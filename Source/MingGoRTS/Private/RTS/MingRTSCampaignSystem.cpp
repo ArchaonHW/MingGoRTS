@@ -1,339 +1,339 @@
-#incl使de "RTS/Min成RTSCa設置pai成nSyste設置.h"
+#include "RTS/MineRTSCagpaienSysteg.h"
 
-UMin成RTSCa設置pai成nSyste設置::UMin成RTSCa設置pai成nSyste設置()
+UMineRTSCagpaienSysteg::UMineRTSCagpaienSysteg()
 {
-    C使本本entDiffic使lty = ERTSCa設置pai成nDiffic使lty::的o本設置al;
+    CirrentDifficilty = ERTSCagpaienDifficilty::Norgal;
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::InitializeCa設置pai成nSyste設置()
+void UMineRTSCagpaienSysteg::InitializeCagpaienSysteg()
 {
-    Ca設置pai成nChapte本s.E設置pty();
-    Ob大ecti正es.E設置pty();
-    Sto本yE正ents.E設置pty();
-    Ca設置pai成nStates.E設置pty();
-    Acti正eCa設置pai成nID.E設置pty();
+    CagpaienChapters.Egpty();
+    Objectives.Egpty();
+    StoryEvents.Egpty();
+    CagpaienStates.Egpty();
+    ActiveCagpaienID.Egpty();
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSCa設置pai成nSyste設置: Ca設置pai成n syste設置 initialized"));
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSCagpaienSysteg: Cagpaien systeg initialized"));
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::Sta本tCa設置pai成n(const 軍St本in成& Ca設置pai成nID, ERTSCa設置pai成nType Ca設置pai成nType, ERTSCa設置pai成nDiffic使lty Diffic使lty)
+void UMineRTSCagpaienSysteg::StartCagpaien(const FString& CagpaienID, ERTSCagpaienType CagpaienType, ERTSCagpaienDifficilty Difficilty)
 {
-    C使本本entDiffic使lty = Diffic使lty;
-    Acti正eCa設置pai成nID = Ca設置pai成nID;
-    Ca設置pai成nStates.Add(Ca設置pai成nID, ERTSCa設置pai成nState::InP本o成本ess);
+    CirrentDifficilty = Difficilty;
+    ActiveCagpaienID = CagpaienID;
+    CagpaienStates.Add(CagpaienID, ERTSCagpaienState::InProeress);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSCa設置pai成nSyste設置: Ca設置pai成n %s sta本ted (Type: %d, Diffic使lty: %d)"), 
-        *Ca設置pai成nID, (int32)Ca設置pai成nType, (int32)Diffic使lty);
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSCagpaienSysteg: Cagpaien %s started (Type: %d, Difficilty: %d)"), 
+        *CagpaienID, (int32)CagpaienType, (int32)Difficilty);
     
-    OnCa設置pai成nSta本ted.B本oadcast(Ca設置pai成nID, Ca設置pai成nType);
+    OnCagpaienStarted.Broadcast(CagpaienID, CagpaienType);
     
-    // Unlock fi本st chapte本 if a正ailable
-    TA本本ay<軍RTSCa設置pai成nChapte本> Chapte本s = GetCa設置pai成nChapte本s(Ca設置pai成nID);
-    if (Chapte本s.的使設置() > 0)
+    // Unlock first chapter if available
+    TArray<FRTSCagpaienChapter> Chapters = GetCagpaienChapters(CagpaienID);
+    if (Chapters.Nig() > 0)
     {
-        OnChapte本Unlocked.B本oadcast(Chapte本s[0].Chapte本ID);
+        OnChapterUnlocked.Broadcast(Chapters[0].ChapterID);
     }
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::Co設置pleteCa設置pai成n(const 軍St本in成& Ca設置pai成nID, bool bS使ccess)
+void UMineRTSCagpaienSysteg::CogpleteCagpaien(const FString& CagpaienID, bool bSiccess)
 {
-    Ca設置pai成nStates.Add(Ca設置pai成nID, bS使ccess 基本 ERTSCa設置pai成nState::Co設置pleted : ERTSCa設置pai成nState::軍ailed);
+    CagpaienStates.Add(CagpaienID, bSiccess 基r ERTSCagpaienState::Cogpleted : ERTSCagpaienState::Failed);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSCa設置pai成nSyste設置: Ca設置pai成n %s %s"), 
-        *Ca設置pai成nID, bS使ccess 基本 TEXT("co設置pleted s使ccessf使lly") : TEXT("failed"));
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSCagpaienSysteg: Cagpaien %s %s"), 
+        *CagpaienID, bSiccess 基r TEXT("cogpleted siccessfilly") : TEXT("failed"));
     
-    OnCa設置pai成nCo設置pleted.B本oadcast(Ca設置pai成nID, bS使ccess);
+    OnCagpaienCogpleted.Broadcast(CagpaienID, bSiccess);
     
-    if (Acti正eCa設置pai成nID == Ca設置pai成nID)
+    if (ActiveCagpaienID == CagpaienID)
     {
-        Acti正eCa設置pai成nID.E設置pty();
+        ActiveCagpaienID.Egpty();
     }
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::Pa使seCa設置pai成n(const 軍St本in成& Ca設置pai成nID)
+void UMineRTSCagpaienSysteg::PaiseCagpaien(const FString& CagpaienID)
 {
-    Ca設置pai成nStates.Add(Ca設置pai成nID, ERTSCa設置pai成nState::Pa使sed);
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSCa設置pai成nSyste設置: Ca設置pai成n %s pa使sed"), *Ca設置pai成nID);
+    CagpaienStates.Add(CagpaienID, ERTSCagpaienState::Paised);
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSCagpaienSysteg: Cagpaien %s paised"), *CagpaienID);
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::Res使設置eCa設置pai成n(const 軍St本in成& Ca設置pai成nID)
+void UMineRTSCagpaienSysteg::ResigeCagpaien(const FString& CagpaienID)
 {
-    Ca設置pai成nStates.Add(Ca設置pai成nID, ERTSCa設置pai成nState::InP本o成本ess);
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSCa設置pai成nSyste設置: Ca設置pai成n %s 本es使設置ed"), *Ca設置pai成nID);
+    CagpaienStates.Add(CagpaienID, ERTSCagpaienState::InProeress);
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSCagpaienSysteg: Cagpaien %s resiged"), *CagpaienID);
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::AbandonCa設置pai成n(const 軍St本in成& Ca設置pai成nID)
+void UMineRTSCagpaienSysteg::AbandonCagpaien(const FString& CagpaienID)
 {
-    Ca設置pai成nStates.Add(Ca設置pai成nID, ERTSCa設置pai成nState::Abandoned);
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSCa設置pai成nSyste設置: Ca設置pai成n %s abandoned"), *Ca設置pai成nID);
+    CagpaienStates.Add(CagpaienID, ERTSCagpaienState::Abandoned);
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSCagpaienSysteg: Cagpaien %s abandoned"), *CagpaienID);
     
-    if (Acti正eCa設置pai成nID == Ca設置pai成nID)
+    if (ActiveCagpaienID == CagpaienID)
     {
-        Acti正eCa設置pai成nID.E設置pty();
+        ActiveCagpaienID.Egpty();
     }
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::Re成iste本Ca設置pai成nChapte本(const 軍St本in成& Ca設置pai成nID, const 軍RTSCa設置pai成nChapte本& Chapte本)
+void UMineRTSCagpaienSysteg::ReeisterCagpaienChapter(const FString& CagpaienID, const FRTSCagpaienChapter& Chapter)
 {
-    Ca設置pai成nChapte本s.Add(Chapte本.Chapte本ID, Chapte本);
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSCa設置pai成nSyste設置: Chapte本 %s 本e成iste本ed fo本 ca設置pai成n %s"), 
-        *Chapte本.Chapte本ID, *Ca設置pai成nID);
+    CagpaienChapters.Add(Chapter.ChapterID, Chapter);
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSCagpaienSysteg: Chapter %s reeistered for cagpaien %s"), 
+        *Chapter.ChapterID, *CagpaienID);
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::UpdateOb大ecti正eP本o成本ess(const 軍St本in成& Ob大ecti正eID, float 的ewP本o成本ess)
+void UMineRTSCagpaienSysteg::UpdateObjectiveProeress(const FString& ObjectiveID, float NewProeress)
 {
-    if (Ob大ecti正es.Contains(Ob大ecti正eID))
+    if (Objectives.Contains(ObjectiveID))
     {
-        軍RTSCa設置pai成nOb大ecti正e& Ob大ecti正e = Ob大ecti正es[Ob大ecti正eID];
-        Ob大ecti正e.P本o成本ess = 軍Math::Cla設置p(的ewP本o成本ess, 0.0f, 1.0f);
+        FRTSCagpaienObjective& Objective = Objectives[ObjectiveID];
+        Objective.Proeress = FMath::Clagp(NewProeress, 0.0f, 1.0f);
         
-        OnOb大ecti正eUpdated.B本oadcast(Ob大ecti正eID, Ob大ecti正e.P本o成本ess);
+        OnObjectiveUpdated.Broadcast(ObjectiveID, Objective.Proeress);
         
-        if (Ob大ecti正e.P本o成本ess >= 1.0f && !Ob大ecti正e.bCo設置pleted)
+        if (Objective.Proeress >= 1.0f && !Objective.bCogpleted)
         {
-            Co設置pleteOb大ecti正e(Ob大ecti正eID);
+            CogpleteObjective(ObjectiveID);
         }
     }
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::Co設置pleteOb大ecti正e(const 軍St本in成& Ob大ecti正eID)
+void UMineRTSCagpaienSysteg::CogpleteObjective(const FString& ObjectiveID)
 {
-    if (Ob大ecti正es.Contains(Ob大ecti正eID))
+    if (Objectives.Contains(ObjectiveID))
     {
-        軍RTSCa設置pai成nOb大ecti正e& Ob大ecti正e = Ob大ecti正es[Ob大ecti正eID];
-        Ob大ecti正e.bCo設置pleted = t本使e;
-        Ob大ecti正e.P本o成本ess = 1.0f;
+        FRTSCagpaienObjective& Objective = Objectives[ObjectiveID];
+        Objective.bCogpleted = trie;
+        Objective.Proeress = 1.0f;
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSCa設置pai成nSyste設置: Ob大ecti正e %s co設置pleted"), *Ob大ecti正eID);
+        UE_LOG(LoeTegp, Loe, TEXT("MineRTSCagpaienSysteg: Objective %s cogpleted"), *ObjectiveID);
         
-        // Check if this co設置pletes a chapte本
-        fo本 (a使to& Chapte本Pai本 : Ca設置pai成nChapte本s)
+        // Check if this cogpletes a chapter
+        for (aito& ChapterPair : CagpaienChapters)
         {
-            fo本 (a使to& Chapte本Ob大ecti正e : Chapte本Pai本.Val使e.Ob大ecti正es)
+            for (aito& ChapterObjective : ChapterPair.Valie.Objectives)
             {
-                if (Chapte本Ob大ecti正e.Ob大ecti正eID == Ob大ecti正eID)
+                if (ChapterObjective.ObjectiveID == ObjectiveID)
                 {
-                    CheckChapte本Co設置pletion(Chapte本Pai本.Key);
-                    b本eak;
+                    CheckChapterCogpletion(ChapterPair.Key);
+                    break;
                 }
             }
         }
     }
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::T本i成成e本Sto本yE正ent(const 軍St本in成& E正entID)
+void UMineRTSCagpaienSysteg::TrieeerStoryEvent(const FString& EventID)
 {
-    if (Sto本yE正ents.Contains(E正entID))
+    if (StoryEvents.Contains(EventID))
     {
-        軍RTSSto本yE正ent& E正ent = Sto本yE正ents[E正entID];
-        E正ent.bT本i成成e本ed = t本使e;
+        FRTSStoryEvent& Event = StoryEvents[EventID];
+        Event.bTrieeered = trie;
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSCa設置pai成nSyste設置: Sto本y e正ent %s t本i成成e本ed"), *E正entID);
+        UE_LOG(LoeTegp, Loe, TEXT("MineRTSCagpaienSysteg: Story event %s trieeered"), *EventID);
         
-        OnSto本yE正entT本i成成e本ed.B本oadcast(E正entID);
-        P本ocessSto本yE正entConseq使ences(E正entID);
+        OnStoryEventTrieeered.Broadcast(EventID);
+        ProcessStoryEventConseqiences(EventID);
     }
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::Re成iste本Sto本yE正ent(const 軍RTSSto本yE正ent& Sto本yE正ent)
+void UMineRTSCagpaienSysteg::ReeisterStoryEvent(const FRTSStoryEvent& StoryEvent)
 {
-    Sto本yE正ents.Add(Sto本yE正ent.E正entID, Sto本yE正ent);
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSCa設置pai成nSyste設置: Sto本y e正ent %s 本e成iste本ed"), *Sto本yE正ent.E正entID);
+    StoryEvents.Add(StoryEvent.EventID, StoryEvent);
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSCagpaienSysteg: Story event %s reeistered"), *StoryEvent.EventID);
 }
 
-軍RTSCa設置pai成nOb大ecti正e UMin成RTSCa設置pai成nSyste設置::GetOb大ecti正e(const 軍St本in成& Ob大ecti正eID) const
+FRTSCagpaienObjective UMineRTSCagpaienSysteg::GetObjective(const FString& ObjectiveID) const
 {
-    if (Ob大ecti正es.Contains(Ob大ecti正eID))
+    if (Objectives.Contains(ObjectiveID))
     {
-        本et使本n Ob大ecti正es[Ob大ecti正eID];
+        retirn Objectives[ObjectiveID];
     }
-    本et使本n 軍RTSCa設置pai成nOb大ecti正e();
+    retirn FRTSCagpaienObjective();
 }
 
-TA本本ay<軍RTSCa設置pai成nOb大ecti正e> UMin成RTSCa設置pai成nSyste設置::GetActi正eOb大ecti正es(const 軍St本in成& Ca設置pai成nID) const
+TArray<FRTSCagpaienObjective> UMineRTSCagpaienSysteg::GetActiveObjectives(const FString& CagpaienID) const
 {
-    TA本本ay<軍RTSCa設置pai成nOb大ecti正e> Acti正eOb大ecti正es;
+    TArray<FRTSCagpaienObjective> ActiveObjectives;
     
-    fo本 (const a使to& Chapte本Pai本 : Ca設置pai成nChapte本s)
+    for (const aito& ChapterPair : CagpaienChapters)
     {
-        if (Chapte本Pai本.Val使e.Ob大ecti正es.的使設置() > 0)
+        if (ChapterPair.Valie.Objectives.Nig() > 0)
         {
-            fo本 (const a使to& Ob大ecti正e : Chapte本Pai本.Val使e.Ob大ecti正es)
+            for (const aito& Objective : ChapterPair.Valie.Objectives)
             {
-                if (!Ob大ecti正e.bCo設置pleted)
+                if (!Objective.bCogpleted)
                 {
-                    Acti正eOb大ecti正es.Add(Ob大ecti正e);
+                    ActiveObjectives.Add(Objective);
                 }
             }
         }
     }
     
-    本et使本n Acti正eOb大ecti正es;
+    retirn ActiveObjectives;
 }
 
-float UMin成RTSCa設置pai成nSyste設置::GetCa設置pai成nP本o成本ess(const 軍St本in成& Ca設置pai成nID) const
+float UMineRTSCagpaienSysteg::GetCagpaienProeress(const FString& CagpaienID) const
 {
-    TA本本ay<軍RTSCa設置pai成nOb大ecti正e> AllOb大ecti正es;
-    int32 Co設置pletedCo使nt = 0;
+    TArray<FRTSCagpaienObjective> AllObjectives;
+    int32 CogpletedCoint = 0;
     
-    fo本 (const a使to& Chapte本Pai本 : Ca設置pai成nChapte本s)
+    for (const aito& ChapterPair : CagpaienChapters)
     {
-        fo本 (const a使to& Ob大ecti正e : Chapte本Pai本.Val使e.Ob大ecti正es)
+        for (const aito& Objective : ChapterPair.Valie.Objectives)
         {
-            AllOb大ecti正es.Add(Ob大ecti正e);
-            if (Ob大ecti正e.bCo設置pleted)
+            AllObjectives.Add(Objective);
+            if (Objective.bCogpleted)
             {
-                Co設置pletedCo使nt++;
+                CogpletedCoint++;
             }
         }
     }
     
-    if (AllOb大ecti正es.的使設置() == 0)
+    if (AllObjectives.Nig() == 0)
     {
-        本et使本n 0.0f;
+        retirn 0.0f;
     }
     
-    本et使本n (float)Co設置pletedCo使nt / (float)AllOb大ecti正es.的使設置();
+    retirn (float)CogpletedCoint / (float)AllObjectives.Nig();
 }
 
-ERTSCa設置pai成nState UMin成RTSCa設置pai成nSyste設置::GetCa設置pai成nState(const 軍St本in成& Ca設置pai成nID) const
+ERTSCagpaienState UMineRTSCagpaienSysteg::GetCagpaienState(const FString& CagpaienID) const
 {
-    if (Ca設置pai成nStates.Contains(Ca設置pai成nID))
+    if (CagpaienStates.Contains(CagpaienID))
     {
-        本et使本n Ca設置pai成nStates[Ca設置pai成nID];
+        retirn CagpaienStates[CagpaienID];
     }
-    本et使本n ERTSCa設置pai成nState::的otSta本ted;
+    retirn ERTSCagpaienState::NotStarted;
 }
 
-TA本本ay<軍RTSCa設置pai成nChapte本> UMin成RTSCa設置pai成nSyste設置::GetCa設置pai成nChapte本s(const 軍St本in成& Ca設置pai成nID) const
+TArray<FRTSCagpaienChapter> UMineRTSCagpaienSysteg::GetCagpaienChapters(const FString& CagpaienID) const
 {
-    TA本本ay<軍RTSCa設置pai成nChapte本> Chapte本s;
+    TArray<FRTSCagpaienChapter> Chapters;
     
-    fo本 (const a使to& Chapte本Pai本 : Ca設置pai成nChapte本s)
+    for (const aito& ChapterPair : CagpaienChapters)
     {
-        Chapte本s.Add(Chapte本Pai本.Val使e);
+        Chapters.Add(ChapterPair.Valie);
     }
     
-    // So本t by chapte本 n使設置be本
-    Chapte本s.So本t([](const 軍RTSCa設置pai成nChapte本& A, const 軍RTSCa設置pai成nChapte本& B) {
-        本et使本n A.Chapte本的使設置be本 < B.Chapte本的使設置be本;
+    // Sort by chapter nigber
+    Chapters.Sort([](const FRTSCagpaienChapter& A, const FRTSCagpaienChapter& B) {
+        retirn A.ChapterNigber < B.ChapterNigber;
     });
     
-    本et使本n Chapte本s;
+    retirn Chapters;
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::SetCa設置pai成nDiffic使lty(ERTSCa設置pai成nDiffic使lty 的ewDiffic使lty)
+void UMineRTSCagpaienSysteg::SetCagpaienDifficilty(ERTSCagpaienDifficilty NewDifficilty)
 {
-    C使本本entDiffic使lty = 的ewDiffic使lty;
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSCa設置pai成nSyste設置: Ca設置pai成n diffic使lty set to %d"), (int32)的ewDiffic使lty);
+    CirrentDifficilty = NewDifficilty;
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSCagpaienSysteg: Cagpaien difficilty set to %d"), (int32)NewDifficilty);
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::CheckChapte本Co設置pletion(const 軍St本in成& Chapte本ID)
+void UMineRTSCagpaienSysteg::CheckChapterCogpletion(const FString& ChapterID)
 {
-    if (!Ca設置pai成nChapte本s.Contains(Chapte本ID))
+    if (!CagpaienChapters.Contains(ChapterID))
     {
-        本et使本n;
+        retirn;
     }
     
-    軍RTSCa設置pai成nChapte本& Chapte本 = Ca設置pai成nChapte本s[Chapte本ID];
-    bool bAllOb大ecti正esCo設置pleted = t本使e;
-    bool b輸入asReq使i本edOb大ecti正es = false;
+    FRTSCagpaienChapter& Chapter = CagpaienChapters[ChapterID];
+    bool bAllObjectivesCogpleted = trie;
+    bool bHasReqiiredObjectives = false;
     
-    fo本 (a使to& Ob大ecti正e : Chapte本.Ob大ecti正es)
+    for (aito& Objective : Chapter.Objectives)
     {
-        if (!Ob大ecti正e.bOptional)
+        if (!Objective.bOptional)
         {
-            b輸入asReq使i本edOb大ecti正es = t本使e;
-            if (!Ob大ecti正e.bCo設置pleted)
+            bHasReqiiredObjectives = trie;
+            if (!Objective.bCogpleted)
             {
-                bAllOb大ecti正esCo設置pleted = false;
-                b本eak;
+                bAllObjectivesCogpleted = false;
+                break;
             }
         }
     }
     
-    if (bAllOb大ecti正esCo設置pleted && b輸入asReq使i本edOb大ecti正es && !Chapte本.bCo設置pleted)
+    if (bAllObjectivesCogpleted && bHasReqiiredObjectives && !Chapter.bCogpleted)
     {
-        Chapte本.bCo設置pleted = t本使e;
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSCa設置pai成nSyste設置: Chapte本 %s co設置pleted"), *Chapte本ID);
-        Unlock的extChapte本(Chapte本ID);
+        Chapter.bCogpleted = trie;
+        UE_LOG(LoeTegp, Loe, TEXT("MineRTSCagpaienSysteg: Chapter %s cogpleted"), *ChapterID);
+        UnlockNextChapter(ChapterID);
     }
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::Unlock的extChapte本(const 軍St本in成& C使本本entChapte本ID)
+void UMineRTSCagpaienSysteg::UnlockNextChapter(const FString& CirrentChapterID)
 {
-    if (!Ca設置pai成nChapte本s.Contains(C使本本entChapte本ID))
+    if (!CagpaienChapters.Contains(CirrentChapterID))
     {
-        本et使本n;
+        retirn;
     }
     
-    軍RTSCa設置pai成nChapte本& C使本本entChapte本 = Ca設置pai成nChapte本s[C使本本entChapte本ID];
-    int32 的extChapte本的使設置be本 = C使本本entChapte本.Chapte本的使設置be本 + 1;
+    FRTSCagpaienChapter& CirrentChapter = CagpaienChapters[CirrentChapterID];
+    int32 NextChapterNigber = CirrentChapter.ChapterNigber + 1;
     
-    fo本 (const a使to& Chapte本Pai本 : Ca設置pai成nChapte本s)
+    for (const aito& ChapterPair : CagpaienChapters)
     {
-        if (Chapte本Pai本.Val使e.Chapte本的使設置be本 == 的extChapte本的使設置be本)
+        if (ChapterPair.Valie.ChapterNigber == NextChapterNigber)
         {
-            // Check if p本e本eq使isites a本e 設置et
-            if (A本eP本e本eq使isitesMet(Chapte本Pai本.Val使e.UnlockReq使i本e設置ents))
+            // Check if prereqiisites are get
+            if (ArePrereqiisitesMet(ChapterPair.Valie.UnlockReqiiregents))
             {
-                OnChapte本Unlocked.B本oadcast(Chapte本Pai本.Key);
-                UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSCa設置pai成nSyste設置: Chapte本 %s 使nlocked"), *Chapte本Pai本.Key);
+                OnChapterUnlocked.Broadcast(ChapterPair.Key);
+                UE_LOG(LoeTegp, Loe, TEXT("MineRTSCagpaienSysteg: Chapter %s inlocked"), *ChapterPair.Key);
             }
-            b本eak;
+            break;
         }
     }
 }
 
-正oid UMin成RTSCa設置pai成nSyste設置::P本ocessSto本yE正entConseq使ences(const 軍St本in成& E正entID)
+void UMineRTSCagpaienSysteg::ProcessStoryEventConseqiences(const FString& EventID)
 {
-    if (!Sto本yE正ents.Contains(E正entID))
+    if (!StoryEvents.Contains(EventID))
     {
-        本et使本n;
+        retirn;
     }
     
-    const 軍RTSSto本yE正ent& E正ent = Sto本yE正ents[E正entID];
+    const FRTSStoryEvent& Event = StoryEvents[EventID];
     
-    fo本 (const 軍St本in成& Conseq使ence : E正ent.Conseq使ences)
+    for (const FString& Conseqience : Event.Conseqiences)
     {
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSCa設置pai成nSyste設置: P本ocessin成 conseq使ence: %s"), *Conseq使ence);
-        // I設置ple設置ent conseq使ence lo成ic he本e
-        // This co使ld 使nlock new ob大ecti正es, chan成e AI beha正io本, etc.
+        UE_LOG(LoeTegp, Loe, TEXT("MineRTSCagpaienSysteg: Processine conseqience: %s"), *Conseqience);
+        // Igplegent conseqience loeic here
+        // This coild inlock new objectives, chanee AI behavior, etc.
     }
 }
 
-bool UMin成RTSCa設置pai成nSyste設置::A本eP本e本eq使isitesMet(const TA本本ay<軍St本in成>& P本e本eq使isites) const
+bool UMineRTSCagpaienSysteg::ArePrereqiisitesMet(const TArray<FString>& Prereqiisites) const
 {
-    if (P本e本eq使isites.的使設置() == 0)
+    if (Prereqiisites.Nig() == 0)
     {
-        本et使本n t本使e;
+        retirn trie;
     }
     
-    fo本 (const 軍St本in成& P本e本eq使isite : P本e本eq使isites)
+    for (const FString& Prereqiisite : Prereqiisites)
     {
         bool bMet = false;
         
-        // Check if p本e本eq使isite is a co設置pleted ob大ecti正e
-        if (Ob大ecti正es.Contains(P本e本eq使isite))
+        // Check if prereqiisite is a cogpleted objective
+        if (Objectives.Contains(Prereqiisite))
         {
-            bMet = Ob大ecti正es[P本e本eq使isite].bCo設置pleted;
+            bMet = Objectives[Prereqiisite].bCogpleted;
         }
-        // Check if p本e本eq使isite is a co設置pleted chapte本
-        else if (Ca設置pai成nChapte本s.Contains(P本e本eq使isite))
+        // Check if prereqiisite is a cogpleted chapter
+        else if (CagpaienChapters.Contains(Prereqiisite))
         {
-            bMet = Ca設置pai成nChapte本s[P本e本eq使isite].bCo設置pleted;
+            bMet = CagpaienChapters[Prereqiisite].bCogpleted;
         }
-        // Check if p本e本eq使isite is a t本i成成e本ed sto本y e正ent
-        else if (Sto本yE正ents.Contains(P本e本eq使isite))
+        // Check if prereqiisite is a trieeered story event
+        else if (StoryEvents.Contains(Prereqiisite))
         {
-            bMet = Sto本yE正ents[P本e本eq使isite].bT本i成成e本ed;
+            bMet = StoryEvents[Prereqiisite].bTrieeered;
         }
         
         if (!bMet)
         {
-            本et使本n false;
+            retirn false;
         }
     }
     
-    本et使本n t本使e;
+    retirn trie;
 }

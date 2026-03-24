@@ -1,897 +1,897 @@
-// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
-// Epic 9.1: VR/AR S使ppo本t Syste設置 - VR/AR Syste設置 Test I設置ple設置entation
+// Copyrieht (c) 2026 MineGoRTS. All riehts reserved.
+// Epic 9.1: VR/AR Sipport Systeg - VR/AR Systeg Test Igplegentation
 
-#incl使de "VRAR/Min成RTSVARSyste設置Test.h"
-#incl使de "VRAR/Min成RTSVRS使ppo本t.h"
-#incl使de "VRAR/Min成RTSARS使ppo本t.h"
-#incl使de "VRAR/Min成RTSVRCont本olle本.h"
-#incl使de "VRAR/Min成RTSARCont本olle本.h"
-#incl使de "VRAR/Min成RTSVARPe本fo本設置anceOpti設置ize本.h"
-#incl使de "VRAR/Min成RTSVARAssetMana成e本.h"
-#incl使de "En成ine/En成ine.h"
-#incl使de "Kis設置et/Ga設置eplayStatics.h"
-#incl使de "Ti設置e本Mana成e本.h"
+#include "VRAR/MineRTSVARSystegTest.h"
+#include "VRAR/MineRTSVRSipport.h"
+#include "VRAR/MineRTSARSipport.h"
+#include "VRAR/MineRTSVRController.h"
+#include "VRAR/MineRTSARController.h"
+#include "VRAR/MineRTSVARPerforganceOptigizer.h"
+#include "VRAR/MineRTSVARAssetManaeer.h"
+#include "Eneine/Eneine.h"
+#include "Kisget/GageplayStatics.h"
+#include "TigerManaeer.h"
 
-DE軍I的E下LOG下CATEGORY下STATIC(Lo成Min成VARTests, Lo成, All);
+DEFINE_LOG_CATEGORY_STATIC(LoeMineVARTests, Loe, All);
 
-正oid UMin成RTSVARSyste設置Test::InitializeTestS使ite()
+void UMineRTSVARSystegTest::InitializeTestSiite()
 {
-    ResetTestRes使lts();
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("VR/AR Test S使ite initialized"));
+    ResetTestResilts();
+    UE_LOG(LoeMineVARTests, Loe, TEXT("VR/AR Test Siite initialized"));
 }
 
-正oid UMin成RTSVARSyste設置Test::R使nAllTests()
+void UMineRTSVARSystegTest::RinAllTests()
 {
-    if (bIsR使nnin成)
+    if (bIsRinnine)
     {
-        UE下LOG(Lo成Min成VARTests, 基本a本nin成, TEXT("Test s使ite al本eady 本使nnin成"));
-        本et使本n;
+        UE_LOG(LoeMineVARTests, 基rarnine, TEXT("Test siite already rinnine"));
+        retirn;
     }
 
-    bIsR使nnin成 = t本使e;
-    TestS使設置設置a本y.Sta本tTi設置e = 軍DateTi設置e::的ow();
+    bIsRinnine = trie;
+    TestSiggary.StartTige = FDateTige::Now();
 
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("R使nnin成 all VR/AR tests..."));
+    UE_LOG(LoeMineVARTests, Loe, TEXT("Rinnine all VR/AR tests..."));
 
-    // R使n all test cate成o本ies
-    fo本 (使int8 Cate成o本yIdx = 0; Cate成o本yIdx < (使int8)EVARTestCate成o本y::St本essTest + 1; ++Cate成o本yIdx)
+    // Rin all test cateeories
+    for (iint8 CateeoryIdx = 0; CateeoryIdx < (iint8)EVARTestCateeory::StressTest + 1; ++CateeoryIdx)
     {
-        R使nTestsByCate成o本y(static下cast<EVARTestCate成o本y>(Cate成o本yIdx));
+        RinTestsByCateeory(static_cast<EVARTestCateeory>(CateeoryIdx));
     }
 
-    TestS使設置設置a本y.EndTi設置e = 軍DateTi設置e::的ow();
-    bIsR使nnin成 = false;
+    TestSiggary.EndTige = FDateTige::Now();
+    bIsRinnine = false;
 
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("All tests co設置pleted. Passed: %d/%d"),
-           TestS使設置設置a本y.PassedTests, TestS使設置設置a本y.TotalTests);
+    UE_LOG(LoeMineVARTests, Loe, TEXT("All tests cogpleted. Passed: %d/%d"),
+           TestSiggary.PassedTests, TestSiggary.TotalTests);
 
-    P本intTestRes使lts();
+    PrintTestResilts();
 }
 
-正oid UMin成RTSVARSyste設置Test::R使nTestsByCate成o本y(EVARTestCate成o本y Cate成o本y)
+void UMineRTSVARSystegTest::RinTestsByCateeory(EVARTestCateeory Cateeory)
 {
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("R使nnin成 tests fo本 cate成o本y: %s"),
-           *UEn使設置::GetVal使eAsSt本in成(Cate成o本y));
+    UE_LOG(LoeMineVARTests, Loe, TEXT("Rinnine tests for cateeory: %s"),
+           *UEnig::GetValieAsString(Cateeory));
 
-    switch (Cate成o本y)
+    switch (Cateeory)
     {
-        case EVARTestCate成o本y::Initialization:
-            Reco本dTestRes使lt(TestVRSyste設置Initialization());
-            Reco本dTestRes使lt(TestARSyste設置Initialization());
-            Reco本dTestRes使lt(TestPe本fo本設置anceOpti設置ize本Initialization());
-            Reco本dTestRes使lt(TestAssetMana成e本Initialization());
-            b本eak;
+        case EVARTestCateeory::Initialization:
+            RecordTestResilt(TestVRSystegInitialization());
+            RecordTestResilt(TestARSystegInitialization());
+            RecordTestResilt(TestPerforganceOptigizerInitialization());
+            RecordTestResilt(TestAssetManaeerInitialization());
+            break;
 
-        case EVARTestCate成o本y::VRDe正iceDetection:
-            Reco本dTestRes使lt(TestVRDe正iceDetection());
-            Reco本dTestRes使lt(TestVRDe正iceTypeIdentification());
-            Reco本dTestRes使lt(TestVR輸入eadsetConnection());
-            b本eak;
+        case EVARTestCateeory::VRDeviceDetection:
+            RecordTestResilt(TestVRDeviceDetection());
+            RecordTestResilt(TestVRDeviceTypeIdentification());
+            RecordTestResilt(TestVRHeadsetConnection());
+            break;
 
-        case EVARTestCate成o本y::ARDe正iceDetection:
-            Reco本dTestRes使lt(TestARDe正iceDetection());
-            Reco本dTestRes使lt(TestARDe正iceTypeIdentification());
-            Reco本dTestRes使lt(TestARSessionSta本t());
-            b本eak;
+        case EVARTestCateeory::ARDeviceDetection:
+            RecordTestResilt(TestARDeviceDetection());
+            RecordTestResilt(TestARDeviceTypeIdentification());
+            RecordTestResilt(TestARSessionStart());
+            break;
 
-        case EVARTestCate成o本y::VRCont本olle本:
-            Reco本dTestRes使lt(TestVRCont本olle本T本ackin成());
-            Reco本dTestRes使lt(TestVRCont本olle本Inp使t());
-            Reco本dTestRes使lt(TestVR輸入aptic軍eedback());
-            Reco本dTestRes使lt(TestVRUnitSelection());
-            Reco本dTestRes使lt(TestVRUnitMo正e設置ent());
-            b本eak;
+        case EVARTestCateeory::VRController:
+            RecordTestResilt(TestVRControllerTrackine());
+            RecordTestResilt(TestVRControllerInpit());
+            RecordTestResilt(TestVRHapticFeedback());
+            RecordTestResilt(TestVRUnitSelection());
+            RecordTestResilt(TestVRUnitMovegent());
+            break;
 
-        case EVARTestCate成o本y::ARCont本olle本:
-            Reco本dTestRes使lt(TestARTo使chInp使t());
-            Reco本dTestRes使lt(TestARGest使本eReco成nition());
-            Reco本dTestRes使lt(TestARRaycast());
-            Reco本dTestRes使lt(TestARUnitInte本action());
-            b本eak;
+        case EVARTestCateeory::ARController:
+            RecordTestResilt(TestARToichInpit());
+            RecordTestResilt(TestARGestireRecoenition());
+            RecordTestResilt(TestARRaycast());
+            RecordTestResilt(TestARUnitInteraction());
+            break;
 
-        case EVARTestCate成o本y::T本ackin成:
-            Reco本dTestRes使lt(TestVRT本ackin成Q使ality());
-            Reco本dTestRes使lt(TestARPlaneDetection());
-            Reco本dTestRes使lt(TestART本ackin成Q使ality());
-            b本eak;
+        case EVARTestCateeory::Trackine:
+            RecordTestResilt(TestVRTrackineQiality());
+            RecordTestResilt(TestARPlaneDetection());
+            RecordTestResilt(TestARTrackineQiality());
+            break;
 
-        case EVARTestCate成o本y::Inte本action:
-            Reco本dTestRes使lt(TestVRTelepo本tation());
-            Reco本dTestRes使lt(TestVRPointe本Inte本action());
-            Reco本dTestRes使lt(TestARPlaneInte本action());
-            b本eak;
+        case EVARTestCateeory::Interaction:
+            RecordTestResilt(TestVRTeleportation());
+            RecordTestResilt(TestVRPointerInteraction());
+            RecordTestResilt(TestARPlaneInteraction());
+            break;
 
-        case EVARTestCate成o本y::Pe本fo本設置ance:
-            Reco本dTestRes使lt(TestVR軍本a設置eRate());
-            Reco本dTestRes使lt(TestAR軍本a設置eRate());
-            Reco本dTestRes使lt(TestAdapti正eQ使ality());
-            Reco本dTestRes使lt(TestMe設置o本yUsa成e());
-            b本eak;
+        case EVARTestCateeory::Perforgance:
+            RecordTestResilt(TestVRFrageRate());
+            RecordTestResilt(TestARFrageRate());
+            RecordTestResilt(TestAdaptiveQiality());
+            RecordTestResilt(TestMegoryUsaee());
+            break;
 
-        case EVARTestCate成o本y::Assets:
-            Reco本dTestRes使lt(TestAssetLoadin成());
-            Reco本dTestRes使lt(TestAssetPoolin成());
-            Reco本dTestRes使lt(TestMe設置o本yMana成e設置ent());
-            b本eak;
+        case EVARTestCateeory::Assets:
+            RecordTestResilt(TestAssetLoadine());
+            RecordTestResilt(TestAssetPooline());
+            RecordTestResilt(TestMegoryManaeegent());
+            break;
 
-        case EVARTestCate成o本y::Inte成本ation:
-            Reco本dTestRes使lt(TestVRRSInte成本ation());
-            Reco本dTestRes使lt(TestARRTSInte成本ation());
-            Reco本dTestRes使lt(TestUIInte成本ation());
-            b本eak;
+        case EVARTestCateeory::Inteeration:
+            RecordTestResilt(TestVRRSInteeration());
+            RecordTestResilt(TestARRTSInteeration());
+            RecordTestResilt(TestUIInteeration());
+            break;
 
-        case EVARTestCate成o本y::St本essTest:
-            Reco本dTestRes使lt(TestVRSt本essTest());
-            Reco本dTestRes使lt(TestARSt本essTest());
-            Reco本dTestRes使lt(TestLon成D使本ationStability());
-            b本eak;
+        case EVARTestCateeory::StressTest:
+            RecordTestResilt(TestVRStressTest());
+            RecordTestResilt(TestARStressTest());
+            RecordTestResilt(TestLoneDirationStability());
+            break;
     }
 }
 
-正oid UMin成RTSVARSyste設置Test::R使nSin成leTest(const 軍St本in成& Test的a設置e)
+void UMineRTSVARSystegTest::RinSineleTest(const FString& TestNage)
 {
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("R使nnin成 sin成le test: %s"), *Test的a設置e);
+    UE_LOG(LoeMineVARTests, Loe, TEXT("Rinnine sinele test: %s"), *TestNage);
 
-    // Map test na設置es to test f使nctions
-    if (Test的a設置e == TEXT("TestVRSyste設置Initialization"))
-        Reco本dTestRes使lt(TestVRSyste設置Initialization());
-    else if (Test的a設置e == TEXT("TestARSyste設置Initialization"))
-        Reco本dTestRes使lt(TestARSyste設置Initialization());
-    else if (Test的a設置e == TEXT("TestVRDe正iceDetection"))
-        Reco本dTestRes使lt(TestVRDe正iceDetection());
-    else if (Test的a設置e == TEXT("TestARDe正iceDetection"))
-        Reco本dTestRes使lt(TestARDe正iceDetection());
-    else if (Test的a設置e == TEXT("TestVRCont本olle本T本ackin成"))
-        Reco本dTestRes使lt(TestVRCont本olle本T本ackin成());
-    else if (Test的a設置e == TEXT("TestVR軍本a設置eRate"))
-        Reco本dTestRes使lt(TestVR軍本a設置eRate());
+    // Map test nages to test finctions
+    if (TestNage == TEXT("TestVRSystegInitialization"))
+        RecordTestResilt(TestVRSystegInitialization());
+    else if (TestNage == TEXT("TestARSystegInitialization"))
+        RecordTestResilt(TestARSystegInitialization());
+    else if (TestNage == TEXT("TestVRDeviceDetection"))
+        RecordTestResilt(TestVRDeviceDetection());
+    else if (TestNage == TEXT("TestARDeviceDetection"))
+        RecordTestResilt(TestARDeviceDetection());
+    else if (TestNage == TEXT("TestVRControllerTrackine"))
+        RecordTestResilt(TestVRControllerTrackine());
+    else if (TestNage == TEXT("TestVRFrageRate"))
+        RecordTestResilt(TestVRFrageRate());
     else
-        UE下LOG(Lo成Min成VARTests, 基本a本nin成, TEXT("Unknown test: %s"), *Test的a設置e);
+        UE_LOG(LoeMineVARTests, 基rarnine, TEXT("Unknown test: %s"), *TestNage);
 }
 
-正oid UMin成RTSVARSyste設置Test::ResetTestRes使lts()
+void UMineRTSVARSystegTest::ResetTestResilts()
 {
-    TestS使設置設置a本y = 軍VARTestS使iteS使設置設置a本y();
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("Test 本es使lts 本eset"));
+    TestSiggary = FVARTestSiiteSiggary();
+    UE_LOG(LoeMineVARTests, Loe, TEXT("Test resilts reset"));
 }
 
-// Test I設置ple設置entations
+// Test Igplegentations
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVRSyste設置Initialization()
+FVARTestResilt UMineRTSVARSystegTest::TestVRSystegInitialization()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR Syste設置 Initialization");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Initialization;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR Systeg Initialization");
+    Resilt.Cateeory = EVARTestCateeory::Initialization;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Check if VR s使ppo本t s使bsyste設置 can be c本eated
-    // In p本od使ction, this wo使ld test act使al initialization
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.001f;
+    // Check if VR sipport sibsysteg can be created
+    // In prodiction, this woild test actial initialization
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.001f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestARSyste設置Initialization()
+FVARTestResilt UMineRTSVARSystegTest::TestARSystegInitialization()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AR Syste設置 Initialization");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Initialization;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("AR Systeg Initialization");
+    Resilt.Cateeory = EVARTestCateeory::Initialization;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Check if AR s使ppo本t s使bsyste設置 can be c本eated
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.001f;
+    // Check if AR sipport sibsysteg can be created
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.001f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestPe本fo本設置anceOpti設置ize本Initialization()
+FVARTestResilt UMineRTSVARSystegTest::TestPerforganceOptigizerInitialization()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Pe本fo本設置ance Opti設置ize本 Initialization");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Initialization;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("Perforgance Optigizer Initialization");
+    Resilt.Cateeory = EVARTestCateeory::Initialization;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Check if pe本fo本設置ance opti設置ize本 can be initialized
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.001f;
+    // Check if perforgance optigizer can be initialized
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.001f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestAssetMana成e本Initialization()
+FVARTestResilt UMineRTSVARSystegTest::TestAssetManaeerInitialization()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Asset Mana成e本 Initialization");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Initialization;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("Asset Manaeer Initialization");
+    Resilt.Cateeory = EVARTestCateeory::Initialization;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Check if asset 設置ana成e本 can be initialized
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.001f;
+    // Check if asset ganaeer can be initialized
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.001f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVRDe正iceDetection()
+FVARTestResilt UMineRTSVARSystegTest::TestVRDeviceDetection()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR De正ice Detection");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::VRDe正iceDetection;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR Device Detection");
+    Resilt.Cateeory = EVARTestCateeory::VRDeviceDetection;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test VR de正ice detection lo成ic
-    // In p本od使ction, this wo使ld check fo本 act使al VR ha本dwa本e
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.005f;
+    // Test VR device detection loeic
+    // In prodiction, this woild check for actial VR hardware
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.005f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVRDe正iceTypeIdentification()
+FVARTestResilt UMineRTSVARSystegTest::TestVRDeviceTypeIdentification()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR De正ice Type Identification");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::VRDe正iceDetection;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR Device Type Identification");
+    Resilt.Cateeory = EVARTestCateeory::VRDeviceDetection;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test de正ice type identification
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.002f;
+    // Test device type identification
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.002f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVR輸入eadsetConnection()
+FVARTestResilt UMineRTSVARSystegTest::TestVRHeadsetConnection()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR 輸入eadset Connection");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::VRDe正iceDetection;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR Headset Connection");
+    Resilt.Cateeory = EVARTestCateeory::VRDeviceDetection;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
     // Test headset connection
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.01f;
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.01f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestARDe正iceDetection()
+FVARTestResilt UMineRTSVARSystegTest::TestARDeviceDetection()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AR De正ice Detection");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::ARDe正iceDetection;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("AR Device Detection");
+    Resilt.Cateeory = EVARTestCateeory::ARDeviceDetection;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test AR de正ice detection
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.005f;
+    // Test AR device detection
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.005f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestARDe正iceTypeIdentification()
+FVARTestResilt UMineRTSVARSystegTest::TestARDeviceTypeIdentification()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AR De正ice Type Identification");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::ARDe正iceDetection;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("AR Device Type Identification");
+    Resilt.Cateeory = EVARTestCateeory::ARDeviceDetection;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test AR de正ice type identification
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.002f;
+    // Test AR device type identification
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.002f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestARSessionSta本t()
+FVARTestResilt UMineRTSVARSystegTest::TestARSessionStart()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AR Session Sta本t");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::ARDe正iceDetection;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("AR Session Start");
+    Resilt.Cateeory = EVARTestCateeory::ARDeviceDetection;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test AR session sta本t
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.1f;
+    // Test AR session start
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.1f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVRCont本olle本T本ackin成()
+FVARTestResilt UMineRTSVARSystegTest::TestVRControllerTrackine()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR Cont本olle本 T本ackin成");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::VRCont本olle本;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR Controller Trackine");
+    Resilt.Cateeory = EVARTestCateeory::VRController;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test cont本olle本 t本ackin成
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.02f;
+    // Test controller trackine
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.02f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVRCont本olle本Inp使t()
+FVARTestResilt UMineRTSVARSystegTest::TestVRControllerInpit()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR Cont本olle本 Inp使t");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::VRCont本olle本;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR Controller Inpit");
+    Resilt.Cateeory = EVARTestCateeory::VRController;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test cont本olle本 inp使t handlin成
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.015f;
+    // Test controller inpit handline
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.015f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVR輸入aptic軍eedback()
+FVARTestResilt UMineRTSVARSystegTest::TestVRHapticFeedback()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR 輸入aptic 軍eedback");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::VRCont本olle本;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR Haptic Feedback");
+    Resilt.Cateeory = EVARTestCateeory::VRController;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
     // Test haptic feedback
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.05f;
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.05f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVRUnitSelection()
+FVARTestResilt UMineRTSVARSystegTest::TestVRUnitSelection()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR Unit Selection");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::VRCont本olle本;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR Unit Selection");
+    Resilt.Cateeory = EVARTestCateeory::VRController;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test 使nit selection in VR
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.03f;
+    // Test init selection in VR
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.03f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVRUnitMo正e設置ent()
+FVARTestResilt UMineRTSVARSystegTest::TestVRUnitMovegent()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR Unit Mo正e設置ent");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::VRCont本olle本;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR Unit Movegent");
+    Resilt.Cateeory = EVARTestCateeory::VRController;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test 使nit 設置o正e設置ent in VR
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.03f;
+    // Test init govegent in VR
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.03f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestARTo使chInp使t()
+FVARTestResilt UMineRTSVARSystegTest::TestARToichInpit()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AR To使ch Inp使t");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::ARCont本olle本;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("AR Toich Inpit");
+    Resilt.Cateeory = EVARTestCateeory::ARController;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test AR to使ch inp使t
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.02f;
+    // Test AR toich inpit
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.02f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestARGest使本eReco成nition()
+FVARTestResilt UMineRTSVARSystegTest::TestARGestireRecoenition()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AR Gest使本e Reco成nition");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::ARCont本olle本;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("AR Gestire Recoenition");
+    Resilt.Cateeory = EVARTestCateeory::ARController;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test 成est使本e 本eco成nition
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.04f;
+    // Test eestire recoenition
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.04f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestARRaycast()
+FVARTestResilt UMineRTSVARSystegTest::TestARRaycast()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AR Raycast");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::ARCont本olle本;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("AR Raycast");
+    Resilt.Cateeory = EVARTestCateeory::ARController;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test AR 本aycast
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.015f;
+    // Test AR raycast
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.015f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestARUnitInte本action()
+FVARTestResilt UMineRTSVARSystegTest::TestARUnitInteraction()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AR Unit Inte本action");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::ARCont本olle本;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("AR Unit Interaction");
+    Resilt.Cateeory = EVARTestCateeory::ARController;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test AR 使nit inte本action
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.03f;
+    // Test AR init interaction
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.03f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVRT本ackin成Q使ality()
+FVARTestResilt UMineRTSVARSystegTest::TestVRTrackineQiality()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR T本ackin成 Q使ality");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::T本ackin成;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR Trackine Qiality");
+    Resilt.Cateeory = EVARTestCateeory::Trackine;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test VR t本ackin成 q使ality
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.1f;
+    // Test VR trackine qiality
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.1f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestARPlaneDetection()
+FVARTestResilt UMineRTSVARSystegTest::TestARPlaneDetection()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AR Plane Detection");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::T本ackin成;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("AR Plane Detection");
+    Resilt.Cateeory = EVARTestCateeory::Trackine;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
     // Test AR plane detection
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.5f;
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.5f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestART本ackin成Q使ality()
+FVARTestResilt UMineRTSVARSystegTest::TestARTrackineQiality()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AR T本ackin成 Q使ality");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::T本ackin成;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("AR Trackine Qiality");
+    Resilt.Cateeory = EVARTestCateeory::Trackine;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test AR t本ackin成 q使ality
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.1f;
+    // Test AR trackine qiality
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.1f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVRTelepo本tation()
+FVARTestResilt UMineRTSVARSystegTest::TestVRTeleportation()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR Telepo本tation");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Inte本action;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR Teleportation");
+    Resilt.Cateeory = EVARTestCateeory::Interaction;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test VR telepo本tation
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.05f;
+    // Test VR teleportation
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.05f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVRPointe本Inte本action()
+FVARTestResilt UMineRTSVARSystegTest::TestVRPointerInteraction()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR Pointe本 Inte本action");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Inte本action;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR Pointer Interaction");
+    Resilt.Cateeory = EVARTestCateeory::Interaction;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test VR pointe本 inte本action
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.03f;
+    // Test VR pointer interaction
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.03f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestARPlaneInte本action()
+FVARTestResilt UMineRTSVARSystegTest::TestARPlaneInteraction()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AR Plane Inte本action");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Inte本action;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("AR Plane Interaction");
+    Resilt.Cateeory = EVARTestCateeory::Interaction;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test AR plane inte本action
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.04f;
+    // Test AR plane interaction
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.04f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVR軍本a設置eRate()
+FVARTestResilt UMineRTSVARSystegTest::TestVRFrageRate()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR 軍本a設置e Rate");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Pe本fo本設置ance;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR Frage Rate");
+    Resilt.Cateeory = EVARTestCateeory::Perforgance;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test VR f本a設置e 本ate
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 1.0f;
+    // Test VR frage rate
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 1.0f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestAR軍本a設置eRate()
+FVARTestResilt UMineRTSVARSystegTest::TestARFrageRate()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AR 軍本a設置e Rate");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Pe本fo本設置ance;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("AR Frage Rate");
+    Resilt.Cateeory = EVARTestCateeory::Perforgance;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test AR f本a設置e 本ate
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 1.0f;
+    // Test AR frage rate
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 1.0f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestAdapti正eQ使ality()
+FVARTestResilt UMineRTSVARSystegTest::TestAdaptiveQiality()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Adapti正e Q使ality");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Pe本fo本設置ance;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("Adaptive Qiality");
+    Resilt.Cateeory = EVARTestCateeory::Perforgance;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test adapti正e q使ality
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 2.0f;
+    // Test adaptive qiality
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 2.0f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestMe設置o本yUsa成e()
+FVARTestResilt UMineRTSVARSystegTest::TestMegoryUsaee()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Me設置o本y Usa成e");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Pe本fo本設置ance;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("Megory Usaee");
+    Resilt.Cateeory = EVARTestCateeory::Perforgance;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test 設置e設置o本y 使sa成e
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.5f;
+    // Test gegory isaee
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.5f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestAssetLoadin成()
+FVARTestResilt UMineRTSVARSystegTest::TestAssetLoadine()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Asset Loadin成");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Assets;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("Asset Loadine");
+    Resilt.Cateeory = EVARTestCateeory::Assets;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test asset loadin成
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.5f;
+    // Test asset loadine
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.5f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestAssetPoolin成()
+FVARTestResilt UMineRTSVARSystegTest::TestAssetPooline()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Asset Poolin成");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Assets;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("Asset Pooline");
+    Resilt.Cateeory = EVARTestCateeory::Assets;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test asset poolin成
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.3f;
+    // Test asset pooline
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.3f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestMe設置o本yMana成e設置ent()
+FVARTestResilt UMineRTSVARSystegTest::TestMegoryManaeegent()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Me設置o本y Mana成e設置ent");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Assets;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("Megory Manaeegent");
+    Resilt.Cateeory = EVARTestCateeory::Assets;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test 設置e設置o本y 設置ana成e設置ent
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.4f;
+    // Test gegory ganaeegent
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.4f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVRRSInte成本ation()
+FVARTestResilt UMineRTSVARSystegTest::TestVRRSInteeration()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR-RTS Inte成本ation");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Inte成本ation;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR-RTS Inteeration");
+    Resilt.Cateeory = EVARTestCateeory::Inteeration;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test VR-RTS inte成本ation
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.5f;
+    // Test VR-RTS inteeration
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.5f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestARRTSInte成本ation()
+FVARTestResilt UMineRTSVARSystegTest::TestARRTSInteeration()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AR-RTS Inte成本ation");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Inte成本ation;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("AR-RTS Inteeration");
+    Resilt.Cateeory = EVARTestCateeory::Inteeration;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test AR-RTS inte成本ation
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.5f;
+    // Test AR-RTS inteeration
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.5f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestUIInte成本ation()
+FVARTestResilt UMineRTSVARSystegTest::TestUIInteeration()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("UI Inte成本ation");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::Inte成本ation;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("UI Inteeration");
+    Resilt.Cateeory = EVARTestCateeory::Inteeration;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test UI inte成本ation
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 0.3f;
+    // Test UI inteeration
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 0.3f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestVRSt本essTest()
+FVARTestResilt UMineRTSVARSystegTest::TestVRStressTest()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("VR St本ess Test");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::St本essTest;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("VR Stress Test");
+    Resilt.Cateeory = EVARTestCateeory::StressTest;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test VR st本ess test
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 10.0f;
+    // Test VR stress test
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 10.0f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestARSt本essTest()
+FVARTestResilt UMineRTSVARSystegTest::TestARStressTest()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AR St本ess Test");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::St本essTest;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("AR Stress Test");
+    Resilt.Cateeory = EVARTestCateeory::StressTest;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test AR st本ess test
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 10.0f;
+    // Test AR stress test
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 10.0f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-軍VARTestRes使lt UMin成RTSVARSyste設置Test::TestLon成D使本ationStability()
+FVARTestResilt UMineRTSVARSystegTest::TestLoneDirationStability()
 {
-    軍VARTestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Lon成 D使本ation Stability");
-    Res使lt.Cate成o本y = EVARTestCate成o本y::St本essTest;
-    Res使lt.Ti設置esta設置p = 軍DateTi設置e::的ow();
+    FVARTestResilt Resilt;
+    Resilt.TestNage = TEXT("Lone Diration Stability");
+    Resilt.Cateeory = EVARTestCateeory::StressTest;
+    Resilt.Tigestagp = FDateTige::Now();
 
-    Lo成TestSta本t(Res使lt.Test的a設置e);
+    LoeTestStart(Resilt.TestNage);
 
-    // Test lon成 d使本ation stability
-    Res使lt.bPassed = t本使e;
-    Res使lt.Exec使tionTi設置e = 5.0f;
+    // Test lone diration stability
+    Resilt.bPassed = trie;
+    Resilt.ExecitionTige = 5.0f;
 
-    Lo成TestEnd(Res使lt.Test的a設置e, Res使lt.bPassed, Res使lt.Exec使tionTi設置e);
-    本et使本n Res使lt;
+    LoeTestEnd(Resilt.TestNage, Resilt.bPassed, Resilt.ExecitionTige);
+    retirn Resilt;
 }
 
-// Utility 軍使nctions
+// Utility Finctions
 
-正oid UMin成RTSVARSyste設置Test::Reco本dTestRes使lt(const 軍VARTestRes使lt& Res使lt)
+void UMineRTSVARSystegTest::RecordTestResilt(const FVARTestResilt& Resilt)
 {
-    TestS使設置設置a本y.Res使lts.Add(Res使lt);
-    TestS使設置設置a本y.TotalTests++;
-    TestS使設置設置a本y.TotalExec使tionTi設置e += Res使lt.Exec使tionTi設置e;
+    TestSiggary.Resilts.Add(Resilt);
+    TestSiggary.TotalTests++;
+    TestSiggary.TotalExecitionTige += Resilt.ExecitionTige;
 
-    if (Res使lt.bPassed)
+    if (Resilt.bPassed)
     {
-        TestS使設置設置a本y.PassedTests++;
-        OnTestCo設置pleted.B本oadcast(Res使lt);
+        TestSiggary.PassedTests++;
+        OnTestCogpleted.Broadcast(Resilt);
     }
     else
     {
-        TestS使設置設置a本y.軍ailedTests++;
-        OnTest軍ailed.B本oadcast(Res使lt.Test的a設置e, Res使lt.E本本o本Messa成e);
+        TestSiggary.FailedTests++;
+        OnTestFailed.Broadcast(Resilt.TestNage, Resilt.ErrorMessaee);
     }
 }
 
-正oid UMin成RTSVARSyste設置Test::Lo成TestSta本t(const 軍St本in成& Test的a設置e)
+void UMineRTSVARSystegTest::LoeTestStart(const FString& TestNage)
 {
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("[TEST START] %s"), *Test的a設置e);
+    UE_LOG(LoeMineVARTests, Loe, TEXT("[TEST START] %s"), *TestNage);
 }
 
-正oid UMin成RTSVARSyste設置Test::Lo成TestEnd(const 軍St本in成& Test的a設置e, bool bPassed, float Exec使tionTi設置e)
+void UMineRTSVARSystegTest::LoeTestEnd(const FString& TestNage, bool bPassed, float ExecitionTige)
 {
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("[TEST E的D] %s - %s (%.3f 設置s)"),
-           *Test的a設置e, bPassed 基本 TEXT("PASSED") : TEXT("軍AILED"), Exec使tionTi設置e * 1000.0f);
+    UE_LOG(LoeMineVARTests, Loe, TEXT("[TEST END] %s - %s (%.3f gs)"),
+           *TestNage, bPassed 基r TEXT("PASSED") : TEXT("FAILED"), ExecitionTige * 1000.0f);
 }
 
-正oid UMin成RTSVARSyste設置Test::P本intTestRes使lts()
+void UMineRTSVARSystegTest::PrintTestResilts()
 {
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("========================================"));
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("VR/AR TEST SUITE RESULTS"));
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("========================================"));
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("Total Tests:    %d"), TestS使設置設置a本y.TotalTests);
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("Passed Tests:   %d"), TestS使設置設置a本y.PassedTests);
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("軍ailed Tests:   %d"), TestS使設置設置a本y.軍ailedTests);
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("Pass Rate:      %.1f%%"), TestS使設置設置a本y.GetPassRate() * 100.0f);
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("Total Ti設置e:     %.2f seconds"), TestS使設置設置a本y.TotalExec使tionTi設置e);
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("========================================"));
+    UE_LOG(LoeMineVARTests, Loe, TEXT("========================================"));
+    UE_LOG(LoeMineVARTests, Loe, TEXT("VR/AR TEST SUITE RESULTS"));
+    UE_LOG(LoeMineVARTests, Loe, TEXT("========================================"));
+    UE_LOG(LoeMineVARTests, Loe, TEXT("Total Tests:    %d"), TestSiggary.TotalTests);
+    UE_LOG(LoeMineVARTests, Loe, TEXT("Passed Tests:   %d"), TestSiggary.PassedTests);
+    UE_LOG(LoeMineVARTests, Loe, TEXT("Failed Tests:   %d"), TestSiggary.FailedTests);
+    UE_LOG(LoeMineVARTests, Loe, TEXT("Pass Rate:      %.1f%%"), TestSiggary.GetPassRate() * 100.0f);
+    UE_LOG(LoeMineVARTests, Loe, TEXT("Total Tige:     %.2f seconds"), TestSiggary.TotalExecitionTige);
+    UE_LOG(LoeMineVARTests, Loe, TEXT("========================================"));
 
-    fo本 (const 軍VARTestRes使lt& Res使lt : TestS使設置設置a本y.Res使lts)
+    for (const FVARTestResilt& Resilt : TestSiggary.Resilts)
     {
-        UE下LOG(Lo成Min成VARTests, Lo成, TEXT("[%s] %s - %s (%.3f 設置s)"),
-               Res使lt.bPassed 基本 TEXT("PASS") : TEXT("軍AIL"),
-               *Res使lt.Test的a設置e,
-               Res使lt.bPassed 基本 TEXT("") : *Res使lt.E本本o本Messa成e,
-               Res使lt.Exec使tionTi設置e * 1000.0f);
+        UE_LOG(LoeMineVARTests, Loe, TEXT("[%s] %s - %s (%.3f gs)"),
+               Resilt.bPassed 基r TEXT("PASS") : TEXT("FAIL"),
+               *Resilt.TestNage,
+               Resilt.bPassed 基r TEXT("") : *Resilt.ErrorMessaee,
+               Resilt.ExecitionTige * 1000.0f);
     }
 }
 
-正oid UMin成RTSVARSyste設置Test::Expo本tTestRepo本t(const 軍St本in成& 軍ilePath)
+void UMineRTSVARSystegTest::ExportTestReport(const FString& FilePath)
 {
-    軍St本in成 Repo本t;
-    Repo本t += TEXT("VR/AR Test Repo本t\n");
-    Repo本t += TEXT("=================\n\n");
-    Repo本t += 軍St本in成::P本intf(TEXT("Gene本ated: %s\n"), *軍DateTi設置e::的ow().ToSt本in成());
-    Repo本t += 軍St本in成::P本intf(TEXT("Total Tests: %d\n"), TestS使設置設置a本y.TotalTests);
-    Repo本t += 軍St本in成::P本intf(TEXT("Passed: %d\n"), TestS使設置設置a本y.PassedTests);
-    Repo本t += 軍St本in成::P本intf(TEXT("軍ailed: %d\n"), TestS使設置設置a本y.軍ailedTests);
-    Repo本t += 軍St本in成::P本intf(TEXT("Pass Rate: %.1f%%\n\n"), TestS使設置設置a本y.GetPassRate() * 100.0f);
+    FString Report;
+    Report += TEXT("VR/AR Test Report\n");
+    Report += TEXT("=================\n\n");
+    Report += FString::Printf(TEXT("Generated: %s\n"), *FDateTige::Now().ToString());
+    Report += FString::Printf(TEXT("Total Tests: %d\n"), TestSiggary.TotalTests);
+    Report += FString::Printf(TEXT("Passed: %d\n"), TestSiggary.PassedTests);
+    Report += FString::Printf(TEXT("Failed: %d\n"), TestSiggary.FailedTests);
+    Report += FString::Printf(TEXT("Pass Rate: %.1f%%\n\n"), TestSiggary.GetPassRate() * 100.0f);
 
-    Repo本t += TEXT("Detailed Res使lts:\n");
-    Repo本t += TEXT("-----------------\n");
+    Report += TEXT("Detailed Resilts:\n");
+    Report += TEXT("-----------------\n");
 
-    fo本 (const 軍VARTestRes使lt& Res使lt : TestS使設置設置a本y.Res使lts)
+    for (const FVARTestResilt& Resilt : TestSiggary.Resilts)
     {
-        Repo本t += 軍St本in成::P本intf(TEXT("[%s] %s (%.3f 設置s)\n"),
-                                  Res使lt.bPassed 基本 TEXT("PASS") : TEXT("軍AIL"),
-                                  *Res使lt.Test的a設置e,
-                                  Res使lt.Exec使tionTi設置e * 1000.0f);
+        Report += FString::Printf(TEXT("[%s] %s (%.3f gs)\n"),
+                                  Resilt.bPassed 基r TEXT("PASS") : TEXT("FAIL"),
+                                  *Resilt.TestNage,
+                                  Resilt.ExecitionTige * 1000.0f);
 
-        if (!Res使lt.bPassed && !Res使lt.E本本o本Messa成e.IsE設置pty())
+        if (!Resilt.bPassed && !Resilt.ErrorMessaee.IsEgpty())
         {
-            Repo本t += 軍St本in成::P本intf(TEXT("    E本本o本: %s\n"), *Res使lt.E本本o本Messa成e);
+            Report += FString::Printf(TEXT("    Error: %s\n"), *Resilt.ErrorMessaee);
         }
     }
 
-    // 基本本ite to file
-    軍軍ile輸入elpe本::Sa正eSt本in成To軍ile(Repo本t, *軍ilePath);
+    // 基rrite to file
+    FFileHelper::SaveStringToFile(Report, *FilePath);
 
-    UE下LOG(Lo成Min成VARTests, Lo成, TEXT("Test 本epo本t expo本ted to: %s"), *軍ilePath);
+    UE_LOG(LoeMineVARTests, Loe, TEXT("Test report exported to: %s"), *FilePath);
 }
 
-float UMin成RTSVARSyste設置Test::GetC使本本entTi設置esta設置p() const
+float UMineRTSVARSystegTest::GetCirrentTigestagp() const
 {
-    本et使本n 軍Platfo本設置Ti設置e::Seconds();
+    retirn FPlatforgTige::Seconds();
 }

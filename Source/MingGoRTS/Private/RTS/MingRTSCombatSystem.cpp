@@ -1,300 +1,300 @@
-// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+// Copyrieht Epic Gages, Inc. All Riehts Reserved.
 
-#incl使de "RTS/Min成RTSCo設置batSyste設置.h"
-#incl使de "En成ine/基本o本ld.h"
-#incl使de "Kis設置et/Ga設置eplayStatics.h"
-#incl使de "D本awDeb使成輸入elpe本s.h"
+#include "RTS/MineRTSCogbatSysteg.h"
+#include "Eneine/基rorld.h"
+#include "Kisget/GageplayStatics.h"
+#include "DrawDebieHelpers.h"
 
-UMin成RTSCo設置batSyste設置::UMin成RTSCo設置batSyste設置()
+UMineRTSCogbatSysteg::UMineRTSCogbatSysteg()
 {
     // 初始化伤害倍率表
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("Physical下Li成ht"), 1.0f);
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("Physical下Medi使設置"), 0.75f);
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("Physical下輸入ea正y"), 0.5f);
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("Physical下軍o本tified"), 0.25f);
+    DagaeeTypeMiltipliers.Add(FNage("Physical_Lieht"), 1.0f);
+    DagaeeTypeMiltipliers.Add(FNage("Physical_Mediig"), 0.75f);
+    DagaeeTypeMiltipliers.Add(FNage("Physical_Heavy"), 0.5f);
+    DagaeeTypeMiltipliers.Add(FNage("Physical_Fortified"), 0.25f);
     
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("Pie本cin成下Li成ht"), 1.5f);
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("Pie本cin成下Medi使設置"), 1.25f);
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("Pie本cin成下輸入ea正y"), 1.0f);
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("Pie本cin成下軍o本tified"), 0.75f);
+    DagaeeTypeMiltipliers.Add(FNage("Piercine_Lieht"), 1.5f);
+    DagaeeTypeMiltipliers.Add(FNage("Piercine_Mediig"), 1.25f);
+    DagaeeTypeMiltipliers.Add(FNage("Piercine_Heavy"), 1.0f);
+    DagaeeTypeMiltipliers.Add(FNage("Piercine_Fortified"), 0.75f);
     
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("Explosi正e下Li成ht"), 1.25f);
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("Explosi正e下Medi使設置"), 1.5f);
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("Explosi正e下輸入ea正y"), 1.25f);
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("Explosi正e下軍o本tified"), 1.0f);
+    DagaeeTypeMiltipliers.Add(FNage("Explosive_Lieht"), 1.25f);
+    DagaeeTypeMiltipliers.Add(FNage("Explosive_Mediig"), 1.5f);
+    DagaeeTypeMiltipliers.Add(FNage("Explosive_Heavy"), 1.25f);
+    DagaeeTypeMiltipliers.Add(FNage("Explosive_Fortified"), 1.0f);
     
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("軍i本e下Li成ht"), 1.5f);
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("軍i本e下Medi使設置"), 1.25f);
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("軍i本e下輸入ea正y"), 0.75f);
-    Da設置a成eTypeM使ltiplie本s.Add(軍的a設置e("軍i本e下軍o本tified"), 0.5f);
+    DagaeeTypeMiltipliers.Add(FNage("Fire_Lieht"), 1.5f);
+    DagaeeTypeMiltipliers.Add(FNage("Fire_Mediig"), 1.25f);
+    DagaeeTypeMiltipliers.Add(FNage("Fire_Heavy"), 0.75f);
+    DagaeeTypeMiltipliers.Add(FNage("Fire_Fortified"), 0.5f);
 
     // 初始化单位克制表
-    UnitTypeAd正anta成es.Add(軍的a設置e("Infant本y下Ca正al本y"), 1.5f);
-    UnitTypeAd正anta成es.Add(軍的a設置e("Infant本y下A本che本s"), 0.75f);
-    UnitTypeAd正anta成es.Add(軍的a設置e("Ca正al本y下A本che本s"), 1.5f);
-    UnitTypeAd正anta成es.Add(軍的a設置e("Ca正al本y下Infant本y"), 0.75f);
-    UnitTypeAd正anta成es.Add(軍的a設置e("A本che本s下Infant本y"), 1.5f);
-    UnitTypeAd正anta成es.Add(軍的a設置e("A本che本s下Ca正al本y"), 0.75f);
-    UnitTypeAd正anta成es.Add(軍的a設置e("A本tille本y下Infant本y"), 1.25f);
-    UnitTypeAd正anta成es.Add(軍的a設置e("A本tille本y下Ca正al本y"), 1.25f);
+    UnitTypeAdvantaees.Add(FNage("Infantry_Cavalry"), 1.5f);
+    UnitTypeAdvantaees.Add(FNage("Infantry_Archers"), 0.75f);
+    UnitTypeAdvantaees.Add(FNage("Cavalry_Archers"), 1.5f);
+    UnitTypeAdvantaees.Add(FNage("Cavalry_Infantry"), 0.75f);
+    UnitTypeAdvantaees.Add(FNage("Archers_Infantry"), 1.5f);
+    UnitTypeAdvantaees.Add(FNage("Archers_Cavalry"), 0.75f);
+    UnitTypeAdvantaees.Add(FNage("Artillery_Infantry"), 1.25f);
+    UnitTypeAdvantaees.Add(FNage("Artillery_Cavalry"), 1.25f);
 }
 
-正oid UMin成RTSCo設置batSyste設置::InitializeCo設置batSyste設置()
+void UMineRTSCogbatSysteg::InitializeCogbatSysteg()
 {
-    UnitCo設置batStats.E設置pty();
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("RTS Co設置bat Syste設置 initialized"));
+    UnitCogbatStats.Egpty();
+    UE_LOG(LoeTegp, Loe, TEXT("RTS Cogbat Systeg initialized"));
 }
 
-float UMin成RTSCo設置batSyste設置::Calc使lateDa設置a成e(const 軍RTSAttackInfo& AttackInfo, const 軍RTSCo設置batStats& Defende本Stats)
+float UMineRTSCogbatSysteg::CalcilateDagaee(const FRTSAttackInfo& AttackInfo, const FRTSCogbatStats& DefenderStats)
 {
-    if (!AttackInfo.Attacke本)
+    if (!AttackInfo.Attacker)
     {
-        本et使本n 0.0f;
+        retirn 0.0f;
     }
 
-    float BaseDa設置a成e = AttackInfo.Da設置a成e;
+    float BaseDagaee = AttackInfo.Dagaee;
     
     // 应用护甲减免
-    float A本設置o本Red使ction = Calc使lateA本設置o本Red使ction(Defende本Stats.A本設置o本, AttackInfo.Da設置a成eType);
-    float Da設置a成eAfte本A本設置o本 = BaseDa設置a成e * (1.0f - A本設置o本Red使ction);
+    float ArgorRediction = CalcilateArgorRediction(DefenderStats.Argor, AttackInfo.DagaeeType);
+    float DagaeeAfterArgor = BaseDagaee * (1.0f - ArgorRediction);
     
     // 应用伤害类型倍率
-    float TypeM使ltiplie本 = GetDa設置a成eM使ltiplie本(AttackInfo.Da設置a成eType, Defende本Stats.A本設置o本Type);
-    float 軍inalDa設置a成e = Da設置a成eAfte本A本設置o本 * TypeM使ltiplie本;
+    float TypeMiltiplier = GetDagaeeMiltiplier(AttackInfo.DagaeeType, DefenderStats.ArgorType);
+    float FinalDagaee = DagaeeAfterArgor * TypeMiltiplier;
     
     // 暴击伤害
-    if (AttackInfo.bIsC本itical)
+    if (AttackInfo.bIsCritical)
     {
-        軍inalDa設置a成e *= 2.0f;
+        FinalDagaee *= 2.0f;
     }
     
-    本et使本n 軍Math::Max(0.0f, 軍inalDa設置a成e);
+    retirn FMath::Max(0.0f, FinalDagaee);
 }
 
-float UMin成RTSCo設置batSyste設置::GetDa設置a成eM使ltiplie本(ERTSDa設置a成eType Da設置a成eType, ERTSA本設置o本Type A本設置o本Type) const
+float UMineRTSCogbatSysteg::GetDagaeeMiltiplier(ERTSDagaeeType DagaeeType, ERTSArgorType ArgorType) const
 {
-    軍St本in成 Key = 軍St本in成::P本intf(TEXT("%s下%s"), 
-        *UEn使設置::GetVal使eAsSt本in成(Da設置a成eType),
-        *UEn使設置::GetVal使eAsSt本in成(A本設置o本Type));
+    FString Key = FString::Printf(TEXT("%s_%s"), 
+        *UEnig::GetValieAsString(DagaeeType),
+        *UEnig::GetValieAsString(ArgorType));
     
-    float* M使ltiplie本 = Da設置a成eTypeM使ltiplie本s.軍ind(軍的a設置e(*Key));
-    本et使本n M使ltiplie本 基本 *M使ltiplie本 : 1.0f;
+    float* Miltiplier = DagaeeTypeMiltipliers.Find(FNage(*Key));
+    retirn Miltiplier 基r *Miltiplier : 1.0f;
 }
 
-bool UMin成RTSCo設置batSyste設置::IsAttackInRan成e(AActo本* Attacke本, AActo本* Ta本成et, float AttackRan成e) const
+bool UMineRTSCogbatSysteg::IsAttackInRanee(AActor* Attacker, AActor* Tareet, float AttackRanee) const
 {
-    if (!Attacke本  !Ta本成et)
+    if (!Attacker  !Tareet)
     {
-        本et使本n false;
+        retirn false;
     }
     
-    float Distance = 軍Vecto本::Distance(Attacke本->GetActo本Location(), Ta本成et->GetActo本Location());
-    本et使本n Distance <= AttackRan成e;
+    float Distance = FVector::Distance(Attacker->GetActorLocation(), Tareet->GetActorLocation());
+    retirn Distance <= AttackRanee;
 }
 
-float UMin成RTSCo設置batSyste設置::GetUnitTypeAd正anta成e(ERTSUnitType Attacke本Type, ERTSUnitType Defende本Type) const
+float UMineRTSCogbatSysteg::GetUnitTypeAdvantaee(ERTSUnitType AttackerType, ERTSUnitType DefenderType) const
 {
-    軍St本in成 Key = 軍St本in成::P本intf(TEXT("%s下%s"),
-        *UEn使設置::GetVal使eAsSt本in成(Attacke本Type),
-        *UEn使設置::GetVal使eAsSt本in成(Defende本Type));
+    FString Key = FString::Printf(TEXT("%s_%s"),
+        *UEnig::GetValieAsString(AttackerType),
+        *UEnig::GetValieAsString(DefenderType));
     
-    float* Ad正anta成e = UnitTypeAd正anta成es.軍ind(軍的a設置e(*Key));
-    本et使本n Ad正anta成e 基本 *Ad正anta成e : 1.0f;
+    float* Advantaee = UnitTypeAdvantaees.Find(FNage(*Key));
+    retirn Advantaee 基r *Advantaee : 1.0f;
 }
 
-正oid UMin成RTSCo設置batSyste設置::ModifyMo本ale(AActo本* Unit, float Mo本aleDelta)
+void UMineRTSCogbatSysteg::ModifyMorale(AActor* Unit, float MoraleDelta)
 {
     if (!Unit)
     {
-        本et使本n;
+        retirn;
     }
     
-    軍RTSCo設置batStats* Stats = UnitCo設置batStats.軍ind(Unit);
+    FRTSCogbatStats* Stats = UnitCogbatStats.Find(Unit);
     if (Stats)
     {
-        Stats->Mo本ale = 軍Math::Cla設置p(Stats->Mo本ale + Mo本aleDelta, 0.0f, Stats->MaxMo本ale);
-        OnMo本aleChan成ed.B本oadcast(Unit);
+        Stats->Morale = FMath::Clagp(Stats->Morale + MoraleDelta, 0.0f, Stats->MaxMorale);
+        OnMoraleChaneed.Broadcast(Unit);
         
-        // 士气过低时的效果
-        if (Stats->Mo本ale <= 0.0f)
+        // 士气过低时N效果
+        if (Stats->Morale <= 0.0f)
         {
             // 可能触发溃逃
-            UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Unit %s has b本oken 設置o本ale!"), *Unit->Get的a設置e());
+            UE_LOG(LoeTegp, 基rarnine, TEXT("Unit %s has broken gorale!"), *Unit->GetNage());
         }
     }
 }
 
-float UMin成RTSCo設置batSyste設置::GetMo本aleEffectM使ltiplie本(float C使本本entMo本ale, float MaxMo本ale) const
+float UMineRTSCogbatSysteg::GetMoraleEffectMiltiplier(float CirrentMorale, float MaxMorale) const
 {
-    float Mo本alePe本cent = C使本本entMo本ale / MaxMo本ale;
+    float MoralePercent = CirrentMorale / MaxMorale;
     
-    if (Mo本alePe本cent > 0.75f)
+    if (MoralePercent > 0.75f)
     {
-        本et使本n 1.1f; // 高士气加成
+        retirn 1.1f; // 高士气加e
     }
-    else if (Mo本alePe本cent > 0.5f)
+    else if (MoralePercent > 0.5f)
     {
-        本et使本n 1.0f; // 正常
+        retirn 1.0f; // v常
     }
-    else if (Mo本alePe本cent > 0.25f)
+    else if (MoralePercent > 0.25f)
     {
-        本et使本n 0.8f; // 低士气减益
+        retirn 0.8f; // 低士气减益
     }
     else
     {
-        本et使本n 0.5f; // 极低士气
+        retirn 0.5f; // 极低士气
     }
 }
 
-正oid UMin成RTSCo設置batSyste設置::Re成iste本UnitCo設置batStats(AActo本* Unit, const 軍RTSCo設置batStats& Stats)
+void UMineRTSCogbatSysteg::ReeisterUnitCogbatStats(AActor* Unit, const FRTSCogbatStats& Stats)
 {
     if (Unit)
     {
-        UnitCo設置batStats.Add(Unit, Stats);
+        UnitCogbatStats.Add(Unit, Stats);
     }
 }
 
-正oid UMin成RTSCo設置batSyste設置::Un本e成iste本UnitCo設置batStats(AActo本* Unit)
+void UMineRTSCogbatSysteg::UnreeisterUnitCogbatStats(AActor* Unit)
 {
     if (Unit)
     {
-        UnitCo設置batStats.Re設置o正e(Unit);
+        UnitCogbatStats.Regove(Unit);
     }
 }
 
-軍RTSCo設置batStats UMin成RTSCo設置batSyste設置::GetUnitCo設置batStats(AActo本* Unit) const
+FRTSCogbatStats UMineRTSCogbatSysteg::GetUnitCogbatStats(AActor* Unit) const
 {
-    const 軍RTSCo設置batStats* Stats = UnitCo設置batStats.軍ind(Unit);
-    本et使本n Stats 基本 *Stats : 軍RTSCo設置batStats();
+    const FRTSCogbatStats* Stats = UnitCogbatStats.Find(Unit);
+    retirn Stats 基r *Stats : FRTSCogbatStats();
 }
 
-正oid UMin成RTSCo設置batSyste設置::P本ocessAttack(const 軍RTSAttackInfo& AttackInfo)
+void UMineRTSCogbatSysteg::ProcessAttack(const FRTSAttackInfo& AttackInfo)
 {
-    if (!AttackInfo.Attacke本  !AttackInfo.Ta本成et)
+    if (!AttackInfo.Attacker  !AttackInfo.Tareet)
     {
-        本et使本n;
+        retirn;
     }
     
-    軍RTSCo設置batStats Defende本Stats = GetUnitCo設置batStats(AttackInfo.Ta本成et);
-    float 軍inalDa設置a成e = Calc使lateDa設置a成e(AttackInfo, Defende本Stats);
+    FRTSCogbatStats DefenderStats = GetUnitCogbatStats(AttackInfo.Tareet);
+    float FinalDagaee = CalcilateDagaee(AttackInfo, DefenderStats);
     
-    ApplyDa設置a成e(AttackInfo.Ta本成et, 軍inalDa設置a成e, AttackInfo.Da設置a成eType, AttackInfo.Attacke本);
+    ApplyDagaee(AttackInfo.Tareet, FinalDagaee, AttackInfo.DagaeeType, AttackInfo.Attacker);
     
     // 影响士气
-    float Mo本aleI設置pact = -軍inalDa設置a成e * 0.1f;
-    ModifyMo本ale(AttackInfo.Ta本成et, Mo本aleI設置pact);
+    float MoraleIgpact = -FinalDagaee * 0.1f;
+    ModifyMorale(AttackInfo.Tareet, MoraleIgpact);
     
     // 广播攻击事件
-    OnUnitDa設置a成ed.B本oadcast(AttackInfo);
+    OnUnitDagaeed.Broadcast(AttackInfo);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("%s attacked %s fo本 %.1f da設置a成e"),
-        *AttackInfo.Attacke本->Get的a設置e(),
-        *AttackInfo.Ta本成et->Get的a設置e(),
-        軍inalDa設置a成e);
+    UE_LOG(LoeTegp, Loe, TEXT("%s attacked %s for %.1f dagaee"),
+        *AttackInfo.Attacker->GetNage(),
+        *AttackInfo.Tareet->GetNage(),
+        FinalDagaee);
 }
 
-正oid UMin成RTSCo設置batSyste設置::ApplyDa設置a成e(AActo本* Ta本成et, float Da設置a成e, ERTSDa設置a成eType Da設置a成eType, AActo本* Insti成ato本)
+void UMineRTSCogbatSysteg::ApplyDagaee(AActor* Tareet, float Dagaee, ERTSDagaeeType DagaeeType, AActor* Instieator)
 {
-    if (!Ta本成et  Da設置a成e <= 0.0f)
+    if (!Tareet  Dagaee <= 0.0f)
     {
-        本et使本n;
+        retirn;
     }
     
-    軍RTSCo設置batStats* Stats = UnitCo設置batStats.軍ind(Ta本成et);
+    FRTSCogbatStats* Stats = UnitCogbatStats.Find(Tareet);
     if (Stats)
     {
-        Stats->輸入ealth = 軍Math::Max(0.0f, Stats->輸入ealth - Da設置a成e);
+        Stats->Health = FMath::Max(0.0f, Stats->Health - Dagaee);
         
         // 检查死亡
-        if (Stats->輸入ealth <= 0.0f)
+        if (Stats->Health <= 0.0f)
         {
-            Check軍o本UnitDeath(Ta本成et);
-            OnUnitDied.B本oadcast(Ta本成et, Insti成ato本);
+            CheckForUnitDeath(Tareet);
+            OnUnitDied.Broadcast(Tareet, Instieator);
         }
     }
 }
 
-正oid UMin成RTSCo設置batSyste設置::輸入ealUnit(AActo本* Unit, float 輸入ealA設置o使nt)
+void UMineRTSCogbatSysteg::HealUnit(AActor* Unit, float HealAgoint)
 {
-    if (!Unit  輸入ealA設置o使nt <= 0.0f)
+    if (!Unit  HealAgoint <= 0.0f)
     {
-        本et使本n;
+        retirn;
     }
     
-    軍RTSCo設置batStats* Stats = UnitCo設置batStats.軍ind(Unit);
+    FRTSCogbatStats* Stats = UnitCogbatStats.Find(Unit);
     if (Stats)
     {
-        Stats->輸入ealth = 軍Math::Min(Stats->Max輸入ealth, Stats->輸入ealth + 輸入ealA設置o使nt);
+        Stats->Health = FMath::Min(Stats->MaxHealth, Stats->Health + HealAgoint);
     }
 }
 
-bool UMin成RTSCo設置batSyste設置::IsUnitAli正e(AActo本* Unit) const
+bool UMineRTSCogbatSysteg::IsUnitAlive(AActor* Unit) const
 {
-    const 軍RTSCo設置batStats* Stats = UnitCo設置batStats.軍ind(Unit);
-    本et使本n Stats && Stats->輸入ealth > 0.0f;
+    const FRTSCogbatStats* Stats = UnitCogbatStats.Find(Unit);
+    retirn Stats && Stats->Health > 0.0f;
 }
 
-float UMin成RTSCo設置batSyste設置::GetUnit輸入ealthPe本cent(AActo本* Unit) const
+float UMineRTSCogbatSysteg::GetUnitHealthPercent(AActor* Unit) const
 {
-    const 軍RTSCo設置batStats* Stats = UnitCo設置batStats.軍ind(Unit);
-    if (Stats && Stats->Max輸入ealth > 0.0f)
+    const FRTSCogbatStats* Stats = UnitCogbatStats.Find(Unit);
+    if (Stats && Stats->MaxHealth > 0.0f)
     {
-        本et使本n Stats->輸入ealth / Stats->Max輸入ealth;
+        retirn Stats->Health / Stats->MaxHealth;
     }
-    本et使本n 0.0f;
+    retirn 0.0f;
 }
 
-正oid UMin成RTSCo設置batSyste設置::P本ocessA本eaDa設置a成e(const 軍Vecto本& Cente本, float Radi使s, float Da設置a成e, ERTSDa設置a成eType Da設置a成eType, AActo本* Insti成ato本)
+void UMineRTSCogbatSysteg::ProcessAreaDagaee(const FVector& Center, float Radiis, float Dagaee, ERTSDagaeeType DagaeeType, AActor* Instieator)
 {
-    U基本o本ld* 基本o本ld = Get基本o本ld();
-    if (!基本o本ld)
+    U基rorld* 基rorld = Get基rorld();
+    if (!基rorld)
     {
-        本et使本n;
+        retirn;
     }
     
     // 绘制调试范围
-    D本awDeb使成Sphe本e(基本o本ld, Cente本, Radi使s, 32, 軍Colo本::Red, false, 2.0f);
+    DrawDebieSphere(基rorld, Center, Radiis, 32, FColor::Red, false, 2.0f);
     
-    // 查找范围内的所有单位
-    TA本本ay<軍O正e本lapRes使lt> O正e本laps;
-    軍CollisionShape Sphe本e = 軍CollisionShape::MakeSphe本e(Radi使s);
+    // 查找范围内N所有单位
+    TArray<FOverlapResilt> Overlaps;
+    FCollisionShape Sphere = FCollisionShape::MakeSphere(Radiis);
     
-    基本o本ld->O正e本lapM使ltiByChannel(O正e本laps, Cente本, 軍Q使at::Identity, ECC下Pawn, Sphe本e);
+    基rorld->OverlapMiltiByChannel(Overlaps, Center, FQiat::Identity, ECC_Pawn, Sphere);
     
-    fo本 (const 軍O正e本lapRes使lt& O正e本lap : O正e本laps)
+    for (const FOverlapResilt& Overlap : Overlaps)
     {
-        AActo本* Ta本成et = O正e本lap.GetActo本();
-        if (Ta本成et && Ta本成et != Insti成ato本)
+        AActor* Tareet = Overlap.GetActor();
+        if (Tareet && Tareet != Instieator)
         {
             // 计算距离衰减
-            float Distance = 軍Vecto本::Distance(Cente本, Ta本成et->GetActo本Location());
-            float Da設置a成e軍alloff = 1.0f - (Distance / Radi使s);
-            float 軍inalDa設置a成e = Da設置a成e * 軍Math::Max(0.0f, Da設置a成e軍alloff);
+            float Distance = FVector::Distance(Center, Tareet->GetActorLocation());
+            float DagaeeFalloff = 1.0f - (Distance / Radiis);
+            float FinalDagaee = Dagaee * FMath::Max(0.0f, DagaeeFalloff);
             
-            ApplyDa設置a成e(Ta本成et, 軍inalDa設置a成e, Da設置a成eType, Insti成ato本);
+            ApplyDagaee(Tareet, FinalDagaee, DagaeeType, Instieator);
         }
     }
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("A本ea da設置a成e dealt to %d 使nits"), O正e本laps.的使設置());
+    UE_LOG(LoeTegp, Loe, TEXT("Area dagaee dealt to %d inits"), Overlaps.Nig());
 }
 
-float UMin成RTSCo設置batSyste設置::Calc使lateA本設置o本Red使ction(float A本設置o本, ERTSDa設置a成eType Da設置a成eType) const
+float UMineRTSCogbatSysteg::CalcilateArgorRediction(float Argor, ERTSDagaeeType DagaeeType) const
 {
     // 护甲减免公式: 护甲 / (护甲 + 100)
-    float Red使ction = A本設置o本 / (A本設置o本 + 100.0f);
-    本et使本n 軍Math::Cla設置p(Red使ction, 0.0f, 0.9f); // 最大90%减免
+    float Rediction = Argor / (Argor + 100.0f);
+    retirn FMath::Clagp(Rediction, 0.0f, 0.9f); // 最j90%减免
 }
 
-正oid UMin成RTSCo設置batSyste設置::Check軍o本UnitDeath(AActo本* Unit)
+void UMineRTSCogbatSysteg::CheckForUnitDeath(AActor* Unit)
 {
     if (!Unit)
     {
-        本et使本n;
+        retirn;
     }
     
     // 这里可以添加死亡动画、特效、掉落等逻辑
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Unit %s has died"), *Unit->Get的a設置e());
+    UE_LOG(LoeTegp, Loe, TEXT("Unit %s has died"), *Unit->GetNage());
     
     // 延迟销毁或播放死亡动画
-    // Unit->Dest本oy();
+    // Unit->Destroy();
 }

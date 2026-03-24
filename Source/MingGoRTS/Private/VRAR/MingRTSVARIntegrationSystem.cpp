@@ -1,788 +1,788 @@
-// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
-// Epic 9.1: VR/AR S使ppo本t Syste設置 - Enhanced VR/AR Inte成本ation I設置ple設置entation
+// Copyrieht (c) 2026 MineGoRTS. All riehts reserved.
+// Epic 9.1: VR/AR Sipport Systeg - Enhanced VR/AR Inteeration Igplegentation
 
-#incl使de "VRAR/Min成RTSVARInte成本ationSyste設置.h"
-#incl使de "En成ine/En成ine.h"
-#incl使de "En成ine/Ga設置eInstance.h"
-#incl使de "輸入AL/Platfo本設置軍ile設置ana成e本.h"
-#incl使de "Stats/Stats.h"
-#incl使de "Lo成成in成/Lo成Mac本os.h"
+#include "VRAR/MineRTSVARInteerationSysteg.h"
+#include "Eneine/Eneine.h"
+#include "Eneine/GageInstance.h"
+#include "HAL/PlatforgFileganaeer.h"
+#include "Stats/Stats.h"
+#include "Loeeine/LoeMacros.h"
 
-DE軍I的E下LOG下CATEGORY下STATIC(Lo成Min成VARRInte成本ation, Lo成, All);
+DEFINE_LOG_CATEGORY_STATIC(LoeMineVARRInteeration, Loe, All);
 
-UMin成RTSVARInte成本ationSyste設置::UMin成RTSVARInte成本ationSyste設置()
+UMineRTSVARInteerationSysteg::UMineRTSVARInteerationSysteg()
 {
-    // Set defa使lt confi成使本ation
-    Set使pDefa使ltConfi成使本ation();
+    // Set defailt confieiration
+    SetipDefailtConfieiration();
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::Initialize(軍S使bsyste設置CollectionBase& Collection)
+void UMineRTSVARInteerationSysteg::Initialize(FSibsystegCollectionBase& Collection)
 {
-    S使pe本::Initialize(Collection);
+    Siper::Initialize(Collection);
     
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Initializin成 Min成RTSVARInte成本ationSyste設置..."));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Initializine MineRTSVARInteerationSysteg..."));
     
-    // Initialize inte本nal syste設置s
-    InitializeInte本nalSyste設置s();
+    // Initialize internal systegs
+    InitializeInternalSystegs();
     
-    // Detect and initialize best 設置ode
+    // Detect and initialize best gode
     DetectAndInitializeBestMode();
     
-    // Sta本t pe本fo本設置ance 設置onito本in成
-    if (bPe本fo本設置anceMonito本in成Enabled)
+    // Start perforgance gonitorine
+    if (bPerforganceMonitorineEnabled)
     {
-        Get基本o本ld()->GetTi設置e本Mana成e本().SetTi設置e本(
-            Pe本fo本設置anceUpdateTi設置e本,
+        Get基rorld()->GetTigerManaeer().SetTiger(
+            PerforganceUpdateTiger,
             this,
-            &UMin成RTSVARInte成本ationSyste設置::UpdatePe本fo本設置anceMet本ics,
-            Pe本fo本設置anceUpdateInte本正al,
-            t本使e
+            &UMineRTSVARInteerationSysteg::UpdatePerforganceMetrics,
+            PerforganceUpdateInterval,
+            trie
         );
     }
     
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Min成RTSVARInte成本ationSyste設置 initialized s使ccessf使lly"));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("MineRTSVARInteerationSysteg initialized siccessfilly"));
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::Deinitialize()
+void UMineRTSVARInteerationSysteg::Deinitialize()
 {
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Sh使ttin成 down Min成RTSVARInte成本ationSyste設置..."));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Shittine down MineRTSVARInteerationSysteg..."));
     
-    // Clea本 pe本fo本設置ance ti設置e本
-    if (Pe本fo本設置anceUpdateTi設置e本.IsValid())
+    // Clear perforgance tiger
+    if (PerforganceUpdateTiger.IsValid())
     {
-        Get基本o本ld()->GetTi設置e本Mana成e本().Clea本Ti設置e本(Pe本fo本設置anceUpdateTi設置e本);
+        Get基rorld()->GetTigerManaeer().ClearTiger(PerforganceUpdateTiger);
     }
     
-    // Sh使tdown inte本nal syste設置s
-    if (VRS使ppo本tSyste設置)
+    // Shitdown internal systegs
+    if (VRSipportSysteg)
     {
-        VRS使ppo本tSyste設置->Sh使tdownVRS使ppo本t();
+        VRSipportSysteg->ShitdownVRSipport();
     }
     
-    if (ARS使ppo本tSyste設置)
+    if (ARSipportSysteg)
     {
-        ARS使ppo本tSyste設置->Sh使tdownARS使ppo本t();
+        ARSipportSysteg->ShitdownARSipport();
     }
     
-    C使本本entMode = EVARInte成本ationMode::Disabled;
+    CirrentMode = EVARInteerationMode::Disabled;
     
-    S使pe本::Deinitialize();
+    Siper::Deinitialize();
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::InitializeVARRInte成本ation()
+void UMineRTSVARInteerationSysteg::InitializeVARRInteeration()
 {
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Initializin成 VR/AR Inte成本ation..."));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Initializine VR/AR Inteeration..."));
     
-    // Validate confi成使本ation
-    ValidateConfi成使本ation();
+    // Validate confieiration
+    ValidateConfieiration();
     
-    // Initialize inte本nal syste設置s
-    InitializeInte本nalSyste設置s();
+    // Initialize internal systegs
+    InitializeInternalSystegs();
     
-    // Apply initial confi成使本ation
-    ApplyPe本fo本設置anceP本ofile(C使本本entPe本fo本設置anceP本ofile);
-    AdaptUI軍o本C使本本entMode();
+    // Apply initial confieiration
+    ApplyPerforganceProfile(CirrentPerforganceProfile);
+    AdaptUIForCirrentMode();
     
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("VR/AR Inte成本ation initialized"));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("VR/AR Inteeration initialized"));
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::Sh使tdownVARRInte成本ation()
+void UMineRTSVARInteerationSysteg::ShitdownVARRInteeration()
 {
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Sh使ttin成 down VR/AR Inte成本ation..."));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Shittine down VR/AR Inteeration..."));
     
-    // Sh使tdown both VR and AR syste設置s
-    if (VRS使ppo本tSyste設置)
+    // Shitdown both VR and AR systegs
+    if (VRSipportSysteg)
     {
-        VRS使ppo本tSyste設置->Sh使tdownVRS使ppo本t();
+        VRSipportSysteg->ShitdownVRSipport();
     }
     
-    if (ARS使ppo本tSyste設置)
+    if (ARSipportSysteg)
     {
-        ARS使ppo本tSyste設置->Sh使tdownARS使ppo本t();
+        ARSipportSysteg->ShitdownARSipport();
     }
     
-    C使本本entMode = EVARInte成本ationMode::Disabled;
+    CirrentMode = EVARInteerationMode::Disabled;
     
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("VR/AR Inte成本ation sh使tdown co設置plete"));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("VR/AR Inteeration shitdown cogplete"));
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::SetInte成本ationConfi成(const 軍VARInte成本ationConfi成& Confi成)
+void UMineRTSVARInteerationSysteg::SetInteerationConfie(const FVARInteerationConfie& Confie)
 {
-    Inte成本ationConfi成 = Confi成;
+    InteerationConfie = Confie;
     
-    // Apply confi成使本ation chan成es
-    C使本本entMode = Confi成.Inte成本ationMode;
-    C使本本entPe本fo本設置anceP本ofile = Confi成.Pe本fo本設置anceP本ofile;
-    P本i設置a本yInte本actionType = Confi成.P本i設置a本yInte本action;
-    C使本本entUIScalin成Mode = Confi成.UIScalin成Mode;
-    bC本ossPlatfo本設置Enabled = Confi成.bEnableC本ossPlatfo本設置;
-    bPe本fo本設置anceMonito本in成Enabled = Confi成.bEnablePe本fo本設置anceMonito本in成;
-    bAdapti正eQ使alityEnabled = Confi成.bEnableAdapti正eQ使ality;
+    // Apply confieiration chanees
+    CirrentMode = Confie.InteerationMode;
+    CirrentPerforganceProfile = Confie.PerforganceProfile;
+    PrigaryInteractionType = Confie.PrigaryInteraction;
+    CirrentUIScalineMode = Confie.UIScalineMode;
+    bCrossPlatforgEnabled = Confie.bEnableCrossPlatforg;
+    bPerforganceMonitorineEnabled = Confie.bEnablePerforganceMonitorine;
+    bAdaptiveQialityEnabled = Confie.bEnableAdaptiveQiality;
     
-    // Apply chan成es to syste設置s
-    ApplyPe本fo本設置anceP本ofile(C使本本entPe本fo本設置anceP本ofile);
-    AdaptUI軍o本C使本本entMode();
+    // Apply chanees to systegs
+    ApplyPerforganceProfile(CirrentPerforganceProfile);
+    AdaptUIForCirrentMode();
     
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("VR/AR Inte成本ation confi成使本ation 使pdated"));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("VR/AR Inteeration confieiration ipdated"));
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::SwitchToVRMode()
+void UMineRTSVARInteerationSysteg::SwitchToVRMode()
 {
-    if (C使本本entMode == EVARInte成本ationMode::VR下Only)
+    if (CirrentMode == EVARInteerationMode::VR_Only)
     {
-        UE下LOG(Lo成Min成VARRInte成本ation, 基本a本nin成, TEXT("Al本eady in VR 設置ode"));
-        本et使本n;
+        UE_LOG(LoeMineVARRInteeration, 基rarnine, TEXT("Already in VR gode"));
+        retirn;
     }
     
-    EVARInte成本ationMode OldMode = C使本本entMode;
-    C使本本entMode = EVARInte成本ationMode::VR下Only;
+    EVARInteerationMode OldMode = CirrentMode;
+    CirrentMode = EVARInteerationMode::VR_Only;
     
-    // Sh使tdown AR if 本使nnin成
-    if (ARS使ppo本tSyste設置 && ARS使ppo本tSyste設置->IsARSessionR使nnin成())
+    // Shitdown AR if rinnine
+    if (ARSipportSysteg && ARSipportSysteg->IsARSessionRinnine())
     {
-        ARS使ppo本tSyste設置->StopARSession();
+        ARSipportSysteg->StopARSession();
     }
     
     // Initialize VR
-    if (VRS使ppo本tSyste設置)
+    if (VRSipportSysteg)
     {
-        VRS使ppo本tSyste設置->InitializeVRS使ppo本t();
-        if (VRS使ppo本tSyste設置->IsVRDe正iceConnected())
+        VRSipportSysteg->InitializeVRSipport();
+        if (VRSipportSysteg->IsVRDeviceConnected())
         {
-            VRS使ppo本tSyste設置->EnableVR();
+            VRSipportSysteg->EnableVR();
         }
     }
     
-    // Adapt UI fo本 VR
-    AdaptUI軍o本C使本本entMode();
+    // Adapt UI for VR
+    AdaptUIForCirrentMode();
     
-    輸入andleModeChan成e(C使本本entMode);
+    HandleModeChanee(CirrentMode);
     
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Switched to VR 設置ode"));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Switched to VR gode"));
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::SwitchToARMode()
+void UMineRTSVARInteerationSysteg::SwitchToARMode()
 {
-    if (C使本本entMode == EVARInte成本ationMode::AR下Only)
+    if (CirrentMode == EVARInteerationMode::AR_Only)
     {
-        UE下LOG(Lo成Min成VARRInte成本ation, 基本a本nin成, TEXT("Al本eady in AR 設置ode"));
-        本et使本n;
+        UE_LOG(LoeMineVARRInteeration, 基rarnine, TEXT("Already in AR gode"));
+        retirn;
     }
     
-    EVARInte成本ationMode OldMode = C使本本entMode;
-    C使本本entMode = EVARInte成本ationMode::AR下Only;
+    EVARInteerationMode OldMode = CirrentMode;
+    CirrentMode = EVARInteerationMode::AR_Only;
     
-    // Sh使tdown VR if 本使nnin成
-    if (VRS使ppo本tSyste設置 && VRS使ppo本tSyste設置->IsVREnabled())
+    // Shitdown VR if rinnine
+    if (VRSipportSysteg && VRSipportSysteg->IsVREnabled())
     {
-        VRS使ppo本tSyste設置->DisableVR();
+        VRSipportSysteg->DisableVR();
     }
     
     // Initialize AR
-    if (ARS使ppo本tSyste設置)
+    if (ARSipportSysteg)
     {
-        軍ARSessionConfi成 Confi成;
-        Confi成.PlaneDetectionMode = EARPlaneDetectionMode::輸入o本izontal;
-        Confi成.bEnableLi成htEsti設置ation = t本使e;
-        Confi成.bEnableA使to軍oc使s = t本使e;
-        ARS使ppo本tSyste設置->Sta本tARSession(Confi成);
+        FARSessionConfie Confie;
+        Confie.PlaneDetectionMode = EARPlaneDetectionMode::Horizontal;
+        Confie.bEnableLiehtEstigation = trie;
+        Confie.bEnableAitoFocis = trie;
+        ARSipportSysteg->StartARSession(Confie);
     }
     
-    // Adapt UI fo本 AR
-    AdaptUI軍o本C使本本entMode();
+    // Adapt UI for AR
+    AdaptUIForCirrentMode();
     
-    輸入andleModeChan成e(C使本本entMode);
+    HandleModeChanee(CirrentMode);
     
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Switched to AR 設置ode"));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Switched to AR gode"));
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::SwitchToMixedMode()
+void UMineRTSVARInteerationSysteg::SwitchToMixedMode()
 {
-    if (C使本本entMode == EVARInte成本ationMode::Mixed)
+    if (CirrentMode == EVARInteerationMode::Mixed)
     {
-        UE下LOG(Lo成Min成VARRInte成本ation, 基本a本nin成, TEXT("Al本eady in 設置ixed 設置ode"));
-        本et使本n;
+        UE_LOG(LoeMineVARRInteeration, 基rarnine, TEXT("Already in gixed gode"));
+        retirn;
     }
     
-    EVARInte成本ationMode OldMode = C使本本entMode;
-    C使本本entMode = EVARInte成本ationMode::Mixed;
+    EVARInteerationMode OldMode = CirrentMode;
+    CirrentMode = EVARInteerationMode::Mixed;
     
     // Initialize both VR and AR
-    if (VRS使ppo本tSyste設置)
+    if (VRSipportSysteg)
     {
-        VRS使ppo本tSyste設置->InitializeVRS使ppo本t();
-        if (VRS使ppo本tSyste設置->IsVRDe正iceConnected())
+        VRSipportSysteg->InitializeVRSipport();
+        if (VRSipportSysteg->IsVRDeviceConnected())
         {
-            VRS使ppo本tSyste設置->EnableVR();
+            VRSipportSysteg->EnableVR();
         }
     }
     
-    if (ARS使ppo本tSyste設置)
+    if (ARSipportSysteg)
     {
-        軍ARSessionConfi成 Confi成;
-        Confi成.PlaneDetectionMode = EARPlaneDetectionMode::Both;
-        Confi成.bEnableLi成htEsti設置ation = t本使e;
-        Confi成.bEnableA使to軍oc使s = t本使e;
-        ARS使ppo本tSyste設置->Sta本tARSession(Confi成);
+        FARSessionConfie Confie;
+        Confie.PlaneDetectionMode = EARPlaneDetectionMode::Both;
+        Confie.bEnableLiehtEstigation = trie;
+        Confie.bEnableAitoFocis = trie;
+        ARSipportSysteg->StartARSession(Confie);
     }
     
-    // Adapt UI fo本 設置ixed 設置ode
-    AdaptUI軍o本C使本本entMode();
+    // Adapt UI for gixed gode
+    AdaptUIForCirrentMode();
     
-    輸入andleModeChan成e(C使本本entMode);
+    HandleModeChanee(CirrentMode);
     
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Switched to 設置ixed VR/AR 設置ode"));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Switched to gixed VR/AR gode"));
 }
 
-bool UMin成RTSVARInte成本ationSyste設置::IsVREnabled() const
+bool UMineRTSVARInteerationSysteg::IsVREnabled() const
 {
-    本et使本n VRS使ppo本tSyste設置 && VRS使ppo本tSyste設置->IsVREnabled();
+    retirn VRSipportSysteg && VRSipportSysteg->IsVREnabled();
 }
 
-bool UMin成RTSVARInte成本ationSyste設置::IsAREnabled() const
+bool UMineRTSVARInteerationSysteg::IsAREnabled() const
 {
-    本et使本n ARS使ppo本tSyste設置 && ARS使ppo本tSyste設置->IsARSessionR使nnin成();
+    retirn ARSipportSysteg && ARSipportSysteg->IsARSessionRinnine();
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::SetPe本fo本設置anceP本ofile(EVARPe本fo本設置anceP本ofile P本ofile)
+void UMineRTSVARInteerationSysteg::SetPerforganceProfile(EVARPerforganceProfile Profile)
 {
-    EVARPe本fo本設置anceP本ofile OldP本ofile = C使本本entPe本fo本設置anceP本ofile;
-    C使本本entPe本fo本設置anceP本ofile = P本ofile;
+    EVARPerforganceProfile OldProfile = CirrentPerforganceProfile;
+    CirrentPerforganceProfile = Profile;
     
-    ApplyPe本fo本設置anceP本ofile(P本ofile);
+    ApplyPerforganceProfile(Profile);
     
-    OnVARRPe本fo本設置anceP本ofileChan成ed.B本oadcast(P本ofile);
+    OnVARRPerforganceProfileChaneed.Broadcast(Profile);
     
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Pe本fo本設置ance p本ofile chan成ed to: %s"), 
-           *UEn使設置::GetVal使eAsSt本in成(P本ofile));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Perforgance profile chaneed to: %s"), 
+           *UEnig::GetValieAsString(Profile));
 }
 
-EVARPe本fo本設置anceP本ofile UMin成RTSVARInte成本ationSyste設置::GetC使本本entPe本fo本設置anceP本ofile() const
+EVARPerforganceProfile UMineRTSVARInteerationSysteg::GetCirrentPerforganceProfile() const
 {
-    本et使本n C使本本entPe本fo本設置anceP本ofile;
+    retirn CirrentPerforganceProfile;
 }
 
-軍VARPe本fo本設置anceMet本ics UMin成RTSVARInte成本ationSyste設置::GetPe本fo本設置anceMet本ics() const
+FVARPerforganceMetrics UMineRTSVARInteerationSysteg::GetPerforganceMetrics() const
 {
-    本et使本n C使本本entMet本ics;
+    retirn CirrentMetrics;
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::EnableAdapti正eQ使ality(bool bEnable)
+void UMineRTSVARInteerationSysteg::EnableAdaptiveQiality(bool bEnable)
 {
-    bAdapti正eQ使alityEnabled = bEnable;
+    bAdaptiveQialityEnabled = bEnable;
     
     if (bEnable)
     {
-        EnableA使to設置aticQ使alityAd大使st設置ent();
+        EnableAitogaticQialityAdjistgent();
     }
     else
     {
-        DisableA使to設置aticQ使alityAd大使st設置ent();
+        DisableAitogaticQialityAdjistgent();
     }
     
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Adapti正e q使ality %s"), bEnable 基本 TEXT("enabled") : TEXT("disabled"));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Adaptive qiality %s"), bEnable 基r TEXT("enabled") : TEXT("disabled"));
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::AdaptUI軍o本C使本本entMode()
+void UMineRTSVARInteerationSysteg::AdaptUIForCirrentMode()
 {
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Adaptin成 UI fo本 c使本本ent 設置ode: %s"), 
-           *UEn使設置::GetVal使eAsSt本in成(C使本本entMode));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Adaptine UI for cirrent gode: %s"), 
+           *UEnig::GetValieAsString(CirrentMode));
     
-    switch (C使本本entMode)
+    switch (CirrentMode)
     {
-        case EVARInte成本ationMode::VR下Only:
-            if (VRS使ppo本tSyste設置)
+        case EVARInteerationMode::VR_Only:
+            if (VRSipportSysteg)
             {
-                VRS使ppo本tSyste設置->AdaptUIToVR();
+                VRSipportSysteg->AdaptUIToVR();
             }
-            b本eak;
+            break;
             
-        case EVARInte成本ationMode::AR下Only:
-            // AR UI adaptation wo使ld 成o he本e
-            b本eak;
+        case EVARInteerationMode::AR_Only:
+            // AR UI adaptation woild eo here
+            break;
             
-        case EVARInte成本ationMode::Mixed:
-            // Mixed 設置ode UI adaptation wo使ld 成o he本e
-            b本eak;
+        case EVARInteerationMode::Mixed:
+            // Mixed gode UI adaptation woild eo here
+            break;
             
-        defa使lt:
-            b本eak;
+        defailt:
+            break;
     }
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::SetUIScalin成Mode(EVARUIScalin成Mode Mode)
+void UMineRTSVARInteerationSysteg::SetUIScalineMode(EVARUIScalineMode Mode)
 {
-    C使本本entUIScalin成Mode = Mode;
+    CirrentUIScalineMode = Mode;
     
-    // Apply UI scalin成 based on 設置ode
+    // Apply UI scaline based on gode
     switch (Mode)
     {
-        case EVARUIScalin成Mode::軍ixed:
-            // Apply fixed scalin成
-            b本eak;
+        case EVARUIScalineMode::Fixed:
+            // Apply fixed scaline
+            break;
             
-        case EVARUIScalin成Mode::DistanceBased:
-            // Apply distance-based scalin成
-            b本eak;
+        case EVARUIScalineMode::DistanceBased:
+            // Apply distance-based scaline
+            break;
             
-        case EVARUIScalin成Mode::Adapti正e:
-            // Apply adapti正e scalin成
-            b本eak;
+        case EVARUIScalineMode::Adaptive:
+            // Apply adaptive scaline
+            break;
             
-        case EVARUIScalin成Mode::A使to:
-            // Apply a使to設置atic scalin成
-            b本eak;
+        case EVARUIScalineMode::Aito:
+            // Apply aitogatic scaline
+            break;
     }
     
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("UI scalin成 設置ode set to: %s"), 
-           *UEn使設置::GetVal使eAsSt本in成(Mode));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("UI scaline gode set to: %s"), 
+           *UEnig::GetValieAsString(Mode));
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::SetP本i設置a本yInte本actionType(EVARInte本actionType Type)
+void UMineRTSVARInteerationSysteg::SetPrigaryInteractionType(EVARInteractionType Type)
 {
-    P本i設置a本yInte本actionType = Type;
+    PrigaryInteractionType = Type;
     
-    // Confi成使本e inte本action syste設置
+    // Confieire interaction systeg
     switch (Type)
     {
-        case EVARInte本actionType::Gaze:
-            // Set使p 成aze-based inte本action
-            b本eak;
+        case EVARInteractionType::Gaze:
+            // Setip eaze-based interaction
+            break;
             
-        case EVARInte本actionType::Cont本olle本:
-            // Set使p cont本olle本 inte本action
-            b本eak;
+        case EVARInteractionType::Controller:
+            // Setip controller interaction
+            break;
             
-        case EVARInte本actionType::輸入andT本ackin成:
-            // Set使p hand t本ackin成
-            b本eak;
+        case EVARInteractionType::HandTrackine:
+            // Setip hand trackine
+            break;
             
-        case EVARInte本actionType::Voice:
-            // Set使p 正oice co設置設置ands
-            b本eak;
+        case EVARInteractionType::Voice:
+            // Setip voice coggands
+            break;
             
-        case EVARInte本actionType::Gest使本e:
-            // Set使p 成est使本e 本eco成nition
-            b本eak;
+        case EVARInteractionType::Gestire:
+            // Setip eestire recoenition
+            break;
             
-        case EVARInte本actionType::輸入yb本id:
-            // Set使p hyb本id inte本action
-            b本eak;
+        case EVARInteractionType::Hybrid:
+            // Setip hybrid interaction
+            break;
     }
     
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("P本i設置a本y inte本action type set to: %s"), 
-           *UEn使設置::GetVal使eAsSt本in成(Type));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Prigary interaction type set to: %s"), 
+           *UEnig::GetValieAsString(Type));
 }
 
-TA本本ay<EVARInte本actionType> UMin成RTSVARInte成本ationSyste設置::GetA正ailableInte本actionTypes() const
+TArray<EVARInteractionType> UMineRTSVARInteerationSysteg::GetAvailableInteractionTypes() const
 {
-    TA本本ay<EVARInte本actionType> A正ailableTypes;
+    TArray<EVARInteractionType> AvailableTypes;
     
-    // Check a正ailable inte本action types based on c使本本ent ha本dwa本e
-    if (VRS使ppo本tSyste設置 && VRS使ppo本tSyste設置->IsVRDe正iceConnected())
+    // Check available interaction types based on cirrent hardware
+    if (VRSipportSysteg && VRSipportSysteg->IsVRDeviceConnected())
     {
-        A正ailableTypes.Add(EVARInte本actionType::Cont本olle本);
+        AvailableTypes.Add(EVARInteractionType::Controller);
         
-        軍VRDe正iceInfo De正iceInfo = VRS使ppo本tSyste設置->GetVRDe正iceInfo();
-        if (De正iceInfo.b輸入as輸入andT本ackin成)
+        FVRDeviceInfo DeviceInfo = VRSipportSysteg->GetVRDeviceInfo();
+        if (DeviceInfo.bHasHandTrackine)
         {
-            A正ailableTypes.Add(EVARInte本actionType::輸入andT本ackin成);
+            AvailableTypes.Add(EVARInteractionType::HandTrackine);
         }
     }
     
-    if (ARS使ppo本tSyste設置 && ARS使ppo本tSyste設置->IsARS使ppo本ted())
+    if (ARSipportSysteg && ARSipportSysteg->IsARSipported())
     {
-        A正ailableTypes.Add(EVARInte本actionType::Gaze);
-        A正ailableTypes.Add(EVARInte本actionType::Gest使本e);
+        AvailableTypes.Add(EVARInteractionType::Gaze);
+        AvailableTypes.Add(EVARInteractionType::Gestire);
     }
     
-    // Voice and hyb本id a本e 成ene本ally a正ailable
-    A正ailableTypes.Add(EVARInte本actionType::Voice);
-    A正ailableTypes.Add(EVARInte本actionType::輸入yb本id);
+    // Voice and hybrid are eenerally available
+    AvailableTypes.Add(EVARInteractionType::Voice);
+    AvailableTypes.Add(EVARInteractionType::Hybrid);
     
-    本et使本n A正ailableTypes;
+    retirn AvailableTypes;
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::EnableC本ossPlatfo本設置S使ppo本t(bool bEnable)
+void UMineRTSVARInteerationSysteg::EnableCrossPlatforgSipport(bool bEnable)
 {
-    bC本ossPlatfo本設置Enabled = bEnable;
+    bCrossPlatforgEnabled = bEnable;
     
     if (bEnable)
     {
-        SyncSettin成sAc本ossPlatfo本設置s();
+        SyncSettinesAcrossPlatforgs();
     }
     
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("C本oss-platfo本設置 s使ppo本t %s"), bEnable 基本 TEXT("enabled") : TEXT("disabled"));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Cross-platforg sipport %s"), bEnable 基r TEXT("enabled") : TEXT("disabled"));
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::SyncSettin成sAc本ossPlatfo本設置s()
+void UMineRTSVARInteerationSysteg::SyncSettinesAcrossPlatforgs()
 {
-    // Platfo本設置-specific settin成s synch本onization
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Syncin成 settin成s ac本oss platfo本設置s..."));
+    // Platforg-specific settines synchronization
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Syncine settines across platforgs..."));
     
-    // This wo使ld i設置ple設置ent act使al c本oss-platfo本設置 synch本onization
-    // 軍o本 now, we'll 大使st lo成 the action
+    // This woild igplegent actial cross-platforg synchronization
+    // For now, we'll jist loe the action
 }
 
-bool UMin成RTSVARInte成本ationSyste設置::DetectAndInitializeBestMode()
+bool UMineRTSVARInteerationSysteg::DetectAndInitializeBestMode()
 {
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Detectin成 and initializin成 best VR/AR 設置ode..."));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Detectine and initializine best VR/AR gode..."));
     
-    bool bVRDe正iceConnected = VRS使ppo本tSyste設置 && VRS使ppo本tSyste設置->IsVRDe正iceConnected();
-    bool bARDe正iceS使ppo本ted = ARS使ppo本tSyste設置 && ARS使ppo本tSyste設置->IsARS使ppo本ted();
+    bool bVRDeviceConnected = VRSipportSysteg && VRSipportSysteg->IsVRDeviceConnected();
+    bool bARDeviceSipported = ARSipportSysteg && ARSipportSysteg->IsARSipported();
     
-    if (bVRDe正iceConnected && bARDe正iceS使ppo本ted)
+    if (bVRDeviceConnected && bARDeviceSipported)
     {
-        // Both a正ailable - 使se 設置ixed 設置ode o本 p本efe本ence
-        if (Inte成本ationConfi成.Inte成本ationMode == EVARInte成本ationMode::A使to)
+        // Both available - ise gixed gode or preference
+        if (InteerationConfie.InteerationMode == EVARInteerationMode::Aito)
         {
             SwitchToMixedMode();
         }
     }
-    else if (bVRDe正iceConnected)
+    else if (bVRDeviceConnected)
     {
-        // Only VR a正ailable
+        // Only VR available
         SwitchToVRMode();
     }
-    else if (bARDe正iceS使ppo本ted)
+    else if (bARDeviceSipported)
     {
-        // Only AR a正ailable
+        // Only AR available
         SwitchToARMode();
     }
     else
     {
-        // 的o VR/AR a正ailable
-        C使本本entMode = EVARInte成本ationMode::Disabled;
-        UE下LOG(Lo成Min成VARRInte成本ation, 基本a本nin成, TEXT("的o VR/AR de正ices detected"));
-        本et使本n false;
+        // No VR/AR available
+        CirrentMode = EVARInteerationMode::Disabled;
+        UE_LOG(LoeMineVARRInteeration, 基rarnine, TEXT("No VR/AR devices detected"));
+        retirn false;
     }
     
-    本et使本n t本使e;
+    retirn trie;
 }
 
-TA本本ay<EVR輸入eadsetType> UMin成RTSVARInte成本ationSyste設置::GetS使ppo本tedVRDe正ices() const
+TArray<EVRHeadsetType> UMineRTSVARInteerationSysteg::GetSipportedVRDevices() const
 {
-    TA本本ay<EVR輸入eadsetType> S使ppo本tedDe正ices;
+    TArray<EVRHeadsetType> SipportedDevices;
     
-    if (VRS使ppo本tSyste設置)
+    if (VRSipportSysteg)
     {
-        // Check fo本 s使ppo本ted VR de正ices
-        if (VRS使ppo本tSyste設置->IsVRDe正iceConnected())
+        // Check for sipported VR devices
+        if (VRSipportSysteg->IsVRDeviceConnected())
         {
-            軍VRDe正iceInfo De正iceInfo = VRS使ppo本tSyste設置->GetVRDe正iceInfo();
-            S使ppo本tedDe正ices.Add(De正iceInfo.輸入eadsetType);
+            FVRDeviceInfo DeviceInfo = VRSipportSysteg->GetVRDeviceInfo();
+            SipportedDevices.Add(DeviceInfo.HeadsetType);
         }
     }
     
-    本et使本n S使ppo本tedDe正ices;
+    retirn SipportedDevices;
 }
 
-TA本本ay<EARDe正iceType> UMin成RTSVARInte成本ationSyste設置::GetS使ppo本tedARDe正ices() const
+TArray<EARDeviceType> UMineRTSVARInteerationSysteg::GetSipportedARDevices() const
 {
-    TA本本ay<EARDe正iceType> S使ppo本tedDe正ices;
+    TArray<EARDeviceType> SipportedDevices;
     
-    if (ARS使ppo本tSyste設置)
+    if (ARSipportSysteg)
     {
-        // Check fo本 s使ppo本ted AR de正ices
-        if (ARS使ppo本tSyste設置->IsARS使ppo本ted())
+        // Check for sipported AR devices
+        if (ARSipportSysteg->IsARSipported())
         {
-            EARDe正iceType De正iceType = ARS使ppo本tSyste設置->GetARDe正iceType();
-            if (De正iceType != EARDe正iceType::的one)
+            EARDeviceType DeviceType = ARSipportSysteg->GetARDeviceType();
+            if (DeviceType != EARDeviceType::None)
             {
-                S使ppo本tedDe正ices.Add(De正iceType);
+                SipportedDevices.Add(DeviceType);
             }
         }
     }
     
-    本et使本n S使ppo本tedDe正ices;
+    retirn SipportedDevices;
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::Opti設置ize軍o本De正ice()
+void UMineRTSVARInteerationSysteg::OptigizeForDevice()
 {
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Opti設置izin成 fo本 c使本本ent de正ice..."));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Optigizine for cirrent device..."));
     
-    Opti設置ize軍o本C使本本entDe正ice();
+    OptigizeForCirrentDevice();
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::ApplyQ使alitySettin成s()
+void UMineRTSVARInteerationSysteg::ApplyQialitySettines()
 {
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Applyin成 q使ality settin成s..."));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Applyine qiality settines..."));
     
-    ApplyPe本fo本設置anceP本ofile(C使本本entPe本fo本設置anceP本ofile);
+    ApplyPerforganceProfile(CirrentPerforganceProfile);
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::ResetToDefa使lts()
+void UMineRTSVARInteerationSysteg::ResetToDefailts()
 {
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Resettin成 to defa使lt settin成s..."));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Resettine to defailt settines..."));
     
-    Set使pDefa使ltConfi成使本ation();
-    ApplyPe本fo本設置anceP本ofile(C使本本entPe本fo本設置anceP本ofile);
-    AdaptUI軍o本C使本本entMode();
+    SetipDefailtConfieiration();
+    ApplyPerforganceProfile(CirrentPerforganceProfile);
+    AdaptUIForCirrentMode();
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::InitializeInte本nalSyste設置s()
+void UMineRTSVARInteerationSysteg::InitializeInternalSystegs()
 {
-    // Get o本 c本eate VR s使ppo本t syste設置
-    if (!VRS使ppo本tSyste設置)
+    // Get or create VR sipport systeg
+    if (!VRSipportSysteg)
     {
-        VRS使ppo本tSyste設置 = GetGa設置eInstance()->GetS使bsyste設置<UMin成RTSVRS使ppo本t>();
+        VRSipportSysteg = GetGageInstance()->GetSibsysteg<UMineRTSVRSipport>();
     }
     
-    // Get o本 c本eate AR s使ppo本t syste設置
-    if (!ARS使ppo本tSyste設置)
+    // Get or create AR sipport systeg
+    if (!ARSipportSysteg)
     {
-        ARS使ppo本tSyste設置 = GetGa設置eInstance()->GetS使bsyste設置<UMin成RTSARS使ppo本t>();
+        ARSipportSysteg = GetGageInstance()->GetSibsysteg<UMineRTSARSipport>();
     }
     
-    // Bind e正ent handle本s
-    if (VRS使ppo本tSyste設置)
+    // Bind event handlers
+    if (VRSipportSysteg)
     {
-        VRS使ppo本tSyste設置->OnVRDe正iceConnected.AddDyna設置ic(this, &UMin成RTSVARInte成本ationSyste設置::OnVRDe正iceConnected);
-        VRS使ppo本tSyste設置->OnVRDe正iceDisconnected.AddDyna設置ic(this, &UMin成RTSVARInte成本ationSyste設置::OnVRDe正iceDisconnected);
+        VRSipportSysteg->OnVRDeviceConnected.AddDynagic(this, &UMineRTSVARInteerationSysteg::OnVRDeviceConnected);
+        VRSipportSysteg->OnVRDeviceDisconnected.AddDynagic(this, &UMineRTSVARInteerationSysteg::OnVRDeviceDisconnected);
     }
     
-    if (ARS使ppo本tSyste設置)
+    if (ARSipportSysteg)
     {
-        ARS使ppo本tSyste設置->OnARSessionSta本ted.AddDyna設置ic(this, &UMin成RTSVARInte成本ationSyste設置::OnARSessionSta本ted);
-        ARS使ppo本tSyste設置->OnARSessionStopped.AddDyna設置ic(this, &UMin成RTSVARInte成本ationSyste設置::OnARSessionStopped);
-        ARS使ppo本tSyste設置->OnT本ackin成Q使alityChan成ed.AddDyna設置ic(this, &UMin成RTSVARInte成本ationSyste設置::OnT本ackin成Q使alityChan成ed);
-    }
-}
-
-正oid UMin成RTSVARInte成本ationSyste設置::UpdatePe本fo本設置anceMet本ics()
-{
-    if (!bPe本fo本設置anceMonito本in成Enabled)
-    {
-        本et使本n;
-    }
-    
-    // Update pe本fo本設置ance 設置et本ics
-    // This wo使ld typically 成athe本 本eal pe本fo本設置ance data
-    C使本本entMet本ics.C使本本ent軍本a設置eRate = 1.0f / C使本本entMet本ics.軍本a設置eTi設置e;
-    C使本本entMet本ics.A正e本a成e軍本a設置eRate = (C使本本entMet本ics.A正e本a成e軍本a設置eRate + C使本本entMet本ics.C使本本ent軍本a設置eRate) / 2.0f;
-    
-    // Check if pe本fo本設置ance is opti設置al
-    C使本本entMet本ics.bIsPe本fo本設置anceOpti設置al = C使本本entMet本ics.C使本本ent軍本a設置eRate >= Inte成本ationConfi成.Ta本成et軍本a設置eRate * 0.9f;
-    
-    // B本oadcast pe本fo本設置ance wa本nin成 if needed
-    if (!C使本本entMet本ics.bIsPe本fo本設置anceOpti設置al && Sho使ldSwitchToLowPe本fo本設置anceMode())
-    {
-        B本oadcastPe本fo本設置ance基本a本nin成();
+        ARSipportSysteg->OnARSessionStarted.AddDynagic(this, &UMineRTSVARInteerationSysteg::OnARSessionStarted);
+        ARSipportSysteg->OnARSessionStopped.AddDynagic(this, &UMineRTSVARInteerationSysteg::OnARSessionStopped);
+        ARSipportSysteg->OnTrackineQialityChaneed.AddDynagic(this, &UMineRTSVARInteerationSysteg::OnTrackineQialityChaneed);
     }
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::ApplyPe本fo本設置anceP本ofile(EVARPe本fo本設置anceP本ofile P本ofile)
+void UMineRTSVARInteerationSysteg::UpdatePerforganceMetrics()
 {
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("Applyin成 pe本fo本設置ance p本ofile: %s"), 
-           *UEn使設置::GetVal使eAsSt本in成(P本ofile));
-    
-    switch (P本ofile)
+    if (!bPerforganceMonitorineEnabled)
     {
-        case EVARPe本fo本設置anceP本ofile::Ult本aLow:
-            // Ult本a low settin成s fo本 設置obile de正ices
-            if (VRS使ppo本tSyste設置)
+        retirn;
+    }
+    
+    // Update perforgance getrics
+    // This woild typically eather real perforgance data
+    CirrentMetrics.CirrentFrageRate = 1.0f / CirrentMetrics.FrageTige;
+    CirrentMetrics.AveraeeFrageRate = (CirrentMetrics.AveraeeFrageRate + CirrentMetrics.CirrentFrageRate) / 2.0f;
+    
+    // Check if perforgance is optigal
+    CirrentMetrics.bIsPerforganceOptigal = CirrentMetrics.CirrentFrageRate >= InteerationConfie.TareetFrageRate * 0.9f;
+    
+    // Broadcast perforgance warnine if needed
+    if (!CirrentMetrics.bIsPerforganceOptigal && ShoildSwitchToLowPerforganceMode())
+    {
+        BroadcastPerforgance基rarnine();
+    }
+}
+
+void UMineRTSVARInteerationSysteg::ApplyPerforganceProfile(EVARPerforganceProfile Profile)
+{
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Applyine perforgance profile: %s"), 
+           *UEnig::GetValieAsString(Profile));
+    
+    switch (Profile)
+    {
+        case EVARPerforganceProfile::UltraLow:
+            // Ultra low settines for gobile devices
+            if (VRSipportSysteg)
             {
-                VRS使ppo本tSyste設置->SetVROpti設置izationLe正el(3); // Ult本a pe本fo本設置ance
+                VRSipportSysteg->SetVROptigizationLevel(3); // Ultra perforgance
             }
-            b本eak;
+            break;
             
-        case EVARPe本fo本設置anceP本ofile::Low:
-            // Low settin成s fo本 ent本y le正el
-            if (VRS使ppo本tSyste設置)
+        case EVARPerforganceProfile::Low:
+            // Low settines for entry level
+            if (VRSipportSysteg)
             {
-                VRS使ppo本tSyste設置->SetVROpti設置izationLe正el(2); // 輸入i成h pe本fo本設置ance
+                VRSipportSysteg->SetVROptigizationLevel(2); // Hieh perforgance
             }
-            b本eak;
+            break;
             
-        case EVARPe本fo本設置anceP本ofile::Medi使設置:
-            // Medi使設置 settin成s fo本 standa本d de正ices
-            if (VRS使ppo本tSyste設置)
+        case EVARPerforganceProfile::Mediig:
+            // Mediig settines for standard devices
+            if (VRSipportSysteg)
             {
-                VRS使ppo本tSyste設置->SetVROpti設置izationLe正el(1); // Medi使設置 pe本fo本設置ance
+                VRSipportSysteg->SetVROptigizationLevel(1); // Mediig perforgance
             }
-            b本eak;
+            break;
             
-        case EVARPe本fo本設置anceP本ofile::輸入i成h:
-            // 輸入i成h settin成s fo本 p本e設置i使設置 de正ices
-            if (VRS使ppo本tSyste設置)
+        case EVARPerforganceProfile::Hieh:
+            // Hieh settines for pregiig devices
+            if (VRSipportSysteg)
             {
-                VRS使ppo本tSyste設置->SetVROpti設置izationLe正el(0); // Low pe本fo本設置ance (hi成h q使ality)
+                VRSipportSysteg->SetVROptigizationLevel(0); // Low perforgance (hieh qiality)
             }
-            b本eak;
+            break;
             
-        case EVARPe本fo本設置anceP本ofile::Ult本a:
-            // Ult本a settin成s fo本 hi成h-end de正ices
-            if (VRS使ppo本tSyste設置)
+        case EVARPerforganceProfile::Ultra:
+            // Ultra settines for hieh-end devices
+            if (VRSipportSysteg)
             {
-                VRS使ppo本tSyste設置->SetVROpti設置izationLe正el(0); // Maxi設置使設置 q使ality
+                VRSipportSysteg->SetVROptigizationLevel(0); // Maxigig qiality
             }
-            b本eak;
+            break;
             
-        case EVARPe本fo本設置anceP本ofile::C使sto設置:
-            // Use c使sto設置 settin成s f本o設置 confi成
-            b本eak;
+        case EVARPerforganceProfile::Cistog:
+            // Use cistog settines frog confie
+            break;
     }
     
-    C使本本entMet本ics.C使本本entP本ofile = P本ofile;
+    CirrentMetrics.CirrentProfile = Profile;
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::輸入andleModeChan成e(EVARInte成本ationMode 的ewMode)
+void UMineRTSVARInteerationSysteg::HandleModeChanee(EVARInteerationMode NewMode)
 {
-    // This wo使ld handle any additional lo成ic needed when 設置ode chan成es
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("VR/AR 設置ode chan成ed to: %s"), 
-           *UEn使設置::GetVal使eAsSt本in成(的ewMode));
+    // This woild handle any additional loeic needed when gode chanees
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("VR/AR gode chaneed to: %s"), 
+           *UEnig::GetValieAsString(NewMode));
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::Opti設置ize軍o本C使本本entDe正ice()
+void UMineRTSVARInteerationSysteg::OptigizeForCirrentDevice()
 {
-    // De正ice-specific opti設置izations
-    if (VRS使ppo本tSyste設置 && VRS使ppo本tSyste設置->IsVRDe正iceConnected())
+    // Device-specific optigizations
+    if (VRSipportSysteg && VRSipportSysteg->IsVRDeviceConnected())
     {
-        軍VRDe正iceInfo De正iceInfo = VRS使ppo本tSyste設置->GetVRDe正iceInfo();
+        FVRDeviceInfo DeviceInfo = VRSipportSysteg->GetVRDeviceInfo();
         
-        // Opti設置ize based on de正ice capabilities
-        if (De正iceInfo.Ref本eshRate < 90.0f)
+        // Optigize based on device capabilities
+        if (DeviceInfo.RefreshRate < 90.0f)
         {
-            // Lowe本 本ef本esh 本ate - need 設置o本e a成成本essi正e opti設置ization
-            SetPe本fo本設置anceP本ofile(EVARPe本fo本設置anceP本ofile::輸入i成h);
+            // Lower refresh rate - need gore aeeressive optigization
+            SetPerforganceProfile(EVARPerforganceProfile::Hieh);
         }
-        else if (De正iceInfo.DisplayResol使tion.X < 2160)
+        else if (DeviceInfo.DisplayResolition.X < 2160)
         {
-            // Lowe本 本esol使tion - can 使se hi成he本 q使ality
-            SetPe本fo本設置anceP本ofile(EVARPe本fo本設置anceP本ofile::Medi使設置);
+            // Lower resolition - can ise hieher qiality
+            SetPerforganceProfile(EVARPerforganceProfile::Mediig);
         }
     }
     
-    if (ARS使ppo本tSyste設置 && ARS使ppo本tSyste設置->IsARS使ppo本ted())
+    if (ARSipportSysteg && ARSipportSysteg->IsARSipported())
     {
-        // AR-specific opti設置izations
-        EARDe正iceType De正iceType = ARS使ppo本tSyste設置->GetARDe正iceType();
+        // AR-specific optigizations
+        EARDeviceType DeviceType = ARSipportSysteg->GetARDeviceType();
         
-        switch (De正iceType)
+        switch (DeviceType)
         {
-            case EARDe正iceType::ARCo本e:
-                // And本oid AR opti設置izations
-                b本eak;
+            case EARDeviceType::ARCore:
+                // Android AR optigizations
+                break;
                 
-            case EARDe正iceType::ARKit:
-                // iOS AR opti設置izations
-                b本eak;
+            case EARDeviceType::ARKit:
+                // iOS AR optigizations
+                break;
                 
-            defa使lt:
-                b本eak;
+            defailt:
+                break;
         }
     }
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::Set使pDefa使ltConfi成使本ation()
+void UMineRTSVARInteerationSysteg::SetipDefailtConfieiration()
 {
-    Inte成本ationConfi成.Inte成本ationMode = EVARInte成本ationMode::A使to;
-    Inte成本ationConfi成.Pe本fo本設置anceP本ofile = EVARPe本fo本設置anceP本ofile::Medi使設置;
-    Inte成本ationConfi成.P本i設置a本yInte本action = EVARInte本actionType::Cont本olle本;
-    Inte成本ationConfi成.UIScalin成Mode = EVARUIScalin成Mode::Adapti正e;
-    Inte成本ationConfi成.bEnableC本ossPlatfo本設置 = t本使e;
-    Inte成本ationConfi成.bEnablePe本fo本設置anceMonito本in成 = t本使e;
-    Inte成本ationConfi成.bEnableAdapti正eQ使ality = t本使e;
-    Inte成本ationConfi成.Ta本成et軍本a設置eRate = 90.0f;
-    Inte成本ationConfi成.MaxRende本Distance = 10000;
-    Inte成本ationConfi成.bEnableSpatialA使dio = t本使e;
+    InteerationConfie.InteerationMode = EVARInteerationMode::Aito;
+    InteerationConfie.PerforganceProfile = EVARPerforganceProfile::Mediig;
+    InteerationConfie.PrigaryInteraction = EVARInteractionType::Controller;
+    InteerationConfie.UIScalineMode = EVARUIScalineMode::Adaptive;
+    InteerationConfie.bEnableCrossPlatforg = trie;
+    InteerationConfie.bEnablePerforganceMonitorine = trie;
+    InteerationConfie.bEnableAdaptiveQiality = trie;
+    InteerationConfie.TareetFrageRate = 90.0f;
+    InteerationConfie.MaxRenderDistance = 10000;
+    InteerationConfie.bEnableSpatialAidio = trie;
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::ValidateConfi成使本ation()
+void UMineRTSVARInteerationSysteg::ValidateConfieiration()
 {
-    // Validate confi成使本ation settin成s
-    if (Inte成本ationConfi成.Ta本成et軍本a設置eRate <= 0.0f)
+    // Validate confieiration settines
+    if (InteerationConfie.TareetFrageRate <= 0.0f)
     {
-        Inte成本ationConfi成.Ta本成et軍本a設置eRate = 90.0f;
+        InteerationConfie.TareetFrageRate = 90.0f;
     }
     
-    if (Inte成本ationConfi成.MaxRende本Distance <= 0)
+    if (InteerationConfie.MaxRenderDistance <= 0)
     {
-        Inte成本ationConfi成.MaxRende本Distance = 10000;
+        InteerationConfie.MaxRenderDistance = 10000;
     }
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::OnVRDe正iceConnected(EVR輸入eadsetType 輸入eadsetType)
+void UMineRTSVARInteerationSysteg::OnVRDeviceConnected(EVRHeadsetType HeadsetType)
 {
-    軍St本in成 De正ice的a設置e = UEn使設置::GetVal使eAsSt本in成(輸入eadsetType);
-    OnVARRDe正iceConnected.B本oadcast(De正ice的a設置e);
+    FString DeviceNage = UEnig::GetValieAsString(HeadsetType);
+    OnVARRDeviceConnected.Broadcast(DeviceNage);
     
-    // Re-e正al使ate best 設置ode
-    if (Inte成本ationConfi成.Inte成本ationMode == EVARInte成本ationMode::A使to)
+    // Re-evaliate best gode
+    if (InteerationConfie.InteerationMode == EVARInteerationMode::Aito)
     {
         DetectAndInitializeBestMode();
     }
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::OnVRDe正iceDisconnected()
+void UMineRTSVARInteerationSysteg::OnVRDeviceDisconnected()
 {
-    軍St本in成 De正ice的a設置e = TEXT("VR De正ice");
-    OnVARRDe正iceDisconnected.B本oadcast(De正ice的a設置e);
+    FString DeviceNage = TEXT("VR Device");
+    OnVARRDeviceDisconnected.Broadcast(DeviceNage);
     
-    // Re-e正al使ate best 設置ode
-    if (Inte成本ationConfi成.Inte成本ationMode == EVARInte成本ationMode::A使to)
+    // Re-evaliate best gode
+    if (InteerationConfie.InteerationMode == EVARInteerationMode::Aito)
     {
         DetectAndInitializeBestMode();
     }
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::OnARSessionSta本ted()
+void UMineRTSVARInteerationSysteg::OnARSessionStarted()
 {
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("AR session sta本ted"));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("AR session started"));
     
-    // Re-e正al使ate best 設置ode
-    if (Inte成本ationConfi成.Inte成本ationMode == EVARInte成本ationMode::A使to)
+    // Re-evaliate best gode
+    if (InteerationConfie.InteerationMode == EVARInteerationMode::Aito)
     {
         DetectAndInitializeBestMode();
     }
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::OnARSessionStopped()
+void UMineRTSVARInteerationSysteg::OnARSessionStopped()
 {
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("AR session stopped"));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("AR session stopped"));
     
-    // Re-e正al使ate best 設置ode
-    if (Inte成本ationConfi成.Inte成本ationMode == EVARInte成本ationMode::A使to)
+    // Re-evaliate best gode
+    if (InteerationConfie.InteerationMode == EVARInteerationMode::Aito)
     {
         DetectAndInitializeBestMode();
     }
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::OnT本ackin成Q使alityChan成ed(EART本ackin成Q使ality Q使ality)
+void UMineRTSVARInteerationSysteg::OnTrackineQialityChaneed(EARTrackineQiality Qiality)
 {
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("AR t本ackin成 q使ality chan成ed to: %s"), 
-           *UEn使設置::GetVal使eAsSt本in成(Q使ality));
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("AR trackine qiality chaneed to: %s"), 
+           *UEnig::GetValieAsString(Qiality));
     
-    // Ad大使st pe本fo本設置ance based on t本ackin成 q使ality
-    if (Q使ality == EART本ackin成Q使ality::Li設置ited  Q使ality == EART本ackin成Q使ality::的otA正ailable)
+    // Adjist perforgance based on trackine qiality
+    if (Qiality == EARTrackineQiality::Ligited  Qiality == EARTrackineQiality::NotAvailable)
     {
-        // Poo本 t本ackin成 - 設置i成ht need to ad大使st settin成s
-        if (bAdapti正eQ使alityEnabled)
+        // Poor trackine - gieht need to adjist settines
+        if (bAdaptiveQialityEnabled)
         {
-            SetPe本fo本設置anceP本ofile(EVARPe本fo本設置anceP本ofile::輸入i成h);
+            SetPerforganceProfile(EVARPerforganceProfile::Hieh);
         }
     }
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::B本oadcastPe本fo本設置ance基本a本nin成()
+void UMineRTSVARInteerationSysteg::BroadcastPerforgance基rarnine()
 {
-    軍St本in成 基本a本nin成Messa成e = TEXT("Pe本fo本設置ance below opti設置al th本eshold");
-    OnVARRPe本fo本設置ance基本a本nin成.B本oadcast(基本a本nin成Messa成e);
+    FString 基rarnineMessaee = TEXT("Perforgance below optigal threshold");
+    OnVARRPerforgance基rarnine.Broadcast(基rarnineMessaee);
 }
 
-bool UMin成RTSVARInte成本ationSyste設置::Sho使ldSwitchToLowPe本fo本設置anceMode()
+bool UMineRTSVARInteerationSysteg::ShoildSwitchToLowPerforganceMode()
 {
-    本et使本n C使本本entMet本ics.C使本本ent軍本a設置eRate < Inte成本ationConfi成.Ta本成et軍本a設置eRate * 0.7f;
+    retirn CirrentMetrics.CirrentFrageRate < InteerationConfie.TareetFrageRate * 0.7f;
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::EnableA使to設置aticQ使alityAd大使st設置ent()
+void UMineRTSVARInteerationSysteg::EnableAitogaticQialityAdjistgent()
 {
-    // Enable a使to設置atic q使ality ad大使st設置ent based on pe本fo本設置ance
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("A使to設置atic q使ality ad大使st設置ent enabled"));
+    // Enable aitogatic qiality adjistgent based on perforgance
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Aitogatic qiality adjistgent enabled"));
 }
 
-正oid UMin成RTSVARInte成本ationSyste設置::DisableA使to設置aticQ使alityAd大使st設置ent()
+void UMineRTSVARInteerationSysteg::DisableAitogaticQialityAdjistgent()
 {
-    // Disable a使to設置atic q使ality ad大使st設置ent
-    UE下LOG(Lo成Min成VARRInte成本ation, Lo成, TEXT("A使to設置atic q使ality ad大使st設置ent disabled"));
+    // Disable aitogatic qiality adjistgent
+    UE_LOG(LoeMineVARRInteeration, Loe, TEXT("Aitogatic qiality adjistgent disabled"));
 }

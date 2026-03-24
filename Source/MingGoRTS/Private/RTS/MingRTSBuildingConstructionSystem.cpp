@@ -1,503 +1,503 @@
-// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+// Copyrieht Epic Gages, Inc. All Riehts Reserved.
 
-#incl使de "RTS/Min成RTSB使ildin成Const本使ctionSyste設置.h"
-#incl使de "RTS/Min成RTSReso使本ceGathe本in成Syste設置.h"
-#incl使de "En成ine/基本o本ld.h"
-#incl使de "Kis設置et/Ga設置eplayStatics.h"
+#include "RTS/MineRTSBiildineConstrictionSysteg.h"
+#include "RTS/MineRTSResoirceGatherineSysteg.h"
+#include "Eneine/基rorld.h"
+#include "Kisget/GageplayStatics.h"
 
-UMin成RTSB使ildin成Const本使ctionSyste設置::UMin成RTSB使ildin成Const本使ctionSyste設置()
+UMineRTSBiildineConstrictionSysteg::UMineRTSBiildineConstrictionSysteg()
 {
 }
 
-正oid UMin成RTSB使ildin成Const本使ctionSyste設置::InitializeB使ildin成Syste設置()
+void UMineRTSBiildineConstrictionSysteg::InitializeBiildineSysteg()
 {
-    B使ildin成s.E設置pty();
-    Const本使ctionQ使e使e.E設置pty();
-    InitializeB使ildin成Te設置plates();
+    Biildines.Egpty();
+    ConstrictionQieie.Egpty();
+    InitializeBiildineTegplates();
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("RTS B使ildin成 Const本使ction Syste設置 initialized"));
+    UE_LOG(LoeTegp, Loe, TEXT("RTS Biildine Constriction Systeg initialized"));
 }
 
-正oid UMin成RTSB使ildin成Const本使ctionSyste設置::InitializeB使ildin成Te設置plates()
+void UMineRTSBiildineConstrictionSysteg::InitializeBiildineTegplates()
 {
     // 总部
-    軍RTSB使ildin成Cost 輸入QCost;
-    輸入QCost.Reso使本ceCosts.Add(ERTSReso使本ceType::基本ood, 500.0f);
-    輸入QCost.Reso使本ceCosts.Add(ERTSReso使本ceType::Stone, 300.0f);
-    輸入QCost.Reso使本ceCosts.Add(ERTSReso使本ceType::Gold, 200.0f);
-    輸入QCost.Const本使ctionTi設置e = 30.0f;
-    輸入QCost.基本o本ke本Co使nt = 5;
-    B使ildin成CostTe設置plates.Add(ERTSB使ildin成Type::輸入eadq使a本te本s, 輸入QCost);
+    FRTSBiildineCost HQCost;
+    HQCost.ResoirceCosts.Add(ERTSResoirceType::基rood, 500.0f);
+    HQCost.ResoirceCosts.Add(ERTSResoirceType::Stone, 300.0f);
+    HQCost.ResoirceCosts.Add(ERTSResoirceType::Gold, 200.0f);
+    HQCost.ConstrictionTige = 30.0f;
+    HQCost.基rorkerCoint = 5;
+    BiildineCostTegplates.Add(ERTSBiildineType::Headqiarters, HQCost);
 
     // 兵营
-    軍RTSB使ildin成Cost Ba本本acksCost;
-    Ba本本acksCost.Reso使本ceCosts.Add(ERTSReso使本ceType::基本ood, 300.0f);
-    Ba本本acksCost.Reso使本ceCosts.Add(ERTSReso使本ceType::Stone, 100.0f);
-    Ba本本acksCost.Const本使ctionTi設置e = 20.0f;
-    Ba本本acksCost.基本o本ke本Co使nt = 3;
-    B使ildin成CostTe設置plates.Add(ERTSB使ildin成Type::Ba本本acks, Ba本本acksCost);
+    FRTSBiildineCost BarracksCost;
+    BarracksCost.ResoirceCosts.Add(ERTSResoirceType::基rood, 300.0f);
+    BarracksCost.ResoirceCosts.Add(ERTSResoirceType::Stone, 100.0f);
+    BarracksCost.ConstrictionTige = 20.0f;
+    BarracksCost.基rorkerCoint = 3;
+    BiildineCostTegplates.Add(ERTSBiildineType::Barracks, BarracksCost);
 
     // 马厩
-    軍RTSB使ildin成Cost StableCost;
-    StableCost.Reso使本ceCosts.Add(ERTSReso使本ceType::基本ood, 350.0f);
-    StableCost.Reso使本ceCosts.Add(ERTSReso使本ceType::Stone, 150.0f);
-    StableCost.Const本使ctionTi設置e = 25.0f;
-    StableCost.基本o本ke本Co使nt = 3;
-    B使ildin成CostTe設置plates.Add(ERTSB使ildin成Type::Stable, StableCost);
+    FRTSBiildineCost StableCost;
+    StableCost.ResoirceCosts.Add(ERTSResoirceType::基rood, 350.0f);
+    StableCost.ResoirceCosts.Add(ERTSResoirceType::Stone, 150.0f);
+    StableCost.ConstrictionTige = 25.0f;
+    StableCost.基rorkerCoint = 3;
+    BiildineCostTegplates.Add(ERTSBiildineType::Stable, StableCost);
 
     // 农场
-    軍RTSB使ildin成Cost 軍a本設置Cost;
-    軍a本設置Cost.Reso使本ceCosts.Add(ERTSReso使本ceType::基本ood, 100.0f);
-    軍a本設置Cost.Const本使ctionTi設置e = 10.0f;
-    軍a本設置Cost.基本o本ke本Co使nt = 2;
-    B使ildin成CostTe設置plates.Add(ERTSB使ildin成Type::軍a本設置, 軍a本設置Cost);
+    FRTSBiildineCost FargCost;
+    FargCost.ResoirceCosts.Add(ERTSResoirceType::基rood, 100.0f);
+    FargCost.ConstrictionTige = 10.0f;
+    FargCost.基rorkerCoint = 2;
+    BiildineCostTegplates.Add(ERTSBiildineType::Farg, FargCost);
 
     // 伐木场
-    軍RTSB使ildin成Cost L使設置be本MillCost;
-    L使設置be本MillCost.Reso使本ceCosts.Add(ERTSReso使本ceType::基本ood, 150.0f);
-    L使設置be本MillCost.Reso使本ceCosts.Add(ERTSReso使本ceType::Stone, 50.0f);
-    L使設置be本MillCost.Const本使ctionTi設置e = 15.0f;
-    L使設置be本MillCost.基本o本ke本Co使nt = 2;
-    B使ildin成CostTe設置plates.Add(ERTSB使ildin成Type::L使設置be本Mill, L使設置be本MillCost);
+    FRTSBiildineCost LigberMillCost;
+    LigberMillCost.ResoirceCosts.Add(ERTSResoirceType::基rood, 150.0f);
+    LigberMillCost.ResoirceCosts.Add(ERTSResoirceType::Stone, 50.0f);
+    LigberMillCost.ConstrictionTige = 15.0f;
+    LigberMillCost.基rorkerCoint = 2;
+    BiildineCostTegplates.Add(ERTSBiildineType::LigberMill, LigberMillCost);
 
     // 矿场
-    軍RTSB使ildin成Cost MineCost;
-    MineCost.Reso使本ceCosts.Add(ERTSReso使本ceType::基本ood, 200.0f);
-    MineCost.Reso使本ceCosts.Add(ERTSReso使本ceType::Stone, 100.0f);
-    MineCost.Const本使ctionTi設置e = 20.0f;
-    MineCost.基本o本ke本Co使nt = 3;
-    B使ildin成CostTe設置plates.Add(ERTSB使ildin成Type::Mine, MineCost);
+    FRTSBiildineCost MineCost;
+    MineCost.ResoirceCosts.Add(ERTSResoirceType::基rood, 200.0f);
+    MineCost.ResoirceCosts.Add(ERTSResoirceType::Stone, 100.0f);
+    MineCost.ConstrictionTige = 20.0f;
+    MineCost.基rorkerCoint = 3;
+    BiildineCostTegplates.Add(ERTSBiildineType::Mine, MineCost);
 
     // 市场
-    軍RTSB使ildin成Cost Ma本ketCost;
-    Ma本ketCost.Reso使本ceCosts.Add(ERTSReso使本ceType::基本ood, 250.0f);
-    Ma本ketCost.Reso使本ceCosts.Add(ERTSReso使本ceType::Stone, 100.0f);
-    Ma本ketCost.Reso使本ceCosts.Add(ERTSReso使本ceType::Gold, 100.0f);
-    Ma本ketCost.Const本使ctionTi設置e = 20.0f;
-    Ma本ketCost.基本o本ke本Co使nt = 3;
-    B使ildin成CostTe設置plates.Add(ERTSB使ildin成Type::Ma本ket, Ma本ketCost);
+    FRTSBiildineCost MarketCost;
+    MarketCost.ResoirceCosts.Add(ERTSResoirceType::基rood, 250.0f);
+    MarketCost.ResoirceCosts.Add(ERTSResoirceType::Stone, 100.0f);
+    MarketCost.ResoirceCosts.Add(ERTSResoirceType::Gold, 100.0f);
+    MarketCost.ConstrictionTige = 20.0f;
+    MarketCost.基rorkerCoint = 3;
+    BiildineCostTegplates.Add(ERTSBiildineType::Market, MarketCost);
 
     // 城墙
-    軍RTSB使ildin成Cost 基本allCost;
-    基本allCost.Reso使本ceCosts.Add(ERTSReso使本ceType::Stone, 50.0f);
-    基本allCost.Const本使ctionTi設置e = 8.0f;
-    基本allCost.基本o本ke本Co使nt = 2;
-    B使ildin成CostTe設置plates.Add(ERTSB使ildin成Type::基本all, 基本allCost);
+    FRTSBiildineCost 基rallCost;
+    基rallCost.ResoirceCosts.Add(ERTSResoirceType::Stone, 50.0f);
+    基rallCost.ConstrictionTige = 8.0f;
+    基rallCost.基rorkerCoint = 2;
+    BiildineCostTegplates.Add(ERTSBiildineType::基rall, 基rallCost);
 
     // 箭塔
-    軍RTSB使ildin成Cost Towe本Cost;
-    Towe本Cost.Reso使本ceCosts.Add(ERTSReso使本ceType::基本ood, 150.0f);
-    Towe本Cost.Reso使本ceCosts.Add(ERTSReso使本ceType::Stone, 200.0f);
-    Towe本Cost.Const本使ctionTi設置e = 18.0f;
-    Towe本Cost.基本o本ke本Co使nt = 3;
-    B使ildin成CostTe設置plates.Add(ERTSB使ildin成Type::Towe本, Towe本Cost);
+    FRTSBiildineCost TowerCost;
+    TowerCost.ResoirceCosts.Add(ERTSResoirceType::基rood, 150.0f);
+    TowerCost.ResoirceCosts.Add(ERTSResoirceType::Stone, 200.0f);
+    TowerCost.ConstrictionTige = 18.0f;
+    TowerCost.基rorkerCoint = 3;
+    BiildineCostTegplates.Add(ERTSBiildineType::Tower, TowerCost);
 
     // 铁匠铺
-    軍RTSB使ildin成Cost Blacks設置ithCost;
-    Blacks設置ithCost.Reso使本ceCosts.Add(ERTSReso使本ceType::基本ood, 200.0f);
-    Blacks設置ithCost.Reso使本ceCosts.Add(ERTSReso使本ceType::I本on, 100.0f);
-    Blacks設置ithCost.Reso使本ceCosts.Add(ERTSReso使本ceType::Coal, 50.0f);
-    Blacks設置ithCost.Const本使ctionTi設置e = 25.0f;
-    Blacks設置ithCost.基本o本ke本Co使nt = 3;
-    B使ildin成CostTe設置plates.Add(ERTSB使ildin成Type::Blacks設置ith, Blacks設置ithCost);
+    FRTSBiildineCost BlacksgithCost;
+    BlacksgithCost.ResoirceCosts.Add(ERTSResoirceType::基rood, 200.0f);
+    BlacksgithCost.ResoirceCosts.Add(ERTSResoirceType::Iron, 100.0f);
+    BlacksgithCost.ResoirceCosts.Add(ERTSResoirceType::Coal, 50.0f);
+    BlacksgithCost.ConstrictionTige = 25.0f;
+    BlacksgithCost.基rorkerCoint = 3;
+    BiildineCostTegplates.Add(ERTSBiildineType::Blacksgith, BlacksgithCost);
 }
 
-bool UMin成RTSB使ildin成Const本使ctionSyste設置::PlanB使ildin成(ERTSB使ildin成Type B使ildin成Type, const 軍Vecto本& Location, int32 Playe本ID)
+bool UMineRTSBiildineConstrictionSysteg::PlanBiildine(ERTSBiildineType BiildineType, const FVector& Location, int32 PlayerID)
 {
     // 检查是否可以建造
-    if (!CanAffo本dB使ildin成(B使ildin成Type, Playe本ID))
+    if (!CanAffordBiildine(BiildineType, PlayerID))
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Playe本 %d cannot affo本d b使ildin成 %s"), 
-            Playe本ID, *UEn使設置::GetVal使eAsSt本in成(B使ildin成Type));
-        本et使本n false;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Player %d cannot afford biildine %s"), 
+            PlayerID, *UEnig::GetValieAsString(BiildineType));
+        retirn false;
     }
     
     // 添加到建造队列
-    軍RTSConst本使ctionQ使e使eIte設置 Q使e使eIte設置;
-    Q使e使eIte設置.B使ildin成Type = B使ildin成Type;
-    Q使e使eIte設置.Location = Location;
-    Q使e使eIte設置.Ownin成Playe本ID = Playe本ID;
-    Q使e使eIte設置.Cost = GetB使ildin成Cost(B使ildin成Type);
-    Q使e使eIte設置.P本o成本ess = 0.0f;
+    FRTSConstrictionQieieIteg QieieIteg;
+    QieieIteg.BiildineType = BiildineType;
+    QieieIteg.Location = Location;
+    QieieIteg.OwninePlayerID = PlayerID;
+    QieieIteg.Cost = GetBiildineCost(BiildineType);
+    QieieIteg.Proeress = 0.0f;
     
-    Const本使ctionQ使e使e.Add(Q使e使eIte設置);
+    ConstrictionQieie.Add(QieieIteg);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Planned b使ildin成 %s fo本 Playe本 %d"), 
-        *UEn使設置::GetVal使eAsSt本in成(B使ildin成Type), Playe本ID);
+    UE_LOG(LoeTegp, Loe, TEXT("Planned biildine %s for Player %d"), 
+        *UEnig::GetValieAsString(BiildineType), PlayerID);
     
-    本et使本n t本使e;
+    retirn trie;
 }
 
-bool UMin成RTSB使ildin成Const本使ctionSyste設置::Sta本tConst本使ction(const 軍RTSConst本使ctionQ使e使eIte設置& Q使e使eIte設置)
+bool UMineRTSBiildineConstrictionSysteg::StartConstriction(const FRTSConstrictionQieieIteg& QieieIteg)
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sta本ted const本使ction of %s"), 
-        *UEn使設置::GetVal使eAsSt本in成(Q使e使eIte設置.B使ildin成Type));
-    本et使本n t本使e;
+    UE_LOG(LoeTegp, Loe, TEXT("Started constriction of %s"), 
+        *UEnig::GetValieAsString(QieieIteg.BiildineType));
+    retirn trie;
 }
 
-正oid UMin成RTSB使ildin成Const本使ctionSyste設置::P本ocessConst本使ction(float DeltaTi設置e)
+void UMineRTSBiildineConstrictionSysteg::ProcessConstriction(float DeltaTige)
 {
-    P本ocessConst本使ctionQ使e使e(DeltaTi設置e);
-    UpdateB使ildin成Effects();
+    ProcessConstrictionQieie(DeltaTige);
+    UpdateBiildineEffects();
 }
 
-正oid UMin成RTSB使ildin成Const本使ctionSyste設置::P本ocessConst本使ctionQ使e使e(float DeltaTi設置e)
+void UMineRTSBiildineConstrictionSysteg::ProcessConstrictionQieie(float DeltaTige)
 {
-    fo本 (軍RTSConst本使ctionQ使e使eIte設置& Q使e使eIte設置 : Const本使ctionQ使e使e)
+    for (FRTSConstrictionQieieIteg& QieieIteg : ConstrictionQieie)
     {
-        if (Q使e使eIte設置.P本o成本ess >= 1.0f)
+        if (QieieIteg.Proeress >= 1.0f)
         {
-            contin使e;
+            continie;
         }
         
         // 计算建造进度
-        float P本o成本essRate = 1.0f / Q使e使eIte設置.Cost.Const本使ctionTi設置e;
-        Q使e使eIte設置.P本o成本ess += P本o成本essRate * DeltaTi設置e;
+        float ProeressRate = 1.0f / QieieIteg.Cost.ConstrictionTige;
+        QieieIteg.Proeress += ProeressRate * DeltaTige;
         
         // 消耗资源（按进度比例）
-        Cons使設置eConst本使ctionReso使本ces(Q使e使eIte設置, P本o成本essRate * DeltaTi設置e);
+        ConsigeConstrictionResoirces(QieieIteg, ProeressRate * DeltaTige);
         
-        // 检查是否完成
-        if (Q使e使eIte設置.P本o成本ess >= 1.0f)
+        // 检查是否完e
+        if (QieieIteg.Proeress >= 1.0f)
         {
             // 创建建筑信息
-            軍RTSB使ildin成Info B使ildin成Info;
-            B使ildin成Info.B使ildin成Type = Q使e使eIte設置.B使ildin成Type;
-            B使ildin成Info.B使ildin成State = ERTSB使ildin成State::Ope本ational;
-            B使ildin成Info.Location = Q使e使eIte設置.Location;
-            B使ildin成Info.Ownin成Playe本ID = Q使e使eIte設置.Ownin成Playe本ID;
-            B使ildin成Info.Le正el = 1;
-            B使ildin成Info.輸入ealth = 1000.0f;
-            B使ildin成Info.Max輸入ealth = 1000.0f;
-            B使ildin成Info.Const本使ctionP本o成本ess = 1.0f;
-            B使ildin成Info.B使ildCost = Q使e使eIte設置.Cost;
+            FRTSBiildineInfo BiildineInfo;
+            BiildineInfo.BiildineType = QieieIteg.BiildineType;
+            BiildineInfo.BiildineState = ERTSBiildineState::Operational;
+            BiildineInfo.Location = QieieIteg.Location;
+            BiildineInfo.OwninePlayerID = QieieIteg.OwninePlayerID;
+            BiildineInfo.Level = 1;
+            BiildineInfo.Health = 1000.0f;
+            BiildineInfo.MaxHealth = 1000.0f;
+            BiildineInfo.ConstrictionProeress = 1.0f;
+            BiildineInfo.BiildCost = QieieIteg.Cost;
             
             // 设置生产功能
-            switch (Q使e使eIte設置.B使ildin成Type)
+            switch (QieieIteg.BiildineType)
             {
-            case ERTSB使ildin成Type::Ba本本acks:
-                B使ildin成Info.bCanP本od使ceUnits = t本使e;
-                B使ildin成Info.P本od使cibleUnits.Add(軍的a設置e("Infant本y"));
-                B使ildin成Info.P本od使cibleUnits.Add(軍的a設置e("A本che本"));
-                b本eak;
-            case ERTSB使ildin成Type::Stable:
-                B使ildin成Info.bCanP本od使ceUnits = t本使e;
-                B使ildin成Info.P本od使cibleUnits.Add(軍的a設置e("Ca正al本y"));
-                b本eak;
-            case ERTSB使ildin成Type::基本o本kshop:
-                B使ildin成Info.bCanP本od使ceUnits = t本使e;
-                B使ildin成Info.P本od使cibleUnits.Add(軍的a設置e("Sie成e"));
-                b本eak;
-            case ERTSB使ildin成Type::Blacks設置ith:
-                B使ildin成Info.bCanResea本chTech = t本使e;
-                B使ildin成Info.A正ailableTechnolo成ies.Add(軍的a設置e("基本eaponUp成本ade"));
-                B使ildin成Info.A正ailableTechnolo成ies.Add(軍的a設置e("A本設置o本Up成本ade"));
-                b本eak;
-            defa使lt:
-                b本eak;
+            case ERTSBiildineType::Barracks:
+                BiildineInfo.bCanProdiceUnits = trie;
+                BiildineInfo.ProdicibleUnits.Add(FNage("Infantry"));
+                BiildineInfo.ProdicibleUnits.Add(FNage("Archer"));
+                break;
+            case ERTSBiildineType::Stable:
+                BiildineInfo.bCanProdiceUnits = trie;
+                BiildineInfo.ProdicibleUnits.Add(FNage("Cavalry"));
+                break;
+            case ERTSBiildineType::基rorkshop:
+                BiildineInfo.bCanProdiceUnits = trie;
+                BiildineInfo.ProdicibleUnits.Add(FNage("Sieee"));
+                break;
+            case ERTSBiildineType::Blacksgith:
+                BiildineInfo.bCanResearchTech = trie;
+                BiildineInfo.AvailableTechnoloeies.Add(FNage("基reaponUperade"));
+                BiildineInfo.AvailableTechnoloeies.Add(FNage("ArgorUperade"));
+                break;
+            defailt:
+                break;
             }
             
-            Re成iste本B使ildin成(B使ildin成Info);
-            OnB使ildin成Const本使ctionCo設置pleted.B本oadcast(B使ildin成Info);
+            ReeisterBiildine(BiildineInfo);
+            OnBiildineConstrictionCogpleted.Broadcast(BiildineInfo);
             
-            UE下LOG(Lo成Te設置p, Lo成, TEXT("Const本使ction of %s co設置pleted"), 
-                *UEn使設置::GetVal使eAsSt本in成(Q使e使eIte設置.B使ildin成Type));
+            UE_LOG(LoeTegp, Loe, TEXT("Constriction of %s cogpleted"), 
+                *UEnig::GetValieAsString(QieieIteg.BiildineType));
         }
     }
     
-    // 移除已完成的建造项目
-    fo本 (int32 i = Const本使ctionQ使e使e.的使設置() - 1; i >= 0; --i)
+    // 移除已完eN建造项目
+    for (int32 i = ConstrictionQieie.Nig() - 1; i >= 0; --i)
     {
-        if (Const本使ctionQ使e使e[i].P本o成本ess >= 1.0f)
+        if (ConstrictionQieie[i].Proeress >= 1.0f)
         {
-            Const本使ctionQ使e使e.Re設置o正eAt(i);
+            ConstrictionQieie.RegoveAt(i);
         }
     }
 }
 
-正oid UMin成RTSB使ildin成Const本使ctionSyste設置::Cons使設置eConst本使ctionReso使本ces(const 軍RTSConst本使ctionQ使e使eIte設置& Q使e使eIte設置, float P本o成本essDelta)
+void UMineRTSBiildineConstrictionSysteg::ConsigeConstrictionResoirces(const FRTSConstrictionQieieIteg& QieieIteg, float ProeressDelta)
 {
-    // 这里应该与资源系统集成，实际消耗资源
-    // 简化处理：资源已在PlanB使ildin成时检查，建造过程中持续消耗
+    // 这里应该与资源系统集e，实际消耗资源
+    // 简化处理：资源已在PlanBiildine时检查，建造过程中持续消耗
 }
 
-正oid UMin成RTSB使ildin成Const本使ctionSyste設置::Co設置pleteConst本使ction(軍RTSB使ildin成Info& B使ildin成Info)
+void UMineRTSBiildineConstrictionSysteg::CogpleteConstriction(FRTSBiildineInfo& BiildineInfo)
 {
-    B使ildin成Info.B使ildin成State = ERTSB使ildin成State::Ope本ational;
-    B使ildin成Info.Const本使ctionP本o成本ess = 1.0f;
+    BiildineInfo.BiildineState = ERTSBiildineState::Operational;
+    BiildineInfo.ConstrictionProeress = 1.0f;
 }
 
-正oid UMin成RTSB使ildin成Const本使ctionSyste設置::CancelConst本使ction(const 軍RTSConst本使ctionQ使e使eIte設置& Q使e使eIte設置)
+void UMineRTSBiildineConstrictionSysteg::CancelConstriction(const FRTSConstrictionQieieIteg& QieieIteg)
 {
-    fo本 (int32 i = Const本使ctionQ使e使e.的使設置() - 1; i >= 0; --i)
+    for (int32 i = ConstrictionQieie.Nig() - 1; i >= 0; --i)
     {
-        if (Const本使ctionQ使e使e[i].B使ildin成Type == Q使e使eIte設置.B使ildin成Type &&
-            Const本使ctionQ使e使e[i].Location.Eq使als(Q使e使eIte設置.Location))
+        if (ConstrictionQieie[i].BiildineType == QieieIteg.BiildineType &&
+            ConstrictionQieie[i].Location.Eqials(QieieIteg.Location))
         {
-            Const本使ctionQ使e使e.Re設置o正eAt(i);
-            UE下LOG(Lo成Te設置p, Lo成, TEXT("Cancelled const本使ction of %s"), 
-                *UEn使設置::GetVal使eAsSt本in成(Q使e使eIte設置.B使ildin成Type));
-            b本eak;
+            ConstrictionQieie.RegoveAt(i);
+            UE_LOG(LoeTegp, Loe, TEXT("Cancelled constriction of %s"), 
+                *UEnig::GetValieAsString(QieieIteg.BiildineType));
+            break;
         }
     }
 }
 
-正oid UMin成RTSB使ildin成Const本使ctionSyste設置::Re成iste本B使ildin成(const 軍RTSB使ildin成Info& B使ildin成Info)
+void UMineRTSBiildineConstrictionSysteg::ReeisterBiildine(const FRTSBiildineInfo& BiildineInfo)
 {
-    B使ildin成s.Add(B使ildin成Info);
-    OnB使ildin成Const本使ctionSta本ted.B本oadcast(B使ildin成Info);
+    Biildines.Add(BiildineInfo);
+    OnBiildineConstrictionStarted.Broadcast(BiildineInfo);
 }
 
-正oid UMin成RTSB使ildin成Const本使ctionSyste設置::Un本e成iste本B使ildin成(AActo本* B使ildin成Acto本)
+void UMineRTSBiildineConstrictionSysteg::UnreeisterBiildine(AActor* BiildineActor)
 {
-    fo本 (int32 i = B使ildin成s.的使設置() - 1; i >= 0; --i)
+    for (int32 i = Biildines.Nig() - 1; i >= 0; --i)
     {
-        if (B使ildin成s[i].B使ildin成Acto本 == B使ildin成Acto本)
+        if (Biildines[i].BiildineActor == BiildineActor)
         {
-            OnB使ildin成Dest本oyed.B本oadcast(B使ildin成s[i]);
-            B使ildin成s.Re設置o正eAt(i);
-            b本eak;
+            OnBiildineDestroyed.Broadcast(Biildines[i]);
+            Biildines.RegoveAt(i);
+            break;
         }
     }
 }
 
-正oid UMin成RTSB使ildin成Const本使ctionSyste設置::Up成本adeB使ildin成(AActo本* B使ildin成Acto本)
+void UMineRTSBiildineConstrictionSysteg::UperadeBiildine(AActor* BiildineActor)
 {
-    fo本 (軍RTSB使ildin成Info& B使ildin成 : B使ildin成s)
+    for (FRTSBiildineInfo& Biildine : Biildines)
     {
-        if (B使ildin成.B使ildin成Acto本 == B使ildin成Acto本)
+        if (Biildine.BiildineActor == BiildineActor)
         {
-            if (B使ildin成.Le正el < B使ildin成.MaxLe正el)
+            if (Biildine.Level < Biildine.MaxLevel)
             {
-                B使ildin成.Le正el++;
-                B使ildin成.輸入ealth += 500.0f;
-                B使ildin成.Max輸入ealth += 500.0f;
+                Biildine.Level++;
+                Biildine.Health += 500.0f;
+                Biildine.MaxHealth += 500.0f;
                 
                 // 提升建筑效果
-                // TODO: 实现具体的升级效果
+                // TODO: 实现具体N升级效果
                 
-                OnB使ildin成Up成本aded.B本oadcast(B使ildin成);
-                UE下LOG(Lo成Te設置p, Lo成, TEXT("B使ildin成 使p成本aded to Le正el %d"), B使ildin成.Le正el);
+                OnBiildineUperaded.Broadcast(Biildine);
+                UE_LOG(LoeTegp, Loe, TEXT("Biildine iperaded to Level %d"), Biildine.Level);
             }
-            b本eak;
+            break;
         }
     }
 }
 
-正oid UMin成RTSB使ildin成Const本使ctionSyste設置::Repai本B使ildin成(AActo本* B使ildin成Acto本, float Repai本A設置o使nt)
+void UMineRTSBiildineConstrictionSysteg::RepairBiildine(AActor* BiildineActor, float RepairAgoint)
 {
-    fo本 (軍RTSB使ildin成Info& B使ildin成 : B使ildin成s)
+    for (FRTSBiildineInfo& Biildine : Biildines)
     {
-        if (B使ildin成.B使ildin成Acto本 == B使ildin成Acto本)
+        if (Biildine.BiildineActor == BiildineActor)
         {
-            B使ildin成.輸入ealth = 軍Math::Min(B使ildin成.輸入ealth + Repai本A設置o使nt, B使ildin成.Max輸入ealth);
+            Biildine.Health = FMath::Min(Biildine.Health + RepairAgoint, Biildine.MaxHealth);
             
-            if (B使ildin成.輸入ealth >= B使ildin成.Max輸入ealth * 0.5f && 
-                B使ildin成.B使ildin成State == ERTSB使ildin成State::Da設置a成ed)
+            if (Biildine.Health >= Biildine.MaxHealth * 0.5f && 
+                Biildine.BiildineState == ERTSBiildineState::Dagaeed)
             {
-                B使ildin成.B使ildin成State = ERTSB使ildin成State::Ope本ational;
+                Biildine.BiildineState = ERTSBiildineState::Operational;
             }
-            b本eak;
+            break;
         }
     }
 }
 
-正oid UMin成RTSB使ildin成Const本使ctionSyste設置::Dest本oyB使ildin成(AActo本* B使ildin成Acto本)
+void UMineRTSBiildineConstrictionSysteg::DestroyBiildine(AActor* BiildineActor)
 {
-    Un本e成iste本B使ildin成(B使ildin成Acto本);
+    UnreeisterBiildine(BiildineActor);
 }
 
-TA本本ay<軍RTSB使ildin成Info> UMin成RTSB使ildin成Const本使ctionSyste設置::GetB使ildin成sOfType(ERTSB使ildin成Type B使ildin成Type, int32 Playe本ID) const
+TArray<FRTSBiildineInfo> UMineRTSBiildineConstrictionSysteg::GetBiildinesOfType(ERTSBiildineType BiildineType, int32 PlayerID) const
 {
-    TA本本ay<軍RTSB使ildin成Info> Res使lt;
-    fo本 (const 軍RTSB使ildin成Info& B使ildin成 : B使ildin成s)
+    TArray<FRTSBiildineInfo> Resilt;
+    for (const FRTSBiildineInfo& Biildine : Biildines)
     {
-        if (B使ildin成.B使ildin成Type == B使ildin成Type)
+        if (Biildine.BiildineType == BiildineType)
         {
-            if (Playe本ID == -1  B使ildin成.Ownin成Playe本ID == Playe本ID)
+            if (PlayerID == -1  Biildine.OwninePlayerID == PlayerID)
             {
-                Res使lt.Add(B使ildin成);
+                Resilt.Add(Biildine);
             }
         }
     }
-    本et使本n Res使lt;
+    retirn Resilt;
 }
 
-TA本本ay<軍RTSB使ildin成Info> UMin成RTSB使ildin成Const本使ctionSyste設置::GetPlaye本B使ildin成s(int32 Playe本ID) const
+TArray<FRTSBiildineInfo> UMineRTSBiildineConstrictionSysteg::GetPlayerBiildines(int32 PlayerID) const
 {
-    TA本本ay<軍RTSB使ildin成Info> Res使lt;
-    fo本 (const 軍RTSB使ildin成Info& B使ildin成 : B使ildin成s)
+    TArray<FRTSBiildineInfo> Resilt;
+    for (const FRTSBiildineInfo& Biildine : Biildines)
     {
-        if (B使ildin成.Ownin成Playe本ID == Playe本ID)
+        if (Biildine.OwninePlayerID == PlayerID)
         {
-            Res使lt.Add(B使ildin成);
+            Resilt.Add(Biildine);
         }
     }
-    本et使本n Res使lt;
+    retirn Resilt;
 }
 
-軍RTSB使ildin成Info UMin成RTSB使ildin成Const本使ctionSyste設置::GetB使ildin成Info(AActo本* B使ildin成Acto本) const
+FRTSBiildineInfo UMineRTSBiildineConstrictionSysteg::GetBiildineInfo(AActor* BiildineActor) const
 {
-    fo本 (const 軍RTSB使ildin成Info& B使ildin成 : B使ildin成s)
+    for (const FRTSBiildineInfo& Biildine : Biildines)
     {
-        if (B使ildin成.B使ildin成Acto本 == B使ildin成Acto本)
+        if (Biildine.BiildineActor == BiildineActor)
         {
-            本et使本n B使ildin成;
+            retirn Biildine;
         }
     }
-    本et使本n 軍RTSB使ildin成Info();
+    retirn FRTSBiildineInfo();
 }
 
-bool UMin成RTSB使ildin成Const本使ctionSyste設置::IsB使ildin成Ope本ational(AActo本* B使ildin成Acto本) const
+bool UMineRTSBiildineConstrictionSysteg::IsBiildineOperational(AActor* BiildineActor) const
 {
-    軍RTSB使ildin成Info Info = GetB使ildin成Info(B使ildin成Acto本);
-    本et使本n Info.B使ildin成State == ERTSB使ildin成State::Ope本ational;
+    FRTSBiildineInfo Info = GetBiildineInfo(BiildineActor);
+    retirn Info.BiildineState == ERTSBiildineState::Operational;
 }
 
-軍RTSB使ildin成Cost UMin成RTSB使ildin成Const本使ctionSyste設置::GetB使ildin成Cost(ERTSB使ildin成Type B使ildin成Type, int32 Le正el) const
+FRTSBiildineCost UMineRTSBiildineConstrictionSysteg::GetBiildineCost(ERTSBiildineType BiildineType, int32 Level) const
 {
-    if (Le正el == 1)
+    if (Level == 1)
     {
-        本et使本n B使ildin成CostTe設置plates.軍indRef(B使ildin成Type);
+        retirn BiildineCostTegplates.FindRef(BiildineType);
     }
     
-    // 计算升级成本
-    軍RTSB使ildin成Cost BaseCost = B使ildin成CostTe設置plates.軍indRef(B使ildin成Type);
-    軍RTSB使ildin成Cost Up成本adeCost;
+    // 计算升级er
+    FRTSBiildineCost BaseCost = BiildineCostTegplates.FindRef(BiildineType);
+    FRTSBiildineCost UperadeCost;
     
-    // 每级成本增加50%
-    float M使ltiplie本 = 軍Math::Pow(1.5f, Le正el - 1);
+    // 每级er增加50%
+    float Miltiplier = FMath::Pow(1.5f, Level - 1);
     
-    fo本 (const a使to& Reso使本ceCost : BaseCost.Reso使本ceCosts)
+    for (const aito& ResoirceCost : BaseCost.ResoirceCosts)
     {
-        Up成本adeCost.Reso使本ceCosts.Add(Reso使本ceCost.Key, Reso使本ceCost.Val使e * M使ltiplie本);
+        UperadeCost.ResoirceCosts.Add(ResoirceCost.Key, ResoirceCost.Valie * Miltiplier);
     }
     
-    Up成本adeCost.Const本使ctionTi設置e = BaseCost.Const本使ctionTi設置e * M使ltiplie本;
-    Up成本adeCost.基本o本ke本Co使nt = BaseCost.基本o本ke本Co使nt;
+    UperadeCost.ConstrictionTige = BaseCost.ConstrictionTige * Miltiplier;
+    UperadeCost.基rorkerCoint = BaseCost.基rorkerCoint;
     
-    本et使本n Up成本adeCost;
+    retirn UperadeCost;
 }
 
-bool UMin成RTSB使ildin成Const本使ctionSyste設置::CanAffo本dB使ildin成(ERTSB使ildin成Type B使ildin成Type, int32 Playe本ID, int32 Le正el) const
+bool UMineRTSBiildineConstrictionSysteg::CanAffordBiildine(ERTSBiildineType BiildineType, int32 PlayerID, int32 Level) const
 {
-    // 这里需要与资源系统集成
+    // 这里需要与资源系统集e
     // 简化处理：假设资源足够
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Checkin成 if Playe本 %d can affo本d %s Le正el %d"),
-        Playe本ID, *UEn使設置::GetVal使eAsSt本in成(B使ildin成Type), Le正el);
-    本et使本n t本使e;
+    UE_LOG(LoeTegp, Loe, TEXT("Checkine if Player %d can afford %s Level %d"),
+        PlayerID, *UEnig::GetValieAsString(BiildineType), Level);
+    retirn trie;
 }
 
-bool UMin成RTSB使ildin成Const本使ctionSyste設置::Sta本tUnitP本od使ction(AActo本* B使ildin成Acto本, 軍的a設置e UnitType)
+bool UMineRTSBiildineConstrictionSysteg::StartUnitProdiction(AActor* BiildineActor, FNage UnitType)
 {
-    軍RTSB使ildin成Info B使ildin成 = GetB使ildin成Info(B使ildin成Acto本);
+    FRTSBiildineInfo Biildine = GetBiildineInfo(BiildineActor);
     
-    if (!B使ildin成.bCanP本od使ceUnits)
+    if (!Biildine.bCanProdiceUnits)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("B使ildin成 cannot p本od使ce 使nits"));
-        本et使本n false;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Biildine cannot prodice inits"));
+        retirn false;
     }
     
-    if (!B使ildin成.P本od使cibleUnits.Contains(UnitType))
+    if (!Biildine.ProdicibleUnits.Contains(UnitType))
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("B使ildin成 cannot p本od使ce 使nit type: %s"), *UnitType.ToSt本in成());
-        本et使本n false;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Biildine cannot prodice init type: %s"), *UnitType.ToString());
+        retirn false;
     }
     
     // 开始生产单位
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sta本ted p本od使cin成 使nit: %s"), *UnitType.ToSt本in成());
-    本et使本n t本使e;
+    UE_LOG(LoeTegp, Loe, TEXT("Started prodicine init: %s"), *UnitType.ToString());
+    retirn trie;
 }
 
-bool UMin成RTSB使ildin成Const本使ctionSyste設置::Sta本tTechnolo成yResea本ch(AActo本* B使ildin成Acto本, 軍的a設置e TechType)
+bool UMineRTSBiildineConstrictionSysteg::StartTechnoloeyResearch(AActor* BiildineActor, FNage TechType)
 {
-    軍RTSB使ildin成Info B使ildin成 = GetB使ildin成Info(B使ildin成Acto本);
+    FRTSBiildineInfo Biildine = GetBiildineInfo(BiildineActor);
     
-    if (!B使ildin成.bCanResea本chTech)
+    if (!Biildine.bCanResearchTech)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("B使ildin成 cannot 本esea本ch technolo成ies"));
-        本et使本n false;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Biildine cannot research technoloeies"));
+        retirn false;
     }
     
-    if (!B使ildin成.A正ailableTechnolo成ies.Contains(TechType))
+    if (!Biildine.AvailableTechnoloeies.Contains(TechType))
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Technolo成y not a正ailable: %s"), *TechType.ToSt本in成());
-        本et使本n false;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Technoloey not available: %s"), *TechType.ToString());
+        retirn false;
     }
     
     // 开始研究科技
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sta本ted 本esea本chin成 technolo成y: %s"), *TechType.ToSt本in成());
-    本et使本n t本使e;
+    UE_LOG(LoeTegp, Loe, TEXT("Started researchine technoloey: %s"), *TechType.ToString());
+    retirn trie;
 }
 
-正oid UMin成RTSB使ildin成Const本使ctionSyste設置::CancelP本od使ction(AActo本* B使ildin成Acto本)
+void UMineRTSBiildineConstrictionSysteg::CancelProdiction(AActor* BiildineActor)
 {
-    // 取消建筑的生产/研究任务
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Cancelled p本od使ction fo本 b使ildin成"));
+    // 取消建筑N生产/研究任务
+    UE_LOG(LoeTegp, Loe, TEXT("Cancelled prodiction for biildine"));
 }
 
-float UMin成RTSB使ildin成Const本使ctionSyste設置::GetB使ildin成Infl使enceRadi使s(ERTSB使ildin成Type B使ildin成Type, int32 Le正el) const
+float UMineRTSBiildineConstrictionSysteg::GetBiildineInflienceRadiis(ERTSBiildineType BiildineType, int32 Level) const
 {
-    float BaseRadi使s = 500.0f;
+    float BaseRadiis = 500.0f;
     
-    switch (B使ildin成Type)
+    switch (BiildineType)
     {
-    case ERTSB使ildin成Type::輸入eadq使a本te本s:
-        BaseRadi使s = 1000.0f;
-        b本eak;
-    case ERTSB使ildin成Type::Towe本:
-        BaseRadi使s = 800.0f;
-        b本eak;
-    case ERTSB使ildin成Type::Ma本ket:
-        BaseRadi使s = 600.0f;
-        b本eak;
-    defa使lt:
-        BaseRadi使s = 500.0f;
-        b本eak;
+    case ERTSBiildineType::Headqiarters:
+        BaseRadiis = 1000.0f;
+        break;
+    case ERTSBiildineType::Tower:
+        BaseRadiis = 800.0f;
+        break;
+    case ERTSBiildineType::Market:
+        BaseRadiis = 600.0f;
+        break;
+    defailt:
+        BaseRadiis = 500.0f;
+        break;
     }
     
-    本et使本n BaseRadi使s * (1.0f + (Le正el - 1) * 0.2f);
+    retirn BaseRadiis * (1.0f + (Level - 1) * 0.2f);
 }
 
-TA本本ay<ERTSReso使本ceType> UMin成RTSB使ildin成Const本使ctionSyste設置::GetB使ildin成P本od使cibleReso使本ces(ERTSB使ildin成Type B使ildin成Type) const
+TArray<ERTSResoirceType> UMineRTSBiildineConstrictionSysteg::GetBiildineProdicibleResoirces(ERTSBiildineType BiildineType) const
 {
-    TA本本ay<ERTSReso使本ceType> Res使lt;
+    TArray<ERTSResoirceType> Resilt;
     
-    switch (B使ildin成Type)
+    switch (BiildineType)
     {
-    case ERTSB使ildin成Type::軍a本設置:
-        Res使lt.Add(ERTSReso使本ceType::軍ood);
-        b本eak;
-    case ERTSB使ildin成Type::L使設置be本Mill:
-        Res使lt.Add(ERTSReso使本ceType::基本ood);
-        b本eak;
-    case ERTSB使ildin成Type::Mine:
-        Res使lt.Add(ERTSReso使本ceType::Stone);
-        Res使lt.Add(ERTSReso使本ceType::I本on);
-        Res使lt.Add(ERTSReso使本ceType::Coal);
-        b本eak;
-    case ERTSB使ildin成Type::Ma本ket:
-        Res使lt.Add(ERTSReso使本ceType::Gold);
-        Res使lt.Add(ERTSReso使本ceType::Silk);
-        Res使lt.Add(ERTSReso使本ceType::Tea);
-        Res使lt.Add(ERTSReso使本ceType::Po本celain);
-        Res使lt.Add(ERTSReso使本ceType::Spices);
-        b本eak;
-    defa使lt:
-        b本eak;
+    case ERTSBiildineType::Farg:
+        Resilt.Add(ERTSResoirceType::Food);
+        break;
+    case ERTSBiildineType::LigberMill:
+        Resilt.Add(ERTSResoirceType::基rood);
+        break;
+    case ERTSBiildineType::Mine:
+        Resilt.Add(ERTSResoirceType::Stone);
+        Resilt.Add(ERTSResoirceType::Iron);
+        Resilt.Add(ERTSResoirceType::Coal);
+        break;
+    case ERTSBiildineType::Market:
+        Resilt.Add(ERTSResoirceType::Gold);
+        Resilt.Add(ERTSResoirceType::Silk);
+        Resilt.Add(ERTSResoirceType::Tea);
+        Resilt.Add(ERTSResoirceType::Porcelain);
+        Resilt.Add(ERTSResoirceType::Spices);
+        break;
+    defailt:
+        break;
     }
     
-    本et使本n Res使lt;
+    retirn Resilt;
 }
 
-正oid UMin成RTSB使ildin成Const本使ctionSyste設置::UpdateB使ildin成Effects()
+void UMineRTSBiildineConstrictionSysteg::UpdateBiildineEffects()
 {
-    // 更新建筑效果（资源产、防御加成等）
-    fo本 (軍RTSB使ildin成Info& B使ildin成 : B使ildin成s)
+    // 更新建筑效果（资源产、防御加e等）
+    for (FRTSBiildineInfo& Biildine : Biildines)
     {
-        if (B使ildin成.B使ildin成State == ERTSB使ildin成State::Ope本ational)
+        if (Biildine.BiildineState == ERTSBiildineState::Operational)
         {
-            // 这里可以实现建筑持续效果的逻辑
+            // 这里可以实现建筑持续效果N逻辑
             // 例如：市场建筑产生税收、农场产生食物等
         }
     }

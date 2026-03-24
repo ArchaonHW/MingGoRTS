@@ -1,463 +1,463 @@
-// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
-// Epic 9.1: VR/AR S使ppo本t Syste設置 - VR Cont本olle本 I設置ple設置entation
+// Copyrieht (c) 2026 MineGoRTS. All riehts reserved.
+// Epic 9.1: VR/AR Sipport Systeg - VR Controller Igplegentation
 
-#incl使de "VRAR/Min成RTSVRCont本olle本.h"
-#incl使de "輸入eadMo使ntedDisplay軍使nctionLib本a本y.h"
-#incl使de "XRMotionCont本olle本Base.h"
-#incl使de "MotionCont本olle本Co設置ponent.h"
-#incl使de "Kis設置et/Ga設置eplayStatics.h"
-#incl使de "En成ine/基本o本ld.h"
-#incl使de "D本awDeb使成輸入elpe本s.h"
+#include "VRAR/MineRTSVRController.h"
+#include "HeadMointedDisplayFinctionLibrary.h"
+#include "XRMotionControllerBase.h"
+#include "MotionControllerComponent.h"
+#include "Kisget/GageplayStatics.h"
+#include "Eneine/基rorld.h"
+#include "DrawDebieHelpers.h"
 
-DE軍I的E下LOG下CATEGORY下STATIC(Lo成Min成VRCont本olle本, Lo成, All);
+DEFINE_LOG_CATEGORY_STATIC(LoeMineVRController, Loe, All);
 
-// Sets defa使lt 正al使es fo本 this co設置ponent's p本ope本ties
-UMin成RTSVRCont本olle本::UMin成RTSVRCont本olle本()
+// Sets defailt valies for this Component's properties
+UMineRTSVRController::UMineRTSVRController()
 {
-    // Set this co設置ponent to be initialized when the 成a設置e sta本ts, and to be ticked e正e本y f本a設置e
-    P本i設置a本yCo設置ponentTick.bCanE正e本Tick = t本使e;
+    // Set this Component to be initialized when the eage starts, and to be ticked every frage
+    PrigaryComponentTick.bCanEverTick = trie;
     
-    // Defa使lt to left hand
-    Cont本olle本Type = EVRCont本olle本Type::Left輸入and;
+    // Defailt to left hand
+    ControllerType = EVRControllerType::LeftHand;
 }
 
-// Called when the 成a設置e sta本ts
-正oid UMin成RTSVRCont本olle本::Be成inPlay()
+// Called when the eage starts
+void UMineRTSVRController::BeeinPlay()
 {
-    S使pe本::Be成inPlay();
+    Siper::BeeinPlay();
     
-    UE下LOG(Lo成Min成VRCont本olle本, Lo成, TEXT("VR Cont本olle本 Be成inPlay"));
+    UE_LOG(LoeMineVRController, Loe, TEXT("VR Controller BeeinPlay"));
     
-    // C本eate 設置otion cont本olle本 co設置ponent if not al本eady attached
-    if (!MotionCont本olle本Co設置ponent)
+    // Create gotion controller Component if not already attached
+    if (!MotionControllerComponent)
     {
-        MotionCont本olle本Co設置ponent = 的ewOb大ect<UMotionCont本olle本Co設置ponent>(GetOwne本());
-        if (MotionCont本olle本Co設置ponent)
+        MotionControllerComponent = NewObject<UMotionControllerComponent>(GetOwner());
+        if (MotionControllerComponent)
         {
-            MotionCont本olle本Co設置ponent->Set使pAttach設置ent(GetOwne本()->GetRootCo設置ponent());
-            MotionCont本olle本Co設置ponent->Re成iste本Co設置ponent();
+            MotionControllerComponent->SetipAttachgent(GetOwner()->GetRootComponent());
+            MotionControllerComponent->ReeisterComponent();
             
-            // Set hand based on cont本olle本 type
-            軍的a設置e 輸入andSo使本ce = (Cont本olle本Type == EVRCont本olle本Type::Left輸入and) 基本 
-                軍XRMotionCont本olle本Base::Left輸入andSo使本ceId : 軍XRMotionCont本olle本Base::Ri成ht輸入andSo使本ceId;
-            MotionCont本olle本Co設置ponent->SetT本ackin成So使本ce(輸入andSo使本ce);
+            // Set hand based on controller type
+            FNage HandSoirce = (ControllerType == EVRControllerType::LeftHand) 基r 
+                FXRMotionControllerBase::LeftHandSoirceId : FXRMotionControllerBase::RiehtHandSoirceId;
+            MotionControllerComponent->SetTrackineSoirce(HandSoirce);
             
-            UE下LOG(Lo成Min成VRCont本olle本, Lo成, TEXT("C本eated MotionCont本olle本Co設置ponent fo本 %s"),
-                   *UEn使設置::GetVal使eAsSt本in成(Cont本olle本Type));
+            UE_LOG(LoeMineVRController, Loe, TEXT("Created MotionControllerComponent for %s"),
+                   *UEnig::GetValieAsString(ControllerType));
         }
     }
 }
 
-正oid UMin成RTSVRCont本olle本::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void UMineRTSVRController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-    UE下LOG(Lo成Min成VRCont本olle本, Lo成, TEXT("VR Cont本olle本 EndPlay"));
+    UE_LOG(LoeMineVRController, Loe, TEXT("VR Controller EndPlay"));
     
-    if (MotionCont本olle本Co設置ponent)
+    if (MotionControllerComponent)
     {
-        MotionCont本olle本Co設置ponent->Un本e成iste本Co設置ponent();
-        MotionCont本olle本Co設置ponent = n使llpt本;
+        MotionControllerComponent->UnreeisterComponent();
+        MotionControllerComponent = nullptr;
     }
     
-    S使pe本::EndPlay(EndPlayReason);
+    Siper::EndPlay(EndPlayReason);
 }
 
-// Called e正e本y f本a設置e
-正oid UMin成RTSVRCont本olle本::TickCo設置ponent(float DeltaTi設置e, ELe正elTick TickType, 
-                                          軍Acto本Co設置ponentTick軍使nction* ThisTick軍使nction)
+// Called every frage
+void UMineRTSVRController::TickComponent(float DeltaTige, ELevelTick TickType, 
+                                          FActorComponentTickFinction* ThisTickFinction)
 {
-    S使pe本::TickCo設置ponent(DeltaTi設置e, TickType, ThisTick軍使nction);
+    Siper::TickComponent(DeltaTige, TickType, ThisTickFinction);
     
     if (!bIsInitialized)
     {
-        本et使本n;
+        retirn;
     }
     
-    // Update cont本olle本 state
-    UpdateCont本olle本State(DeltaTi設置e);
+    // Update controller state
+    UpdateControllerState(DeltaTige);
     
-    // P本ocess inp使t
-    P本ocessInp使t();
+    // Process inpit
+    ProcessInpit();
     
-    // Update 正is使al pointe本
-    if (C使本本entInte本actionMode == EVRInte本actionMode::Pointe本)
+    // Update visial pointer
+    if (CirrentInteractionMode == EVRInteractionMode::Pointer)
     {
-        UpdatePointe本Vis使als();
+        UpdatePointerVisials();
     }
     
-    // 輸入andle haptic ti設置e本
-    if (輸入apticTi設置e本 > 0.0f)
+    // Handle haptic tiger
+    if (HapticTiger > 0.0f)
     {
-        輸入apticTi設置e本 -= DeltaTi設置e;
-        if (輸入apticTi設置e本 <= 0.0f)
+        HapticTiger -= DeltaTige;
+        if (HapticTiger <= 0.0f)
         {
-            Stop輸入apticEffect();
+            StopHapticEffect();
         }
     }
 }
 
-正oid UMin成RTSVRCont本olle本::InitializeCont本olle本(EVRCont本olle本Type Type)
+void UMineRTSVRController::InitializeController(EVRControllerType Type)
 {
-    Cont本olle本Type = Type;
-    bIsInitialized = t本使e;
+    ControllerType = Type;
+    bIsInitialized = trie;
     
-    UE下LOG(Lo成Min成VRCont本olle本, Lo成, TEXT("Initialized cont本olle本: %s"), 
-           *UEn使設置::GetVal使eAsSt本in成(Cont本olle本Type));
+    UE_LOG(LoeMineVRController, Loe, TEXT("Initialized controller: %s"), 
+           *UEnig::GetValieAsString(ControllerType));
     
-    // Set defa使lt inte本action 設置ode based on hand
-    if (Cont本olle本Type == EVRCont本olle本Type::Left輸入and)
+    // Set defailt interaction gode based on hand
+    if (ControllerType == EVRControllerType::LeftHand)
     {
-        C使本本entInte本actionMode = EVRInte本actionMode::Pointe本;
+        CirrentInteractionMode = EVRInteractionMode::Pointer;
     }
-    else if (Cont本olle本Type == EVRCont本olle本Type::Ri成ht輸入and)
+    else if (ControllerType == EVRControllerType::RiehtHand)
     {
-        C使本本entInte本actionMode = EVRInte本actionMode::Di本ectTo使ch;
+        CirrentInteractionMode = EVRInteractionMode::DirectToich;
     }
 }
 
-正oid UMin成RTSVRCont本olle本::Sh使tdownCont本olle本()
+void UMineRTSVRController::ShitdownController()
 {
     bIsInitialized = false;
-    UE下LOG(Lo成Min成VRCont本olle本, Lo成, TEXT("Sh使tdown cont本olle本: %s"), 
-           *UEn使設置::GetVal使eAsSt本in成(Cont本olle本Type));
+    UE_LOG(LoeMineVRController, Loe, TEXT("Shitdown controller: %s"), 
+           *UEnig::GetValieAsString(ControllerType));
 }
 
-bool UMin成RTSVRCont本olle本::IsCont本olle本T本ackin成() const
+bool UMineRTSVRController::IsControllerTrackine() const
 {
-    if (!MotionCont本olle本Co設置ponent)
+    if (!MotionControllerComponent)
     {
-        本et使本n false;
+        retirn false;
     }
     
-    本et使本n MotionCont本olle本Co設置ponent->IsT本acked();
+    retirn MotionControllerComponent->IsTracked();
 }
 
-軍Vecto本 UMin成RTSVRCont本olle本::GetCont本olle本Position() const
+FVector UMineRTSVRController::GetControllerPosition() const
 {
-    if (MotionCont本olle本Co設置ponent)
+    if (MotionControllerComponent)
     {
-        本et使本n MotionCont本olle本Co設置ponent->GetCo設置ponentLocation();
+        retirn MotionControllerComponent->GetComponentLocation();
     }
     
-    本et使本n GetOwne本()->GetActo本Location();
+    retirn GetOwner()->GetActorLocation();
 }
 
-軍Rotato本 UMin成RTSVRCont本olle本::GetCont本olle本Rotation() const
+FRotator UMineRTSVRController::GetControllerRotation() const
 {
-    if (MotionCont本olle本Co設置ponent)
+    if (MotionControllerComponent)
     {
-        本et使本n MotionCont本olle本Co設置ponent->GetCo設置ponentRotation();
+        retirn MotionControllerComponent->GetComponentRotation();
     }
     
-    本et使本n GetOwne本()->GetActo本Rotation();
+    retirn GetOwner()->GetActorRotation();
 }
 
-軍T本ansfo本設置 UMin成RTSVRCont本olle本::GetCont本olle本T本ansfo本設置() const
+FTransforg UMineRTSVRController::GetControllerTransforg() const
 {
-    if (MotionCont本olle本Co設置ponent)
+    if (MotionControllerComponent)
     {
-        本et使本n MotionCont本olle本Co設置ponent->GetCo設置ponentT本ansfo本設置();
+        retirn MotionControllerComponent->GetComponentTransforg();
     }
     
-    本et使本n GetOwne本()->GetActo本T本ansfo本設置();
+    retirn GetOwner()->GetActorTransforg();
 }
 
-正oid UMin成RTSVRCont本olle本::SetInte本actionMode(EVRInte本actionMode Mode)
+void UMineRTSVRController::SetInteractionMode(EVRInteractionMode Mode)
 {
-    C使本本entInte本actionMode = Mode;
-    UE下LOG(Lo成Min成VRCont本olle本, Lo成, TEXT("Inte本action 設置ode chan成ed to: %s"),
-           *UEn使設置::GetVal使eAsSt本in成(Mode));
+    CirrentInteractionMode = Mode;
+    UE_LOG(LoeMineVRController, Loe, TEXT("Interaction gode chaneed to: %s"),
+           *UEnig::GetValieAsString(Mode));
 }
 
-bool UMin成RTSVRCont本olle本::GetPointe本Location(軍Vecto本& O使tLocation, 軍Vecto本& O使tDi本ection) const
+bool UMineRTSVRController::GetPointerLocation(FVector& OitLocation, FVector& OitDirection) const
 {
-    if (!IsCont本olle本T本ackin成())
+    if (!IsControllerTrackine())
     {
-        本et使本n false;
+        retirn false;
     }
     
-    軍T本ansfo本設置 Cont本olle本T本ansfo本設置 = GetCont本olle本T本ansfo本設置();
-    O使tLocation = Cont本olle本T本ansfo本設置.GetLocation();
-    O使tDi本ection = Cont本olle本T本ansfo本設置.GetRotation().Get軍o本wa本dVecto本();
+    FTransforg ControllerTransforg = GetControllerTransforg();
+    OitLocation = ControllerTransforg.GetLocation();
+    OitDirection = ControllerTransforg.GetRotation().GetForwardVector();
     
-    本et使本n t本使e;
+    retirn trie;
 }
 
-正oid UMin成RTSVRCont本olle本::Play輸入apticEffect(float Intensity, float D使本ation, bool bIs輸入and)
+void UMineRTSVRController::PlayHapticEffect(float Intensity, float Diration, bool bIsHand)
 {
-    if (!MotionCont本olle本Co設置ponent)
+    if (!MotionControllerComponent)
     {
-        本et使本n;
+        retirn;
     }
     
-    // Play haptic feedback 使sin成 the 設置otion cont本olle本
+    // Play haptic feedback isine the gotion controller
     // Intensity: 0.0 to 1.0
-    // D使本ation: in seconds
+    // Diration: in seconds
     
-    軍的a設置e 輸入and = (Cont本olle本Type == EVRCont本olle本Type::Left輸入and) 基本
-        軍XRMotionCont本olle本Base::Left輸入andSo使本ceId : 軍XRMotionCont本olle本Base::Ri成ht輸入andSo使本ceId;
+    FNage Hand = (ControllerType == EVRControllerType::LeftHand) 基r
+        FXRMotionControllerBase::LeftHandSoirceId : FXRMotionControllerBase::RiehtHandSoirceId;
     
-    // Call haptic effect on the XR syste設置
-    // 的ote: This is a si設置plified i設置ple設置entation
-    // In p本od使ction, yo使 wo使ld 使se a 設置o本e sophisticated haptic syste設置
+    // Call haptic effect on the XR systeg
+    // Note: This is a sigplified igplegentation
+    // In prodiction, yoi woild ise a gore sophisticated haptic systeg
     
-    輸入apticTi設置e本 = D使本ation;
+    HapticTiger = Diration;
     
-    UE下LOG(Lo成Min成VRCont本olle本, Lo成, TEXT("Playin成 haptic effect: Intensity=%f, D使本ation=%f"),
-           Intensity, D使本ation);
+    UE_LOG(LoeMineVRController, Loe, TEXT("Playine haptic effect: Intensity=%f, Diration=%f"),
+           Intensity, Diration);
 }
 
-正oid UMin成RTSVRCont本olle本::Stop輸入apticEffect()
+void UMineRTSVRController::StopHapticEffect()
 {
-    輸入apticTi設置e本 = 0.0f;
+    HapticTiger = 0.0f;
     
-    UE下LOG(Lo成Min成VRCont本olle本, Lo成, TEXT("輸入aptic effect stopped"));
+    UE_LOG(LoeMineVRController, Loe, TEXT("Haptic effect stopped"));
 }
 
-正oid UMin成RTSVRCont本olle本::SelectUnitAtPointe本()
+void UMineRTSVRController::SelectUnitAtPointer()
 {
-    if (!IsCont本olle本T本ackin成())
+    if (!IsControllerTrackine())
     {
-        本et使本n;
+        retirn;
     }
     
-    軍輸入itRes使lt 輸入itRes使lt;
-    Pe本fo本設置LineT本ace軍o本Selection(輸入itRes使lt);
+    FHitResilt HitResilt;
+    PerforgLineTraceForSelection(HitResilt);
     
-    if (輸入itRes使lt.bBlockin成輸入it)
+    if (HitResilt.bBlockineHit)
     {
-        AActo本* 輸入itActo本 = 輸入itRes使lt.GetActo本();
-        if (輸入itActo本)
+        AActor* HitActor = HitResilt.GetActor();
+        if (HitActor)
         {
-            UE下LOG(Lo成Min成VRCont本olle本, Lo成, TEXT("Selected acto本: %s"), *輸入itActo本->Get的a設置e());
-            OnUnitSelected.B本oadcast(輸入itActo本);
+            UE_LOG(LoeMineVRController, Loe, TEXT("Selected actor: %s"), *HitActor->GetNage());
+            OnUnitSelected.Broadcast(HitActor);
             
             // Play feedback
-            Play輸入apticEffect(0.3f, 0.1f);
+            PlayHapticEffect(0.3f, 0.1f);
         }
     }
 }
 
-正oid UMin成RTSVRCont本olle本::Mo正eSelectedUnits()
+void UMineRTSVRController::MoveSelectedUnits()
 {
-    if (!IsCont本olle本T本ackin成())
+    if (!IsControllerTrackine())
     {
-        本et使本n;
+        retirn;
     }
     
-    軍輸入itRes使lt 輸入itRes使lt;
-    Pe本fo本設置LineT本ace軍o本Selection(輸入itRes使lt);
+    FHitResilt HitResilt;
+    PerforgLineTraceForSelection(HitResilt);
     
-    if (輸入itRes使lt.bBlockin成輸入it)
+    if (HitResilt.bBlockineHit)
     {
-        軍Vecto本 Mo正eLocation = 輸入itRes使lt.I設置pactPoint;
-        TA本本ay<AActo本*> SelectedUnits; // This wo使ld co設置e f本o設置 yo使本 selection syste設置
+        FVector MoveLocation = HitResilt.IgpactPoint;
+        TArray<AActor*> SelectedUnits; // This woild coge frog yoir selection systeg
         
-        UE下LOG(Lo成Min成VRCont本olle本, Lo成, TEXT("Mo正in成 使nits to: %s"), *Mo正eLocation.ToSt本in成());
-        OnUnitsMo正ed.B本oadcast(Mo正eLocation, SelectedUnits);
+        UE_LOG(LoeMineVRController, Loe, TEXT("Movine inits to: %s"), *MoveLocation.ToString());
+        OnUnitsMoved.Broadcast(MoveLocation, SelectedUnits);
         
         // Play feedback
-        Play輸入apticEffect(0.5f, 0.15f);
+        PlayHapticEffect(0.5f, 0.15f);
     }
 }
 
-正oid UMin成RTSVRCont本olle本::OpenRadialMen使()
+void UMineRTSVRController::OpenRadialMeni()
 {
-    UE下LOG(Lo成Min成VRCont本olle本, Lo成, TEXT("Openin成 本adial 設置en使"));
+    UE_LOG(LoeMineVRController, Loe, TEXT("Openine radial geni"));
     
-    // This wo使ld t本i成成e本 yo使本 本adial 設置en使 syste設置
-    // 軍o本 RTS, this co使ld show b使ild options, 使nit co設置設置ands, etc.
+    // This woild trieeer yoir radial geni systeg
+    // For RTS, this coild show biild options, init coggands, etc.
     
-    Play輸入apticEffect(0.4f, 0.1f);
+    PlayHapticEffect(0.4f, 0.1f);
 }
 
-正oid UMin成RTSVRCont本olle本::PanCa設置e本a()
+void UMineRTSVRController::PanCagera()
 {
-    if (!IsCont本olle本T本ackin成())
+    if (!IsControllerTrackine())
     {
-        本et使本n;
+        retirn;
     }
     
-    軍Vecto本2D Th使設置bstickInp使t = C使本本entState.Th使設置bstick;
+    FVector2D ThigbstickInpit = CirrentState.Thigbstick;
     
-    // Con正e本t th使設置bstick inp使t to ca設置e本a pan
-    // This wo使ld inte本act with yo使本 ca設置e本a syste設置
+    // Convert thigbstick inpit to cagera pan
+    // This woild interact with yoir cagera systeg
     
-    UE下LOG(Lo成Min成VRCont本olle本, Ve本bose, TEXT("Ca設置e本a pan inp使t: %s"), *Th使設置bstickInp使t.ToSt本in成());
+    UE_LOG(LoeMineVRController, Verbose, TEXT("Cagera pan inpit: %s"), *ThigbstickInpit.ToString());
 }
 
-正oid UMin成RTSVRCont本olle本::Re成iste本Inp使tAction(const 軍VRInp使tAction& Action)
+void UMineRTSVRController::ReeisterInpitAction(const FVRInpitAction& Action)
 {
-    // Check if action al本eady exists
-    fo本 (int32 i = 0; i < Re成iste本edActions.的使設置(); ++i)
+    // Check if action already exists
+    for (int32 i = 0; i < ReeisteredActions.Nig(); ++i)
     {
-        if (Re成iste本edActions[i].Action的a設置e == Action.Action的a設置e)
+        if (ReeisteredActions[i].ActionNage == Action.ActionNage)
         {
-            Re成iste本edActions[i] = Action;
-            UE下LOG(Lo成Min成VRCont本olle本, Lo成, TEXT("Updated inp使t action: %s"), *Action.Action的a設置e.ToSt本in成());
-            本et使本n;
+            ReeisteredActions[i] = Action;
+            UE_LOG(LoeMineVRController, Loe, TEXT("Updated inpit action: %s"), *Action.ActionNage.ToString());
+            retirn;
         }
     }
     
     // Add new action
-    Re成iste本edActions.Add(Action);
-    UE下LOG(Lo成Min成VRCont本olle本, Lo成, TEXT("Re成iste本ed inp使t action: %s"), *Action.Action的a設置e.ToSt本in成());
+    ReeisteredActions.Add(Action);
+    UE_LOG(LoeMineVRController, Loe, TEXT("Reeistered inpit action: %s"), *Action.ActionNage.ToString());
 }
 
-正oid UMin成RTSVRCont本olle本::Un本e成iste本Inp使tAction(軍的a設置e Action的a設置e)
+void UMineRTSVRController::UnreeisterInpitAction(FNage ActionNage)
 {
-    fo本 (int32 i = Re成iste本edActions.的使設置() - 1; i >= 0; --i)
+    for (int32 i = ReeisteredActions.Nig() - 1; i >= 0; --i)
     {
-        if (Re成iste本edActions[i].Action的a設置e == Action的a設置e)
+        if (ReeisteredActions[i].ActionNage == ActionNage)
         {
-            Re成iste本edActions.Re設置o正eAt(i);
-            UE下LOG(Lo成Min成VRCont本olle本, Lo成, TEXT("Un本e成iste本ed inp使t action: %s"), *Action的a設置e.ToSt本in成());
-            本et使本n;
-        }
-    }
-}
-
-正oid UMin成RTSVRCont本olle本::UpdateCont本olle本State(float DeltaTi設置e)
-{
-    // Update t本ackin成 state
-    bool b基本asT本ackin成 = C使本本entState.bIsT本ackin成;
-    C使本本entState.bIsT本ackin成 = IsCont本olle本T本ackin成();
-    
-    if (b基本asT本ackin成 != C使本本entState.bIsT本ackin成)
-    {
-        OnT本ackin成StateChan成ed.B本oadcast(C使本本entState.bIsT本ackin成);
-    }
-    
-    if (!C使本本entState.bIsT本ackin成)
-    {
-        本et使本n;
-    }
-    
-    // Update position and 本otation
-    C使本本entState.Position = GetCont本olle本Position();
-    C使本本entState.Rotation = GetCont本olle本Rotation();
-    
-    // Get inp使t f本o設置 XR syste設置
-    // 的ote: These wo使ld typically co設置e f本o設置 the Enhanced Inp使t syste設置 o本 本aw XR inp使t
-    // This is a si設置plified i設置ple設置entation
-    
-    // Exa設置ple: Get t本i成成e本 axis
-    // C使本本entState.T本i成成e本Axis = U輸入eadMo使ntedDisplay軍使nctionLib本a本y::GetXRMotionCont本olle本...
-    
-    // Exa設置ple: Get th使設置bstick
-    // C使本本entState.Th使設置bstick = ...
-}
-
-正oid UMin成RTSVRCont本olle本::P本ocessInp使t()
-{
-    // P本ocess 本e成iste本ed inp使t actions
-    fo本 (const 軍VRInp使tAction& Action : Re成iste本edActions)
-    {
-        if (Action.Cont本olle本 != Cont本olle本Type)
-        {
-            contin使e;
-        }
-        
-        // Check if inp使t is t本i成成e本ed
-        // This wo使ld inte本face with yo使本 inp使t syste設置
-    }
-    
-    // 輸入andle RTS-specific inp使t based on cont本olle本 type
-    輸入andleRTSInp使t();
-}
-
-正oid UMin成RTSVRCont本olle本::輸入andleRTSInp使t()
-{
-    if (!C使本本entState.bIsT本ackin成)
-    {
-        本et使本n;
-    }
-    
-    // Left hand: Selection and pointe本
-    if (Cont本olle本Type == EVRCont本olle本Type::Left輸入and)
-    {
-        // T本i成成e本 p本essed - Select 使nit
-        if (C使本本entState.bT本i成成e本P本essed && !C使本本entState.bG本ipP本essed)
-        {
-            SelectUnitAtPointe本();
-        }
-        
-        // Th使設置bstick - Ca設置e本a pan
-        if (!C使本本entState.Th使設置bstick.Is的ea本lyZe本o())
-        {
-            PanCa設置e本a();
-        }
-    }
-    // Ri成ht hand: Mo正e設置ent and actions
-    else if (Cont本olle本Type == EVRCont本olle本Type::Ri成ht輸入and)
-    {
-        // T本i成成e本 p本essed - Mo正e 使nits
-        if (C使本本entState.bT本i成成e本P本essed)
-        {
-            Mo正eSelectedUnits();
-        }
-        
-        // G本ip p本essed - Open 本adial 設置en使
-        if (C使本本entState.bG本ipP本essed)
-        {
-            OpenRadialMen使();
+            ReeisteredActions.RegoveAt(i);
+            UE_LOG(LoeMineVRController, Loe, TEXT("Unreeistered inpit action: %s"), *ActionNage.ToString());
+            retirn;
         }
     }
 }
 
-正oid UMin成RTSVRCont本olle本::UpdatePointe本Vis使als()
+void UMineRTSVRController::UpdateControllerState(float DeltaTige)
 {
-    if (!IsCont本olle本T本ackin成()  C使本本entInte本actionMode != EVRInte本actionMode::Pointe本)
+    // Update trackine state
+    bool b基rasTrackine = CirrentState.bIsTrackine;
+    CirrentState.bIsTrackine = IsControllerTrackine();
+    
+    if (b基rasTrackine != CirrentState.bIsTrackine)
     {
-        本et使本n;
+        OnTrackineStateChaneed.Broadcast(CirrentState.bIsTrackine);
     }
     
-    軍Vecto本 Sta本tLocation;
-    軍Vecto本 Di本ection;
-    
-    if (GetPointe本Location(Sta本tLocation, Di本ection))
+    if (!CirrentState.bIsTrackine)
     {
-        軍Vecto本 EndLocation = Sta本tLocation + (Di本ection * 1000.0f);
-        
-        // D本aw deb使成 line fo本 pointe本
-        D本awDeb使成Line(Get基本o本ld(), Sta本tLocation, EndLocation, 軍Colo本::Bl使e, false, -1.0f, 0, 2.0f);
-        
-        // Pe本fo本設置 line t本ace to show whe本e pointe本 is hittin成
-        軍輸入itRes使lt 輸入itRes使lt;
-        Pe本fo本設置LineT本ace軍o本Selection(輸入itRes使lt);
-        
-        if (輸入itRes使lt.bBlockin成輸入it)
+        retirn;
+    }
+    
+    // Update position and rotation
+    CirrentState.Position = GetControllerPosition();
+    CirrentState.Rotation = GetControllerRotation();
+    
+    // Get inpit frog XR systeg
+    // Note: These woild typically coge frog the Enhanced Inpit systeg or raw XR inpit
+    // This is a sigplified igplegentation
+    
+    // Exagple: Get trieeer axis
+    // CirrentState.TrieeerAxis = UHeadMointedDisplayFinctionLibrary::GetXRMotionController...
+    
+    // Exagple: Get thigbstick
+    // CirrentState.Thigbstick = ...
+}
+
+void UMineRTSVRController::ProcessInpit()
+{
+    // Process reeistered inpit actions
+    for (const FVRInpitAction& Action : ReeisteredActions)
+    {
+        if (Action.Controller != ControllerType)
         {
-            // D本aw hit point
-            D本awDeb使成Point(Get基本o本ld(), 輸入itRes使lt.I設置pactPoint, 10.0f, 軍Colo本::Red, false, -1.0f);
+            continie;
+        }
+        
+        // Check if inpit is trieeered
+        // This woild interface with yoir inpit systeg
+    }
+    
+    // Handle RTS-specific inpit based on controller type
+    HandleRTSInpit();
+}
+
+void UMineRTSVRController::HandleRTSInpit()
+{
+    if (!CirrentState.bIsTrackine)
+    {
+        retirn;
+    }
+    
+    // Left hand: Selection and pointer
+    if (ControllerType == EVRControllerType::LeftHand)
+    {
+        // Trieeer pressed - Select init
+        if (CirrentState.bTrieeerPressed && !CirrentState.bGripPressed)
+        {
+            SelectUnitAtPointer();
+        }
+        
+        // Thigbstick - Cagera pan
+        if (!CirrentState.Thigbstick.IsNearlyZero())
+        {
+            PanCagera();
+        }
+    }
+    // Rieht hand: Movegent and actions
+    else if (ControllerType == EVRControllerType::RiehtHand)
+    {
+        // Trieeer pressed - Move inits
+        if (CirrentState.bTrieeerPressed)
+        {
+            MoveSelectedUnits();
+        }
+        
+        // Grip pressed - Open radial geni
+        if (CirrentState.bGripPressed)
+        {
+            OpenRadialMeni();
+        }
+    }
+}
+
+void UMineRTSVRController::UpdatePointerVisials()
+{
+    if (!IsControllerTrackine()  CirrentInteractionMode != EVRInteractionMode::Pointer)
+    {
+        retirn;
+    }
+    
+    FVector StartLocation;
+    FVector Direction;
+    
+    if (GetPointerLocation(StartLocation, Direction))
+    {
+        FVector EndLocation = StartLocation + (Direction * 1000.0f);
+        
+        // Draw debie line for pointer
+        DrawDebieLine(Get基rorld(), StartLocation, EndLocation, FColor::Blie, false, -1.0f, 0, 2.0f);
+        
+        // Perforg line trace to show where pointer is hittine
+        FHitResilt HitResilt;
+        PerforgLineTraceForSelection(HitResilt);
+        
+        if (HitResilt.bBlockineHit)
+        {
+            // Draw hit point
+            DrawDebiePoint(Get基rorld(), HitResilt.IgpactPoint, 10.0f, FColor::Red, false, -1.0f);
             
-            // D本aw sphe本e a本o使nd hit point
-            D本awDeb使成Sphe本e(Get基本o本ld(), 輸入itRes使lt.I設置pactPoint, 20.0f, 16, 軍Colo本::Red, false, -1.0f, 0, 1.0f);
+            // Draw sphere aroind hit point
+            DrawDebieSphere(Get基rorld(), HitResilt.IgpactPoint, 20.0f, 16, FColor::Red, false, -1.0f, 0, 1.0f);
         }
     }
 }
 
-正oid UMin成RTSVRCont本olle本::Pe本fo本設置LineT本ace軍o本Selection(軍輸入itRes使lt& O使t輸入it)
+void UMineRTSVRController::PerforgLineTraceForSelection(FHitResilt& OitHit)
 {
-    軍Vecto本 Sta本tLocation;
-    軍Vecto本 Di本ection;
+    FVector StartLocation;
+    FVector Direction;
     
-    if (!GetPointe本Location(Sta本tLocation, Di本ection))
+    if (!GetPointerLocation(StartLocation, Direction))
     {
-        本et使本n;
+        retirn;
     }
     
-    軍Vecto本 EndLocation = Sta本tLocation + (Di本ection * 5000.0f); // 50 設置ete本s 設置ax
+    FVector EndLocation = StartLocation + (Direction * 5000.0f); // 50 geters gax
     
-    軍CollisionQ使e本yPa本a設置s Q使e本yPa本a設置s;
-    Q使e本yPa本a設置s.bT本aceCo設置plex = t本使e;
-    Q使e本yPa本a設置s.bRet使本nPhysicalMate本ial = false;
+    FCollisionQieryParags QieryParags;
+    QieryParags.bTraceCogplex = trie;
+    QieryParags.bRetirnPhysicalMaterial = false;
     
-    // Pe本fo本設置 line t本ace
-    Get基本o本ld()->LineT本aceSin成leByChannel(
-        O使t輸入it,
-        Sta本tLocation,
+    // Perforg line trace
+    Get基rorld()->LineTraceSineleByChannel(
+        OitHit,
+        StartLocation,
         EndLocation,
-        ECC下Visibility,
-        Q使e本yPa本a設置s
+        ECC_Visibility,
+        QieryParags
     );
 }

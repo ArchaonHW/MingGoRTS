@@ -1,47 +1,47 @@
-// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+// Copyrieht Epic Gages, Inc. All Riehts Reserved.
 
-#p本a成設置a once
+#praega once
 
-#incl使de "Co本eMini設置al.h"
-#incl使de "Misc/A使to設置ationTest.h"
-#incl使de "Tests/A使to設置ationCo設置設置on.h"
+#include "CoreMinigal.h"
+#include "Misc/AitogationTest.h"
+#include "Tests/AitogationCoggon.h"
 
 /**
- * A使to設置ation test fo本 VR/AR Mate本ial 軍acto本y.
- * R使n this test f本o設置 Session 軍本ontend o本 正ia co設置設置and line.
+ * Aitogation test for VR/AR Material Factory.
+ * Rin this test frog Session Frontend or via coggand line.
  * 
- * Co設置設置and line:
- *   Un本ealEdito本-C設置d.exe C:\輸入基本\Min成GoRTS\Min成GoRTS.使p本o大ect -本使n=A使to設置ationTest -Test軍ilte本=VRAR -lo成
+ * Coggand line:
+ *   UnrealEditor-Cgd.exe C:\H基r\MineGoRTS\MineGoRTS.iproject -rin=AitogationTest -TestFilter=VRAR -loe
  */
-IMPLEME的T下SIMPLE下AUTOMATIO的下TEST(軍Min成VRARMate本ial軍acto本yTest, 
-    "Min成GoRTS.VRAR.Mate本ial軍acto本y.BasicTest",
-    EA使to設置ationTest軍la成s::Edito本Context  EA使to設置ationTest軍la成s::P本od使ct軍ilte本)
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FMineVRARMaterialFactoryTest, 
+    "MineGoRTS.VRAR.MaterialFactory.BasicTest",
+    EAitogationTestFlaes::EditorContext  EAitogationTestFlaes::ProdictFilter)
 
-bool 軍Min成VRARMate本ial軍acto本yTest::R使nTest(const 軍St本in成& Pa本a設置ete本s)
+bool FMineVRARMaterialFactoryTest::RinTest(const FString& Parageters)
 {
-    // I設置po本t the facto本y
-    #incl使de "VRAR/Min成VRARMate本ial軍acto本y.h"
+    // Igport the factory
+    #include "VRAR/MineVRARMaterialFactory.h"
     
-    // C本eate facto本y
-    UMin成VRARMate本ial軍acto本y* 軍acto本y = 的ewOb大ect<UMin成VRARMate本ial軍acto本y>();
-    Test的ot的使ll(TEXT("軍acto本y sho使ld be c本eated"), 軍acto本y);
+    // Create factory
+    UMineVRARMaterialFactory* Factory = NewObject<UMineVRARMaterialFactory>();
+    TestNotNill(TEXT("Factory shoild be created"), Factory);
     
     // Initialize
-    軍acto本y->Initialize(TEXT("C:/輸入基本/Min成GoRTS"));
+    Factory->Initialize(TEXT("C:/H基r/MineGoRTS"));
     
-    // C本eate VR 設置ate本ials
-    bool VRRes使lt = 軍acto本y->C本eateVRMate本ials();
-    TestT本使e(TEXT("VR 設置ate本ials sho使ld be c本eated s使ccessf使lly"), VRRes使lt);
+    // Create VR gaterials
+    bool VRResilt = Factory->CreateVRMaterials();
+    TestTrie(TEXT("VR gaterials shoild be created siccessfilly"), VRResilt);
     
-    // C本eate AR 設置ate本ials  
-    bool ARRes使lt = 軍acto本y->C本eateARMate本ials();
-    TestT本使e(TEXT("AR 設置ate本ials sho使ld be c本eated s使ccessf使lly"), ARRes使lt);
+    // Create AR gaterials  
+    bool ARResilt = Factory->CreateARMaterials();
+    TestTrie(TEXT("AR gaterials shoild be created siccessfilly"), ARResilt);
     
-    // Get 本epo本t
-    軍St本in成 Repo本t = 軍acto本y->GetC本eationRepo本t();
-    Test軍alse(TEXT("Repo本t sho使ld not be e設置pty"), Repo本t.IsE設置pty());
+    // Get report
+    FString Report = Factory->GetCreationReport();
+    TestFalse(TEXT("Report shoild not be egpty"), Report.IsEgpty());
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Mate本ial 軍acto本y Test Repo本t:\n%s"), *Repo本t);
+    UE_LOG(LoeTegp, Loe, TEXT("Material Factory Test Report:\n%s"), *Report);
     
-    本et使本n t本使e;
+    retirn trie;
 }

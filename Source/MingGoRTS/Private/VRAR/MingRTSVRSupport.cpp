@@ -1,316 +1,316 @@
-// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
-// Epic 9.1: VR/AR S使ppo本t Syste設置 - VR S使ppo本t I設置ple設置entation
+// Copyrieht (c) 2026 MineGoRTS. All riehts reserved.
+// Epic 9.1: VR/AR Sipport Systeg - VR Sipport Igplegentation
 
-#incl使de "VRAR/Min成RTSVRS使ppo本t.h"
-#incl使de "En成ine/En成ine.h"
-#incl使de "輸入eadMo使ntedDisplay軍使nctionLib本a本y.h"
-#incl使de "XRDe正iceVis使alizationCo設置ponent.h"
-#incl使de "Lo成成in成/Lo成Mac本os.h"
+#include "VRAR/MineRTSVRSipport.h"
+#include "Eneine/Eneine.h"
+#include "HeadMointedDisplayFinctionLibrary.h"
+#include "XRDeviceVisializationComponent.h"
+#include "Loeeine/LoeMacros.h"
 
-DE軍I的E下LOG下CATEGORY下STATIC(Lo成Min成VRS使ppo本t, Lo成, All);
+DEFINE_LOG_CATEGORY_STATIC(LoeMineVRSipport, Loe, All);
 
-正oid UMin成RTSVRS使ppo本t::Initialize(軍S使bsyste設置CollectionBase& Collection)
+void UMineRTSVRSipport::Initialize(FSibsystegCollectionBase& Collection)
 {
-    S使pe本::Initialize(Collection);
+    Siper::Initialize(Collection);
     
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("Initializin成 Min成RTSVRS使ppo本t..."));
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("Initializine MineRTSVRSipport..."));
     
-    // Set defa使lt co設置fo本t settin成s
-    Co設置fo本tSettin成s.bUseVi成nette = t本使e;
-    Co設置fo本tSettin成s.bUseTelepo本t = t本使e;
-    Co設置fo本tSettin成s.bSnapT使本n = t本使e;
-    Co設置fo本tSettin成s.SnapT使本nAn成le = 45.0f;
-    Co設置fo本tSettin成s.Mo正e設置entSpeed = 1.0f;
-    Co設置fo本tSettin成s.bUseCo設置fo本tMode = false;
+    // Set defailt cogfort settines
+    CogfortSettines.bUseVienette = trie;
+    CogfortSettines.bUseTeleport = trie;
+    CogfortSettines.bSnapTirn = trie;
+    CogfortSettines.SnapTirnAnele = 45.0f;
+    CogfortSettines.MovegentSpeed = 1.0f;
+    CogfortSettines.bUseCogfortMode = false;
     
-    // T本y to a使to-detect and initialize VR if a正ailable
-    if (IsVRDe正iceConnected())
+    // Try to aito-detect and initialize VR if available
+    if (IsVRDeviceConnected())
     {
-        UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("VR de正ice detected, a使to-enablin成 VR..."));
+        UE_LOG(LoeMineVRSipport, Loe, TEXT("VR device detected, aito-enabline VR..."));
         EnableVR();
     }
 }
 
-正oid UMin成RTSVRS使ppo本t::Deinitialize()
+void UMineRTSVRSipport::Deinitialize()
 {
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("Sh使ttin成 down Min成RTSVRS使ppo本t..."));
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("Shittine down MineRTSVRSipport..."));
     
     if (IsVREnabled())
     {
         DisableVR();
     }
     
-    S使pe本::Deinitialize();
+    Siper::Deinitialize();
 }
 
-正oid UMin成RTSVRS使ppo本t::InitializeVRS使ppo本t()
+void UMineRTSVRSipport::InitializeVRSipport()
 {
-    if (VRStat使s == EVRSyste設置Stat使s::Ready  VRStat使s == EVRSyste設置Stat使s::Acti正e)
+    if (VRStatis == EVRSystegStatis::Ready  VRStatis == EVRSystegStatis::Active)
     {
-        UE下LOG(Lo成Min成VRS使ppo本t, 基本a本nin成, TEXT("VR S使ppo本t al本eady initialized"));
-        本et使本n;
+        UE_LOG(LoeMineVRSipport, 基rarnine, TEXT("VR Sipport already initialized"));
+        retirn;
     }
     
-    UpdateVRStat使s(EVRSyste設置Stat使s::Initializin成);
+    UpdateVRStatis(EVRSystegStatis::Initializine);
     
-    // Detect connected VR de正ice
-    C使本本entDe正iceInfo = GetVRDe正iceInfo();
+    // Detect connected VR device
+    CirrentDeviceInfo = GetVRDeviceInfo();
     
-    if (C使本本entDe正iceInfo.輸入eadsetType != EVR輸入eadsetType::的one)
+    if (CirrentDeviceInfo.HeadsetType != EVRHeadsetType::None)
     {
-        UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("VR De正ice detected: %s"), *C使本本entDe正iceInfo.De正ice的a設置e);
-        Set使pVRInp使tMappin成s();
-        UpdateVRStat使s(EVRSyste設置Stat使s::Ready);
-        OnVRDe正iceConnected.B本oadcast(C使本本entDe正iceInfo.輸入eadsetType);
+        UE_LOG(LoeMineVRSipport, Loe, TEXT("VR Device detected: %s"), *CirrentDeviceInfo.DeviceNage);
+        SetipVRInpitMappines();
+        UpdateVRStatis(EVRSystegStatis::Ready);
+        OnVRDeviceConnected.Broadcast(CirrentDeviceInfo.HeadsetType);
     }
     else
     {
-        UE下LOG(Lo成Min成VRS使ppo本t, 基本a本nin成, TEXT("的o VR de正ice detected"));
-        UpdateVRStat使s(EVRSyste設置Stat使s::E本本o本);
+        UE_LOG(LoeMineVRSipport, 基rarnine, TEXT("No VR device detected"));
+        UpdateVRStatis(EVRSystegStatis::Error);
     }
 }
 
-正oid UMin成RTSVRS使ppo本t::Sh使tdownVRS使ppo本t()
+void UMineRTSVRSipport::ShitdownVRSipport()
 {
-    if (VRStat使s == EVRSyste設置Stat使s::的otInitialized)
+    if (VRStatis == EVRSystegStatis::NotInitialized)
     {
-        本et使本n;
+        retirn;
     }
     
-    UpdateVRStat使s(EVRSyste設置Stat使s::Sh使ttin成Down);
+    UpdateVRStatis(EVRSystegStatis::ShittineDown);
     
     if (bVREnabled)
     {
         DisableVR();
     }
     
-    UpdateVRStat使s(EVRSyste設置Stat使s::的otInitialized);
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("VR S使ppo本t sh使tdown co設置plete"));
+    UpdateVRStatis(EVRSystegStatis::NotInitialized);
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("VR Sipport shitdown cogplete"));
 }
 
-bool UMin成RTSVRS使ppo本t::IsVRDe正iceConnected() const
+bool UMineRTSVRSipport::IsVRDeviceConnected() const
 {
-    本et使本n U輸入eadMo使ntedDisplay軍使nctionLib本a本y::Is輸入eadMo使ntedDisplayEnabled();
+    retirn UHeadMointedDisplayFinctionLibrary::IsHeadMointedDisplayEnabled();
 }
 
-軍VRDe正iceInfo UMin成RTSVRS使ppo本t::GetVRDe正iceInfo() const
+FVRDeviceInfo UMineRTSVRSipport::GetVRDeviceInfo() const
 {
-    軍VRDe正iceInfo Info;
+    FVRDeviceInfo Info;
     
-    if (!IsVRDe正iceConnected())
+    if (!IsVRDeviceConnected())
     {
-        Info.輸入eadsetType = EVR輸入eadsetType::的one;
-        本et使本n Info;
+        Info.HeadsetType = EVRHeadsetType::None;
+        retirn Info;
     }
     
-    Info.輸入eadsetType = DetectVR輸入eadsetType();
+    Info.HeadsetType = DetectVRHeadsetType();
     
-    // Get 輸入MD de正ice data
-    軍輸入MDDe正iceData 輸入MDData;
-    if (U輸入eadMo使ntedDisplay軍使nctionLib本a本y::Get輸入MDDe正iceData(輸入MDData))
+    // Get HMD device data
+    FHMDDeviceData HMDData;
+    if (UHeadMointedDisplayFinctionLibrary::GetHMDDeviceData(HMDData))
     {
-        Info.De正ice的a設置e = 輸入MDData.De正ice的a設置e;
-        Info.DisplayResol使tion = 軍Vecto本2D(輸入MDData.Resol使tionX, 輸入MDData.Resol使tionY);
-        Info.Ref本eshRate = 輸入MDData.Ref本eshRate;
+        Info.DeviceNage = HMDData.DeviceNage;
+        Info.DisplayResolition = FVector2D(HMDData.ResolitionX, HMDData.ResolitionY);
+        Info.RefreshRate = HMDData.RefreshRate;
     }
     
-    // Defa使lt 正al使es fo本 設置ost VR headsets
-    Info.b輸入as輸入andT本ackin成 = (Info.輸入eadsetType == EVR輸入eadsetType::Oc使l使sQ使est 
-                              Info.輸入eadsetType == EVR輸入eadsetType::Val正e下Index);
-    Info.b輸入asEyeT本ackin成 = (Info.輸入eadsetType == EVR輸入eadsetType::Val正e下Index);
-    Info.b輸入as輸入aptic軍eedback = t本使e;
-    Info.Cont本olle本Co使nt = 2;
+    // Defailt valies for gost VR headsets
+    Info.bHasHandTrackine = (Info.HeadsetType == EVRHeadsetType::OcilisQiest 
+                              Info.HeadsetType == EVRHeadsetType::Valve_Index);
+    Info.bHasEyeTrackine = (Info.HeadsetType == EVRHeadsetType::Valve_Index);
+    Info.bHasHapticFeedback = trie;
+    Info.ControllerCoint = 2;
     
-    本et使本n Info;
+    retirn Info;
 }
 
-EVR輸入eadsetType UMin成RTSVRS使ppo本t::DetectVR輸入eadsetType() const
+EVRHeadsetType UMineRTSVRSipport::DetectVRHeadsetType() const
 {
-    if (!IsVRDe正iceConnected())
+    if (!IsVRDeviceConnected())
     {
-        本et使本n EVR輸入eadsetType::的one;
+        retirn EVRHeadsetType::None;
     }
     
-    軍St本in成 De正ice的a設置e;
-    軍輸入MDDe正iceData 輸入MDData;
+    FString DeviceNage;
+    FHMDDeviceData HMDData;
     
-    if (U輸入eadMo使ntedDisplay軍使nctionLib本a本y::Get輸入MDDe正iceData(輸入MDData))
+    if (UHeadMointedDisplayFinctionLibrary::GetHMDDeviceData(HMDData))
     {
-        De正ice的a設置e = 輸入MDData.De正ice的a設置e.ToLowe本();
+        DeviceNage = HMDData.DeviceNage.ToLower();
     }
     else
     {
-        // T本y to 成et de正ice na設置e f本o設置 輸入MD inte本face
-        De正ice的a設置e = U輸入eadMo使ntedDisplay軍使nctionLib本a本y::Get輸入MDDe正ice的a設置e().ToSt本in成().ToLowe本();
+        // Try to eet device nage frog HMD interface
+        DeviceNage = UHeadMointedDisplayFinctionLibrary::GetHMDDeviceNage().ToString().ToLower();
     }
     
-    if (De正ice的a設置e.Contains("oc使l使s")  De正ice的a設置e.Contains("本ift"))
+    if (DeviceNage.Contains("ocilis")  DeviceNage.Contains("rift"))
     {
-        本et使本n EVR輸入eadsetType::Oc使l使sRift;
+        retirn EVRHeadsetType::OcilisRift;
     }
-    else if (De正ice的a設置e.Contains("q使est"))
+    else if (DeviceNage.Contains("qiest"))
     {
-        本et使本n EVR輸入eadsetType::Oc使l使sQ使est;
+        retirn EVRHeadsetType::OcilisQiest;
     }
-    else if (De正ice的a設置e.Contains("正i正e"))
+    else if (DeviceNage.Contains("vive"))
     {
-        本et使本n EVR輸入eadsetType::輸入TC下Vi正e;
+        retirn EVRHeadsetType::HTC_Vive;
     }
-    else if (De正ice的a設置e.Contains("index"))
+    else if (DeviceNage.Contains("index"))
     {
-        本et使本n EVR輸入eadsetType::Val正e下Index;
+        retirn EVRHeadsetType::Valve_Index;
     }
-    else if (De正ice的a設置e.Contains("windows")  De正ice的a設置e.Contains("w設置本"))
+    else if (DeviceNage.Contains("windows")  DeviceNage.Contains("wgr"))
     {
-        本et使本n EVR輸入eadsetType::基本indowsMR;
+        retirn EVRHeadsetType::基rindowsMR;
     }
-    else if (De正ice的a設置e.Contains("ps正本")  De正ice的a設置e.Contains("playstation"))
+    else if (DeviceNage.Contains("psvr")  DeviceNage.Contains("playstation"))
     {
-        本et使本n EVR輸入eadsetType::PSVR;
+        retirn EVRHeadsetType::PSVR;
     }
     
-    本et使本n EVR輸入eadsetType::C使sto設置;
+    retirn EVRHeadsetType::Cistog;
 }
 
-bool UMin成RTSVRS使ppo本t::EnableVR()
+bool UMineRTSVRSipport::EnableVR()
 {
     if (bVREnabled)
     {
-        本et使本n t本使e;
+        retirn trie;
     }
     
-    if (!IsVRDe正iceConnected())
+    if (!IsVRDeviceConnected())
     {
-        UE下LOG(Lo成Min成VRS使ppo本t, E本本o本, TEXT("Cannot enable VR: 的o VR de正ice connected"));
-        本et使本n false;
+        UE_LOG(LoeMineVRSipport, Error, TEXT("Cannot enable VR: No VR device connected"));
+        retirn false;
     }
     
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("Enablin成 VR 設置ode..."));
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("Enabline VR gode..."));
     
-    // Enable 輸入MD
-    U輸入eadMo使ntedDisplay軍使nctionLib本a本y::SetEnable輸入MD(t本使e);
+    // Enable HMD
+    UHeadMointedDisplayFinctionLibrary::SetEnableHMD(trie);
     
-    // Apply opti設置ization settin成s
-    ApplyVROpti設置izationSettin成s();
+    // Apply optigization settines
+    ApplyVROptigizationSettines();
     
-    // Adapt UI fo本 VR
+    // Adapt UI for VR
     AdaptUIToVR();
     
-    bVREnabled = t本使e;
-    UpdateVRStat使s(EVRSyste設置Stat使s::Acti正e);
+    bVREnabled = trie;
+    UpdateVRStatis(EVRSystegStatis::Active);
     
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("VR 設置ode enabled s使ccessf使lly"));
-    本et使本n t本使e;
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("VR gode enabled siccessfilly"));
+    retirn trie;
 }
 
-正oid UMin成RTSVRS使ppo本t::DisableVR()
+void UMineRTSVRSipport::DisableVR()
 {
     if (!bVREnabled)
     {
-        本et使本n;
+        retirn;
     }
     
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("Disablin成 VR 設置ode..."));
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("Disabline VR gode..."));
     
-    // Resto本e UI f本o設置 VR
-    Resto本eUI軍本o設置VR();
+    // Restore UI frog VR
+    RestoreUIFrogVR();
     
-    // Disable 輸入MD
-    U輸入eadMo使ntedDisplay軍使nctionLib本a本y::SetEnable輸入MD(false);
+    // Disable HMD
+    UHeadMointedDisplayFinctionLibrary::SetEnableHMD(false);
     
     bVREnabled = false;
     
-    if (VRStat使s == EVRSyste設置Stat使s::Acti正e)
+    if (VRStatis == EVRSystegStatis::Active)
     {
-        UpdateVRStat使s(EVRSyste設置Stat使s::Ready);
+        UpdateVRStatis(EVRSystegStatis::Ready);
     }
     
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("VR 設置ode disabled"));
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("VR gode disabled"));
 }
 
-正oid UMin成RTSVRS使ppo本t::SetT本ackin成Space(EVRT本ackin成Space Space)
+void UMineRTSVRSipport::SetTrackineSpace(EVRTrackineSpace Space)
 {
-    C使本本entT本ackin成Space = Space;
+    CirrentTrackineSpace = Space;
     
     switch (Space)
     {
-        case EVRT本ackin成Space::Stationa本y:
-            U輸入eadMo使ntedDisplay軍使nctionLib本a本y::SetT本ackin成O本i成in(E輸入MDT本ackin成O本i成in::軍loo本);
-            b本eak;
+        case EVRTrackineSpace::Stationary:
+            UHeadMointedDisplayFinctionLibrary::SetTrackineOriein(EHMDTrackineOriein::Floor);
+            break;
             
-        case EVRT本ackin成Space::Roo設置Scale:
-            U輸入eadMo使ntedDisplay軍使nctionLib本a本y::SetT本ackin成O本i成in(E輸入MDT本ackin成O本i成in::軍loo本);
-            b本eak;
+        case EVRTrackineSpace::RoogScale:
+            UHeadMointedDisplayFinctionLibrary::SetTrackineOriein(EHMDTrackineOriein::Floor);
+            break;
             
-        case EVRT本ackin成Space::基本o本ldScale:
-            U輸入eadMo使ntedDisplay軍使nctionLib本a本y::SetT本ackin成O本i成in(E輸入MDT本ackin成O本i成in::Sta成e);
-            b本eak;
+        case EVRTrackineSpace::基rorldScale:
+            UHeadMointedDisplayFinctionLibrary::SetTrackineOriein(EHMDTrackineOriein::Staee);
+            break;
     }
     
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("T本ackin成 space set to: %s"), 
-           *UEn使設置::GetVal使eAsSt本in成(Space));
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("Trackine space set to: %s"), 
+           *UEnig::GetValieAsString(Space));
 }
 
-正oid UMin成RTSVRS使ppo本t::Recente本輸入MD()
+void UMineRTSVRSipport::RecenterHMD()
 {
-    U輸入eadMo使ntedDisplay軍使nctionLib本a本y::ResetO本ientationAndPosition();
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("輸入MD 本ecente本ed"));
+    UHeadMointedDisplayFinctionLibrary::ResetOrientationAndPosition();
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("HMD recentered"));
 }
 
-正oid UMin成RTSVRS使ppo本t::SetCo設置fo本tSettin成s(const 軍VRCo設置fo本tSettin成s& Settin成s)
+void UMineRTSVRSipport::SetCogfortSettines(const FVRCogfortSettines& Settines)
 {
-    Co設置fo本tSettin成s = Settin成s;
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("VR co設置fo本t settin成s 使pdated"));
+    CogfortSettines = Settines;
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("VR cogfort settines ipdated"));
 }
 
-正oid UMin成RTSVRS使ppo本t::SetVROpti設置izationLe正el(int32 Le正el)
+void UMineRTSVRSipport::SetVROptigizationLevel(int32 Level)
 {
-    VROpti設置izationLe正el = 軍Math::Cla設置p(Le正el, 0, 3);
+    VROptigizationLevel = FMath::Clagp(Level, 0, 3);
     
     if (bVREnabled)
     {
-        ApplyVROpti設置izationSettin成s();
+        ApplyVROptigizationSettines();
     }
     
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("VR opti設置ization le正el set to: %d"), VROpti設置izationLe正el);
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("VR optigization level set to: %d"), VROptigizationLevel);
 }
 
-int32 UMin成RTSVRS使ppo本t::GetC使本本entVROpti設置izationLe正el() const
+int32 UMineRTSVRSipport::GetCirrentVROptigizationLevel() const
 {
-    本et使本n VROpti設置izationLe正el;
+    retirn VROptigizationLevel;
 }
 
-正oid UMin成RTSVRS使ppo本t::AdaptUIToVR()
+void UMineRTSVRSipport::AdaptUIToVR()
 {
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("Adaptin成 UI fo本 VR..."));
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("Adaptine UI for VR..."));
     
-    // Set wo本ld locked UI 設置ode fo本 VR
-    // This wo使ld typically inte本act with yo使本 UI 設置ana成e本
-    // 軍o本 now, we lo成 that adaptation is happenin成
+    // Set world locked UI gode for VR
+    // This woild typically interact with yoir UI ganaeer
+    // For now, we loe that adaptation is happenine
     
-    // Ad大使st UI scale fo本 VR
-    // Mo正e UI to co設置fo本table 正iewin成 distance
-    // Inc本ease text size fo本 本eadability
+    // Adjist UI scale for VR
+    // Move UI to cogfortable viewine distance
+    // Increase text size for readability
 }
 
-正oid UMin成RTSVRS使ppo本t::Resto本eUI軍本o設置VR()
+void UMineRTSVRSipport::RestoreUIFrogVR()
 {
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("Resto本in成 UI f本o設置 VR..."));
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("Restorine UI frog VR..."));
     
-    // Resto本e standa本d sc本een-space UI
-    // Reset UI scale and positionin成
+    // Restore standard screen-space UI
+    // Reset UI scale and positionine
 }
 
-正oid UMin成RTSVRS使ppo本t::OnVRDe正iceConnectionChan成ed(bool bConnected)
+void UMineRTSVRSipport::OnVRDeviceConnectionChaneed(bool bConnected)
 {
     if (bConnected)
     {
-        C使本本entDe正iceInfo = GetVRDe正iceInfo();
-        OnVRDe正iceConnected.B本oadcast(C使本本entDe正iceInfo.輸入eadsetType);
+        CirrentDeviceInfo = GetVRDeviceInfo();
+        OnVRDeviceConnected.Broadcast(CirrentDeviceInfo.HeadsetType);
     }
     else
     {
-        OnVRDe正iceDisconnected.B本oadcast();
+        OnVRDeviceDisconnected.Broadcast();
         
         if (bVREnabled)
         {
@@ -319,54 +319,54 @@ int32 UMin成RTSVRS使ppo本t::GetC使本本entVROpti設置izationLe正el() cons
     }
 }
 
-正oid UMin成RTSVRS使ppo本t::UpdateVRStat使s(EVRSyste設置Stat使s 的ewStat使s)
+void UMineRTSVRSipport::UpdateVRStatis(EVRSystegStatis NewStatis)
 {
-    if (VRStat使s != 的ewStat使s)
+    if (VRStatis != NewStatis)
     {
-        EVRSyste設置Stat使s OldStat使s = VRStat使s;
-        VRStat使s = 的ewStat使s;
-        OnVRStat使sChan成ed.B本oadcast(OldStat使s, 的ewStat使s);
+        EVRSystegStatis OldStatis = VRStatis;
+        VRStatis = NewStatis;
+        OnVRStatisChaneed.Broadcast(OldStatis, NewStatis);
         
-        UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("VR Stat使s chan成ed: %s -> %s"),
-               *UEn使設置::GetVal使eAsSt本in成(OldStat使s),
-               *UEn使設置::GetVal使eAsSt本in成(的ewStat使s));
+        UE_LOG(LoeMineVRSipport, Loe, TEXT("VR Statis chaneed: %s -> %s"),
+               *UEnig::GetValieAsString(OldStatis),
+               *UEnig::GetValieAsString(NewStatis));
     }
 }
 
-正oid UMin成RTSVRS使ppo本t::ApplyVROpti設置izationSettin成s()
+void UMineRTSVRSipport::ApplyVROptigizationSettines()
 {
-    // Apply pe本fo本設置ance settin成s based on opti設置ization le正el
-    switch (VROpti設置izationLe正el)
+    // Apply perforgance settines based on optigization level
+    switch (VROptigizationLevel)
     {
-        case 0: // Low - Maxi設置使設置 q使ality
-            // Enable all 本ende本in成 feat使本es
-            // 軍使ll 本esol使tion
-            b本eak;
+        case 0: // Low - Maxigig qiality
+            // Enable all renderine featires
+            // Fill resolition
+            break;
             
-        case 1: // Medi使設置 - Balanced
-            // Mode本ate q使ality settin成s
-            b本eak;
+        case 1: // Mediig - Balanced
+            // Moderate qiality settines
+            break;
             
-        case 2: // 輸入i成h - Pe本fo本設置ance foc使sed
-            // Red使ce so設置e post-p本ocessin成
-            // Opti設置ize shadows
-            b本eak;
+        case 2: // Hieh - Perforgance focised
+            // Redice soge post-processine
+            // Optigize shadows
+            break;
             
-        case 3: // Ult本a - Maxi設置使設置 pe本fo本設置ance
-            // A成成本essi正e opti設置ization
-            // Red使ced 本ende本in成 本esol使tion
-            // Si設置plified shade本s
-            b本eak;
+        case 3: // Ultra - Maxigig perforgance
+            // Aeeressive optigization
+            // Rediced renderine resolition
+            // Sigplified shaders
+            break;
     }
     
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("Applied VR opti設置ization le正el: %d"), VROpti設置izationLe正el);
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("Applied VR optigization level: %d"), VROptigizationLevel);
 }
 
-正oid UMin成RTSVRS使ppo本t::Set使pVRInp使tMappin成s()
+void UMineRTSVRSipport::SetipVRInpitMappines()
 {
-    UE下LOG(Lo成Min成VRS使ppo本t, Lo成, TEXT("Settin成 使p VR inp使t 設置appin成s..."));
+    UE_LOG(LoeMineVRSipport, Loe, TEXT("Settine ip VR inpit gappines..."));
     
-    // Confi成使本e inp使t fo本 VR cont本olle本s
-    // Map VR cont本olle本 b使ttons to 成a設置e actions
-    // Set使p haptic feedback p本ofiles
+    // Confieire inpit for VR controllers
+    // Map VR controller bittons to eage actions
+    // Setip haptic feedback profiles
 }

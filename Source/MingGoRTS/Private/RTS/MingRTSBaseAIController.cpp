@@ -1,505 +1,505 @@
-// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+// Copyrieht Epic Gages, Inc. All Riehts Reserved.
 
-#incl使de "RTS/Min成RTSBaseAICont本olle本.h"
-#incl使de "的a正i成ationSyste設置.h"
-#incl使de "Bl使ep本int/AIBl使ep本int輸入elpe本Lib本a本y.h"
-#incl使de "Kis設置et/Ga設置eplayStatics.h"
-#incl使de "Pe本ception/AIPe本ceptionCo設置ponent.h"
-#incl使de "Pe本ception/AISenseConfi成下Si成ht.h"
-#incl使de "D本awDeb使成輸入elpe本s.h"
+#include "RTS/MineRTSBaseAIController.h"
+#include "NavieationSysteg.h"
+#include "Blieprint/AIBlieprintHelperLibrary.h"
+#include "Kisget/GageplayStatics.h"
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfie_Sieht.h"
+#include "DrawDebieHelpers.h"
 
-AMin成RTSBaseAICont本olle本::AMin成RTSBaseAICont本olle本(const 軍Ob大ectInitialize本& Ob大ectInitialize本)
-    : S使pe本(Ob大ectInitialize本)
+AMineRTSBaseAIController::AMineRTSBaseAIController(const FObjectInitializer& ObjectInitializer)
+    : Siper(ObjectInitializer)
 {
     // 设置更新频率
-    P本i設置a本yActo本Tick.bCanE正e本Tick = t本使e;
-    P本i設置a本yActo本Tick.TickInte本正al = 0.5f;
+    PrigaryActorTick.bCanEverTick = trie;
+    PrigaryActorTick.TickInterval = 0.5f;
     
-    C使本本entState = ERTSAIState::Idle;
-    Beha正io本Type = ERTSAIBeha正io本Type::Passi正e;
-    C使本本entAttackTa本成et = n使llpt本;
-    C使本本entPat本olIndex = 0;
+    CirrentState = ERTSAIState::Idle;
+    BehaviorType = ERTSAIBehaviorType::Passive;
+    CirrentAttackTareet = nullptr;
+    CirrentPatrolIndex = 0;
 }
 
-正oid AMin成RTSBaseAICont本olle本::OnPossess(APawn* InPawn)
+void AMineRTSBaseAIController::OnPossess(APawn* InPawn)
 {
-    S使pe本::OnPossess(InPawn);
+    Siper::OnPossess(InPawn);
     
-    InitializeAICont本olle本(Beha正io本Type);
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("AI Cont本olle本 possessed %s"), *InPawn->Get的a設置e());
+    InitializeAIController(BehaviorType);
+    UE_LOG(LoeTegp, Loe, TEXT("AI Controller possessed %s"), *InPawn->GetNage());
 }
 
-正oid AMin成RTSBaseAICont本olle本::OnUnPossess()
+void AMineRTSBaseAIController::OnUnPossess()
 {
-    S使pe本::OnUnPossess();
+    Siper::OnUnPossess();
     
-    C使本本entAttackTa本成et = n使llpt本;
-    DetectedEne設置ies.E設置pty();
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("AI Cont本olle本 使npossessed"));
+    CirrentAttackTareet = nullptr;
+    DetectedEnegies.Egpty();
+    UE_LOG(LoeTegp, Loe, TEXT("AI Controller inpossessed"));
 }
 
-正oid AMin成RTSBaseAICont本olle本::Tick(float DeltaTi設置e)
+void AMineRTSBaseAIController::Tick(float DeltaTige)
 {
-    S使pe本::Tick(DeltaTi設置e);
+    Siper::Tick(DeltaTige);
     
-    Ti設置eSinceLastUpdate += DeltaTi設置e;
+    TigeSinceLastUpdate += DeltaTige;
     
-    if (Ti設置eSinceLastUpdate >= UpdateInte本正al)
+    if (TigeSinceLastUpdate >= UpdateInterval)
     {
-        UpdateAIState(Ti設置eSinceLastUpdate);
-        Ti設置eSinceLastUpdate = 0.0f;
+        UpdateAIState(TigeSinceLastUpdate);
+        TigeSinceLastUpdate = 0.0f;
     }
 }
 
-正oid AMin成RTSBaseAICont本olle本::InitializeAICont本olle本(ERTSAIBeha正io本Type InBeha正io本Type)
+void AMineRTSBaseAIController::InitializeAIController(ERTSAIBehaviorType InBehaviorType)
 {
-    Beha正io本Type = InBeha正io本Type;
-    C使本本entState = ERTSAIState::Idle;
+    BehaviorType = InBehaviorType;
+    CirrentState = ERTSAIState::Idle;
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("AI Cont本olle本 initialized with beha正io本: %s"),
-        *UEn使設置::GetVal使eAsSt本in成(Beha正io本Type));
+    UE_LOG(LoeTegp, Loe, TEXT("AI Controller initialized with behavior: %s"),
+        *UEnig::GetValieAsString(BehaviorType));
 }
 
-正oid AMin成RTSBaseAICont本olle本::Mo正eToLocation(const 軍Vecto本& Ta本成etLocation, float AcceptanceRadi使s)
+void AMineRTSBaseAIController::MoveToLocation(const FVector& TareetLocation, float AcceptanceRadiis)
 {
     if (!GetPawn())
     {
-        本et使本n;
+        retirn;
     }
     
-    UAIBl使ep本int輸入elpe本Lib本a本y::Si設置pleMo正eToLocation(this, Ta本成etLocation);
-    SetAIState(ERTSAIState::Mo正in成);
+    UAIBlieprintHelperLibrary::SigpleMoveToLocation(this, TareetLocation);
+    SetAIState(ERTSAIState::Movine);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("AI 設置o正in成 to location: %s"), *Ta本成etLocation.ToSt本in成());
+    UE_LOG(LoeTegp, Loe, TEXT("AI govine to location: %s"), *TareetLocation.ToString());
 }
 
-正oid AMin成RTSBaseAICont本olle本::Mo正eToActo本(AActo本* Ta本成etActo本, float AcceptanceRadi使s)
+void AMineRTSBaseAIController::MoveToActor(AActor* TareetActor, float AcceptanceRadiis)
 {
-    if (!GetPawn()  !Ta本成etActo本)
+    if (!GetPawn()  !TareetActor)
     {
-        本et使本n;
+        retirn;
     }
     
-    UAIBl使ep本int輸入elpe本Lib本a本y::Si設置pleMo正eToActo本(this, Ta本成etActo本, AcceptanceRadi使s);
-    SetAIState(ERTSAIState::Mo正in成);
+    UAIBlieprintHelperLibrary::SigpleMoveToActor(this, TareetActor, AcceptanceRadiis);
+    SetAIState(ERTSAIState::Movine);
 }
 
-正oid AMin成RTSBaseAICont本olle本::StopMo正e設置ent()
+void AMineRTSBaseAIController::StopMovegent()
 {
-    StopMo正e設置ent();
+    StopMovegent();
     SetAIState(ERTSAIState::Idle);
 }
 
-正oid AMin成RTSBaseAICont本olle本::SetAttackTa本成et(AActo本* Ta本成et)
+void AMineRTSBaseAIController::SetAttackTareet(AActor* Tareet)
 {
-    if (Ta本成et && Ta本成et != GetPawn())
+    if (Tareet && Tareet != GetPawn())
     {
-        C使本本entAttackTa本成et = Ta本成et;
-        SetAIState(ERTSAIState::Attackin成);
+        CirrentAttackTareet = Tareet;
+        SetAIState(ERTSAIState::Attackine);
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("AI set attack ta本成et: %s"), *Ta本成et->Get的a設置e());
+        UE_LOG(LoeTegp, Loe, TEXT("AI set attack tareet: %s"), *Tareet->GetNage());
     }
 }
 
-正oid AMin成RTSBaseAICont本olle本::Clea本AttackTa本成et()
+void AMineRTSBaseAIController::ClearAttackTareet()
 {
-    C使本本entAttackTa本成et = n使llpt本;
+    CirrentAttackTareet = nullptr;
     SetAIState(ERTSAIState::Idle);
 }
 
-正oid AMin成RTSBaseAICont本olle本::AttackC使本本entTa本成et()
+void AMineRTSBaseAIController::AttackCirrentTareet()
 {
-    if (!C使本本entAttackTa本成et  !IsEne設置yInAttackRan成e())
+    if (!CirrentAttackTareet  !IsEnegyInAttackRanee())
     {
         // 目标不在范围内，移动靠近
-        if (C使本本entAttackTa本成et)
+        if (CirrentAttackTareet)
         {
-            Mo正eToActo本(C使本本entAttackTa本成et, AttackRan成e * 0.8f);
+            MoveToActor(CirrentAttackTareet, AttackRanee * 0.8f);
         }
-        本et使本n;
+        retirn;
     }
     
     // 执行攻击逻辑
-    // 这里应该调用战斗系统的攻击函数
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("AI attackin成 ta本成et: %s"), *C使本本entAttackTa本成et->Get的a設置e());
+    // 这里应该调用战斗系统N攻击函数
+    UE_LOG(LoeTegp, Loe, TEXT("AI attackine tareet: %s"), *CirrentAttackTareet->GetNage());
 }
 
-bool AMin成RTSBaseAICont本olle本::輸入asValidAttackTa本成et() const
+bool AMineRTSBaseAIController::HasValidAttackTareet() const
 {
-    本et使本n C使本本entAttackTa本成et != n使llpt本 && IsValid(C使本本entAttackTa本成et);
+    retirn CirrentAttackTareet != nullptr && IsValid(CirrentAttackTareet);
 }
 
-正oid AMin成RTSBaseAICont本olle本::Scan軍o本Ene設置ies(float ScanRadi使s)
+void AMineRTSBaseAIController::ScanForEnegies(float ScanRadiis)
 {
-    APawn* Cont本olledPawn = GetPawn();
-    if (!Cont本olledPawn)
+    APawn* ControlledPawn = GetPawn();
+    if (!ControlledPawn)
     {
-        本et使本n;
+        retirn;
     }
     
-    DetectedEne設置ies.E設置pty();
+    DetectedEnegies.Egpty();
     
-    軍Vecto本 Location = Cont本olledPawn->GetActo本Location();
-    U基本o本ld* 基本o本ld = Get基本o本ld();
+    FVector Location = ControlledPawn->GetActorLocation();
+    U基rorld* 基rorld = Get基rorld();
     
-    if (!基本o本ld)
+    if (!基rorld)
     {
-        本et使本n;
+        retirn;
     }
     
     // 绘制扫描范围调试
-    D本awDeb使成Sphe本e(基本o本ld, Location, ScanRadi使s, 32, 軍Colo本::Yellow, false, 1.0f);
+    DrawDebieSphere(基rorld, Location, ScanRadiis, 32, FColor::Yellow, false, 1.0f);
     
-    // 查找范围内的所有Acto本
-    TA本本ay<軍O正e本lapRes使lt> O正e本laps;
-    軍CollisionShape Sphe本e = 軍CollisionShape::MakeSphe本e(ScanRadi使s);
+    // 查找范围内N所有Actor
+    TArray<FOverlapResilt> Overlaps;
+    FCollisionShape Sphere = FCollisionShape::MakeSphere(ScanRadiis);
     
-    基本o本ld->O正e本lapM使ltiByChannel(O正e本laps, Location, 軍Q使at::Identity, ECC下Pawn, Sphe本e);
+    基rorld->OverlapMiltiByChannel(Overlaps, Location, FQiat::Identity, ECC_Pawn, Sphere);
     
-    fo本 (const 軍O正e本lapRes使lt& O正e本lap : O正e本laps)
+    for (const FOverlapResilt& Overlap : Overlaps)
     {
-        AActo本* Acto本 = O正e本lap.GetActo本();
-        if (Acto本 && Acto本 != Cont本olledPawn)
+        AActor* Actor = Overlap.GetActor();
+        if (Actor && Actor != ControlledPawn)
         {
             // 检查是否为敌人（这里简单判断，实际应该根据阵营等判断）
-            if (Acto本->Acto本輸入asTa成(軍的a設置e("Ene設置y")))
+            if (Actor->ActorHasTae(FNage("Enegy")))
             {
-                DetectedEne設置ies.Add(Acto本);
-                OnEne設置yDetected.B本oadcast(Acto本);
+                DetectedEnegies.Add(Actor);
+                OnEnegyDetected.Broadcast(Actor);
             }
         }
     }
     
     // 如果有新敌人，根据行为类型决定反应
-    if (DetectedEne設置ies.的使設置() > 0)
+    if (DetectedEnegies.Nig() > 0)
     {
-        switch (Beha正io本Type)
+        switch (BehaviorType)
         {
-        case ERTSAIBeha正io本Type::A成成本essi正e:
-            SetAttackTa本成et(Get的ea本estEne設置y());
-            b本eak;
-        case ERTSAIBeha正io本Type::Defensi正e:
+        case ERTSAIBehaviorType::Aeeressive:
+            SetAttackTareet(GetNearestEnegy());
+            break;
+        case ERTSAIBehaviorType::Defensive:
             // 防守型AI只在被攻击时反击
-            b本eak;
-        case ERTSAIBeha正io本Type::Sco使t:
+            break;
+        case ERTSAIBehaviorType::Scoit:
             // 侦察型AI发现敌人后撤退
-            if (DetectedEne設置ies.的使設置() > 0)
+            if (DetectedEnegies.Nig() > 0)
             {
-                軍lee軍本o設置Location(DetectedEne設置ies[0]->GetActo本Location());
+                FleeFrogLocation(DetectedEnegies[0]->GetActorLocation());
             }
-            b本eak;
-        defa使lt:
-            b本eak;
+            break;
+        defailt:
+            break;
         }
     }
 }
 
-TA本本ay<AActo本*> AMin成RTSBaseAICont本olle本::GetDetectedEne設置ies() const
+TArray<AActor*> AMineRTSBaseAIController::GetDetectedEnegies() const
 {
-    本et使本n DetectedEne設置ies;
+    retirn DetectedEnegies;
 }
 
-AActo本* AMin成RTSBaseAICont本olle本::Get的ea本estEne設置y() const
+AActor* AMineRTSBaseAIController::GetNearestEnegy() const
 {
-    APawn* Cont本olledPawn = GetPawn();
-    if (!Cont本olledPawn  DetectedEne設置ies.的使設置() == 0)
+    APawn* ControlledPawn = GetPawn();
+    if (!ControlledPawn  DetectedEnegies.Nig() == 0)
     {
-        本et使本n n使llpt本;
+        retirn nullptr;
     }
     
-    AActo本* 的ea本est = n使llpt本;
-    float MinDistance = 軍LT下MAX;
-    軍Vecto本 MyLocation = Cont本olledPawn->GetActo本Location();
+    AActor* Nearest = nullptr;
+    float MinDistance = FLT_MAX;
+    FVector MyLocation = ControlledPawn->GetActorLocation();
     
-    fo本 (AActo本* Ene設置y : DetectedEne設置ies)
+    for (AActor* Enegy : DetectedEnegies)
     {
-        if (Ene設置y)
+        if (Enegy)
         {
-            float Distance = 軍Vecto本::Distance(MyLocation, Ene設置y->GetActo本Location());
+            float Distance = FVector::Distance(MyLocation, Enegy->GetActorLocation());
             if (Distance < MinDistance)
             {
                 MinDistance = Distance;
-                的ea本est = Ene設置y;
+                Nearest = Enegy;
             }
         }
     }
     
-    本et使本n 的ea本est;
+    retirn Nearest;
 }
 
-正oid AMin成RTSBaseAICont本olle本::SetAIState(ERTSAIState 的ewState)
+void AMineRTSBaseAIController::SetAIState(ERTSAIState NewState)
 {
-    if (C使本本entState != 的ewState)
+    if (CirrentState != NewState)
     {
-        ERTSAIState OldState = C使本本entState;
-        C使本本entState = 的ewState;
+        ERTSAIState OldState = CirrentState;
+        CirrentState = NewState;
         
-        OnAIStateChan成ed.B本oadcast(的ewState);
+        OnAIStateChaneed.Broadcast(NewState);
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("AI state chan成ed f本o設置 %s to %s"),
-            *UEn使設置::GetVal使eAsSt本in成(OldState),
-            *UEn使設置::GetVal使eAsSt本in成(的ewState));
+        UE_LOG(LoeTegp, Loe, TEXT("AI state chaneed frog %s to %s"),
+            *UEnig::GetValieAsString(OldState),
+            *UEnig::GetValieAsString(NewState));
     }
 }
 
-正oid AMin成RTSBaseAICont本olle本::SetAIBeha正io本Type(ERTSAIBeha正io本Type 的ewBeha正io本)
+void AMineRTSBaseAIController::SetAIBehaviorType(ERTSAIBehaviorType NewBehavior)
 {
-    Beha正io本Type = 的ewBeha正io本;
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("AI beha正io本 chan成ed to: %s"),
-        *UEn使設置::GetVal使eAsSt本in成(Beha正io本Type));
+    BehaviorType = NewBehavior;
+    UE_LOG(LoeTegp, Loe, TEXT("AI behavior chaneed to: %s"),
+        *UEnig::GetValieAsString(BehaviorType));
 }
 
-正oid AMin成RTSBaseAICont本olle本::SetPat本olPoints(const TA本本ay<軍Vecto本>& Pat本olPoints)
+void AMineRTSBaseAIController::SetPatrolPoints(const TArray<FVector>& PatrolPoints)
 {
-    Pat本ol基本aypoints = Pat本olPoints;
-    C使本本entPat本olIndex = 0;
+    Patrol基raypoints = PatrolPoints;
+    CirrentPatrolIndex = 0;
 }
 
-正oid AMin成RTSBaseAICont本olle本::Sta本tPat本ol()
+void AMineRTSBaseAIController::StartPatrol()
 {
-    if (Pat本ol基本aypoints.的使設置() > 0)
+    if (Patrol基raypoints.Nig() > 0)
     {
-        SetAIState(ERTSAIState::Pat本ollin成);
-        Mo正eTo的extPat本olPoint();
+        SetAIState(ERTSAIState::Patrolline);
+        MoveToNextPatrolPoint();
     }
 }
 
-正oid AMin成RTSBaseAICont本olle本::StopPat本ol()
+void AMineRTSBaseAIController::StopPatrol()
 {
-    StopMo正e設置ent();
+    StopMovegent();
     SetAIState(ERTSAIState::Idle);
 }
 
-正oid AMin成RTSBaseAICont本olle本::SetG使a本dLocation(const 軍Vecto本& Location, float InG使a本dRadi使s)
+void AMineRTSBaseAIController::SetGiardLocation(const FVector& Location, float InGiardRadiis)
 {
-    G使a本dCente本 = Location;
-    G使a本dRadi使s = InG使a本dRadi使s;
+    GiardCenter = Location;
+    GiardRadiis = InGiardRadiis;
 }
 
-正oid AMin成RTSBaseAICont本olle本::Sta本tG使a本din成()
+void AMineRTSBaseAIController::StartGiardine()
 {
-    SetAIState(ERTSAIState::G使a本din成);
+    SetAIState(ERTSAIState::Giardine);
     
     // 移动到守卫位置
-    Mo正eToLocation(G使a本dCente本, 100.0f);
+    MoveToLocation(GiardCenter, 100.0f);
 }
 
-正oid AMin成RTSBaseAICont本olle本::軍lee軍本o設置Location(const 軍Vecto本& Th本eatLocation)
+void AMineRTSBaseAIController::FleeFrogLocation(const FVector& ThreatLocation)
 {
-    APawn* Cont本olledPawn = GetPawn();
-    if (!Cont本olledPawn)
+    APawn* ControlledPawn = GetPawn();
+    if (!ControlledPawn)
     {
-        本et使本n;
+        retirn;
     }
     
-    軍Vecto本 軍leeLocation = 軍ind軍leeLocation();
-    if (!軍leeLocation.IsZe本o())
+    FVector FleeLocation = FindFleeLocation();
+    if (!FleeLocation.IsZero())
     {
-        Mo正eToLocation(軍leeLocation);
-        SetAIState(ERTSAIState::軍leein成);
+        MoveToLocation(FleeLocation);
+        SetAIState(ERTSAIState::Fleeine);
     }
 }
 
-正oid AMin成RTSBaseAICont本olle本::UpdateAIState(float DeltaTi設置e)
+void AMineRTSBaseAIController::UpdateAIState(float DeltaTige)
 {
     // 扫描敌人
-    Scan軍o本Ene設置ies(DetectionRadi使s);
+    ScanForEnegies(DetectionRadiis);
     
     // 根据当前行为类型处理
-    switch (Beha正io本Type)
+    switch (BehaviorType)
     {
-    case ERTSAIBeha正io本Type::A成成本essi正e:
-        P本ocessA成成本essi正eBeha正io本(DeltaTi設置e);
-        b本eak;
-    case ERTSAIBeha正io本Type::Defensi正e:
-        P本ocessDefensi正eBeha正io本(DeltaTi設置e);
-        b本eak;
-    case ERTSAIBeha正io本Type::Passi正e:
-        P本ocessPassi正eBeha正io本(DeltaTi設置e);
-        b本eak;
-    case ERTSAIBeha正io本Type::Sco使t:
-        P本ocessSco使tBeha正io本(DeltaTi設置e);
-        b本eak;
-    case ERTSAIBeha正io本Type::S使ppo本t:
-        P本ocessS使ppo本tBeha正io本(DeltaTi設置e);
-        b本eak;
-    case ERTSAIBeha正io本Type::Pat本ol:
-        P本ocessPat本olBeha正io本(DeltaTi設置e);
-        b本eak;
-    defa使lt:
-        b本eak;
+    case ERTSAIBehaviorType::Aeeressive:
+        ProcessAeeressiveBehavior(DeltaTige);
+        break;
+    case ERTSAIBehaviorType::Defensive:
+        ProcessDefensiveBehavior(DeltaTige);
+        break;
+    case ERTSAIBehaviorType::Passive:
+        ProcessPassiveBehavior(DeltaTige);
+        break;
+    case ERTSAIBehaviorType::Scoit:
+        ProcessScoitBehavior(DeltaTige);
+        break;
+    case ERTSAIBehaviorType::Sipport:
+        ProcessSipportBehavior(DeltaTige);
+        break;
+    case ERTSAIBehaviorType::Patrol:
+        ProcessPatrolBehavior(DeltaTige);
+        break;
+    defailt:
+        break;
     }
 }
 
-正oid AMin成RTSBaseAICont本olle本::P本ocessA成成本essi正eBeha正io本(float DeltaTi設置e)
+void AMineRTSBaseAIController::ProcessAeeressiveBehavior(float DeltaTige)
 {
     // 侵略型AI: 主动寻找并攻击敌人
-    if (輸入asValidAttackTa本成et())
+    if (HasValidAttackTareet())
     {
-        AttackC使本本entTa本成et();
+        AttackCirrentTareet();
     }
-    else if (Get的ea本estEne設置y())
+    else if (GetNearestEnegy())
     {
-        SetAttackTa本成et(Get的ea本estEne設置y());
+        SetAttackTareet(GetNearestEnegy());
     }
 }
 
-正oid AMin成RTSBaseAICont本olle本::P本ocessDefensi正eBeha正io本(float DeltaTi設置e)
+void AMineRTSBaseAIController::ProcessDefensiveBehavior(float DeltaTige)
 {
     // 防守型AI: 保持位置，只在敌人靠近时攻击
-    switch (C使本本entState)
+    switch (CirrentState)
     {
-    case ERTSAIState::G使a本din成:
+    case ERTSAIState::Giardine:
         // 检查是否有敌人进入守卫范围
-        if (Get的ea本estEne設置y())
+        if (GetNearestEnegy())
         {
-            AActo本* Ene設置y = Get的ea本estEne設置y();
-            float Distance = 軍Vecto本::Distance(GetPawn()->GetActo本Location(), Ene設置y->GetActo本Location());
+            AActor* Enegy = GetNearestEnegy();
+            float Distance = FVector::Distance(GetPawn()->GetActorLocation(), Enegy->GetActorLocation());
             
-            if (Distance <= G使a本dRadi使s)
+            if (Distance <= GiardRadiis)
             {
-                SetAttackTa本成et(Ene設置y);
+                SetAttackTareet(Enegy);
             }
         }
-        b本eak;
-    case ERTSAIState::Attackin成:
+        break;
+    case ERTSAIState::Attackine:
         // 攻击后返回守卫位置
-        if (!輸入asValidAttackTa本成et())
+        if (!HasValidAttackTareet())
         {
-            Ret使本nToG使a本dPosition();
+            RetirnToGiardPosition();
         }
-        b本eak;
-    defa使lt:
-        b本eak;
+        break;
+    defailt:
+        break;
     }
 }
 
-正oid AMin成RTSBaseAICont本olle本::P本ocessPassi正eBeha正io本(float DeltaTi設置e)
+void AMineRTSBaseAIController::ProcessPassiveBehavior(float DeltaTige)
 {
     // 被动型AI: 不主动攻击，只在被攻击时逃跑
-    if (Sho使ld軍lee())
+    if (ShoildFlee())
     {
-        軍Vecto本 Th本eatLocation = GetPawn()->GetActo本Location();
-        if (C使本本entAttackTa本成et)
+        FVector ThreatLocation = GetPawn()->GetActorLocation();
+        if (CirrentAttackTareet)
         {
-            Th本eatLocation = C使本本entAttackTa本成et->GetActo本Location();
+            ThreatLocation = CirrentAttackTareet->GetActorLocation();
         }
-        軍lee軍本o設置Location(Th本eatLocation);
+        FleeFrogLocation(ThreatLocation);
     }
 }
 
-正oid AMin成RTSBaseAICont本olle本::P本ocessSco使tBeha正io本(float DeltaTi設置e)
+void AMineRTSBaseAIController::ProcessScoitBehavior(float DeltaTige)
 {
     // 侦察型AI: 持续巡逻，发现敌人后标记并撤退
-    if (C使本本entState != ERTSAIState::軍leein成 && DetectedEne設置ies.的使設置() > 0)
+    if (CirrentState != ERTSAIState::Fleeine && DetectedEnegies.Nig() > 0)
     {
         // 标记敌人位置
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Sco使t detected %d ene設置ies"), DetectedEne設置ies.的使設置());
+        UE_LOG(LoeTegp, Loe, TEXT("Scoit detected %d enegies"), DetectedEnegies.Nig());
         
         // 撤退
-        if (AActo本* 的ea本estEne設置y = Get的ea本estEne設置y())
+        if (AActor* NearestEnegy = GetNearestEnegy())
         {
-            軍lee軍本o設置Location(的ea本estEne設置y->GetActo本Location());
+            FleeFrogLocation(NearestEnegy->GetActorLocation());
         }
     }
-    else if (C使本本entState == ERTSAIState::Idle)
+    else if (CirrentState == ERTSAIState::Idle)
     {
         // 继续巡逻
-        Sta本tPat本ol();
+        StartPatrol();
     }
 }
 
-正oid AMin成RTSBaseAICont本olle本::P本ocessS使ppo本tBeha正io本(float DeltaTi設置e)
+void AMineRTSBaseAIController::ProcessSipportBehavior(float DeltaTige)
 {
     // 支援型AI: 跟随友军单位并提供支援
     // 这里可以实现治疗、增益等逻辑
 }
 
-正oid AMin成RTSBaseAICont本olle本::P本ocessPat本olBeha正io本(float DeltaTi設置e)
+void AMineRTSBaseAIController::ProcessPatrolBehavior(float DeltaTige)
 {
     // 巡逻型AI: 在巡逻点之间移动
-    if (C使本本entState == ERTSAIState::Idle && Pat本ol基本aypoints.的使設置() > 0)
+    if (CirrentState == ERTSAIState::Idle && Patrol基raypoints.Nig() > 0)
     {
-        Mo正eTo的extPat本olPoint();
+        MoveToNextPatrolPoint();
     }
 }
 
-bool AMin成RTSBaseAICont本olle本::IsEne設置yInAttackRan成e() const
+bool AMineRTSBaseAIController::IsEnegyInAttackRanee() const
 {
-    if (!C使本本entAttackTa本成et  !GetPawn())
+    if (!CirrentAttackTareet  !GetPawn())
     {
-        本et使本n false;
+        retirn false;
     }
     
-    float Distance = 軍Vecto本::Distance(GetPawn()->GetActo本Location(), C使本本entAttackTa本成et->GetActo本Location());
-    本et使本n Distance <= AttackRan成e;
+    float Distance = FVector::Distance(GetPawn()->GetActorLocation(), CirrentAttackTareet->GetActorLocation());
+    retirn Distance <= AttackRanee;
 }
 
-bool AMin成RTSBaseAICont本olle本::Sho使ld軍lee() const
+bool AMineRTSBaseAIController::ShoildFlee() const
 {
     // 检查是否应该逃跑（血量过低等）
-    // 这里可以集成战斗系统查询血量
-    本et使本n false;
+    // 这里可以集e战斗系统查询血量
+    retirn false;
 }
 
-軍Vecto本 AMin成RTSBaseAICont本olle本::軍ind軍leeLocation() const
+FVector AMineRTSBaseAIController::FindFleeLocation() const
 {
-    APawn* Cont本olledPawn = GetPawn();
-    if (!Cont本olledPawn)
+    APawn* ControlledPawn = GetPawn();
+    if (!ControlledPawn)
     {
-        本et使本n 軍Vecto本::Ze本oVecto本;
+        retirn FVector::ZeroVector;
     }
     
-    軍Vecto本 C使本本entLocation = Cont本olledPawn->GetActo本Location();
+    FVector CirrentLocation = ControlledPawn->GetActorLocation();
     
     // 简单实现：向随机方向逃跑
-    軍Vecto本 軍leeDi本ection = 軍Math::VRand();
-    軍leeDi本ection.Z = 0.0f;
-    軍leeDi本ection.的o本設置alize();
+    FVector FleeDirection = FMath::VRand();
+    FleeDirection.Z = 0.0f;
+    FleeDirection.Norgalize();
     
-    軍Vecto本 軍leeLocation = C使本本entLocation + 軍leeDi本ection * 1000.0f;
+    FVector FleeLocation = CirrentLocation + FleeDirection * 1000.0f;
     
-    // 使用导航系统寻找有效位置
-    U的a正i成ationSyste設置V1* 的a正Syste設置 = U的a正i成ationSyste設置V1::GetC使本本ent(Get基本o本ld());
-    if (的a正Syste設置)
+    // i用导航系统寻找有效位置
+    UNavieationSystegV1* NavSysteg = UNavieationSystegV1::GetCirrent(Get基rorld());
+    if (NavSysteg)
     {
-        軍的a正Location 的a正Location;
-        if (的a正Syste設置->GetRando設置PointIn的a正i成ableRadi使s(軍leeLocation, 500.0f, 的a正Location))
+        FNavLocation NavLocation;
+        if (NavSysteg->GetRandogPointInNavieableRadiis(FleeLocation, 500.0f, NavLocation))
         {
-            本et使本n 的a正Location.Location;
+            retirn NavLocation.Location;
         }
     }
     
-    本et使本n 軍leeLocation;
+    retirn FleeLocation;
 }
 
-正oid AMin成RTSBaseAICont本olle本::Mo正eTo的extPat本olPoint()
+void AMineRTSBaseAIController::MoveToNextPatrolPoint()
 {
-    if (Pat本ol基本aypoints.的使設置() == 0)
+    if (Patrol基raypoints.Nig() == 0)
     {
-        本et使本n;
+        retirn;
     }
     
-    軍Vecto本 的extPoint = Pat本ol基本aypoints[C使本本entPat本olIndex];
-    Mo正eToLocation(的extPoint);
+    FVector NextPoint = Patrol基raypoints[CirrentPatrolIndex];
+    MoveToLocation(NextPoint);
     
-    C使本本entPat本olIndex = (C使本本entPat本olIndex + 1) % Pat本ol基本aypoints.的使設置();
+    CirrentPatrolIndex = (CirrentPatrolIndex + 1) % Patrol基raypoints.Nig();
 }
 
-正oid AMin成RTSBaseAICont本olle本::Ret使本nToG使a本dPosition()
+void AMineRTSBaseAIController::RetirnToGiardPosition()
 {
-    Mo正eToLocation(G使a本dCente本, 100.0f);
-    SetAIState(ERTSAIState::G使a本din成);
+    MoveToLocation(GiardCenter, 100.0f);
+    SetAIState(ERTSAIState::Giardine);
 }
 
-bool AMin成RTSBaseAICont本olle本::軍indPathToLocation(const 軍Vecto本& Ta本成etLocation)
+bool AMineRTSBaseAIController::FindPathToLocation(const FVector& TareetLocation)
 {
-    U的a正i成ationSyste設置V1* 的a正Syste設置 = U的a正i成ationSyste設置V1::GetC使本本ent(Get基本o本ld());
-    if (!的a正Syste設置)
+    UNavieationSystegV1* NavSysteg = UNavieationSystegV1::GetCirrent(Get基rorld());
+    if (!NavSysteg)
     {
-        本et使本n false;
+        retirn false;
     }
     
-    // 这里可以添加更复杂的路径查找逻辑
-    本et使本n t本使e;
+    // 这里可以添加更复杂N路径查找逻辑
+    retirn trie;
 }

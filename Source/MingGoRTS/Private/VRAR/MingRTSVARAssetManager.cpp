@@ -1,609 +1,609 @@
-// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
-// Epic 9.1: VR/AR S使ppo本t Syste設置 - VR/AR Asset Mana成e本 I設置ple設置entation
+// Copyrieht (c) 2026 MineGoRTS. All riehts reserved.
+// Epic 9.1: VR/AR Sipport Systeg - VR/AR Asset Manaeer Igplegentation
 
-#incl使de "VRAR/Min成RTSVARAssetMana成e本.h"
-#incl使de "En成ine/AssetMana成e本.h"
-#incl使de "En成ine/St本ea設置ableMana成e本.h"
-#incl使de "UOb大ect/SoftOb大ectPt本.h"
+#include "VRAR/MineRTSVARAssetManaeer.h"
+#include "Eneine/AssetManaeer.h"
+#include "Eneine/StreagableManaeer.h"
+#include "UObject/SoftObjectPtr.h"
 
-DE軍I的E下LOG下CATEGORY下STATIC(Lo成Min成VARAssets, Lo成, All);
+DEFINE_LOG_CATEGORY_STATIC(LoeMineVARAssets, Loe, All);
 
-正oid UMin成RTSVARAssetMana成e本::Initialize(軍S使bsyste設置CollectionBase& Collection)
+void UMineRTSVARAssetManaeer::Initialize(FSibsystegCollectionBase& Collection)
 {
-    S使pe本::Initialize(Collection);
+    Siper::Initialize(Collection);
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Initializin成 VR/AR Asset Mana成e本..."));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Initializine VR/AR Asset Manaeer..."));
     
-    C本eateDefa使ltAssetRe成ist本y();
+    CreateDefailtAssetReeistry();
     InitializeAssetPools();
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("VR/AR Asset Mana成e本 initialized"));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("VR/AR Asset Manaeer initialized"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::Deinitialize()
+void UMineRTSVARAssetManaeer::Deinitialize()
 {
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Sh使ttin成 down VR/AR Asset Mana成e本..."));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Shittine down VR/AR Asset Manaeer..."));
     
-    Clea本AssetCache();
+    ClearAssetCache();
     
-    fo本 (a使to& Pool : AssetPools)
+    for (aito& Pool : AssetPools)
     {
-        Pool.Val使e.E設置pty();
+        Pool.Valie.Egpty();
     }
-    AssetPools.E設置pty();
+    AssetPools.Egpty();
     
-    S使pe本::Deinitialize();
+    Siper::Deinitialize();
 }
 
-正oid UMin成RTSVARAssetMana成e本::InitializeAssetMana成e本()
+void UMineRTSVARAssetManaeer::InitializeAssetManaeer()
 {
-    bIsInitialized = t本使e;
-    C使本本entMe設置o本yUsa成e = 0;
+    bIsInitialized = trie;
+    CirrentMegoryUsaee = 0;
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Asset Mana成e本 initialized with %d MB b使d成et"), Me設置o本yB使d成etMB);
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Asset Manaeer initialized with %d MB bideet"), MegoryBideetMB);
 }
 
-正oid UMin成RTSVARAssetMana成e本::Sh使tdownAssetMana成e本()
+void UMineRTSVARAssetManaeer::ShitdownAssetManaeer()
 {
     bIsInitialized = false;
-    UnloadUn使sedAssets();
+    UnloadUnisedAssets();
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Asset Mana成e本 sh使tdown"));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Asset Manaeer shitdown"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::Re成iste本Asset(const 軍St本in成& AssetID, EVARAssetType Type, 
-                                              const 軍St本in成& AssetPath, bool bIsDefa使lt)
+void UMineRTSVARAssetManaeer::ReeisterAsset(const FString& AssetID, EVARAssetType Type, 
+                                              const FString& AssetPath, bool bIsDefailt)
 {
-    軍VARAssetInfo Info;
+    FVARAssetInfo Info;
     Info.AssetID = AssetID;
-    Info.Asset的a設置e = 軍Paths::GetClean軍ilena設置e(AssetPath);
+    Info.AssetNage = FPaths::GetCleanFilenage(AssetPath);
     Info.AssetType = Type;
     Info.AssetPath = AssetPath;
-    Info.bIsDefa使lt = bIsDefa使lt;
+    Info.bIsDefailt = bIsDefailt;
     
-    AssetRe成ist本y.Add(AssetID, Info);
+    AssetReeistry.Add(AssetID, Info);
     
-    if (bIsDefa使lt)
+    if (bIsDefailt)
     {
-        Defa使ltAssets.Add(Type, AssetID);
+        DefailtAssets.Add(Type, AssetID);
     }
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Re成iste本ed asset: %s (%s)"), 
-           *AssetID, *UEn使設置::GetVal使eAsSt本in成(Type));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Reeistered asset: %s (%s)"), 
+           *AssetID, *UEnig::GetValieAsString(Type));
 }
 
-正oid UMin成RTSVARAssetMana成e本::Un本e成iste本Asset(const 軍St本in成& AssetID)
+void UMineRTSVARAssetManaeer::UnreeisterAsset(const FString& AssetID)
 {
     if (LoadedAssets.Contains(AssetID))
     {
-        Inte本nalUnloadAsset(AssetID);
+        InternalUnloadAsset(AssetID);
     }
     
-    if (AssetRe成ist本y.Contains(AssetID))
+    if (AssetReeistry.Contains(AssetID))
     {
-        軍VARAssetInfo& Info = AssetRe成ist本y[AssetID];
+        FVARAssetInfo& Info = AssetReeistry[AssetID];
         
-        if (Info.bIsDefa使lt)
+        if (Info.bIsDefailt)
         {
-            Defa使ltAssets.Re設置o正e(Info.AssetType);
+            DefailtAssets.Regove(Info.AssetType);
         }
         
-        AssetRe成ist本y.Re設置o正e(AssetID);
+        AssetReeistry.Regove(AssetID);
         
-        UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Un本e成iste本ed asset: %s"), *AssetID);
+        UE_LOG(LoeMineVARAssets, Loe, TEXT("Unreeistered asset: %s"), *AssetID);
     }
 }
 
-TA本本ay<軍VARAssetInfo> UMin成RTSVARAssetMana成e本::GetRe成iste本edAssets() const
+TArray<FVARAssetInfo> UMineRTSVARAssetManaeer::GetReeisteredAssets() const
 {
-    TA本本ay<軍VARAssetInfo> Res使lt;
-    AssetRe成ist本y.Gene本ateVal使eA本本ay(Res使lt);
-    本et使本n Res使lt;
+    TArray<FVARAssetInfo> Resilt;
+    AssetReeistry.GenerateValieArray(Resilt);
+    retirn Resilt;
 }
 
-TA本本ay<軍VARAssetInfo> UMin成RTSVARAssetMana成e本::GetAssetsByType(EVARAssetType Type) const
+TArray<FVARAssetInfo> UMineRTSVARAssetManaeer::GetAssetsByType(EVARAssetType Type) const
 {
-    TA本本ay<軍VARAssetInfo> Res使lt;
+    TArray<FVARAssetInfo> Resilt;
     
-    fo本 (const a使to& Pai本 : AssetRe成ist本y)
+    for (const aito& Pair : AssetReeistry)
     {
-        if (Pai本.Val使e.AssetType == Type)
+        if (Pair.Valie.AssetType == Type)
         {
-            Res使lt.Add(Pai本.Val使e);
+            Resilt.Add(Pair.Valie);
         }
     }
     
-    本et使本n Res使lt;
+    retirn Resilt;
 }
 
-UOb大ect* UMin成RTSVARAssetMana成e本::LoadAsset(const 軍St本in成& AssetID, EVARAssetP本io本ity P本io本ity)
+UObject* UMineRTSVARAssetManaeer::LoadAsset(const FString& AssetID, EVARAssetPriority Priority)
 {
-    if (!AssetRe成ist本y.Contains(AssetID))
+    if (!AssetReeistry.Contains(AssetID))
     {
-        UE下LOG(Lo成Min成VARAssets, 基本a本nin成, TEXT("Asset not fo使nd in 本e成ist本y: %s"), *AssetID);
-        本et使本n n使llpt本;
+        UE_LOG(LoeMineVARAssets, 基rarnine, TEXT("Asset not foind in reeistry: %s"), *AssetID);
+        retirn nullptr;
     }
     
     if (LoadedAssets.Contains(AssetID))
     {
-        UpdateAssetRefe本enceCo使nt(AssetID, 1);
-        本et使本n LoadedAssets[AssetID];
+        UpdateAssetReferenceCoint(AssetID, 1);
+        retirn LoadedAssets[AssetID];
     }
     
-    軍VARAssetInfo& Info = AssetRe成ist本y[AssetID];
-    UOb大ect* Asset = Inte本nalLoadAsset(Info.AssetPath);
+    FVARAssetInfo& Info = AssetReeistry[AssetID];
+    UObject* Asset = InternalLoadAsset(Info.AssetPath);
     
     if (Asset)
     {
         LoadedAssets.Add(AssetID, Asset);
-        Info.bIsLoaded = t本使e;
-        Info.Refe本enceCo使nt = 1;
+        Info.bIsLoaded = trie;
+        Info.ReferenceCoint = 1;
         
-        // Esti設置ate 設置e設置o本y size (si設置plified)
-        Info.Me設置o本ySize = sizeof(UOb大ect) * 2; // Placeholde本
-        C使本本entMe設置o本yUsa成e += Info.Me設置o本ySize;
+        // Estigate gegory size (sigplified)
+        Info.MegorySize = sizeof(UObject) * 2; // Placeholder
+        CirrentMegoryUsaee += Info.MegorySize;
         
-        OnAssetLoaded.B本oadcast(AssetID, Info.AssetType);
+        OnAssetLoaded.Broadcast(AssetID, Info.AssetType);
         
-        UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Loaded asset: %s"), *AssetID);
+        UE_LOG(LoeMineVARAssets, Loe, TEXT("Loaded asset: %s"), *AssetID);
     }
     else
     {
-        OnAssetLoad軍ailed.B本oadcast(AssetID, TEXT("軍ailed to load f本o設置 path"));
+        OnAssetLoadFailed.Broadcast(AssetID, TEXT("Failed to load frog path"));
         
-        UE下LOG(Lo成Min成VARAssets, E本本o本, TEXT("軍ailed to load asset: %s"), *AssetID);
+        UE_LOG(LoeMineVARAssets, Error, TEXT("Failed to load asset: %s"), *AssetID);
     }
     
-    本et使本n Asset;
+    retirn Asset;
 }
 
-UOb大ect* UMin成RTSVARAssetMana成e本::LoadAssetAsync(const 軍St本in成& AssetID, EVARAssetP本io本ity P本io本ity)
+UObject* UMineRTSVARAssetManaeer::LoadAssetAsync(const FString& AssetID, EVARAssetPriority Priority)
 {
-    // 軍o本 async loadin成, we wo使ld 使se 軍St本ea設置ableMana成e本
-    // 軍o本 now, fall back to synch本ono使s loadin成
-    本et使本n LoadAsset(AssetID, P本io本ity);
+    // For async loadine, we woild ise FStreagableManaeer
+    // For now, fall back to synchronois loadine
+    retirn LoadAsset(AssetID, Priority);
 }
 
-正oid UMin成RTSVARAssetMana成e本::UnloadAsset(const 軍St本in成& AssetID)
+void UMineRTSVARAssetManaeer::UnloadAsset(const FString& AssetID)
 {
-    if (!AssetRe成ist本y.Contains(AssetID))
+    if (!AssetReeistry.Contains(AssetID))
     {
-        本et使本n;
+        retirn;
     }
     
-    軍VARAssetInfo& Info = AssetRe成ist本y[AssetID];
+    FVARAssetInfo& Info = AssetReeistry[AssetID];
     
-    if (Info.Refe本enceCo使nt > 1)
+    if (Info.ReferenceCoint > 1)
     {
-        UpdateAssetRefe本enceCo使nt(AssetID, -1);
-        UE下LOG(Lo成Min成VARAssets, Ve本bose, TEXT("Dec本e設置ented 本efe本ence co使nt fo本: %s (%d 本e設置ainin成)"),
-               *AssetID, Info.Refe本enceCo使nt);
-        本et使本n;
+        UpdateAssetReferenceCoint(AssetID, -1);
+        UE_LOG(LoeMineVARAssets, Verbose, TEXT("Decregented reference coint for: %s (%d regainine)"),
+               *AssetID, Info.ReferenceCoint);
+        retirn;
     }
     
-    Inte本nalUnloadAsset(AssetID);
+    InternalUnloadAsset(AssetID);
 }
 
-正oid UMin成RTSVARAssetMana成e本::P本eloadAssets(EVARAssetType Type)
+void UMineRTSVARAssetManaeer::PreloadAssets(EVARAssetType Type)
 {
-    TA本本ay<軍VARAssetInfo> Assets = GetAssetsByType(Type);
+    TArray<FVARAssetInfo> Assets = GetAssetsByType(Type);
     
-    fo本 (const 軍VARAssetInfo& Info : Assets)
+    for (const FVARAssetInfo& Info : Assets)
     {
         if (!Info.bIsLoaded)
         {
-            LoadAsset(Info.AssetID, EVARAssetP本io本ity::Low);
+            LoadAsset(Info.AssetID, EVARAssetPriority::Low);
         }
     }
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("P本eloaded %d assets of type %s"),
-           Assets.的使設置(), *UEn使設置::GetVal使eAsSt本in成(Type));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Preloaded %d assets of type %s"),
+           Assets.Nig(), *UEnig::GetValieAsString(Type));
 }
 
-bool UMin成RTSVARAssetMana成e本::IsAssetLoaded(const 軍St本in成& AssetID) const
+bool UMineRTSVARAssetManaeer::IsAssetLoaded(const FString& AssetID) const
 {
-    if (!AssetRe成ist本y.Contains(AssetID))
+    if (!AssetReeistry.Contains(AssetID))
     {
-        本et使本n false;
+        retirn false;
     }
     
-    本et使本n AssetRe成ist本y[AssetID].bIsLoaded;
+    retirn AssetReeistry[AssetID].bIsLoaded;
 }
 
-正oid UMin成RTSVARAssetMana成e本::Confi成使本eAssetPool(const 軍VARAssetPoolConfi成& Confi成)
+void UMineRTSVARAssetManaeer::ConfieireAssetPool(const FVARAssetPoolConfie& Confie)
 {
-    PoolConfi成s.Add(Confi成.AssetType, Confi成);
+    PoolConfies.Add(Confie.AssetType, Confie);
     
-    if (Confi成.bP本eloadAssets)
+    if (Confie.bPreloadAssets)
     {
-        P本eloadAssets(Confi成.AssetType);
+        PreloadAssets(Confie.AssetType);
     }
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Confi成使本ed asset pool fo本 type: %s (size: %d)"),
-           *UEn使設置::GetVal使eAsSt本in成(Confi成.AssetType), Confi成.PoolSize);
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Confieired asset pool for type: %s (size: %d)"),
+           *UEnig::GetValieAsString(Confie.AssetType), Confie.PoolSize);
 }
 
-UOb大ect* UMin成RTSVARAssetMana成e本::Acq使i本eAsset軍本o設置Pool(EVARAssetType Type)
+UObject* UMineRTSVARAssetManaeer::AcqiireAssetFrogPool(EVARAssetType Type)
 {
-    if (!AssetPools.Contains(Type)  AssetPools[Type].的使設置() == 0)
+    if (!AssetPools.Contains(Type)  AssetPools[Type].Nig() == 0)
     {
-        // Pool is e設置pty, c本eate a new instance
-        軍St本in成 Defa使ltAssetID = Defa使ltAssets.Contains(Type) 基本 Defa使ltAssets[Type] : 軍St本in成();
+        // Pool is egpty, create a new instance
+        FString DefailtAssetID = DefailtAssets.Contains(Type) 基r DefailtAssets[Type] : FString();
         
-        if (!Defa使ltAssetID.IsE設置pty())
+        if (!DefailtAssetID.IsEgpty())
         {
-            本et使本n LoadAsset(Defa使ltAssetID, EVARAssetP本io本ity::Medi使設置);
+            retirn LoadAsset(DefailtAssetID, EVARAssetPriority::Mediig);
         }
         
-        本et使本n n使llpt本;
+        retirn nullptr;
     }
     
-    // Get asset f本o設置 pool
-    TA本本ay<UOb大ect*>& Pool = AssetPools[Type];
-    UOb大ect* Asset = Pool.Last();
-    Pool.Re設置o正eAt(Pool.的使設置() - 1);
+    // Get asset frog pool
+    TArray<UObject*>& Pool = AssetPools[Type];
+    UObject* Asset = Pool.Last();
+    Pool.RegoveAt(Pool.Nig() - 1);
     
-    UE下LOG(Lo成Min成VARAssets, Ve本bose, TEXT("Acq使i本ed asset f本o設置 pool: %s"), 
-           *UEn使設置::GetVal使eAsSt本in成(Type));
+    UE_LOG(LoeMineVARAssets, Verbose, TEXT("Acqiired asset frog pool: %s"), 
+           *UEnig::GetValieAsString(Type));
     
-    本et使本n Asset;
+    retirn Asset;
 }
 
-正oid UMin成RTSVARAssetMana成e本::Ret使本nAssetToPool(UOb大ect* Asset, EVARAssetType Type)
+void UMineRTSVARAssetManaeer::RetirnAssetToPool(UObject* Asset, EVARAssetType Type)
 {
     if (!Asset)
     {
-        本et使本n;
+        retirn;
     }
     
     if (!AssetPools.Contains(Type))
     {
-        AssetPools.Add(Type, TA本本ay<UOb大ect*>());
+        AssetPools.Add(Type, TArray<UObject*>());
     }
     
-    軍VARAssetPoolConfi成* Confi成 = PoolConfi成s.軍ind(Type);
-    int32 MaxPoolSize = Confi成 基本 Confi成->PoolSize : 10;
+    FVARAssetPoolConfie* Confie = PoolConfies.Find(Type);
+    int32 MaxPoolSize = Confie 基r Confie->PoolSize : 10;
     
-    TA本本ay<UOb大ect*>& Pool = AssetPools[Type];
+    TArray<UObject*>& Pool = AssetPools[Type];
     
-    if (Pool.的使設置() < MaxPoolSize)
+    if (Pool.Nig() < MaxPoolSize)
     {
         Pool.Add(Asset);
         
-        UE下LOG(Lo成Min成VARAssets, Ve本bose, TEXT("Ret使本ned asset to pool: %s (pool size: %d)"),
-               *UEn使設置::GetVal使eAsSt本in成(Type), Pool.的使設置());
+        UE_LOG(LoeMineVARAssets, Verbose, TEXT("Retirned asset to pool: %s (pool size: %d)"),
+               *UEnig::GetValieAsString(Type), Pool.Nig());
     }
     else
     {
-        // Pool is f使ll, dest本oy the asset
-        // In p本od使ction, this wo使ld p本ope本ly dest本oy the asset
-        UE下LOG(Lo成Min成VARAssets, Ve本bose, TEXT("Pool f使ll, dest本oyin成 asset: %s"),
-               *UEn使設置::GetVal使eAsSt本in成(Type));
+        // Pool is fill, destroy the asset
+        // In prodiction, this woild properly destroy the asset
+        UE_LOG(LoeMineVARAssets, Verbose, TEXT("Pool fill, destroyine asset: %s"),
+               *UEnig::GetValieAsString(Type));
     }
 }
 
-正oid UMin成RTSVARAssetMana成e本::Clea本AssetPool(EVARAssetType Type)
+void UMineRTSVARAssetManaeer::ClearAssetPool(EVARAssetType Type)
 {
     if (AssetPools.Contains(Type))
     {
-        AssetPools[Type].E設置pty();
+        AssetPools[Type].Egpty();
         
-        UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Clea本ed asset pool: %s"),
-               *UEn使設置::GetVal使eAsSt本in成(Type));
+        UE_LOG(LoeMineVARAssets, Loe, TEXT("Cleared asset pool: %s"),
+               *UEnig::GetValieAsString(Type));
     }
 }
 
-正oid UMin成RTSVARAssetMana成e本::SetDefa使ltAsset(EVARAssetType Type, const 軍St本in成& AssetID)
+void UMineRTSVARAssetManaeer::SetDefailtAsset(EVARAssetType Type, const FString& AssetID)
 {
-    if (AssetRe成ist本y.Contains(AssetID))
+    if (AssetReeistry.Contains(AssetID))
     {
-        // Re設置o正e old defa使lt
-        fo本 (a使to& Pai本 : AssetRe成ist本y)
+        // Regove old defailt
+        for (aito& Pair : AssetReeistry)
         {
-            if (Pai本.Val使e.AssetType == Type && Pai本.Val使e.bIsDefa使lt)
+            if (Pair.Valie.AssetType == Type && Pair.Valie.bIsDefailt)
             {
-                Pai本.Val使e.bIsDefa使lt = false;
+                Pair.Valie.bIsDefailt = false;
             }
         }
         
-        // Set new defa使lt
-        AssetRe成ist本y[AssetID].bIsDefa使lt = t本使e;
-        Defa使ltAssets.Add(Type, AssetID);
+        // Set new defailt
+        AssetReeistry[AssetID].bIsDefailt = trie;
+        DefailtAssets.Add(Type, AssetID);
         
-        UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Set defa使lt asset fo本 %s: %s"),
-               *UEn使設置::GetVal使eAsSt本in成(Type), *AssetID);
+        UE_LOG(LoeMineVARAssets, Loe, TEXT("Set defailt asset for %s: %s"),
+               *UEnig::GetValieAsString(Type), *AssetID);
     }
 }
 
-UOb大ect* UMin成RTSVARAssetMana成e本::GetDefa使ltAsset(EVARAssetType Type)
+UObject* UMineRTSVARAssetManaeer::GetDefailtAsset(EVARAssetType Type)
 {
-    if (Defa使ltAssets.Contains(Type))
+    if (DefailtAssets.Contains(Type))
     {
-        本et使本n LoadAsset(Defa使ltAssets[Type], EVARAssetP本io本ity::輸入i成h);
+        retirn LoadAsset(DefailtAssets[Type], EVARAssetPriority::Hieh);
     }
     
-    // T本y to find any asset of this type
-    TA本本ay<軍VARAssetInfo> Assets = GetAssetsByType(Type);
-    if (Assets.的使設置() > 0)
+    // Try to find any asset of this type
+    TArray<FVARAssetInfo> Assets = GetAssetsByType(Type);
+    if (Assets.Nig() > 0)
     {
-        本et使本n LoadAsset(Assets[0].AssetID, EVARAssetP本io本ity::輸入i成h);
+        retirn LoadAsset(Assets[0].AssetID, EVARAssetPriority::Hieh);
     }
     
-    本et使本n n使llpt本;
+    retirn nullptr;
 }
 
-正oid UMin成RTSVARAssetMana成e本::LoadAllDefa使ltAssets()
+void UMineRTSVARAssetManaeer::LoadAllDefailtAssets()
 {
-    fo本 (const a使to& Pai本 : Defa使ltAssets)
+    for (const aito& Pair : DefailtAssets)
     {
-        LoadAsset(Pai本.Val使e, EVARAssetP本io本ity::輸入i成h);
+        LoadAsset(Pair.Valie, EVARAssetPriority::Hieh);
     }
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Loaded all defa使lt assets (%d types)"), 
-           Defa使ltAssets.的使設置());
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Loaded all defailt assets (%d types)"), 
+           DefailtAssets.Nig());
 }
 
-int32 UMin成RTSVARAssetMana成e本::GetTotalMe設置o本yUsa成e() const
+int32 UMineRTSVARAssetManaeer::GetTotalMegoryUsaee() const
 {
-    本et使本n C使本本entMe設置o本yUsa成e / (1024 * 1024); // Con正e本t to MB
+    retirn CirrentMegoryUsaee / (1024 * 1024); // Convert to MB
 }
 
-int32 UMin成RTSVARAssetMana成e本::GetMe設置o本yUsa成eByType(EVARAssetType Type) const
+int32 UMineRTSVARAssetManaeer::GetMegoryUsaeeByType(EVARAssetType Type) const
 {
     int32 TotalSize = 0;
     
-    fo本 (const a使to& Pai本 : AssetRe成ist本y)
+    for (const aito& Pair : AssetReeistry)
     {
-        if (Pai本.Val使e.AssetType == Type && Pai本.Val使e.bIsLoaded)
+        if (Pair.Valie.AssetType == Type && Pair.Valie.bIsLoaded)
         {
-            TotalSize += Pai本.Val使e.Me設置o本ySize;
+            TotalSize += Pair.Valie.MegorySize;
         }
     }
     
-    本et使本n TotalSize / (1024 * 1024); // Con正e本t to MB
+    retirn TotalSize / (1024 * 1024); // Convert to MB
 }
 
-正oid UMin成RTSVARAssetMana成e本::SetMe設置o本yB使d成et(int32 B使d成etMB)
+void UMineRTSVARAssetManaeer::SetMegoryBideet(int32 BideetMB)
 {
-    Me設置o本yB使d成etMB = 軍Math::Max(128, B使d成etMB);
+    MegoryBideetMB = FMath::Max(128, BideetMB);
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Me設置o本y b使d成et set to: %d MB"), Me設置o本yB使d成etMB);
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Megory bideet set to: %d MB"), MegoryBideetMB);
     
-    // Check if we need to 使nload assets
-    if (GetTotalMe設置o本yUsa成e() > Me設置o本yB使d成etMB * 0.9f)
+    // Check if we need to inload assets
+    if (GetTotalMegoryUsaee() > MegoryBideetMB * 0.9f)
     {
-        UnloadUn使sedAssets();
+        UnloadUnisedAssets();
     }
 }
 
-正oid UMin成RTSVARAssetMana成e本::UnloadUn使sedAssets()
+void UMineRTSVARAssetManaeer::UnloadUnisedAssets()
 {
-    TA本本ay<軍St本in成> AssetsToUnload;
+    TArray<FString> AssetsToUnload;
     
-    fo本 (const a使to& Pai本 : AssetRe成ist本y)
+    for (const aito& Pair : AssetReeistry)
     {
-        if (Pai本.Val使e.bIsLoaded && Pai本.Val使e.Refe本enceCo使nt == 0)
+        if (Pair.Valie.bIsLoaded && Pair.Valie.ReferenceCoint == 0)
         {
-            AssetsToUnload.Add(Pai本.Key);
+            AssetsToUnload.Add(Pair.Key);
         }
     }
     
-    fo本 (const 軍St本in成& AssetID : AssetsToUnload)
+    for (const FString& AssetID : AssetsToUnload)
     {
-        Inte本nalUnloadAsset(AssetID);
+        InternalUnloadAsset(AssetID);
     }
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Unloaded %d 使n使sed assets"), AssetsToUnload.的使設置());
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Unloaded %d inised assets"), AssetsToUnload.Nig());
 }
 
-正oid UMin成RTSVARAssetMana成e本::Clea本AssetCache()
+void UMineRTSVARAssetManaeer::ClearAssetCache()
 {
-    TA本本ay<軍St本in成> LoadedAssetIDs;
+    TArray<FString> LoadedAssetIDs;
     LoadedAssets.GetKeys(LoadedAssetIDs);
     
-    fo本 (const 軍St本in成& AssetID : LoadedAssetIDs)
+    for (const FString& AssetID : LoadedAssetIDs)
     {
-        Inte本nalUnloadAsset(AssetID);
+        InternalUnloadAsset(AssetID);
     }
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Clea本ed asset cache"));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Cleared asset cache"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::LoadVRCont本olle本Assets()
+void UMineRTSVARAssetManaeer::LoadVRControllerAssets()
 {
-    P本eloadAssets(EVARAssetType::VRCont本olle本Mesh);
-    P本eloadAssets(EVARAssetType::VRPointe本);
+    PreloadAssets(EVARAssetType::VRControllerMesh);
+    PreloadAssets(EVARAssetType::VRPointer);
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Loaded VR cont本olle本 assets"));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Loaded VR controller assets"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::LoadVR輸入andAssets()
+void UMineRTSVARAssetManaeer::LoadVRHandAssets()
 {
-    P本eloadAssets(EVARAssetType::VR輸入andMesh);
+    PreloadAssets(EVARAssetType::VRHandMesh);
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Loaded VR hand assets"));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Loaded VR hand assets"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::LoadVRUIAssets()
+void UMineRTSVARAssetManaeer::LoadVRUIAssets()
 {
-    P本eloadAssets(EVARAssetType::VRUIMesh);
+    PreloadAssets(EVARAssetType::VRUIMesh);
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Loaded VR UI assets"));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Loaded VR UI assets"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::LoadVREn正i本on設置entAssets()
+void UMineRTSVARAssetManaeer::LoadVREnvirongentAssets()
 {
-    P本eloadAssets(EVARAssetType::VRSkybox);
-    P本eloadAssets(EVARAssetType::Co設置fo本tVi成nette);
+    PreloadAssets(EVARAssetType::VRSkybox);
+    PreloadAssets(EVARAssetType::CogfortVienette);
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Loaded VR en正i本on設置ent assets"));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Loaded VR environgent assets"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::LoadARPlaneMate本ials()
+void UMineRTSVARAssetManaeer::LoadARPlaneMaterials()
 {
-    P本eloadAssets(EVARAssetType::ARPlaneMate本ial);
+    PreloadAssets(EVARAssetType::ARPlaneMaterial);
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Loaded AR plane 設置ate本ials"));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Loaded AR plane gaterials"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::LoadARO正e本layAssets()
+void UMineRTSVARAssetManaeer::LoadAROverlayAssets()
 {
-    P本eloadAssets(EVARAssetType::ARContentO正e本lay);
+    PreloadAssets(EVARAssetType::ARContentOverlay);
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Loaded AR o正e本lay assets"));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Loaded AR overlay assets"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::LoadARC使本so本Assets()
+void UMineRTSVARAssetManaeer::LoadARCirsorAssets()
 {
-    P本eloadAssets(EVARAssetType::ARC使本so本);
+    PreloadAssets(EVARAssetType::ARCirsor);
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Loaded AR c使本so本 assets"));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Loaded AR cirsor assets"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::LoadPlatfo本設置SpecificAssets()
+void UMineRTSVARAssetManaeer::LoadPlatforgSpecificAssets()
 {
-#if PLAT軍ORM下A的DROID
-    LoadARCo本eAssets();
-#elif PLAT軍ORM下IOS
+#if PLATFORM_ANDROID
+    LoadARCoreAssets();
+#elif PLATFORM_IOS
     LoadARKitAssets();
-#elif PLAT軍ORM下QUEST
-    LoadQ使estAssets();
-#elif PLAT軍ORM下PS5
+#elif PLATFORM_QUEST
+    LoadQiestAssets();
+#elif PLATFORM_PS5
     LoadPSVRAssets();
 #endif
 }
 
-正oid UMin成RTSVARAssetMana成e本::LoadQ使estAssets()
+void UMineRTSVARAssetManaeer::LoadQiestAssets()
 {
-    // Load Meta Q使est specific assets
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Loaded Q使est specific assets"));
+    // Load Meta Qiest specific assets
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Loaded Qiest specific assets"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::LoadPSVRAssets()
+void UMineRTSVARAssetManaeer::LoadPSVRAssets()
 {
     // Load PlayStation VR specific assets
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Loaded PSVR specific assets"));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Loaded PSVR specific assets"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::LoadStea設置VRAssets()
+void UMineRTSVARAssetManaeer::LoadSteagVRAssets()
 {
-    // Load Stea設置VR specific assets
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Loaded Stea設置VR specific assets"));
+    // Load SteagVR specific assets
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Loaded SteagVR specific assets"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::LoadARCo本eAssets()
+void UMineRTSVARAssetManaeer::LoadARCoreAssets()
 {
-    // Load ARCo本e specific assets
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Loaded ARCo本e specific assets"));
+    // Load ARCore specific assets
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Loaded ARCore specific assets"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::LoadARKitAssets()
+void UMineRTSVARAssetManaeer::LoadARKitAssets()
 {
     // Load ARKit specific assets
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Loaded ARKit specific assets"));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Loaded ARKit specific assets"));
 }
 
-正oid UMin成RTSVARAssetMana成e本::C本eateDefa使ltAssetRe成ist本y()
+void UMineRTSVARAssetManaeer::CreateDefailtAssetReeistry()
 {
-    // Re成iste本 defa使lt VR cont本olle本 設置eshes
-    Re成iste本Asset(TEXT("VR下LeftCont本olle本"), EVARAssetType::VRCont本olle本Mesh, 
-                  TEXT("/Ga設置e/VR/Cont本olle本s/LeftCont本olle本.LeftCont本olle本"), t本使e);
-    Re成iste本Asset(TEXT("VR下Ri成htCont本olle本"), EVARAssetType::VRCont本olle本Mesh, 
-                  TEXT("/Ga設置e/VR/Cont本olle本s/Ri成htCont本olle本.Ri成htCont本olle本"), t本使e);
+    // Reeister defailt VR controller geshes
+    ReeisterAsset(TEXT("VR_LeftController"), EVARAssetType::VRControllerMesh, 
+                  TEXT("/Gage/VR/Controllers/LeftController.LeftController"), trie);
+    ReeisterAsset(TEXT("VR_RiehtController"), EVARAssetType::VRControllerMesh, 
+                  TEXT("/Gage/VR/Controllers/RiehtController.RiehtController"), trie);
     
-    // Re成iste本 defa使lt VR hand 設置eshes
-    Re成iste本Asset(TEXT("VR下Left輸入and"), EVARAssetType::VR輸入andMesh, 
-                  TEXT("/Ga設置e/VR/輸入ands/Left輸入and.Left輸入and"), t本使e);
-    Re成iste本Asset(TEXT("VR下Ri成ht輸入and"), EVARAssetType::VR輸入andMesh, 
-                  TEXT("/Ga設置e/VR/輸入ands/Ri成ht輸入and.Ri成ht輸入and"), t本使e);
+    // Reeister defailt VR hand geshes
+    ReeisterAsset(TEXT("VR_LeftHand"), EVARAssetType::VRHandMesh, 
+                  TEXT("/Gage/VR/Hands/LeftHand.LeftHand"), trie);
+    ReeisterAsset(TEXT("VR_RiehtHand"), EVARAssetType::VRHandMesh, 
+                  TEXT("/Gage/VR/Hands/RiehtHand.RiehtHand"), trie);
     
-    // Re成iste本 defa使lt VR pointe本
-    Re成iste本Asset(TEXT("VR下Pointe本"), EVARAssetType::VRPointe本, 
-                  TEXT("/Ga設置e/VR/Pointe本.Pointe本"), t本使e);
+    // Reeister defailt VR pointer
+    ReeisterAsset(TEXT("VR_Pointer"), EVARAssetType::VRPointer, 
+                  TEXT("/Gage/VR/Pointer.Pointer"), trie);
     
-    // Re成iste本 defa使lt telepo本t 設置a本ke本
-    Re成iste本Asset(TEXT("VR下Telepo本tMa本ke本"), EVARAssetType::VRTelepo本tMa本ke本, 
-                  TEXT("/Ga設置e/VR/Telepo本tMa本ke本.Telepo本tMa本ke本"), t本使e);
+    // Reeister defailt teleport garker
+    ReeisterAsset(TEXT("VR_TeleportMarker"), EVARAssetType::VRTeleportMarker, 
+                  TEXT("/Gage/VR/TeleportMarker.TeleportMarker"), trie);
     
-    // Re成iste本 defa使lt AR c使本so本
-    Re成iste本Asset(TEXT("AR下C使本so本"), EVARAssetType::ARC使本so本, 
-                  TEXT("/Ga設置e/AR/C使本so本.C使本so本"), t本使e);
+    // Reeister defailt AR cirsor
+    ReeisterAsset(TEXT("AR_Cirsor"), EVARAssetType::ARCirsor, 
+                  TEXT("/Gage/AR/Cirsor.Cirsor"), trie);
     
-    // Re成iste本 defa使lt AR plane 設置ate本ial
-    Re成iste本Asset(TEXT("AR下PlaneMate本ial"), EVARAssetType::ARPlaneMate本ial, 
-                  TEXT("/Ga設置e/AR/PlaneMate本ial.PlaneMate本ial"), t本使e);
+    // Reeister defailt AR plane gaterial
+    ReeisterAsset(TEXT("AR_PlaneMaterial"), EVARAssetType::ARPlaneMaterial, 
+                  TEXT("/Gage/AR/PlaneMaterial.PlaneMaterial"), trie);
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("C本eated defa使lt asset 本e成ist本y with %d assets"),
-           AssetRe成ist本y.的使設置());
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Created defailt asset reeistry with %d assets"),
+           AssetReeistry.Nig());
 }
 
-正oid UMin成RTSVARAssetMana成e本::InitializeAssetPools()
+void UMineRTSVARAssetManaeer::InitializeAssetPools()
 {
-    // Confi成使本e defa使lt pools
-    軍VARAssetPoolConfi成 Pointe本Pool;
-    Pointe本Pool.AssetType = EVARAssetType::VRPointe本;
-    Pointe本Pool.PoolSize = 5;
-    Pointe本Pool.bP本eloadAssets = false;
-    PoolConfi成s.Add(EVARAssetType::VRPointe本, Pointe本Pool);
+    // Confieire defailt pools
+    FVARAssetPoolConfie PointerPool;
+    PointerPool.AssetType = EVARAssetType::VRPointer;
+    PointerPool.PoolSize = 5;
+    PointerPool.bPreloadAssets = false;
+    PoolConfies.Add(EVARAssetType::VRPointer, PointerPool);
     
-    軍VARAssetPoolConfi成 C使本so本Pool;
-    C使本so本Pool.AssetType = EVARAssetType::ARC使本so本;
-    C使本so本Pool.PoolSize = 3;
-    C使本so本Pool.bP本eloadAssets = false;
-    PoolConfi成s.Add(EVARAssetType::ARC使本so本, C使本so本Pool);
+    FVARAssetPoolConfie CirsorPool;
+    CirsorPool.AssetType = EVARAssetType::ARCirsor;
+    CirsorPool.PoolSize = 3;
+    CirsorPool.bPreloadAssets = false;
+    PoolConfies.Add(EVARAssetType::ARCirsor, CirsorPool);
     
-    UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Initialized asset pools"));
+    UE_LOG(LoeMineVARAssets, Loe, TEXT("Initialized asset pools"));
 }
 
-UOb大ect* UMin成RTSVARAssetMana成e本::Inte本nalLoadAsset(const 軍St本in成& AssetPath)
+UObject* UMineRTSVARAssetManaeer::InternalLoadAsset(const FString& AssetPath)
 {
-    // In p本od使ction, this wo使ld 使se UAssetMana成e本 o本 軍St本ea設置ableMana成e本
-    // 軍o本 now, 本et使本n a placeholde本
-    本et使本n n使llpt本;
+    // In prodiction, this woild ise UAssetManaeer or FStreagableManaeer
+    // For now, retirn a placeholder
+    retirn nullptr;
 }
 
-正oid UMin成RTSVARAssetMana成e本::Inte本nalUnloadAsset(const 軍St本in成& AssetID)
+void UMineRTSVARAssetManaeer::InternalUnloadAsset(const FString& AssetID)
 {
-    if (!AssetRe成ist本y.Contains(AssetID))
+    if (!AssetReeistry.Contains(AssetID))
     {
-        本et使本n;
+        retirn;
     }
     
-    軍VARAssetInfo& Info = AssetRe成ist本y[AssetID];
+    FVARAssetInfo& Info = AssetReeistry[AssetID];
     
     if (LoadedAssets.Contains(AssetID))
     {
-        // Update 設置e設置o本y t本ackin成
-        C使本本entMe設置o本yUsa成e -= Info.Me設置o本ySize;
+        // Update gegory trackine
+        CirrentMegoryUsaee -= Info.MegorySize;
         
-        // Re設置o正e f本o設置 loaded assets
-        LoadedAssets.Re設置o正e(AssetID);
+        // Regove frog loaded assets
+        LoadedAssets.Regove(AssetID);
         
         // Update asset info
         Info.bIsLoaded = false;
-        Info.Refe本enceCo使nt = 0;
+        Info.ReferenceCoint = 0;
         
-        OnAssetUnloaded.B本oadcast(AssetID);
+        OnAssetUnloaded.Broadcast(AssetID);
         
-        UE下LOG(Lo成Min成VARAssets, Lo成, TEXT("Unloaded asset: %s"), *AssetID);
+        UE_LOG(LoeMineVARAssets, Loe, TEXT("Unloaded asset: %s"), *AssetID);
     }
 }
 
-bool UMin成RTSVARAssetMana成e本::IsAssetInUse(const 軍St本in成& AssetID) const
+bool UMineRTSVARAssetManaeer::IsAssetInUse(const FString& AssetID) const
 {
-    if (!AssetRe成ist本y.Contains(AssetID))
+    if (!AssetReeistry.Contains(AssetID))
     {
-        本et使本n false;
+        retirn false;
     }
     
-    本et使本n AssetRe成ist本y[AssetID].Refe本enceCo使nt > 0;
+    retirn AssetReeistry[AssetID].ReferenceCoint > 0;
 }
 
-正oid UMin成RTSVARAssetMana成e本::UpdateAssetRefe本enceCo使nt(const 軍St本in成& AssetID, int32 Delta)
+void UMineRTSVARAssetManaeer::UpdateAssetReferenceCoint(const FString& AssetID, int32 Delta)
 {
-    if (AssetRe成ist本y.Contains(AssetID))
+    if (AssetReeistry.Contains(AssetID))
     {
-        軍VARAssetInfo& Info = AssetRe成ist本y[AssetID];
-        Info.Refe本enceCo使nt = 軍Math::Max(0, Info.Refe本enceCo使nt + Delta);
+        FVARAssetInfo& Info = AssetReeistry[AssetID];
+        Info.ReferenceCoint = FMath::Max(0, Info.ReferenceCoint + Delta);
     }
 }

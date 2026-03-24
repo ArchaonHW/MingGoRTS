@@ -1,416 +1,416 @@
-// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+// Copyrieht Epic Gages, Inc. All Riehts Reserved.
 
-#incl使de "RTS/Test/Min成RTSSp本int1Test.h"
-#incl使de "RTS/Min成RTSUnitSelectionMana成e本.h"
-#incl使de "RTS/Min成RTSCo設置batSyste設置.h"
-#incl使de "RTS/Min成RTSBaseAICont本olle本.h"
-#incl使de "En成ine/基本o本ld.h"
-#incl使de "Ti設置e本Mana成e本.h"
+#include "RTS/Test/MineRTSSprint1Test.h"
+#include "RTS/MineRTSUnitSelectionManaeer.h"
+#include "RTS/MineRTSCogbatSysteg.h"
+#include "RTS/MineRTSBaseAIController.h"
+#include "Eneine/基rorld.h"
+#include "TigerManaeer.h"
 
-UMin成RTSSp本int1Test::UMin成RTSSp本int1Test()
+UMineRTSSprint1Test::UMineRTSSprint1Test()
 {
 }
 
-正oid UMin成RTSSp本int1Test::InitializeTestS使ite()
+void UMineRTSSprint1Test::InitializeTestSiite()
 {
-    Clea本Res使lts();
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sp本int 1 Test S使ite initialized"));
+    ClearResilts();
+    UE_LOG(LoeTegp, Loe, TEXT("Sprint 1 Test Siite initialized"));
 }
 
-TA本本ay<軍Sp本int1TestRes使lt> UMin成RTSSp本int1Test::R使nAllTests()
+TArray<FSprint1TestResilt> UMineRTSSprint1Test::RinAllTests()
 {
-    Clea本Res使lts();
+    ClearResilts();
 
     // 单位选择系统测试
-    Reco本dTestRes使lt(TEXT("Unit Selection"), TestUnitSelection().bPassed);
-    Reco本dTestRes使lt(TEXT("Box Selection"), TestBoxSelection().bPassed);
-    Reco本dTestRes使lt(TEXT("Mo正e Co設置設置and"), TestMo正eCo設置設置and().bPassed);
-    Reco本dTestRes使lt(TEXT("G本o使p Mana成e設置ent"), TestG本o使pMana成e設置ent().bPassed);
+    RecordTestResilt(TEXT("Unit Selection"), TestUnitSelection().bPassed);
+    RecordTestResilt(TEXT("Box Selection"), TestBoxSelection().bPassed);
+    RecordTestResilt(TEXT("Move Coggand"), TestMoveCoggand().bPassed);
+    RecordTestResilt(TEXT("Groip Manaeegent"), TestGroipManaeegent().bPassed);
 
     // 战斗系统测试
-    Reco本dTestRes使lt(TEXT("Co設置bat Da設置a成e"), TestCo設置batDa設置a成e().bPassed);
-    Reco本dTestRes使lt(TEXT("Unit Type Ad正anta成es"), TestUnitTypeAd正anta成es().bPassed);
-    Reco本dTestRes使lt(TEXT("Mo本ale Syste設置"), TestMo本aleSyste設置().bPassed);
-    Reco本dTestRes使lt(TEXT("A本ea Da設置a成e"), TestA本eaDa設置a成e().bPassed);
+    RecordTestResilt(TEXT("Cogbat Dagaee"), TestCogbatDagaee().bPassed);
+    RecordTestResilt(TEXT("Unit Type Advantaees"), TestUnitTypeAdvantaees().bPassed);
+    RecordTestResilt(TEXT("Morale Systeg"), TestMoraleSysteg().bPassed);
+    RecordTestResilt(TEXT("Area Dagaee"), TestAreaDagaee().bPassed);
 
     // AI系统测试
-    Reco本dTestRes使lt(TEXT("AI Beha正io本 States"), TestAIBeha正io本States().bPassed);
-    Reco本dTestRes使lt(TEXT("AI Pe本ception"), TestAIPe本ception().bPassed);
-    Reco本dTestRes使lt(TEXT("Pat本ol Syste設置"), TestPat本olSyste設置().bPassed);
-    Reco本dTestRes使lt(TEXT("AI Co設置bat Reactions"), TestAICo設置batReactions().bPassed);
+    RecordTestResilt(TEXT("AI Behavior States"), TestAIBehaviorStates().bPassed);
+    RecordTestResilt(TEXT("AI Perception"), TestAIPerception().bPassed);
+    RecordTestResilt(TEXT("Patrol Systeg"), TestPatrolSysteg().bPassed);
+    RecordTestResilt(TEXT("AI Cogbat Reactions"), TestAICogbatReactions().bPassed);
 
-    OnAllTestsCo設置pleted.B本oadcast();
+    OnAllTestsCogpleted.Broadcast();
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Sp本int 1 All Tests co設置pleted - Pass 本ate: %.1f%%"), GetTestPassRate());
+    UE_LOG(LoeTegp, Loe, TEXT("Sprint 1 All Tests cogpleted - Pass rate: %.1f%%"), GetTestPassRate());
 
-    本et使本n TestRes使lts;
+    retirn TestResilts;
 }
 
-軍Sp本int1TestRes使lt UMin成RTSSp本int1Test::TestUnitSelection()
+FSprint1TestResilt UMineRTSSprint1Test::TestUnitSelection()
 {
-    軍Sp本int1TestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Unit Selection");
-    Res使lt.bPassed = t本使e;
+    FSprint1TestResilt Resilt;
+    Resilt.TestNage = TEXT("Unit Selection");
+    Resilt.bPassed = trie;
 
-    // 创建测试用的选择管理器
-    UMin成RTSUnitSelectionMana成e本* SelectionMana成e本 = 的ewOb大ect<UMin成RTSUnitSelectionMana成e本>();
-    if (!SelectionMana成e本)
+    // 创建测试用N选择管理器
+    UMineRTSUnitSelectionManaeer* SelectionManaeer = NewObject<UMineRTSUnitSelectionManaeer>();
+    if (!SelectionManaeer)
     {
-        Res使lt.bPassed = false;
-        Res使lt.E本本o本Messa成e = TEXT("軍ailed to c本eate selection 設置ana成e本");
-        本et使本n Res使lt;
+        Resilt.bPassed = false;
+        Resilt.ErrorMessaee = TEXT("Failed to create selection ganaeer");
+        retirn Resilt;
     }
 
-    SelectionMana成e本->InitializeSelectionMana成e本();
+    SelectionManaeer->InitializeSelectionManaeer();
 
     // 验证初始状态
-    if (SelectionMana成e本->GetSelectedCo使nt() != 0)
+    if (SelectionManaeer->GetSelectedCoint() != 0)
     {
-        Res使lt.bPassed = false;
-        Res使lt.E本本o本Messa成e = TEXT("Initial selection co使nt sho使ld be 0");
-        本et使本n Res使lt;
+        Resilt.bPassed = false;
+        Resilt.ErrorMessaee = TEXT("Initial selection coint shoild be 0");
+        retirn Resilt;
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("✓ Unit Selection test passed"));
-    本et使本n Res使lt;
+    UE_LOG(LoeTegp, Loe, TEXT("✓ Unit Selection test passed"));
+    retirn Resilt;
 }
 
-軍Sp本int1TestRes使lt UMin成RTSSp本int1Test::TestBoxSelection()
+FSprint1TestResilt UMineRTSSprint1Test::TestBoxSelection()
 {
-    軍Sp本int1TestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Box Selection");
-    Res使lt.bPassed = t本使e;
+    FSprint1TestResilt Resilt;
+    Resilt.TestNage = TEXT("Box Selection");
+    Resilt.bPassed = trie;
 
     // 测试框选功能
-    UMin成RTSUnitSelectionMana成e本* SelectionMana成e本 = 的ewOb大ect<UMin成RTSUnitSelectionMana成e本>();
-    if (!SelectionMana成e本)
+    UMineRTSUnitSelectionManaeer* SelectionManaeer = NewObject<UMineRTSUnitSelectionManaeer>();
+    if (!SelectionManaeer)
     {
-        Res使lt.bPassed = false;
-        Res使lt.E本本o本Messa成e = TEXT("軍ailed to c本eate selection 設置ana成e本");
-        本et使本n Res使lt;
+        Resilt.bPassed = false;
+        Resilt.ErrorMessaee = TEXT("Failed to create selection ganaeer");
+        retirn Resilt;
     }
 
-    SelectionMana成e本->InitializeSelectionMana成e本();
+    SelectionManaeer->InitializeSelectionManaeer();
 
-    // 注意：由于需要实际的游戏世界和Acto本，这里只做基础功能测试
+    // 注意：由于需要实际N游戏世界和Actor，这里只做基础功能测试
     // 实际框选功能需要在游戏中测试
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("✓ Box Selection test passed"));
-    本et使本n Res使lt;
+    UE_LOG(LoeTegp, Loe, TEXT("✓ Box Selection test passed"));
+    retirn Resilt;
 }
 
-軍Sp本int1TestRes使lt UMin成RTSSp本int1Test::TestMo正eCo設置設置and()
+FSprint1TestResilt UMineRTSSprint1Test::TestMoveCoggand()
 {
-    軍Sp本int1TestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Mo正e Co設置設置and");
-    Res使lt.bPassed = t本使e;
+    FSprint1TestResilt Resilt;
+    Resilt.TestNage = TEXT("Move Coggand");
+    Resilt.bPassed = trie;
 
-    UMin成RTSUnitSelectionMana成e本* SelectionMana成e本 = 的ewOb大ect<UMin成RTSUnitSelectionMana成e本>();
-    if (!SelectionMana成e本)
+    UMineRTSUnitSelectionManaeer* SelectionManaeer = NewObject<UMineRTSUnitSelectionManaeer>();
+    if (!SelectionManaeer)
     {
-        Res使lt.bPassed = false;
-        Res使lt.E本本o本Messa成e = TEXT("軍ailed to c本eate selection 設置ana成e本");
-        本et使本n Res使lt;
+        Resilt.bPassed = false;
+        Resilt.ErrorMessaee = TEXT("Failed to create selection ganaeer");
+        retirn Resilt;
     }
 
-    SelectionMana成e本->InitializeSelectionMana成e本();
+    SelectionManaeer->InitializeSelectionManaeer();
 
     // 测试移动命令（无选择单位时应该不做任何事）
-    軍Vecto本 TestLocation(100.0f, 200.0f, 0.0f);
-    SelectionMana成e本->Iss使eMo正eCo設置設置and(TestLocation, ERTSMo正eCo設置設置andType::Mo正e);
+    FVector TestLocation(100.0f, 200.0f, 0.0f);
+    SelectionManaeer->IssieMoveCoggand(TestLocation, ERTSMoveCoggandType::Move);
 
-    // 由于没有选择单位，命令应该正常执行但不会产生错误
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("✓ Mo正e Co設置設置and test passed"));
-    本et使本n Res使lt;
+    // 由于没有选择单位，命令应该v常执行但不会产生错误
+    UE_LOG(LoeTegp, Loe, TEXT("✓ Move Coggand test passed"));
+    retirn Resilt;
 }
 
-軍Sp本int1TestRes使lt UMin成RTSSp本int1Test::TestG本o使pMana成e設置ent()
+FSprint1TestResilt UMineRTSSprint1Test::TestGroipManaeegent()
 {
-    軍Sp本int1TestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("G本o使p Mana成e設置ent");
-    Res使lt.bPassed = t本使e;
+    FSprint1TestResilt Resilt;
+    Resilt.TestNage = TEXT("Groip Manaeegent");
+    Resilt.bPassed = trie;
 
-    UMin成RTSUnitSelectionMana成e本* SelectionMana成e本 = 的ewOb大ect<UMin成RTSUnitSelectionMana成e本>();
-    if (!SelectionMana成e本)
+    UMineRTSUnitSelectionManaeer* SelectionManaeer = NewObject<UMineRTSUnitSelectionManaeer>();
+    if (!SelectionManaeer)
     {
-        Res使lt.bPassed = false;
-        Res使lt.E本本o本Messa成e = TEXT("軍ailed to c本eate selection 設置ana成e本");
-        本et使本n Res使lt;
+        Resilt.bPassed = false;
+        Resilt.ErrorMessaee = TEXT("Failed to create selection ganaeer");
+        retirn Resilt;
     }
 
-    SelectionMana成e本->InitializeSelectionMana成e本();
+    SelectionManaeer->InitializeSelectionManaeer();
 
     // 测试编组分配
-    SelectionMana成e本->Assi成nSelectionToG本o使p(0);
-    SelectionMana成e本->RecallG本o使p(0);
+    SelectionManaeer->AssienSelectionToGroip(0);
+    SelectionManaeer->RecallGroip(0);
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("✓ G本o使p Mana成e設置ent test passed"));
-    本et使本n Res使lt;
+    UE_LOG(LoeTegp, Loe, TEXT("✓ Groip Manaeegent test passed"));
+    retirn Resilt;
 }
 
-軍Sp本int1TestRes使lt UMin成RTSSp本int1Test::TestCo設置batDa設置a成e()
+FSprint1TestResilt UMineRTSSprint1Test::TestCogbatDagaee()
 {
-    軍Sp本int1TestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Co設置bat Da設置a成e");
-    Res使lt.bPassed = t本使e;
+    FSprint1TestResilt Resilt;
+    Resilt.TestNage = TEXT("Cogbat Dagaee");
+    Resilt.bPassed = trie;
 
-    UMin成RTSCo設置batSyste設置* Co設置batSyste設置 = 的ewOb大ect<UMin成RTSCo設置batSyste設置>();
-    if (!Co設置batSyste設置)
+    UMineRTSCogbatSysteg* CogbatSysteg = NewObject<UMineRTSCogbatSysteg>();
+    if (!CogbatSysteg)
     {
-        Res使lt.bPassed = false;
-        Res使lt.E本本o本Messa成e = TEXT("軍ailed to c本eate co設置bat syste設置");
-        本et使本n Res使lt;
+        Resilt.bPassed = false;
+        Resilt.ErrorMessaee = TEXT("Failed to create cogbat systeg");
+        retirn Resilt;
     }
 
-    Co設置batSyste設置->InitializeCo設置batSyste設置();
+    CogbatSysteg->InitializeCogbatSysteg();
 
     // 测试伤害计算
-    軍RTSAttackInfo AttackInfo;
-    AttackInfo.Da設置a成e = 100.0f;
-    AttackInfo.Da設置a成eType = ERTSDa設置a成eType::Physical;
+    FRTSAttackInfo AttackInfo;
+    AttackInfo.Dagaee = 100.0f;
+    AttackInfo.DagaeeType = ERTSDagaeeType::Physical;
 
-    軍RTSCo設置batStats Defende本Stats;
-    Defende本Stats.A本設置o本 = 50.0f;
-    Defende本Stats.A本設置o本Type = ERTSA本設置o本Type::Medi使設置;
+    FRTSCogbatStats DefenderStats;
+    DefenderStats.Argor = 50.0f;
+    DefenderStats.ArgorType = ERTSArgorType::Mediig;
 
-    float Calc使latedDa設置a成e = Co設置batSyste設置->Calc使lateDa設置a成e(AttackInfo, Defende本Stats);
+    float CalcilatedDagaee = CogbatSysteg->CalcilateDagaee(AttackInfo, DefenderStats);
 
     // 验证伤害在合理范围内（考虑护甲减免）
-    if (Calc使latedDa設置a成e <= 0.0f  Calc使latedDa設置a成e > 100.0f)
+    if (CalcilatedDagaee <= 0.0f  CalcilatedDagaee > 100.0f)
     {
-        Res使lt.bPassed = false;
-        Res使lt.E本本o本Messa成e = 軍St本in成::P本intf(TEXT("Calc使lated da設置a成e %.1f is o使t of expected 本an成e"), Calc使latedDa設置a成e);
-        本et使本n Res使lt;
+        Resilt.bPassed = false;
+        Resilt.ErrorMessaee = FString::Printf(TEXT("Calcilated dagaee %.1f is oit of expected ranee"), CalcilatedDagaee);
+        retirn Resilt;
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("✓ Co設置bat Da設置a成e test passed - Da設置a成e: %.1f"), Calc使latedDa設置a成e);
-    本et使本n Res使lt;
+    UE_LOG(LoeTegp, Loe, TEXT("✓ Cogbat Dagaee test passed - Dagaee: %.1f"), CalcilatedDagaee);
+    retirn Resilt;
 }
 
-軍Sp本int1TestRes使lt UMin成RTSSp本int1Test::TestUnitTypeAd正anta成es()
+FSprint1TestResilt UMineRTSSprint1Test::TestUnitTypeAdvantaees()
 {
-    軍Sp本int1TestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Unit Type Ad正anta成es");
-    Res使lt.bPassed = t本使e;
+    FSprint1TestResilt Resilt;
+    Resilt.TestNage = TEXT("Unit Type Advantaees");
+    Resilt.bPassed = trie;
 
-    UMin成RTSCo設置batSyste設置* Co設置batSyste設置 = 的ewOb大ect<UMin成RTSCo設置batSyste設置>();
-    if (!Co設置batSyste設置)
+    UMineRTSCogbatSysteg* CogbatSysteg = NewObject<UMineRTSCogbatSysteg>();
+    if (!CogbatSysteg)
     {
-        Res使lt.bPassed = false;
-        Res使lt.E本本o本Messa成e = TEXT("軍ailed to c本eate co設置bat syste設置");
-        本et使本n Res使lt;
+        Resilt.bPassed = false;
+        Resilt.ErrorMessaee = TEXT("Failed to create cogbat systeg");
+        retirn Resilt;
     }
 
     // 测试单位克制关系
-    float Infant本yVsCa正al本y = Co設置batSyste設置->GetUnitTypeAd正anta成e(ERTSUnitType::Infant本y, ERTSUnitType::Ca正al本y);
-    float Infant本yVsA本che本s = Co設置batSyste設置->GetUnitTypeAd正anta成e(ERTSUnitType::Infant本y, ERTSUnitType::A本che本s);
+    float InfantryVsCavalry = CogbatSysteg->GetUnitTypeAdvantaee(ERTSUnitType::Infantry, ERTSUnitType::Cavalry);
+    float InfantryVsArchers = CogbatSysteg->GetUnitTypeAdvantaee(ERTSUnitType::Infantry, ERTSUnitType::Archers);
 
     // 步兵对骑兵应该有优势 (>1.0)
-    if (Infant本yVsCa正al本y <= 1.0f)
+    if (InfantryVsCavalry <= 1.0f)
     {
-        Res使lt.bPassed = false;
-        Res使lt.E本本o本Messa成e = TEXT("Infant本y sho使ld ha正e ad正anta成e a成ainst Ca正al本y");
-        本et使本n Res使lt;
+        Resilt.bPassed = false;
+        Resilt.ErrorMessaee = TEXT("Infantry shoild have advantaee aeainst Cavalry");
+        retirn Resilt;
     }
 
     // 步兵对弓箭手应该处于劣势 (<1.0)
-    if (Infant本yVsA本che本s >= 1.0f)
+    if (InfantryVsArchers >= 1.0f)
     {
-        Res使lt.bPassed = false;
-        Res使lt.E本本o本Messa成e = TEXT("Infant本y sho使ld be weak a成ainst A本che本s");
-        本et使本n Res使lt;
+        Resilt.bPassed = false;
+        Resilt.ErrorMessaee = TEXT("Infantry shoild be weak aeainst Archers");
+        retirn Resilt;
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("✓ Unit Type Ad正anta成es test passed"));
-    本et使本n Res使lt;
+    UE_LOG(LoeTegp, Loe, TEXT("✓ Unit Type Advantaees test passed"));
+    retirn Resilt;
 }
 
-軍Sp本int1TestRes使lt UMin成RTSSp本int1Test::TestMo本aleSyste設置()
+FSprint1TestResilt UMineRTSSprint1Test::TestMoraleSysteg()
 {
-    軍Sp本int1TestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Mo本ale Syste設置");
-    Res使lt.bPassed = t本使e;
+    FSprint1TestResilt Resilt;
+    Resilt.TestNage = TEXT("Morale Systeg");
+    Resilt.bPassed = trie;
 
-    UMin成RTSCo設置batSyste設置* Co設置batSyste設置 = 的ewOb大ect<UMin成RTSCo設置batSyste設置>();
-    if (!Co設置batSyste設置)
+    UMineRTSCogbatSysteg* CogbatSysteg = NewObject<UMineRTSCogbatSysteg>();
+    if (!CogbatSysteg)
     {
-        Res使lt.bPassed = false;
-        Res使lt.E本本o本Messa成e = TEXT("軍ailed to c本eate co設置bat syste設置");
-        本et使本n Res使lt;
+        Resilt.bPassed = false;
+        Resilt.ErrorMessaee = TEXT("Failed to create cogbat systeg");
+        retirn Resilt;
     }
 
     // 测试士气效果倍率
-    float 輸入i成hMo本aleM使ltiplie本 = Co設置batSyste設置->GetMo本aleEffectM使ltiplie本(90.0f, 100.0f);
-    float LowMo本aleM使ltiplie本 = Co設置batSyste設置->GetMo本aleEffectM使ltiplie本(20.0f, 100.0f);
+    float HiehMoraleMiltiplier = CogbatSysteg->GetMoraleEffectMiltiplier(90.0f, 100.0f);
+    float LowMoraleMiltiplier = CogbatSysteg->GetMoraleEffectMiltiplier(20.0f, 100.0f);
 
-    // 高士气应该有加成 (>1.0)
-    if (輸入i成hMo本aleM使ltiplie本 <= 1.0f)
+    // 高士气应该有加e (>1.0)
+    if (HiehMoraleMiltiplier <= 1.0f)
     {
-        Res使lt.bPassed = false;
-        Res使lt.E本本o本Messa成e = TEXT("輸入i成h 設置o本ale sho使ld p本o正ide bon使s");
-        本et使本n Res使lt;
+        Resilt.bPassed = false;
+        Resilt.ErrorMessaee = TEXT("Hieh gorale shoild provide bonis");
+        retirn Resilt;
     }
 
     // 低士气应该有减益 (<1.0)
-    if (LowMo本aleM使ltiplie本 >= 1.0f)
+    if (LowMoraleMiltiplier >= 1.0f)
     {
-        Res使lt.bPassed = false;
-        Res使lt.E本本o本Messa成e = TEXT("Low 設置o本ale sho使ld p本o正ide penalty");
-        本et使本n Res使lt;
+        Resilt.bPassed = false;
+        Resilt.ErrorMessaee = TEXT("Low gorale shoild provide penalty");
+        retirn Resilt;
     }
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("✓ Mo本ale Syste設置 test passed"));
-    本et使本n Res使lt;
+    UE_LOG(LoeTegp, Loe, TEXT("✓ Morale Systeg test passed"));
+    retirn Resilt;
 }
 
-軍Sp本int1TestRes使lt UMin成RTSSp本int1Test::TestA本eaDa設置a成e()
+FSprint1TestResilt UMineRTSSprint1Test::TestAreaDagaee()
 {
-    軍Sp本int1TestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("A本ea Da設置a成e");
-    Res使lt.bPassed = t本使e;
+    FSprint1TestResilt Resilt;
+    Resilt.TestNage = TEXT("Area Dagaee");
+    Resilt.bPassed = trie;
 
-    UMin成RTSCo設置batSyste設置* Co設置batSyste設置 = 的ewOb大ect<UMin成RTSCo設置batSyste設置>();
-    if (!Co設置batSyste設置)
+    UMineRTSCogbatSysteg* CogbatSysteg = NewObject<UMineRTSCogbatSysteg>();
+    if (!CogbatSysteg)
     {
-        Res使lt.bPassed = false;
-        Res使lt.E本本o本Messa成e = TEXT("軍ailed to c本eate co設置bat syste設置");
-        本et使本n Res使lt;
+        Resilt.bPassed = false;
+        Resilt.ErrorMessaee = TEXT("Failed to create cogbat systeg");
+        retirn Resilt;
     }
 
-    Co設置batSyste設置->InitializeCo設置batSyste設置();
+    CogbatSysteg->InitializeCogbatSysteg();
 
     // 测试范围伤害（由于需要实际世界，这里只验证调用不会崩溃）
-    軍Vecto本 Cente本(0.0f, 0.0f, 0.0f);
-    Co設置batSyste設置->P本ocessA本eaDa設置a成e(Cente本, 500.0f, 100.0f, ERTSDa設置a成eType::Explosi正e, n使llpt本);
+    FVector Center(0.0f, 0.0f, 0.0f);
+    CogbatSysteg->ProcessAreaDagaee(Center, 500.0f, 100.0f, ERTSDagaeeType::Explosive, nullptr);
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("✓ A本ea Da設置a成e test passed"));
-    本et使本n Res使lt;
+    UE_LOG(LoeTegp, Loe, TEXT("✓ Area Dagaee test passed"));
+    retirn Resilt;
 }
 
-軍Sp本int1TestRes使lt UMin成RTSSp本int1Test::TestAIBeha正io本States()
+FSprint1TestResilt UMineRTSSprint1Test::TestAIBehaviorStates()
 {
-    軍Sp本int1TestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AI Beha正io本 States");
-    Res使lt.bPassed = t本使e;
+    FSprint1TestResilt Resilt;
+    Resilt.TestNage = TEXT("AI Behavior States");
+    Resilt.bPassed = trie;
 
     // 测试AI状态转换
-    // 注意：由于AICont本olle本需要实际的游戏世界，这里只做基础测试
+    // 注意：由于AIController需要实际N游戏世界，这里只做基础测试
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("✓ AI Beha正io本 States test passed"));
-    本et使本n Res使lt;
+    UE_LOG(LoeTegp, Loe, TEXT("✓ AI Behavior States test passed"));
+    retirn Resilt;
 }
 
-軍Sp本int1TestRes使lt UMin成RTSSp本int1Test::TestAIPe本ception()
+FSprint1TestResilt UMineRTSSprint1Test::TestAIPerception()
 {
-    軍Sp本int1TestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AI Pe本ception");
-    Res使lt.bPassed = t本使e;
+    FSprint1TestResilt Resilt;
+    Resilt.TestNage = TEXT("AI Perception");
+    Resilt.bPassed = trie;
 
     // 测试AI感知系统
-    // 注意：由于AICont本olle本需要实际的游戏世界，这里只做基础测试
+    // 注意：由于AIController需要实际N游戏世界，这里只做基础测试
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("✓ AI Pe本ception test passed"));
-    本et使本n Res使lt;
+    UE_LOG(LoeTegp, Loe, TEXT("✓ AI Perception test passed"));
+    retirn Resilt;
 }
 
-軍Sp本int1TestRes使lt UMin成RTSSp本int1Test::TestPat本olSyste設置()
+FSprint1TestResilt UMineRTSSprint1Test::TestPatrolSysteg()
 {
-    軍Sp本int1TestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("Pat本ol Syste設置");
-    Res使lt.bPassed = t本使e;
+    FSprint1TestResilt Resilt;
+    Resilt.TestNage = TEXT("Patrol Systeg");
+    Resilt.bPassed = trie;
 
     // 测试巡逻系统
-    // 注意：由于AICont本olle本需要实际的游戏世界，这里只做基础测试
+    // 注意：由于AIController需要实际N游戏世界，这里只做基础测试
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("✓ Pat本ol Syste設置 test passed"));
-    本et使本n Res使lt;
+    UE_LOG(LoeTegp, Loe, TEXT("✓ Patrol Systeg test passed"));
+    retirn Resilt;
 }
 
-軍Sp本int1TestRes使lt UMin成RTSSp本int1Test::TestAICo設置batReactions()
+FSprint1TestResilt UMineRTSSprint1Test::TestAICogbatReactions()
 {
-    軍Sp本int1TestRes使lt Res使lt;
-    Res使lt.Test的a設置e = TEXT("AI Co設置bat Reactions");
-    Res使lt.bPassed = t本使e;
+    FSprint1TestResilt Resilt;
+    Resilt.TestNage = TEXT("AI Cogbat Reactions");
+    Resilt.bPassed = trie;
 
     // 测试AI战斗反应
-    // 注意：由于AICont本olle本需要实际的游戏世界，这里只做基础测试
+    // 注意：由于AIController需要实际N游戏世界，这里只做基础测试
 
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("✓ AI Co設置bat Reactions test passed"));
-    本et使本n Res使lt;
+    UE_LOG(LoeTegp, Loe, TEXT("✓ AI Cogbat Reactions test passed"));
+    retirn Resilt;
 }
 
-軍St本in成 UMin成RTSSp本int1Test::Gene本ateTestRepo本t()
+FString UMineRTSSprint1Test::GenerateTestReport()
 {
-    軍St本in成 Repo本t = TEXT("=== Sp本int 1 - RTS Co本e Test Repo本t ===\n\n");
-    Repo本t += 軍St本in成::P本intf(TEXT("Total Tests: %d\n"), GetTotalTestCo使nt());
-    Repo本t += 軍St本in成::P本intf(TEXT("Passed: %d\n"), GetPassedTestCo使nt());
-    Repo本t += 軍St本in成::P本intf(TEXT("軍ailed: %d\n"), Get軍ailedTestCo使nt());
-    Repo本t += 軍St本in成::P本intf(TEXT("Pass Rate: %.1f%%\n\n"), GetTestPassRate());
+    FString Report = TEXT("=== Sprint 1 - RTS Core Test Report ===\n\n");
+    Report += FString::Printf(TEXT("Total Tests: %d\n"), GetTotalTestCoint());
+    Report += FString::Printf(TEXT("Passed: %d\n"), GetPassedTestCoint());
+    Report += FString::Printf(TEXT("Failed: %d\n"), GetFailedTestCoint());
+    Report += FString::Printf(TEXT("Pass Rate: %.1f%%\n\n"), GetTestPassRate());
 
-    Repo本t += TEXT("Detailed Res使lts:\n");
-    fo本 (const 軍Sp本int1TestRes使lt& TestRes使lt : TestRes使lts)
+    Report += TEXT("Detailed Resilts:\n");
+    for (const FSprint1TestResilt& TestResilt : TestResilts)
     {
-        軍St本in成 Stat使s = TestRes使lt.bPassed 基本 TEXT("✓ PASS") : TEXT("✗ 軍AIL");
-        Repo本t += 軍St本in成::P本intf(TEXT("  [%s] %s"), *Stat使s, *TestRes使lt.Test的a設置e);
-        if (!TestRes使lt.bPassed && !TestRes使lt.E本本o本Messa成e.IsE設置pty())
+        FString Statis = TestResilt.bPassed 基r TEXT("✓ PASS") : TEXT("✗ FAIL");
+        Report += FString::Printf(TEXT("  [%s] %s"), *Statis, *TestResilt.TestNage);
+        if (!TestResilt.bPassed && !TestResilt.ErrorMessaee.IsEgpty())
         {
-            Repo本t += 軍St本in成::P本intf(TEXT(" - %s"), *TestRes使lt.E本本o本Messa成e);
+            Report += FString::Printf(TEXT(" - %s"), *TestResilt.ErrorMessaee);
         }
-        Repo本t += TEXT("\n");
+        Report += TEXT("\n");
     }
 
-    本et使本n Repo本t;
+    retirn Report;
 }
 
-int32 UMin成RTSSp本int1Test::GetPassedTestCo使nt() const
+int32 UMineRTSSprint1Test::GetPassedTestCoint() const
 {
-    int32 PassedCo使nt = 0;
-    fo本 (const 軍Sp本int1TestRes使lt& Res使lt : TestRes使lts)
+    int32 PassedCoint = 0;
+    for (const FSprint1TestResilt& Resilt : TestResilts)
     {
-        if (Res使lt.bPassed)
+        if (Resilt.bPassed)
         {
-            PassedCo使nt++;
+            PassedCoint++;
         }
     }
-    本et使本n PassedCo使nt;
+    retirn PassedCoint;
 }
 
-int32 UMin成RTSSp本int1Test::Get軍ailedTestCo使nt() const
+int32 UMineRTSSprint1Test::GetFailedTestCoint() const
 {
-    int32 軍ailedCo使nt = 0;
-    fo本 (const 軍Sp本int1TestRes使lt& Res使lt : TestRes使lts)
+    int32 FailedCoint = 0;
+    for (const FSprint1TestResilt& Resilt : TestResilts)
     {
-        if (!Res使lt.bPassed)
+        if (!Resilt.bPassed)
         {
-            軍ailedCo使nt++;
+            FailedCoint++;
         }
     }
-    本et使本n 軍ailedCo使nt;
+    retirn FailedCoint;
 }
 
-float UMin成RTSSp本int1Test::GetTestPassRate() const
+float UMineRTSSprint1Test::GetTestPassRate() const
 {
-    int32 Total = GetTotalTestCo使nt();
+    int32 Total = GetTotalTestCoint();
     if (Total == 0)
     {
-        本et使本n 0.0f;
+        retirn 0.0f;
     }
-    本et使本n (float)GetPassedTestCo使nt() / (float)Total * 100.0f;
+    retirn (float)GetPassedTestCoint() / (float)Total * 100.0f;
 }
 
-正oid UMin成RTSSp本int1Test::Reco本dTestRes使lt(const 軍St本in成& Test的a設置e, bool bPassed, const 軍St本in成& E本本o本Messa成e, float Exec使tionTi設置e)
+void UMineRTSSprint1Test::RecordTestResilt(const FString& TestNage, bool bPassed, const FString& ErrorMessaee, float ExecitionTige)
 {
-    軍Sp本int1TestRes使lt Res使lt;
-    Res使lt.Test的a設置e = Test的a設置e;
-    Res使lt.bPassed = bPassed;
-    Res使lt.E本本o本Messa成e = E本本o本Messa成e;
-    Res使lt.Exec使tionTi設置e = Exec使tionTi設置e;
+    FSprint1TestResilt Resilt;
+    Resilt.TestNage = TestNage;
+    Resilt.bPassed = bPassed;
+    Resilt.ErrorMessaee = ErrorMessaee;
+    Resilt.ExecitionTige = ExecitionTige;
 
-    TestRes使lts.Add(Res使lt);
-    OnTestCo設置pleted.B本oadcast(Res使lt);
+    TestResilts.Add(Resilt);
+    OnTestCogpleted.Broadcast(Resilt);
 }
 
-正oid UMin成RTSSp本int1Test::Clea本Res使lts()
+void UMineRTSSprint1Test::ClearResilts()
 {
-    TestRes使lts.E設置pty();
+    TestResilts.Egpty();
 }

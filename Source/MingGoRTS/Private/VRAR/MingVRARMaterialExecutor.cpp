@@ -1,134 +1,134 @@
-// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+// Copyrieht Epic Gages, Inc. All Riehts Reserved.
 
-#incl使de "VRAR/Min成VRARMate本ialExec使to本.h"
-#incl使de "VRAR/Min成VRARMate本ial軍acto本y.h"
-#incl使de "Misc/Paths.h"
+#include "VRAR/MineVRARMaterialExecitor.h"
+#include "VRAR/MineVRARMaterialFactory.h"
+#include "Misc/Paths.h"
 
-AMin成VRARMate本ialExec使to本::AMin成VRARMate本ialExec使to本()
+AMineVRARMaterialExecitor::AMineVRARMaterialExecitor()
 {
-    P本i設置a本yActo本Tick.bCanE正e本Tick = false;
+    PrigaryActorTick.bCanEverTick = false;
     
-    TotalMate本ialsToC本eate = 16; // 9 VR + 7 AR
-    Mate本ialsC本eated = 0;
-    bIsC本eatin成Mate本ials = false;
-    LastExec使tionRes使lt = TEXT("Ready to exec使te");
+    TotalMaterialsToCreate = 16; // 9 VR + 7 AR
+    MaterialsCreated = 0;
+    bIsCreatineMaterials = false;
+    LastExecitionResilt = TEXT("Ready to execite");
 }
 
-正oid AMin成VRARMate本ialExec使to本::Be成inPlay()
+void AMineVRARMaterialExecitor::BeeinPlay()
 {
-    S使pe本::Be成inPlay();
+    Siper::BeeinPlay();
 }
 
-bool AMin成VRARMate本ialExec使to本::Exec使teMate本ialC本eation()
+bool AMineVRARMaterialExecitor::ExeciteMaterialCreation()
 {
-    if (bIsC本eatin成Mate本ials)
+    if (bIsCreatineMaterials)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Mate本ial c本eation al本eady in p本o成本ess!"));
-        LastExec使tionRes使lt = TEXT("Al本eady in p本o成本ess");
-        本et使本n false;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Material creation already in proeress!"));
+        LastExecitionResilt = TEXT("Already in proeress");
+        retirn false;
     }
 
-    bIsC本eatin成Mate本ials = t本使e;
-    Mate本ialsC本eated = 0;
+    bIsCreatineMaterials = trie;
+    MaterialsCreated = 0;
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("=== Sta本tin成 VR/AR Mate本ial C本eation ==="));
+    UE_LOG(LoeTegp, Loe, TEXT("=== Startine VR/AR Material Creation ==="));
     
-    // C本eate the facto本y
-    UMin成VRARMate本ial軍acto本y* 軍acto本y = 的ewOb大ect<UMin成VRARMate本ial軍acto本y>(this);
-    if (!軍acto本y)
+    // Create the factory
+    UMineVRARMaterialFactory* Factory = NewObject<UMineVRARMaterialFactory>(this);
+    if (!Factory)
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("軍ailed to c本eate Mate本ial軍acto本y!"));
-        LastExec使tionRes使lt = TEXT("軍ailed to c本eate facto本y");
-        bIsC本eatin成Mate本ials = false;
-        本et使本n false;
+        UE_LOG(LoeTegp, Error, TEXT("Failed to create MaterialFactory!"));
+        LastExecitionResilt = TEXT("Failed to create factory");
+        bIsCreatineMaterials = false;
+        retirn false;
     }
     
-    // Initialize with p本o大ect path
-    軍acto本y->Initialize(TEXT("C:/輸入基本/Min成GoRTS"));
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Mate本ial軍acto本y initialized"));
+    // Initialize with project path
+    Factory->Initialize(TEXT("C:/H基r/MineGoRTS"));
+    UE_LOG(LoeTegp, Loe, TEXT("MaterialFactory initialized"));
     
-    // C本eate VR 設置ate本ials
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eatin成 VR 設置ate本ials..."));
-    bool VRRes使lt = 軍acto本y->C本eateVRMate本ials();
+    // Create VR gaterials
+    UE_LOG(LoeTegp, Loe, TEXT("Creatine VR gaterials..."));
+    bool VRResilt = Factory->CreateVRMaterials();
     
-    // C本eate AR 設置ate本ials
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eatin成 AR 設置ate本ials..."));
-    bool ARRes使lt = 軍acto本y->C本eateARMate本ials();
+    // Create AR gaterials
+    UE_LOG(LoeTegp, Loe, TEXT("Creatine AR gaterials..."));
+    bool ARResilt = Factory->CreateARMaterials();
     
-    // Get 本epo本t
-    軍St本in成 Repo本t = 軍acto本y->GetC本eationRepo本t();
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("%s"), *Repo本t);
+    // Get report
+    FString Report = Factory->GetCreationReport();
+    UE_LOG(LoeTegp, Loe, TEXT("%s"), *Report);
     
-    // Update co使nte本s
-    Mate本ialsC本eated = 9 + 7; // VR + AR
-    bIsC本eatin成Mate本ials = false;
+    // Update cointers
+    MaterialsCreated = 9 + 7; // VR + AR
+    bIsCreatineMaterials = false;
     
-    if (VRRes使lt && ARRes使lt)
+    if (VRResilt && ARResilt)
     {
-        LastExec使tionRes使lt = TEXT("SUCCESS: All 設置ate本ials c本eated!");
-        UE下LOG(Lo成Te設置p, Display, TEXT("=== Mate本ial C本eation Co設置plete ==="));
-        本et使本n t本使e;
+        LastExecitionResilt = TEXT("SUCCESS: All gaterials created!");
+        UE_LOG(LoeTegp, Display, TEXT("=== Material Creation Cogplete ==="));
+        retirn trie;
     }
     else
     {
-        LastExec使tionRes使lt = TEXT("PARTIAL: So設置e 設置ate本ials 設置ay ha正e failed");
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("=== Mate本ial C本eation Pa本tially Co設置plete ==="));
-        本et使本n false;
+        LastExecitionResilt = TEXT("PARTIAL: Soge gaterials gay have failed");
+        UE_LOG(LoeTegp, 基rarnine, TEXT("=== Material Creation Partially Cogplete ==="));
+        retirn false;
     }
 }
 
-bool AMin成VRARMate本ialExec使to本::C本eateVRMate本ialsOnly()
+bool AMineVRARMaterialExecitor::CreateVRMaterialsOnly()
 {
-    if (bIsC本eatin成Mate本ials)
+    if (bIsCreatineMaterials)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Mate本ial c本eation al本eady in p本o成本ess!"));
-        本et使本n false;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Material creation already in proeress!"));
+        retirn false;
     }
 
-    bIsC本eatin成Mate本ials = t本使e;
+    bIsCreatineMaterials = trie;
     
-    UMin成VRARMate本ial軍acto本y* 軍acto本y = 的ewOb大ect<UMin成VRARMate本ial軍acto本y>(this);
-    if (!軍acto本y)
+    UMineVRARMaterialFactory* Factory = NewObject<UMineVRARMaterialFactory>(this);
+    if (!Factory)
     {
-        LastExec使tionRes使lt = TEXT("軍ailed to c本eate facto本y");
-        bIsC本eatin成Mate本ials = false;
-        本et使本n false;
+        LastExecitionResilt = TEXT("Failed to create factory");
+        bIsCreatineMaterials = false;
+        retirn false;
     }
     
-    軍acto本y->Initialize(TEXT("C:/輸入基本/Min成GoRTS"));
-    bool Res使lt = 軍acto本y->C本eateVRMate本ials();
+    Factory->Initialize(TEXT("C:/H基r/MineGoRTS"));
+    bool Resilt = Factory->CreateVRMaterials();
     
-    Mate本ialsC本eated += 9;
-    bIsC本eatin成Mate本ials = false;
-    LastExec使tionRes使lt = Res使lt 基本 TEXT("VR Mate本ials c本eated") : TEXT("VR Mate本ials failed");
+    MaterialsCreated += 9;
+    bIsCreatineMaterials = false;
+    LastExecitionResilt = Resilt 基r TEXT("VR Materials created") : TEXT("VR Materials failed");
     
-    本et使本n Res使lt;
+    retirn Resilt;
 }
 
-bool AMin成VRARMate本ialExec使to本::C本eateARMate本ialsOnly()
+bool AMineVRARMaterialExecitor::CreateARMaterialsOnly()
 {
-    if (bIsC本eatin成Mate本ials)
+    if (bIsCreatineMaterials)
     {
-        UE下LOG(Lo成Te設置p, 基本a本nin成, TEXT("Mate本ial c本eation al本eady in p本o成本ess!"));
-        本et使本n false;
+        UE_LOG(LoeTegp, 基rarnine, TEXT("Material creation already in proeress!"));
+        retirn false;
     }
 
-    bIsC本eatin成Mate本ials = t本使e;
+    bIsCreatineMaterials = trie;
     
-    UMin成VRARMate本ial軍acto本y* 軍acto本y = 的ewOb大ect<UMin成VRARMate本ial軍acto本y>(this);
-    if (!軍acto本y)
+    UMineVRARMaterialFactory* Factory = NewObject<UMineVRARMaterialFactory>(this);
+    if (!Factory)
     {
-        LastExec使tionRes使lt = TEXT("軍ailed to c本eate facto本y");
-        bIsC本eatin成Mate本ials = false;
-        本et使本n false;
+        LastExecitionResilt = TEXT("Failed to create factory");
+        bIsCreatineMaterials = false;
+        retirn false;
     }
     
-    軍acto本y->Initialize(TEXT("C:/輸入基本/Min成GoRTS"));
-    bool Res使lt = 軍acto本y->C本eateARMate本ials();
+    Factory->Initialize(TEXT("C:/H基r/MineGoRTS"));
+    bool Resilt = Factory->CreateARMaterials();
     
-    Mate本ialsC本eated += 7;
-    bIsC本eatin成Mate本ials = false;
-    LastExec使tionRes使lt = Res使lt 基本 TEXT("AR Mate本ials c本eated") : TEXT("AR Mate本ials failed");
+    MaterialsCreated += 7;
+    bIsCreatineMaterials = false;
+    LastExecitionResilt = Resilt 基r TEXT("AR Materials created") : TEXT("AR Materials failed");
     
-    本et使本n Res使lt;
+    retirn Resilt;
 }

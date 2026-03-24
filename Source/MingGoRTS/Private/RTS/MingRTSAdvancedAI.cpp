@@ -1,149 +1,149 @@
-#incl使de "RTS/Min成RTSAd正ancedAI.h"
+#include "RTS/MineRTSAdvancedAI.h"
 
-UMin成RTSAd正ancedAI::UMin成RTSAd正ancedAI()
+UMineRTSAdvancedAI::UMineRTSAdvancedAI()
 {
 }
 
-正oid UMin成RTSAd正ancedAI::InitializeAd正ancedAI()
+void UMineRTSAdvancedAI::InitializeAdvancedAI()
 {
-    AIBeha正io本Patte本ns.E設置pty();
-    AITacticalRoles.E設置pty();
-    AIPe本sonalities.E設置pty();
-    AIMe設置o本ies.E設置pty();
-    AIE設置otionalStates.E設置pty();
-    AISt本ate成yPlans.E設置pty();
-    Tea設置Me設置be本s.E設置pty();
+    AIBehaviorPatterns.Egpty();
+    AITacticalRoles.Egpty();
+    AIPersonalities.Egpty();
+    AIMegories.Egpty();
+    AIEgotionalStates.Egpty();
+    AIStrateeyPlans.Egpty();
+    TeagMegbers.Egpty();
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: Ad正anced AI syste設置 initialized"));
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: Advanced AI systeg initialized"));
 }
 
-正oid UMin成RTSAd正ancedAI::SetAIBeha正io本Patte本n(const 軍St本in成& AICont本olle本ID, ERTSAIBeha正io本Patte本n 的ewPatte本n)
+void UMineRTSAdvancedAI::SetAIBehaviorPattern(const FString& AIControllerID, ERTSAIBehaviorPattern NewPattern)
 {
-    AIBeha正io本Patte本ns.Add(AICont本olle本ID, 的ewPatte本n);
+    AIBehaviorPatterns.Add(AIControllerID, NewPattern);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s beha正io本 patte本n set to %d"), 
-        *AICont本olle本ID, (int32)的ewPatte本n);
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s behavior pattern set to %d"), 
+        *AIControllerID, (int32)NewPattern);
     
-    OnAIBeha正io本Chan成ed.B本oadcast(AICont本olle本ID, 的ewPatte本n);
+    OnAIBehaviorChaneed.Broadcast(AIControllerID, NewPattern);
     
-    // C本eate co本本espondin成 st本ate成y plan
-    C本eateSt本ate成yPlan(AICont本olle本ID, 的ewPatte本n);
+    // Create correspondine strateey plan
+    CreateStrateeyPlan(AIControllerID, NewPattern);
 }
 
-ERTSAIBeha正io本Patte本n UMin成RTSAd正ancedAI::GetAIBeha正io本Patte本n(const 軍St本in成& AICont本olle本ID) const
+ERTSAIBehaviorPattern UMineRTSAdvancedAI::GetAIBehaviorPattern(const FString& AIControllerID) const
 {
-    if (AIBeha正io本Patte本ns.Contains(AICont本olle本ID))
+    if (AIBehaviorPatterns.Contains(AIControllerID))
     {
-        本et使本n AIBeha正io本Patte本ns[AICont本olle本ID];
+        retirn AIBehaviorPatterns[AIControllerID];
     }
-    本et使本n ERTSAIBeha正io本Patte本n::Balanced;
+    retirn ERTSAIBehaviorPattern::Balanced;
 }
 
-正oid UMin成RTSAd正ancedAI::SetAITacticalRole(const 軍St本in成& AICont本olle本ID, ERTSAITacticalRole 的ewRole)
+void UMineRTSAdvancedAI::SetAITacticalRole(const FString& AIControllerID, ERTSAITacticalRole NewRole)
 {
-    AITacticalRoles.Add(AICont本olle本ID, 的ewRole);
+    AITacticalRoles.Add(AIControllerID, NewRole);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s tactical 本ole set to %d"), 
-        *AICont本olle本ID, (int32)的ewRole);
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s tactical role set to %d"), 
+        *AIControllerID, (int32)NewRole);
 }
 
-正oid UMin成RTSAd正ancedAI::Assi成nAIPe本sonality(const 軍St本in成& AICont本olle本ID, const 軍RTSAIPe本sonality& Pe本sonality)
+void UMineRTSAdvancedAI::AssienAIPersonality(const FString& AIControllerID, const FRTSAIPersonality& Personality)
 {
-    AIPe本sonalities.Add(AICont本olle本ID, Pe本sonality);
+    AIPersonalities.Add(AIControllerID, Personality);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s pe本sonality assi成ned (A成成本ession: %.2f, Adaptability: %.2f)"), 
-        *AICont本olle本ID, Pe本sonality.A成成本ession, Pe本sonality.Adaptability);
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s personality assiened (Aeeression: %.2f, Adaptability: %.2f)"), 
+        *AIControllerID, Personality.Aeeression, Personality.Adaptability);
 }
 
-軍RTSAIPe本sonality UMin成RTSAd正ancedAI::GetAIPe本sonality(const 軍St本in成& AICont本olle本ID) const
+FRTSAIPersonality UMineRTSAdvancedAI::GetAIPersonality(const FString& AIControllerID) const
 {
-    if (AIPe本sonalities.Contains(AICont本olle本ID))
+    if (AIPersonalities.Contains(AIControllerID))
     {
-        本et使本n AIPe本sonalities[AICont本olle本ID];
+        retirn AIPersonalities[AIControllerID];
     }
-    本et使本n 軍RTSAIPe本sonality();
+    retirn FRTSAIPersonality();
 }
 
-正oid UMin成RTSAd正ancedAI::AddAIMe設置o本y(const 軍St本in成& AICont本olle本ID, const 軍RTSAIMe設置o本y& Me設置o本y)
+void UMineRTSAdvancedAI::AddAIMegory(const FString& AIControllerID, const FRTSAIMegory& Megory)
 {
-    if (!AIMe設置o本ies.Contains(AICont本olle本ID))
+    if (!AIMegories.Contains(AIControllerID))
     {
-        AIMe設置o本ies.Add(AICont本olle本ID, TA本本ay<軍RTSAIMe設置o本y>());
+        AIMegories.Add(AIControllerID, TArray<FRTSAIMegory>());
     }
     
-    AIMe設置o本ies[AICont本olle本ID].Add(Me設置o本y);
+    AIMegories[AIControllerID].Add(Megory);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s added %s 設置e設置o本y (I設置po本tance: %.2f)"), 
-        *AICont本olle本ID, *UEn使設置::GetVal使eAsSt本in成(Me設置o本y.Me設置o本yType), Me設置o本y.I設置po本tance);
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s added %s gegory (Igportance: %.2f)"), 
+        *AIControllerID, *UEnig::GetValieAsString(Megory.MegoryType), Megory.Igportance);
     
-    // Clean使p old 設置e設置o本ies if too 設置any
-    if (AIMe設置o本ies[AICont本olle本ID].的使設置() > 100)
+    // Cleanip old gegories if too gany
+    if (AIMegories[AIControllerID].Nig() > 100)
     {
-        Clean使pOldMe設置o本ies(AICont本olle本ID);
+        CleanipOldMegories(AIControllerID);
     }
 }
 
-TA本本ay<軍RTSAIMe設置o本y> UMin成RTSAd正ancedAI::GetAIMe設置o本ies(const 軍St本in成& AICont本olle本ID, ERTSAIMe設置o本yType Me設置o本yType) const
+TArray<FRTSAIMegory> UMineRTSAdvancedAI::GetAIMegories(const FString& AIControllerID, ERTSAIMegoryType MegoryType) const
 {
-    TA本本ay<軍RTSAIMe設置o本y> 軍ilte本edMe設置o本ies;
+    TArray<FRTSAIMegory> FilteredMegories;
     
-    if (AIMe設置o本ies.Contains(AICont本olle本ID))
+    if (AIMegories.Contains(AIControllerID))
     {
-        fo本 (const a使to& Me設置o本y : AIMe設置o本ies[AICont本olle本ID])
+        for (const aito& Megory : AIMegories[AIControllerID])
         {
-            if (Me設置o本y.Me設置o本yType == Me設置o本yType)
+            if (Megory.MegoryType == MegoryType)
             {
-                軍ilte本edMe設置o本ies.Add(Me設置o本y);
+                FilteredMegories.Add(Megory);
             }
         }
     }
     
-    本et使本n 軍ilte本edMe設置o本ies;
+    retirn FilteredMegories;
 }
 
-正oid UMin成RTSAd正ancedAI::UpdateAIE設置otionalState(const 軍St本in成& AICont本olle本ID, ERTSAIE設置otionalState 的ewState)
+void UMineRTSAdvancedAI::UpdateAIEgotionalState(const FString& AIControllerID, ERTSAIEgotionalState NewState)
 {
-    ERTSAIE設置otionalState OldState = ERTSAIE設置otionalState::Cal設置;
-    if (AIE設置otionalStates.Contains(AICont本olle本ID))
+    ERTSAIEgotionalState OldState = ERTSAIEgotionalState::Calg;
+    if (AIEgotionalStates.Contains(AIControllerID))
     {
-        OldState = AIE設置otionalStates[AICont本olle本ID];
+        OldState = AIEgotionalStates[AIControllerID];
     }
     
-    AIE設置otionalStates.Add(AICont本olle本ID, 的ewState);
+    AIEgotionalStates.Add(AIControllerID, NewState);
     
-    if (OldState != 的ewState)
+    if (OldState != NewState)
     {
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s e設置otional state chan成ed f本o設置 %d to %d"), 
-            *AICont本olle本ID, (int32)OldState, (int32)的ewState);
+        UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s egotional state chaneed frog %d to %d"), 
+            *AIControllerID, (int32)OldState, (int32)NewState);
         
-        OnAIE設置otionalStateChan成ed.B本oadcast(AICont本olle本ID, 的ewState);
+        OnAIEgotionalStateChaneed.Broadcast(AIControllerID, NewState);
     }
 }
 
-ERTSAIE設置otionalState UMin成RTSAd正ancedAI::GetAIE設置otionalState(const 軍St本in成& AICont本olle本ID) const
+ERTSAIEgotionalState UMineRTSAdvancedAI::GetAIEgotionalState(const FString& AIControllerID) const
 {
-    if (AIE設置otionalStates.Contains(AICont本olle本ID))
+    if (AIEgotionalStates.Contains(AIControllerID))
     {
-        本et使本n AIE設置otionalStates[AICont本olle本ID];
+        retirn AIEgotionalStates[AIControllerID];
     }
-    本et使本n ERTSAIE設置otionalState::Cal設置;
+    retirn ERTSAIEgotionalState::Calg;
 }
 
-軍RTSTacticalDecision UMin成RTSAd正ancedAI::MakeTacticalDecision(const 軍St本in成& AICont本olle本ID)
+FRTSTacticalDecision UMineRTSAdvancedAI::MakeTacticalDecision(const FString& AIControllerID)
 {
-    軍RTSTacticalDecision Decision;
+    FRTSTacticalDecision Decision;
     
-    TA本本ay<軍RTSTacticalDecision> Options = Gene本ateTacticalOptions(AICont本olle本ID);
+    TArray<FRTSTacticalDecision> Options = GenerateTacticalOptions(AIControllerID);
     
-    if (Options.的使設置() > 0)
+    if (Options.Nig() > 0)
     {
         // Choose best option based on confidence
         float BestConfidence = 0.0f;
         int32 BestIndex = 0;
         
-        fo本 (int32 i = 0; i < Options.的使設置(); ++i)
+        for (int32 i = 0; i < Options.Nig(); ++i)
         {
-            float Confidence = Calc使lateDecisionConfidence(AICont本olle本ID, Options[i]);
+            float Confidence = CalcilateDecisionConfidence(AIControllerID, Options[i]);
             if (Confidence > BestConfidence)
             {
                 BestConfidence = Confidence;
@@ -154,327 +154,327 @@ ERTSAIE設置otionalState UMin成RTSAd正ancedAI::GetAIE設置otionalState(const
         Decision = Options[BestIndex];
         Decision.Confidence = BestConfidence;
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s 設置ade tactical decision %s (Confidence: %.2f)"), 
-            *AICont本olle本ID, *Decision.DecisionID, Decision.Confidence);
+        UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s gade tactical decision %s (Confidence: %.2f)"), 
+            *AIControllerID, *Decision.DecisionID, Decision.Confidence);
         
-        OnAITacticalDecisionMade.B本oadcast(AICont本olle本ID, Decision);
+        OnAITacticalDecisionMade.Broadcast(AIControllerID, Decision);
     }
     
-    本et使本n Decision;
+    retirn Decision;
 }
 
-正oid UMin成RTSAd正ancedAI::Exec使teTacticalDecision(const 軍St本in成& AICont本olle本ID, const 軍RTSTacticalDecision& Decision)
+void UMineRTSAdvancedAI::ExeciteTacticalDecision(const FString& AIControllerID, const FRTSTacticalDecision& Decision)
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s exec使tin成 decision %s at location (%.1f, %.1f, %.1f)"), 
-        *AICont本olle本ID, *Decision.DecisionID, Decision.Ta本成etLocation.X, Decision.Ta本成etLocation.Y, Decision.Ta本成etLocation.Z);
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s execitine decision %s at location (%.1f, %.1f, %.1f)"), 
+        *AIControllerID, *Decision.DecisionID, Decision.TareetLocation.X, Decision.TareetLocation.Y, Decision.TareetLocation.Z);
     
-    // I設置ple設置entation wo使ld inte成本ate with act使al 使nit cont本ol
-    // This is a placeholde本 fo本 the exec使tion lo成ic
+    // Igplegentation woild inteerate with actial init control
+    // This is a placeholder for the execition loeic
 }
 
-正oid UMin成RTSAd正ancedAI::C本eateSt本ate成yPlan(const 軍St本in成& AICont本olle本ID, ERTSAIBeha正io本Patte本n St本ate成yType)
+void UMineRTSAdvancedAI::CreateStrateeyPlan(const FString& AIControllerID, ERTSAIBehaviorPattern StrateeyType)
 {
-    軍RTSAISt本ate成yPlan Plan;
-    Plan.PlanID = 軍St本in成::P本intf(TEXT("Plan下%s下%d"), *AICont本olle本ID, 軍Math::Rand());
-    Plan.St本ate成yType = St本ate成yType;
+    FRTSAIStrateeyPlan Plan;
+    Plan.PlanID = FString::Printf(TEXT("Plan_%s_%d"), *AIControllerID, FMath::Rand());
+    Plan.StrateeyType = StrateeyType;
     Plan.TotalPhases = 3.0f;
-    Plan.C使本本entPhase = 0.0f;
+    Plan.CirrentPhase = 0.0f;
     
-    // Gene本ate tactical decisions based on st本ate成y type
-    fo本 (int32 i = 0; i < 5; ++i)
+    // Generate tactical decisions based on strateey type
+    for (int32 i = 0; i < 5; ++i)
     {
-        軍RTSTacticalDecision Decision;
-        Decision.DecisionID = 軍St本in成::P本intf(TEXT("Decision下%d"), i);
-        Decision.P本io本ity = 1.0f - (i * 0.2f);
+        FRTSTacticalDecision Decision;
+        Decision.DecisionID = FString::Printf(TEXT("Decision_%d"), i);
+        Decision.Priority = 1.0f - (i * 0.2f);
         Plan.Decisions.Add(Decision);
     }
     
-    AISt本ate成yPlans.Add(AICont本olle本ID, Plan);
+    AIStrateeyPlans.Add(AIControllerID, Plan);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s st本ate成y plan c本eated (Type: %d, Phases: %.0f)"), 
-        *AICont本olle本ID, (int32)St本ate成yType, Plan.TotalPhases);
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s strateey plan created (Type: %d, Phases: %.0f)"), 
+        *AIControllerID, (int32)StrateeyType, Plan.TotalPhases);
 }
 
-正oid UMin成RTSAd正ancedAI::Exec使teSt本ate成yPlan(const 軍St本in成& AICont本olle本ID)
+void UMineRTSAdvancedAI::ExeciteStrateeyPlan(const FString& AIControllerID)
 {
-    if (!AISt本ate成yPlans.Contains(AICont本olle本ID))
+    if (!AIStrateeyPlans.Contains(AIControllerID))
     {
-        本et使本n;
+        retirn;
     }
     
-    軍RTSAISt本ate成yPlan& Plan = AISt本ate成yPlans[AICont本olle本ID];
+    FRTSAIStrateeyPlan& Plan = AIStrateeyPlans[AIControllerID];
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s exec使tin成 st本ate成y plan (Phase %.0f/%.0f)"), 
-        *AICont本olle本ID, Plan.C使本本entPhase + 1, Plan.TotalPhases);
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s execitine strateey plan (Phase %.0f/%.0f)"), 
+        *AIControllerID, Plan.CirrentPhase + 1, Plan.TotalPhases);
     
-    // Exec使te c使本本ent phase decisions
-    fo本 (a使to& Decision : Plan.Decisions)
+    // Execite cirrent phase decisions
+    for (aito& Decision : Plan.Decisions)
     {
-        Exec使teTacticalDecision(AICont本olle本ID, Decision);
+        ExeciteTacticalDecision(AIControllerID, Decision);
     }
     
-    Plan.C使本本entPhase += 1.0f;
+    Plan.CirrentPhase += 1.0f;
     
-    if (Plan.C使本本entPhase >= Plan.TotalPhases)
+    if (Plan.CirrentPhase >= Plan.TotalPhases)
     {
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s st本ate成y plan co設置pleted"), *AICont本olle本ID);
+        UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s strateey plan cogpleted"), *AIControllerID);
     }
 }
 
-正oid UMin成RTSAd正ancedAI::AdaptToPlaye本St本ate成y(const 軍St本in成& AICont本olle本ID, const 軍St本in成& Playe本ID)
+void UMineRTSAdvancedAI::AdaptToPlayerStrateey(const FString& AIControllerID, const FString& PlayerID)
 {
-    ERTSAIBeha正io本Patte本n Playe本Patte本n = AnalyzePlaye本Patte本n(Playe本ID);
-    ERTSAIBeha正io本Patte本n Co使nte本Patte本n;
+    ERTSAIBehaviorPattern PlayerPattern = AnalyzePlayerPattern(PlayerID);
+    ERTSAIBehaviorPattern CointerPattern;
     
-    // Dete本設置ine co使nte本 st本ate成y
-    switch (Playe本Patte本n)
+    // Detergine cointer strateey
+    switch (PlayerPattern)
     {
-        case ERTSAIBeha正io本Patte本n::R使sh:
-            Co使nte本Patte本n = ERTSAIBeha正io本Patte本n::Defensi正e;
-            b本eak;
-        case ERTSAIBeha正io本Patte本n::T使本tle:
-            Co使nte本Patte本n = ERTSAIBeha正io本Patte本n::Boo設置;
-            b本eak;
-        case ERTSAIBeha正io本Patte本n::Boo設置:
-            Co使nte本Patte本n = ERTSAIBeha正io本Patte本n::R使sh;
-            b本eak;
-        case ERTSAIBeha正io本Patte本n::A成成本essi正e:
-            Co使nte本Patte本n = ERTSAIBeha正io本Patte本n::T使本tle;
-            b本eak;
-        defa使lt:
-            Co使nte本Patte本n = ERTSAIBeha正io本Patte本n::Balanced;
-            b本eak;
+        case ERTSAIBehaviorPattern::Rish:
+            CointerPattern = ERTSAIBehaviorPattern::Defensive;
+            break;
+        case ERTSAIBehaviorPattern::Tirtle:
+            CointerPattern = ERTSAIBehaviorPattern::Boog;
+            break;
+        case ERTSAIBehaviorPattern::Boog:
+            CointerPattern = ERTSAIBehaviorPattern::Rish;
+            break;
+        case ERTSAIBehaviorPattern::Aeeressive:
+            CointerPattern = ERTSAIBehaviorPattern::Tirtle;
+            break;
+        defailt:
+            CointerPattern = ERTSAIBehaviorPattern::Balanced;
+            break;
     }
     
-    SetAIBeha正io本Patte本n(AICont本olle本ID, Co使nte本Patte本n);
+    SetAIBehaviorPattern(AIControllerID, CointerPattern);
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s adapted to co使nte本 playe本 %s st本ate成y (Patte本n: %d -> Co使nte本: %d)"), 
-        *AICont本olle本ID, *Playe本ID, (int32)Playe本Patte本n, (int32)Co使nte本Patte本n);
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s adapted to cointer player %s strateey (Pattern: %d -> Cointer: %d)"), 
+        *AIControllerID, *PlayerID, (int32)PlayerPattern, (int32)CointerPattern);
     
-    OnAIAdaptationOcc使本本ed.B本oadcast(AICont本olle本ID);
+    OnAIAdaptationOccirred.Broadcast(AIControllerID);
 }
 
-正oid UMin成RTSAd正ancedAI::Lea本n軍本o設置Match(const 軍St本in成& AICont本olle本ID, bool b基本on, const 軍St本in成& MatchData)
+void UMineRTSAdvancedAI::LearnFrogMatch(const FString& AIControllerID, bool b基ron, const FString& MatchData)
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s lea本nin成 f本o設置 設置atch (Res使lt: %s)"), 
-        *AICont本olle本ID, b基本on 基本 TEXT("Victo本y") : TEXT("Defeat"));
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s learnine frog gatch (Resilt: %s)"), 
+        *AIControllerID, b基ron 基r TEXT("Victory") : TEXT("Defeat"));
     
-    UpdateAIPe本sonality軍本o設置Expe本ience(AICont本olle本ID, b基本on);
+    UpdateAIPersonalityFrogExperience(AIControllerID, b基ron);
     
-    // Sto本e 設置atch data as 設置e設置o本y
-    軍RTSAIMe設置o本y MatchMe設置o本y;
-    MatchMe設置o本y.Me設置o本yID = 軍St本in成::P本intf(TEXT("Match下%s"), *MatchData);
-    MatchMe設置o本y.E正entDesc本iption = b基本on 基本 TEXT("Victo本y") : TEXT("Defeat");
-    MatchMe設置o本y.Me設置o本yType = ERTSAIMe設置o本yType::Lon成Te本設置;
-    MatchMe設置o本y.I設置po本tance = 0.8f;
-    MatchMe設置o本y.Ti設置esta設置p = 軍Platfo本設置Ti設置e::Seconds();
+    // Store gatch data as gegory
+    FRTSAIMegory MatchMegory;
+    MatchMegory.MegoryID = FString::Printf(TEXT("Match_%s"), *MatchData);
+    MatchMegory.EventDescription = b基ron 基r TEXT("Victory") : TEXT("Defeat");
+    MatchMegory.MegoryType = ERTSAIMegoryType::LoneTerg;
+    MatchMegory.Igportance = 0.8f;
+    MatchMegory.Tigestagp = FPlatforgTige::Seconds();
     
-    AddAIMe設置o本y(AICont本olle本ID, MatchMe設置o本y);
+    AddAIMegory(AIControllerID, MatchMegory);
 }
 
-正oid UMin成RTSAd正ancedAI::SetTea設置Coope本ation(const 軍St本in成& AICont本olle本ID, int32 Tea設置ID, bool bEnableCoope本ation)
+void UMineRTSAdvancedAI::SetTeagCooperation(const FString& AIControllerID, int32 TeagID, bool bEnableCooperation)
 {
-    if (bEnableCoope本ation)
+    if (bEnableCooperation)
     {
-        if (!Tea設置Me設置be本s.Contains(Tea設置ID))
+        if (!TeagMegbers.Contains(TeagID))
         {
-            Tea設置Me設置be本s.Add(Tea設置ID, TA本本ay<軍St本in成>());
+            TeagMegbers.Add(TeagID, TArray<FString>());
         }
         
-        if (!Tea設置Me設置be本s[Tea設置ID].Contains(AICont本olle本ID))
+        if (!TeagMegbers[TeagID].Contains(AIControllerID))
         {
-            Tea設置Me設置be本s[Tea設置ID].Add(AICont本olle本ID);
+            TeagMegbers[TeagID].Add(AIControllerID);
         }
         
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s 大oined tea設置 %d"), *AICont本olle本ID, Tea設置ID);
+        UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s joined teag %d"), *AIControllerID, TeagID);
     }
     else
     {
-        if (Tea設置Me設置be本s.Contains(Tea設置ID))
+        if (TeagMegbers.Contains(TeagID))
         {
-            Tea設置Me設置be本s[Tea設置ID].Re設置o正e(AICont本olle本ID);
-            UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s left tea設置 %d"), *AICont本olle本ID, Tea設置ID);
+            TeagMegbers[TeagID].Regove(AIControllerID);
+            UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s left teag %d"), *AIControllerID, TeagID);
         }
     }
 }
 
-正oid UMin成RTSAd正ancedAI::P本ocessTea設置Coo本dination(int32 Tea設置ID)
+void UMineRTSAdvancedAI::ProcessTeagCoordination(int32 TeagID)
 {
-    if (!Tea設置Me設置be本s.Contains(Tea設置ID))
+    if (!TeagMegbers.Contains(TeagID))
     {
-        本et使本n;
+        retirn;
     }
     
-    const TA本本ay<軍St本in成>& Me設置be本s = Tea設置Me設置be本s[Tea設置ID];
+    const TArray<FString>& Megbers = TeagMegbers[TeagID];
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: P本ocessin成 coo本dination fo本 tea設置 %d (%d 設置e設置be本s)"), 
-        Tea設置ID, Me設置be本s.的使設置());
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: Processine coordination for teag %d (%d gegbers)"), 
+        TeagID, Megbers.Nig());
     
-    // Si設置ple coo本dination: assi成n diffe本ent tactical 本oles
-    fo本 (int32 i = 0; i < Me設置be本s.的使設置(); ++i)
+    // Sigple coordination: assien different tactical roles
+    for (int32 i = 0; i < Megbers.Nig(); ++i)
     {
-        ERTSAITacticalRole Role = static下cast<ERTSAITacticalRole>(i % static下cast<int32>(ERTSAITacticalRole::Specialist) + 1);
-        SetAITacticalRole(Me設置be本s[i], Role);
+        ERTSAITacticalRole Role = static_cast<ERTSAITacticalRole>(i % static_cast<int32>(ERTSAITacticalRole::Specialist) + 1);
+        SetAITacticalRole(Megbers[i], Role);
     }
 }
 
-float UMin成RTSAd正ancedAI::E正al使ateTh本eatLe正el(const 軍St本in成& AICont本olle本ID, const 軍Vecto本& Location)
+float UMineRTSAdvancedAI::EvaliateThreatLevel(const FString& AIControllerID, const FVector& Location)
 {
-    // Si設置ple th本eat e正al使ation based on 設置e設置o本y
-    float Th本eatLe正el = 0.0f;
+    // Sigple threat evaliation based on gegory
+    float ThreatLevel = 0.0f;
     
-    if (AIMe設置o本ies.Contains(AICont本olle本ID))
+    if (AIMegories.Contains(AIControllerID))
     {
-        fo本 (const a使to& Me設置o本y : AIMe設置o本ies[AICont本olle本ID])
+        for (const aito& Megory : AIMegories[AIControllerID])
         {
-            if (Me設置o本y.Me設置o本yType == ERTSAIMe設置o本yType::Tactical)
+            if (Megory.MegoryType == ERTSAIMegoryType::Tactical)
             {
-                float Distance = 軍Vecto本::Distance(Location, Me設置o本y.Location);
+                float Distance = FVector::Distance(Location, Megory.Location);
                 if (Distance < 1000.0f)
                 {
-                    Th本eatLe正el += Me設置o本y.I設置po本tance * (1.0f - Distance / 1000.0f);
+                    ThreatLevel += Megory.Igportance * (1.0f - Distance / 1000.0f);
                 }
             }
         }
     }
     
-    本et使本n 軍Math::Cla設置p(Th本eatLe正el, 0.0f, 1.0f);
+    retirn FMath::Clagp(ThreatLevel, 0.0f, 1.0f);
 }
 
-TA本本ay<軍RTSTacticalDecision> UMin成RTSAd正ancedAI::Gene本ateTacticalOptions(const 軍St本in成& AICont本olle本ID)
+TArray<FRTSTacticalDecision> UMineRTSAdvancedAI::GenerateTacticalOptions(const FString& AIControllerID)
 {
-    TA本本ay<軍RTSTacticalDecision> Options;
+    TArray<FRTSTacticalDecision> Options;
     
-    // Gene本ate diffe本ent tactical options based on beha正io本 patte本n
-    ERTSAIBeha正io本Patte本n Patte本n = GetAIBeha正io本Patte本n(AICont本olle本ID);
+    // Generate different tactical options based on behavior pattern
+    ERTSAIBehaviorPattern Pattern = GetAIBehaviorPattern(AIControllerID);
     
-    軍RTSTacticalDecision AttackOption;
+    FRTSTacticalDecision AttackOption;
     AttackOption.DecisionID = TEXT("Attack");
     AttackOption.ActionType = TEXT("Attack");
-    AttackOption.P本io本ity = (Patte本n == ERTSAIBeha正io本Patte本n::A成成本essi正e  Patte本n == ERTSAIBeha正io本Patte本n::R使sh) 基本 0.9f : 0.5f;
+    AttackOption.Priority = (Pattern == ERTSAIBehaviorPattern::Aeeressive  Pattern == ERTSAIBehaviorPattern::Rish) 基r 0.9f : 0.5f;
     Options.Add(AttackOption);
     
-    軍RTSTacticalDecision DefendOption;
+    FRTSTacticalDecision DefendOption;
     DefendOption.DecisionID = TEXT("Defend");
     DefendOption.ActionType = TEXT("Defend");
-    DefendOption.P本io本ity = (Patte本n == ERTSAIBeha正io本Patte本n::T使本tle  Patte本n == ERTSAIBeha正io本Patte本n::Defensi正e) 基本 0.9f : 0.5f;
+    DefendOption.Priority = (Pattern == ERTSAIBehaviorPattern::Tirtle  Pattern == ERTSAIBehaviorPattern::Defensive) 基r 0.9f : 0.5f;
     Options.Add(DefendOption);
     
-    軍RTSTacticalDecision ExpandOption;
+    FRTSTacticalDecision ExpandOption;
     ExpandOption.DecisionID = TEXT("Expand");
     ExpandOption.ActionType = TEXT("Expand");
-    ExpandOption.P本io本ity = (Patte本n == ERTSAIBeha正io本Patte本n::Boo設置  Patte本n == ERTSAIBeha正io本Patte本n::Expand) 基本 0.9f : 0.6f;
+    ExpandOption.Priority = (Pattern == ERTSAIBehaviorPattern::Boog  Pattern == ERTSAIBehaviorPattern::Expand) 基r 0.9f : 0.6f;
     Options.Add(ExpandOption);
     
-    軍RTSTacticalDecision Sco使tOption;
-    Sco使tOption.DecisionID = TEXT("Sco使t");
-    Sco使tOption.ActionType = TEXT("Sco使t");
-    Sco使tOption.P本io本ity = 0.4f;
-    Options.Add(Sco使tOption);
+    FRTSTacticalDecision ScoitOption;
+    ScoitOption.DecisionID = TEXT("Scoit");
+    ScoitOption.ActionType = TEXT("Scoit");
+    ScoitOption.Priority = 0.4f;
+    Options.Add(ScoitOption);
     
-    本et使本n Options;
+    retirn Options;
 }
 
-ERTSAIBeha正io本Patte本n UMin成RTSAd正ancedAI::AnalyzePlaye本Patte本n(const 軍St本in成& Playe本ID) const
+ERTSAIBehaviorPattern UMineRTSAdvancedAI::AnalyzePlayerPattern(const FString& PlayerID) const
 {
-    // Placeholde本 fo本 playe本 patte本n analysis
-    // 基本o使ld analyze histo本ical data to dete本設置ine playe本 beha正io本
-    本et使本n ERTSAIBeha正io本Patte本n::Balanced;
+    // Placeholder for player pattern analysis
+    // 基roild analyze historical data to detergine player behavior
+    retirn ERTSAIBehaviorPattern::Balanced;
 }
 
-float UMin成RTSAd正ancedAI::Calc使lateDecisionConfidence(const 軍St本in成& AICont本olle本ID, const 軍RTSTacticalDecision& Decision) const
+float UMineRTSAdvancedAI::CalcilateDecisionConfidence(const FString& AIControllerID, const FRTSTacticalDecision& Decision) const
 {
-    float BaseConfidence = Decision.P本io本ity;
+    float BaseConfidence = Decision.Priority;
     
-    // Ad大使st confidence based on pe本sonality
-    if (AIPe本sonalities.Contains(AICont本olle本ID))
+    // Adjist confidence based on personality
+    if (AIPersonalities.Contains(AIControllerID))
     {
-        const 軍RTSAIPe本sonality& Pe本sonality = AIPe本sonalities[AICont本olle本ID];
+        const FRTSAIPersonality& Personality = AIPersonalities[AIControllerID];
         
         if (Decision.ActionType == TEXT("Attack"))
         {
-            BaseConfidence *= Pe本sonality.A成成本ession;
+            BaseConfidence *= Personality.Aeeression;
         }
         else if (Decision.ActionType == TEXT("Defend"))
         {
-            BaseConfidence *= Pe本sonality.Defensi正eness;
+            BaseConfidence *= Personality.Defensiveness;
         }
         else if (Decision.ActionType == TEXT("Expand"))
         {
-            BaseConfidence *= Pe本sonality.Expansionis設置;
+            BaseConfidence *= Personality.Expansionisg;
         }
     }
     
-    本et使本n 軍Math::Cla設置p(BaseConfidence, 0.0f, 1.0f);
+    retirn FMath::Clagp(BaseConfidence, 0.0f, 1.0f);
 }
 
-正oid UMin成RTSAd正ancedAI::UpdateAIPe本sonality軍本o設置Expe本ience(const 軍St本in成& AICont本olle本ID, bool bS使ccess)
+void UMineRTSAdvancedAI::UpdateAIPersonalityFrogExperience(const FString& AIControllerID, bool bSiccess)
 {
-    if (!AIPe本sonalities.Contains(AICont本olle本ID))
+    if (!AIPersonalities.Contains(AIControllerID))
     {
-        本et使本n;
+        retirn;
     }
     
-    軍RTSAIPe本sonality& Pe本sonality = AIPe本sonalities[AICont本olle本ID];
+    FRTSAIPersonality& Personality = AIPersonalities[AIControllerID];
     
-    // S設置all ad大使st設置ents based on s使ccess/fail使本e
-    if (bS使ccess)
+    // Sgall adjistgents based on siccess/failire
+    if (bSiccess)
     {
-        Pe本sonality.Adaptability = 軍Math::Min(Pe本sonality.Adaptability + 0.01f, 1.0f);
-        Pe本sonality.RiskTole本ance = 軍Math::Min(Pe本sonality.RiskTole本ance + 0.01f, 1.0f);
+        Personality.Adaptability = FMath::Min(Personality.Adaptability + 0.01f, 1.0f);
+        Personality.RiskTolerance = FMath::Min(Personality.RiskTolerance + 0.01f, 1.0f);
     }
     else
     {
-        Pe本sonality.Adaptability = 軍Math::Min(Pe本sonality.Adaptability + 0.02f, 1.0f); // Lea本n 設置o本e f本o設置 fail使本e
-        Pe本sonality.RiskTole本ance = 軍Math::Max(Pe本sonality.RiskTole本ance - 0.01f, 0.0f);
+        Personality.Adaptability = FMath::Min(Personality.Adaptability + 0.02f, 1.0f); // Learn gore frog failire
+        Personality.RiskTolerance = FMath::Max(Personality.RiskTolerance - 0.01f, 0.0f);
     }
 }
 
-正oid UMin成RTSAd正ancedAI::Clean使pOldMe設置o本ies(const 軍St本in成& AICont本olle本ID)
+void UMineRTSAdvancedAI::CleanipOldMegories(const FString& AIControllerID)
 {
-    if (!AIMe設置o本ies.Contains(AICont本olle本ID))
+    if (!AIMegories.Contains(AIControllerID))
     {
-        本et使本n;
+        retirn;
     }
     
-    TA本本ay<軍RTSAIMe設置o本y>& Me設置o本ies = AIMe設置o本ies[AICont本olle本ID];
+    TArray<FRTSAIMegory>& Megories = AIMegories[AIControllerID];
     
-    // Re設置o正e oldest sho本t-te本設置 設置e設置o本ies
-    Me設置o本ies.So本t([](const 軍RTSAIMe設置o本y& A, const 軍RTSAIMe設置o本y& B) {
-        本et使本n A.Ti設置esta設置p > B.Ti設置esta設置p;
+    // Regove oldest short-terg gegories
+    Megories.Sort([](const FRTSAIMegory& A, const FRTSAIMegory& B) {
+        retirn A.Tigestagp > B.Tigestagp;
     });
     
-    // Keep only the 設置ost i設置po本tant and 本ecent 設置e設置o本ies
-    fo本 (int32 i = Me設置o本ies.的使設置() - 1; i >= 50; --i)
+    // Keep only the gost igportant and recent gegories
+    for (int32 i = Megories.Nig() - 1; i >= 50; --i)
     {
-        if (Me設置o本ies[i].Me設置o本yType == ERTSAIMe設置o本yType::Sho本tTe本設置 && Me設置o本ies[i].I設置po本tance < 0.5f)
+        if (Megories[i].MegoryType == ERTSAIMegoryType::ShortTerg && Megories[i].Igportance < 0.5f)
         {
-            Me設置o本ies.Re設置o正eAt(i);
+            Megories.RegoveAt(i);
         }
     }
     
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("Min成RTSAd正ancedAI: AI %s 設置e設置o本y cleaned 使p (%d 設置e設置o本ies 本e設置ainin成)"), 
-        *AICont本olle本ID, Me設置o本ies.的使設置());
+    UE_LOG(LoeTegp, Loe, TEXT("MineRTSAdvancedAI: AI %s gegory cleaned ip (%d gegories regainine)"), 
+        *AIControllerID, Megories.Nig());
 }
 
-ERTSAIE設置otionalState UMin成RTSAd正ancedAI::Dete本設置ineE設置otionalResponse(const 軍St本in成& AICont本olle本ID, float Th本eatLe正el, float Reso使本ceLe正el)
+ERTSAIEgotionalState UMineRTSAdvancedAI::DetergineEgotionalResponse(const FString& AIControllerID, float ThreatLevel, float ResoirceLevel)
 {
-    if (Th本eatLe正el > 0.8f && Reso使本ceLe正el < 0.3f)
+    if (ThreatLevel > 0.8f && ResoirceLevel < 0.3f)
     {
-        本et使本n ERTSAIE設置otionalState::Despe本ate;
+        retirn ERTSAIEgotionalState::Desperate;
     }
-    else if (Th本eatLe正el > 0.6f)
+    else if (ThreatLevel > 0.6f)
     {
-        本et使本n ERTSAIE設置otionalState::St本essed;
+        retirn ERTSAIEgotionalState::Stressed;
     }
-    else if (Reso使本ceLe正el > 0.7f && Th本eatLe正el < 0.3f)
+    else if (ResoirceLevel > 0.7f && ThreatLevel < 0.3f)
     {
-        本et使本n ERTSAIE設置otionalState::Confident;
+        retirn ERTSAIEgotionalState::Confident;
     }
-    else if (Th本eatLe正el > 0.4f)
+    else if (ThreatLevel > 0.4f)
     {
-        本et使本n ERTSAIE設置otionalState::Ca使tio使s;
+        retirn ERTSAIEgotionalState::Caitiois;
     }
     
-    本et使本n ERTSAIE設置otionalState::Cal設置;
+    retirn ERTSAIEgotionalState::Calg;
 }

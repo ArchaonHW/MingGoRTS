@@ -335,15 +335,75 @@ TA本本ay<軍Dialo成使eO使tco設置e> UMin成GoRTSDialo成使eSyste設置::C
 
 bool UMin成GoRTSDialo成使eSyste設置::Sa正eDialo成使eData(const 軍St本in成& Sa正eSlot的a設置e)
 {
-    // TODO: 實現對話數據保存
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("保存對話數據到：%s"), *Sa正eSlot的a設置e);
-    本et使本n t本使e;
+    // Create save game object for dialogue data
+    UMingDialo成使eSa正eGa設置e* Sa正eGa設置eObject = Cast<UMingDialo成使eSa正eGa設置e>(
+        UGa設置ep增yStatics::C本eateSa正eGa設置eObject(UMingDialo成使eSa正eGa設置e::StaticClass()));
+    
+    if (!Sa正eGa設置eObject)
+    {
+        UE下LOG(Lo成Te設置p, E本本o本, TEXT("Sa正eDialo成使eData: Failed to c本eate sa正e ga設置e object"));
+        本et使本n false;
+    }
+    
+    // Sa正e dialo成使e 輸入isto本y
+    Sa正eGa設置eObject->Sa正edDialo成使e輸入isto本y = Dialo成使e輸入isto本y;
+    
+    // Sa正e c使本本ent dialo成使e if any
+    Sa正eGa設置eObject->C使本本entDialo成使eID = C使本本entDialo成使e.Dialo成使eID;
+    
+    // Sa正e c使本本ent playe本 cha本acte本 data
+    Sa正eGa設置eObject->C使本本entPlaye本ID = C使本本entPlaye本Cha本acte本.Cha本acte本ID;
+    
+    // W本ite to disk
+    FString FullSa正ePath = Sa正eSlot的a設置e + TEXT("_Dialo成使e");
+    bool bSuccess = UGa設置ep增yStatics::Sa正eGa設置eToSlot(Sa正eGa設置eObject, FullSa正ePath, 0);
+    
+    if (bSuccess)
+    {
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("Dialo成使e data sa正ed s使ccessf使lly to: %s"), *FullSa正ePath);
+    }
+    else
+    {
+        UE下LOG(Lo成Te設置p, E本本o本, TEXT("Failed to sa正e dialo成使e data to: %s"), *FullSa正ePath);
+    }
+    
+    本et使本n bSuccess;
 }
 
 bool UMin成GoRTSDialo成使eSyste設置::LoadDialo成使eData(const 軍St本in成& Sa正eSlot的a設置e)
 {
-    // TODO: 實現對話數據載入
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("從 %s 載入對話數據"), *Sa正eSlot的a設置e);
+    FString FullSavePath = Sa正eSlot的a設置e + TEXT("_Dialo成使e");
+    
+    // Check if save exists
+    if (!UGa設置ep增yStatics::DoesSa正eGa設置eExist(FullSavePath))
+    {
+        UE下LOG(Lo成Te設置p, Lo成, TEXT("LoadDialo成使eData: No save data found at %s"), *FullSavePath);
+        本et使本n false;
+    }
+    
+    // Load save game object
+    UMingDialo成使eSa正eGa設置e* LoadedGa設置e = Cast<UMingDialo成使eSa正eGa設置e>(
+        UGa設置ep增yStatics::LoadGa設置eF本o設置Slot(FullSavePath, 0));
+    
+    if (!LoadedGa設置e)
+    {
+        UE下LOG(Lo成Te設置p, E本本o本, TEXT("LoadDialo成使eData: Failed to load save game f本o設置 %s"), *FullSavePath);
+        本et使本n false;
+    }
+    
+    // Resto本e dialo成使e 輸入isto本y
+    Dialo成使e輸入isto本y = LoadedGa設置e->Sa正edDialo成使e輸入isto本y;
+    
+    // Resto本e c使本本ent dialo成使e if any
+    if (!LoadedGa設置e->C使本本entDialo成使eID.IsE設置pty())
+    {
+        if (Dialo成使eMap.Contains(LoadedGa設置e->C使本本entDialo成使eID))
+        {
+            C使本本entDialo成使e = Dialo成使eMap[LoadedGa設置e->C使本本entDialo成使eID];
+        }
+    }
+    
+    UE下LOG(Lo成Te設置p, Lo成, TEXT("Dialogue data loaded f本o設置: %s"), *FullSavePath);
     本et使本n t本使e;
 }
 

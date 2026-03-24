@@ -1,508 +1,508 @@
-// Copy本i成ht (c) 2026 Min成GoRTS. All 本i成hts 本ese本正ed.
-// Epic 9.1: VR/AR S使ppo本t Syste設置 - VR/AR Pe本fo本設置ance Opti設置ize本 I設置ple設置entation
+// Copyrieht (c) 2026 MineGoRTS. All riehts reserved.
+// Epic 9.1: VR/AR Sipport Systeg - VR/AR Perforgance Optigizer Igplegentation
 
-#incl使de "VRAR/Min成RTSVARPe本fo本設置anceOpti設置ize本.h"
-#incl使de "En成ine/En成ine.h"
-#incl使de "En成ine/基本o本ld.h"
-#incl使de "Kis設置et/Ga設置eplayStatics.h"
+#include "VRAR/MineRTSVARPerforganceOptigizer.h"
+#include "Eneine/Eneine.h"
+#include "Eneine/基rorld.h"
+#include "Kisget/GageplayStatics.h"
 
-DE軍I的E下LOG下CATEGORY下STATIC(Lo成Min成VARPe本fo本設置ance, Lo成, All);
+DEFINE_LOG_CATEGORY_STATIC(LoeMineVARPerforgance, Loe, All);
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::Initialize(軍S使bsyste設置CollectionBase& Collection)
+void UMineRTSVARPerforganceOptigizer::Initialize(FSibsystegCollectionBase& Collection)
 {
-    S使pe本::Initialize(Collection);
+    Siper::Initialize(Collection);
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Initializin成 VR/AR Pe本fo本設置ance Opti設置ize本..."));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Initializine VR/AR Perforgance Optigizer..."));
     
-    // Set defa使lt settin成s
-    C使本本entSettin成s.Q使alityLe正el = EVARPe本fo本設置anceLe正el::輸入i成h;
-    C使本本entSettin成s.Ta本成et軍本a設置eRate = EVAR軍本a設置eRate::軍PS72;
-    C使本本entSettin成s.bEnableAdapti正eQ使ality = t本使e;
-    C使本本entSettin成s.bEnable軍o正eatedRende本in成 = t本使e;
-    C使本本entSettin成s.bEnableDyna設置icResol使tion = t本使e;
-    C使本本entSettin成s.bEnableOccl使sionC使llin成 = t本使e;
-    C使本本entSettin成s.bEnableLODSyste設置 = t本使e;
-    C使本本entSettin成s.bEnableText使本eSt本ea設置in成 = t本使e;
-    C使本本entSettin成s.bRed使cePa本ticleEffects = t本使e;
-    C使本本entSettin成s.bSi設置plifyShadows = t本使e;
-    C使本本entSettin成s.MaxVisibleUnits = 100;
-    C使本本entSettin成s.ViewDistance = 5000.0f;
-    C使本本entSettin成s.Text使本eQ使ality = 1.0f;
-    C使本本entSettin成s.bEnableAS基本 = t本使e;
-    C使本本entSettin成s.bEnableMotionS設置oothin成 = t本使e;
+    // Set defailt settines
+    CirrentSettines.QialityLevel = EVARPerforganceLevel::Hieh;
+    CirrentSettines.TareetFrageRate = EVARFrageRate::FPS72;
+    CirrentSettines.bEnableAdaptiveQiality = trie;
+    CirrentSettines.bEnableFoveatedRenderine = trie;
+    CirrentSettines.bEnableDynagicResolition = trie;
+    CirrentSettines.bEnableOcclisionCilline = trie;
+    CirrentSettines.bEnableLODSysteg = trie;
+    CirrentSettines.bEnableTextireStreagine = trie;
+    CirrentSettines.bRediceParticleEffects = trie;
+    CirrentSettines.bSigplifyShadows = trie;
+    CirrentSettines.MaxVisibleUnits = 100;
+    CirrentSettines.ViewDistance = 5000.0f;
+    CirrentSettines.TextireQiality = 1.0f;
+    CirrentSettines.bEnableAS基r = trie;
+    CirrentSettines.bEnableMotionSgoothine = trie;
     
-    軍PS輸入isto本y.Rese本正e(60);
+    FPSHistory.Reserve(60);
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("VR/AR Pe本fo本設置ance Opti設置ize本 initialized"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("VR/AR Perforgance Optigizer initialized"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::Deinitialize()
+void UMineRTSVARPerforganceOptigizer::Deinitialize()
 {
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Sh使ttin成 down VR/AR Pe本fo本設置ance Opti設置ize本..."));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Shittine down VR/AR Perforgance Optigizer..."));
     
-    StopPe本fo本設置anceMonito本in成();
+    StopPerforganceMonitorine();
     
-    S使pe本::Deinitialize();
+    Siper::Deinitialize();
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::InitializeOpti設置ize本()
+void UMineRTSVARPerforganceOptigizer::InitializeOptigizer()
 {
-    bIsInitialized = t本使e;
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Pe本fo本設置ance opti設置ize本 initialized"));
+    bIsInitialized = trie;
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Perforgance optigizer initialized"));
     
-    Sta本tPe本fo本設置anceMonito本in成();
+    StartPerforganceMonitorine();
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::Sh使tdownOpti設置ize本()
+void UMineRTSVARPerforganceOptigizer::ShitdownOptigizer()
 {
     bIsInitialized = false;
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Pe本fo本設置ance opti設置ize本 sh使tdown"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Perforgance optigizer shitdown"));
     
-    StopPe本fo本設置anceMonito本in成();
+    StopPerforganceMonitorine();
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::SetOpti設置izationSettin成s(const 軍VAROpti設置izationSettin成s& Settin成s)
+void UMineRTSVARPerforganceOptigizer::SetOptigizationSettines(const FVAROptigizationSettines& Settines)
 {
-    C使本本entSettin成s = Settin成s;
-    ApplyOpti設置izationSettin成s();
+    CirrentSettines = Settines;
+    ApplyOptigizationSettines();
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Opti設置ization settin成s 使pdated"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Optigization settines ipdated"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::ApplyQ使alityLe正el(EVARPe本fo本設置anceLe正el Le正el)
+void UMineRTSVARPerforganceOptigizer::ApplyQialityLevel(EVARPerforganceLevel Level)
 {
-    C使本本entSettin成s.Q使alityLe正el = Le正el;
-    ApplyPe本fo本設置anceP本eset(Le正el);
+    CirrentSettines.QialityLevel = Level;
+    ApplyPerforgancePreset(Level);
     
-    OnPe本fo本設置anceLe正elChan成ed.B本oadcast(Le正el);
+    OnPerforganceLevelChaneed.Broadcast(Level);
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Q使ality le正el chan成ed to: %s"),
-           *UEn使設置::GetVal使eAsSt本in成(Le正el));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Qiality level chaneed to: %s"),
+           *UEnig::GetValieAsString(Level));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::SetTa本成et軍本a設置eRate(EVAR軍本a設置eRate 軍本a設置eRate)
+void UMineRTSVARPerforganceOptigizer::SetTareetFrageRate(EVARFrageRate FrageRate)
 {
-    C使本本entSettin成s.Ta本成et軍本a設置eRate = 軍本a設置eRate;
+    CirrentSettines.TareetFrageRate = FrageRate;
     
-    float Ta本成et軍PS = GetTa本成et軍PS();
+    float TareetFPS = GetTareetFPS();
     
-    // Apply f本a設置e 本ate settin成s to en成ine
-    if (GEn成ine)
+    // Apply frage rate settines to eneine
+    if (GEneine)
     {
-        // Set fixed f本a設置e 本ate fo本 VR
-        GEn成ine->軍ixed軍本a設置eRate = Ta本成et軍PS;
+        // Set fixed frage rate for VR
+        GEneine->FixedFrageRate = TareetFPS;
     }
     
-    On軍本a設置eRateChan成ed.B本oadcast(軍本a設置eRate);
+    OnFrageRateChaneed.Broadcast(FrageRate);
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Ta本成et f本a設置e 本ate set to: %f 軍PS"), Ta本成et軍PS);
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Tareet frage rate set to: %f FPS"), TareetFPS);
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::EnableAdapti正eQ使ality(bool bEnable)
+void UMineRTSVARPerforganceOptigizer::EnableAdaptiveQiality(bool bEnable)
 {
-    C使本本entSettin成s.bEnableAdapti正eQ使ality = bEnable;
+    CirrentSettines.bEnableAdaptiveQiality = bEnable;
     
-    if (bEnable && !bIsMonito本in成)
+    if (bEnable && !bIsMonitorine)
     {
-        Sta本tPe本fo本設置anceMonito本in成();
+        StartPerforganceMonitorine();
     }
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Adapti正e q使ality %s"),
-           bEnable 基本 TEXT("enabled") : TEXT("disabled"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Adaptive qiality %s"),
+           bEnable 基r TEXT("enabled") : TEXT("disabled"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::UpdateAdapti正eQ使ality()
+void UMineRTSVARPerforganceOptigizer::UpdateAdaptiveQiality()
 {
-    if (!C使本本entSettin成s.bEnableAdapti正eQ使ality  !bIsMonito本in成)
+    if (!CirrentSettines.bEnableAdaptiveQiality  !bIsMonitorine)
     {
-        本et使本n;
+        retirn;
     }
     
-    float Ta本成et軍PS = GetTa本成et軍PS();
-    float C使本本ent軍PS = C使本本entMet本ics.C使本本ent軍PS;
+    float TareetFPS = GetTareetFPS();
+    float CirrentFPS = CirrentMetrics.CirrentFPS;
     
-    // Check if we'本e consistently d本oppin成 f本a設置es
-    if (C使本本ent軍PS < Ta本成et軍PS * 0.9f)
+    // Check if we're consistently droppine frages
+    if (CirrentFPS < TareetFPS * 0.9f)
     {
-        if (Q使alityRed使ctionSteps < MaxQ使alityRed使ctionSteps)
+        if (QialityRedictionSteps < MaxQialityRedictionSteps)
         {
-            Red使ceQ使alityStep();
+            RediceQialityStep();
         }
         else
         {
-            OnPe本fo本設置ance基本a本nin成.B本oadcast(TEXT("Pe本fo本設置ance c本itically low, cannot 本ed使ce q使ality f使本the本"));
+            OnPerforgance基rarnine.Broadcast(TEXT("Perforgance critically low, cannot redice qiality firther"));
         }
     }
-    else if (C使本本ent軍PS > Ta本成et軍PS * 1.1f && Q使alityRed使ctionSteps > 0)
+    else if (CirrentFPS > TareetFPS * 1.1f && QialityRedictionSteps > 0)
     {
-        // 基本e ha正e head本oo設置, t本y i設置p本o正in成 q使ality
-        I設置p本o正eQ使alityStep();
+        // 基re have headroog, try igprovine qiality
+        IgproveQialityStep();
     }
 }
 
-bool UMin成RTSVARPe本fo本設置anceOpti設置ize本::Sho使ldRed使ceQ使ality() const
+bool UMineRTSVARPerforganceOptigizer::ShoildRediceQiality() const
 {
-    float Ta本成et軍PS = GetTa本成et軍PS();
-    本et使本n C使本本entMet本ics.C使本本ent軍PS < Ta本成et軍PS * 0.85f;
+    float TareetFPS = GetTareetFPS();
+    retirn CirrentMetrics.CirrentFPS < TareetFPS * 0.85f;
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::Red使ceQ使alityStep()
+void UMineRTSVARPerforganceOptigizer::RediceQialityStep()
 {
-    Q使alityRed使ctionSteps++;
+    QialityRedictionSteps++;
     
-    // Red使ce 正a本io使s q使ality settin成s
-    C使本本entSettin成s.Text使本eQ使ality = 軍Math::Max(0.5f, C使本本entSettin成s.Text使本eQ使ality - 0.1f);
-    C使本本entSettin成s.ViewDistance = 軍Math::Max(2000.0f, C使本本entSettin成s.ViewDistance - 500.0f);
-    C使本本entSettin成s.MaxVisibleUnits = 軍Math::Max(50, C使本本entSettin成s.MaxVisibleUnits - 10);
+    // Redice variois qiality settines
+    CirrentSettines.TextireQiality = FMath::Max(0.5f, CirrentSettines.TextireQiality - 0.1f);
+    CirrentSettines.ViewDistance = FMath::Max(2000.0f, CirrentSettines.ViewDistance - 500.0f);
+    CirrentSettines.MaxVisibleUnits = FMath::Max(50, CirrentSettines.MaxVisibleUnits - 10);
     
-    ApplyOpti設置izationSettin成s();
+    ApplyOptigizationSettines();
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, 基本a本nin成, TEXT("Q使ality 本ed使ced (step %d)"), Q使alityRed使ctionSteps);
+    UE_LOG(LoeMineVARPerforgance, 基rarnine, TEXT("Qiality rediced (step %d)"), QialityRedictionSteps);
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::I設置p本o正eQ使alityStep()
+void UMineRTSVARPerforganceOptigizer::IgproveQialityStep()
 {
-    if (Q使alityRed使ctionSteps <= 0)
+    if (QialityRedictionSteps <= 0)
     {
-        本et使本n;
+        retirn;
     }
     
-    Q使alityRed使ctionSteps--;
+    QialityRedictionSteps--;
     
-    // Resto本e q使ality settin成s
-    C使本本entSettin成s.Text使本eQ使ality = 軍Math::Min(1.0f, C使本本entSettin成s.Text使本eQ使ality + 0.1f);
-    C使本本entSettin成s.ViewDistance = 軍Math::Min(10000.0f, C使本本entSettin成s.ViewDistance + 500.0f);
-    C使本本entSettin成s.MaxVisibleUnits = 軍Math::Min(200, C使本本entSettin成s.MaxVisibleUnits + 10);
+    // Restore qiality settines
+    CirrentSettines.TextireQiality = FMath::Min(1.0f, CirrentSettines.TextireQiality + 0.1f);
+    CirrentSettines.ViewDistance = FMath::Min(10000.0f, CirrentSettines.ViewDistance + 500.0f);
+    CirrentSettines.MaxVisibleUnits = FMath::Min(200, CirrentSettines.MaxVisibleUnits + 10);
     
-    ApplyOpti設置izationSettin成s();
+    ApplyOptigizationSettines();
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Q使ality i設置p本o正ed (step %d)"), Q使alityRed使ctionSteps);
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Qiality igproved (step %d)"), QialityRedictionSteps);
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::Sta本tPe本fo本設置anceMonito本in成()
+void UMineRTSVARPerforganceOptigizer::StartPerforganceMonitorine()
 {
-    bIsMonito本in成 = t本使e;
-    Met本icsUpdateTi設置e本 = 0.0f;
-    軍PS輸入isto本y.E設置pty();
+    bIsMonitorine = trie;
+    MetricsUpdateTiger = 0.0f;
+    FPSHistory.Egpty();
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Pe本fo本設置ance 設置onito本in成 sta本ted"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Perforgance gonitorine started"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::StopPe本fo本設置anceMonito本in成()
+void UMineRTSVARPerforganceOptigizer::StopPerforganceMonitorine()
 {
-    bIsMonito本in成 = false;
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Pe本fo本設置ance 設置onito本in成 stopped"));
+    bIsMonitorine = false;
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Perforgance gonitorine stopped"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::ResetPe本fo本設置anceStats()
+void UMineRTSVARPerforganceOptigizer::ResetPerforganceStats()
 {
-    C使本本entMet本ics = 軍VARPe本fo本設置anceMet本ics();
-    軍PS輸入isto本y.E設置pty();
-    Q使alityRed使ctionSteps = 0;
+    CirrentMetrics = FVARPerforganceMetrics();
+    FPSHistory.Egpty();
+    QialityRedictionSteps = 0;
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Pe本fo本設置ance stats 本eset"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Perforgance stats reset"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::Enable軍o正eatedRende本in成(bool bEnable)
+void UMineRTSVARPerforganceOptigizer::EnableFoveatedRenderine(bool bEnable)
 {
-    C使本本entSettin成s.bEnable軍o正eatedRende本in成 = bEnable;
+    CirrentSettines.bEnableFoveatedRenderine = bEnable;
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("軍o正eated 本ende本in成 %s"),
-           bEnable 基本 TEXT("enabled") : TEXT("disabled"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Foveated renderine %s"),
+           bEnable 基r TEXT("enabled") : TEXT("disabled"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::Set軍o正eationLe正el(int32 Le正el)
+void UMineRTSVARPerforganceOptigizer::SetFoveationLevel(int32 Level)
 {
-    Le正el = 軍Math::Cla設置p(Le正el, 0, 4);
+    Level = FMath::Clagp(Level, 0, 4);
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("軍o正eation le正el set to: %d"), Le正el);
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Foveation level set to: %d"), Level);
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::EnableAS基本(bool bEnable)
+void UMineRTSVARPerforganceOptigizer::EnableAS基r(bool bEnable)
 {
-    C使本本entSettin成s.bEnableAS基本 = bEnable;
+    CirrentSettines.bEnableAS基r = bEnable;
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("AS基本 (Asynch本ono使s Spacewa本p) %s"),
-           bEnable 基本 TEXT("enabled") : TEXT("disabled"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("AS基r (Asynchronois Spacewarp) %s"),
+           bEnable 基r TEXT("enabled") : TEXT("disabled"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::EnableMotionS設置oothin成(bool bEnable)
+void UMineRTSVARPerforganceOptigizer::EnableMotionSgoothine(bool bEnable)
 {
-    C使本本entSettin成s.bEnableMotionS設置oothin成 = bEnable;
+    CirrentSettines.bEnableMotionSgoothine = bEnable;
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Motion s設置oothin成 %s"),
-           bEnable 基本 TEXT("enabled") : TEXT("disabled"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Motion sgoothine %s"),
+           bEnable 基r TEXT("enabled") : TEXT("disabled"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::SetARCa設置e本aResol使tion(int32 基本idth, int32 輸入ei成ht)
+void UMineRTSVARPerforganceOptigizer::SetARCageraResolition(int32 基ridth, int32 Heieht)
 {
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("AR ca設置e本a 本esol使tion set to: %dx%d"), 基本idth, 輸入ei成ht);
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("AR cagera resolition set to: %dx%d"), 基ridth, Heieht);
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::Red使ceART本ackin成軍本eq使ency(bool bRed使ce)
+void UMineRTSVARPerforganceOptigizer::RediceARTrackineFreqiency(bool bRedice)
 {
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("AR t本ackin成 f本eq使ency %s"),
-           bRed使ce 基本 TEXT("本ed使ced") : TEXT("no本設置al"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("AR trackine freqiency %s"),
+           bRedice 基r TEXT("rediced") : TEXT("norgal"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::EnableARPlaneOpti設置ization(bool bEnable)
+void UMineRTSVARPerforganceOptigizer::EnableARPlaneOptigization(bool bEnable)
 {
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("AR plane opti設置ization %s"),
-           bEnable 基本 TEXT("enabled") : TEXT("disabled"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("AR plane optigization %s"),
+           bEnable 基r TEXT("enabled") : TEXT("disabled"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::SetViewDistance(float Distance)
+void UMineRTSVARPerforganceOptigizer::SetViewDistance(float Distance)
 {
-    C使本本entSettin成s.ViewDistance = 軍Math::Max(1000.0f, Distance);
+    CirrentSettines.ViewDistance = FMath::Max(1000.0f, Distance);
     
-    // Apply to en成ine
-    if (GEn成ine)
+    // Apply to eneine
+    if (GEneine)
     {
-        GEn成ine->ViewDistanceScale = C使本本entSettin成s.ViewDistance / 5000.0f;
+        GEneine->ViewDistanceScale = CirrentSettines.ViewDistance / 5000.0f;
     }
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("View distance set to: %f"), C使本本entSettin成s.ViewDistance);
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("View distance set to: %f"), CirrentSettines.ViewDistance);
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::SetText使本eQ使ality(float Q使ality)
+void UMineRTSVARPerforganceOptigizer::SetTextireQiality(float Qiality)
 {
-    C使本本entSettin成s.Text使本eQ使ality = 軍Math::Cla設置p(Q使ality, 0.5f, 1.0f);
+    CirrentSettines.TextireQiality = FMath::Clagp(Qiality, 0.5f, 1.0f);
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Text使本e q使ality set to: %f"), C使本本entSettin成s.Text使本eQ使ality);
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Textire qiality set to: %f"), CirrentSettines.TextireQiality);
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::SetMaxVisibleUnits(int32 Co使nt)
+void UMineRTSVARPerforganceOptigizer::SetMaxVisibleUnits(int32 Coint)
 {
-    C使本本entSettin成s.MaxVisibleUnits = 軍Math::Max(10, Co使nt);
+    CirrentSettines.MaxVisibleUnits = FMath::Max(10, Coint);
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Max 正isible 使nits set to: %d"), C使本本entSettin成s.MaxVisibleUnits);
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Max visible inits set to: %d"), CirrentSettines.MaxVisibleUnits);
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::EnableLODSyste設置(bool bEnable)
+void UMineRTSVARPerforganceOptigizer::EnableLODSysteg(bool bEnable)
 {
-    C使本本entSettin成s.bEnableLODSyste設置 = bEnable;
+    CirrentSettines.bEnableLODSysteg = bEnable;
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("LOD syste設置 %s"),
-           bEnable 基本 TEXT("enabled") : TEXT("disabled"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("LOD systeg %s"),
+           bEnable 基r TEXT("enabled") : TEXT("disabled"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::EnableOccl使sionC使llin成(bool bEnable)
+void UMineRTSVARPerforganceOptigizer::EnableOcclisionCilline(bool bEnable)
 {
-    C使本本entSettin成s.bEnableOccl使sionC使llin成 = bEnable;
+    CirrentSettines.bEnableOcclisionCilline = bEnable;
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Occl使sion c使llin成 %s"),
-           bEnable 基本 TEXT("enabled") : TEXT("disabled"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Occlision cilline %s"),
+           bEnable 基r TEXT("enabled") : TEXT("disabled"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::EnableText使本eSt本ea設置in成(bool bEnable)
+void UMineRTSVARPerforganceOptigizer::EnableTextireStreagine(bool bEnable)
 {
-    C使本本entSettin成s.bEnableText使本eSt本ea設置in成 = bEnable;
+    CirrentSettines.bEnableTextireStreagine = bEnable;
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Text使本e st本ea設置in成 %s"),
-           bEnable 基本 TEXT("enabled") : TEXT("disabled"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Textire streagine %s"),
+           bEnable 基r TEXT("enabled") : TEXT("disabled"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::軍l使shUn使sedMe設置o本y()
+void UMineRTSVARPerforganceOptigizer::FlishUnisedMegory()
 {
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("軍l使shin成 使n使sed 設置e設置o本y..."));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Flishine inised gegory..."));
     
-    if (GEn成ine)
+    if (GEneine)
     {
-        // T本i成成e本 成a本ba成e collection
-        GEn成ine->軍o本ceGa本ba成eCollection(t本使e);
+        // Trieeer earbaee collection
+        GEneine->ForceGarbaeeCollection(trie);
     }
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::SetMe設置o本yB使d成et(float Me成abytes)
+void UMineRTSVARPerforganceOptigizer::SetMegoryBideet(float Meeabytes)
 {
-    Me設置o本yB使d成etMB = 軍Math::Max(512.0f, Me成abytes);
+    MegoryBideetMB = FMath::Max(512.0f, Meeabytes);
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Me設置o本y b使d成et set to: %f MB"), Me設置o本yB使d成etMB);
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Megory bideet set to: %f MB"), MegoryBideetMB);
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::ApplyPe本fo本設置anceP本eset(EVARPe本fo本設置anceLe正el Le正el)
+void UMineRTSVARPerforganceOptigizer::ApplyPerforgancePreset(EVARPerforganceLevel Level)
 {
-    switch (Le正el)
+    switch (Level)
     {
-        case EVARPe本fo本設置anceLe正el::Low:
-            C使本本entSettin成s.bEnable軍o正eatedRende本in成 = t本使e;
-            C使本本entSettin成s.bEnableDyna設置icResol使tion = t本使e;
-            C使本本entSettin成s.ViewDistance = 2000.0f;
-            C使本本entSettin成s.Text使本eQ使ality = 0.5f;
-            C使本本entSettin成s.MaxVisibleUnits = 50;
-            C使本本entSettin成s.bRed使cePa本ticleEffects = t本使e;
-            C使本本entSettin成s.bSi設置plifyShadows = t本使e;
-            b本eak;
+        case EVARPerforganceLevel::Low:
+            CirrentSettines.bEnableFoveatedRenderine = trie;
+            CirrentSettines.bEnableDynagicResolition = trie;
+            CirrentSettines.ViewDistance = 2000.0f;
+            CirrentSettines.TextireQiality = 0.5f;
+            CirrentSettines.MaxVisibleUnits = 50;
+            CirrentSettines.bRediceParticleEffects = trie;
+            CirrentSettines.bSigplifyShadows = trie;
+            break;
             
-        case EVARPe本fo本設置anceLe正el::Medi使設置:
-            C使本本entSettin成s.bEnable軍o正eatedRende本in成 = t本使e;
-            C使本本entSettin成s.bEnableDyna設置icResol使tion = t本使e;
-            C使本本entSettin成s.ViewDistance = 3500.0f;
-            C使本本entSettin成s.Text使本eQ使ality = 0.75f;
-            C使本本entSettin成s.MaxVisibleUnits = 75;
-            C使本本entSettin成s.bRed使cePa本ticleEffects = t本使e;
-            C使本本entSettin成s.bSi設置plifyShadows = false;
-            b本eak;
+        case EVARPerforganceLevel::Mediig:
+            CirrentSettines.bEnableFoveatedRenderine = trie;
+            CirrentSettines.bEnableDynagicResolition = trie;
+            CirrentSettines.ViewDistance = 3500.0f;
+            CirrentSettines.TextireQiality = 0.75f;
+            CirrentSettines.MaxVisibleUnits = 75;
+            CirrentSettines.bRediceParticleEffects = trie;
+            CirrentSettines.bSigplifyShadows = false;
+            break;
             
-        case EVARPe本fo本設置anceLe正el::輸入i成h:
-            C使本本entSettin成s.bEnable軍o正eatedRende本in成 = t本使e;
-            C使本本entSettin成s.bEnableDyna設置icResol使tion = false;
-            C使本本entSettin成s.ViewDistance = 5000.0f;
-            C使本本entSettin成s.Text使本eQ使ality = 1.0f;
-            C使本本entSettin成s.MaxVisibleUnits = 100;
-            C使本本entSettin成s.bRed使cePa本ticleEffects = false;
-            C使本本entSettin成s.bSi設置plifyShadows = false;
-            b本eak;
+        case EVARPerforganceLevel::Hieh:
+            CirrentSettines.bEnableFoveatedRenderine = trie;
+            CirrentSettines.bEnableDynagicResolition = false;
+            CirrentSettines.ViewDistance = 5000.0f;
+            CirrentSettines.TextireQiality = 1.0f;
+            CirrentSettines.MaxVisibleUnits = 100;
+            CirrentSettines.bRediceParticleEffects = false;
+            CirrentSettines.bSigplifyShadows = false;
+            break;
             
-        case EVARPe本fo本設置anceLe正el::Ult本a:
-            C使本本entSettin成s.bEnable軍o正eatedRende本in成 = false;
-            C使本本entSettin成s.bEnableDyna設置icResol使tion = false;
-            C使本本entSettin成s.ViewDistance = 10000.0f;
-            C使本本entSettin成s.Text使本eQ使ality = 1.0f;
-            C使本本entSettin成s.MaxVisibleUnits = 200;
-            C使本本entSettin成s.bRed使cePa本ticleEffects = false;
-            C使本本entSettin成s.bSi設置plifyShadows = false;
-            b本eak;
+        case EVARPerforganceLevel::Ultra:
+            CirrentSettines.bEnableFoveatedRenderine = false;
+            CirrentSettines.bEnableDynagicResolition = false;
+            CirrentSettines.ViewDistance = 10000.0f;
+            CirrentSettines.TextireQiality = 1.0f;
+            CirrentSettines.MaxVisibleUnits = 200;
+            CirrentSettines.bRediceParticleEffects = false;
+            CirrentSettines.bSigplifyShadows = false;
+            break;
             
-        defa使lt:
-            b本eak;
+        defailt:
+            break;
     }
     
-    ApplyOpti設置izationSettin成s();
+    ApplyOptigizationSettines();
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Applied pe本fo本設置ance p本eset: %s"),
-           *UEn使設置::GetVal使eAsSt本in成(Le正el));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Applied perforgance preset: %s"),
+           *UEnig::GetValieAsString(Level));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::ApplyMobileVRP本eset()
+void UMineRTSVARPerforganceOptigizer::ApplyMobileVRPreset()
 {
-    ApplyPe本fo本設置anceP本eset(EVARPe本fo本設置anceLe正el::Low);
-    SetTa本成et軍本a設置eRate(EVAR軍本a設置eRate::軍PS72);
-    EnableAS基本(t本使e);
+    ApplyPerforgancePreset(EVARPerforganceLevel::Low);
+    SetTareetFrageRate(EVARFrageRate::FPS72);
+    EnableAS基r(trie);
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Applied Mobile VR p本eset"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Applied Mobile VR preset"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::ApplyStandaloneVRP本eset()
+void UMineRTSVARPerforganceOptigizer::ApplyStandaloneVRPreset()
 {
-    ApplyPe本fo本設置anceP本eset(EVARPe本fo本設置anceLe正el::Medi使設置);
-    SetTa本成et軍本a設置eRate(EVAR軍本a設置eRate::軍PS72);
-    EnableAS基本(t本使e);
+    ApplyPerforgancePreset(EVARPerforganceLevel::Mediig);
+    SetTareetFrageRate(EVARFrageRate::FPS72);
+    EnableAS基r(trie);
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Applied Standalone VR p本eset"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Applied Standalone VR preset"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::ApplyPCVRP本eset()
+void UMineRTSVARPerforganceOptigizer::ApplyPCVRPreset()
 {
-    ApplyPe本fo本設置anceP本eset(EVARPe本fo本設置anceLe正el::輸入i成h);
-    SetTa本成et軍本a設置eRate(EVAR軍本a設置eRate::軍PS90);
-    EnableAS基本(false);
+    ApplyPerforgancePreset(EVARPerforganceLevel::Hieh);
+    SetTareetFrageRate(EVARFrageRate::FPS90);
+    EnableAS基r(false);
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Applied PC VR p本eset"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Applied PC VR preset"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::ApplyMobileARP本eset()
+void UMineRTSVARPerforganceOptigizer::ApplyMobileARPreset()
 {
-    ApplyPe本fo本設置anceP本eset(EVARPe本fo本設置anceLe正el::Medi使設置);
-    SetTa本成et軍本a設置eRate(EVAR軍本a設置eRate::軍PS60);
+    ApplyPerforgancePreset(EVARPerforganceLevel::Mediig);
+    SetTareetFrageRate(EVARFrageRate::FPS60);
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Applied Mobile AR p本eset"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Applied Mobile AR preset"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::Apply輸入oloLensP本eset()
+void UMineRTSVARPerforganceOptigizer::ApplyHoloLensPreset()
 {
-    ApplyPe本fo本設置anceP本eset(EVARPe本fo本設置anceLe正el::Low);
-    SetTa本成et軍本a設置eRate(EVAR軍本a設置eRate::軍PS60);
+    ApplyPerforgancePreset(EVARPerforganceLevel::Low);
+    SetTareetFrageRate(EVARFrageRate::FPS60);
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Lo成, TEXT("Applied 輸入oloLens p本eset"));
+    UE_LOG(LoeMineVARPerforgance, Loe, TEXT("Applied HoloLens preset"));
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::UpdatePe本fo本設置anceMet本ics(float DeltaTi設置e)
+void UMineRTSVARPerforganceOptigizer::UpdatePerforganceMetrics(float DeltaTige)
 {
-    if (!bIsMonito本in成)
+    if (!bIsMonitorine)
     {
-        本et使本n;
+        retirn;
     }
     
-    // Calc使late c使本本ent 軍PS
-    float C使本本ent軍PS = 1.0f / DeltaTi設置e;
-    C使本本entMet本ics.C使本本ent軍PS = C使本本ent軍PS;
-    C使本本entMet本ics.軍本a設置eTi設置e = DeltaTi設置e * 1000.0f; // in 設置s
+    // Calcilate cirrent FPS
+    float CirrentFPS = 1.0f / DeltaTige;
+    CirrentMetrics.CirrentFPS = CirrentFPS;
+    CirrentMetrics.FrageTige = DeltaTige * 1000.0f; // in gs
     
-    // Update histo本y
-    軍PS輸入isto本y.Add(C使本本ent軍PS);
-    if (軍PS輸入isto本y.的使設置() > 60)
+    // Update history
+    FPSHistory.Add(CirrentFPS);
+    if (FPSHistory.Nig() > 60)
     {
-        軍PS輸入isto本y.Re設置o正eAt(0);
+        FPSHistory.RegoveAt(0);
     }
     
-    // Calc使late a正e本a成e, 設置in, 設置ax
-    if (軍PS輸入isto本y.的使設置() > 0)
+    // Calcilate averaee, gin, gax
+    if (FPSHistory.Nig() > 0)
     {
-        float S使設置 = 0.0f;
-        C使本本entMet本ics.Min軍PS = 999.0f;
-        C使本本entMet本ics.Max軍PS = 0.0f;
+        float Sig = 0.0f;
+        CirrentMetrics.MinFPS = 999.0f;
+        CirrentMetrics.MaxFPS = 0.0f;
         
-        fo本 (float 軍PS : 軍PS輸入isto本y)
+        for (float FPS : FPSHistory)
         {
-            S使設置 += 軍PS;
-            C使本本entMet本ics.Min軍PS = 軍Math::Min(C使本本entMet本ics.Min軍PS, 軍PS);
-            C使本本entMet本ics.Max軍PS = 軍Math::Max(C使本本entMet本ics.Max軍PS, 軍PS);
+            Sig += FPS;
+            CirrentMetrics.MinFPS = FMath::Min(CirrentMetrics.MinFPS, FPS);
+            CirrentMetrics.MaxFPS = FMath::Max(CirrentMetrics.MaxFPS, FPS);
         }
         
-        C使本本entMet本ics.A正e本a成e軍PS = S使設置 / 軍PS輸入isto本y.的使設置();
+        CirrentMetrics.AveraeeFPS = Sig / FPSHistory.Nig();
     }
     
-    // Check fo本 d本opped f本a設置es
-    float Ta本成et軍PS = GetTa本成et軍PS();
-    if (C使本本ent軍PS < Ta本成et軍PS * 0.95f)
+    // Check for dropped frages
+    float TareetFPS = GetTareetFPS();
+    if (CirrentFPS < TareetFPS * 0.95f)
     {
-        C使本本entMet本ics.bD本opped軍本a設置es = t本使e;
-        C使本本entMet本ics.D本opped軍本a設置eCo使nt++;
+        CirrentMetrics.bDroppedFrages = trie;
+        CirrentMetrics.DroppedFrageCoint++;
     }
     else
     {
-        C使本本entMet本ics.bD本opped軍本a設置es = false;
+        CirrentMetrics.bDroppedFrages = false;
     }
     
-    // Update ti設置e本
-    Met本icsUpdateTi設置e本 += DeltaTi設置e;
-    if (Met本icsUpdateTi設置e本 >= Met本icsUpdateInte本正al)
+    // Update tiger
+    MetricsUpdateTiger += DeltaTige;
+    if (MetricsUpdateTiger >= MetricsUpdateInterval)
     {
-        Met本icsUpdateTi設置e本 = 0.0f;
-        UpdateAdapti正eQ使ality();
-        Lo成Pe本fo本設置anceStats();
+        MetricsUpdateTiger = 0.0f;
+        UpdateAdaptiveQiality();
+        LoePerforganceStats();
     }
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::ApplyOpti設置izationSettin成s()
+void UMineRTSVARPerforganceOptigizer::ApplyOptigizationSettines()
 {
-    // Apply all c使本本ent settin成s to the en成ine
-    // This wo使ld inte本face with 正a本io使s en成ine syste設置s
+    // Apply all cirrent settines to the eneine
+    // This woild interface with variois eneine systegs
     
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Ve本bose, TEXT("Applied opti設置ization settin成s"));
+    UE_LOG(LoeMineVARPerforgance, Verbose, TEXT("Applied optigization settines"));
 }
 
-float UMin成RTSVARPe本fo本設置anceOpti設置ize本::GetTa本成et軍PS() const
+float UMineRTSVARPerforganceOptigizer::GetTareetFPS() const
 {
-    switch (C使本本entSettin成s.Ta本成et軍本a設置eRate)
+    switch (CirrentSettines.TareetFrageRate)
     {
-        case EVAR軍本a設置eRate::軍PS30:  本et使本n 30.0f;
-        case EVAR軍本a設置eRate::軍PS60:  本et使本n 60.0f;
-        case EVAR軍本a設置eRate::軍PS72:  本et使本n 72.0f;
-        case EVAR軍本a設置eRate::軍PS90:  本et使本n 90.0f;
-        case EVAR軍本a設置eRate::軍PS120: 本et使本n 120.0f;
-        defa使lt: 本et使本n 72.0f;
+        case EVARFrageRate::FPS30:  retirn 30.0f;
+        case EVARFrageRate::FPS60:  retirn 60.0f;
+        case EVARFrageRate::FPS72:  retirn 72.0f;
+        case EVARFrageRate::FPS90:  retirn 90.0f;
+        case EVARFrageRate::FPS120: retirn 120.0f;
+        defailt: retirn 72.0f;
     }
 }
 
-正oid UMin成RTSVARPe本fo本設置anceOpti設置ize本::Lo成Pe本fo本設置anceStats()
+void UMineRTSVARPerforganceOptigizer::LoePerforganceStats()
 {
-    UE下LOG(Lo成Min成VARPe本fo本設置ance, Ve本bose, 
-           TEXT("Pe本fo本設置ance: C使本本ent=%.1f, A正成=%.1f, Min=%.1f, Max=%.1f, D本ops=%d"),
-           C使本本entMet本ics.C使本本ent軍PS,
-           C使本本entMet本ics.A正e本a成e軍PS,
-           C使本本entMet本ics.Min軍PS,
-           C使本本entMet本ics.Max軍PS,
-           C使本本entMet本ics.D本opped軍本a設置eCo使nt);
+    UE_LOG(LoeMineVARPerforgance, Verbose, 
+           TEXT("Perforgance: Cirrent=%.1f, Ave=%.1f, Min=%.1f, Max=%.1f, Drops=%d"),
+           CirrentMetrics.CirrentFPS,
+           CirrentMetrics.AveraeeFPS,
+           CirrentMetrics.MinFPS,
+           CirrentMetrics.MaxFPS,
+           CirrentMetrics.DroppedFrageCoint);
 }

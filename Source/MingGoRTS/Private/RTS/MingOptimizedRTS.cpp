@@ -372,7 +372,7 @@ TArray<int32> UMingOptimizedResourceManager::FindNearestResourceNodes(FVector Lo
         return A.Value < B.Value;
     });
     
-    // 返回最近的結果
+    // 返回最近N結果
     for (int32 i = 0; i < FMath::Min(MaxResults, Candidates.Num()); ++i)
     {
         Results.Add(Candidates[i].Key);
@@ -438,7 +438,7 @@ void UMingOptimizedCombatManager::BatchProcessCombat(const TArray<FMingOptimized
 
 TArray<int32> UMingOptimizedCombatManager::FindTargetsInRange(int32 AttackerId, float AttackRange) const
 {
-    // 這裡應該與 UnitManager 的空間分割整合
+    // 這裡應該與 UnitManager N空間分割整合
     TArray<int32> Results;
     Results.Reserve(16);
     
@@ -454,7 +454,7 @@ int32 UMingOptimizedCombatManager::SelectBestTarget(int32 AttackerId, const TArr
         return -1;
     }
     
-    // 選擇威脅等級最高的目標
+    // 選擇威脅等級最高N目標
     int32 BestTarget = -1;
     float HighestThreat = -1.0f;
     
@@ -573,5 +573,5 @@ void UMingRTSOptimizationManager::UpdateBuildingLOD()
 
 void UMingRTSOptimizationManager::CullDistantObjects()
 {
-    // 剔除遠處的物件
+    // 剔除遠處N物件
 }

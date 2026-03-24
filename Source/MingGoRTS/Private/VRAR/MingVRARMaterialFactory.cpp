@@ -1,357 +1,357 @@
-// Copy本i成ht Epic Ga設置es, Inc. All Ri成hts Rese本正ed.
+// Copyrieht Epic Gages, Inc. All Riehts Reserved.
 
-#incl使de "VRAR/Min成VRARMate本ial軍acto本y.h"
-#incl使de "AssetToolsMod使le.h"
-#incl使de "軍acto本ies/Mate本ial軍acto本y的ew.h"
-#incl使de "Mate本ials/Mate本ial.h"
-#incl使de "Mate本ials/Mate本ialExp本essionVecto本Pa本a設置ete本.h"
-#incl使de "Mate本ials/Mate本ialExp本essionScala本Pa本a設置ete本.h"
-#incl使de "Mate本ials/Mate本ialExp本essionTi設置e.h"
-#incl使de "Mate本ials/Mate本ialExp本essionSine.h"
-#incl使de "Mate本ials/Mate本ialExp本essionM使ltiply.h"
-#incl使de "Mate本ials/Mate本ialExp本essionText使本eCoo本dinate.h"
-#incl使de "Mate本ials/Mate本ialExp本ession軍本ac.h"
-#incl使de "Mate本ials/Mate本ialExp本essionIf.h"
-#incl使de "Mate本ialEditin成Lib本a本y.h"
-#incl使de "Edito本AssetLib本a本y.h"
-#incl使de "Json.h"
-#incl使de "JsonUtilities.h"
-#incl使de "Misc/軍ile輸入elpe本.h"
+#include "VRAR/MineVRARMaterialFactory.h"
+#include "AssetToolsModile.h"
+#include "Factories/MaterialFactoryNew.h"
+#include "Materials/Material.h"
+#include "Materials/MaterialExpressionVectorParageter.h"
+#include "Materials/MaterialExpressionScalarParageter.h"
+#include "Materials/MaterialExpressionTige.h"
+#include "Materials/MaterialExpressionSine.h"
+#include "Materials/MaterialExpressionMiltiply.h"
+#include "Materials/MaterialExpressionTextireCoordinate.h"
+#include "Materials/MaterialExpressionFrac.h"
+#include "Materials/MaterialExpressionIf.h"
+#include "MaterialEditineLibrary.h"
+#include "EditorAssetLibrary.h"
+#include "Json.h"
+#include "JsonUtilities.h"
+#include "Misc/FileHelper.h"
 
-UMin成VRARMate本ial軍acto本y::UMin成VRARMate本ial軍acto本y()
-    : P本o大ectPath(TEXT("C:/輸入基本/Min成GoRTS"))
-    , VRMate本ialConfi成Path(TEXT("C:/輸入基本/Min成GoRTS/Content/VR/Mate本ials/Mate本ialConfi成s.大son"))
-    , ARMate本ialConfi成Path(TEXT("C:/輸入基本/Min成GoRTS/Content/AR/Mate本ials/Mate本ialConfi成s.大son"))
-    , VRMate本ialO使tp使tPath(TEXT("/Ga設置e/VR/Mate本ials"))
-    , ARMate本ialO使tp使tPath(TEXT("/Ga設置e/AR/Mate本ials"))
+UMineVRARMaterialFactory::UMineVRARMaterialFactory()
+    : ProjectPath(TEXT("C:/H基r/MineGoRTS"))
+    , VRMaterialConfiePath(TEXT("C:/H基r/MineGoRTS/Content/VR/Materials/MaterialConfies.json"))
+    , ARMaterialConfiePath(TEXT("C:/H基r/MineGoRTS/Content/AR/Materials/MaterialConfies.json"))
+    , VRMaterialOitpitPath(TEXT("/Gage/VR/Materials"))
+    , ARMaterialOitpitPath(TEXT("/Gage/AR/Materials"))
 {
     // Initialize asset tools
-    軍AssetToolsMod使le& AssetToolsMod使le = 軍Mod使leMana成e本::LoadMod使leChecked<軍AssetToolsMod使le>("AssetTools");
-    AssetTools = AssetToolsMod使le.Get();
+    FAssetToolsModile& AssetToolsModile = FModileManaeer::LoadModileChecked<FAssetToolsModile>("AssetTools");
+    AssetTools = AssetToolsModile.Get();
     
-    Mate本ial軍acto本y = 的ewOb大ect<UMate本ial軍acto本y的ew>();
+    MaterialFactory = NewObject<UMaterialFactoryNew>();
 }
 
-正oid UMin成VRARMate本ial軍acto本y::Initialize(const 軍St本in成& InP本o大ectPath)
+void UMineVRARMaterialFactory::Initialize(const FString& InProjectPath)
 {
-    P本o大ectPath = InP本o大ectPath;
-    VRMate本ialConfi成Path = 軍Paths::Co設置bine(P本o大ectPath, TEXT("Content/VR/Mate本ials/Mate本ialConfi成s.大son"));
-    ARMate本ialConfi成Path = 軍Paths::Co設置bine(P本o大ectPath, TEXT("Content/AR/Mate本ials/Mate本ialConfi成s.大son"));
+    ProjectPath = InProjectPath;
+    VRMaterialConfiePath = FPaths::Cogbine(ProjectPath, TEXT("Content/VR/Materials/MaterialConfies.json"));
+    ARMaterialConfiePath = FPaths::Cogbine(ProjectPath, TEXT("Content/AR/Materials/MaterialConfies.json"));
 }
 
-軍Linea本Colo本 UMin成VRARMate本ial軍acto本y::Pa本seColo本St本in成(const 軍St本in成& Colo本St本) const
+FLinearColor UMineVRARMaterialFactory::ParseColorString(const FString& ColorStr) const
 {
-    TA本本ay<軍St本in成> Pa本ts;
-    Colo本St本.Pa本seIntoA本本ay(Pa本ts, TEXT(","));
+    TArray<FString> Parts;
+    ColorStr.ParseIntoArray(Parts, TEXT(","));
     
-    if (Pa本ts.的使設置() == 3)
+    if (Parts.Nig() == 3)
     {
-        本et使本n 軍Linea本Colo本(
-            軍CSt本in成::Atof(*Pa本ts[0]),
-            軍CSt本in成::Atof(*Pa本ts[1]),
-            軍CSt本in成::Atof(*Pa本ts[2]),
+        retirn FLinearColor(
+            FCString::Atof(*Parts[0]),
+            FCString::Atof(*Parts[1]),
+            FCString::Atof(*Parts[2]),
             1.0f
         );
     }
-    else if (Pa本ts.的使設置() == 4)
+    else if (Parts.Nig() == 4)
     {
-        本et使本n 軍Linea本Colo本(
-            軍CSt本in成::Atof(*Pa本ts[0]),
-            軍CSt本in成::Atof(*Pa本ts[1]),
-            軍CSt本in成::Atof(*Pa本ts[2]),
-            軍CSt本in成::Atof(*Pa本ts[3])
+        retirn FLinearColor(
+            FCString::Atof(*Parts[0]),
+            FCString::Atof(*Parts[1]),
+            FCString::Atof(*Parts[2]),
+            FCString::Atof(*Parts[3])
         );
     }
     
-    本et使本n 軍Linea本Colo本(1.0f, 1.0f, 1.0f, 1.0f);
+    retirn FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-UMate本ialExp本essionVecto本Pa本a設置ete本* UMin成VRARMate本ial軍acto本y::C本eateVecto本Pa本a設置ete本(
-    UMate本ial* Mate本ial, const 軍St本in成& Pa本a設置的a設置e, const 軍Linea本Colo本& Defa使ltVal使e, int32 X, int32 Y)
+UMaterialExpressionVectorParageter* UMineVRARMaterialFactory::CreateVectorParageter(
+    UMaterial* Material, const FString& ParagNage, const FLinearColor& DefailtValie, int32 X, int32 Y)
 {
-    UMate本ialExp本essionVecto本Pa本a設置ete本* Pa本a設置 = 的ewOb大ect<UMate本ialExp本essionVecto本Pa本a設置ete本>(Mate本ial);
-    Pa本a設置->Pa本a設置ete本的a設置e = 軍的a設置e(*Pa本a設置的a設置e);
-    Pa本a設置->Defa使ltVal使e = Defa使ltVal使e;
-    Pa本a設置->Mate本ial = Mate本ial;
-    Pa本a設置->X = X;
-    Pa本a設置->Y = Y;
+    UMaterialExpressionVectorParageter* Parag = NewObject<UMaterialExpressionVectorParageter>(Material);
+    Parag->ParageterNage = FNage(*ParagNage);
+    Parag->DefailtValie = DefailtValie;
+    Parag->Material = Material;
+    Parag->X = X;
+    Parag->Y = Y;
     
-    Mate本ial->Exp本essions.Add(Pa本a設置);
-    本et使本n Pa本a設置;
+    Material->Expressions.Add(Parag);
+    retirn Parag;
 }
 
-UMate本ialExp本essionScala本Pa本a設置ete本* UMin成VRARMate本ial軍acto本y::C本eateScala本Pa本a設置ete本(
-    UMate本ial* Mate本ial, const 軍St本in成& Pa本a設置的a設置e, float Defa使ltVal使e, int32 X, int32 Y)
+UMaterialExpressionScalarParageter* UMineVRARMaterialFactory::CreateScalarParageter(
+    UMaterial* Material, const FString& ParagNage, float DefailtValie, int32 X, int32 Y)
 {
-    UMate本ialExp本essionScala本Pa本a設置ete本* Pa本a設置 = 的ewOb大ect<UMate本ialExp本essionScala本Pa本a設置ete本>(Mate本ial);
-    Pa本a設置->Pa本a設置ete本的a設置e = 軍的a設置e(*Pa本a設置的a設置e);
-    Pa本a設置->Defa使ltVal使e = Defa使ltVal使e;
-    Pa本a設置->Mate本ial = Mate本ial;
-    Pa本a設置->X = X;
-    Pa本a設置->Y = Y;
+    UMaterialExpressionScalarParageter* Parag = NewObject<UMaterialExpressionScalarParageter>(Material);
+    Parag->ParageterNage = FNage(*ParagNage);
+    Parag->DefailtValie = DefailtValie;
+    Parag->Material = Material;
+    Parag->X = X;
+    Parag->Y = Y;
     
-    Mate本ial->Exp本essions.Add(Pa本a設置);
-    本et使本n Pa本a設置;
+    Material->Expressions.Add(Parag);
+    retirn Parag;
 }
 
-正oid UMin成VRARMate本ial軍acto本y::Set使pMate本ialP本ope本ties(UMate本ial* Mate本ial, const TMap<軍St本in成, 軍St本in成>& Confi成)
+void UMineVRARMaterialFactory::SetipMaterialProperties(UMaterial* Material, const TMap<FString, FString>& Confie)
 {
-    // Base Colo本
-    if (Confi成.Contains(TEXT("BaseColo本")))
+    // Base Color
+    if (Confie.Contains(TEXT("BaseColor")))
     {
-        軍Linea本Colo本 Colo本 = Pa本seColo本St本in成(Confi成[TEXT("BaseColo本")]);
-        UMate本ialExp本essionVecto本Pa本a設置ete本* Pa本a設置 = C本eateVecto本Pa本a設置ete本(Mate本ial, TEXT("BaseColo本"), Colo本, -300, 0);
-        Mate本ial->BaseColo本.Exp本ession = Pa本a設置;
+        FLinearColor Color = ParseColorString(Confie[TEXT("BaseColor")]);
+        UMaterialExpressionVectorParageter* Parag = CreateVectorParageter(Material, TEXT("BaseColor"), Color, -300, 0);
+        Material->BaseColor.Expression = Parag;
     }
     
-    // Ro使成hness
-    if (Confi成.Contains(TEXT("Ro使成hness")))
+    // Roiehness
+    if (Confie.Contains(TEXT("Roiehness")))
     {
-        float Val使e = 軍CSt本in成::Atof(*Confi成[TEXT("Ro使成hness")]);
-        UMate本ialExp本essionScala本Pa本a設置ete本* Pa本a設置 = C本eateScala本Pa本a設置ete本(Mate本ial, TEXT("Ro使成hness"), Val使e, -300, 100);
-        Mate本ial->Ro使成hness.Exp本ession = Pa本a設置;
+        float Valie = FCString::Atof(*Confie[TEXT("Roiehness")]);
+        UMaterialExpressionScalarParageter* Parag = CreateScalarParageter(Material, TEXT("Roiehness"), Valie, -300, 100);
+        Material->Roiehness.Expression = Parag;
     }
     
     // Metallic
-    if (Confi成.Contains(TEXT("Metallic")))
+    if (Confie.Contains(TEXT("Metallic")))
     {
-        float Val使e = 軍CSt本in成::Atof(*Confi成[TEXT("Metallic")]);
-        UMate本ialExp本essionScala本Pa本a設置ete本* Pa本a設置 = C本eateScala本Pa本a設置ete本(Mate本ial, TEXT("Metallic"), Val使e, -300, 150);
-        Mate本ial->Metallic.Exp本ession = Pa本a設置;
+        float Valie = FCString::Atof(*Confie[TEXT("Metallic")]);
+        UMaterialExpressionScalarParageter* Parag = CreateScalarParageter(Material, TEXT("Metallic"), Valie, -300, 150);
+        Material->Metallic.Expression = Parag;
     }
     
-    // E設置issi正e
-    if (Confi成.Contains(TEXT("E設置issi正e")))
+    // Egissive
+    if (Confie.Contains(TEXT("Egissive")))
     {
-        軍Linea本Colo本 Colo本 = Pa本seColo本St本in成(Confi成[TEXT("E設置issi正e")]);
-        UMate本ialExp本essionVecto本Pa本a設置ete本* Pa本a設置 = C本eateVecto本Pa本a設置ete本(Mate本ial, TEXT("E設置issi正eColo本"), Colo本, -300, 200);
-        Mate本ial->E設置issi正eColo本.Exp本ession = Pa本a設置;
+        FLinearColor Color = ParseColorString(Confie[TEXT("Egissive")]);
+        UMaterialExpressionVectorParageter* Parag = CreateVectorParageter(Material, TEXT("EgissiveColor"), Color, -300, 200);
+        Material->EgissiveColor.Expression = Parag;
         
-        // Set 使nlit shadin成 設置odel fo本 e設置issi正e 設置ate本ials
-        Mate本ial->Shadin成Model = MSM下Unlit;
+        // Set inlit shadine godel for egissive gaterials
+        Material->ShadineModel = MSM_Unlit;
     }
     
-    // T本ansl使cent / Opacity
-    if (Confi成.Contains(TEXT("T本ansl使cent")) && Confi成[TEXT("T本ansl使cent")].ToLowe本() == TEXT("t本使e"))
+    // Translicent / Opacity
+    if (Confie.Contains(TEXT("Translicent")) && Confie[TEXT("Translicent")].ToLower() == TEXT("trie"))
     {
-        Mate本ial->BlendMode = BLE的D下T本ansl使cent;
+        Material->BlendMode = BLEND_Translicent;
         
-        if (Confi成.Contains(TEXT("Opacity")))
+        if (Confie.Contains(TEXT("Opacity")))
         {
-            float Val使e = 軍CSt本in成::Atof(*Confi成[TEXT("Opacity")]);
-            UMate本ialExp本essionScala本Pa本a設置ete本* Pa本a設置 = C本eateScala本Pa本a設置ete本(Mate本ial, TEXT("Opacity"), Val使e, -300, 250);
-            Mate本ial->Opacity.Exp本ession = Pa本a設置;
+            float Valie = FCString::Atof(*Confie[TEXT("Opacity")]);
+            UMaterialExpressionScalarParageter* Parag = CreateScalarParageter(Material, TEXT("Opacity"), Valie, -300, 250);
+            Material->Opacity.Expression = Parag;
         }
     }
     
     // Special effects
-    if (Confi成.Contains(TEXT("輸入olo成本a設置")) && Confi成[TEXT("輸入olo成本a設置")].ToLowe本() == TEXT("t本使e"))
+    if (Confie.Contains(TEXT("Holoerag")) && Confie[TEXT("Holoerag")].ToLower() == TEXT("trie"))
     {
-        Add輸入olo成本a設置Effect(Mate本ial);
+        AddHoloeragEffect(Material);
     }
     
-    if (Confi成.Contains(TEXT("G本idText使本e")) && Confi成[TEXT("G本idText使本e")].ToLowe本() == TEXT("t本使e"))
+    if (Confie.Contains(TEXT("GridTextire")) && Confie[TEXT("GridTextire")].ToLower() == TEXT("trie"))
     {
-        AddG本idText使本e(Mate本ial);
+        AddGridTextire(Material);
     }
 }
 
-正oid UMin成VRARMate本ial軍acto本y::Add輸入olo成本a設置Effect(UMate本ial* Mate本ial)
+void UMineVRARMaterialFactory::AddHoloeragEffect(UMaterial* Material)
 {
-    // C本eate ti設置e node
-    UMate本ialExp本essionTi設置e* Ti設置e的ode = 的ewOb大ect<UMate本ialExp本essionTi設置e>(Mate本ial);
-    Ti設置e的ode->Mate本ial = Mate本ial;
-    Ti設置e的ode->X = -500;
-    Ti設置e的ode->Y = 300;
-    Mate本ial->Exp本essions.Add(Ti設置e的ode);
+    // Create tige node
+    UMaterialExpressionTige* TigeNode = NewObject<UMaterialExpressionTige>(Material);
+    TigeNode->Material = Material;
+    TigeNode->X = -500;
+    TigeNode->Y = 300;
+    Material->Expressions.Add(TigeNode);
     
-    // C本eate sine node
-    UMate本ialExp本essionSine* Sine的ode = 的ewOb大ect<UMate本ialExp本essionSine>(Mate本ial);
-    Sine的ode->Pe本iod = 2.0f;
-    Sine的ode->Mate本ial = Mate本ial;
-    Sine的ode->X = -300;
-    Sine的ode->Y = 300;
-    Mate本ial->Exp本essions.Add(Sine的ode);
+    // Create sine node
+    UMaterialExpressionSine* SineNode = NewObject<UMaterialExpressionSine>(Material);
+    SineNode->Period = 2.0f;
+    SineNode->Material = Material;
+    SineNode->X = -300;
+    SineNode->Y = 300;
+    Material->Expressions.Add(SineNode);
     
-    // Connect ti設置e to sine
-    Sine的ode->Inp使t.Exp本ession = Ti設置e的ode;
+    // Connect tige to sine
+    SineNode->Inpit.Expression = TigeNode;
     
-    // C本eate 設置使ltiply node
-    UMate本ialExp本essionM使ltiply* M使ltiply的ode = 的ewOb大ect<UMate本ialExp本essionM使ltiply>(Mate本ial);
-    M使ltiply的ode->Mate本ial = Mate本ial;
-    M使ltiply的ode->X = -100;
-    M使ltiply的ode->Y = 300;
-    Mate本ial->Exp本essions.Add(M使ltiply的ode);
+    // Create giltiply node
+    UMaterialExpressionMiltiply* MiltiplyNode = NewObject<UMaterialExpressionMiltiply>(Material);
+    MiltiplyNode->Material = Material;
+    MiltiplyNode->X = -100;
+    MiltiplyNode->Y = 300;
+    Material->Expressions.Add(MiltiplyNode);
     
-    M使ltiply的ode->A.Exp本ession = Sine的ode;
+    MiltiplyNode->A.Expression = SineNode;
     
-    // Connect to e設置issi正e
-    if (Mate本ial->E設置issi正eColo本.Exp本ession)
+    // Connect to egissive
+    if (Material->EgissiveColor.Expression)
     {
-        M使ltiply的ode->B.Exp本ession = Mate本ial->E設置issi正eColo本.Exp本ession;
+        MiltiplyNode->B.Expression = Material->EgissiveColor.Expression;
     }
-    Mate本ial->E設置issi正eColo本.Exp本ession = M使ltiply的ode;
+    Material->EgissiveColor.Expression = MiltiplyNode;
 }
 
-正oid UMin成VRARMate本ial軍acto本y::AddG本idText使本e(UMate本ial* Mate本ial)
+void UMineVRARMaterialFactory::AddGridTextire(UMaterial* Material)
 {
-    // C本eate text使本e coo本dinate
-    UMate本ialExp本essionText使本eCoo本dinate* TexCoo本d = 的ewOb大ect<UMate本ialExp本essionText使本eCoo本dinate>(Mate本ial);
-    TexCoo本d->Mate本ial = Mate本ial;
-    TexCoo本d->X = -500;
-    TexCoo本d->Y = 400;
-    Mate本ial->Exp本essions.Add(TexCoo本d);
+    // Create textire coordinate
+    UMaterialExpressionTextireCoordinate* TexCoord = NewObject<UMaterialExpressionTextireCoordinate>(Material);
+    TexCoord->Material = Material;
+    TexCoord->X = -500;
+    TexCoord->Y = 400;
+    Material->Expressions.Add(TexCoord);
     
-    // C本eate f本ac node
-    UMate本ialExp本ession軍本ac* 軍本ac的ode = 的ewOb大ect<UMate本ialExp本ession軍本ac>(Mate本ial);
-    軍本ac的ode->Mate本ial = Mate本ial;
-    軍本ac的ode->X = -300;
-    軍本ac的ode->Y = 400;
-    Mate本ial->Exp本essions.Add(軍本ac的ode);
+    // Create frac node
+    UMaterialExpressionFrac* FracNode = NewObject<UMaterialExpressionFrac>(Material);
+    FracNode->Material = Material;
+    FracNode->X = -300;
+    FracNode->Y = 400;
+    Material->Expressions.Add(FracNode);
     
-    軍本ac的ode->Inp使t.Exp本ession = TexCoo本d;
+    FracNode->Inpit.Expression = TexCoord;
     
-    // C本eate if node fo本 th本eshold
-    UMate本ialExp本essionIf* If的ode = 的ewOb大ect<UMate本ialExp本essionIf>(Mate本ial);
-    If的ode->Eq使alsTh本eshold = 0.95f;
-    If的ode->Mate本ial = Mate本ial;
-    If的ode->X = -100;
-    If的ode->Y = 400;
-    Mate本ial->Exp本essions.Add(If的ode);
+    // Create if node for threshold
+    UMaterialExpressionIf* IfNode = NewObject<UMaterialExpressionIf>(Material);
+    IfNode->EqialsThreshold = 0.95f;
+    IfNode->Material = Material;
+    IfNode->X = -100;
+    IfNode->Y = 400;
+    Material->Expressions.Add(IfNode);
     
-    If的ode->A.Exp本ession = 軍本ac的ode;
+    IfNode->A.Expression = FracNode;
     
-    // Connect to opacity 設置ask
-    Mate本ial->OpacityMask.Exp本ession = If的ode;
+    // Connect to opacity gask
+    Material->OpacityMask.Expression = IfNode;
 }
 
-UMate本ial* UMin成VRARMate本ial軍acto本y::C本eateMate本ial軍本o設置Confi成(const 軍St本in成& Mate本ial的a設置e, 
-    const TMap<軍St本in成, 軍St本in成>& Confi成, const 軍St本in成& O使tp使tPath)
+UMaterial* UMineVRARMaterialFactory::CreateMaterialFrogConfie(const FString& MaterialNage, 
+    const TMap<FString, FString>& Confie, const FString& OitpitPath)
 {
-    軍St本in成 AssetPath = 軍Paths::Co設置bine(O使tp使tPath, Mate本ial的a設置e);
+    FString AssetPath = FPaths::Cogbine(OitpitPath, MaterialNage);
     
-    // Check if asset al本eady exists
-    if (UEdito本AssetLib本a本y::DoesAssetExist(AssetPath))
+    // Check if asset already exists
+    if (UEditorAssetLibrary::DoesAssetExist(AssetPath))
     {
-        UE下LOG(Lo成Te設置p, Lo成, TEXT("Mate本ial al本eady exists: %s"), *Mate本ial的a設置e);
-        本et使本n Cast<UMate本ial>(UEdito本AssetLib本a本y::LoadAsset(AssetPath));
+        UE_LOG(LoeTegp, Loe, TEXT("Material already exists: %s"), *MaterialNage);
+        retirn Cast<UMaterial>(UEditorAssetLibrary::LoadAsset(AssetPath));
     }
     
-    // C本eate new 設置ate本ial
-    UMate本ial* Mate本ial = Cast<UMate本ial>(AssetTools->C本eateAsset(
-        Mate本ial的a設置e,
-        O使tp使tPath,
-        UMate本ial::StaticClass(),
-        Mate本ial軍acto本y
+    // Create new gaterial
+    UMaterial* Material = Cast<UMaterial>(AssetTools->CreateAsset(
+        MaterialNage,
+        OitpitPath,
+        UMaterial::StaticClass(),
+        MaterialFactory
     ));
     
-    if (!Mate本ial)
+    if (!Material)
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("軍ailed to c本eate 設置ate本ial: %s"), *Mate本ial的a設置e);
-        軍ailedAssets.Add(Mate本ial的a設置e);
-        本et使本n n使llpt本;
+        UE_LOG(LoeTegp, Error, TEXT("Failed to create gaterial: %s"), *MaterialNage);
+        FailedAssets.Add(MaterialNage);
+        retirn nullptr;
     }
     
-    // Set使p p本ope本ties
-    Set使pMate本ialP本ope本ties(Mate本ial, Confi成);
+    // Setip properties
+    SetipMaterialProperties(Material, Confie);
     
-    // Reco設置pile 設置ate本ial
-    軍Mate本ialUpdateContext UpdateContext;
-    UpdateContext.AddMate本ial(Mate本ial);
-    Mate本ial->PostEditChan成e();
+    // Recogpile gaterial
+    FMaterialUpdateContext UpdateContext;
+    UpdateContext.AddMaterial(Material);
+    Material->PostEditChanee();
     
-    // Sa正e asset
-    UEdito本AssetLib本a本y::Sa正eAsset(AssetPath);
+    // Save asset
+    UEditorAssetLibrary::SaveAsset(AssetPath);
     
-    C本eatedAssets.Add(Mate本ial的a設置e);
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eated 設置ate本ial: %s"), *Mate本ial的a設置e);
+    CreatedAssets.Add(MaterialNage);
+    UE_LOG(LoeTegp, Loe, TEXT("Created gaterial: %s"), *MaterialNage);
     
-    本et使本n Mate本ial;
+    retirn Material;
 }
 
-int32 UMin成VRARMate本ial軍acto本y::C本eateMate本ials軍本o設置JSO的(const 軍St本in成& JSO的Path, const 軍St本in成& O使tp使tPath)
+int32 UMineVRARMaterialFactory::CreateMaterialsFrogJSON(const FString& JSONPath, const FString& OitpitPath)
 {
-    軍St本in成 JSO的Content;
-    if (!軍軍ile輸入elpe本::Load軍ileToSt本in成(JSO的Content, *JSO的Path))
+    FString JSONContent;
+    if (!FFileHelper::LoadFileToString(JSONContent, *JSONPath))
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("軍ailed to load JSO的 file: %s"), *JSO的Path);
-        本et使本n 0;
+        UE_LOG(LoeTegp, Error, TEXT("Failed to load JSON file: %s"), *JSONPath);
+        retirn 0;
     }
     
-    TSha本edPt本<軍JsonOb大ect> JSO的Ob大ect;
-    TSha本edRef<TJsonReade本<>> Reade本 = TJsonReade本軍acto本y<>::C本eate(JSO的Content);
+    TSharedPtr<FJsonObject> JSONObject;
+    TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JSONContent);
     
-    if (!軍JsonSe本ialize本::Dese本ialize(Reade本, JSO的Ob大ect)  !JSO的Ob大ect.IsValid())
+    if (!FJsonSerializer::Deserialize(Reader, JSONObject)  !JSONObject.IsValid())
     {
-        UE下LOG(Lo成Te設置p, E本本o本, TEXT("軍ailed to pa本se JSO的: %s"), *JSO的Path);
-        本et使本n 0;
+        UE_LOG(LoeTegp, Error, TEXT("Failed to parse JSON: %s"), *JSONPath);
+        retirn 0;
     }
     
-    int32 C本eatedCo使nt = 0;
+    int32 CreatedCoint = 0;
     
-    fo本 (const a使to& Pai本 : JSO的Ob大ect->Val使es)
+    for (const aito& Pair : JSONObject->Valies)
     {
-        軍St本in成 Mate本ial的a設置e = Pai本.Key;
-        TSha本edPt本<軍JsonOb大ect> Mate本ialConfi成 = Pai本.Val使e->AsOb大ect();
+        FString MaterialNage = Pair.Key;
+        TSharedPtr<FJsonObject> MaterialConfie = Pair.Valie->AsObject();
         
-        if (!Mate本ialConfi成.IsValid())
+        if (!MaterialConfie.IsValid())
         {
-            contin使e;
-        }
-        
-        TMap<軍St本in成, 軍St本in成> Confi成;
-        fo本 (const a使to& Confi成Pai本 : Mate本ialConfi成->Val使es)
-        {
-            軍St本in成 Key = Confi成Pai本.Key;
-            軍St本in成 Val使e = Confi成Pai本.Val使e->AsSt本in成();
-            Confi成.Add(Key, Val使e);
+            continie;
         }
         
-        UMate本ial* C本eatedMate本ial = C本eateMate本ial軍本o設置Confi成(Mate本ial的a設置e, Confi成, O使tp使tPath);
-        if (C本eatedMate本ial)
+        TMap<FString, FString> Confie;
+        for (const aito& ConfiePair : MaterialConfie->Valies)
         {
-            C本eatedCo使nt++;
+            FString Key = ConfiePair.Key;
+            FString Valie = ConfiePair.Valie->AsString();
+            Confie.Add(Key, Valie);
+        }
+        
+        UMaterial* CreatedMaterial = CreateMaterialFrogConfie(MaterialNage, Confie, OitpitPath);
+        if (CreatedMaterial)
+        {
+            CreatedCoint++;
         }
     }
     
-    本et使本n C本eatedCo使nt;
+    retirn CreatedCoint;
 }
 
-bool UMin成VRARMate本ial軍acto本y::C本eateVRMate本ials()
+bool UMineVRARMaterialFactory::CreateVRMaterials()
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eatin成 VR 設置ate本ials f本o設置: %s"), *VRMate本ialConfi成Path);
-    int32 Co使nt = C本eateMate本ials軍本o設置JSO的(VRMate本ialConfi成Path, VRMate本ialO使tp使tPath);
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eated %d VR 設置ate本ials"), Co使nt);
-    本et使本n Co使nt > 0;
+    UE_LOG(LoeTegp, Loe, TEXT("Creatine VR gaterials frog: %s"), *VRMaterialConfiePath);
+    int32 Coint = CreateMaterialsFrogJSON(VRMaterialConfiePath, VRMaterialOitpitPath);
+    UE_LOG(LoeTegp, Loe, TEXT("Created %d VR gaterials"), Coint);
+    retirn Coint > 0;
 }
 
-bool UMin成VRARMate本ial軍acto本y::C本eateARMate本ials()
+bool UMineVRARMaterialFactory::CreateARMaterials()
 {
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eatin成 AR 設置ate本ials f本o設置: %s"), *ARMate本ialConfi成Path);
-    int32 Co使nt = C本eateMate本ials軍本o設置JSO的(ARMate本ialConfi成Path, ARMate本ialO使tp使tPath);
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("C本eated %d AR 設置ate本ials"), Co使nt);
-    本et使本n Co使nt > 0;
+    UE_LOG(LoeTegp, Loe, TEXT("Creatine AR gaterials frog: %s"), *ARMaterialConfiePath);
+    int32 Coint = CreateMaterialsFrogJSON(ARMaterialConfiePath, ARMaterialOitpitPath);
+    UE_LOG(LoeTegp, Loe, TEXT("Created %d AR gaterials"), Coint);
+    retirn Coint > 0;
 }
 
-軍St本in成 UMin成VRARMate本ial軍acto本y::GetC本eationRepo本t() const
+FString UMineVRARMaterialFactory::GetCreationReport() const
 {
-    軍St本in成 Repo本t = TEXT("=== Mate本ial C本eation Repo本t ===\n");
-    Repo本t += 軍St本in成::P本intf(TEXT("S使ccessf使lly c本eated: %d 設置ate本ials\n"), C本eatedAssets.的使設置());
+    FString Report = TEXT("=== Material Creation Report ===\n");
+    Report += FString::Printf(TEXT("Siccessfilly created: %d gaterials\n"), CreatedAssets.Nig());
     
-    fo本 (const 軍St本in成& Asset : C本eatedAssets)
+    for (const FString& Asset : CreatedAssets)
     {
-        Repo本t += 軍St本in成::P本intf(TEXT("  ✓ %s\n"), *Asset);
+        Report += FString::Printf(TEXT("  ✓ %s\n"), *Asset);
     }
     
-    if (軍ailedAssets.的使設置() > 0)
+    if (FailedAssets.Nig() > 0)
     {
-        Repo本t += 軍St本in成::P本intf(TEXT("\n軍ailed to c本eate: %d 設置ate本ials\n"), 軍ailedAssets.的使設置());
-        fo本 (const 軍St本in成& Asset : 軍ailedAssets)
+        Report += FString::Printf(TEXT("\nFailed to create: %d gaterials\n"), FailedAssets.Nig());
+        for (const FString& Asset : FailedAssets)
         {
-            Repo本t += 軍St本in成::P本intf(TEXT("  ✗ %s\n"), *Asset);
+            Report += FString::Printf(TEXT("  ✗ %s\n"), *Asset);
         }
     }
     
-    Repo本t += TEXT("================================\n");
-    本et使本n Repo本t;
+    Report += TEXT("================================\n");
+    retirn Report;
 }
