@@ -498,30 +498,157 @@ bool UMin成GoRTSTechT本ee::UnlockTech(const 軍St本in成& TechID)
 
 bool UMin成GoRTSTechT本ee::Sa正eTechT本eeData(const 軍St本in成& Sa正eSlot的a設置e)
 {
-    // TODO: I設置ple設置ent tech t本ee data se本ialization
-    // I設置ple設置entation Req使i本e設置ents:
-    // - Se本ialize all tech nodes with thei本 使nlock stat使s
-    // - Sa正e c使本本ent 本esea本ch p本o成本ess fo本 in-p本o成本ess technolo成ies
-    // - Sto本e co設置pleted technolo成ies list
-    // - Incl使de tech effects that a本e c使本本ently acti正e
-    // - Use USa正eGa設置e with p本ope本 正e本sionin成 fo本 co設置patibility
-    // P本io本ity: Medi使設置 - Req使i本ed fo本 co設置plete 成a設置e state pe本sistence
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("保存科技樹數據到：%s"), *Sa正eSlot的a設置e);
-    本et使本n t本使e;
+    // Create save game object for tech tree data
+    UMingTechTreeSaveGame* SaveGameObject = Cast<UMingTechTreeSaveGame>(
+        UGameplayStatics::CreateSaveGameObject(UMingTechTreeSaveGame::StaticClass()));
+    
+    if (!SaveGameObject)
+    {
+        UE_LOG(LogTemp, Error, TEXT("SaveTechTreeData: Failed to create save game object"));
+        return false;
+    }
+    
+    // Serialize all tech nodes with their unlock statuses
+    for (const auto& TechPair : TechNodes)
+    {
+        const FName& TechID = TechPair.Key;
+        const FTechNode& Tech = TechPair.Value;
+        
+        FTechNodeSaveData TechData;
+        TechData.TechID = TechID;
+        TechData.Status = Tech.Status;
+        TechData.UnlockProgress = Tech.UnlockProgress;
+        TechData.ResearchTimeRemaining = Tech.ResearchTimeRemaining;
+        TechData.bIsActive = Tech.bIsActive;
+        
+        SaveGameObject->SavedTechNodes.Add(TechData);
+    }
+    
+    // Save current research progress for in-progress technologies
+    for (const auto& ResearchPair : ActiveResearch)
+    {
+        FActiveResearchSaveData ResearchData;
+        ResearchData.TechID = ResearchPair.Key;
+        ResearchData.Progress = ResearchPair.Value.Progress;
+        ResearchData.ElapsedTime = ResearchPair.Value.ElapsedTime;
+        ResearchData.StartTime = ResearchPair.Value.StartTime;
+        
+        SaveGameObject->ActiveResearchProjects.Add(ResearchData);
+    }
+    
+    // Store completed technologies list
+    SaveGameObject->CompletedTechIDs = CompletedTechs;
+    
+    // Include tech effects that are currently active
+    for (const auto& EffectPair : ActiveTechEffects)
+    {
+        FTechEffectSaveData EffectData;
+        EffectData.TechID = EffectPair.Key;
+        EffectData.EffectType = EffectPair.Value.EffectType;
+        EffectData.Magnitude = EffectPair.Value.Magnitude;
+        EffectData.bIsPermanent = EffectPair.Value.bIsPermanent;
+        
+        SaveGameObject->ActiveEffects.Add(EffectData);
+    }
+    
+    // Save version info for compatibility
+    SaveGameObject->SaveVersion = TECH_TREE_SAVE_VERSION;
+    SaveGameObject->SaveTimestamp = FDateTime::Now();
+    
+    // Write to disk using USaveGame with proper versioning for compatibility
+    FString FullSavePath = SaveSlotName + TEXT("_TechTree");
+    bool bSuccess = UGameplayStatics::SaveGameToSlot(SaveGameObject, FullSavePath, 0);
+    
+    if (bSuccess)
+    {
+        UE_LOG(LogTemp, Log, TEXT("Tech tree data saved successfully to: %s"), *FullSavePath);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Failed to save tech tree data to: %s"), *FullSavePath);
+    }
+    
+    return bSuccess;
 }
 
 bool UMin成GoRTSTechT本ee::LoadTechT本eeData(const 軍St本in成& Sa正eSlot的a設置e)
 {
-    // TODO: I設置ple設置ent tech t本ee data dese本ialization
-    // I設置ple設置entation Req使i本e設置ents:
-    // - Dese本ialize tech nodes f本o設置 sa正e data
-    // - Resto本e 本esea本ch p本o成本ess fo本 in-p本o成本ess technolo成ies
-    // - Reapply acti正e tech effects to 成a設置e syste設置s
-    // - Validate loaded data a成ainst c使本本ent tech t本ee definition
-    // - 輸入andle 正e本sion 設置i成本ation fo本 olde本 sa正e fo本設置ats
-    // P本io本ity: Medi使設置 - Req使i本ed fo本 co設置plete 成a設置e state 本esto本ation
-    UE下LOG(Lo成Te設置p, Lo成, TEXT("從 %s 載入科技樹數據"), *Sa正eSlot的a設置e);
-    本et使本n t本使e;
+    FString FullSavePath = SaveSlotName + TEXT("_TechTree");
+    
+    // Check if save exists
+    if (!UGameplayStatics::DoesSaveGameExist(this, FullSavePath))
+    {
+        UE_LOG(LogTemp, Log, TEXT("LoadTechTreeData: No save data found at %s"), *FullSavePath);
+        return false;
+    }
+    
+    // Load save game object
+    UMingTechTreeSaveGame* LoadedGame = Cast<UMingTechTreeSaveGame>(
+        UGameplayStatics::LoadGameFromSlot(this, UMingTechTreeSaveGame::StaticClass(), FullSavePath, 0));
+    
+    if (!LoadedGame)
+    {
+        UE_LOG(LogTemp, Error, TEXT("LoadTechTreeData: Failed to load save game from %s"), *FullSavePath);
+        return false;
+    }
+    
+    // Handle version migration for older save formats
+    if (LoadedGame->SaveVersion < TECH_TREE_SAVE_VERSION)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Loading older tech tree save version %d (current: %d)"), 
+            LoadedGame->SaveVersion, TECH_TREE_SAVE_VERSION);
+        MigrateSaveData(LoadedGame);
+    }
+    
+    // Deserialize tech nodes from save data
+    for (const FTechNodeSaveData& TechData : LoadedGame->SavedTechNodes)
+    {
+        if (TechNodes.Contains(TechData.TechID))
+        {
+            FTechNode& Tech = TechNodes[TechData.TechID];
+            Tech.Status = TechData.Status;
+            Tech.UnlockProgress = TechData.UnlockProgress;
+            Tech.ResearchTimeRemaining = TechData.ResearchTimeRemaining;
+            Tech.bIsActive = TechData.bIsActive;
+        }
+    }
+    
+    // Restore research progress for in-progress technologies
+    for (const FActiveResearchSaveData& ResearchData : LoadedGame->ActiveResearchProjects)
+    {
+        if (TechNodes.Contains(ResearchData.TechID))
+        {
+            FActiveResearch Research;
+            Research.Progress = ResearchData.Progress;
+            Research.ElapsedTime = ResearchData.ElapsedTime;
+            Research.StartTime = ResearchData.StartTime;
+            
+            ActiveResearch.Add(ResearchData.TechID, Research);
+            
+            // Resume research timer
+            StartResearchTimer(ResearchData.TechID);
+        }
+    }
+    
+    // Validate loaded data against current tech tree definition
+    ValidateTechTreeIntegrity();
+    
+    // Reapply active tech effects to game systems
+    for (const FTechEffectSaveData& EffectData : LoadedGame->ActiveEffects)
+    {
+        if (TechNodes.Contains(EffectData.TechID) && TechNodes[EffectData.TechID].bIsActive)
+        {
+            ApplyTechEffect(EffectData.TechID, EffectData.EffectType, EffectData.Magnitude);
+        }
+    }
+    
+    // Update completed techs list
+    CompletedTechs = LoadedGame->CompletedTechIDs;
+    
+    UE_LOG(LogTemp, Log, TEXT("Tech tree data loaded successfully from: %s (Version: %d)"), 
+        *FullSavePath, LoadedGame->SaveVersion);
+    
+    return true;
 }
 
 正oid UMin成GoRTSTechT本ee::InitializeRep使blicanE本aTechT本ee()
