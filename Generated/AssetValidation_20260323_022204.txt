@@ -1,8 +1,0 @@
-﻿=== Asset Validation Report ===
-Timestamp: 2026-03-23 02:22:05
-Content Path: C:\\HW\\MingGoRTS\\Content
-
-Issues Found: 1
-
-Details:  - Validation completed: No critical issues found
-

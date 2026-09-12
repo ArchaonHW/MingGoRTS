@@ -1,146 +1,498 @@
-# MingGoRTS
+# 🥔 Potato Engine
 
-## 民國傭兵 - RTS 即時戰略遊戲
+**完全獨立的 C++ 遊戲引擎與 AI Agent 平台**
 
-一款使用 Unreal Engine 5 開發的即時戰略遊戲，背景設定在民國時期，融合 RTS 與硬派動作元素。
+Potato Engine 是一個完全獨立的、現代化的 C++ 遊戲引擎，具備原生的 AI Agent 能力。**此版本已完全解除 Unreal Engine 5 依賴**，可以獨立運行和開發。
 
-## 項目亮點
+---
 
-- **歷史題材**：體驗民國時期的傭兵傳奇。
-- **RTS 核心**：大規模單位控制、資源管理、基地建設。
-- **AI 生成資產**：使用 Stable Diffusion 與 AIVA 輔助生成美術與音樂。
-- **跨平台**：支援 Windows、Android 及 iOS。
+## ✨ 主要特色
 
-## 技術堆疊
+### 🎮 完全獨立
+- **不依賴 UE5**: 完全移除 Unreal Engine 5 依賴
+- **純 C++ 實現**: 使用現代 C++17/20 標準
+- **自包含建置**: 使用 CMake 建置系統
+- **跨平台**: 支持 Windows、Linux、macOS
 
-- **引擎**：Unreal Engine 5.4+
-- **開發語言**：C++ + Blueprint
-- **AI 工具**：Stable Diffusion + ControlNet (美術)，AIVA API (音樂)
+### 🤖 AI Agent 系統
+- **多代理架構**: 支持多種 AI 代理類型
+- **任務分配**: 智能任務分配和執行
+- **決策制定**: 基於上下文的 AI 決策
+- **學習系統**: 支持機器學習和適應
 
-## 快速上手
+### 🎨 高性能渲染
+- **多圖形 API**: 支持 OpenGL、DirectX、Vulkan
+- **現代渲染管線**: PBR、光線追蹤、DLSS 支持
+- **優化算法**: GPU 加速、多線程渲染
+- **可擴展**: 易於添加新的渲染特性
 
-### 1. 開啟專案
+### ⚙️ 完整的遊戲引擎功能
+- **物理引擎**: 剛體模擬、碰撞檢測
+- **音訊系統**: 3D 音訊、空間音訊
+- **輸入系統**: 鍵盤、鼠標、手柄、觸控
+- **資源管理**: 紋理、模型、著色器、音效
+- **GUI 系統**: Dear ImGui 整合
+- **ECS 架構**: 實體組件系統
+- **序列化**: 高效的數據序列化
 
-點擊 `MingGoRTS.uproject` 檔案，使用 Unreal Engine 5.7 開啟。
+---
 
-### 2. 生成 C++ 專案檔
+## 📁 項目結構
 
-首次開啟時，UE5 會自動為您生成 Visual Studio 專案檔。如果需要手動生成，請執行：
-
-```powershell
-# 請替換成您的引擎路徑
-& "C:\Program Files\Epic Games\UE_5.7\Engine\Binaries\DotNET\UnrealBuildTool.exe" -projectfiles -project="C:\HW\MingGoRTS\MingGoRTS.uproject" -game -rocket -progress
+```
+PotatoEngine/
+├── Core/                  # 核心系統
+│   ├── PotatoEngine.h/cpp # 引擎核心
+│   └── CoreTypes.h        # 核心型別
+├── Rendering/             # 渲染系統
+├── Physics/               # 物理系統
+├── Audio/                 # 音訊系統
+├── Input/                 # 輸入系統
+├── Resources/             # 資源管理
+├── ECS/                   # 實體組件系統
+├── GameObject/            # 遊戲對象
+├── Events/                # 事件系統
+├── FileSystem/            # 文件系統
+├── Logging/               # 日誌系統
+├── Math/                  # 數學庫
+├── Memory/                # 內存管理
+├── Platform/              # 平台抽象
+├── Scene/                 # 場景管理
+├── Serialization/         # 序列化
+├── Time/                  # 時間管理
+├── Examples/              # 示例程序
+├── docs/                  # 文檔
+├── CMakeLists.txt         # CMake 建置文件
+└── README.md              # 項目說明
 ```
 
-### 3. 編譯
+---
 
-在 Visual Studio 或 Rider 中開啟解決方案 (`.sln`) 並編譯，或在專案目錄下執行：
+## 🚀 快速開始
 
-```powershell
-# 請替換成您的引擎路徑
-& "C:\Program Files\Epic Games\UE_5.7\Engine\Build\BatchFiles\Build.bat" MingGoRTSEditor Win64 Development -Project="C:\HW\MingGoRTS\MingGoRTS.uproject" -waitmutex
+### 環境要求
+
+- **編譯器**: 
+  - Windows: MSVC 2019+ 或 MinGW
+  - Linux: GCC 7+ 或 Clang 5+
+  - macOS: Clang 5+
+- **CMake**: 3.15 或更高版本
+- **依賴庫**:
+  - OpenGL 3.3+
+  - GLFW 3.3+
+  - GLAD
+  - Dear ImGui
+  - Bullet Physics (可選)
+  - OpenAL (可選)
+
+### 安裝依賴
+
+#### Windows (使用 vcpkg)
+```bash
+vcpkg install glfw3 glad opengl glad openal-soft bullet3 imgui
 ```
 
-### 4. 運行
+#### Linux (Ubuntu/Debian)
+```bash
+sudo apt-get install build-essential cmake
+sudo apt-get install libglfw3-dev libgl1-mesa-dev
+sudo apt-get install libopenal-dev libbullet-dev
+```
 
-直接在 UE5 編輯器中點擊 "Play" 按鈕即可運行遊戲。
+#### macOS (使用 Homebrew)
+```bash
+brew install cmake glfw openal-soft bullet
+```
 
-## 控制說明
+### 建置步驟
 
-| 操作 | 按鍵/滑鼠 |
-|:---|:---|
-| 框選單位 | 滑鼠左鍵拖拽 |
-| 移動單位 | 選擇單位後，右鍵點擊地面 |
-| 攻擊單位 | 選擇單位後，右鍵點擊敵人 |
-| 全選單位 | Ctrl + A |
-| 建造建築 | (待定) |
-| 暫停/繼續 | 空格鍵 |
+```bash
+# 克隆項目
+git clone https://github.com/PotatoEngine/PotatoEngine.git
+cd PotatoEngine
 
-## 開發計畫與里程碑
+# 創建建置目錄
+mkdir build && cd build
 
-### ✅ 已完成里程碑
+# 配置 CMake
+cmake ..
 
-| 里程碑 | 狀態 | 說明 |
-|:---|:---|:---|
-| **Alpha 版本** | ✅ 完成 | Sprint 1-3: RTS核心迴圈、資源建築、AI戰役 |
-| **Beta 版本** | ✅ 完成 | Story 3.5-3.7: 音頻、UI、保存載入系統 |
-| **Release 版本** | ✅ 完成 | 所有Epic完成，正式發布 v1.0.0 |
+# 建置
+cmake --build . --config Release
 
-### 核心系統完成狀態
+# 運行示例
+cd bin
+./SimpleExample
+```
 
-| 系統 | 狀態 | 關鍵檔案 |
-|:---|:---|:---|
-| **RTS 核心** | ✅ 完成 | `MingRTSUnitManager`, `MingRTSCombatSystem` |
-| **資源建築** | ✅ 完成 | `MingRTSResourceManager`, `MingRTSBuildingSystem` |
-| **AI 戰役** | ✅ 完成 | `MingRTSAIEnhancedSystem`, `MingRTSCampaignSystem` |
-| **角色關係** | ✅ 完成 | `MingRelationshipManager`, `MingReputationManager` |
-| **音頻系統** | ✅ 完成 | `MingAudioSystem`, `MingRepublicEraAudioThemes` |
-| **UI 系統** | ✅ 完成 | `MingPersonalUIManager`, `MingDialoguePanel` |
-| **保存載入** | ✅ 完成 | `MingRTSSaveLoadEnhancedSystem` |
-| **四層整合** | ✅ 完成 | `MingFourLayerManager` |
-| **網絡多人** | ✅ 完成 | `MingRTSNetworkEnhancedSystem` |
-| **性能優化** | ✅ 完成 | `MingRTSPerformanceEnhancedSystem` (Epic 8.1) |
-| **本地化** | ✅ 完成 | `MingRTSLocalizationEnhancedSystem` (Epic 7.1) |
-| **Release 測試** | ✅ 完成 | `MingReleaseIntegrationTest` (38測試) |
+### Windows 建置
 
-### Beta 版本特性 (Story 3.5-3.7)
+```bash
+# 使用 Visual Studio
+cmake -G "Visual Studio 16 2019" ..
+cmake --build . --config Release
 
-#### Story 3.5: 音頻和音效系統
-- 10個民國時期音頻主題 (戰鬥、探索、外交等)
-- 10個地區音效 (北平、上海、南京等)
-- 音頻-關係系統互動
-- MetaSounds 程序化音效
+# 或使用 MinGW
+cmake -G "MinGW Makefiles" ..
+cmake --build .
+```
 
-#### Story 3.6: UI 和界面系統
-- 完整個人系統 UI (關係、聲望、對話、任務)
-- 主儀表板 (MingMainDashboard)
-- 打字機效果對話系統
-- 輔助功能支持 (字體大小、高對比度等)
+---
 
-#### Story 3.7: 保存和載入系統
-- 11種保存數據類型
-- 10種保存格式 (二進制、JSON、壓縮、加密等)
-- 自動保存和備份恢復
-- 雲端保存支持
+## 💻 使用示例
 
-### Release 版本特性 (v1.0.0)
+### 基本初始化
 
-#### 10 個 Epic 系統全部完成
-- **Epic 1.1**: RTS 戰鬥系統 - 200+ 單位, 6 AI 類型, 7 傷害類型
-- **Epic 2.1**: 經濟系統 - 10 資源, 15 建築, 貿易系統
-- **Epic 3.1**: AI 戰役系統 - 12 行為模式, 8 戰役類型
-- **Epic 4.1**: UI 音頻系統 - 21 UI 類型, 16 音頻情感
-- **Epic 5.1**: 網絡系統 - 10 網絡類型, 11 遊戲模式
-- **Epic 6.1**: 保存系統 - 11 數據類型, 雲端支持
-- **Epic 7.1**: 本地化 - 20 語言, 17 地區
-- **Epic 8.1**: 性能調試 - 11 監控類別
-- **Epic 9**: AI 內容生成 - 12 內容類型
-- **Epic 10**: 四層整合 - 策略/戰術/個人/建築
+```cpp
+#include "Core/PotatoEngine.h"
 
-### 📁 文檔指南
+using namespace Potato;
 
-- **Release 發布準備**: `docs/RELEASE_INTEGRATION_GUIDE.md` (完整發布指南)
-- **Beta 集成指南**: `docs/BETA_INTEGRATION_GUIDE.md`
-- **音頻系統**: `docs/STORY_3_5_AUDIO_INTEGRATION.md`
-- **UI 系統**: `docs/STORY_3_6_UI_INTEGRATION.md`
-- **保存載入**: `docs/STORY_3_7_SAVE_LOAD_INTEGRATION.md`
-- **Release 測試套件**: `Plugins/MingCore/Source/MingCore/Tests/MingReleaseIntegrationTest`
+int main() {
+    // 獲取引擎實例
+    PotatoEngine& engine = PotatoEngine::GetInstance();
+    
+    // 配置引擎
+    EngineConfig config;
+    config.windowWidth = 1920;
+    config.windowHeight = 1080;
+    config.windowTitle = "My Potato Game";
+    config.enablePhysics = true;
+    config.enableAudio = true;
+    config.enableGUI = true;
+    config.enableAI = true;
+    
+    // 初始化引擎
+    if (!engine.Initialize(config)) {
+        return -1;
+    }
+    
+    // 設置更新回調
+    engine.SetUpdateCallback([](float deltaTime) {
+        // 遊戲邏輯更新
+    });
+    
+    // 運行主循環
+    engine.RunMainLoop();
+    
+    // 關閉引擎
+    engine.Shutdown();
+    
+    return 0;
+}
+```
 
-### 舊版開發計畫
+### 使用 AI Agent
 
-- **Sprint 1**：RTS 核心迴圈 (單位選擇、移動、資源)。✅ 已完成
-- **Sprint 2**：資源與建築系統。✅ 已完成
-- **Sprint 3**：AI 與戰役基礎。✅ 已完成
-- **Sprint 4+**：UI、音效、關卡設計、傭兵模式。✅ 已完成
+```cpp
+#include "AI/PotatoAI.h"
 
-## 貢獻人員
-- 開發者：Archaon (V仔)
-- 助理：馬鈴薯 (🥔)
+// 創建 AI 代理
+AgentDesc desc;
+desc.name = "Developer";
+desc.type = AgentType::Development;
+desc.autonomous = true;
 
-## 許可
+Agent* agent = engine.GetAI()->CreateAgent(desc);
+
+// 分配任務
+AgentTask task;
+task.id = "task_001";
+task.description = "Generate player controller";
+task.priority = TaskPriority::High;
+
+agent->AssignTask(task);
+
+// 更新代理
+agent->Update(deltaTime);
+```
+
+### 使用資源管理器
+
+```cpp
+#include "Resources/PotatoResourceManager.h"
+
+// 加載紋理
+Texture* texture = engine.GetResourceManager()->LoadTexture("textures/player.png");
+
+// 加載著色器
+Shader* shader = engine.GetResourceManager()->LoadShader(
+    "shaders/vertex.glsl",
+    "shaders/fragment.glsl"
+);
+
+// 使用著色器
+shader->Bind();
+shader->SetUniformMat4("modelMatrix", modelMatrix);
+shader->SetUniformVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+```
+
+---
+
+## 📚 核心系統
+
+### 核心系統 (Core)
+- **PotatoEngine**: 引擎核心
+- **CoreTypes**: 核心型別定義
+
+### 渲染系統 (Rendering)
+- **PotatoRenderer**: 渲染器接口
+- **PotatoOpenGL**: OpenGL 實現
+- **PotatoDirectX**: DirectX 實現 (開發中)
+- **PotatoVulkan**: Vulkan 實現 (開發中)
+
+### 物理系統 (Physics)
+- **PotatoPhysics**: 物理引擎核心
+- **RigidBody**: 剛體模擬
+- **CollisionShape**: 碰撞形狀
+- **支持**: 盒、球、膠囊、圓柱
+
+### 音訊系統 (Audio)
+- **PotatoAudio**: 音訊引擎
+- **Sound**: 音效播放
+- **Music**: 音樂播放
+- **3D 音訊**: 空間音訊支持
+
+### 輸入系統 (Input)
+- **PotatoInput**: 輸入管理
+- **鍵盤**: 完整鍵盤支持
+- **鼠標**: 按鈕、位置、滾動
+- **手柄**: 多手柄支持
+
+### 資源管理 (Resources)
+- **PotatoResourceManager**: 資源管理器
+- **Texture**: 紋理管理
+- **Model**: 模型管理
+- **Shader**: 著色器管理
+- **引用計數**: 自動資源管理
+
+### ECS 系統 (ECS)
+- **Entity**: 實體
+- **Component**: 組件
+- **System**: 系統
+- **World**: 世界管理
+
+### 遊戲對象 (GameObject)
+- **GameObject**: 遊戲對象基類
+- **Transform**: 變換組件
+- **Component**: 組件系統
+
+### 事件系統 (Events)
+- **EventBus**: 事件總線
+- **Event**: 事件基類
+- **EventHandler**: 事件處理器
+
+### 文件系統 (FileSystem)
+- **FileSystem**: 文件系統抽象
+- **File**: 文件操作
+- **Path**: 路徑處理
+
+### 日誌系統 (Logging)
+- **Logger**: 日誌記錄器
+- **LogLevel**: 日誌級別
+- **LogSink**: 日誌輸出
+
+### 數學庫 (Math)
+- **Vector**: 向量運算
+- **Matrix**: 矩陣運算
+- **Quaternion**: 四元數
+- **Math**: 數學函數
+
+### 內存管理 (Memory)
+- **Allocator**: 分配器
+- **Pool**: 對象池
+- **SmartPtr**: 智能指針
+
+### 平台抽象 (Platform)
+- **Platform**: 平台接口
+- **Window**: 窗口管理
+- **Thread**: 線程管理
+
+### 場景管理 (Scene)
+- **Scene**: 場景
+- **SceneManager**: 場景管理器
+- **Node**: 場景節點
+
+### 序列化 (Serialization)
+- **Serializer**: 序列化器
+- **Deserializer**: 反序列化器
+- **Format**: 格式支持 (JSON, Binary)
+
+### 時間管理 (Time)
+- **Time**: 時間管理
+- **Timer**: 計時器
+- **Clock**: 時鐘
+
+### AI 系統 (AI)
+- **PotatoAI**: AI 引擎
+- **Agent**: AI 代理
+- **任務系統**: 任務分配和執行
+- **決策系統**: AI 決策制定
+- **學習系統**: 機器學習支持
+
+---
+
+## 🔧 配置選項
+
+### 引擎配置
+```cpp
+struct EngineConfig {
+    int windowWidth = 1920;
+    int windowHeight = 1080;
+    std::string windowTitle = "Potato Engine";
+    bool enableVSync = true;
+    bool enableFullscreen = false;
+    int targetFPS = 60;
+    bool enablePhysics = true;
+    bool enableAudio = true;
+    bool enableGUI = true;
+    bool enableAI = true;
+    std::string assetPath = "./assets";
+};
+```
+
+### 渲染配置
+```cpp
+struct RenderConfig {
+    RendererType type = RendererType::OpenGL;
+    int windowWidth = 1920;
+    int windowHeight = 1080;
+    bool enableVSync = true;
+    glm::vec4 clearColor = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
+};
+```
+
+### 物理配置
+```cpp
+struct PhysicsConfig {
+    glm::vec3 gravity = glm::vec3(0.0f, -9.8f, 0.0f);
+    int maxSolverIterations = 10;
+    float fixedTimeStep = 1.0f / 60.0f;
+    bool enableDebugDraw = false;
+};
+```
+
+---
+
+## 📊 性能目標
+
+- **啟動時間**: <5 秒
+- **內存使用**: <500MB (基礎系統)
+- **FPS**: 60+ FPS (中等場景)
+- **加載時間**: <2 秒 (小型場景)
+- **代理響應**: <50ms
+
+---
+
+## 🛠️ 開發狀態
+
+### 已完成 ✅
+- [x] 核心引擎框架
+- [x] OpenGL 渲染器
+- [x] 物理系統框架
+- [x] 音訊系統框架
+- [x] 輸入系統
+- [x] GUI 系統
+- [x] 資源管理系統
+- [x] AI Agent 系統
+- [x] ECS 架構
+- [x] 事件系統
+- [x] 文件系統
+- [x] 日誌系統
+- [x] 數學庫
+- [x] 內存管理
+- [x] 平台抽象
+- [x] 場景管理
+- [x] 序列化
+- [x] 時間管理
+- [x] CMake 建置系統
+
+### 開發中 🚧
+- [ ] DirectX 渲染器
+- [ ] Vulkan 渲染器
+- [ ] Bullet Physics 完整整合
+- [ ] OpenAL 完整整合
+- [ ] 模型加載器
+- [ ] 動畫系統
+- [ ] 粒子系統
+- [ ] 編輯器應用
+
+### 規劃中 📋
+- [ ] 網絡多人遊戲
+- [ ] 物理材質系統
+- [ ] 高級著色器
+- [ ] 性能分析器
+- [ ] 調試器
+- [ ] 移動平台支持
+
+---
+
+## 🤝 貢獻
+
+歡迎貢獻！請遵循以下步驟：
+
+1. Fork 項目
+2. 創建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 開啟 Pull Request
+
+---
+
+## 📄 許可證
 
 MIT License
 
 ---
 
-*"民國亂世，傭兵為王。"*
+## 📞 聯繫方式
+
+- **項目主頁**: https://github.com/PotatoEngine/PotatoEngine
+- **問題報告**: https://github.com/PotatoEngine/PotatoEngine/issues
+- **文檔**: https://docs.potatoengine.com
+
+---
+
+## 🙏 致謝
+
+感謝以下開源項目：
+
+- [GLFW](https://www.glfw.org/) - 窗口和輸入管理
+- [GLAD](https://github.com/Dav1dde/glad) - OpenGL 加載器
+- [Dear ImGui](https://github.com/ocornut/imgui) - 即時 GUI
+- [Bullet Physics](https://pybullet.org/) - 物理引擎
+- [OpenAL](https://www.openal.org/) - 音訊 API
+- [stb](https://github.com/nothings/stb) - 圖像加載
+
+---
+
+## 🎯 未來路線
+
+### 短期目標 (3-6 個月)
+- 完成 DirectX 和 Vulkan 渲染器
+- 完整整合 Bullet Physics
+- 完整整合 OpenAL
+- 添加模型加載器
+- 實現編輯器應用
+
+### 中期目標 (6-12 個月)
+- 實現動畫系統
+- 實現粒子系統
+- 添加網絡支持
+- 實現性能分析器
+- 添加移動平台支持
+
+### 長期目標 (1-2 年)
+- 完整的編輯器套件
+- 可視化腳本系統
+- 高級 AI 特性
+- 雲端渲染支持
+- VR/AR 支持
+
+---
+
+**🥔 Potato Engine - 完全獨立的遊戲引擎**
+
+*版本: 1.0.0*  
+*狀態: 活躍開發中*  
+*完全解除 UE5 依賴*

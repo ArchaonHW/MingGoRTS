@@ -1,4 +1,0 @@
-UnitID,Name,ResourceCost,BuildTimeSeconds
-unit_infantry_basic,Infantry,res_money:50|res_manpower:1,10
-unit_cavalry_basic,Cavalry,res_money:100|res_manpower:1,25
-unit_armored_car,Armored Car,res_money:300|res_steel:50,45

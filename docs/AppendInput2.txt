@@ -1,3 +1,0 @@
-[/Script/Engine.InputSettings]
-+ActionMappings=(ActionName="Select",bShift=False,bCtrl=False,bAlt=False,bCmd=False,Key=LeftMouseButton)
-+ActionMappings=(ActionName="Command",bShift=False,bCtrl=False,bAlt=False,bCmd=False,Key=RightMouseButton)
