@@ -15,10 +15,17 @@ Potato Engine 是一個完全獨立的、現代化的 C++ 遊戲引擎，具備�
 - **跨平台**: 支持 Windows、Linux、macOS
 
 ### 🤖 AI Agent 系統
-- **多代理架構**: 支持多種 AI 代理類型
+- **多代理架構**: 支持多種 AI 代理類型（開發、設計、分析、測試、調試、研究）
 - **任務分配**: 智能任務分配和執行
-- **決策制定**: 基於上下文的 AI 決策
+- **決策制定**: 基於上下文的 AI 決策和群體決策
 - **學習系統**: 支持機器學習和適應
+- **性能監控**: 實時代理性能和任務監控
+
+### 🎨 圖形介面 (GUI)
+- **多功能面板**: 儀表板、代理管理器、任務查看器、控制台、設置、統計、代碼編輯器、資產瀏覽器
+- **實時監控**: 系統狀態、代理活動、任務進度
+- **主題系統**: 深色、淺色、馬鈴薯、自訂主題
+- **可自訂佈局**: 靈活的面板佈局和設置
 
 ### 🎨 高性能渲染
 - **多圖形 API**: 支持 OpenGL、DirectX、Vulkan
@@ -60,8 +67,16 @@ PotatoEngine/
 ├── Scene/                 # 場景管理
 ├── Serialization/         # 序列化
 ├── Time/                  # 時間管理
+├── AI/                    # AI Agent 系統
+│   ├── AIAgentSystem.h/cpp # AI 代理系統
+│   └── (代理類型實現)
+├── GUI/                   # 圖形介面系統
+│   ├── AgentGUI.h/cpp      # GUI 系統
+│   └── (面板實現)
 ├── Examples/              # 示例程序
+│   └── AIAgentGUIExample.cpp # AI Agent GUI 整合示例
 ├── docs/                  # 文檔
+│   └── AI_AGENT_GUI_GUIDE.md # AI Agent GUI 指南
 ├── CMakeLists.txt         # CMake 建置文件
 └── README.md              # 項目說明
 ```
@@ -185,27 +200,82 @@ int main() {
 ### 使用 AI Agent
 
 ```cpp
-#include "AI/PotatoAI.h"
+#include "AI/AIAgentSystem.h"
 
-// 創建 AI 代理
-AgentDesc desc;
-desc.name = "Developer";
-desc.type = AgentType::Development;
+// 創建 AI 系統
+auto aiSystem = std::make_unique<Potato::AI::AIAgentSystem>();
+aiSystem->Initialize();
+
+// 創建代理
+auto manager = aiSystem->GetAgentManager();
+Potato::AI::AgentDesc desc;
+desc.name = "CodeMaster";
+desc.type = Potato::AI::AgentType::Developer;
 desc.autonomous = true;
+desc.performanceRating = 0.9f;
 
-Agent* agent = engine.GetAI()->CreateAgent(desc);
+Potato::AI::AIAgent* agent = manager->CreateAgent(desc);
 
 // 分配任務
-AgentTask task;
+Potato::AI::AgentTask task;
 task.id = "task_001";
 task.description = "Generate player controller";
-task.priority = TaskPriority::High;
+task.category = "Code Generation";
+task.priority = Potato::AI::TaskPriority::High;
 
-agent->AssignTask(task);
+manager->AssignTaskToAgent("CodeMaster", task);
 
-// 更新代理
-agent->Update(deltaTime);
+// 更新系統
+aiSystem->Update(deltaTime);
 ```
+
+### 使用 GUI 系統
+
+```cpp
+#include "GUI/AgentGUI.h"
+
+// 創建 GUI 系統
+auto guiSystem = std::make_unique<Potato::GUI::AgentGUISystem>();
+guiSystem->Initialize();
+
+// 連接 AI 系統
+guiSystem->SetAgentSystem(aiSystem.get());
+
+// 設置主題
+guiSystem->SetTheme(Potato::GUI::GUITheme::Dark);
+
+// 更新和渲染
+guiSystem->Update(deltaTime);
+guiSystem->Render();
+```
+
+### AI Agent GUI 整合示例
+
+```cpp
+#include "AI/AIAgentSystem.h"
+#include "GUI/AgentGUI.h"
+
+// 初始化系統
+auto aiSystem = std::make_unique<Potato::AI::AIAgentSystem>();
+auto guiSystem = std::make_unique<Potato::GUI::AgentGUISystem>();
+
+aiSystem->Initialize();
+guiSystem->Initialize();
+
+// 連接系統
+guiSystem->SetAgentSystem(aiSystem.get());
+
+// 主循環
+while (running) {
+    float deltaTime = GetDeltaTime();
+    
+    aiSystem->Update(deltaTime);
+    guiSystem->Update(deltaTime);
+    guiSystem->Render();
+}
+```
+
+詳細使用指南請參考：[AI Agent GUI 指南](docs/AI_AGENT_GUI_GUIDE.md)
 
 ### 使用資源管理器
 
@@ -324,11 +394,27 @@ shader->SetUniformVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
 - **Clock**: 時鐘
 
 ### AI 系統 (AI)
-- **PotatoAI**: AI 引擎
-- **Agent**: AI 代理
+- **AIAgentSystem**: AI 代理系統核心
+- **AIAgent**: AI 代理基類
+- **DeveloperAgent**: 開發代理（代碼生成和優化）
+- **DesignerAgent**: 設計代理（創意和設計任務）
+- **AnalystAgent**: 分析代理（數據分析和優化）
+- **AIAgentManager**: 代理管理器
 - **任務系統**: 任務分配和執行
-- **決策系統**: AI 決策制定
+- **決策系統**: AI 決策制定和群體決策
 - **學習系統**: 機器學習支持
+
+### GUI 系統 (GUI)
+- **AgentGUISystem**: GUI 系統核心
+- **GUIManager**: GUI 管理器
+- **DashboardPanel**: 儀表板面板
+- **AgentManagerPanel**: 代理管理器面板
+- **TaskViewerPanel**: 任務查看器面板
+- **ConsolePanel**: 控制台面板
+- **SettingsPanel**: 設置面板
+- **StatisticsPanel**: 統計面板
+- **CodeEditorPanel**: 代碼編輯器面板
+- **AssetBrowserPanel**: 資產瀏覽器面板
 
 ---
 
@@ -392,9 +478,10 @@ struct PhysicsConfig {
 - [x] 物理系統框架
 - [x] 音訊系統框架
 - [x] 輸入系統
-- [x] GUI 系統
 - [x] 資源管理系統
-- [x] AI Agent 系統
+- [x] AI Agent 系統（含多種代理類型）
+- [x] GUI 圖形介面系統（含8個專業面板）
+- [x] AI Agent 與 GUI 整合
 - [x] ECS 架構
 - [x] 事件系統
 - [x] 文件系統
@@ -450,6 +537,11 @@ MIT License
 - **項目主頁**: https://github.com/PotatoEngine/PotatoEngine
 - **問題報告**: https://github.com/PotatoEngine/PotatoEngine/issues
 - **文檔**: https://docs.potatoengine.com
+
+## 📚 相關文檔
+
+- [AI Agent GUI 指南](docs/AI_AGENT_GUI_GUIDE.md) - AI 代理和圖形介面使用指南
+- [量子開發研究](docs/QUANTUM_DEVELOPMENT_RESEARCH.md) - 量子計算研究報告
 
 ---
 
