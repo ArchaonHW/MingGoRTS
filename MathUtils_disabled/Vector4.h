@@ -1,7 +1,10 @@
 #pragma once
 
+#ifndef POTATO_VECTOR4_H
+#define POTATO_VECTOR4_H
+
 #include "Core/CoreTypes.h"
-#include "Vector3.h"
+#include "MathUtils/Vector3.h"
 #include <cmath>
 #include <algorithm>
 
@@ -201,3 +204,5 @@ inline Vector4 operator/(const Vector4& a, const Vector4& b) {
 }
 
 } // namespace Potato
+
+#endif // POTATO_VECTOR4_H

@@ -1,8 +1,19 @@
 #pragma once
 
+#ifndef POTATO_VECTOR2_H
+#define POTATO_VECTOR2_H
+
 #include "Core/CoreTypes.h"
 #include <cmath>
 #include <algorithm>
+
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
 
 namespace Potato {
 
@@ -186,3 +197,5 @@ inline Vector2 operator*(float scalar, const Vector2& vec) {
 }
 
 } // namespace Potato
+
+#endif // POTATO_VECTOR2_H

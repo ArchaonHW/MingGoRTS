@@ -1,13 +1,20 @@
 #pragma once
 
-// Potato Engine 數學庫
-// 包含所有數學相關的類型和函數
+#ifndef POTATO_MATH_UTILS_H
+#define POTATO_MATH_UTILS_H
 
-#include "Vector2.h"
-#include "Vector3.h"
-#include "Vector4.h"
-#include "Matrix4.h"
-#include "Quaternion.h"
+// Potato Engine Math Library
+// Contains all math-related types and functions
+
+#include "MathUtils/Vector2.h"
+#include "MathUtils/Vector3.h"
+#include "MathUtils/Vector4.h"
+#include "MathUtils/Matrix4.h"
+#include "MathUtils/Quaternion.h"
+
+#include <cmath>
+#include <cstdlib>
+#include <algorithm>
 
 namespace Potato {
 
@@ -93,102 +100,102 @@ namespace MathUtils {
     
     // 模運算 (處理負數)
     inline float Mod(float x, float y) {
-        return x - y * std::floor(x / y);
+        return x - y * Floor(x / y);
     }
     
     // 分數部分
     inline float Fract(float x) {
-        return x - std::floor(x);
+        return x - Floor(x);
     }
     
     // 最接近的整數
     inline float Round(float x) {
-        return std::round(x);
+        return static_cast<float>(std::round(static_cast<double>(x)));
     }
     
     // 向上取整
     inline float Ceil(float x) {
-        return std::ceil(x);
+        return static_cast<float>(std::ceil(static_cast<double>(x)));
     }
     
     // 向下取整
     inline float Floor(float x) {
-        return std::floor(x);
+        return static_cast<float>(std::floor(static_cast<double>(x)));
     }
     
     // 幂函數
     inline float Pow(float base, float exponent) {
-        return std::pow(base, exponent);
+        return static_cast<float>(std::pow(static_cast<double>(base), static_cast<double>(exponent)));
     }
     
     // 平方根
     inline float Sqrt(float x) {
-        return std::sqrt(x);
+        return static_cast<float>(std::sqrt(static_cast<double>(x)));
     }
     
     // 倒數平方根 (快速版本)
     inline float InvSqrt(float x) {
-        return 1.0f / std::sqrt(x);
+        return 1.0f / Sqrt(x);
     }
     
     // 指數函數
     inline float Exp(float x) {
-        return std::exp(x);
+        return static_cast<float>(std::exp(static_cast<double>(x)));
     }
     
     // 對數函數
     inline float Log(float x) {
-        return std::log(x);
+        return static_cast<float>(std::log(static_cast<double>(x)));
     }
     
     inline float Log2(float x) {
-        return std::log2(x);
+        return static_cast<float>(std::log2(static_cast<double>(x)));
     }
     
     inline float Log10(float x) {
-        return std::log10(x);
+        return static_cast<float>(std::log10(static_cast<double>(x)));
     }
     
-    // 三角函數
+    // 三角函數 (使用 std 命名空間避免衝突)
     inline float Sin(float x) {
-        return std::sin(x);
+        return std::sin(static_cast<double>(x));
     }
     
     inline float Cos(float x) {
-        return std::cos(x);
+        return std::cos(static_cast<double>(x));
     }
     
     inline float Tan(float x) {
-        return std::tan(x);
+        return std::tan(static_cast<double>(x));
     }
     
     inline float Asin(float x) {
-        return std::asin(x);
+        return static_cast<float>(std::asin(static_cast<double>(x)));
     }
     
     inline float Acos(float x) {
-        return std::acos(x);
+        return static_cast<float>(std::acos(static_cast<double>(x)));
     }
     
     inline float Atan(float x) {
-        return std::atan(x);
+        return static_cast<float>(std::atan(static_cast<double>(x)));
     }
     
     inline float Atan2(float y, float x) {
-        return std::atan2(y, x);
+        return static_cast<float>(std::atan2(static_cast<double>(y), static_cast<double>(x)));
     }
     
     // 雙曲函數
     inline float Sinh(float x) {
-        return std::sinh(x);
+        return static_cast<float>(std::sinh(static_cast<double>(x)));
     }
     
     inline float Cosh(float x) {
-        return std::cosh(x);
+        return static_cast<float>(std::cosh(static_cast<double>(x)));
     }
     
     inline float Tanh(float x) {
-        return std::tanh(x);
+        return static_cast<float>(std::tanh(static_cast<double>(x)));
     }
     
     // 隨機數生成
@@ -239,7 +246,7 @@ namespace MathUtils {
         float s = hsv.y;
         float v = hsv.z;
         
-        float i = std::floor(h);
+        float i = Floor(h);
         float f = h - i;
         float p = v * (1.0f - s);
         float q = v * (1.0f - s * f);
@@ -275,12 +282,14 @@ namespace MathUtils {
     // 伽馬校正
     inline Vector3 GammaCorrect(const Vector3& color, float gamma) {
         return Vector3(
-            std::pow(color.x, 1.0f / gamma),
-            std::pow(color.y, 1.0f / gamma),
-            std::pow(color.z, 1.0f / gamma)
+            Pow(color.x, 1.0f / gamma),
+            Pow(color.y, 1.0f / gamma),
+            Pow(color.z, 1.0f / gamma)
         );
     }
     
 } // namespace MathUtils
 
 } // namespace Potato
+
+#endif // POTATO_MATH_UTILS_H

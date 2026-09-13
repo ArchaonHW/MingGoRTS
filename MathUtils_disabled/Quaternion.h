@@ -1,8 +1,11 @@
 #pragma once
 
+#ifndef POTATO_QUATERNION_H
+#define POTATO_QUATERNION_H
+
 #include "Core/CoreTypes.h"
-#include "Vector3.h"
-#include "Matrix4.h"
+#include "MathUtils/Vector3.h"
+#include "MathUtils/Matrix4.h"
 #include <cmath>
 
 namespace Potato {
@@ -346,3 +349,5 @@ inline Quaternion operator*(float scalar, const Quaternion& quat) {
 }
 
 } // namespace Potato
+
+#endif // POTATO_QUATERNION_H

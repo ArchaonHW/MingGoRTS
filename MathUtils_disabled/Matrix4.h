@@ -1,8 +1,11 @@
 #pragma once
 
+#ifndef POTATO_MATRIX4_H
+#define POTATO_MATRIX4_H
+
 #include "Core/CoreTypes.h"
-#include "Vector3.h"
-#include "Vector4.h"
+#include "MathUtils/Vector3.h"
+#include "MathUtils/Vector4.h"
 #include <cmath>
 #include <cstring>
 
@@ -354,3 +357,5 @@ inline Matrix4 operator*(float scalar, const Matrix4& mat) {
 }
 
 } // namespace Potato
+
+#endif // POTATO_MATRIX4_H
