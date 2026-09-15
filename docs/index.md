@@ -14,6 +14,7 @@
 - **[AI_AGENT_ENHANCEMENT_COMPLETION_REPORT.md](./AI_AGENT_ENHANCEMENT_COMPLETION_REPORT.md)** - AI Agent 系統增強完成報告，包含編碼修復、系統整合、性能優化和測試驗證
 - **[AI_AGENT_ENHANCEMENT_GUIDE.md](./AI_AGENT_ENHANCEMENT_GUIDE.md)** - AI Agent 系統增強使用指南，包含新增代理類型、感知系統、記憶系統、工具系統和計畫系統
 - **[AI_AGENT_GUI_GUIDE.md](./AI_AGENT_GUI_GUIDE.md)** - AI Agent GUI 集成指南
+- **[POTATO_ENGINE_AI_ENHANCEMENT_COMPLETION_REPORT.md](./POTATO_ENGINE_AI_ENHANCEMENT_COMPLETION_REPORT.md)** - Potato Engine AI 機器學習增強完成報告，包含神經網絡、強化學習和自然語言處理
 
 ## 💻 MingGoRTS IDE
 

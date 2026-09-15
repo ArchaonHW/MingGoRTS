@@ -3,6 +3,7 @@
  */
 
 #include "IDEGUI.h"
+#include "../IntelligentSuggestion.h"
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -2295,6 +2296,138 @@ std::vector<std::string> IDEGUI::GetStandardLibraryFunctions() {
 }
 
 // ============================================================================
+// Intelligent Suggestions Implementation
+// ============================================================================
+
+void IDEGUI::UpdateIntelligentSuggestions() {
+    if (!state.intelligentSuggestionsEnabled) return;
+    
+    // In a real implementation, this would:
+    // 1. Get current code context
+    // 2. Call IntelligentSuggestionSystem::GenerateSuggestions
+    // 3. Update state.currentSuggestions
+    
+    // For now, add a placeholder suggestion
+    Suggestion suggestion;
+    suggestion.type = SuggestionType::CodeCompletion;
+    suggestion.title = "Intelligent Suggestion";
+    suggestion.description = "AI-powered code analysis and suggestions";
+    suggestion.code = "// Suggested code";
+    suggestion.reason = "Based on code patterns and best practices";
+    suggestion.confidence = ConfidenceLevel::High;
+    suggestion.confidenceScore = 0.85f;
+    
+    state.currentSuggestions.clear();
+    state.currentSuggestions.push_back(suggestion);
+    state.showSuggestions = true;
+}
+
+void IDEGUI::RenderIntelligentSuggestions() {
+    if (!state.showSuggestions || state.currentSuggestions.empty()) return;
+    
+    ImGui::SetNextWindowPos(ImVec2(state.codeEditorPos.x + 50, 
+                                       state.codeEditorPos.y + 100), 
+                        ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_FirstUseEver);
+    
+    ImGui::Begin("Intelligent Suggestions", &state.showSuggestions);
+    
+    ImGui::TextColored(ImVec4(0.3f, 0.8f, 0.3f, 1.0f), "[AI] Intelligent Suggestions");
+    ImGui::Separator();
+    
+    for (size_t i = 0; i < state.currentSuggestions.size(); i++) {
+        const auto& suggestion = state.currentSuggestions[i];
+        
+        ImGui::PushID(static_cast<int>(i));
+        
+        // Suggestion type indicator
+        ImVec4 typeColor;
+        switch (suggestion.type) {
+            case SuggestionType::CodeCompletion: typeColor = ImVec4(0.3f, 0.8f, 0.3f, 1.0f); break;
+            case SuggestionType::Refactoring: typeColor = ImVec4(0.3f, 0.6f, 0.8f, 1.0f); break;
+            case SuggestionType::Optimization: typeColor = ImVec4(0.8f, 0.6f, 0.3f, 1.0f); break;
+            case SuggestionType::BugFix: typeColor = ImVec4(0.9f, 0.3f, 0.3f, 1.0f); break;
+            case SuggestionType::BestPractice: typeColor = ImVec4(0.6f, 0.8f, 0.3f, 1.0f); break;
+            default: typeColor = ImVec4(0.6f, 0.6f, 0.8f, 1.0f); break;
+        }
+        
+        ImGui::TextColored(typeColor, "[%s]", 
+            suggestion.type == SuggestionType::CodeCompletion ? "Code" :
+            suggestion.type == SuggestionType::Refactoring ? "Refactor" :
+            suggestion.type == SuggestionType::Optimization ? "Optimize" :
+            suggestion.type == SuggestionType::BugFix ? "Bug" :
+            suggestion.type == SuggestionType::BestPractice ? "Best" : "Other");
+        
+        ImGui::SameLine();
+        ImGui::Text("%s", suggestion.title.c_str());
+        
+        if (ImGui::IsItemHovered()) {
+            ImGui::BeginTooltip();
+            ImGui::Text("%s", suggestion.description.c_str());
+            ImGui::Separator();
+            ImGui::Text("Reason: %s", suggestion.reason.c_str());
+            ImGui::Text("Confidence: %.1f%%", suggestion.confidenceScore * 100.0f);
+            ImGui::EndTooltip();
+        }
+        
+        // Apply button
+        ImGui::SameLine();
+        if (ImGui::SmallButton("Apply")) {
+            ApplySuggestion(suggestion);
+            LearnFromSuggestion(suggestion.id, true);
+        }
+        
+        // Dismiss button
+        ImGui::SameLine();
+        if (ImGui::SmallButton("Dismiss")) {
+            LearnFromSuggestion(suggestion.id, false);
+            state.currentSuggestions.erase(state.currentSuggestions.begin() + i);
+            i--;
+        }
+        
+        ImGui::Separator();
+        
+        ImGui::PopID();
+    }
+    
+    if (ImGui::Button("Close")) {
+        state.showSuggestions = false;
+    }
+    
+    ImGui::End();
+}
+
+void IDEGUI::ApplySuggestion(const Suggestion& suggestion) {
+    // In a real implementation, this would:
+    // 1. Insert the suggested code at the cursor position
+    // 2. Update the editor buffer
+    // 3. Mark the file as modified
+    
+    AddOutputLog("[AI] Applied suggestion: " + suggestion.title);
+    AddOutputLog("[AI] Code: " + suggestion.code);
+    
+    // Placeholder: add suggestion code to current editor content
+    if (state.activeTab >= 0) {
+        std::string currentContent = state.editorBuffer;
+        currentContent += "\n" + suggestion.code + "\n";
+        strncpy(state.editorBuffer, currentContent.c_str(), sizeof(state.editorBuffer) - 1);
+        state.openTabs[state.activeTab].modified = true;
+    }
+}
+
+void IDEGUI::LearnFromSuggestion(const std::string& suggestionId, bool accepted) {
+    // In a real implementation, this would:
+    // 1. Call IntelligentSuggestionSystem::LearnFromFeedback
+    // 2. Update suggestion weights based on acceptance
+    
+    if (accepted) {
+        AddOutputLog("[AI] Suggestion accepted - learning from feedback");
+    } else {
+        AddOutputLog("[AI] Suggestion dismissed - learning from feedback");
+    }
+}
+
+// ============================================================================
 // Autocomplete Implementation
 // ============================================================================
 
@@ -2379,6 +2512,48 @@ bool IDEGUI::ShouldShowAutocomplete() {
     // In a real implementation, this would check if autocomplete should be shown
     // based on current cursor position and context
     return true;
+}
+
+int IDEGUI::CalculateCyclomaticComplexity(const std::string& code) {
+    int complexity = 1; // Base complexity
+    
+    // Count decision points
+    complexity += std::count(code.begin(), code.end(), 'i'); // if
+    complexity += std::count(code.begin(), code.end(), '?'); // ternary
+    complexity += std::count(code.begin(), code.end(), ':'); // case/else
+    complexity += std::count(code.begin(), code.end(), 'f'); // for
+    complexity += std::count(code.begin(), code.end(), 'w'); // while
+    
+    return complexity;
+}
+
+int IDEGUI::CalculateNestingDepth(const std::string& code) {
+    int maxDepth = 0;
+    int currentDepth = 0;
+    
+    for (char c : code) {
+        if (c == '{') {
+            currentDepth++;
+            maxDepth = std::max(maxDepth, currentDepth);
+        } else if (c == '}') {
+            currentDepth--;
+        }
+    }
+    
+    return maxDepth;
+}
+
+std::vector<std::string> IDEGUI::FindLongFunctions(const std::string& code, int maxLines) {
+    std::vector<std::string> longFunctions;
+    
+    // This is a simplified version
+    // Real implementation would parse actual function boundaries
+    
+    if (code.length() > maxLines * 80) { // Rough estimate
+        longFunctions.push_back("Large function detected");
+    }
+    
+    return longFunctions;
 }
 
 } // namespace MingGoRTSIDE

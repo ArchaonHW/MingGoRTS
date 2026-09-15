@@ -7,6 +7,7 @@
 
 #include "../IDECore.h"
 #include "../AIIntegration.h"
+#include "../IntelligentSuggestion.h"
 #include "I18N.h"
 #include "imgui.h"
 #include <string>
@@ -167,6 +168,12 @@ struct IDEGUIState {
     std::vector<std::string> autocompleteSuggestions;
     bool showAutocomplete = false;
     int autocompleteIndex = 0;
+    
+    // Intelligent suggestion system
+    bool intelligentSuggestionsEnabled = true;
+    std::vector<Suggestion> currentSuggestions;
+    bool showSuggestions = false;
+    int suggestionIndex = 0;
 };
 
 /**
@@ -249,6 +256,21 @@ public:
     void UpdateAutocomplete();
     void SelectAutocompleteSuggestion(int index);
     void InsertAutocomplete();
+    std::vector<std::string> GetSuggestionsForContext(const std::string& context);
+    bool ShouldShowAutocomplete();
+    std::vector<std::string> GetCppKeywords();
+    std::vector<std::string> GetStandardLibraryFunctions();
+    
+    // Intelligent Suggestions
+    void UpdateIntelligentSuggestions();
+    void RenderIntelligentSuggestions();
+    void ApplySuggestion(const Suggestion& suggestion);
+    void LearnFromSuggestion(const std::string& suggestionId, bool accepted);
+    
+    // Code Analysis Helpers
+    int CalculateCyclomaticComplexity(const std::string& code);
+    int CalculateNestingDepth(const std::string& code);
+    std::vector<std::string> FindLongFunctions(const std::string& code, int maxLines = 50);
     
     // File System
     std::vector<std::string> ScanDirectory(const std::string& path);
