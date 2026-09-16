@@ -1,0 +1,108 @@
+// BattleSceneTest - E4 戰鬥→場景同步驗證(無頭)
+// 覆蓋:Squad→SceneNode 綁定、grid→世界座標換算、Sync 每幀更新、
+//       全滅自動隱藏、士氣調色、SetUnitMesh 進 render list、新 squad 補掛
+
+#include "Gameplay/BattleController.h"
+#include "Gameplay/BattleSceneSync.h"
+#include "Scene/SceneNode.h"
+#include "Rendering/SceneRenderer.h"
+#include "Rendering/RenderableComponent.h"
+#include "Rendering/OpenGLRenderer.h" // Mesh(GL 惰性建立)
+#include "Rendering/Camera.h"
+
+#include <cstdio>
+#include <cmath>
+
+using namespace Potato;
+using namespace Potato::Gameplay;
+
+static int g_pass = 0;
+static int g_fail = 0;
+
+static void Check(bool ok, const char* name, float value = 0.0f, float expected = 0.0f) {
+    if (ok) {
+        g_pass++;
+        printf("  [PASS] %s\n", name);
+    } else {
+        g_fail++;
+        printf("  [FAIL] %s  (got %.4f, expected %.4f)\n", name, value, expected);
+    }
+}
+
+int main() {
+    printf("=== Battle Scene Sync Tests ===\n\n");
+
+    const float CELL = 2.0f;
+    BattleController battle(20, 15, CELL);
+    Squad* blue = battle.CreateSquad("藍軍一隊", 0, Vector2(2, 2), 10);
+    Squad* red  = battle.CreateSquad("紅軍一隊", 1, Vector2(17, 12), 10);
+
+    SceneGraph scene;
+    auto root = MakeShared<SceneNode>("root");
+    scene.SetRootNode(root);
+
+    BattleSceneSync sync;
+    sync.Attach(battle, scene, CELL);
+    sync.Sync(battle);
+
+    // [1] 兩個 squad 都產生場景節點
+    Check(sync.BindingCount() == 2, "兩個 squad 各建一節點",
+          static_cast<float>(sync.BindingCount()), 2.0f);
+
+    // [2] grid 座標 × cellSize → 世界座標
+    SceneNode* blueNode = sync.GetNodeFor(blue);
+    Check(blueNode != nullptr, "藍軍節點存在");
+    if (blueNode) {
+        Vector3 wp = blueNode->GetWorldPosition();
+        Check(std::fabs(wp.x - 4.0f) < 1e-4f && std::fabs(wp.z - 4.0f) < 1e-4f,
+              "grid(2,2)*2 = 世界(4,4)", wp.x, 4.0f);
+    }
+
+    // [3] Sync 追蹤移動:改 squad 位置後節點跟上
+    blue->IssueOrder(SquadOrder::MoveTo, Vector2(8, 8));
+    // 直接推 squad(不經 battle.Update,隔離測同步層)
+    for (int i = 0; i < 30; ++i) blue->Update(1.0f / 30.0f, nullptr);
+    sync.Sync(battle);
+    if (blueNode) {
+        Vector3 wp = blueNode->GetWorldPosition();
+        Check(wp.x > 4.1f, "移動後節點跟進", wp.x, 5.0f);
+    }
+
+    // [4] 全滅 → 節點自動隱藏(從視錐收集消失)
+    red->ApplyCasualties(99);
+    sync.Sync(battle);
+    SceneNode* redNode = sync.GetNodeFor(red);
+    Check(redNode && !redNode->IsActive(), "全滅 squad 節點隱藏");
+
+    // [5] 士氣映射顏色:滿士氣亮,低士氣暗
+    RenderableComponent* rc = blueNode ? blueNode->GetRenderable() : nullptr;
+    Check(rc != nullptr, "節點有 renderable");
+    if (rc) {
+        Vector3 fullColor = rc->color;
+        Check(fullColor.z > 0.8f, "藍隊顏色為藍色系", fullColor.z, 0.9f);
+    }
+
+    // [6] 補掛:Attach 後新建的 squad 在下次 Sync 自動上場景
+    Squad* late = battle.CreateSquad("增援隊", 0, Vector2(5, 5), 8);
+    sync.Sync(battle);
+    Check(sync.GetNodeFor(late) != nullptr, "新增 squad 自動補掛");
+
+    // [7] 接上渲染管線:設 mesh 後可見節點進 render list
+    sync.SetUnitMesh(MakeShared<Mesh>());
+    Camera cam;
+    cam.SetPosition(Vector3(20, 40, 20));
+    cam.SetTarget(Vector3(20, 0, 15));
+    cam.SetPerspective(55.0f * 3.14159265f / 180.0f, 16.0f / 9.0f, 0.1f, 200.0f);
+
+    SceneRenderer renderer;
+    auto items = renderer.CollectRenderList(scene, cam);
+    // 可見的應是藍軍 + 增援隊(紅軍已隱藏);相機俯視戰場中央,兩隊都應在視錐內
+    Check(items.size() == 2, "render list = 存活可見小隊數",
+          static_cast<float>(items.size()), 2.0f);
+
+    sync.Detach();
+    Check(sync.BindingCount() == 0, "Detach 清空綁定");
+
+    printf("\n=== 結果: %d PASS, %d FAIL ===\n", g_pass, g_fail);
+    return g_fail == 0 ? 0 : 1;
+}

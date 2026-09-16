@@ -2,7 +2,7 @@
 title: 'IDE Intelligent Development Assistant — own in-process AI agent codegen'
 type: 'feature'
 created: '2026-09-16'
-status: 'approved'
+status: 'done'
 route: 'dispatch'
 baseline_commit: 'd5eff759dd45e73a4caa47ab7865a33446ff6d24'
 review_loop_iteration: 0

@@ -31,3 +31,16 @@ C++20 遊戲引擎 + MingGoRTS IDE，CMake 建置，無 UE5 依賴。BMAD v6 已
 - IDE GUI state 用固定長度 char buffer（如 `state.developmentResponse`）——必須 `strncpy` + 結尾 `\0` 或 `memset`，不可直接 `=` 指派 `std::string`
 
 <!-- /bmad:context -->
+
+## Gameplay 層（doctrine 戰鬥原型，2026-09-17 新增）
+
+- `Gameplay/`：斷橋原型的玩法層——`FlowField`（群體尋路）/`Squad`/`Doctrine`（含規則冷卻）/`BattleController`（三拍狀態機）/`BattlePlanner`（AI 參謀）/`BattleMap`（T-4 地圖 JSON）/`EnemyGeneral`（T-5 敵將人格腳本）/`BattleResources`（T-6 情報/CP/士氣執行率）/`BattleRecorder`（T-7 事件錄製回放）/`Roster`（T-8 名冊）
+- `Gameplay` lib 連結 `PotatoEngine`（BattleSceneSync 需要場景類型）；`PotatoEngine` 不反向依賴 Gameplay
+- 資產 schema：`assets/cards/` 角色卡（`potato.character_card/1`，人格三軸 + signatureDoctrine）、`assets/maps/` 戰場圖（`potato.battle_map/1`）、回放 `potato.battle_replay/1`、名冊 `potato.roster/1`
+- JSON 解析用 `Serialization/JsonParser.h`（`Potato::JsonValue`），不要引第三方 JSON 庫
+
+## 驗證方式更新
+
+- CTest 已啟用：`enable_testing()` + `POTATO_TESTS` 清單，`cd build && ctest -C Release`；新測試執行檔加進 `POTATO_TESTS` 即自動註冊
+- 玩法 demo：`DoctrineBattleDemo`（手寫腳本）、`AutoPlannerDemo`（AI 規劃）、`DuanqiaoDemo`（斷橋整合）皆為無頭測試，回傳非零即失敗
+- BattleRecorder/Roster 會寫出 JSON 檔到工作目錄——屬預期行為，勿當副作用刪除

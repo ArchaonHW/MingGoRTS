@@ -8,6 +8,7 @@
 
 #include <functional>
 #include <memory>
+#include <random>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -74,6 +75,14 @@ public:
     // 某隊現存成員總數（含潰逃中）
     int TotalMembers(int team) const;
 
+    // 目前遊戲時間（秒）與事件回調存取（BattleRecorder 附加用）
+    float GetElapsed() const { return elapsed; }
+    EventCallback GetEventCallback() const { return onEvent; }
+
+    // T-6 士氣執行率：小隊士氣 < threshold 時 doctrine 動作只有 rate 機率生效
+    // （rate 1.0 = 關閉此規則）
+    void SetMoraleExecution(float threshold, float rate);
+
     // 部署完畢 → 進入即時執行（不再能改 doctrine）
     bool BeginExecution();
 
@@ -126,6 +135,9 @@ private:
     float timeScale;
     float doctrineTimer;      // doctrine 評估節流
     float elapsed;
+    float moraleExecThreshold = 0.0f; // 0 = 關閉
+    float moraleExecRate = 1.0f;
+    mutable std::mt19937 execRng{std::random_device{}()};
 
     static constexpr float DOCTRINE_INTERVAL = 0.25f; // 每 0.25s 遊戲時間評估一次
     static constexpr float OBJECTIVE_RADIUS = 1.0f;

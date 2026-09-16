@@ -112,6 +112,11 @@ bool BattleController::Intervene(Squad* squad, SquadOrder order,
     return true;
 }
 
+void BattleController::SetMoraleExecution(float threshold, float rate) {
+    moraleExecThreshold = threshold;
+    moraleExecRate = rate;
+}
+
 void BattleController::Emit(const std::string& msg) {
     if (onEvent) {
         onEvent(msg);
@@ -275,6 +280,17 @@ void BattleController::EvaluateDoctrines() {
         const SquadContext& ctx = contexts[squad.get()];
         DoctrineAction action = docIt->second.Evaluate(ctx);
         const DoctrineRule* rule = docIt->second.GetMatchedRule();
+
+        // T-6 士氣執行率：士氣崩到門檻以下，命令有機率被抗命（原地不動）
+        if (moraleExecThreshold > 0.0f &&
+            ctx.moralePct < moraleExecThreshold &&
+            action != DoctrineAction::RetreatToRally) { // 撤退永遠執行
+            std::uniform_real_distribution<float> roll(0.0f, 1.0f);
+            if (roll(execRng) > moraleExecRate) {
+                Emit(squad->GetName() + " ignored orders (low morale)");
+                continue;
+            }
+        }
 
         SquadOrder prevOrder = squad->GetOrder();
         Vector2 prevTarget = squad->GetOrderTarget();
