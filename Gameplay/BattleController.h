@@ -1,0 +1,119 @@
+#pragma once
+
+#include "Core/CoreTypes.h"
+#include "MathUtils/Vector2.h"
+#include "FlowField.h"
+#include "Squad.h"
+#include "Doctrine.h"
+
+#include <functional>
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+namespace Potato {
+namespace Gameplay {
+
+/**
+ * 戰鬥階段：對應「回合層 → 即時層 → 戰後」的三拍循環
+ */
+enum class BattlePhase {
+    Deployment,     // 回合層：編成、寫 doctrine、配置
+    Execution,      // 即時層：doctrine 自動執行，可用 CP 介入
+    Resolution      // 戰後：勝負已定
+};
+
+enum class BattleOutcome {
+    Ongoing,
+    Victory,        // team 0（玩家方）全殲或擊潰敵軍
+    Defeat,
+    Draw
+};
+
+/**
+ * 戰鬥控制器
+ *
+ * 即時執行層的核心：持有戰場 grid/flow field、所有小隊、
+ * 每隊的 doctrine 集合與目標點，逐 tick 評估 doctrine →
+ * 下達命令 → 移動 → 結算戰鬥。不依賴 EventBus，
+ * 事件用回調輸出（上層可自行接到 EventBus）。
+ */
+class BattleController {
+public:
+    using EventCallback = std::function<void(const std::string&)>;
+
+    BattleController(int gridWidth, int gridHeight, float cellSize);
+
+    // ---- 部署階段 ----
+    Squad* CreateSquad(const std::string& name, int team,
+                       const Vector2& pos, int members);
+    void AssignDoctrine(Squad* squad, const DoctrineSet& doctrine);
+    void SetObjective(int team, const Vector2& pos);
+    void SetRallyPoint(int team, const Vector2& pos);
+    void SetCommandPoints(int team, int points);
+
+    FlowField& GetField() { return field; }
+
+    // 部署完畢 → 進入即時執行（不再能改 doctrine）
+    bool BeginExecution();
+
+    // ---- 即時階段 ----
+    // timeScale：0 = 暫停（指令階段）、0.25 = 子彈時間、1 = 正常
+    void SetTimeScale(float scale);
+    float GetTimeScale() const { return timeScale; }
+
+    // CP 介入：覆寫該隊命令 holdSeconds 秒（遊戲時間）。回傳 false = CP 不足/階段不對
+    bool Intervene(Squad* squad, SquadOrder order, const Vector2& target,
+                   float holdSeconds = 5.0f);
+
+    // 每幀呼叫：realDt 為真實秒數，內部乘 timeScale
+    void Update(float realDt);
+
+    // ---- 查詢 ----
+    BattlePhase GetPhase() const { return phase; }
+    BattleOutcome GetOutcome() const { return outcome; }
+    int GetCommandPoints(int team) const;
+    const std::vector<UniquePtr<Squad>>& GetSquads() const { return squads; }
+
+    void SetEventCallback(EventCallback cb) { onEvent = std::move(cb); }
+
+private:
+    void EvaluateDoctrines();
+    void ResolveCombat(float dt);
+    void UpdateContexts();
+    void CheckOutcome();
+    void Emit(const std::string& msg);
+
+    SquadContext BuildContext(const Squad& squad) const;
+    FlowField* GetTeamField(int team);
+    Squad* FindNearestEnemy(const Squad& squad, float maxDist) const;
+    Squad* FindWeakestEnemy(const Squad& squad, float maxDist) const;
+    Squad* FindNearestEngagedAlly(const Squad& squad) const;
+
+    FlowField field;                                  // 地形/障礙定義
+    std::unordered_map<int, UniquePtr<FlowField>> teamFields; // 各隊目標場
+    std::vector<UniquePtr<Squad>> squads;
+    std::unordered_map<Squad*, DoctrineSet> doctrines;
+    std::unordered_map<int, Vector2> objectives;
+    std::unordered_map<int, Vector2> rallyPoints;
+    std::unordered_map<int, int> commandPoints;
+    std::unordered_map<Squad*, float> interventionUntil; // 剩餘覆寫秒數
+    std::unordered_map<Squad*, float> damageBuffer;      // 小數傷害累積
+    std::unordered_map<Squad*, SquadContext> contexts;
+
+    BattlePhase phase;
+    BattleOutcome outcome;
+    float timeScale;
+    float doctrineTimer;      // doctrine 評估節流
+    float elapsed;
+
+    static constexpr float DOCTRINE_INTERVAL = 0.25f; // 每 0.25s 遊戲時間評估一次
+    static constexpr float OBJECTIVE_RADIUS = 1.0f;
+    static constexpr float ENGAGE_RADIUS_FACTOR = 1.0f;
+
+    EventCallback onEvent;
+};
+
+} // namespace Gameplay
+} // namespace Potato
