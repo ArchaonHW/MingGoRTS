@@ -73,6 +73,7 @@ struct Suggestion {
  */
 struct CodeAnalysis {
     std::string filePath;
+    std::string codeText;  // 保留原文供後續規則掃描（如 magic number 檢查）
     std::vector<std::string> functions;
     std::vector<std::string> classes;
     std::vector<std::string> variables;
@@ -153,6 +154,7 @@ private:
     // Statistics
     size_t totalSuggestions;
     size_t acceptedSuggestions;
+    size_t nextSuggestionId;  // 遞增序號，供 LearnFromFeedback 回推類型
     
     // Helper methods
     float CalculateConfidence(const Suggestion& suggestion);

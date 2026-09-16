@@ -23,9 +23,9 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - [x] `SceneTest` — rotated-parent case (90° Y) asserts child world position via `TransformPoint`; Camera viewport guard checks added
 - [x] `LoadWAV` hardening — `AudioTest` malformed-file cases
 - `CheckExternalHandles` system-dir auto-trust direction unpinned (needs real system-dir process holding a handle — not hermetic).
-- GL-context-dependent changes (`VertexArray` lazy create, `Mesh::Draw` non-indexed fallback, `AdvancedShader` reload cleanup, `ShouldClose` null guard) have no verification path — needs a GL-context-capable smoke run.
-- `TimeManager` paused-FPS (`UpdateFPS(rawDeltaTime)`), `DashboardPanel` success-rate formula — unpinned; `Update()` needs real sleeping, others are trivial guards.
-- IDE dev-assistant async write-back seam (`std::async` → `PollDevelopmentResult` → `developmentResponse`) has no executable check — needs an ImGui harness or a UI-free result-application helper.
+- [x] GL-context-dependent changes — `GLSmokeTest` covers `VertexArray` lazy create (construct + empty `Draw` before context), `Mesh::Draw` non-indexed/indexed/instanced paths, `ShouldClose` null guard; self-SKIPs on headless. (`AdvancedShader` reload no longer exists — stale item.)
+- [x] `TimeManager` paused-FPS — `TimeTest` pins `UpdateFPS(rawDeltaTime)`: paused → deltaTime/totalTime frozen but real FPS still reported. (`DashboardPanel` no longer exists — stale item.)
+- [x] IDE dev-assistant write-back seam — `WriteGenerationResult` extracted to `GuiTextUtils.h` (UI-free); `PollDevelopmentResult` uses it; `DevAssistantSmoke` covers success/failure write-back paths.
 
 ## Cleanup / leftovers
 
@@ -34,3 +34,10 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - [x] `Mesh::Draw`/`DrawInstanced` — early-return when both buffers empty; no longer binds/creates VAO pointlessly
 - [ ] `_bmad-output/brainstorming-session-2026-09-16.md` — skipped: file has unstaged user edits (still in use?)
 - [x] Untracked root `nul` artifact — already absent (verified via `\\?\` path)
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-intelligent-suggestions.md`
+  summary: Run intelligent-suggestion analysis off the render thread / cache compiled regexes — GenerateSuggestions constructs std::regex objects per call and scans the whole 8KB buffer synchronously each quiet-period.
+  evidence: Blind Hunter review — std::regex built per call (e.g. magicNumberRegex in GetBestPracticeRecommendations); bounded but can hitch a frame on each analysis pass.
+- source_spec: `_bmad-output/implementation-artifacts/spec-intelligent-suggestions.md`
+  summary: Replace file-scope raw-pointer AI globals (g_SuggestionSystem et al.) with owned instances guarded against double-Init; Initialize() return value currently ignored.
+  evidence: Blind Hunter review — second IDEGUI instance overwrites/leaks the global; Shutdown timeout early-return leaves the pointer dangling.

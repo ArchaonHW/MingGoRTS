@@ -19,6 +19,8 @@
 #include <chrono>
 #include <cctype>
 #include <mutex>
+#include <unordered_set>
+#include <functional>
 
 namespace MingGoRTSIDE {
 
@@ -28,6 +30,13 @@ static Potato::AI::DevelopmentAssistant* g_DevAssistant = nullptr;
 static Potato::AI::LLMManager* g_LLMManager = nullptr;
 static Potato::AI::KnowledgeGraph* g_KnowledgeGraph = nullptr;
 static Potato::AI::SelfReflection* g_SelfReflection = nullptr;
+
+// 智能建議系統實例（規則式分析引擎，無外部依賴）
+static IntelligentSuggestionSystem* g_SuggestionSystem = nullptr;
+
+// 使用者已關閉的建議標題集合——同一標題不再自動出現（id 每次生成皆不同，
+// 以 title 作為抑止鍵才能跨分析週期生效）
+static std::unordered_set<std::string> g_DismissedSuggestionTitles;
 
 // g_DevSystem 非執行緒安全（stats/tasks/knowledgeGraph/selfReflection 未同步）——
 // 背景生成 worker 與 UI 端各處理器共用此 mutex 互斥
@@ -86,6 +95,9 @@ IDEGUI::IDEGUI()
     g_DevSystem->SetKnowledgeGraph(g_KnowledgeGraph);
     g_DevSystem->SetSelfReflection(g_SelfReflection);
     g_DevAssistant = new Potato::AI::DevelopmentAssistant(g_DevSystem);
+
+    g_SuggestionSystem = new IntelligentSuggestionSystem();
+    g_SuggestionSystem->Initialize();
 }
 
 IDEGUI::~IDEGUI() {
@@ -156,6 +168,11 @@ void IDEGUI::Shutdown() {
         g_DevSystem->Shutdown();
         delete g_DevSystem;
         g_DevSystem = nullptr;
+    }
+    if (g_SuggestionSystem) {
+        g_SuggestionSystem->Shutdown();
+        delete g_SuggestionSystem;
+        g_SuggestionSystem = nullptr;
     }
     if (g_KnowledgeGraph) {
         delete g_KnowledgeGraph;
@@ -2465,26 +2482,72 @@ std::vector<std::string> IDEGUI::GetStandardLibraryFunctions() {
 // ============================================================================
 
 void IDEGUI::UpdateIntelligentSuggestions() {
-    if (!state.intelligentSuggestionsEnabled) return;
-    
-    // In a real implementation, this would:
-    // 1. Get current code context
-    // 2. Call IntelligentSuggestionSystem::GenerateSuggestions
-    // 3. Update state.currentSuggestions
-    
-    // For now, add a placeholder suggestion
-    Suggestion suggestion;
-    suggestion.type = SuggestionType::CodeCompletion;
-    suggestion.title = "Intelligent Suggestion";
-    suggestion.description = "AI-powered code analysis and suggestions";
-    suggestion.code = "// Suggested code";
-    suggestion.reason = "Based on code patterns and best practices";
-    suggestion.confidence = ConfidenceLevel::High;
-    suggestion.confidenceScore = 0.85f;
-    
-    state.currentSuggestions.clear();
-    state.currentSuggestions.push_back(suggestion);
-    state.showSuggestions = true;
+    if (!state.intelligentSuggestionsEnabled || !g_SuggestionSystem) {
+        state.showSuggestions = false;
+        return;
+    }
+
+    // 無開啟分頁時不分析（編輯器實際編輯的是 tab.buffer，不是 state.editorBuffer）
+    if (state.activeTab < 0 ||
+        state.activeTab >= static_cast<int>(state.openTabs.size())) {
+        state.showSuggestions = false;
+        return;
+    }
+    const auto& tab = state.openTabs[state.activeTab];
+    if (tab.buffer[0] == '\0') {
+        state.showSuggestions = false;
+        return;
+    }
+
+    // 去抖動：內容（含檔案路徑）變更時重設計時器，
+    // 停止編輯滿 500ms 才重跑全檔分析，避免打字途中洗掉使用者正在看的建議
+    static size_t s_contentHash = 0;
+    static bool s_analysisPending = false;
+    static auto s_lastEditTime = std::chrono::steady_clock::now();
+    static size_t s_shownSignature = 0;
+
+    const std::string hashInput = std::string(tab.buffer) + "\x1F" + tab.filePath;
+    const size_t contentHash = std::hash<std::string>{}(hashInput);
+    const auto now = std::chrono::steady_clock::now();
+
+    if (contentHash != s_contentHash) {
+        s_contentHash = contentHash;
+        s_lastEditTime = now;
+        s_analysisPending = true;
+    }
+    if (!s_analysisPending) return;
+    if (now - s_lastEditTime < std::chrono::milliseconds(500)) return;
+    s_analysisPending = false;
+
+    std::vector<Suggestion> suggestions = g_SuggestionSystem->GenerateSuggestions(
+        std::string(tab.buffer), tab.filePath, tab.currentLine, tab.currentColumn);
+
+    // 過濾已被使用者關閉過的建議（以標題為抑止鍵）
+    suggestions.erase(
+        std::remove_if(suggestions.begin(), suggestions.end(),
+            [](const Suggestion& s) {
+                return g_DismissedSuggestionTitles.count(s.title) > 0;
+            }),
+        suggestions.end());
+
+    if (suggestions.empty()) {
+        state.currentSuggestions.clear();
+        state.showSuggestions = false;
+        return;
+    }
+
+    // 建議集合有實質變化才自動重開面板；
+    // 否則保留使用者手動關閉的狀態
+    size_t signature = 0;
+    for (const auto& s : suggestions) {
+        signature ^= std::hash<std::string>{}(s.title);
+    }
+    if (signature != s_shownSignature) {
+        s_shownSignature = signature;
+        state.showSuggestions = true;
+    }
+
+    state.currentSuggestions = std::move(suggestions);
 }
 
 void IDEGUI::RenderIntelligentSuggestions() {
@@ -2540,12 +2603,16 @@ void IDEGUI::RenderIntelligentSuggestions() {
         if (ImGui::SmallButton("Apply")) {
             ApplySuggestion(suggestion);
             LearnFromSuggestion(suggestion.id, true);
+            // 套用後移除該建議，避免重複點擊重複插入
+            state.currentSuggestions.erase(state.currentSuggestions.begin() + i);
+            i--;
         }
         
         // Dismiss button
         ImGui::SameLine();
         if (ImGui::SmallButton("Dismiss")) {
             LearnFromSuggestion(suggestion.id, false);
+            g_DismissedSuggestionTitles.insert(suggestion.title);
             state.currentSuggestions.erase(state.currentSuggestions.begin() + i);
             i--;
         }
@@ -2563,29 +2630,26 @@ void IDEGUI::RenderIntelligentSuggestions() {
 }
 
 void IDEGUI::ApplySuggestion(const Suggestion& suggestion) {
-    // In a real implementation, this would:
-    // 1. Insert the suggested code at the cursor position
-    // 2. Update the editor buffer
-    // 3. Mark the file as modified
-    
     AddOutputLog("[AI] Applied suggestion: " + suggestion.title);
     AddOutputLog("[AI] Code: " + suggestion.code);
-    
-    // Placeholder: add suggestion code to current editor content
+
+    // 附加建議程式碼到作用中分頁的編輯緩衝區（tab.buffer 才是編輯器實際內容）
     if (state.activeTab >= 0 &&
         state.activeTab < static_cast<int>(state.openTabs.size())) {
-        std::string currentContent = state.editorBuffer;
+        auto& tab = state.openTabs[state.activeTab];
+        std::string currentContent = tab.buffer;
         currentContent += "\n" + suggestion.code + "\n";
-        CopyToBuffer(state.editorBuffer, sizeof(state.editorBuffer), currentContent);
-        state.openTabs[state.activeTab].modified = true;
+        CopyToBuffer(tab.buffer, sizeof(tab.buffer), currentContent);
+        tab.content = tab.buffer;
+        tab.modified = true;
     }
 }
 
 void IDEGUI::LearnFromSuggestion(const std::string& suggestionId, bool accepted) {
-    // In a real implementation, this would:
-    // 1. Call IntelligentSuggestionSystem::LearnFromFeedback
-    // 2. Update suggestion weights based on acceptance
-    
+    if (g_SuggestionSystem) {
+        g_SuggestionSystem->LearnFromFeedback(suggestionId, accepted);
+    }
+
     if (accepted) {
         AddOutputLog("[AI] Suggestion accepted - learning from feedback");
     } else {
