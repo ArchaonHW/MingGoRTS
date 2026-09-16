@@ -24,7 +24,13 @@
     "trigger": "AllyEngaged",
     "threshold": 0.0,
     "action": "AttackNearest",
-    "description": "友軍被圍立即强攻解围——仁安羌以寡擊眾救出英軍七千"
+    "description": "友軍被圍立即強攻解圍——仁安羌以寡擊眾救出英軍七千"
+  },
+  "portrait": {
+    "build": "normal",
+    "head": "cap",
+    "beard": "none",
+    "glasses": false
   },
   "lore": "維吉尼亞軍校出身,新一軍軍長。仁安羌大捷名揚國際,緬北反攻屢建奇功。",
   "historicalBattle": "仁安羌大捷 1942",

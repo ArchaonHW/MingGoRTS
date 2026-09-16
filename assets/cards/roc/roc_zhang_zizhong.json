@@ -26,6 +26,12 @@
     "action": "AttackNearest",
     "description": "兵力瀕危時發起決死突擊——南瓜店最後的衝鋒,以死明志"
   },
+  "portrait": {
+    "build": "normal",
+    "head": "cap",
+    "beard": "mustache",
+    "glasses": false
+  },
   "lore": "第三十三集團軍總司令,棗宜會戰壯烈殉國,為二戰同盟國陣亡最高階將領。",
   "historicalBattle": "棗宜會戰 1940",
   "art": "cards/art/roc_zhang_zizhong.png"

@@ -26,6 +26,12 @@
     "action": "DefendNearestAlly",
     "description": "友軍接戰即機動策應——小諸葛的全局調度藝術"
   },
+  "portrait": {
+    "build": "normal",
+    "head": "cap",
+    "beard": "none",
+    "glasses": true
+  },
   "lore": "桂系軍事靈魂,抗戰參謀副總長,善於運動戰與戰略調度,軍事才華冠絕一時。",
   "historicalBattle": "崑崙關戰役 1939",
   "art": "cards/art/roc_bai_chongxi.png"

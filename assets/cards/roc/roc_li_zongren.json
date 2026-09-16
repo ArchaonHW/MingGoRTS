@@ -26,6 +26,12 @@
     "action": "HoldPosition",
     "description": "寡不敵眾時死守陣地,誘敵深入後外圍合圍——台兒莊大捷的戰法"
   },
+  "portrait": {
+    "build": "normal",
+    "head": "cap",
+    "beard": "none",
+    "glasses": false
+  },
   "lore": "桂系首領,指揮台兒莊大捷,抗戰正面戰場首次大勝。後任中華民國代總統。",
   "historicalBattle": "台兒莊大捷 1938",
   "art": "cards/art/roc_li_zongren.png"

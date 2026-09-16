@@ -24,7 +24,13 @@
     "trigger": "AllyEngaged",
     "threshold": 0.0,
     "action": "DefendNearestAlly",
-    "description": "友軍接戰即馳援——兵諫的膽魄化為戰場上的救援直覺"
+    "description": "友軍接戰即馳援——兵諺的膽魄化為戰場上的救援直覺"
+  },
+  "portrait": {
+    "build": "slim",
+    "head": "cap",
+    "beard": "none",
+    "glasses": false
   },
   "lore": "東北易幟促成統一,西安事變改寫歷史。半生戎馬,半生軟禁,世紀滄桑。",
   "historicalBattle": "西安事變 1936",

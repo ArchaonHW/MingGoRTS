@@ -26,6 +26,12 @@
     "action": "HoldPosition",
     "description": "抵達目標點後死守不退——同古保衛戰十二晝夜的鋼鐵防線"
   },
+  "portrait": {
+    "build": "slim",
+    "head": "cap",
+    "beard": "none",
+    "glasses": false
+  },
   "lore": "第二百師師長,遠征緬甸血戰同古,撤退途中壯烈殉國,年僅三十八歲。",
   "historicalBattle": "同古保衛戰 1942",
   "art": "cards/art/roc_dai_anlan.png"
