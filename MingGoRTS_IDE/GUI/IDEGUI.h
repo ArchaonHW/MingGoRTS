@@ -174,6 +174,12 @@ struct IDEGUIState {
     std::vector<Suggestion> currentSuggestions;
     bool showSuggestions = false;
     int suggestionIndex = 0;
+    
+    // Intelligent Development System state
+    bool showDevelopmentAssistant = false;
+    char developmentPrompt[4096];
+    char developmentResponse[8192];
+    bool developmentProcessing = false;
 };
 
 /**
@@ -271,6 +277,16 @@ public:
     int CalculateCyclomaticComplexity(const std::string& code);
     int CalculateNestingDepth(const std::string& code);
     std::vector<std::string> FindLongFunctions(const std::string& code, int maxLines = 50);
+    
+    // Intelligent Development System Integration
+    void GenerateCodeFromPrompt();
+    void AnalyzeCodeWithAI();
+    void GenerateTestsWithAI();
+    void GenerateDocumentationWithAI();
+    void FixBugWithAI();
+    void OptimizeCodeWithAI();
+    void ReviewCodeWithAI();
+    void ShowDevelopmentAssistant();
     
     // File System
     std::vector<std::string> ScanDirectory(const std::string& path);

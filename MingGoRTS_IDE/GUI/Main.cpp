@@ -105,6 +105,7 @@ int main() {
         ideGUI.RenderGitPanel();
         ideGUI.RenderCodeAnalysis();
         ideGUI.RenderIntelligentSuggestions();
+        ideGUI.RenderDevelopmentAssistant();
         ideGUI.RenderSettings();
         ideGUI.RenderHelp();
         ideGUI.RenderStatusBar();

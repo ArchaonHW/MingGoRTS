@@ -76,7 +76,11 @@ PotatoEngine/
 ├── Examples/              # 示例程序
 │   └── AIAgentGUIExample.cpp # AI Agent GUI 整合示例
 ├── docs/                  # 文檔
-│   └── AI_AGENT_GUI_GUIDE.md # AI Agent GUI 指南
+│   ├── guides/            # 使用指南與建置說明
+│   ├── architecture/      # 架構設計與開發計劃
+│   ├── reports/           # 整合報告與稽核
+│   ├── research/          # 研究文檔
+│   └── archive/           # 歷史完成報告
 ├── CMakeLists.txt         # CMake 建置文件
 └── README.md              # 項目說明
 ```
@@ -275,7 +279,7 @@ while (running) {
 }
 ```
 
-詳細使用指南請參考：[AI Agent GUI 指南](docs/AI_AGENT_GUI_GUIDE.md)
+詳細使用指南請參考：[AI Agent GUI 指南](docs/guides/AI_AGENT_GUI_GUIDE.md)
 
 ### 使用資源管理器
 
@@ -540,8 +544,10 @@ MIT License
 
 ## 📚 相關文檔
 
-- [AI Agent GUI 指南](docs/AI_AGENT_GUI_GUIDE.md) - AI 代理和圖形介面使用指南
-- [量子開發研究](docs/QUANTUM_DEVELOPMENT_RESEARCH.md) - 量子計算研究報告
+- [文檔索引](docs/index.md) - 完整文檔目錄
+- [AI Agent GUI 指南](docs/guides/AI_AGENT_GUI_GUIDE.md) - AI 代理和圖形介面使用指南
+- [整合完成報告](docs/reports/CONSOLIDATED_COMPLETION_REPORT.md) - 開發歷程彙總
+- [量子開發研究](docs/research/QUANTUM_DEVELOPMENT_RESEARCH.md) - 量子計算研究報告
 
 ---
 

@@ -4,6 +4,7 @@
 
 #include "IDEGUI.h"
 #include "../IntelligentSuggestion.h"
+#include "../../AI/IntelligentDevelopmentSystem.h"
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -14,6 +15,11 @@
 
 namespace MingGoRTSIDE {
 
+// Intelligent Development System instance
+static Potato::AI::IntelligentDevelopmentSystem* g_DevSystem = nullptr;
+static Potato::AI::DevelopmentAssistant* g_DevAssistant = nullptr;
+static Potato::AI::LLMManager* g_LLMManager = nullptr;
+
 IDEGUI::IDEGUI()
     : core(nullptr)
     , running(false) {
@@ -22,9 +28,20 @@ IDEGUI::IDEGUI()
     memset(state.terminalBuffer, 0, sizeof(state.terminalBuffer));
     memset(state.searchBuffer, 0, sizeof(state.searchBuffer));
     memset(state.replaceBuffer, 0, sizeof(state.replaceBuffer));
+    memset(state.developmentPrompt, 0, sizeof(state.developmentPrompt));
+    memset(state.developmentResponse, 0, sizeof(state.developmentResponse));
     
     // Set default path
     state.currentPath = "C:\\HWC\\MingGoRTS";
+    
+    // Initialize Intelligent Development System
+    g_LLMManager = new Potato::AI::LLMManager();
+    auto localClient = std::make_unique<Potato::AI::LocalModelClient>("llama-2-7b");
+    g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local, std::move(localClient));
+    g_LLMManager->SetDefaultProvider(Potato::AI::LLMProvider::Local);
+    
+    g_DevSystem = new Potato::AI::IntelligentDevelopmentSystem();
+    // Note: We'll initialize properly when IDECore is available
 }
 
 IDEGUI::~IDEGUI() {
@@ -64,6 +81,20 @@ bool IDEGUI::Initialize(IDECore* ideCore) {
 
 void IDEGUI::Shutdown() {
     std::cout << "Shutting down MingGoRTS IDE GUI..." << std::endl;
+    
+    if (g_DevAssistant) {
+        delete g_DevAssistant;
+        g_DevAssistant = nullptr;
+    }
+    if (g_DevSystem) {
+        g_DevSystem->Shutdown();
+        delete g_DevSystem;
+        g_DevSystem = nullptr;
+    }
+    if (g_LLMManager) {
+        delete g_LLMManager;
+        g_LLMManager = nullptr;
+    }
     
     if (g_I18N) {
         g_I18N->Shutdown();
@@ -252,6 +283,7 @@ void IDEGUI::RenderMainMenu() {
             ImGui::MenuItem(T(TranslationKey::Panel_FileExplorer).c_str(), nullptr, &state.showFileExplorer);
             ImGui::MenuItem(T(TranslationKey::Panel_CodeEditor).c_str(), nullptr, &state.showCodeEditor);
             ImGui::MenuItem(T(TranslationKey::Panel_AIAgentPanel).c_str(), nullptr, &state.showAIAgentPanel);
+            ImGui::MenuItem("Development Assistant", "Ctrl+D", &state.showDevelopmentAssistant);
             ImGui::MenuItem(T(TranslationKey::Panel_Terminal).c_str(), nullptr, &state.showTerminal);
             ImGui::MenuItem(T(TranslationKey::Panel_Output).c_str(), nullptr, &state.showOutput);
             ImGui::MenuItem(T(TranslationKey::Panel_Properties).c_str(), nullptr, &state.showProperties);
@@ -315,6 +347,10 @@ void IDEGUI::RenderMainMenu() {
                     );
                     AddOutputLog("AI: Asset Agent created");
                 }
+            }
+            ImGui::Separator();
+            if (ImGui::MenuItem("Development Assistant", "Ctrl+D")) {
+                ShowDevelopmentAssistant();
             }
             ImGui::Separator();
             if (ImGui::MenuItem(T(TranslationKey::AI_ShowAgentStatus).c_str())) {
@@ -1319,7 +1355,11 @@ void IDEGUI::HandleKeyboardShortcuts() {
         state.showAIAgentPanel = !state.showAIAgentPanel;
     }
     
-    // Ctrl+4 - Toggle Terminal
+    // Ctrl+D - Toggle Development Assistant
+    if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_D)) {
+        ShowDevelopmentAssistant();
+    }
+
     if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_4)) {
         state.showTerminal = !state.showTerminal;
     }
@@ -2411,6 +2451,7 @@ void IDEGUI::ApplySuggestion(const Suggestion& suggestion) {
         std::string currentContent = state.editorBuffer;
         currentContent += "\n" + suggestion.code + "\n";
         strncpy(state.editorBuffer, currentContent.c_str(), sizeof(state.editorBuffer) - 1);
+        state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
         state.openTabs[state.activeTab].modified = true;
     }
 }
@@ -2554,6 +2595,235 @@ std::vector<std::string> IDEGUI::FindLongFunctions(const std::string& code, int 
     }
     
     return longFunctions;
+}
+
+// ============================================================================
+// Intelligent Development System Integration
+// ============================================================================
+
+void IDEGUI::GenerateCodeFromPrompt() {
+    if (!g_DevSystem) {
+        AddOutputLog("[Dev] Development system not initialized");
+        return;
+    }
+    
+    state.developmentProcessing = true;
+    AddOutputLog("[Dev] Generating code from prompt...");
+    
+    std::string prompt(state.developmentPrompt);
+    Potato::AI::CodeGenerationResult result = g_DevSystem->GenerateCode(prompt, "C++");
+    
+    if (result.success) {
+        // Insert generated code into editor
+        if (state.activeTab >= 0) {
+            std::string currentContent = state.editorBuffer;
+            currentContent += "\n" + result.generatedCode + "\n";
+            strncpy(state.editorBuffer, currentContent.c_str(), sizeof(state.editorBuffer) - 1);
+            state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
+            state.openTabs[state.activeTab].modified = true;
+        }
+        
+        AddOutputLog("[Dev] Code generated successfully");
+        strncpy(state.developmentResponse, result.generatedCode.c_str(), sizeof(state.developmentResponse) - 1);
+        state.developmentResponse[sizeof(state.developmentResponse) - 1] = '\0';
+    } else {
+        AddOutputLog("[Dev] Code generation failed: " + result.error);
+        std::string errorMsg = "Error: " + result.error;
+        strncpy(state.developmentResponse, errorMsg.c_str(), sizeof(state.developmentResponse) - 1);
+        state.developmentResponse[sizeof(state.developmentResponse) - 1] = '\0';
+    }
+    
+    state.developmentProcessing = false;
+}
+
+void IDEGUI::AnalyzeCodeWithAI() {
+    if (!g_DevSystem) {
+        AddOutputLog("[Dev] Development system not initialized");
+        return;
+    }
+    
+    std::string code(state.editorBuffer);
+    Potato::AI::CodeAnalysisResult result = g_DevSystem->AnalyzeCode(code, "C++");
+    
+    AddOutputLog("[Dev] Code Analysis Results:");
+    AddOutputLog("  Lines of Code: " + std::to_string(result.lineCount));
+    AddOutputLog("  Complexity: " + std::to_string(result.complexity));
+    AddOutputLog("  Quality Score: " + std::to_string(result.qualityScore));
+    
+    for (const auto& issue : result.issues) {
+        AddOutputLog("  Issue: " + issue);
+    }
+    
+    for (const auto& suggestion : result.suggestions) {
+        AddOutputLog("  Suggestion: " + suggestion);
+    }
+}
+
+void IDEGUI::GenerateTestsWithAI() {
+    if (!g_DevSystem) {
+        AddOutputLog("[Dev] Development system not initialized");
+        return;
+    }
+    
+    std::string code(state.editorBuffer);
+    Potato::AI::TestGenerationResult result = g_DevSystem->GenerateTestsForFunction(code);
+    
+    if (result.success) {
+        AddOutputLog("[Dev] Tests generated successfully");
+        AddOutputLog("  Framework: " + result.testFramework);
+        AddOutputLog("  Coverage: " + std::to_string(result.coverage) + "%");
+        AddOutputLog("  Generated Code:\n" + result.testCode);
+    } else {
+        AddOutputLog("[Dev] Test generation failed: " + result.error);
+    }
+}
+
+void IDEGUI::GenerateDocumentationWithAI() {
+    if (!g_DevSystem) {
+        AddOutputLog("[Dev] Development system not initialized");
+        return;
+    }
+    
+    std::string code(state.editorBuffer);
+    std::string documentation = g_DevSystem->GenerateDocumentation(code);
+    
+    AddOutputLog("[Dev] Generated Documentation:");
+    AddOutputLog(documentation);
+}
+
+void IDEGUI::FixBugWithAI() {
+    if (!g_DevSystem) {
+        AddOutputLog("[Dev] Development system not initialized");
+        return;
+    }
+    
+    std::string code(state.editorBuffer);
+    std::string bugDescription = state.developmentPrompt;
+    
+    std::string fixedCode = g_DevSystem->FixBug(code, bugDescription);
+    
+    if (fixedCode != code) {
+        // Update editor with fixed code
+        strncpy(state.editorBuffer, fixedCode.c_str(), sizeof(state.editorBuffer) - 1);
+        state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
+        if (state.activeTab >= 0) {
+            state.openTabs[state.activeTab].modified = true;
+        }
+        AddOutputLog("[Dev] Bug fixed successfully");
+    } else {
+        AddOutputLog("[Dev] Bug fixing failed or no changes needed");
+    }
+}
+
+void IDEGUI::OptimizeCodeWithAI() {
+    if (!g_DevSystem) {
+        AddOutputLog("[Dev] Development system not initialized");
+        return;
+    }
+    
+    std::string code(state.editorBuffer);
+    std::vector<std::string> optimizations = g_DevSystem->SuggestOptimizations(code);
+    
+    AddOutputLog("[Dev] Optimization Suggestions:");
+    for (const auto& opt : optimizations) {
+        AddOutputLog("  - " + opt);
+    }
+    
+    // Also try to optimize the code
+    std::string optimizedCode = g_DevSystem->OptimizeCode(code);
+    if (optimizedCode != code) {
+        strncpy(state.editorBuffer, optimizedCode.c_str(), sizeof(state.editorBuffer) - 1);
+        state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
+        if (state.activeTab >= 0) {
+            state.openTabs[state.activeTab].modified = true;
+        }
+        AddOutputLog("[Dev] Code optimized successfully");
+    }
+}
+
+void IDEGUI::ReviewCodeWithAI() {
+    if (!g_DevSystem) {
+        AddOutputLog("[Dev] Development system not initialized");
+        return;
+    }
+    
+    std::string code(state.editorBuffer);
+    std::string review = g_DevSystem->ReviewCode(code);
+    
+    AddOutputLog("[Dev] Code Review:");
+    AddOutputLog(review);
+}
+
+void IDEGUI::ShowDevelopmentAssistant() {
+    state.showDevelopmentAssistant = !state.showDevelopmentAssistant;
+}
+
+void IDEGUI::RenderDevelopmentAssistant() {
+    if (!state.showDevelopmentAssistant) return;
+    
+    ImGui::SetNextWindowPos(ImVec2(state.codeEditorPos.x + 50, 
+                                       state.codeEditorPos.y + 100), 
+                        ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+    
+    ImGui::Begin("Development Assistant", &state.showDevelopmentAssistant);
+    
+    ImGui::TextColored(ImVec4(0.3f, 0.8f, 0.3f, 1.0f), "[AI] Development Assistant");
+    ImGui::Separator();
+    
+    // Development prompt input
+    ImGui::Text("Prompt:");
+    ImGui::InputTextMultiline("##DevPrompt", state.developmentPrompt, 
+                               sizeof(state.developmentPrompt), 
+                               ImVec2(-1, 80));
+    
+    // Action buttons
+    if (ImGui::Button("Generate Code")) {
+        GenerateCodeFromPrompt();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Analyze Code")) {
+        AnalyzeCodeWithAI();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Generate Tests")) {
+        GenerateTestsWithAI();
+    }
+    
+    ImGui::Spacing();
+    
+    if (ImGui::Button("Generate Documentation")) {
+        GenerateDocumentationWithAI();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Fix Bug")) {
+        FixBugWithAI();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Optimize Code")) {
+        OptimizeCodeWithAI();
+    }
+    
+    ImGui::Spacing();
+    
+    if (ImGui::Button("Review Code")) {
+        ReviewCodeWithAI();
+    }
+    
+    ImGui::Separator();
+    
+    // Response display
+    ImGui::Text("Response:");
+    if (state.developmentProcessing) {
+        ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.3f, 1.0f), "Processing...");
+    } else {
+        ImGui::InputTextMultiline("##DevResponse", state.developmentResponse,
+                                   sizeof(state.developmentResponse),
+                                   ImVec2(-1, 150),
+                                   ImGuiInputTextFlags_ReadOnly);
+    }
+    
+    ImGui::End();
 }
 
 } // namespace MingGoRTSIDE

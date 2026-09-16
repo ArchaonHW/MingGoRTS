@@ -1,52 +1,43 @@
 # MingGoRTS 文檔索引
 
-## 📚 核心文檔
+```
+docs/
+├── index.md          # 本索引
+├── README.md         # 文檔導航
+├── guides/           # 使用指南與建置說明
+├── architecture/     # 架構設計與開發計劃
+├── reports/          # 整合報告與稽核
+├── research/         # 研究文檔
+└── archive/          # 歷史完成報告(已整合)
+```
 
-- **[README.md](./README.md)** - Potato Engine 文檔目錄和快速開始指南
-- **[BUILD_INSTRUCTIONS.md](./BUILD_INSTRUCTIONS.md)** - 建置說明和步驟指南
+## 📚 指南 (guides/)
 
-## 🎮 Potato Engine 核心
+- **[BUILD_INSTRUCTIONS.md](./guides/BUILD_INSTRUCTIONS.md)** — 建置說明和步驟指南
+- **[AI_AGENT_ENHANCEMENT_GUIDE.md](./guides/AI_AGENT_ENHANCEMENT_GUIDE.md)** — AI Agent 系統使用指南(代理類型、感知、記憶、工具、計畫系統)
+- **[AI_AGENT_GUI_GUIDE.md](./guides/AI_AGENT_GUI_GUIDE.md)** — AI Agent GUI 整合指南
+- **[MINGGORTS_IDE_USER_GUIDE.md](./guides/MINGGORTS_IDE_USER_GUIDE.md)** — IDE 使用指南(啟動說明、功能介紹)
+- **[POTATO_ENGINE_OVERVIEW.md](./guides/POTATO_ENGINE_OVERVIEW.md)** — Potato Engine 專案總覽(原 PotatoEngine/README)
+- **[POTATO_ENGINE_MIGRATION_GUIDE.md](./guides/POTATO_ENGINE_MIGRATION_GUIDE.md)** — UE5 移除遷移指南
 
-- **[POTATO_ENGINE_CORE_ENHANCEMENT_COMPLETION_REPORT.md](./POTATO_ENGINE_CORE_ENHANCEMENT_COMPLETION_REPORT.md)** - 核心引擎增強完成報告，包含性能優化、事件系統、資源管理和場景管理
+## 🏗️ 架構 (architecture/)
 
-## 🤖 AI Agent 系統
+- **[MINGGORTS_IDE_ARCHITECTURE.md](./architecture/MINGGORTS_IDE_ARCHITECTURE.md)** — IDE 架構設計(核心架構、AI 整合層、專門化代理)
+- **[MINGGORTS_IDE_FULL_DEVELOPMENT_PLAN.md](./architecture/MINGGORTS_IDE_FULL_DEVELOPMENT_PLAN.md)** — IDE 完整開發計劃
+- **[POTATO_ENGINE_ARCHITECTURE.md](./architecture/POTATO_ENGINE_ARCHITECTURE.md)** — Potato Engine 獨立架構設計(原 PotatoEngine/ARCHITECTURE)
 
-- **[AI_AGENT_ENHANCEMENT_COMPLETION_REPORT.md](./AI_AGENT_ENHANCEMENT_COMPLETION_REPORT.md)** - AI Agent 系統增強完成報告，包含編碼修復、系統整合、性能優化和測試驗證
-- **[AI_AGENT_ENHANCEMENT_GUIDE.md](./AI_AGENT_ENHANCEMENT_GUIDE.md)** - AI Agent 系統增強使用指南，包含新增代理類型、感知系統、記憶系統、工具系統和計畫系統
-- **[AI_AGENT_GUI_GUIDE.md](./AI_AGENT_GUI_GUIDE.md)** - AI Agent GUI 集成指南
-- **[POTATO_ENGINE_AI_ENHANCEMENT_COMPLETION_REPORT.md](./POTATO_ENGINE_AI_ENHANCEMENT_COMPLETION_REPORT.md)** - Potato Engine AI 機器學習增強完成報告，包含神經網絡、強化學習和自然語言處理
-- **[POTATO_ENGINE_INTEGRATION_COMPLETION_REPORT.md](./POTATO_ENGINE_INTEGRATION_COMPLETION_REPORT.md)** - Potato Engine AI 模組整合完成報告，包含 LLM 集成、RAG 系統和智能建議
-- **[POTATO_ENGINE_ULTIMATE_AI_COMPLETION_REPORT.md](./POTATO_ENGINE_ULTIMATE_AI_COMPLETION_REPORT.md)** - Potato Engine 終極 AI Agent 平台完成報告，包含 LLM 集成、RAG 系統、Agent 鏈和工具框架
-- **[INTELLIGENT_DEVELOPMENT_SYSTEM_COMPLETION_REPORT.md](./INTELLIGENT_DEVELOPMENT_SYSTEM_COMPLETION_REPORT.md)** - 智能開發系統完成報告，包含代碼生成、分析、測試生成和優化
+## 📊 報告 (reports/)
 
-## 💻 MingGoRTS IDE
+- **[CONSOLIDATED_COMPLETION_REPORT.md](./reports/CONSOLIDATED_COMPLETION_REPORT.md)** — 整合完成報告:涵蓋引擎核心、AI 平台、智能開發系統、IDE 全開發歷程(取代 12 份原始報告)
+- **[SECURITY_AUDIT.md](./reports/SECURITY_AUDIT.md)** — 安全稽核報告(2026-09-16)
 
-### 架構與設計
-- **[MINGGORTS_IDE_ARCHITECTURE.md](./MINGGORTS_IDE_ARCHITECTURE.md)** - MingGoRTS IDE 架構設計文檔，包含核心架構、AI 整合層和專門化代理
-- **[MINGGORTS_IDE_FULL_DEVELOPMENT_PLAN.md](./MINGGORTS_IDE_FULL_DEVELOPMENT_PLAN.md)** - MingGoRTS IDE 完整開發計劃
+## 🔬 研究 (research/)
 
-### 完成報告
-- **[MINGGORTS_IDE_COMPLETION_REPORT.md](./MINGGORTS_IDE_COMPLETION_REPORT.md)** - MingGoRTS IDE 初始完成報告
-- **[MINGGORTS_IDE_GUI_COMPLETION_REPORT.md](./MINGGORTS_IDE_GUI_COMPLETION_REPORT.md)** - MingGoRTS IDE GUI 版本完成報告
-- **[MINGGORTS_IDE_ENHANCEMENT_COMPLETION_REPORT.md](./MINGGORTS_IDE_ENHANCEMENT_COMPLETION_REPORT.md)** - MingGoRTS IDE 第一階段增強完成報告
-- **[MINGGORTS_IDE_PHASE2_ENHANCEMENT_COMPLETION_REPORT.md](./MINGGORTS_IDE_PHASE2_ENHANCEMENT_COMPLETION_REPORT.md)** - MingGoRTS IDE 第二階段增強完成報告
-- **[MINGGORTS_IDE_I18N_COMPLETION_REPORT.md](./MINGGORTS_IDE_I18N_COMPLETION_REPORT.md)** - MingGoRTS IDE 國際化完成報告
-- **[MINGGORTS_IDE_AI_INTELLIGENCE_ENHANCEMENT_COMPLETION_REPORT.md](./MINGGORTS_IDE_AI_INTELLIGENCE_ENHANCEMENT_COMPLETION_REPORT.md)** - MingGoRTS IDE AI 智慧增強完成報告
-- **[MINGGORTS_IDE_ADVANCED_FEATURES_COMPLETION_REPORT.md](./MINGGORTS_IDE_ADVANCED_FEATURES_COMPLETION_REPORT.md)** - MingGoRTS IDE 進階功能完成報告
+- **[QUANTUM_DEVELOPMENT_RESEARCH.md](./research/QUANTUM_DEVELOPMENT_RESEARCH.md)** — 量子計算開發研究
 
-### 用戶指南
-- **[MINGGORTS_IDE_USER_GUIDE.md](./MINGGORTS_IDE_USER_GUIDE.md)** - MingGoRTS IDE 使用指南，包含啟動說明和功能介紹
+## 🗄️ 歸檔 (archive/)
 
-## 📖 文檔分類說明
-
-### 核心系統文檔
-涵蓋 Potato Engine 核心功能的增強和優化，包括性能監控、事件系統、資源管理和場景管理。
-
-### AI Agent 文檔
-記錄 AI Agent 系統的增強功能，包括感知系統、記憶系統、工具系統、計畫系統和協作功能。
-
-### IDE 文檔
-記錄 MingGoRTS IDE 的開發過程，包括架構設計、GUI 開發、功能增強、國際化和 AI 智慧增強。
+12 份原始開發完成報告,內容已整合至 `reports/CONSOLIDATED_COMPLETION_REPORT.md`,詳見 [archive/README.md](./archive/README.md)。
 
 ## 🔗 相關鏈接
 
@@ -56,4 +47,4 @@
 
 ---
 
-**🥔 MingGoRTS 文檔索引** - 最後更新：2024
+**🥔 MingGoRTS 文檔索引** — 最後更新:2026-09-16

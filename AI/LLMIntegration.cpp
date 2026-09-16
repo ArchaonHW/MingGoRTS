@@ -10,9 +10,36 @@
 #include <mutex>
 #include <algorithm>
 #include <regex>
+#include <cstdio>
 
 namespace Potato {
 namespace AI {
+
+// 跳脫 JSON 字串中的特殊字元，防止產生不合法 JSON 與注入
+static std::string EscapeJson(const std::string& input) {
+    std::string out;
+    out.reserve(input.size() + 8);
+    for (char c : input) {
+        switch (c) {
+            case '"':  out += "\\\""; break;
+            case '\\': out += "\\\\"; break;
+            case '\b': out += "\\b";  break;
+            case '\f': out += "\\f";  break;
+            case '\n': out += "\\n";  break;
+            case '\r': out += "\\r";  break;
+            case '\t': out += "\\t";  break;
+            default:
+                if (static_cast<unsigned char>(c) < 0x20) {
+                    char buf[8];
+                    snprintf(buf, sizeof(buf), "\\u%04x", c);
+                    out += buf;
+                } else {
+                    out += c;
+                }
+        }
+    }
+    return out;
+}
 
 // ============================================================================
 // OpenAI Client Implementation
@@ -35,7 +62,7 @@ LLMResponse OpenAIClient::ChatCompletion(
     // Build JSON request
     std::stringstream json;
     json << "{";
-    json << "\"model\":\"" << config.model << "\",";
+    json << "\"model\":\"" << EscapeJson(config.model) << "\",";
     json << "\"messages\":[";
     
     for (size_t i = 0; i < messages.size(); i++) {
@@ -49,7 +76,7 @@ LLMResponse OpenAIClient::ChatCompletion(
             case MessageRole::Tool: json << "tool"; break;
         }
         json << "\",";
-        json << "\"content\":\"" << messages[i].content << "\"";
+        json << "\"content\":\"" << EscapeJson(messages[i].content) << "\"";
         json << "}";
     }
     
@@ -76,7 +103,7 @@ LLMResponse OpenAIClient::ChatCompletionWithTools(
     // Build JSON request with tools
     std::stringstream json;
     json << "{";
-    json << "\"model\":\"" << config.model << "\",";
+    json << "\"model\":\"" << EscapeJson(config.model) << "\",";
     json << "\"messages\":[";
     
     for (size_t i = 0; i < messages.size(); i++) {
@@ -90,7 +117,7 @@ LLMResponse OpenAIClient::ChatCompletionWithTools(
             case MessageRole::Tool: json << "tool"; break;
         }
         json << "\",";
-        json << "\"content\":\"" << messages[i].content << "\"";
+        json << "\"content\":\"" << EscapeJson(messages[i].content) << "\"";
         json << "}";
     }
     
@@ -102,8 +129,8 @@ LLMResponse OpenAIClient::ChatCompletionWithTools(
         json << "{";
         json << "\"type\":\"function\",";
         json << "\"function\":{";
-        json << "\"name\":\"" << tools[i].name << "\",";
-        json << "\"description\":\"" << tools[i].description << "\",";
+        json << "\"name\":\"" << EscapeJson(tools[i].name) << "\",";
+        json << "\"description\":\"" << EscapeJson(tools[i].description) << "\",";
         json << "\"parameters\":" << tools[i].parametersSchema;
         json << "}";
         json << "}";
@@ -229,7 +256,7 @@ LLMResponse AnthropicClient::ChatCompletion(
     // Build JSON request for Anthropic API
     std::stringstream json;
     json << "{";
-    json << "\"model\":\"" << config.model << "\",";
+    json << "\"model\":\"" << EscapeJson(config.model) << "\",";
     json << "\"max_tokens\":" << config.maxTokens << ",";
     json << "\"messages\":[";
     
@@ -243,7 +270,7 @@ LLMResponse AnthropicClient::ChatCompletion(
             default: json << "user"; break;
         }
         json << "\",";
-        json << "\"content\":\"" << messages[i].content << "\"";
+        json << "\"content\":\"" << EscapeJson(messages[i].content) << "\"";
         json << "}";
     }
     
@@ -743,7 +770,7 @@ std::vector<ChatMessage> AddAssistantMessage(const std::vector<ChatMessage>& mes
 
 std::string FormatToolCall(const ToolCall& call) {
     std::stringstream ss;
-    ss << "{\"id\":\"" << call.id << "\",\"name\":\"" << call.name << "\",\"arguments\":" << call.arguments << "}";
+    ss << "{\"id\":\"" << EscapeJson(call.id) << "\",\"name\":\"" << EscapeJson(call.name) << "\",\"arguments\":" << call.arguments << "}";
     return ss.str();
 }
 
