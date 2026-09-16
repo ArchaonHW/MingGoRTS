@@ -56,8 +56,10 @@ void DashboardPanel::Render() {
         std::cout << "待處理任務: " << pendingTasks << std::endl;
         std::cout << "已完成任務: " << completedTasks << std::endl;
         
-        if (completedTasks > 0) {
-            successRate = static_cast<float>(completedTasks) / static_cast<float>(completedTasks + 0);
+        // 成功率 = 已完成 / (已完成 + 待處理);分母為 0 時不顯示
+        size_t totalTasks = completedTasks + pendingTasks;
+        if (totalTasks > 0) {
+            successRate = static_cast<float>(completedTasks) / static_cast<float>(totalTasks);
             std::cout << "成功率: " << (successRate * 100.0f) << "%" << std::endl;
         }
     } else {

@@ -2,7 +2,7 @@
 title: 'IDE Intelligent Development Assistant — own in-process AI agent codegen'
 type: 'feature'
 created: '2026-09-16'
-status: 'in-progress'
+status: 'done'
 route: 'dispatch'
 baseline_commit: 'd5eff759dd45e73a4caa47ab7865a33446ff6d24'
 review_loop_iteration: 0
@@ -65,13 +65,13 @@ context: []
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] `AI/IntelligentDevelopmentSystem.cpp` + `.h` -- implement `GenerateLocal(specification, language)` pipeline: NLP intent → template/rule synthesis → optional KnowledgeGraph context; `GenerateCode` tries local pipeline first, falls back to `llmClient` only when configured -- the actual intelligence
-- [ ] `AI/IntelligentDevelopmentSystem.cpp` -- seed a minimal template set (class, function, system-stub, test-stub) driven by parsed intent -- makes output real instead of mock text
-- [ ] `MingGoRTS_IDE/GUI/IDEGUI.h` -- add `std::future<CodeGenerationResult>` + settings fields -- async storage + config surface
-- [ ] `MingGoRTS_IDE/GUI/IDEGUI.cpp` -- init `g_DevSystem` for local pipeline; async `GenerateCodeFromPrompt` with poll-write-back, empty-prompt guard, double-submit guard, truncation marker, editorBuffer append removed -- user-visible behavior
-- [ ] `MingGoRTS_IDE/GUI/IDEGUI.cpp` Settings + `I18N` -- provider/baseURL/apiKey/model/agent fields; env-var defaults `POTATO_LLM_*` -- runtime configuration
-- [ ] `CMakeLists.txt` -- only if new .cpp objects aren't already in a linked lib -- keep zero new deps
-- [ ] `Examples/` small CLI smoke (or extend an existing demo) calling `IntelligentDevelopmentSystem::GenerateCode` with no LLM client -- verifiable without GUI
+- [x] `AI/IntelligentDevelopmentSystem.cpp` + `.h` -- implement `GenerateLocal(specification, language)` pipeline: NLP intent → template/rule synthesis → optional KnowledgeGraph context; `GenerateCode` tries local pipeline first, falls back to `llmClient` only when configured -- the actual intelligence
+- [x] `AI/IntelligentDevelopmentSystem.cpp` -- seed a minimal template set (class, function, system-stub, test-stub) driven by parsed intent -- makes output real instead of mock text
+- [x] `MingGoRTS_IDE/GUI/IDEGUI.h` -- add `std::future<CodeGenerationResult>` + settings fields -- async storage + config surface
+- [x] `MingGoRTS_IDE/GUI/IDEGUI.cpp` -- init `g_DevSystem` for local pipeline; async `GenerateCodeFromPrompt` with poll-write-back, empty-prompt guard, double-submit guard, truncation marker, editorBuffer append removed -- user-visible behavior
+- [x] `MingGoRTS_IDE/GUI/IDEGUI.cpp` Settings + `I18N` -- provider/baseURL/apiKey/model/agent fields; env-var defaults `POTATO_LLM_*` -- runtime configuration
+- [x] `CMakeLists.txt` -- only if new .cpp objects aren't already in a linked lib -- keep zero new deps
+- [x] `Examples/` small CLI smoke (or extend an existing demo) calling `IntelligentDevelopmentSystem::GenerateCode` with no LLM client -- verifiable without GUI
 
 **Acceptance Criteria:**
 - Given the IDE running with no external LLM configured, when a user submits a recognizable codegen prompt, then synthesized C++ appears in the response view and the UI stays responsive.
