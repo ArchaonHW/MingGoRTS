@@ -37,8 +37,8 @@ sources: []
   - **intent:** Battle events (doctrine hits, routs, outcome) are emitted via a `std::function` callback — no EventBus dependency; upper layers may bridge it themselves.
   - **success:** `SetEventCallback` receives human-readable events during the demo run.
 - **CAP-8**
-  - **intent:** Each doctrine rule can carry a cooldown: once it fires it is skipped for N seconds of game time, preventing rule oscillation (decided 2026-09-17; code not yet implemented).
-  - **success:** A rule in cooldown does not participate in evaluation; after cooldown elapses it can fire again. Default `0` = no cooldown (backward compatible).
+  - **intent:** Each doctrine rule can carry a cooldown: once it fires it is skipped for N seconds of game time, preventing rule oscillation (decided 2026-09-17).
+  - **success:** A rule in cooldown does not participate in evaluation; after cooldown elapses it can fire again. Default `0` = no cooldown (backward compatible). Implemented in `Gameplay/Doctrine.*` (`cooldown`/`coolingUntil` on `DoctrineRule`, `SquadContext::now`); verified by 3 assertions in `DoctrineBattleDemo`.
 
 ## Constraints
 
