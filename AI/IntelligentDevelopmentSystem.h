@@ -217,6 +217,10 @@ public:
     DevSystemStats GetStats() const;
     void ResetStats();
     
+    // Subsystem access
+    ILLMClient* GetLLMClient() const { return llmClient; }
+    RAGSystem* GetRAGSystem() const { return ragSystem; }
+    
 private:
     ILLMClient* llmClient;
     AIAgentManager* agentManager;

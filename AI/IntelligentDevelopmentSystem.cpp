@@ -5,6 +5,7 @@
 #include "IntelligentDevelopmentSystem.h"
 #include <iostream>
 #include <sstream>
+#include <cstring>
 #include <chrono>
 #include <algorithm>
 #include <regex>
@@ -752,15 +753,15 @@ DevelopmentAssistant::~DevelopmentAssistant() {
 
 std::string DevelopmentAssistant::Ask(const std::string& question) {
     // Use RAG system to answer questions
-    if (devSystem->ragSystem) {
-        return devSystem->ragSystem->GenerateResponse(question);
+    if (devSystem->GetRAGSystem()) {
+        return devSystem->GetRAGSystem()->GenerateResponse(question);
     }
     
     return "RAG system not available";
 }
 
 std::string DevelopmentAssistant::ExplainCode(const std::string& code) {
-    if (!devSystem->llmClient) {
+    if (!devSystem->GetLLMClient()) {
         return "LLM client not available";
     }
     
@@ -774,7 +775,7 @@ std::string DevelopmentAssistant::ExplainCode(const std::string& code) {
     config.temperature = 0.5f;
     config.maxTokens = 1024;
     
-    LLMResponse response = devSystem->llmClient->ChatCompletion(messages, config);
+    LLMResponse response = devSystem->GetLLMClient()->ChatCompletion(messages, config);
     
     return response.success ? response.content : "";
 }

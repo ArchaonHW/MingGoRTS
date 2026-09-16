@@ -1405,7 +1405,8 @@ void IDEGUI::UpdateCursorPosition() {
 
 std::string IDEGUI::GetCurrentTime() {
     auto now = std::time(nullptr);
-    auto tm = *std::localtime(&now);
+    std::tm tm;
+    localtime_s(&tm, &now);
     
     std::ostringstream oss;
     oss << std::put_time(&tm, "%H:%M:%S");
@@ -2450,8 +2451,7 @@ void IDEGUI::ApplySuggestion(const Suggestion& suggestion) {
     if (state.activeTab >= 0) {
         std::string currentContent = state.editorBuffer;
         currentContent += "\n" + suggestion.code + "\n";
-        strncpy(state.editorBuffer, currentContent.c_str(), sizeof(state.editorBuffer) - 1);
-        state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
+        strncpy_s(state.editorBuffer, sizeof(state.editorBuffer), currentContent.c_str(), _TRUNCATE);
         state.openTabs[state.activeTab].modified = true;
     }
 }
@@ -2618,19 +2618,16 @@ void IDEGUI::GenerateCodeFromPrompt() {
         if (state.activeTab >= 0) {
             std::string currentContent = state.editorBuffer;
             currentContent += "\n" + result.generatedCode + "\n";
-            strncpy(state.editorBuffer, currentContent.c_str(), sizeof(state.editorBuffer) - 1);
-            state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
+            strncpy_s(state.editorBuffer, sizeof(state.editorBuffer), currentContent.c_str(), _TRUNCATE);
             state.openTabs[state.activeTab].modified = true;
         }
         
         AddOutputLog("[Dev] Code generated successfully");
-        strncpy(state.developmentResponse, result.generatedCode.c_str(), sizeof(state.developmentResponse) - 1);
-        state.developmentResponse[sizeof(state.developmentResponse) - 1] = '\0';
+        strncpy_s(state.developmentResponse, sizeof(state.developmentResponse), result.generatedCode.c_str(), _TRUNCATE);
     } else {
         AddOutputLog("[Dev] Code generation failed: " + result.error);
         std::string errorMsg = "Error: " + result.error;
-        strncpy(state.developmentResponse, errorMsg.c_str(), sizeof(state.developmentResponse) - 1);
-        state.developmentResponse[sizeof(state.developmentResponse) - 1] = '\0';
+        strncpy_s(state.developmentResponse, sizeof(state.developmentResponse), errorMsg.c_str(), _TRUNCATE);
     }
     
     state.developmentProcessing = false;
@@ -2704,8 +2701,7 @@ void IDEGUI::FixBugWithAI() {
     
     if (fixedCode != code) {
         // Update editor with fixed code
-        strncpy(state.editorBuffer, fixedCode.c_str(), sizeof(state.editorBuffer) - 1);
-        state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
+        strncpy_s(state.editorBuffer, sizeof(state.editorBuffer), fixedCode.c_str(), _TRUNCATE);
         if (state.activeTab >= 0) {
             state.openTabs[state.activeTab].modified = true;
         }
@@ -2732,8 +2728,7 @@ void IDEGUI::OptimizeCodeWithAI() {
     // Also try to optimize the code
     std::string optimizedCode = g_DevSystem->OptimizeCode(code);
     if (optimizedCode != code) {
-        strncpy(state.editorBuffer, optimizedCode.c_str(), sizeof(state.editorBuffer) - 1);
-        state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
+        strncpy_s(state.editorBuffer, sizeof(state.editorBuffer), optimizedCode.c_str(), _TRUNCATE);
         if (state.activeTab >= 0) {
             state.openTabs[state.activeTab].modified = true;
         }
