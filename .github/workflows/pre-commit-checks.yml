@@ -30,11 +30,14 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - name: Install Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake g++ libglfw3-dev libgl1-mesa-dev
+        sudo apt-get install -y cmake g++ libglfw3-dev libgl1-mesa-dev \
+          libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
 
     - name: Configure CMake
       run: |
