@@ -3,7 +3,7 @@ title: 'Sage Command Screen — 至聖者指揮學 × 治平者管理學遊戲�
 type: 'feature'
 created: '2026-09-17'
 status: 'in-progress'
-baseline_commit: 'b3774369a314f1bca1ee0e47c5d06366db704869'
+baseline_commit: '7c366ee3fa3a3138848efb483f2d399a1984033d'
 context: []
 ---
 
