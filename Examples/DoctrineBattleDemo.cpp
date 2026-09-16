@@ -16,6 +16,34 @@ using namespace Potato::Gameplay;
 int main() {
     printf("=== Doctrine Battle Demo ===\n\n");
 
+    int failures = 0;
+
+    // 規則冷卻（CAP-8）：命中後冷卻期間被略過，冷卻結束恢復
+    {
+        DoctrineSet cd;
+        cd.AddRule({DoctrineTrigger::Always, DoctrineAction::RetreatToRally,
+                    0.0f, 0, 2.0f});
+        cd.AddRule({DoctrineTrigger::Always, DoctrineAction::HoldPosition,
+                    0.0f, 100});
+
+        SquadContext ctx;
+        ctx.now = 0.0f;
+        if (cd.Evaluate(ctx) != DoctrineAction::RetreatToRally) {
+            printf("FAIL: cooldown rule did not fire initially\n");
+            failures++;
+        }
+        ctx.now = 1.0f; // 冷卻中（until 2.0）
+        if (cd.Evaluate(ctx) != DoctrineAction::HoldPosition) {
+            printf("FAIL: cooling rule was not skipped\n");
+            failures++;
+        }
+        ctx.now = 3.0f; // 冷卻結束
+        if (cd.Evaluate(ctx) != DoctrineAction::RetreatToRally) {
+            printf("FAIL: rule did not refire after cooldown\n");
+            failures++;
+        }
+    }
+
     // 20x15 戰場，中央一道牆只留缺口
     BattleController battle(20, 15, 1.0f);
     for (int y = 0; y < 15; ++y) {
@@ -139,7 +167,6 @@ int main() {
     }
 
     // 驗證：戰鬥應在時限內分出勝負，且 CP 介入成功
-    int failures = 0;
     if (battle.GetOutcome() == BattleOutcome::Ongoing) {
         printf("FAIL: battle did not resolve\n");
         failures++;

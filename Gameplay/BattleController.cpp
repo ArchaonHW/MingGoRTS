@@ -42,6 +42,16 @@ void BattleController::SetRallyPoint(int team, const Vector2& pos) {
     rallyPoints[team] = pos;
 }
 
+int BattleController::TotalMembers(int team) const {
+    int total = 0;
+    for (const auto& squad : squads) {
+        if (squad->GetTeam() == team) {
+            total += squad->GetMembers();
+        }
+    }
+    return total;
+}
+
 void BattleController::SetCommandPoints(int team, int points) {
     commandPoints[team] = points;
 }
@@ -146,6 +156,7 @@ SquadContext BattleController::BuildContext(const Squad& squad) const {
     }
     SquadContext ctx;
     ctx.self = &squad;
+    ctx.now = elapsed;
     ctx.healthPct = squad.GetHealthPct();
     ctx.moralePct = squad.GetMorale();
     ctx.underAttack = squad.IsUnderAttack();
@@ -207,6 +218,7 @@ void BattleController::UpdateContexts() {
     for (auto& squad : squads) {
         SquadContext ctx;
         ctx.self = squad.get();
+        ctx.now = elapsed;
         ctx.healthPct = squad->GetHealthPct();
         ctx.moralePct = squad->GetMorale();
         ctx.underAttack = squad->IsUnderAttack();

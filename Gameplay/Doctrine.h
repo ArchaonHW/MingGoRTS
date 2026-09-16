@@ -48,11 +48,14 @@ struct DoctrineRule {
     DoctrineAction action;
     float threshold;    // 觸發參數（血量比/士氣/距離，依 trigger 而定）
     int priority;
+    float cooldown;              // 命中後冷卻秒數（遊戲時間）；0 = 無冷卻
+    mutable float coolingUntil;  // 冷卻截止時間，由 Evaluate 維護
 
     DoctrineRule(DoctrineTrigger t = DoctrineTrigger::Always,
                  DoctrineAction a = DoctrineAction::HoldPosition,
-                 float th = 0.0f, int prio = 100)
-        : trigger(t), action(a), threshold(th), priority(prio) {
+                 float th = 0.0f, int prio = 100, float cd = 0.0f)
+        : trigger(t), action(a), threshold(th), priority(prio),
+          cooldown(cd), coolingUntil(0.0f) {
     }
 };
 
@@ -61,6 +64,7 @@ struct DoctrineRule {
  */
 struct SquadContext {
     const Squad* self;
+    float now;              // 目前遊戲時間（秒），冷卻判定用
     float healthPct;
     float moralePct;
     float nearestEnemyDist;
@@ -71,6 +75,7 @@ struct SquadContext {
 
     SquadContext()
         : self(nullptr)
+        , now(0.0f)
         , healthPct(1.0f)
         , moralePct(1.0f)
         , nearestEnemyDist(-1.0f)

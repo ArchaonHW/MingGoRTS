@@ -40,7 +40,11 @@ bool DoctrineSet::TriggerMatches(const DoctrineRule& rule, const SquadContext& c
 DoctrineAction DoctrineSet::Evaluate(const SquadContext& ctx) const {
     lastMatched = nullptr;
     for (const auto& rule : rules) {
+        if (rule.coolingUntil > ctx.now) {
+            continue; // 冷卻中，本輪略過
+        }
         if (TriggerMatches(rule, ctx)) {
+            rule.coolingUntil = ctx.now + rule.cooldown;
             lastMatched = &rule;
             return rule.action;
         }

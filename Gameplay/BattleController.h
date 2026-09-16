@@ -54,6 +54,25 @@ public:
     void SetCommandPoints(int team, int points);
 
     FlowField& GetField() { return field; }
+    const FlowField& GetField() const { return field; }
+
+    // 查詢部署設定（BattlePlanner 等規劃器用）
+    bool HasObjective(int team) const {
+        return objectives.find(team) != objectives.end();
+    }
+    Vector2 GetObjective(int team) const {
+        auto it = objectives.find(team);
+        return it != objectives.end() ? it->second : Vector2(0.0f, 0.0f);
+    }
+    bool HasRallyPoint(int team) const {
+        return rallyPoints.find(team) != rallyPoints.end();
+    }
+    Vector2 GetRallyPoint(int team) const {
+        auto it = rallyPoints.find(team);
+        return it != rallyPoints.end() ? it->second : Vector2(0.0f, 0.0f);
+    }
+    // 某隊現存成員總數（含潰逃中）
+    int TotalMembers(int team) const;
 
     // 部署完畢 → 進入即時執行（不再能改 doctrine）
     bool BeginExecution();
