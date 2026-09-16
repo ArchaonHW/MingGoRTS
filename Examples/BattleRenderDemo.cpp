@@ -83,7 +83,7 @@ static Mesh MakeBox(float w, float h, float d) {
 }
 
 // 掛一個靜態地形節點(地形/牆/橋)
-static void AddStaticBox(SceneNode* parent, SharedPtr<Mesh> mesh,
+static void AddStaticBox(SharedPtr<SceneNode> parent, SharedPtr<Mesh> mesh,
                          const Vector3& pos, const Vector3& color,
                          const char* name, float boundR) {
     auto node = MakeShared<SceneNode>(name);
@@ -215,13 +215,19 @@ int main(int argc, char** argv) {
         renderer.SetClearColor(Vector3(0.07f, 0.09f, 0.13f));
         renderer.Clear();
         renderer.EnableDepthTest(true);
-        renderer.EnableCulling(true);
+        renderer.EnableCulling(false); // 手排頂點繞序不保證 CCW,先關背面剔除
 
-        sceneRenderer.Render(scene, cam);
-        renderer.SwapBuffers();
+        RenderStats stats = sceneRenderer.Render(scene, cam);
+        if (f == 0) {
+            std::cout << "frame0: visible=" << stats.visibleNodes
+                      << " renderable=" << stats.renderableNodes
+                      << " draws=" << stats.drawCalls << std::endl;
+        }
 
+        // 擷取必須在 SwapBuffers 前:交換後 back buffer 內容未定義
         glReadPixels(0, 0, W, H, GL_RGB, GL_UNSIGNED_BYTE, frameBuf.data());
         fwrite(frameBuf.data(), 1, frameBuf.size(), pipe);
+        renderer.SwapBuffers();
 
         if (battle.GetOutcome() != BattleOutcome::Ongoing) {
             std::cout << "戰鬥結束於 frame " << f << std::endl;
@@ -230,9 +236,9 @@ int main(int argc, char** argv) {
                 renderer.SetClearColor(Vector3(0.07f, 0.09f, 0.13f));
                 renderer.Clear();
                 sceneRenderer.Render(scene, cam);
-                renderer.SwapBuffers();
                 glReadPixels(0, 0, W, H, GL_RGB, GL_UNSIGNED_BYTE, frameBuf.data());
                 fwrite(frameBuf.data(), 1, frameBuf.size(), pipe);
+                renderer.SwapBuffers();
             }
             break;
         }

@@ -39,6 +39,21 @@ sources: []
 - **CAP-8**
   - **intent:** Each doctrine rule can carry a cooldown: once it fires it is skipped for N seconds of game time, preventing rule oscillation (decided 2026-09-17).
   - **success:** A rule in cooldown does not participate in evaluation; after cooldown elapses it can fire again. Default `0` = no cooldown (backward compatible). Implemented in `Gameplay/Doctrine.*` (`cooldown`/`coolingUntil` on `DoctrineRule`, `SquadContext::now`); verified by 3 assertions in `DoctrineBattleDemo`.
+- **CAP-9** (T-4)
+  - **intent:** Battlefield is data-driven: a `potato.battle_map/1` JSON defines grid, terrain cost/blocked patches, named zones, fords (holes in blocked water), per-team deploy zones, pins, and interactables.
+  - **success:** `BattleMap::LoadFromFile` parses `assets/maps/duanqiao.json`; `ApplyToField` blocks the river and opens the ford; `IsInDeployZone` accepts north-bank positions for team 0 and rejects south-bank ones.
+- **CAP-10** (T-5)
+  - **intent:** The enemy is a named general with a readable 3-axis personality (aggression/discipline/cunning) and handwritten doctrine cards; the same schema as `assets/cards/` character cards (`signatureDoctrine` + `cards[]`).
+  - **success:** `EnemyGeneral::MakeGlock()` (侵略90/紀律40/狡詐10, 4 cards) produces doctrine sets for all enemy squads; `LoadFromFile` accepts ROC character cards; personality measurably shifts thresholds (aggression lowers the retreat line).
+- **CAP-11** (T-6)
+  - **intent:** Battle resources: intel points are spent to reveal enemy information; command points cap interventions; per-squad morale below 30% drops doctrine execution to a 70% dice roll (orders can be disobeyed).
+  - **success:** `BattleResources::SpendIntel`/`RevealEnemyPersonality` debit the pool; `SetMoraleExecution(0.30, 0.70)` produces visible "ignored orders (low morale)" events in `DuanqiaoDemo`.
+- **CAP-12** (T-7)
+  - **intent:** Battle events are recorded with game-time timestamps to `potato.battle_replay/1` JSON — replay is event playback, not re-simulation (avoids float nondeterminism).
+  - **success:** `BattleRecorder::Attach` captures every emitted event; `SaveToFile`/`LoadFromFile` round-trip preserves count and order; `DuanqiaoDemo` writes a non-empty replay.
+- **CAP-13** (T-8)
+  - **intent:** Captain-rank-and-above units are enrolled in a named roster with relics; squad annihilation marks the captain KIA with a timestamp; the roster serializes to `potato.roster/1`.
+  - **success:** `Roster::Enroll`/`Update`/`SaveToFile` produce a valid roster file. Note: rout-before-annihilation means KIA only fires on full elimination — pursuit-of-routing-squads is a follow-up need.
 
 ## Constraints
 
@@ -50,8 +65,8 @@ sources: []
 ## Non-goals
 
 - Strategy layer: world map, diplomacy, progression, multi-general friction, chained timeline cards, enemy learning, sandbox simulator, numeric growth — all phase-2 ammunition from the brainstorm.
-- Intel-point economy, rear-guard turns, permadeath roster — designed in the brainstorm, not in this prototype.
-- Battle UI / ImGui panels — the prototype is CLI-only.
+- ~~Intel-point economy, permadeath roster~~ — both implemented 2026-09-17 (CAP-11, CAP-13). Still out: rear-guard turns, pursuit mechanics for routing squads.
+- Battle UI / ImGui panels — the prototype is CLI-only (T-9~T-11 track this).
 - Unit-type action vocab (spear-wall / volley / charge bound to troop type) — prototype uses the generic 6-action set.
 - Command-slot cap (4 vs 5) and "slot debt" overload delay — decided 2026-09-17: no slot enforcement in the prototype; rule count is only an implicit cost. Deferred to phase 2.
 - Engine-layer changes riding in the same worktree (Physics/Rendering/Scene fixes, `MathUtils/Frustum.h`, `Physics/CollisionDetection.h`, PhysicsTest/MathTest additions) — concurrent hardening governed by repo policy and their own tests, not this spec.
