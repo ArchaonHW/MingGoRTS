@@ -9,6 +9,7 @@
 #include <cmath>
 #include <regex>
 #include <chrono>
+#include <unordered_set>
 
 namespace Potato {
 namespace AI {

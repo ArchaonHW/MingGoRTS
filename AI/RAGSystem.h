@@ -40,6 +40,7 @@ struct Document {
     std::string content;
     std::string url;
     std::string author;
+    std::string source;
     uint64_t timestamp;
     std::vector<std::string> tags;
     std::vector<DocumentChunk> chunks;

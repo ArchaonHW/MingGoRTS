@@ -8,6 +8,15 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <chrono>
+
+namespace Potato {
+namespace AI {
+    class TextEmbedding;
+    class NLPPipeline;
+    class NeuralNetwork;
+}
+}
 
 namespace MingGoRTSIDE {
 

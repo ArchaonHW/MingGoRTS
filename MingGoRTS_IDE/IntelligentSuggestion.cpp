@@ -7,6 +7,7 @@
 #include <regex>
 #include <sstream>
 #include <iostream>
+#include <unordered_set>
 
 namespace MingGoRTSIDE {
 
