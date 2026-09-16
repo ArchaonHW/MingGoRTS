@@ -151,6 +151,8 @@ void IDEGUI::Shutdown() {
         g_DevAssistant = nullptr;
     }
     if (g_DevSystem) {
+        // worker 仍在執行的情況已在上方逾時分支提前 return，此處可安全互斥
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
         g_DevSystem->Shutdown();
         delete g_DevSystem;
         g_DevSystem = nullptr;
@@ -1629,16 +1631,13 @@ void IDEGUI::RenderSettings() {
                 model.empty() ? "local" : model);
             g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local, std::move(client));
         }
-        // 讓新註冊的客戶端對 DevSystem 生效（Initialize 為非擁有指標）
-        if (g_DevSystem && g_LLMManager) {
-            std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
-            g_DevSystem->Initialize(
-                g_LLMManager->GetClient(Potato::AI::LLMProvider::Local), nullptr);
-        }
-        // provider/baseUrl/apiKey/agent 目前無 HTTP 客戶端可消費——
+        // 依 provider/apiKey 重新接上（或解除）DevSystem 的外部 LLM fallback，
+        // 讓新註冊的客戶端生效（內部會對 g_DevSystem 互斥）
+        ConfigureDevSystemLLM();
+        // baseUrl/agent 目前沒有可消費的設定通道——
         // 僅保留在設定狀態中，供未來外部 provider 使用
-        AddOutputLog("[Settings] provider/baseUrl/apiKey/agent stored "
-                     "(reserved: no external HTTP client yet)");
+        AddOutputLog("[Settings] baseUrl/agent stored "
+                     "(reserved: no per-client URL/agent channel yet)");
         AddOutputLog("Settings applied successfully");
     }
     
@@ -2732,6 +2731,8 @@ std::vector<std::string> IDEGUI::FindLongFunctions(const std::string& code, int 
 // openai/anthropic + apiKey → 註冊對應 client 作為 fallback。
 void IDEGUI::ConfigureDevSystemLLM() {
     if (!g_DevSystem || !g_LLMManager) return;
+    // g_DevSystem 非執行緒安全——與背景生成 worker 互斥
+    std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
 
     std::string provider(state.llmProvider);
     std::transform(provider.begin(), provider.end(), provider.begin(),
@@ -2783,6 +2784,8 @@ void IDEGUI::GenerateCodeFromPrompt() {
     Potato::AI::IntelligentDevelopmentSystem* sys = g_DevSystem;
     try {
         state.devGenFuture = std::async(std::launch::async, [prompt, sys]() {
+            // DevSystem 內部狀態未同步——與 UI 端各處理器互斥
+            std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
             return sys->GenerateCode(prompt, "C++");
         });
     } catch (const std::exception& e) {
@@ -2835,7 +2838,11 @@ void IDEGUI::AnalyzeCodeWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    Potato::AI::CodeAnalysisResult result = g_DevSystem->AnalyzeCode(code, "C++");
+    Potato::AI::CodeAnalysisResult result;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        result = g_DevSystem->AnalyzeCode(code, "C++");
+    }
     
     AddOutputLog("[Dev] Code Analysis Results:");
     AddOutputLog("  Lines of Code: " + std::to_string(result.lineCount));
@@ -2858,7 +2865,11 @@ void IDEGUI::GenerateTestsWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    Potato::AI::TestGenerationResult result = g_DevSystem->GenerateTestsForFunction(code);
+    Potato::AI::TestGenerationResult result;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        result = g_DevSystem->GenerateTestsForFunction(code);
+    }
     
     if (result.success) {
         AddOutputLog("[Dev] Tests generated successfully");
@@ -2877,7 +2888,11 @@ void IDEGUI::GenerateDocumentationWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    std::string documentation = g_DevSystem->GenerateDocumentation(code);
+    std::string documentation;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        documentation = g_DevSystem->GenerateDocumentation(code);
+    }
     
     AddOutputLog("[Dev] Generated Documentation:");
     AddOutputLog(documentation);
@@ -2892,7 +2907,11 @@ void IDEGUI::FixBugWithAI() {
     std::string code(state.editorBuffer);
     std::string bugDescription = state.developmentPrompt;
     
-    std::string fixedCode = g_DevSystem->FixBug(code, bugDescription);
+    std::string fixedCode;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        fixedCode = g_DevSystem->FixBug(code, bugDescription);
+    }
     
     if (fixedCode != code) {
         // Update editor with fixed code
@@ -2913,15 +2932,18 @@ void IDEGUI::OptimizeCodeWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    std::vector<std::string> optimizations = g_DevSystem->SuggestOptimizations(code);
+    std::vector<std::string> optimizations;
+    std::string optimizedCode;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        optimizations = g_DevSystem->SuggestOptimizations(code);
+        optimizedCode = g_DevSystem->OptimizeCode(code);
+    }
     
     AddOutputLog("[Dev] Optimization Suggestions:");
     for (const auto& opt : optimizations) {
         AddOutputLog("  - " + opt);
     }
-    
-    // Also try to optimize the code
-    std::string optimizedCode = g_DevSystem->OptimizeCode(code);
     if (optimizedCode != code) {
         CopyToBuffer(state.editorBuffer, sizeof(state.editorBuffer), optimizedCode);
         if (state.activeTab >= 0) {
@@ -2938,7 +2960,11 @@ void IDEGUI::ReviewCodeWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    std::string review = g_DevSystem->ReviewCode(code);
+    std::string review;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        review = g_DevSystem->ReviewCode(code);
+    }
     
     AddOutputLog("[Dev] Code Review:");
     AddOutputLog(review);

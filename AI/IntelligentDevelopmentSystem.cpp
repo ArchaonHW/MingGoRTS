@@ -283,7 +283,7 @@ IntelligentDevelopmentSystem::ParseIntent(const std::string& prompt) const {
     // 出現點依序嘗試；候選為非法識別符/關鍵字/停用詞時繼續找下一個
     static const char* markers[] = {
         "called ", "named ", "for ", "class ", "function ",
-        "名為", "叫", "叫做", "名稱"
+        "名為", "叫做", "叫", "名稱"   // 「叫做」先於「叫」——避免吃掉「做」字首
     };
     for (const char* m : markers) {
         size_t mlen = strlen(m);
