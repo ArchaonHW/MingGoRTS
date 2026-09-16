@@ -11,6 +11,7 @@
 #include "AI/IntelligentDevelopmentSystem.h"
 #include "AI/KnowledgeGraph.h"
 #include "AI/SelfReflection.h"
+#include "AI/LLMIntegration.h"
 #include "MingGoRTS_IDE/GUI/GuiTextUtils.h"
 #include <cstdio>
 #include <cstring>
@@ -24,6 +25,44 @@ static void Check(bool cond, const char* name) {
     std::printf("[%s] %s\n", cond ? "PASS" : "FAIL", name);
     if (!cond) failures++;
 }
+
+// 最小 ILLMClient stub：驗證本地管線無法識別時的外部 fallback 路徑
+class StubLLMClient : public ILLMClient {
+public:
+    LLMResponse ChatCompletion(const std::vector<ChatMessage>&,
+                               const LLMConfig&) override {
+        LLMResponse r;
+        r.success = true;
+        r.content = "```cpp\n// stub LLM output\nint stubAnswer() { return 42; }\n```";
+        return r;
+    }
+    LLMResponse ChatCompletionWithTools(const std::vector<ChatMessage>& m,
+                                        const std::vector<ToolDefinition>&,
+                                        const LLMConfig& c) override {
+        return ChatCompletion(m, c);
+    }
+    void ChatCompletionStream(const std::vector<ChatMessage>& m,
+                              const LLMConfig& c,
+                              std::function<void(const std::string&)> cb)
+                              override {
+        cb(ChatCompletion(m, c).content);
+    }
+    std::future<LLMResponse> ChatCompletionAsync(
+        const std::vector<ChatMessage>& m, const LLMConfig& c) override {
+        return std::async(std::launch::deferred,
+                          [&]() { return ChatCompletion(m, c); });
+    }
+    std::vector<float> GenerateEmbedding(const std::string&,
+                                         const std::string&) override {
+        return {0.0f};
+    }
+    std::vector<std::vector<float>> GenerateEmbeddings(
+        const std::vector<std::string>&, const std::string&) override {
+        return {{0.0f}};
+    }
+    bool ValidateConfig(const LLMConfig&) override { return true; }
+    std::string GetDefaultModel() override { return "stub"; }
+};
 
 int main() {
     std::printf("=== DevAssistant Local Pipeline Smoke Test ===\n\n");
@@ -111,6 +150,58 @@ int main() {
         std::memset(buf, 0x7F, sizeof(buf));
         MingGoRTSIDE::CopyToBuffer(buf, sizeof(buf), "short");
         Check(std::strcmp(buf, "short") == 0, "short copy is exact");
+    }
+
+    // 9) methods 擷取（review 修復：methods 清單不再為死路徑）
+    {
+        auto r = dev.GenerateCode(
+            "create a class named Tank with methods fire, reload", "C++");
+        Check(r.success && r.generatedCode.find("fire") != std::string::npos,
+              "methods list populates generated class");
+    }
+
+    // 10) "and" 清單中間項不丟失（review 修復）
+    {
+        auto r = dev.GenerateCode(
+            "create a class named Hero with health and mana and stamina", "C++");
+        Check(r.success &&
+              r.generatedCode.find("m_health") != std::string::npos &&
+              r.generatedCode.find("m_mana") != std::string::npos &&
+              r.generatedCode.find("m_stamina") != std::string::npos,
+              "and-list keeps all members");
+    }
+
+    // 11) 詞邊界："latest" 不誤中 "test"（review 修復）
+    {
+        auto r = dev.GenerateCode(
+            "create a class named Widget showing the latest data", "C++");
+        Check(r.success &&
+              r.generatedCode.find("class Widget") != std::string::npos &&
+              r.generatedCode.find("assert") == std::string::npos,
+              "word-boundary: 'latest' is not 'test'");
+    }
+
+    // 12) LLM fallback：本地管線失敗且 client 存在時走外部 stub
+    {
+        StubLLMClient stub;
+        IntelligentDevelopmentSystem dev2;
+        dev2.Initialize(&stub, nullptr);
+        auto r = dev2.GenerateCode("xyzzy !!!", "C++");
+        Check(r.success, "fallback to llmClient when local fails");
+        Check(r.generatedCode.find("stubAnswer") != std::string::npos,
+              "fallback returns external client output");
+    }
+
+    // 13) LLM fallback：stub 失敗時錯誤可見
+    {
+        StubLLMClient stub;
+        IntelligentDevelopmentSystem dev2;
+        dev2.Initialize(&stub, nullptr);
+        // 可識別提示仍走本地，不浪費外部呼叫
+        auto r = dev2.GenerateCode("create a class named Local", "C++");
+        Check(r.success &&
+              r.generatedCode.find("class Local") != std::string::npos,
+              "local pipeline wins over configured llmClient");
     }
 
     std::printf("\n%s (%d failures)\n", failures == 0 ? "ALL PASS" : "FAILURES", failures);

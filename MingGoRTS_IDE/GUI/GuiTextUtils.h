@@ -29,7 +29,7 @@ inline std::string GetEnvVar(const char* name) {
 // 寫入 char 緩衝區並保證 NUL 結尾；超出時附加 "...[truncated]" 標記。
 // /sdl 禁用 strncpy/strncat —— 用 memcpy 配精確長度。
 inline void CopyToBuffer(char* dst, size_t dstSize, const std::string& src) {
-    if (dstSize == 0) return;
+    if (!dst || dstSize == 0) return;
     const char* truncMarker = "...[truncated]";
     const size_t markerLen = strlen(truncMarker);
     const bool trunc = src.size() >= dstSize && dstSize > markerLen + 1;

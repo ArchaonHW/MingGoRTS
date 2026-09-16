@@ -18,6 +18,7 @@
 #include <future>
 #include <chrono>
 #include <cctype>
+#include <mutex>
 
 namespace MingGoRTSIDE {
 
@@ -27,6 +28,10 @@ static Potato::AI::DevelopmentAssistant* g_DevAssistant = nullptr;
 static Potato::AI::LLMManager* g_LLMManager = nullptr;
 static Potato::AI::KnowledgeGraph* g_KnowledgeGraph = nullptr;
 static Potato::AI::SelfReflection* g_SelfReflection = nullptr;
+
+// g_DevSystem 非執行緒安全（stats/tasks/knowledgeGraph/selfReflection 未同步）——
+// 背景生成 worker 與 UI 端各處理器共用此 mutex 互斥
+static std::mutex g_DevSystemMutex;
 
 // GetEnvVar / CopyToBuffer 移至 GuiTextUtils.h（header-only，供煙霧測試直接覆蓋）
 
@@ -41,20 +46,20 @@ IDEGUI::IDEGUI()
     memset(state.developmentPrompt, 0, sizeof(state.developmentPrompt));
     memset(state.developmentResponse, 0, sizeof(state.developmentResponse));
     
-    // AI/LLM 設定：先讀 POTATO_LLM_* 環境變數作為預設值
+    // AI/LLM 設定：先讀 POTATO_LLM_* 環境變數作為預設值（各快取一次，不重複呼叫）
+    std::string envProvider = GetEnvVar("POTATO_LLM_PROVIDER");
+    std::string envModel = GetEnvVar("POTATO_LLM_MODEL");
+    std::string envBaseUrl = GetEnvVar("POTATO_LLM_BASEURL");
+    std::string envApiKey = GetEnvVar("POTATO_LLM_APIKEY");
+    std::string envAgent = GetEnvVar("POTATO_LLM_AGENT");
     CopyToBuffer(state.llmProvider, sizeof(state.llmProvider),
-                 GetEnvVar("POTATO_LLM_PROVIDER").empty() ? "local"
-                        : GetEnvVar("POTATO_LLM_PROVIDER"));
+                 envProvider.empty() ? "local" : envProvider);
     CopyToBuffer(state.llmModel, sizeof(state.llmModel),
-                 GetEnvVar("POTATO_LLM_MODEL").empty() ? "llama-2-7b"
-                        : GetEnvVar("POTATO_LLM_MODEL"));
-    CopyToBuffer(state.llmBaseUrl, sizeof(state.llmBaseUrl),
-                 GetEnvVar("POTATO_LLM_BASEURL"));
-    CopyToBuffer(state.llmApiKey, sizeof(state.llmApiKey),
-                 GetEnvVar("POTATO_LLM_APIKEY"));
+                 envModel.empty() ? "llama-2-7b" : envModel);
+    CopyToBuffer(state.llmBaseUrl, sizeof(state.llmBaseUrl), envBaseUrl);
+    CopyToBuffer(state.llmApiKey, sizeof(state.llmApiKey), envApiKey);
     CopyToBuffer(state.llmAgent, sizeof(state.llmAgent),
-                 GetEnvVar("POTATO_LLM_AGENT").empty() ? "local-pipeline"
-                        : GetEnvVar("POTATO_LLM_AGENT"));
+                 envAgent.empty() ? "local-pipeline" : envAgent);
     
     // Set default path
     state.currentPath = "C:\\HWC\\MingGoRTS";
@@ -75,9 +80,12 @@ IDEGUI::IDEGUI()
     g_KnowledgeGraph->AddRelationByName("IntelligentDevelopmentSystem", "uses", "KnowledgeGraph");
     
     g_DevSystem = new Potato::AI::IntelligentDevelopmentSystem();
-    g_DevSystem->Initialize(nullptr, nullptr);   // 本地管線無需 LLM/agent manager
+    // 本地管線為主；已註冊的 Local 客戶端作為可選 LLM 後備（非擁有指標）
+    g_DevSystem->Initialize(
+        g_LLMManager->GetClient(Potato::AI::LLMProvider::Local), nullptr);
     g_DevSystem->SetKnowledgeGraph(g_KnowledgeGraph);
     g_DevSystem->SetSelfReflection(g_SelfReflection);
+    g_DevAssistant = new Potato::AI::DevelopmentAssistant(g_DevSystem);
 }
 
 IDEGUI::~IDEGUI() {
@@ -120,7 +128,21 @@ void IDEGUI::Shutdown() {
     
     // 等待背景生成任務完成，避免 worker 存取已刪除的 g_DevSystem
     if (state.devGenFuture.valid()) {
-        state.devGenFuture.wait();
+        // 有界等待：本地管線為確定性即時運算，5 秒足夠；
+        // 若異常超時，跳過刪除（洩漏而非 UAF）
+        if (state.devGenFuture.wait_for(std::chrono::seconds(5)) !=
+            std::future_status::ready) {
+            AddOutputLog("[Dev] Shutdown: generation still running, "
+                         "leaking AI globals to avoid UAF");
+            // 刻意洩漏 future：std::async 產生的 future 解構時會阻塞等 worker，
+            // 移到 heap 放棄擁有權，讓關閉流程繼續走完
+            auto* abandoned =
+                new std::future<Potato::AI::CodeGenerationResult>(
+                    std::move(state.devGenFuture));
+            (void)abandoned;
+            running = false;
+            return;
+        }
     }
     state.developmentProcessing = false;
     
@@ -1607,6 +1629,16 @@ void IDEGUI::RenderSettings() {
                 model.empty() ? "local" : model);
             g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local, std::move(client));
         }
+        // 讓新註冊的客戶端對 DevSystem 生效（Initialize 為非擁有指標）
+        if (g_DevSystem && g_LLMManager) {
+            std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+            g_DevSystem->Initialize(
+                g_LLMManager->GetClient(Potato::AI::LLMProvider::Local), nullptr);
+        }
+        // provider/baseUrl/apiKey/agent 目前無 HTTP 客戶端可消費——
+        // 僅保留在設定狀態中，供未來外部 provider 使用
+        AddOutputLog("[Settings] provider/baseUrl/apiKey/agent stored "
+                     "(reserved: no external HTTP client yet)");
         AddOutputLog("Settings applied successfully");
     }
     
@@ -2541,7 +2573,8 @@ void IDEGUI::ApplySuggestion(const Suggestion& suggestion) {
     AddOutputLog("[AI] Code: " + suggestion.code);
     
     // Placeholder: add suggestion code to current editor content
-    if (state.activeTab >= 0) {
+    if (state.activeTab >= 0 &&
+        state.activeTab < static_cast<int>(state.openTabs.size())) {
         std::string currentContent = state.editorBuffer;
         currentContent += "\n" + suggestion.code + "\n";
         CopyToBuffer(state.editorBuffer, sizeof(state.editorBuffer), currentContent);
@@ -2694,6 +2727,34 @@ std::vector<std::string> IDEGUI::FindLongFunctions(const std::string& code, int 
 // Intelligent Development System Integration
 // ============================================================================
 
+// 依 Settings 的 provider/apiKey 設定 g_DevSystem 的外部 LLM client。
+// "local"/空值 → nullptr（純本地管線，避免 mock client 產生假輸出）；
+// openai/anthropic + apiKey → 註冊對應 client 作為 fallback。
+void IDEGUI::ConfigureDevSystemLLM() {
+    if (!g_DevSystem || !g_LLMManager) return;
+
+    std::string provider(state.llmProvider);
+    std::transform(provider.begin(), provider.end(), provider.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    std::string key(state.llmApiKey);
+
+    Potato::AI::ILLMClient* client = nullptr;
+    if (!key.empty()) {
+        if (provider == "openai") {
+            auto c = std::make_unique<Potato::AI::OpenAIClient>(key);
+            client = c.get();
+            g_LLMManager->RegisterClient(Potato::AI::LLMProvider::OpenAI,
+                                         std::move(c));
+        } else if (provider == "anthropic") {
+            auto c = std::make_unique<Potato::AI::AnthropicClient>(key);
+            client = c.get();
+            g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Anthropic,
+                                         std::move(c));
+        }
+    }
+    g_DevSystem->Initialize(client, nullptr);
+}
+
 void IDEGUI::GenerateCodeFromPrompt() {
     if (!g_DevSystem) {
         AddOutputLog("[Dev] Development system not initialized");
@@ -2711,13 +2772,18 @@ void IDEGUI::GenerateCodeFromPrompt() {
     }
     if (!hasContent) return;
     
+    // 依 Settings 接上（或解除）外部 LLM fallback
+    ConfigureDevSystemLLM();
+    
     state.developmentProcessing = true;
     AddOutputLog("[Dev] Generating code from prompt...");
     
     // 背景執行，UI 不阻塞；結果在 RenderDevelopmentAssistant 輪詢寫回
+    // 捕獲 sys 指標值而非在 worker 內重讀全域（配合 Shutdown 的 wait 保證生命期）
+    Potato::AI::IntelligentDevelopmentSystem* sys = g_DevSystem;
     try {
-        state.devGenFuture = std::async(std::launch::async, [prompt]() {
-            return g_DevSystem->GenerateCode(prompt, "C++");
+        state.devGenFuture = std::async(std::launch::async, [prompt, sys]() {
+            return sys->GenerateCode(prompt, "C++");
         });
     } catch (const std::exception& e) {
         // worker 啟動失敗：立即解除旗標，避免 UI 卡在 Processing 狀態

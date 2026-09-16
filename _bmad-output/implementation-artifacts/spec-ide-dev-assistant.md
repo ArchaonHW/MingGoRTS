@@ -2,7 +2,7 @@
 title: 'IDE Intelligent Development Assistant — own in-process AI agent codegen'
 type: 'feature'
 created: '2026-09-16'
-status: 'done'
+status: 'approved'
 route: 'dispatch'
 baseline_commit: 'd5eff759dd45e73a4caa47ab7865a33446ff6d24'
 review_loop_iteration: 0
@@ -89,6 +89,21 @@ context: []
 ## Spec Change Log
 
 ## Review Triage Log
+
+**Iteration 0** — 3 layers (blind-hunter, edge-case-hunter, verification-gap) over the full worktree diff vs baseline `d5eff75`.
+
+- No `intent_gap` / `bad_spec` findings → no loopback; spec requirements unchanged.
+- `patch` (in-scope, this feature's files): `ParseIntent` dropped middle "and"-list fields; `intent.methods` never populated (dead template path); no C++-identifier validation on extracted names; stop-word candidate skipped to next marker (`class For` bug); keyword substring false positives (`latest`→test); CJK markers decorative (ASCII-only extraction) and `有` matching inside 沒有/所有; `llmClient` never wired (`Initialize(nullptr,nullptr)`) so LLM fallback + Settings fields inert; `g_DevAssistant` never constructed; UI/worker data race on `g_DevSystem`; unbounded `devGenFuture.wait()` in `Shutdown`; `CopyToBuffer` missing nullptr guard; `stats.averageTaskTime` div-by-zero + skipped on local path; `ApplySuggestion` missing `activeTab` upper bound; `GetEnvVar` called twice per var; LLM-fallback branch untested (stub-client check added); whitespace-vs-empty check label.
+- `defer` (out-of-scope files — concurrent worktree changes in Rendering/Physics/Input/Platform/Audio/Security/Serialization, plus harnesses that don't exist): appended to `deferred-work.md`.
+- False positives rejected: `DevAssistantSmoke` IS in `POTATO_TESTS` (`CMakeLists.txt:473`); `_dupenv_s` MinGW concern moot (MinGW build + smoke verified); `nul` artifact deferred.
+
+**Iteration 0 fixes applied** (this round):
+
+- `ParseIntent` rewritten: word-boundary ASCII keyword match (`latest`→test fixed); marker scan keeps priority order but retries all occurrences and rejects C++ keywords/stop words (`class For` no longer emits `class managing`-style garbage deterministically — invalid candidates skipped); "and"-list splitting preserves middle members; `methods`/`functions` group words now populate `intent.methods`; bare `有` removed from member markers (沒有/所有 false positive); `IsCppIdentifier` validation on subject/fields/methods.
+- `GenerateCode` local path now updates `stats` (codeGenerations/totalTasks/averageTaskTime); `averageTaskTime` guarded against totalTasks==0 on LLM path.
+- `GuiTextUtils::CopyToBuffer` nullptr guard added.
+- `IDEGUI`: `ConfigureDevSystemLLM()` wires Settings provider/apiKey → registered `OpenAIClient`/`AnthropicClient` fallback (`local`/empty → pure local pipeline, mock client never used); `g_DevAssistant` constructed; async lambda captures `sys` pointer (no worker-side global re-read); `Shutdown` uses bounded `wait_for(5s)` and leaks AI globals rather than deleting under a live worker; `ApplySuggestion` bounds-checks `activeTab < openTabs.size()`; env defaults read once per var.
+- `DevAssistantSmoke` extended to 24 checks: methods list, and-list members, word-boundary, LLM fallback via `StubLLMClient`, local-wins-over-client.
 
 ## Design Notes
 

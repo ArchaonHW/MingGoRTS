@@ -292,6 +292,7 @@ public:
     // Intelligent Development System Integration
     void GenerateCodeFromPrompt();
     void PollDevelopmentResult();
+    void ConfigureDevSystemLLM();
     void AnalyzeCodeWithAI();
     void GenerateTestsWithAI();
     void GenerateDocumentationWithAI();
