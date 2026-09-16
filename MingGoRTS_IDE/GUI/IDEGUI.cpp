@@ -5,6 +5,8 @@
 #include "IDEGUI.h"
 #include "../IntelligentSuggestion.h"
 #include "../../AI/IntelligentDevelopmentSystem.h"
+#include "../../AI/KnowledgeGraph.h"
+#include "../../AI/SelfReflection.h"
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -12,6 +14,9 @@
 #include <algorithm>
 #include <ctime>
 #include <iomanip>
+#include <future>
+#include <chrono>
+#include <cctype>
 
 namespace MingGoRTSIDE {
 
@@ -19,6 +24,45 @@ namespace MingGoRTSIDE {
 static Potato::AI::IntelligentDevelopmentSystem* g_DevSystem = nullptr;
 static Potato::AI::DevelopmentAssistant* g_DevAssistant = nullptr;
 static Potato::AI::LLMManager* g_LLMManager = nullptr;
+static Potato::AI::KnowledgeGraph* g_KnowledgeGraph = nullptr;
+static Potato::AI::SelfReflection* g_SelfReflection = nullptr;
+
+namespace {
+// 可移植環境變數讀取（/sdl 下 getenv 被禁用；MSVC 用 _dupenv_s）
+std::string GetEnvVar(const char* name) {
+#ifdef _WIN32
+    char* value = nullptr;
+    size_t len = 0;
+    if (_dupenv_s(&value, &len, name) != 0 || value == nullptr) {
+        return "";
+    }
+    std::string result(value, len > 0 ? len - 1 : 0); // len 含 null 結尾
+    std::free(value);
+    return result;
+#else
+    const char* value = std::getenv(name);
+    return value ? std::string(value) : "";
+#endif
+}
+
+// 寫入 char 緩衝區並保證 NUL 結尾；超出時附加截斷標記
+void CopyToBuffer(char* dst, size_t dstSize, const std::string& src) {
+    if (dstSize == 0) return;
+    const char* truncMarker = "...[truncated]";
+    const size_t markerLen = strlen(truncMarker);
+    // /sdl 禁用 strncpy/strncat —— 用 memcpy 配精確長度
+    const bool trunc = src.size() >= dstSize && dstSize > markerLen + 1;
+    const size_t keep = src.size() < dstSize ? src.size()
+        : (dstSize > markerLen + 1 ? dstSize - markerLen - 1 : dstSize - 1);
+    memcpy(dst, src.data(), keep);
+    size_t pos = keep;
+    if (trunc) {
+        memcpy(dst + pos, truncMarker, markerLen);
+        pos += markerLen;
+    }
+    dst[pos] = '\0';
+}
+} // namespace
 
 IDEGUI::IDEGUI()
     : core(nullptr)
@@ -31,17 +75,43 @@ IDEGUI::IDEGUI()
     memset(state.developmentPrompt, 0, sizeof(state.developmentPrompt));
     memset(state.developmentResponse, 0, sizeof(state.developmentResponse));
     
+    // AI/LLM 設定：先讀 POTATO_LLM_* 環境變數作為預設值
+    CopyToBuffer(state.llmProvider, sizeof(state.llmProvider),
+                 GetEnvVar("POTATO_LLM_PROVIDER").empty() ? "local"
+                        : GetEnvVar("POTATO_LLM_PROVIDER"));
+    CopyToBuffer(state.llmModel, sizeof(state.llmModel),
+                 GetEnvVar("POTATO_LLM_MODEL").empty() ? "llama-2-7b"
+                        : GetEnvVar("POTATO_LLM_MODEL"));
+    CopyToBuffer(state.llmBaseUrl, sizeof(state.llmBaseUrl),
+                 GetEnvVar("POTATO_LLM_BASEURL"));
+    CopyToBuffer(state.llmApiKey, sizeof(state.llmApiKey),
+                 GetEnvVar("POTATO_LLM_APIKEY"));
+    CopyToBuffer(state.llmAgent, sizeof(state.llmAgent),
+                 GetEnvVar("POTATO_LLM_AGENT").empty() ? "local-pipeline"
+                        : GetEnvVar("POTATO_LLM_AGENT"));
+    
     // Set default path
     state.currentPath = "C:\\HWC\\MingGoRTS";
     
-    // Initialize Intelligent Development System
+    // Initialize Intelligent Development System（本地管線為主，外部 LLM 可選）
     g_LLMManager = new Potato::AI::LLMManager();
     auto localClient = std::make_unique<Potato::AI::LocalModelClient>("llama-2-7b");
     g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local, std::move(localClient));
     g_LLMManager->SetDefaultProvider(Potato::AI::LLMProvider::Local);
     
+    g_KnowledgeGraph = new Potato::AI::KnowledgeGraph();
+    g_SelfReflection = new Potato::AI::SelfReflection();
+    
+    // 種入引擎模組知識，供生成時參考專案上下文
+    g_KnowledgeGraph->AddRelationByName("AIAgent", "part-of", "AIAgentSystem");
+    g_KnowledgeGraph->AddRelationByName("DeveloperAgent", "is-a", "AIAgent");
+    g_KnowledgeGraph->AddRelationByName("IntelligentDevelopmentSystem", "uses", "LLMIntegration");
+    g_KnowledgeGraph->AddRelationByName("IntelligentDevelopmentSystem", "uses", "KnowledgeGraph");
+    
     g_DevSystem = new Potato::AI::IntelligentDevelopmentSystem();
-    // Note: We'll initialize properly when IDECore is available
+    g_DevSystem->Initialize(nullptr, nullptr);   // 本地管線無需 LLM/agent manager
+    g_DevSystem->SetKnowledgeGraph(g_KnowledgeGraph);
+    g_DevSystem->SetSelfReflection(g_SelfReflection);
 }
 
 IDEGUI::~IDEGUI() {
@@ -82,6 +152,12 @@ bool IDEGUI::Initialize(IDECore* ideCore) {
 void IDEGUI::Shutdown() {
     std::cout << "Shutting down MingGoRTS IDE GUI..." << std::endl;
     
+    // 等待背景生成任務完成，避免 worker 存取已刪除的 g_DevSystem
+    if (state.devGenFuture.valid()) {
+        state.devGenFuture.wait();
+    }
+    state.developmentProcessing = false;
+    
     if (g_DevAssistant) {
         delete g_DevAssistant;
         g_DevAssistant = nullptr;
@@ -90,6 +166,14 @@ void IDEGUI::Shutdown() {
         g_DevSystem->Shutdown();
         delete g_DevSystem;
         g_DevSystem = nullptr;
+    }
+    if (g_KnowledgeGraph) {
+        delete g_KnowledgeGraph;
+        g_KnowledgeGraph = nullptr;
+    }
+    if (g_SelfReflection) {
+        delete g_SelfReflection;
+        g_SelfReflection = nullptr;
     }
     if (g_LLMManager) {
         delete g_LLMManager;
@@ -1516,9 +1600,43 @@ void IDEGUI::RenderSettings() {
     ImGui::Checkbox("Word Wrap", &state.wordWrap);
     ImGui::Checkbox("Show Minimap", &state.showMinimap);
     
+    // AI / LLM 設定（預設讀自 POTATO_LLM_* 環境變數）
+    ImGui::Separator();
+    ImGui::Text("AI / LLM Settings");
+    ImGui::TextDisabled("Local pipeline works without these; set only for external providers");
+    
+    ImGui::Text("Provider:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmprovider", state.llmProvider, sizeof(state.llmProvider));
+    
+    ImGui::Text("Model:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmmodel", state.llmModel, sizeof(state.llmModel));
+    
+    ImGui::Text("Base URL:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmbaseurl", state.llmBaseUrl, sizeof(state.llmBaseUrl));
+    
+    ImGui::Text("API Key:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmapikey", state.llmApiKey, sizeof(state.llmApiKey),
+                   ImGuiInputTextFlags_Password);
+    
+    ImGui::Text("Agent:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmagent", state.llmAgent, sizeof(state.llmAgent));
+    
     // Apply button
     ImGui::Separator();
     if (ImGui::Button("Apply Settings")) {
+        // 套用至可插拔的 LLM 管理器（本地管線不需這些設定；
+        // provider/model 變更會重新註冊本地模型客戶端）
+        if (g_LLMManager) {
+            std::string model(state.llmModel);
+            auto client = std::make_unique<Potato::AI::LocalModelClient>(
+                model.empty() ? "local" : model);
+            g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local, std::move(client));
+        }
         AddOutputLog("Settings applied successfully");
     }
     
@@ -1531,6 +1649,11 @@ void IDEGUI::RenderSettings() {
         state.autoSaveInterval = 300;
         state.wordWrap = false;
         state.showMinimap = false;
+        CopyToBuffer(state.llmProvider, sizeof(state.llmProvider), "local");
+        CopyToBuffer(state.llmModel, sizeof(state.llmModel), "llama-2-7b");
+        memset(state.llmBaseUrl, 0, sizeof(state.llmBaseUrl));
+        memset(state.llmApiKey, 0, sizeof(state.llmApiKey));
+        CopyToBuffer(state.llmAgent, sizeof(state.llmAgent), "local-pipeline");
         SetDarkTheme();
         AddOutputLog("Settings reset to defaults");
     }
@@ -2451,7 +2574,7 @@ void IDEGUI::ApplySuggestion(const Suggestion& suggestion) {
     if (state.activeTab >= 0) {
         std::string currentContent = state.editorBuffer;
         currentContent += "\n" + suggestion.code + "\n";
-        strncpy_s(state.editorBuffer, sizeof(state.editorBuffer), currentContent.c_str(), _TRUNCATE);
+        CopyToBuffer(state.editorBuffer, sizeof(state.editorBuffer), currentContent);
         state.openTabs[state.activeTab].modified = true;
     }
 }
@@ -2606,30 +2729,66 @@ void IDEGUI::GenerateCodeFromPrompt() {
         AddOutputLog("[Dev] Development system not initialized");
         return;
     }
+    if (state.developmentProcessing) {
+        return; // 已在生成中，忽略重複提交
+    }
+    
+    // 空提示：靜默返回
+    std::string prompt(state.developmentPrompt);
+    bool hasContent = false;
+    for (char c : prompt) {
+        if (!std::isspace(static_cast<unsigned char>(c))) { hasContent = true; break; }
+    }
+    if (!hasContent) return;
     
     state.developmentProcessing = true;
     AddOutputLog("[Dev] Generating code from prompt...");
     
-    std::string prompt(state.developmentPrompt);
-    Potato::AI::CodeGenerationResult result = g_DevSystem->GenerateCode(prompt, "C++");
-    
-    if (result.success) {
-        // Insert generated code into editor
-        if (state.activeTab >= 0) {
-            std::string currentContent = state.editorBuffer;
-            currentContent += "\n" + result.generatedCode + "\n";
-            strncpy_s(state.editorBuffer, sizeof(state.editorBuffer), currentContent.c_str(), _TRUNCATE);
-            state.openTabs[state.activeTab].modified = true;
-        }
-        
-        AddOutputLog("[Dev] Code generated successfully");
-        strncpy_s(state.developmentResponse, sizeof(state.developmentResponse), result.generatedCode.c_str(), _TRUNCATE);
-    } else {
-        AddOutputLog("[Dev] Code generation failed: " + result.error);
-        std::string errorMsg = "Error: " + result.error;
-        strncpy_s(state.developmentResponse, sizeof(state.developmentResponse), errorMsg.c_str(), _TRUNCATE);
+    // 背景執行，UI 不阻塞；結果在 RenderDevelopmentAssistant 輪詢寫回
+    try {
+        state.devGenFuture = std::async(std::launch::async, [prompt]() {
+            return g_DevSystem->GenerateCode(prompt, "C++");
+        });
+    } catch (const std::exception& e) {
+        // worker 啟動失敗：立即解除旗標，避免 UI 卡在 Processing 狀態
+        state.developmentProcessing = false;
+        std::string msg = std::string("[Dev] Failed to start generation: ") + e.what();
+        AddOutputLog(msg);
+        CopyToBuffer(state.developmentResponse, sizeof(state.developmentResponse), msg);
+    }
+}
+
+void IDEGUI::PollDevelopmentResult() {
+    if (!state.developmentProcessing) return;
+    if (!state.devGenFuture.valid()) {
+        // 旗標已設但無有效 worker（啟動失敗等）：解除卡住狀態
+        state.developmentProcessing = false;
+        return;
+    }
+    if (state.devGenFuture.wait_for(std::chrono::milliseconds(0)) != std::future_status::ready) {
+        return;
     }
     
+    Potato::AI::CodeGenerationResult result;
+    try {
+        result = state.devGenFuture.get();
+    } catch (const std::exception& e) {
+        result.success = false;
+        result.error = e.what();
+    } catch (...) {
+        result.success = false;
+        result.error = "Unknown generation error";
+    }
+    
+    if (result.success) {
+        AddOutputLog("[Dev] Code generated successfully");
+        CopyToBuffer(state.developmentResponse, sizeof(state.developmentResponse),
+                     result.generatedCode);
+    } else {
+        AddOutputLog("[Dev] Code generation failed: " + result.error);
+        CopyToBuffer(state.developmentResponse, sizeof(state.developmentResponse),
+                     "Error: " + result.error);
+    }
     state.developmentProcessing = false;
 }
 
@@ -2701,7 +2860,7 @@ void IDEGUI::FixBugWithAI() {
     
     if (fixedCode != code) {
         // Update editor with fixed code
-        strncpy_s(state.editorBuffer, sizeof(state.editorBuffer), fixedCode.c_str(), _TRUNCATE);
+        CopyToBuffer(state.editorBuffer, sizeof(state.editorBuffer), fixedCode);
         if (state.activeTab >= 0) {
             state.openTabs[state.activeTab].modified = true;
         }
@@ -2728,7 +2887,7 @@ void IDEGUI::OptimizeCodeWithAI() {
     // Also try to optimize the code
     std::string optimizedCode = g_DevSystem->OptimizeCode(code);
     if (optimizedCode != code) {
-        strncpy_s(state.editorBuffer, sizeof(state.editorBuffer), optimizedCode.c_str(), _TRUNCATE);
+        CopyToBuffer(state.editorBuffer, sizeof(state.editorBuffer), optimizedCode);
         if (state.activeTab >= 0) {
             state.openTabs[state.activeTab].modified = true;
         }
@@ -2754,6 +2913,9 @@ void IDEGUI::ShowDevelopmentAssistant() {
 }
 
 void IDEGUI::RenderDevelopmentAssistant() {
+    // 每幀輪詢背景生成結果（即使面板暫時關閉也要消化結果、解除旗標）
+    PollDevelopmentResult();
+    
     if (!state.showDevelopmentAssistant) return;
     
     ImGui::SetNextWindowPos(ImVec2(state.codeEditorPos.x + 50, 
@@ -2773,9 +2935,11 @@ void IDEGUI::RenderDevelopmentAssistant() {
                                ImVec2(-1, 80));
     
     // Action buttons
+    ImGui::BeginDisabled(state.developmentProcessing);
     if (ImGui::Button("Generate Code")) {
         GenerateCodeFromPrompt();
     }
+    ImGui::EndDisabled();
     ImGui::SameLine();
     if (ImGui::Button("Analyze Code")) {
         AnalyzeCodeWithAI();

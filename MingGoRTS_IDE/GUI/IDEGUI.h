@@ -8,11 +8,13 @@
 #include "../IDECore.h"
 #include "../AIIntegration.h"
 #include "../IntelligentSuggestion.h"
+#include "../../AI/IntelligentDevelopmentSystem.h"
 #include "I18N.h"
 #include "imgui.h"
 #include <string>
 #include <vector>
 #include <memory>
+#include <future>
 
 namespace MingGoRTSIDE {
 
@@ -180,6 +182,15 @@ struct IDEGUIState {
     char developmentPrompt[4096];
     char developmentResponse[8192];
     bool developmentProcessing = false;
+    // 背景生成任務（非阻塞 UI）；worker 完成後在 render 迴圈輪詢寫回
+    std::future<Potato::AI::CodeGenerationResult> devGenFuture;
+    
+    // AI / LLM 設定（Settings 面板可覆寫；預設讀自 POTATO_LLM_* 環境變數）
+    char llmProvider[64];
+    char llmModel[128];
+    char llmBaseUrl[256];
+    char llmApiKey[256];
+    char llmAgent[128];
 };
 
 /**
@@ -280,6 +291,7 @@ public:
     
     // Intelligent Development System Integration
     void GenerateCodeFromPrompt();
+    void PollDevelopmentResult();
     void AnalyzeCodeWithAI();
     void GenerateTestsWithAI();
     void GenerateDocumentationWithAI();

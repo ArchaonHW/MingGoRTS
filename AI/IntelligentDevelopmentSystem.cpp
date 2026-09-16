@@ -3,12 +3,16 @@
  */
 
 #include "IntelligentDevelopmentSystem.h"
+#include "KnowledgeGraph.h"
+#include "SelfReflection.h"
 #include <iostream>
 #include <sstream>
 #include <cstring>
 #include <chrono>
 #include <algorithm>
 #include <regex>
+#include <unordered_set>
+#include <cctype>
 
 namespace Potato {
 namespace AI {
@@ -108,10 +112,15 @@ CodeGenerationResult IntelligentDevelopmentSystem::GenerateCode(
     CodeGenerationResult result;
     result.language = language;
     
+    // 優先使用本地管線（無需外部 LLM）；本地無法識別時才退回 llmClient
+    CodeGenerationResult local = GenerateLocal(specification, language);
+    if (local.success) {
+        return local;
+    }
+    
     if (!llmClient) {
-        result.success = false;
-        result.error = "LLM client not available";
-        return result;
+        // 本地管線失敗且無外部 LLM：回傳本地的明確錯誤訊息
+        return local;
     }
     
     // Build prompt
@@ -147,6 +156,277 @@ CodeGenerationResult IntelligentDevelopmentSystem::GenerateCode(
     
     return result;
 }
+
+// ============================================================================
+// Local Generation Pipeline (NLP intent -> template synthesis -> KG context)
+// ============================================================================
+
+IntelligentDevelopmentSystem::ParsedIntent
+IntelligentDevelopmentSystem::ParseIntent(const std::string& prompt) const {
+    ParsedIntent intent;
+    intent.rawPrompt = prompt;
+    
+    // 小寫化以便關鍵字比對（英文）；中文關鍵字原樣比對
+    std::string lower = prompt;
+    std::transform(lower.begin(), lower.end(), lower.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    
+    auto contains = [&](const char* kw) {
+        return lower.find(kw) != std::string::npos ||
+               prompt.find(kw) != std::string::npos;
+    };
+    
+    // 意圖分類：先特殊後一般（test 優先於 function，因為 "test function" 應產測試）
+    if (contains("test") || contains("測試") || contains("單元測試")) {
+        intent.kind = ParsedIntent::Kind::TestStub;
+    } else if (contains("class") || contains("類") || contains("物件")) {
+        intent.kind = ParsedIntent::Kind::Class;
+    } else if (contains("system") || contains("manager") ||
+               contains("系統") || contains("管理器")) {
+        intent.kind = ParsedIntent::Kind::SystemStub;
+    } else if (contains("function") || contains("method") ||
+               contains("函數") || contains("函式") || contains("方法") ||
+               contains("create") || contains("generate") || contains("實現") ||
+               contains("寫") || contains("建立") || contains("生成")) {
+        intent.kind = ParsedIntent::Kind::Function;
+    } else {
+        intent.kind = ParsedIntent::Kind::Unknown;
+    }
+    
+    // 主體名稱擷取：called X / named X / for X / 名為 X / 叫 X
+    static const char* markers[] = {
+        "called ", "named ", "for ", "class ", "function ",
+        "名為", "叫", "叫做", "名稱"
+    };
+    for (const char* m : markers) {
+        size_t pos = lower.find(m);
+        size_t posRaw = prompt.find(m);
+        size_t p = (pos != std::string::npos) ? pos + strlen(m)
+                 : (posRaw != std::string::npos) ? posRaw + strlen(m)
+                 : std::string::npos;
+        if (p == std::string::npos || p >= prompt.size()) continue;
+        
+        // 取出識別符（字母/數字/底線，允許駝峰）
+        size_t end = p;
+        while (end < prompt.size() &&
+               (std::isalnum(static_cast<unsigned char>(prompt[end])) || prompt[end] == '_')) {
+            end++;
+        }
+        if (end > p) {
+            std::string cand = prompt.substr(p, end - p);
+            // 排除常見英文停用詞誤抓
+            static const std::unordered_set<std::string> stop = {
+                "a", "an", "the", "that", "this", "with", "which", "to",
+                "and", "or", "of", "in", "on", "is", "it", "be", "do"
+            };
+            std::string lc = cand;
+            std::transform(lc.begin(), lc.end(), lc.begin(),
+                           [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
+            if (!stop.count(lc)) {
+                intent.subject = cand;
+                break;
+            }
+        }
+    }
+    
+    // 後備：取提示中第一個大寫開頭或含底線/駝峰的詞
+    if (intent.subject.empty()) {
+        std::stringstream ss(prompt);
+        std::string word;
+        while (ss >> word) {
+            bool ident = !word.empty() &&
+                (std::isupper(static_cast<unsigned char>(word[0])) ||
+                 word.find('_') != std::string::npos);
+            if (ident && word.size() > 1) {
+                // 去掉標點
+                std::string clean;
+                for (char c : word) {
+                    if (std::isalnum(static_cast<unsigned char>(c)) || c == '_') clean += c;
+                }
+                if (clean.size() > 1) { intent.subject = clean; break; }
+            }
+        }
+    }
+    
+    if (intent.subject.empty()) intent.subject = "Generated";
+    
+    // 成員擷取：with/containing/包含/具有 X, Y and Z
+    static const char* memberMarkers[] = { "with ", "containing ", "包含", "具有", "有" };
+    for (const char* m : memberMarkers) {
+        size_t pos = lower.find(m);
+        if (pos == std::string::npos) pos = prompt.find(m);
+        if (pos == std::string::npos) continue;
+        std::string rest = prompt.substr(pos + strlen(m));
+        std::stringstream ss(rest);
+        std::string tok;
+        while (std::getline(ss, tok, ',')) {
+            // 去掉前後空白與 "and"
+            size_t a = tok.find_first_not_of(" \t");
+            if (a == std::string::npos) continue;
+            tok = tok.substr(a);
+            size_t andPos = tok.rfind("and ");
+            if (andPos != std::string::npos && andPos + 4 <= tok.size())
+                tok = tok.substr(andPos + 4);
+            a = tok.find_first_not_of(" \t");
+            if (a == std::string::npos) continue;
+            // 跳過 "fields"/"members"/"field of" 等集合詞
+            static const char* groupWords[] = { "fields ", "members ", "field ",
+                "member ", "attributes ", "properties ", "欄位", "成員" };
+            for (const char* g : groupWords) {
+                size_t gl = strlen(g);
+                if (tok.compare(a, gl, g) == 0) {
+                    tok = tok.substr(a + gl);
+                    a = tok.find_first_not_of(" \t");
+                    break;
+                }
+            }
+            if (a == std::string::npos) continue;
+            std::string clean;
+            for (char c : tok.substr(a)) {
+                if (std::isalnum(static_cast<unsigned char>(c)) || c == '_') clean += c;
+                else break;
+            }
+            if (!clean.empty()) intent.fields.push_back(clean);
+        }
+        break;
+    }
+    
+    return intent;
+}
+
+std::string IntelligentDevelopmentSystem::GenClass(const ParsedIntent& intent) {
+    std::string name = intent.subject;
+    name[0] = static_cast<char>(std::toupper(static_cast<unsigned char>(name[0])));
+    
+    std::stringstream ss;
+    ss << "#pragma once\n\n";
+    ss << "/**\n * " << name << " - generated by Potato DevAssistant\n */\n";
+    ss << "class " << name << " {\npublic:\n";
+    ss << "    " << name << "();\n";
+    ss << "    ~" << name << "();\n\n";
+    for (const auto& m : intent.methods) {
+        ss << "    void " << m << "();\n";
+    }
+    if (!intent.methods.empty()) ss << "\n";
+    ss << "private:\n";
+    for (const auto& f : intent.fields) {
+        ss << "    int m_" << f << " = 0;\n";
+    }
+    if (intent.fields.empty()) ss << "    // TODO: add fields\n";
+    ss << "};\n\n";
+    ss << "inline " << name << "::" << name << "() = default;\n";
+    ss << "inline " << name << "::~" << name << "() = default;\n";
+    return ss.str();
+}
+
+std::string IntelligentDevelopmentSystem::GenFunction(const ParsedIntent& intent) {
+    std::string name = intent.subject;
+    name[0] = static_cast<char>(std::tolower(static_cast<unsigned char>(name[0])));
+    
+    std::stringstream ss;
+    ss << "/**\n * " << name << " - generated by Potato DevAssistant\n";
+    ss << " * TODO: describe parameters and return value\n */\n";
+    ss << "auto " << name << "() -> void {\n";
+    ss << "    // TODO: implement\n";
+    ss << "}\n";
+    return ss.str();
+}
+
+std::string IntelligentDevelopmentSystem::GenSystemStub(const ParsedIntent& intent) {
+    std::string name = intent.subject;
+    name[0] = static_cast<char>(std::toupper(static_cast<unsigned char>(name[0])));
+    if (name.find("System") == std::string::npos &&
+        name.find("Manager") == std::string::npos) {
+        name += "System";
+    }
+    
+    std::stringstream ss;
+    ss << "#pragma once\n\n";
+    ss << "/**\n * " << name << " - engine-style system stub\n */\n";
+    ss << "class " << name << " {\npublic:\n";
+    ss << "    bool Initialize() {\n        initialized = true;\n        return true;\n    }\n\n";
+    ss << "    void Update(float /*deltaTime*/) {\n        if (!initialized) return;\n    }\n\n";
+    ss << "    void Shutdown() {\n        initialized = false;\n    }\n\n";
+    ss << "    bool IsInitialized() const { return initialized; }\n\n";
+    ss << "private:\n    bool initialized = false;\n};\n";
+    return ss.str();
+}
+
+std::string IntelligentDevelopmentSystem::GenTestStub(const ParsedIntent& intent) {
+    std::string name = intent.subject;
+    std::stringstream ss;
+    ss << "/**\n * Test stub for " << name << " - generated by Potato DevAssistant\n */\n";
+    ss << "#include <cassert>\n#include <cstdio>\n\n";
+    ss << "static void test_" << name << "_basic() {\n";
+    ss << "    // TODO: arrange / act / assert\n    assert(true);\n}\n\n";
+    ss << "int main() {\n";
+    ss << "    test_" << name << "_basic();\n";
+    ss << "    std::printf(\"%s: all tests passed\\n\", \"" << name << "\");\n";
+    ss << "    return 0;\n}\n";
+    return ss.str();
+}
+
+std::string IntelligentDevelopmentSystem::Synthesize(const ParsedIntent& intent,
+                                                     const std::string& language) {
+    if (language != "C++" && language != "cpp" && language != "c++") {
+        return "";
+    }
+    switch (intent.kind) {
+        case ParsedIntent::Kind::Class:     return GenClass(intent);
+        case ParsedIntent::Kind::Function:  return GenFunction(intent);
+        case ParsedIntent::Kind::SystemStub:return GenSystemStub(intent);
+        case ParsedIntent::Kind::TestStub:  return GenTestStub(intent);
+        default: return "";
+    }
+}
+
+CodeGenerationResult IntelligentDevelopmentSystem::GenerateLocal(
+    const std::string& specification,
+    const std::string& language) {
+    
+    CodeGenerationResult result;
+    result.language = language;
+    
+    ParsedIntent intent = ParseIntent(specification);
+    if (intent.kind == ParsedIntent::Kind::Unknown) {
+        result.success = false;
+        result.error = "Cannot determine what to generate. "
+                       "Try: 'create a class named Foo', 'generate a function update', "
+                       "'create a test for X', or 'new system AudioManager'.";
+        return result;
+    }
+    
+    std::string code = Synthesize(intent, language);
+    if (code.empty()) {
+        result.success = false;
+        result.error = "No local template for this request (" + language + ")";
+        return result;
+    }
+    
+    // 可選：知識圖譜上下文 — 若主體已知，附註相關模組
+    if (knowledgeGraph) {
+        auto nodes = knowledgeGraph->FindNodesByName(intent.subject);
+        if (!nodes.empty()) {
+            std::string note = "// context: '" + intent.subject + "' exists in project knowledge graph\n";
+            code = note + code;
+        }
+    }
+    
+    // 可選：自我反思記錄
+    if (selfReflection) {
+        uint64_t d = selfReflection->RecordDecision(
+            "codegen: " + specification,
+            {"local-template", "llm"},
+            "local-template", 0.8f, "local-pipeline");
+        selfReflection->RecordOutcome(d, true);
+    }
+    
+    result.generatedCode = code;
+    result.success = true;
+    stats.codeGenerations++;
+    return result;
+}
+
 
 CodeGenerationResult IntelligentDevelopmentSystem::GenerateCodeFromPrompt(
     const std::vector<ChatMessage>& messages,
