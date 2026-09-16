@@ -1456,7 +1456,11 @@ void IDEGUI::UpdateCursorPosition() {
 std::string IDEGUI::GetCurrentTime() {
     auto now = std::time(nullptr);
     std::tm tm;
+#ifdef _WIN32
     localtime_s(&tm, &now);
+#else
+    localtime_r(&now, &tm);
+#endif
     
     std::ostringstream oss;
     oss << std::put_time(&tm, "%H:%M:%S");
