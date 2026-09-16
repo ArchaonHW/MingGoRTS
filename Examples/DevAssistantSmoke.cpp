@@ -29,8 +29,11 @@ static void Check(bool cond, const char* name) {
 // 最小 ILLMClient stub：驗證本地管線無法識別時的外部 fallback 路徑
 class StubLLMClient : public ILLMClient {
 public:
+    int chatCalls = 0;  // 記錄 ChatCompletion 被呼叫次數
+
     LLMResponse ChatCompletion(const std::vector<ChatMessage>&,
                                const LLMConfig&) override {
+        chatCalls++;
         LLMResponse r;
         r.success = true;
         r.content = "```cpp\n// stub LLM output\nint stubAnswer() { return 42; }\n```";
@@ -121,10 +124,12 @@ int main() {
         Check(r.generatedCode.empty(), "no garbage code emitted");
     }
 
-    // 6) 空提示
+    // 6) 空提示與純空白提示
     {
-        auto r = dev.GenerateCode("   ", "C++");
+        auto r = dev.GenerateCode("", "C++");
         Check(!r.success, "empty prompt fails cleanly");
+        auto w = dev.GenerateCode("   ", "C++");
+        Check(!w.success, "whitespace-only prompt fails cleanly");
     }
 
     // 7) KG 上下文：已知主體附帶 context 註解
@@ -185,8 +190,9 @@ int main() {
     {
         StubLLMClient stub;
         IntelligentDevelopmentSystem dev2;
-        dev2.Initialize(&stub, nullptr);
+        dev2.Initialize(&stub, nullptr);  // 非擁有指標——stub 生命期覆蓋本次呼叫
         auto r = dev2.GenerateCode("xyzzy !!!", "C++");
+        Check(stub.chatCalls > 0, "fallback actually invoked the client");
         Check(r.success, "fallback to llmClient when local fails");
         Check(r.generatedCode.find("stubAnswer") != std::string::npos,
               "fallback returns external client output");
