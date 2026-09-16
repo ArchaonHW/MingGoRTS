@@ -80,6 +80,12 @@ context: []
 
 ## Implementation Notes
 
+- `CopyToBuffer`/`GetEnvVar` extracted to header-only `MingGoRTS_IDE/GUI/GuiTextUtils.h` so the smoke test covers truncation semantics headlessly (MSVC-only `strncpy_s`/`_TRUNCATE` also removed — fixes Linux g++ CI).
+- Matrix coverage: HAPPY_PATH/UNRECOGNIZED/EMPTY_PROMPT/LONG_RESPONSE verified by `DevAssistantSmoke` (18 checks, PASS on MSVC + MinGW). DOUBLE_SUBMIT/WORKER_EXIT are one-line GUI flag guards (`BeginDisabled`/early-return, try/catch on `std::async` + invalid-future reset) — no headless ImGui harness exists; verified by inspection + manual check instead.
+- `g_DevSystem->Initialize(nullptr, nullptr)`: no `Potato::AI::AIAgentManager` type exists in IDE scope (only unrelated `SimplifiedAI::AIAgentManager`), and local pipeline needs neither arg.
+- KG seeded with engine module relations in `IDEGUI` ctor; `POTATO_LLM_*` env vars seed Settings defaults, UI overrides at runtime.
+- Known unrelated wart: `stats.averageTaskTime` divides by possibly-zero `totalTasks` (inf, no crash) — only reachable with an llmClient set; out of scope.
+
 ## Spec Change Log
 
 ## Review Triage Log
