@@ -11,6 +11,7 @@
 #include "AI/IntelligentDevelopmentSystem.h"
 #include "AI/KnowledgeGraph.h"
 #include "AI/SelfReflection.h"
+#include "MingGoRTS_IDE/GUI/GuiTextUtils.h"
 #include <cstdio>
 #include <cstring>
 #include <string>
@@ -92,6 +93,24 @@ int main() {
         auto r = dev.GenerateCode("create a class for Player", "C++");
         Check(r.success && r.generatedCode.find("knowledge graph") != std::string::npos,
               "known subject gets KG context note");
+    }
+
+    // 8) LONG_RESPONSE：CopyToBuffer 截斷 + 標記 + NUL 結尾
+    {
+        char buf[64];
+        std::memset(buf, 0x7F, sizeof(buf));
+        std::string big(8192, 'x');
+        MingGoRTSIDE::CopyToBuffer(buf, sizeof(buf), big);
+        Check(buf[sizeof(buf) - 1] == '\0', "truncated copy is NUL-terminated");
+        Check(std::strstr(buf, "...[truncated]") != nullptr,
+              "truncated copy carries marker");
+        Check(std::strlen(buf) < sizeof(buf), "truncated copy stays in bounds");
+    }
+    {
+        char buf[64];
+        std::memset(buf, 0x7F, sizeof(buf));
+        MingGoRTSIDE::CopyToBuffer(buf, sizeof(buf), "short");
+        Check(std::strcmp(buf, "short") == 0, "short copy is exact");
     }
 
     std::printf("\n%s (%d failures)\n", failures == 0 ? "ALL PASS" : "FAILURES", failures);
