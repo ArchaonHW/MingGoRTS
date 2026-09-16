@@ -2,15 +2,16 @@
 
 ## Current
 
-- Spec: `_bmad-output/implementation-artifacts/spec-ide-dev-assistant.md` (status: in-progress, baseline d5eff75)
-- Branch: `feat/engine-security-hardening`
-- Activity: [D] Development — 實作大多已在工作樹中（先前 session 成果），本輪以驗證為主
+- Spec: `_bmad-output/implementation-artifacts/spec-ide-dev-assistant.md` (status: approved 2026-09-17, baseline d5eff75)
+- Branch: `feat/gameplay-doctrine-battle`（dev-assistant 工作來自 `feat/engine-security-hardening` 系列 commit）
+- Activity: [T] Acceptance Testing — 2026-09-17 重跑驗證 PASS（smoke 18/18、ctest 12/12、banned 0），已簽核 SO-001
 
 ## Design Loop Status
 
 | Scenario slug | NN.X | Page name | Status | Date |
 |---|---|---|---|---|
-| ide-dev-assistant | - | IDE Intelligent Development Assistant | building | 2026-09-16 |
+| ide-dev-assistant | - | IDE Intelligent Development Assistant | approved | 2026-09-17 |
+| ide-dev-assistant | - | IDE Intelligent Development Assistant | approved | 2026-09-16 |
 
 ## Verification Evidence (2026-09-16)
 
