@@ -31,16 +31,15 @@ DoctrineAction EnemyGeneral::ActionFromString(const std::string& s) {
 }
 
 bool EnemyGeneral::LoadFromFile(const std::string& path) {
-    std::ifstream f(path);
-    if (!f) {
-        f.open("../../" + path);
-        if (!f) {
-            return false;
+    for (const char* prefix : {"", "../", "../../", "../../../"}) {
+        std::ifstream f(std::string(prefix) + path);
+        if (f) {
+            std::ostringstream ss;
+            ss << f.rdbuf();
+            return LoadFromString(ss.str());
         }
     }
-    std::ostringstream ss;
-    ss << f.rdbuf();
-    return LoadFromString(ss.str());
+    return false;
 }
 
 bool EnemyGeneral::LoadFromString(const std::string& json) {

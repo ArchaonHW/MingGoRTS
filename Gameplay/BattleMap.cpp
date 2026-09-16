@@ -35,17 +35,16 @@ static Vector2 ParsePos(const JsonValue& v) {
 }
 
 bool BattleMap::LoadFromFile(const std::string& path) {
-    std::ifstream f(path);
-    if (!f) {
-        // 容錯：嘗試上層目錄（CTest 工作目錄在 build/bin）
-        f.open("../../" + path);
-        if (!f) {
-            return false;
+    // 容錯：逐層往上找（CTest 工作目錄可能深至 build/bin/Release）
+    for (const char* prefix : {"", "../", "../../", "../../../"}) {
+        std::ifstream f(std::string(prefix) + path);
+        if (f) {
+            std::ostringstream ss;
+            ss << f.rdbuf();
+            return LoadFromString(ss.str());
         }
     }
-    std::ostringstream ss;
-    ss << f.rdbuf();
-    return LoadFromString(ss.str());
+    return false;
 }
 
 bool BattleMap::LoadFromString(const std::string& json) {
