@@ -1,0 +1,88 @@
+{
+  "schema": "potato.asset_manifest/1",
+  "library": "roc-character-cards",
+  "version": "1.0.0",
+  "description": "民國名將角色卡 — 史詩/傳奇級素材庫(doctrine 對齊 Gameplay/Doctrine.h)",
+  "cards": [
+    {
+      "id": "roc_chiang_kaishek",
+      "name": "蔣介石",
+      "rarity": "legendary",
+      "faction": "國民政府",
+      "data": "cards/roc/roc_chiang_kaishek.json",
+      "art": "cards/art/roc_chiang_kaishek.png"
+    },
+    {
+      "id": "roc_zhang_xueliang",
+      "name": "張學良",
+      "rarity": "legendary",
+      "faction": "東北軍",
+      "data": "cards/roc/roc_zhang_xueliang.json",
+      "art": "cards/art/roc_zhang_xueliang.png"
+    },
+    {
+      "id": "roc_li_zongren",
+      "name": "李宗仁",
+      "rarity": "legendary",
+      "faction": "桂系",
+      "data": "cards/roc/roc_li_zongren.json",
+      "art": "cards/art/roc_li_zongren.png"
+    },
+    {
+      "id": "roc_xue_yue",
+      "name": "薛岳",
+      "rarity": "legendary",
+      "faction": "中央軍",
+      "data": "cards/roc/roc_xue_yue.json",
+      "art": "cards/art/roc_xue_yue.png"
+    },
+    {
+      "id": "roc_sun_liren",
+      "name": "孫立人",
+      "rarity": "legendary",
+      "faction": "遠征軍",
+      "data": "cards/roc/roc_sun_liren.json",
+      "art": "cards/art/roc_sun_liren.png"
+    },
+    {
+      "id": "roc_zhang_zizhong",
+      "name": "張自忠",
+      "rarity": "epic",
+      "faction": "西北軍",
+      "data": "cards/roc/roc_zhang_zizhong.json",
+      "art": "cards/art/roc_zhang_zizhong.png"
+    },
+    {
+      "id": "roc_dai_anlan",
+      "name": "戴安瀾",
+      "rarity": "epic",
+      "faction": "遠征軍",
+      "data": "cards/roc/roc_dai_anlan.json",
+      "art": "cards/art/roc_dai_anlan.png"
+    },
+    {
+      "id": "roc_bai_chongxi",
+      "name": "白崇禧",
+      "rarity": "epic",
+      "faction": "桂系",
+      "data": "cards/roc/roc_bai_chongxi.json",
+      "art": "cards/art/roc_bai_chongxi.png"
+    },
+    {
+      "id": "roc_feng_yuxiang",
+      "name": "馮玉祥",
+      "rarity": "epic",
+      "faction": "西北軍",
+      "data": "cards/roc/roc_feng_yuxiang.json",
+      "art": "cards/art/roc_feng_yuxiang.png"
+    },
+    {
+      "id": "roc_yan_xishan",
+      "name": "閻錫山",
+      "rarity": "epic",
+      "faction": "晉綏軍",
+      "data": "cards/roc/roc_yan_xishan.json",
+      "art": "cards/art/roc_yan_xishan.png"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_zhang_zizhong",
+  "name": "張自忠",
+  "courtesyName": "藎臣",
+  "epithet": "梅花將軍",
+  "rarity": "epic",
+  "faction": "西北軍",
+  "role": "commander",
+  "personality": {
+    "aggression": 88,
+    "discipline": 78,
+    "cunning": 55
+  },
+  "stats": {
+    "command": 82,
+    "attack": 90,
+    "defense": 80,
+    "mobility": 72,
+    "moraleAura": 92
+  },
+  "signatureDoctrine": {
+    "name": "決死衝鋒",
+    "trigger": "HealthBelow",
+    "threshold": 0.3,
+    "action": "AttackNearest",
+    "description": "兵力瀕危時發起決死突擊——南瓜店最後的衝鋒,以死明志"
+  },
+  "lore": "第三十三集團軍總司令,棗宜會戰壯烈殉國,為二戰同盟國陣亡最高階將領。",
+  "historicalBattle": "棗宜會戰 1940",
+  "art": "cards/art/roc_zhang_zizhong.png"
+}

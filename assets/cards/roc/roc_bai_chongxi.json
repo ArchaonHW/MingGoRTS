@@ -1,0 +1,32 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_bai_chongxi",
+  "name": "白崇禧",
+  "courtesyName": "健生",
+  "epithet": "小諸葛",
+  "rarity": "epic",
+  "faction": "桂系",
+  "role": "commander",
+  "personality": {
+    "aggression": 60,
+    "discipline": 80,
+    "cunning": 92
+  },
+  "stats": {
+    "command": 90,
+    "attack": 75,
+    "defense": 85,
+    "mobility": 75,
+    "moraleAura": 80
+  },
+  "signatureDoctrine": {
+    "name": "諸葛調度",
+    "trigger": "AllyEngaged",
+    "threshold": 0.0,
+    "action": "DefendNearestAlly",
+    "description": "友軍接戰即機動策應——小諸葛的全局調度藝術"
+  },
+  "lore": "桂系軍事靈魂,抗戰參謀副總長,善於運動戰與戰略調度,軍事才華冠絕一時。",
+  "historicalBattle": "崑崙關戰役 1939",
+  "art": "cards/art/roc_bai_chongxi.png"
+}

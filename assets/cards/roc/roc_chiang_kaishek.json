@@ -1,0 +1,32 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_chiang_kaishek",
+  "name": "蔣介石",
+  "courtesyName": "中正",
+  "epithet": "黃埔校長",
+  "rarity": "legendary",
+  "faction": "國民政府",
+  "role": "commander",
+  "personality": {
+    "aggression": 65,
+    "discipline": 75,
+    "cunning": 85
+  },
+  "stats": {
+    "command": 95,
+    "attack": 70,
+    "defense": 80,
+    "mobility": 55,
+    "moraleAura": 95
+  },
+  "signatureDoctrine": {
+    "name": "空間換時間",
+    "trigger": "MoraleBelow",
+    "threshold": 30.0,
+    "action": "RetreatToRally",
+    "description": "士氣低落時有序後撤,以縱深消耗敵軍——持久抗戰的總體戰略"
+  },
+  "lore": "黃埔軍校校長,北伐統一中國,領導八年抗戰。一生在軍事與政治的鋼索上行走。",
+  "historicalBattle": "北伐戰爭 1926-1928",
+  "art": "cards/art/roc_chiang_kaishek.png"
+}

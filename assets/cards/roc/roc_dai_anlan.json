@@ -1,0 +1,32 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_dai_anlan",
+  "name": "戴安瀾",
+  "courtesyName": "衍功",
+  "epithet": "海鷗將軍",
+  "rarity": "epic",
+  "faction": "遠征軍",
+  "role": "commander",
+  "personality": {
+    "aggression": 75,
+    "discipline": 85,
+    "cunning": 60
+  },
+  "stats": {
+    "command": 80,
+    "attack": 82,
+    "defense": 88,
+    "mobility": 68,
+    "moraleAura": 86
+  },
+  "signatureDoctrine": {
+    "name": "同古死守",
+    "trigger": "ObjectiveReached",
+    "threshold": 0.0,
+    "action": "HoldPosition",
+    "description": "抵達目標點後死守不退——同古保衛戰十二晝夜的鋼鐵防線"
+  },
+  "lore": "第二百師師長,遠征緬甸血戰同古,撤退途中壯烈殉國,年僅三十八歲。",
+  "historicalBattle": "同古保衛戰 1942",
+  "art": "cards/art/roc_dai_anlan.png"
+}

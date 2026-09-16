@@ -1,0 +1,32 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_sun_liren",
+  "name": "孫立人",
+  "courtesyName": "仲倫",
+  "epithet": "東方隆美爾",
+  "rarity": "legendary",
+  "faction": "遠征軍",
+  "role": "commander",
+  "personality": {
+    "aggression": 80,
+    "discipline": 90,
+    "cunning": 65
+  },
+  "stats": {
+    "command": 88,
+    "attack": 90,
+    "defense": 75,
+    "mobility": 82,
+    "moraleAura": 85
+  },
+  "signatureDoctrine": {
+    "name": "仁安羌突擊",
+    "trigger": "AllyEngaged",
+    "threshold": 0.0,
+    "action": "AttackNearest",
+    "description": "友軍被圍立即强攻解围——仁安羌以寡擊眾救出英軍七千"
+  },
+  "lore": "維吉尼亞軍校出身,新一軍軍長。仁安羌大捷名揚國際,緬北反攻屢建奇功。",
+  "historicalBattle": "仁安羌大捷 1942",
+  "art": "cards/art/roc_sun_liren.png"
+}

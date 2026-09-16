@@ -1,0 +1,32 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_feng_yuxiang",
+  "name": "馮玉祥",
+  "courtesyName": "煥章",
+  "epithet": "基督將軍",
+  "rarity": "epic",
+  "faction": "西北軍",
+  "role": "commander",
+  "personality": {
+    "aggression": 62,
+    "discipline": 70,
+    "cunning": 78
+  },
+  "stats": {
+    "command": 78,
+    "attack": 74,
+    "defense": 76,
+    "mobility": 60,
+    "moraleAura": 84
+  },
+  "signatureDoctrine": {
+    "name": "察哈爾抗敵",
+    "trigger": "UnderAttack",
+    "threshold": 0.0,
+    "action": "HoldPosition",
+    "description": "遭受攻擊時原地抗擊——察哈爾民眾抗日同盟軍的鐵血意志"
+  },
+  "lore": "西北軍統帥,一生倒戈八次卻始終抗日。布衣將軍,練兵嚴苛,愛兵如子。",
+  "historicalBattle": "察哈爾抗戰 1933",
+  "art": "cards/art/roc_feng_yuxiang.png"
+}
