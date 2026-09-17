@@ -97,7 +97,34 @@ void BattleController::SetTimeScale(float scale) {
 
 bool BattleController::Intervene(Squad* squad, SquadOrder order,
                                  const Vector2& target, float holdSeconds) {
-    if (phase != BattlePhase::Execution || !squad || squad->IsEliminated()) {
+    if (phase != BattlePhase::Execution || !squad || squad->IsEliminated() ||
+        squad->IsRouting()) {
+        return false;
+    }
+    int team = squad->GetTeam();
+    if (GetCommandPoints(team) <= 0) {
+        Emit("Intervene denied: no command points");
+        return false;
+    }
+    commandPoints[team]--;
+    squad->IssueOrder(order, target);
+    interventionUntil[squad] = holdSeconds;
+    Emit("CP intervention on " + squad->GetName());
+    return true;
+}
+
+bool BattleController::Intervene(Squad* squad, SquadOrder order,
+                                 const Squad* target, float holdSeconds) {
+    // 非 Engage 的 squad 目標指令退化為位置指令（engageTarget 只對 Engage 有意義）
+    if (order != SquadOrder::Engage && target) {
+        return Intervene(squad, order, target->GetPosition(), holdSeconds);
+    }
+    if (!target || target->IsEliminated() || target->IsRouting() ||
+        target == squad || (squad && target->GetTeam() == squad->GetTeam())) {
+        return false;
+    }
+    if (phase != BattlePhase::Execution || !squad || squad->IsEliminated() ||
+        squad->IsRouting()) {
         return false;
     }
     int team = squad->GetTeam();

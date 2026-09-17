@@ -100,6 +100,48 @@ int main() {
     Check(items.size() == 2, "render list = 存活可見小隊數",
           static_cast<float>(items.size()), 2.0f);
 
+    // [8] overlay(A-4):設定環/血條 mesh → 每 binding 長出三個子節點
+    sync.SetOverlayMeshes(MakeShared<Mesh>(), MakeShared<Mesh>(),
+                          MakeShared<Mesh>());
+    sync.Sync(battle);
+    auto findChild = [](SceneNode* n, const char* name) -> SceneNode* {
+        if (!n) return nullptr;
+        for (auto& c : n->GetChildren()) {
+            if (c->GetName() == name) return c.get();
+        }
+        return nullptr;
+    };
+    SceneNode* blueRing  = findChild(blueNode, "__sel_ring");
+    SceneNode* blueBarBg = findChild(blueNode, "__hp_bg");
+    SceneNode* blueFill  = findChild(blueNode, "__hp_fill");
+    Check(blueRing && blueBarBg && blueFill,
+          "小隊節點長出 __sel_ring/__hp_bg/__hp_fill");
+
+    // [9] 選取環只在選中時顯示;全滅小隊血條隱藏
+    sync.SetSelectedSquad(blue);
+    sync.Sync(battle);
+    Check(blueRing && blueRing->IsActive(), "選取後 ring 顯示");
+    SceneNode* redBarBg = findChild(redNode, "__hp_bg");
+    Check(redBarBg && !redBarBg->IsActive(), "全滅小隊血條隱藏");
+
+    // [10] 血條隨兵力縮短 + 向紅漸變(藍隊 10→5,fill scale.x=barWidth*0.5)
+    blue->ApplyCasualties(5);
+    sync.Sync(battle);
+    if (blueFill) {
+        Check(std::fabs(blueFill->GetLocalScale().x - 0.6f) < 0.05f,
+              "血量 50% → 血條縮半", blueFill->GetLocalScale().x, 0.6f);
+        RenderableComponent* frc = blueFill->GetRenderable();
+        Check(frc && frc->color.x > 0.4f, "血條向紅漸變",
+              frc ? frc->color.x : 0.0f, 0.5f);
+    }
+
+    // [11] SetOverlayMeshes 傳 nullptr 會拆掉既有 overlay 節點
+    sync.SetOverlayMeshes(nullptr, nullptr, nullptr, 2.0f, 1.2f);
+    Check(findChild(blueNode, "__sel_ring") == nullptr &&
+          findChild(blueNode, "__hp_bg") == nullptr &&
+          findChild(blueNode, "__hp_fill") == nullptr,
+          "傳 nullptr 清除 overlay 節點");
+
     sync.Detach();
     Check(sync.BindingCount() == 0, "Detach 清空綁定");
 

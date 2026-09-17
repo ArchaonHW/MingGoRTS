@@ -94,6 +94,9 @@ public:
     // CP 介入：覆寫該隊命令 holdSeconds 秒（遊戲時間）。回傳 false = CP 不足/階段不對
     bool Intervene(Squad* squad, SquadOrder order, const Vector2& target,
                    float holdSeconds = 5.0f);
+    // 指定敵隊版本：Engage 等需要 squad 目標的命令用；target 全滅回 false
+    bool Intervene(Squad* squad, SquadOrder order, const Squad* target,
+                   float holdSeconds = 5.0f);
 
     // 每幀呼叫：realDt 為真實秒數，內部乘 timeScale
     void Update(float realDt);

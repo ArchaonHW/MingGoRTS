@@ -65,7 +65,8 @@ Squad* BattlePicker::PickSquad(BattleController& battle, int team,
 
     for (const auto& squadPtr : battle.GetSquads()) {
         Squad* squad = squadPtr.get();
-        if (!squad || squad->GetTeam() != team || squad->GetMembers() <= 0) {
+        if (!squad || squad->GetTeam() != team || squad->GetMembers() <= 0 ||
+            squad->IsRouting()) {
             continue;
         }
         const Vector2& p = squad->GetPosition();
