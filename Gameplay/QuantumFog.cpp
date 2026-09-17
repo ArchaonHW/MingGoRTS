@@ -9,8 +9,9 @@
 namespace Potato {
 namespace Gameplay {
 
-QuantumFog::QuantumFog(float duration, int cost)
-    : intelDuration(duration), intelCost(cost) {
+QuantumFog::QuantumFog(float duration, int cost, int probe)
+    : intelDuration(duration), intelCost(std::max(0, cost)),
+      probeCost(std::max(0, probe)) { // 負費用會反過來產出情報,clamp 掉
 }
 
 int QuantumFog::AddEntity(const std::string& name, int team,
@@ -124,6 +125,40 @@ bool QuantumFog::EliminateCandidate(int entityId, int candidateIndex) {
     probs[candidateIndex] = 0.0;
     e->priors[candidateIndex] = 0.0; // 過期重建時同樣排除
     e->state.SetProbabilities(probs);
+    return true;
+}
+
+bool QuantumFog::Probe(int entityId, const Vector2& truePos, float strength) {
+    if (entityId < 0 || entityId >= static_cast<int>(entities.size()) ||
+        !(strength > 0.0f)) { // !(>0) 同時擋掉 NaN/0/負值
+        return false;
+    }
+    UncertainEntity& e = entities[entityId];
+    if (e.revealed) return true; // 已揭露不需探測,也不扣點
+
+    // 軟重加權:候選愈近真值權重愈高,strength 控制收縮幅度;
+    // 只乘係數不歸零——probe 是軟情報,不做硬排除
+    const float s = std::min(strength, 1.0f);
+    std::vector<double> probs = e.state.Probabilities();
+    std::vector<double> w(probs.size());
+    double wMax = 0.0;
+    for (size_t i = 0; i < probs.size(); ++i) {
+        const Vector2 d = e.candidates[i] - truePos;
+        w[i] = 1.0 / (1.0 + d.x * d.x + d.y * d.y);
+        wMax = std::max(wMax, w[i]);
+    }
+    if (wMax <= 0.0) return false; // 防護:全零權重,不扣點不動雲
+    double total = 0.0;
+    for (size_t i = 0; i < probs.size(); ++i) {
+        probs[i] *= (1.0 - s) + s * (w[i] / wMax);
+        total += probs[i];
+    }
+    if (total <= 0.0) return false; // 不歸一化防護:不重置為均勻
+
+    if (resources && !resources->SpendIntel(e.team, probeCost)) {
+        return false;
+    }
+    e.state.SetProbabilities(probs);
     return true;
 }
 

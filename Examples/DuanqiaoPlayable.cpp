@@ -3,7 +3,8 @@
 // 管線: BattleMap(duanqiao.json) → BattleController(doctrine 執行)
 //       → BattleSceneSync(小隊節點+選取環+血條) → SceneRenderer → OpenGL
 // 操作: 左鍵選取我軍小隊 / 右鍵地面=AttackMove、右鍵敵軍=Engage(皆走 CP 介入)
-//       左鍵點敵情機率雲=花情報點觀測塌縮 / Space 暫停 / 1,2,3 倍速
+//       左鍵點敵情機率雲=探測(1情報,雲收縮) / Shift+左鍵點雲=觀測(2情報,塌縮)
+//       Space 暫停 / 1,2,3 倍速
 //       WASD 平移視角 / 滾輪縮放 / Esc 取消選取
 // 無顯示環境: 印 [SKIP] 並以 0 結束(不進 POTATO_TESTS)
 
@@ -381,12 +382,13 @@ int main() {
     // 情報/CP 走 BattleResources(fog 觀測扣點要它);ApplyPlan 會覆寫
     // 玩家 CP(建議值 2),故資源設定必須在規劃之後
     BattleResources res;
-    res.Setup(battle, 0, /*intel=*/4, /*cp=*/5);
+    res.Setup(battle, 0, /*intel=*/8, /*cp=*/5);
     res.Setup(battle, 1, /*intel=*/0, /*cp=*/3);
     BattleResources::ApplyMoraleRule(battle);
 
-    // ---- Q-1 敵情霧:敵軍以疊加態存在,觀測或接觸才塌縮 ----
-    QuantumFog fog(/*intelDuration=*/25.0f, /*cost=*/1);
+    // ---- Q-1/Q-3 敵情霧:敵軍以疊加態存在,觀測或接觸才塌縮 ----
+    // 觀測 2 情報全額買斷;探測 1 情報讓雲向真值收縮(弱觀測)
+    QuantumFog fog(/*intelDuration=*/25.0f, /*observe=*/2, /*probe=*/1);
     fog.BindResources(&res);
     battle.BindFog(&fog);
     for (Squad* es : {e0, e1, e2, e3}) {
@@ -514,15 +516,36 @@ int main() {
                     selected = hit;
                     sync.SetSelectedSquad(hit);
                 } else {
-                    // 點到敵情雲 → 花情報點觀測塌縮
+                    // 點到敵情雲:LMB=探測(1情報,雲收縮) Shift+LMB=觀測(2情報,塌縮)
                     const int eid = PickFogCloud(fog, battle, ray, CELL);
                     if (eid >= 0) {
                         Squad* ts = battle.GetFogSquad(eid);
-                        if (ts && fog.Observe(eid, ts->GetPosition())) {
-                            eventLog.push_back("觀測塌縮:" + ts->GetName());
+                        const bool full =
+                            glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) ==
+                                GLFW_PRESS ||
+                            glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) ==
+                                GLFW_PRESS;
+                        bool ok = false;
+                        std::string msg;
+                        if (full) {
+                            ok = ts && fog.Observe(eid, ts->GetPosition());
+                            msg = ok ? "觀測塌縮:" + ts->GetName()
+                                     : "觀測失敗(情報不足)";
                         } else {
-                            eventLog.push_back("觀測失敗(情報不足)");
+                            ok = ts && fog.Probe(eid, ts->GetPosition(), 0.4f);
+                            if (ok) {
+                                double mp = 0.0;
+                                for (const auto& c : fog.GetCloud(eid))
+                                    mp = std::max(mp, c.second);
+                                msg = "探測收縮:" + ts->GetName() +
+                                      "(最高" +
+                                      std::to_string(int(mp * 100)) +
+                                      "%)";
+                            } else {
+                                msg = "探測失敗(情報不足)";
+                            }
                         }
+                        eventLog.push_back(msg);
                         if (eventLog.size() > 8) eventLog.pop_front();
                     } else {
                         selected = nullptr;
@@ -606,7 +629,8 @@ int main() {
             ImGui::TextDisabled("未選取小隊(左鍵點選)");
         }
         ImGui::Separator();
-        ImGui::TextDisabled("左鍵選取/點雲觀測 | 右鍵下令 | Space 暫停 | 1/2/3 倍速");
+        ImGui::TextDisabled("左鍵選取 | 點雲探測(1情報) | Shift+點雲觀測(2情報)");
+        ImGui::TextDisabled("右鍵下令 | Space 暫停 | 1/2/3 倍速");
         ImGui::TextDisabled("WASD 平移 | 滾輪縮放 | Esc 取消選取");
         ImGui::End();
 

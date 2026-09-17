@@ -47,7 +47,9 @@ class QuantumFog {
 public:
     // intelCostPerObserve：每次觀測的情報點花費
     // intelDuration：情報時效（秒），0 = 永久揭露
-    explicit QuantumFog(float intelDuration = 30.0f, int intelCostPerObserve = 1);
+    // intelCostPerProbe：弱觀測花費（Q-3），須 < intelCostPerObserve
+    explicit QuantumFog(float intelDuration = 30.0f, int intelCostPerObserve = 1,
+                        int intelCostPerProbe = 1);
 
     void BindResources(BattleResources* res) { this->resources = res; }
 
@@ -79,6 +81,11 @@ public:
     // 已揭露/實體或索引無效/候選已為零/只剩最後一個非零候選時回 false。
     bool EliminateCandidate(int entityId, int candidateIndex);
 
+    // 弱觀測（Q-3）：扣 probeCost 情報，機率雲向 truePos 近端重加權
+    // 收縮但不塌縮（revealed 不變）。strength∈(0,1] 愈強收縮愈多；
+    // 情報不足/已揭露（回 true 不扣點）/strength<=0/無效 id 處理見實作。
+    bool Probe(int entityId, const Vector2& truePos, float strength);
+
     // 純 Born-rule 觀測（無真值來源時）：回傳命中的候選 index，-1 表示失敗
     int ObserveRandom(int entityId);
 
@@ -99,6 +106,7 @@ private:
     BattleResources* resources = nullptr;
     float intelDuration;
     int intelCost;
+    int probeCost;
     uint64_t seedCounter = 1;
 };
 
