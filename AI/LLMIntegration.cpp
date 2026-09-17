@@ -3,6 +3,8 @@
  */
 
 #include "LLMIntegration.h"
+#include "Serialization/JsonParser.h"
+#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <chrono>
@@ -173,14 +175,11 @@ std::future<LLMResponse> OpenAIClient::ChatCompletionAsync(
 std::vector<float> OpenAIClient::GenerateEmbedding(
     const std::string& text,
     const std::string& model) {
-    
-    // Placeholder - would call OpenAI embedding API
-    // Return dummy embedding for now
-    std::vector<float> embedding(1536, 0.0f);  // OpenAI ada-002 dimension
-    for (size_t i = 0; i < embedding.size(); i++) {
-        embedding[i] = static_cast<float>(rand()) / RAND_MAX;
-    }
-    return embedding;
+
+    // HTTP transport 未接入——回傳空向量，上層（RAG）對空 embedding 已降級處理
+    (void)text;
+    (void)model;
+    return {};
 }
 
 std::vector<std::vector<float>> OpenAIClient::GenerateEmbeddings(
@@ -203,36 +202,51 @@ std::string OpenAIClient::GetDefaultModel() {
 }
 
 std::string OpenAIClient::MakeRequest(const std::string& endpoint, const std::string& jsonBody) {
-    // Placeholder - would use HTTP client (curl, libcurl, etc.)
-    // For now, return a mock response
-    return R"({
-        "choices": [{
-            "message": {
-                "role": "assistant",
-                "content": "This is a simulated response from OpenAI API."
-            },
-            "finish_reason": "stop"
-        }],
-        "usage": {
-            "prompt_tokens": 10,
-            "completion_tokens": 20,
-            "total_tokens": 30
-        }
-    })";
+    // HTTP transport 尚未接入（需 WinHTTP/libcurl 或 socket 層）。
+    // 回傳空字串 → ParseResponse 誠實上報失敗，不再回假資料。
+    // 接入點：對 baseURL + endpoint 發 POST、body = jsonBody、
+    // header 帶 "Authorization: Bearer <apiKey>" 與 "Content-Type: application/json"。
+    (void)endpoint;
+    (void)jsonBody;
+    return std::string();
 }
 
 LLMResponse OpenAIClient::ParseResponse(const std::string& jsonResponse) {
     LLMResponse response;
-    
-    // Placeholder - would parse JSON properly
-    // For now, set mock values
-    response.content = "This is a simulated response from OpenAI API.";
+
+    if (jsonResponse.empty()) {
+        response.success = false;
+        response.error = "LLM request failed: HTTP transport not implemented (OpenAI)";
+        return response;
+    }
+
+    JsonValue root;
+    if (!JsonValue::ParseOk(jsonResponse, root)) {
+        response.success = false;
+        response.error = "LLM response parse failed (OpenAI): invalid JSON";
+        return response;
+    }
+
+    const JsonValue& err = root["error"]["message"];
+    if (err.IsString()) {
+        response.success = false;
+        response.error = err.AsString();
+        return response;
+    }
+
+    const JsonValue& choice = root["choices"][0];
+    response.content = choice["message"]["content"].AsString();
+    if (response.content.empty()) {
+        response.success = false;
+        response.error = "LLM response missing content (OpenAI)";
+        return response;
+    }
+
     response.success = true;
-    response.promptTokens = 10;
-    response.completionTokens = 20;
-    response.totalTokens = 30;
-    response.finishReason = "stop";
-    
+    response.finishReason = choice["finish_reason"].AsString("stop");
+    response.promptTokens = root["usage"]["prompt_tokens"].AsInt();
+    response.completionTokens = root["usage"]["completion_tokens"].AsInt();
+    response.totalTokens = root["usage"]["total_tokens"].AsInt();
     return response;
 }
 
@@ -315,14 +329,11 @@ std::future<LLMResponse> AnthropicClient::ChatCompletionAsync(
 std::vector<float> AnthropicClient::GenerateEmbedding(
     const std::string& text,
     const std::string& model) {
-    
-    // Anthropic doesn't have a public embedding API yet
-    // Return dummy embedding
-    std::vector<float> embedding(1536, 0.0f);
-    for (size_t i = 0; i < embedding.size(); i++) {
-        embedding[i] = static_cast<float>(rand()) / RAND_MAX;
-    }
-    return embedding;
+
+    // HTTP transport 未接入——回傳空向量（同 OpenAIClient 的說明）
+    (void)text;
+    (void)model;
+    return {};
 }
 
 std::vector<std::vector<float>> AnthropicClient::GenerateEmbeddings(
@@ -345,24 +356,54 @@ std::string AnthropicClient::GetDefaultModel() {
 }
 
 std::string AnthropicClient::MakeRequest(const std::string& endpoint, const std::string& jsonBody) {
-    // Placeholder for HTTP request
-    return R"({
-        "content": [{
-            "type": "text",
-            "text": "This is a simulated response from Anthropic API."
-        }],
-        "stop_reason": "end_turn"
-    })";
+    // HTTP transport 尚未接入——同 OpenAIClient::MakeRequest 的說明。
+    // 接入點：POST baseURL + endpoint，header 帶 "x-api-key" 與
+    // "anthropic-version"，body = jsonBody。
+    (void)endpoint;
+    (void)jsonBody;
+    return std::string();
 }
 
 LLMResponse AnthropicClient::ParseResponse(const std::string& jsonResponse) {
     LLMResponse response;
-    response.content = "This is a simulated response from Anthropic API.";
+
+    if (jsonResponse.empty()) {
+        response.success = false;
+        response.error = "LLM request failed: HTTP transport not implemented (Anthropic)";
+        return response;
+    }
+
+    JsonValue root;
+    if (!JsonValue::ParseOk(jsonResponse, root)) {
+        response.success = false;
+        response.error = "LLM response parse failed (Anthropic): invalid JSON";
+        return response;
+    }
+
+    const JsonValue& err = root["error"]["message"];
+    if (err.IsString()) {
+        response.success = false;
+        response.error = err.AsString();
+        return response;
+    }
+
+    // Anthropic 回應格式: content 為 [{type:"text", text:"..."}] 陣列
+    for (const JsonValue& block : root["content"].AsArray()) {
+        if (block["type"].AsString() == "text") {
+            response.content += block["text"].AsString();
+        }
+    }
+    if (response.content.empty()) {
+        response.success = false;
+        response.error = "LLM response missing content (Anthropic)";
+        return response;
+    }
+
     response.success = true;
-    response.promptTokens = 10;
-    response.completionTokens = 20;
-    response.totalTokens = 30;
-    response.finishReason = "end_turn";
+    response.finishReason = root["stop_reason"].AsString("end_turn");
+    response.promptTokens = root["usage"]["input_tokens"].AsInt();
+    response.completionTokens = root["usage"]["output_tokens"].AsInt();
+    response.totalTokens = response.promptTokens + response.completionTokens;
     return response;
 }
 
@@ -441,13 +482,12 @@ std::future<LLMResponse> LocalModelClient::ChatCompletionAsync(
 std::vector<float> LocalModelClient::GenerateEmbedding(
     const std::string& text,
     const std::string& model) {
-    
-    // Local model embedding
-    std::vector<float> embedding(768, 0.0f);  // Common dimension
-    for (size_t i = 0; i < embedding.size(); i++) {
-        embedding[i] = static_cast<float>(rand()) / RAND_MAX;
-    }
-    return embedding;
+
+    // 無推論後端——回傳空向量。RAG 層對空 embedding 已降級處理
+    // （InMemoryVectorDB 跳過空 embedding 的 chunk）。
+    (void)text;
+    (void)model;
+    return {};
 }
 
 std::vector<std::vector<float>> LocalModelClient::GenerateEmbeddings(
@@ -470,10 +510,17 @@ std::string LocalModelClient::GetDefaultModel() {
 }
 
 bool LocalModelClient::LoadModel(const std::string& modelPath) {
-    // Placeholder for model loading
-    // Would use llama.cpp or similar
-    modelHandle = reinterpret_cast<void*>(1);  // Dummy handle
-    return true;
+    // 本地推論後端（llama.cpp/Ollama）未接入——誠實回報失敗。
+    // 檔案存在也不假裝能跑：modelHandle 保持 nullptr，
+    // MakeLocalRequest 會據此回傳空 → 上層收到 success=false。
+    std::ifstream f(modelPath, std::ios::binary);
+    if (!f.good()) {
+        std::cerr << "LocalModelClient: model file not found: " << modelPath << std::endl;
+    } else {
+        std::cerr << "LocalModelClient: inference backend not implemented, "
+                     "cannot run: " << modelPath << std::endl;
+    }
+    return false;
 }
 
 void LocalModelClient::UnloadModel() {
@@ -484,18 +531,22 @@ void LocalModelClient::UnloadModel() {
 }
 
 std::string LocalModelClient::MakeLocalRequest(const std::string& prompt) {
-    // Placeholder for local model inference
-    // Would call llama.cpp or Ollama API
-    return "This is a simulated response from local model.";
+    // 本地推論後端未接入；modelHandle 永遠是 nullptr（LoadModel 誠實失敗）。
+    // 回傳空 → ParseLocalResponse 上報失敗，不回假文字。
+    (void)prompt;
+    if (!modelHandle) return std::string();
+    return std::string();
 }
 
 LLMResponse LocalModelClient::ParseLocalResponse(const std::string& response) {
     LLMResponse resp;
+    if (response.empty()) {
+        resp.success = false;
+        resp.error = "Local model inference unavailable (backend not implemented)";
+        return resp;
+    }
     resp.content = response;
     resp.success = true;
-    resp.promptTokens = 10;
-    resp.completionTokens = 20;
-    resp.totalTokens = 30;
     resp.finishReason = "stop";
     return resp;
 }
