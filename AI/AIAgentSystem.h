@@ -577,7 +577,7 @@ public:
     AIAgent* CreateAgent(const AgentDesc& desc);
     void DestroyAgent(const std::string& agentId);
     AIAgent* GetAgent(const std::string& agentId);
-    const std::vector<AIAgent*>& GetAgents() const { return agents; }
+    const std::vector<std::unique_ptr<AIAgent>>& GetAgents() const { return agents; }
     
     // 任務分配
     void AssignTaskToAgent(const std::string& agentId, const AgentTask& task);
@@ -628,8 +628,8 @@ public:
     void SetCollaborationMode(bool enable);  // 新增
     
 private:
-    std::vector<AIAgent*> agents;
-    std::unordered_map<std::string, AIAgent*> agentMap;
+    std::vector<std::unique_ptr<AIAgent>> agents;   // 擁有權
+    std::unordered_map<std::string, AIAgent*> agentMap; // 非擁有索引
     
     bool learningEnabled;
     bool peerLearningEnabled;  // 新增
@@ -759,7 +759,7 @@ private:
  */
 class AIAgentFactory {
 public:
-    static AIAgent* CreateAgent(AgentType type, const AgentDesc& desc);
+    static std::unique_ptr<AIAgent> CreateAgent(AgentType type, const AgentDesc& desc);
     static std::vector<AgentType> GetAvailableAgentTypes();
     static AgentDesc GetDefaultDescription(AgentType type);
 };

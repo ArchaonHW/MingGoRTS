@@ -126,7 +126,7 @@ DQNAgent::DQNAgent(int stateSize, int numActions,
     , rng(std::random_device{}()) {
     
     // Create networks
-    qNetwork = new NeuralNetwork();
+    qNetwork = std::make_unique<NeuralNetwork>();
     qNetwork->AddLayer(stateSize);
     qNetwork->AddLayer(128, "relu");
     qNetwork->AddLayer(128, "relu");
@@ -134,7 +134,7 @@ DQNAgent::DQNAgent(int stateSize, int numActions,
     qNetwork->Build();
     qNetwork->SetLossFunction("mse");
     
-    targetNetwork = new NeuralNetwork();
+    targetNetwork = std::make_unique<NeuralNetwork>();
     targetNetwork->AddLayer(stateSize);
     targetNetwork->AddLayer(128, "relu");
     targetNetwork->AddLayer(128, "relu");
@@ -230,7 +230,7 @@ PolicyGradientAgent::PolicyGradientAgent(int stateSize, int numActions,
     , learningRate(learningRate)
     , discountFactor(discountFactor) {
     
-    policyNetwork = new NeuralNetwork();
+    policyNetwork = std::make_unique<NeuralNetwork>();
     policyNetwork->AddLayer(stateSize);
     policyNetwork->AddLayer(64, "relu");
     policyNetwork->AddLayer(64, "relu");
@@ -308,14 +308,14 @@ ActorCriticAgent::ActorCriticAgent(int stateSize, int numActions,
     , criticLearningRate(criticLearningRate)
     , discountFactor(discountFactor) {
     
-    actorNetwork = new NeuralNetwork();
+    actorNetwork = std::make_unique<NeuralNetwork>();
     actorNetwork->AddLayer(stateSize);
     actorNetwork->AddLayer(64, "relu");
     actorNetwork->AddLayer(64, "relu");
     actorNetwork->AddLayer(numActions);
     actorNetwork->Build();
     
-    criticNetwork = new NeuralNetwork();
+    criticNetwork = std::make_unique<NeuralNetwork>();
     criticNetwork->AddLayer(stateSize);
     criticNetwork->AddLayer(64, "relu");
     criticNetwork->AddLayer(1);

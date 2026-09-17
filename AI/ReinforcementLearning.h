@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "NeuralNetwork.h"
+
 #include <vector>
 #include <unordered_map>
 #include <memory>
@@ -125,9 +127,9 @@ public:
     size_t GetReplayBufferSize() const { return replayBuffer.size(); }
     
 private:
-    class NeuralNetwork* qNetwork;
-    class NeuralNetwork* targetNetwork;
-    
+    std::unique_ptr<NeuralNetwork> qNetwork;
+    std::unique_ptr<NeuralNetwork> targetNetwork;
+
     int stateSize;
     int numActions;
     float learningRate;
@@ -166,13 +168,13 @@ public:
     void ClearTrajectory();
     
 private:
-    class NeuralNetwork* policyNetwork;
-    
+    std::unique_ptr<NeuralNetwork> policyNetwork;
+
     int stateSize;
     int numActions;
     float learningRate;
     float discountFactor;
-    
+
     struct TrajectoryStep {
         State state;
         Action action;
@@ -204,8 +206,8 @@ public:
                    float reward, const State& nextState, bool done);
     
 private:
-    class NeuralNetwork* actorNetwork;
-    class NeuralNetwork* criticNetwork;
+    std::unique_ptr<NeuralNetwork> actorNetwork;
+    std::unique_ptr<NeuralNetwork> criticNetwork;
     
     int stateSize;
     int numActions;
