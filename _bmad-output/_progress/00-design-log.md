@@ -130,3 +130,21 @@ MSVC+MinGW 建置過;QuantumFogBattleTest 17 PASS(觀測扣點/重複不扣/時�
 ## 驗證
 
 MSVC+MinGW 建置過;QuantumTest +20 checks(單調收斂/逼近塌縮仍不揭露/歸一化/費用<觀測/失敗不變/已揭露不扣點);6 target ctest 全過。
+
+---
+
+# 2026-09-17 — Q-2 糾纏小隊(db85b7a)
+
+## 做法
+
+`QuantumFog::Entangle(a,b)`:1:1 雙向糾纏,以雲質心相對偏移最近鄰建 corr 表(同向機動假設——佯攻偏其雲心北→主力也偏北)。任一方經 Observe/Reveal/ObserveRandom 塌縮時,未揭露對象的機率 blend 0.7 向相關候選集中——「推測」非「親見」,revealed 維持 false。Probe 不傳遞(弱測量不構成 joint 測量);已消去候選不復活(硬證據優先);情報只扣被觀測方。
+
+## Review 修復
+
+- **major**:Reveal 被接觸迴圈每 tick 呼叫 → blend 複利,0.1s 內對方雲免費收斂 ~1.0 → Reveal 比照 Observe 加已揭露早退(仍刷新時效),糾纏只在塌縮轉換傳遞一次;ObserveRandom 同
+- 測試補:接觸傳遞、重複接觸不複利、Probe 不觸發、消去候選不復活、對稱觀測
+- demo Entangle 失敗加 log
+
+## 驗證
+
+MSVC+MinGW 建置過;QuantumTest Entangle 段落 ~20 checks;ctest 6/6。平行 session 的 DuanqiaoPlayable hunks(A-1/A-2)被其 commit 捲入先行,本 commit 僅 fog 核心+測試+spec。

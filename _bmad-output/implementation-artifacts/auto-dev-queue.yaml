@@ -171,7 +171,12 @@ queue:
       - Entangle API + 測試：observe A 後 B 機率集中於相關候選格
       - 單獨觀測 B 的行為（對稱/非對稱）在 spec 寫死
       - 至少一張 doctrine 卡或 demo 情境使用 Entangle
-    status: queued
+    status: done
+    note: >
+      commit db85b7a。雲質心相對偏移建 corr 表（同向機動假設），
+      塌縮轉換時對方雲 blend 0.7 集中但不揭露；對稱雙向；
+      已消去候選不復活；Probe 不傳遞。review 修掉 Reveal 每 tick
+      複利收縮（改僅塌縮轉換時傳遞）。demo e0/e1 糾纏。
     size: M
 
   - id: Q-3
