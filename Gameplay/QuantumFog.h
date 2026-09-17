@@ -56,6 +56,17 @@ public:
                   const std::vector<Vector2>& candidates,
                   const std::vector<double>& priors = {});
 
+    // 藍噪候選格生成：在 suspectedCenter 周圍 radius 內產生至多 count
+    // 個最小間距 minSpacing 的候選點（Poisson-disk 散佈，避免機率雲
+    // 叢聚）。biasPoint 不為 nullptr 時，先驗機率依與其距離做高斯
+    // 遞減（σ = radius/2）；否則以 suspectedCenter 為中心。
+    // 產生失敗（候選 < 2）時退回 R2 準隨機圓盤散佈。
+    // 回傳 entityId，失敗回 -1。
+    int AddEntityCloud(const std::string& name, int team,
+                       Vector2 suspectedCenter, float radius, int count,
+                       float minSpacing,
+                       const Vector2* biasPoint = nullptr);
+
     // 觀測：扣情報點 → 塌縮到最接近 truePos 的候選 → 揭露真實位置。
     // 情報不足或實體不存在回傳 false。
     bool Observe(int entityId, const Vector2& truePos);

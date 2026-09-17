@@ -1,6 +1,7 @@
 #include "QuantumFog.h"
 
 #include "BattleResources.h"
+#include "MathUtils/QuasiRandom.h"
 
 #include <algorithm>
 #include <cmath>
@@ -32,6 +33,45 @@ int QuantumFog::AddEntity(const std::string& name, int team,
 
     entities.push_back(std::move(e));
     return static_cast<int>(entities.size()) - 1;
+}
+
+int QuantumFog::AddEntityCloud(const std::string& name, int team,
+                               Vector2 suspectedCenter, float radius,
+                               int count, float minSpacing,
+                               const Vector2* biasPoint) {
+    if (radius <= 0.0f || count < 2) return -1;
+
+    const uint64_t seed = seedCounter * 2654435761ULL;
+    std::vector<Vector2> candidates = Quasi::PoissonDisk(
+        suspectedCenter, radius, count, minSpacing, seed);
+
+    // 飽和退縮：Poisson 產生不足時以 R2 圓盤序列補滿
+    if (static_cast<int>(candidates.size()) < 2 ||
+        static_cast<int>(candidates.size()) < count / 2) {
+        candidates.clear();
+        for (int i = 0; i < count; ++i) {
+            candidates.push_back(
+                suspectedCenter +
+                Quasi::R2InDisk(static_cast<uint64_t>(i), radius, seed));
+        }
+    }
+
+    // 先驗：依與 bias（預設 = suspectedCenter）的距離高斯遞減
+    const Vector2 bias = biasPoint ? *biasPoint : suspectedCenter;
+    const double sigma = static_cast<double>(radius) * 0.5;
+    const double invTwoSigmaSq = 1.0 / (2.0 * sigma * sigma);
+    std::vector<double> priors(candidates.size());
+    double total = 0.0;
+    for (size_t i = 0; i < candidates.size(); ++i) {
+        const Vector2 d = candidates[i] - bias;
+        const double w = std::exp(-(d.x * d.x + d.y * d.y) * invTwoSigmaSq);
+        priors[i] = w;
+        total += w;
+    }
+    if (total <= 0.0) return -1;
+    for (double& p : priors) p /= total;
+
+    return AddEntity(name, team, candidates, priors);
 }
 
 bool QuantumFog::Observe(int entityId, const Vector2& truePos) {
