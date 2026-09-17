@@ -2,7 +2,7 @@
 title: 'Q-3 弱觀測 Probe：廉價部分塌縮'
 type: 'feature'
 created: '2026-09-17'
-status: 'draft'
+status: 'done'
 baseline_commit: 'aa51f42'
 context:
   - _bmad-output/implementation-artifacts/auto-dev-queue.yaml

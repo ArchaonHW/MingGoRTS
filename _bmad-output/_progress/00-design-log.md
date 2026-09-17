@@ -111,3 +111,22 @@
 ## 驗證
 
 MSVC+MinGW 建置過;QuantumFogBattleTest 17 PASS(觀測扣點/重複不扣/時效回雲/接觸免費/Scout 目標/負面觀測/無 fog 退回);BattleSceneTest 22 PASS;既有測試無回歸。
+
+---
+
+# 2026-09-17 — Q-3 弱觀測 Probe(18f48b3)
+
+## 做法
+
+`QuantumFog::Probe(id, truePos, strength)`:扣 probeCost(建構子第三參數,demo=1 < observe=2),候選機率軟重加權 `p_i' ∝ p_i·((1-s)+s·w_i/wMax)`、`w_i=1/(1+d_i²)`——雲向真值收縮但不塌縮,revealed 不變,不寫 priors(軟情報隨時效/退相干衰減,與 EliminateCandidate 的硬證據分層)。demo:LMB 點雲=探測(1 情報)、Shift+LMB=觀測(2 情報),情報池 4→8。
+
+## Review 修復(1 路 edge+acceptance)
+
+- NaN strength 穿透 `<=0` 防護 → `!(strength>0)`;建構子 clamp 非負費用(負費用會反產情報)
+- 測試:comma-expression 改明確 CHECK、失敗探測逐候選比較、補 strength>1 clamp 與連續探測收斂斷言
+- demo 戰報帶最高機率百分比;header 操作說明更新
+- 順帶修 `AgentGUI` unique_ptr copy(7cefc54,MinGW 建置阻斷)
+
+## 驗證
+
+MSVC+MinGW 建置過;QuantumTest +20 checks(單調收斂/逼近塌縮仍不揭露/歸一化/費用<觀測/失敗不變/已揭露不扣點);6 target ctest 全過。

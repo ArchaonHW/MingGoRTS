@@ -171,7 +171,7 @@ queue:
       - Probe 後候選機率方差下降且仍 >1 個非零候選
       - 費用 < Observe；重複 Probe 可逼近塌縮
       - QuantumTest 覆蓋機率單調收斂 + 不歸一化防護
-    status: queued
+    status: done
     size: M
 
   - id: Q-4
