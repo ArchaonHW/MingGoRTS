@@ -61,13 +61,17 @@ struct CollisionData {
     Vector3 position;
     Vector3 normal;
     float penetrationDepth;
-    int otherBodyID;
+    int otherBodyID;  // 舊版相容欄位：等同 bodyBID
+    int bodyAID;      // 碰撞對的第一個物體
+    int bodyBID;      // 碰撞對的第二個物體
     
     CollisionData()
         : position(Vector3::Zero())
         , normal(Vector3::Zero())
         , penetrationDepth(0.0f)
         , otherBodyID(-1)
+        , bodyAID(-1)
+        , bodyBID(-1)
     {
     }
 };
@@ -144,7 +148,9 @@ public:
     
     // 約束
     void SetKinematic(bool kinematic);
-    bool IsKinematic() const { return kinematic; }
+    // kinematic 布林旗標與 SetBodyType(Kinematic) 是同義的：
+    // 兩者皆表示「由速度驅動、不受力/衝量/碰撞反應影響」
+    bool IsKinematic() const { return kinematic || bodyType == PhysicsBodyType::Kinematic; }
     
     void SetGravityEnabled(bool enabled);
     bool IsGravityEnabled() const { return gravityEnabled; }
@@ -156,6 +162,7 @@ public:
     Matrix4 GetTransformMatrix() const;
     
 private:
+    friend class PhysicsWorld;
     int bodyID;
     
     PhysicsBodyType bodyType;
@@ -166,6 +173,7 @@ private:
     float mass;
     Vector3 linearVelocity;
     Vector3 angularVelocity;
+    Vector3 accumulatedForce;   // 本步累積的力，IntegrateVelocity 時以 dt 積分後清零
     float linearDamping;
     float angularDamping;
     
@@ -223,6 +231,11 @@ public:
     void SetFixedTimeStep(float timeStep);
     float GetFixedTimeStep() const { return fixedTimeStep; }
     
+    // Broadphase 網格大小(spatial hash cell size)
+    // 較大 → 每格物體多(假陽性多);較小 → 物體跨格多(插入成本高)
+    void SetBroadphaseCellSize(float size) { broadphaseCellSize = (size > 0.0f) ? size : 4.0f; }
+    float GetBroadphaseCellSize() const { return broadphaseCellSize; }
+    
     // 碰撞回調
     void SetGlobalCollisionCallback(CollisionCallback callback);
     
@@ -256,6 +269,7 @@ private:
     bool initialized;
     
     float accumulatedTime;
+    float broadphaseCellSize;
 };
 
 /**

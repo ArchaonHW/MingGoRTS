@@ -3,8 +3,11 @@
  */
 
 #include "IDEGUI.h"
+#include "GuiTextUtils.h"
 #include "../IntelligentSuggestion.h"
 #include "../../AI/IntelligentDevelopmentSystem.h"
+#include "../../AI/KnowledgeGraph.h"
+#include "../../AI/SelfReflection.h"
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -12,13 +15,36 @@
 #include <algorithm>
 #include <ctime>
 #include <iomanip>
+#include <future>
+#include <memory>
+#include <chrono>
+#include <cctype>
+#include <mutex>
+#include <unordered_set>
+#include <functional>
 
 namespace MingGoRTSIDE {
 
-// Intelligent Development System instance
-static Potato::AI::IntelligentDevelopmentSystem* g_DevSystem = nullptr;
-static Potato::AI::DevelopmentAssistant* g_DevAssistant = nullptr;
-static Potato::AI::LLMManager* g_LLMManager = nullptr;
+// Intelligent Development System instance（unique_ptr：Shutdown 自動釋放，
+// 逾時分支刻意不 reset 等同保留原「洩漏以避免 UAF」語義）
+static std::unique_ptr<Potato::AI::IntelligentDevelopmentSystem> g_DevSystem;
+static std::unique_ptr<Potato::AI::DevelopmentAssistant> g_DevAssistant;
+static std::unique_ptr<Potato::AI::LLMManager> g_LLMManager;
+static std::unique_ptr<Potato::AI::KnowledgeGraph> g_KnowledgeGraph;
+static std::unique_ptr<Potato::AI::SelfReflection> g_SelfReflection;
+
+// 智能建議系統實例（規則式分析引擎，無外部依賴）
+static std::unique_ptr<IntelligentSuggestionSystem> g_SuggestionSystem;
+
+// 使用者已關閉的建議標題集合——同一標題不再自動出現（id 每次生成皆不同，
+// 以 title 作為抑止鍵才能跨分析週期生效）
+static std::unordered_set<std::string> g_DismissedSuggestionTitles;
+
+// g_DevSystem 非執行緒安全（stats/tasks/knowledgeGraph/selfReflection 未同步）——
+// 背景生成 worker 與 UI 端各處理器共用此 mutex 互斥
+static std::mutex g_DevSystemMutex;
+
+// GetEnvVar / CopyToBuffer 移至 GuiTextUtils.h（header-only，供煙霧測試直接覆蓋）
 
 IDEGUI::IDEGUI()
     : core(nullptr)
@@ -31,17 +57,52 @@ IDEGUI::IDEGUI()
     memset(state.developmentPrompt, 0, sizeof(state.developmentPrompt));
     memset(state.developmentResponse, 0, sizeof(state.developmentResponse));
     
+    // AI/LLM 設定：先讀 POTATO_LLM_* 環境變數作為預設值（各快取一次，不重複呼叫）
+    std::string envProvider = GetEnvVar("POTATO_LLM_PROVIDER");
+    std::string envModel = GetEnvVar("POTATO_LLM_MODEL");
+    std::string envBaseUrl = GetEnvVar("POTATO_LLM_BASEURL");
+    std::string envApiKey = GetEnvVar("POTATO_LLM_APIKEY");
+    std::string envAgent = GetEnvVar("POTATO_LLM_AGENT");
+    CopyToBuffer(state.llmProvider, sizeof(state.llmProvider),
+                 envProvider.empty() ? "local" : envProvider);
+    CopyToBuffer(state.llmModel, sizeof(state.llmModel),
+                 envModel.empty() ? "llama-2-7b" : envModel);
+    CopyToBuffer(state.llmBaseUrl, sizeof(state.llmBaseUrl), envBaseUrl);
+    CopyToBuffer(state.llmApiKey, sizeof(state.llmApiKey), envApiKey);
+    CopyToBuffer(state.llmAgent, sizeof(state.llmAgent),
+                 envAgent.empty() ? "local-pipeline" : envAgent);
+    
     // Set default path
     state.currentPath = "C:\\HWC\\MingGoRTS";
     
-    // Initialize Intelligent Development System
-    g_LLMManager = new Potato::AI::LLMManager();
-    auto localClient = std::make_unique<Potato::AI::LocalModelClient>("llama-2-7b");
-    g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local, std::move(localClient));
-    g_LLMManager->SetDefaultProvider(Potato::AI::LLMProvider::Local);
-    
-    g_DevSystem = new Potato::AI::IntelligentDevelopmentSystem();
-    // Note: We'll initialize properly when IDECore is available
+    // Initialize Intelligent Development System（本地管線為主，外部 LLM 可選）
+    // 防重複初始化：第二個 IDEGUI 實例共用全域，不重建也不覆蓋
+    if (!g_DevSystem) {
+        g_LLMManager = std::make_unique<Potato::AI::LLMManager>();
+        auto localClient = std::make_unique<Potato::AI::LocalModelClient>("llama-2-7b");
+        g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local, std::move(localClient));
+        g_LLMManager->SetDefaultProvider(Potato::AI::LLMProvider::Local);
+
+        g_KnowledgeGraph = std::make_unique<Potato::AI::KnowledgeGraph>();
+        g_SelfReflection = std::make_unique<Potato::AI::SelfReflection>();
+
+        // 種入引擎模組知識，供生成時參考專案上下文
+        g_KnowledgeGraph->AddRelationByName("AIAgent", "part-of", "AIAgentSystem");
+        g_KnowledgeGraph->AddRelationByName("DeveloperAgent", "is-a", "AIAgent");
+        g_KnowledgeGraph->AddRelationByName("IntelligentDevelopmentSystem", "uses", "LLMIntegration");
+        g_KnowledgeGraph->AddRelationByName("IntelligentDevelopmentSystem", "uses", "KnowledgeGraph");
+
+        g_DevSystem = std::make_unique<Potato::AI::IntelligentDevelopmentSystem>();
+        // 本地管線為主；已註冊的 Local 客戶端作為可選 LLM 後備（非擁有指標）
+        g_DevSystem->Initialize(
+            g_LLMManager->GetClient(Potato::AI::LLMProvider::Local), nullptr);
+        g_DevSystem->SetKnowledgeGraph(g_KnowledgeGraph.get());
+        g_DevSystem->SetSelfReflection(g_SelfReflection.get());
+        g_DevAssistant = std::make_unique<Potato::AI::DevelopmentAssistant>(g_DevSystem.get());
+
+        g_SuggestionSystem = std::make_unique<IntelligentSuggestionSystem>();
+        g_SuggestionSystem->Initialize();
+    }
 }
 
 IDEGUI::~IDEGUI() {
@@ -82,19 +143,42 @@ bool IDEGUI::Initialize(IDECore* ideCore) {
 void IDEGUI::Shutdown() {
     std::cout << "Shutting down MingGoRTS IDE GUI..." << std::endl;
     
+    // 等待背景生成任務完成，避免 worker 存取已刪除的 g_DevSystem
+    if (state.devGenFuture.valid()) {
+        // 有界等待：本地管線為確定性即時運算，5 秒足夠；
+        // 若異常超時，跳過刪除（洩漏而非 UAF）
+        if (state.devGenFuture.wait_for(std::chrono::seconds(5)) !=
+            std::future_status::ready) {
+            AddOutputLog("[Dev] Shutdown: generation still running, "
+                         "leaking AI globals to avoid UAF");
+            // 刻意洩漏 future：std::async 產生的 future 解構時會阻塞等 worker，
+            // 移到 heap 放棄擁有權，讓關閉流程繼續走完
+            auto* abandoned =
+                new std::future<Potato::AI::CodeGenerationResult>(
+                    std::move(state.devGenFuture));
+            (void)abandoned;
+            running = false;
+            return;
+        }
+    }
+    state.developmentProcessing = false;
+    
     if (g_DevAssistant) {
-        delete g_DevAssistant;
-        g_DevAssistant = nullptr;
+        g_DevAssistant.reset();
     }
     if (g_DevSystem) {
+        // worker 仍在執行的情況已在上方逾時分支提前 return，此處可安全互斥
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
         g_DevSystem->Shutdown();
-        delete g_DevSystem;
-        g_DevSystem = nullptr;
+        g_DevSystem.reset();
     }
-    if (g_LLMManager) {
-        delete g_LLMManager;
-        g_LLMManager = nullptr;
+    if (g_SuggestionSystem) {
+        g_SuggestionSystem->Shutdown();
+        g_SuggestionSystem.reset();
     }
+    g_KnowledgeGraph.reset();
+    g_SelfReflection.reset();
+    g_LLMManager.reset();
     
     if (g_I18N) {
         g_I18N->Shutdown();
@@ -1405,7 +1489,12 @@ void IDEGUI::UpdateCursorPosition() {
 
 std::string IDEGUI::GetCurrentTime() {
     auto now = std::time(nullptr);
-    auto tm = *std::localtime(&now);
+    std::tm tm;
+#ifdef _WIN32
+    localtime_s(&tm, &now);
+#else
+    localtime_r(&now, &tm);
+#endif
     
     std::ostringstream oss;
     oss << std::put_time(&tm, "%H:%M:%S");
@@ -1515,9 +1604,50 @@ void IDEGUI::RenderSettings() {
     ImGui::Checkbox("Word Wrap", &state.wordWrap);
     ImGui::Checkbox("Show Minimap", &state.showMinimap);
     
+    // AI / LLM 設定（預設讀自 POTATO_LLM_* 環境變數）
+    ImGui::Separator();
+    ImGui::Text("AI / LLM Settings");
+    ImGui::TextDisabled("Local pipeline works without these; set only for external providers");
+    
+    ImGui::Text("Provider:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmprovider", state.llmProvider, sizeof(state.llmProvider));
+    
+    ImGui::Text("Model:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmmodel", state.llmModel, sizeof(state.llmModel));
+    
+    ImGui::Text("Base URL:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmbaseurl", state.llmBaseUrl, sizeof(state.llmBaseUrl));
+    
+    ImGui::Text("API Key:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmapikey", state.llmApiKey, sizeof(state.llmApiKey),
+                   ImGuiInputTextFlags_Password);
+    
+    ImGui::Text("Agent:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmagent", state.llmAgent, sizeof(state.llmAgent));
+    
     // Apply button
     ImGui::Separator();
     if (ImGui::Button("Apply Settings")) {
+        // 套用至可插拔的 LLM 管理器（本地管線不需這些設定；
+        // provider/model 變更會重新註冊本地模型客戶端）
+        if (g_LLMManager) {
+            std::string model(state.llmModel);
+            auto client = std::make_unique<Potato::AI::LocalModelClient>(
+                model.empty() ? "local" : model);
+            g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local, std::move(client));
+        }
+        // 依 provider/apiKey 重新接上（或解除）DevSystem 的外部 LLM fallback，
+        // 讓新註冊的客戶端生效（內部會對 g_DevSystem 互斥）
+        ConfigureDevSystemLLM();
+        // baseUrl/agent 目前沒有可消費的設定通道——
+        // 僅保留在設定狀態中，供未來外部 provider 使用
+        AddOutputLog("[Settings] baseUrl/agent stored "
+                     "(reserved: no per-client URL/agent channel yet)");
         AddOutputLog("Settings applied successfully");
     }
     
@@ -1530,6 +1660,11 @@ void IDEGUI::RenderSettings() {
         state.autoSaveInterval = 300;
         state.wordWrap = false;
         state.showMinimap = false;
+        CopyToBuffer(state.llmProvider, sizeof(state.llmProvider), "local");
+        CopyToBuffer(state.llmModel, sizeof(state.llmModel), "llama-2-7b");
+        memset(state.llmBaseUrl, 0, sizeof(state.llmBaseUrl));
+        memset(state.llmApiKey, 0, sizeof(state.llmApiKey));
+        CopyToBuffer(state.llmAgent, sizeof(state.llmAgent), "local-pipeline");
         SetDarkTheme();
         AddOutputLog("Settings reset to defaults");
     }
@@ -2340,26 +2475,72 @@ std::vector<std::string> IDEGUI::GetStandardLibraryFunctions() {
 // ============================================================================
 
 void IDEGUI::UpdateIntelligentSuggestions() {
-    if (!state.intelligentSuggestionsEnabled) return;
-    
-    // In a real implementation, this would:
-    // 1. Get current code context
-    // 2. Call IntelligentSuggestionSystem::GenerateSuggestions
-    // 3. Update state.currentSuggestions
-    
-    // For now, add a placeholder suggestion
-    Suggestion suggestion;
-    suggestion.type = SuggestionType::CodeCompletion;
-    suggestion.title = "Intelligent Suggestion";
-    suggestion.description = "AI-powered code analysis and suggestions";
-    suggestion.code = "// Suggested code";
-    suggestion.reason = "Based on code patterns and best practices";
-    suggestion.confidence = ConfidenceLevel::High;
-    suggestion.confidenceScore = 0.85f;
-    
-    state.currentSuggestions.clear();
-    state.currentSuggestions.push_back(suggestion);
-    state.showSuggestions = true;
+    if (!state.intelligentSuggestionsEnabled || !g_SuggestionSystem) {
+        state.showSuggestions = false;
+        return;
+    }
+
+    // 無開啟分頁時不分析（編輯器實際編輯的是 tab.buffer，不是 state.editorBuffer）
+    if (state.activeTab < 0 ||
+        state.activeTab >= static_cast<int>(state.openTabs.size())) {
+        state.showSuggestions = false;
+        return;
+    }
+    const auto& tab = state.openTabs[state.activeTab];
+    if (tab.buffer[0] == '\0') {
+        state.showSuggestions = false;
+        return;
+    }
+
+    // 去抖動：內容（含檔案路徑）變更時重設計時器，
+    // 停止編輯滿 500ms 才重跑全檔分析，避免打字途中洗掉使用者正在看的建議
+    static size_t s_contentHash = 0;
+    static bool s_analysisPending = false;
+    static auto s_lastEditTime = std::chrono::steady_clock::now();
+    static size_t s_shownSignature = 0;
+
+    const std::string hashInput = std::string(tab.buffer) + "\x1F" + tab.filePath;
+    const size_t contentHash = std::hash<std::string>{}(hashInput);
+    const auto now = std::chrono::steady_clock::now();
+
+    if (contentHash != s_contentHash) {
+        s_contentHash = contentHash;
+        s_lastEditTime = now;
+        s_analysisPending = true;
+    }
+    if (!s_analysisPending) return;
+    if (now - s_lastEditTime < std::chrono::milliseconds(500)) return;
+    s_analysisPending = false;
+
+    std::vector<Suggestion> suggestions = g_SuggestionSystem->GenerateSuggestions(
+        std::string(tab.buffer), tab.filePath, tab.currentLine, tab.currentColumn);
+
+    // 過濾已被使用者關閉過的建議（以標題為抑止鍵）
+    suggestions.erase(
+        std::remove_if(suggestions.begin(), suggestions.end(),
+            [](const Suggestion& s) {
+                return g_DismissedSuggestionTitles.count(s.title) > 0;
+            }),
+        suggestions.end());
+
+    if (suggestions.empty()) {
+        state.currentSuggestions.clear();
+        state.showSuggestions = false;
+        return;
+    }
+
+    // 建議集合有實質變化才自動重開面板；
+    // 否則保留使用者手動關閉的狀態
+    size_t signature = 0;
+    for (const auto& s : suggestions) {
+        signature ^= std::hash<std::string>{}(s.title);
+    }
+    if (signature != s_shownSignature) {
+        s_shownSignature = signature;
+        state.showSuggestions = true;
+    }
+
+    state.currentSuggestions = std::move(suggestions);
 }
 
 void IDEGUI::RenderIntelligentSuggestions() {
@@ -2415,12 +2596,16 @@ void IDEGUI::RenderIntelligentSuggestions() {
         if (ImGui::SmallButton("Apply")) {
             ApplySuggestion(suggestion);
             LearnFromSuggestion(suggestion.id, true);
+            // 套用後移除該建議，避免重複點擊重複插入
+            state.currentSuggestions.erase(state.currentSuggestions.begin() + i);
+            i--;
         }
         
         // Dismiss button
         ImGui::SameLine();
         if (ImGui::SmallButton("Dismiss")) {
             LearnFromSuggestion(suggestion.id, false);
+            g_DismissedSuggestionTitles.insert(suggestion.title);
             state.currentSuggestions.erase(state.currentSuggestions.begin() + i);
             i--;
         }
@@ -2438,29 +2623,26 @@ void IDEGUI::RenderIntelligentSuggestions() {
 }
 
 void IDEGUI::ApplySuggestion(const Suggestion& suggestion) {
-    // In a real implementation, this would:
-    // 1. Insert the suggested code at the cursor position
-    // 2. Update the editor buffer
-    // 3. Mark the file as modified
-    
     AddOutputLog("[AI] Applied suggestion: " + suggestion.title);
     AddOutputLog("[AI] Code: " + suggestion.code);
-    
-    // Placeholder: add suggestion code to current editor content
-    if (state.activeTab >= 0) {
-        std::string currentContent = state.editorBuffer;
+
+    // 附加建議程式碼到作用中分頁的編輯緩衝區（tab.buffer 才是編輯器實際內容）
+    if (state.activeTab >= 0 &&
+        state.activeTab < static_cast<int>(state.openTabs.size())) {
+        auto& tab = state.openTabs[state.activeTab];
+        std::string currentContent = tab.buffer;
         currentContent += "\n" + suggestion.code + "\n";
-        strncpy(state.editorBuffer, currentContent.c_str(), sizeof(state.editorBuffer) - 1);
-        state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
-        state.openTabs[state.activeTab].modified = true;
+        CopyToBuffer(tab.buffer, sizeof(tab.buffer), currentContent);
+        tab.content = tab.buffer;
+        tab.modified = true;
     }
 }
 
 void IDEGUI::LearnFromSuggestion(const std::string& suggestionId, bool accepted) {
-    // In a real implementation, this would:
-    // 1. Call IntelligentSuggestionSystem::LearnFromFeedback
-    // 2. Update suggestion weights based on acceptance
-    
+    if (g_SuggestionSystem) {
+        g_SuggestionSystem->LearnFromFeedback(suggestionId, accepted);
+    }
+
     if (accepted) {
         AddOutputLog("[AI] Suggestion accepted - learning from feedback");
     } else {
@@ -2601,38 +2783,108 @@ std::vector<std::string> IDEGUI::FindLongFunctions(const std::string& code, int 
 // Intelligent Development System Integration
 // ============================================================================
 
+// 依 Settings 的 provider/apiKey 設定 g_DevSystem 的外部 LLM client。
+// "local"/空值 → nullptr（純本地管線，避免 mock client 產生假輸出）；
+// openai/anthropic + apiKey → 註冊對應 client 作為 fallback。
+void IDEGUI::ConfigureDevSystemLLM() {
+    if (!g_DevSystem || !g_LLMManager) return;
+    // g_DevSystem 非執行緒安全——與背景生成 worker 互斥
+    std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+
+    std::string provider(state.llmProvider);
+    std::transform(provider.begin(), provider.end(), provider.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    std::string key(state.llmApiKey);
+
+    Potato::AI::ILLMClient* client = nullptr;
+    if (!key.empty()) {
+        if (provider == "openai") {
+            auto c = std::make_unique<Potato::AI::OpenAIClient>(key);
+            client = c.get();
+            g_LLMManager->RegisterClient(Potato::AI::LLMProvider::OpenAI,
+                                         std::move(c));
+        } else if (provider == "anthropic") {
+            auto c = std::make_unique<Potato::AI::AnthropicClient>(key);
+            client = c.get();
+            g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Anthropic,
+                                         std::move(c));
+        }
+    }
+    g_DevSystem->Initialize(client, nullptr);
+}
+
 void IDEGUI::GenerateCodeFromPrompt() {
     if (!g_DevSystem) {
         AddOutputLog("[Dev] Development system not initialized");
         return;
     }
+    if (state.developmentProcessing) {
+        return; // 已在生成中，忽略重複提交
+    }
+    
+    // 空提示：靜默返回
+    std::string prompt(state.developmentPrompt);
+    bool hasContent = false;
+    for (char c : prompt) {
+        if (!std::isspace(static_cast<unsigned char>(c))) { hasContent = true; break; }
+    }
+    if (!hasContent) return;
+    
+    // 依 Settings 接上（或解除）外部 LLM fallback
+    ConfigureDevSystemLLM();
     
     state.developmentProcessing = true;
     AddOutputLog("[Dev] Generating code from prompt...");
     
-    std::string prompt(state.developmentPrompt);
-    Potato::AI::CodeGenerationResult result = g_DevSystem->GenerateCode(prompt, "C++");
-    
-    if (result.success) {
-        // Insert generated code into editor
-        if (state.activeTab >= 0) {
-            std::string currentContent = state.editorBuffer;
-            currentContent += "\n" + result.generatedCode + "\n";
-            strncpy(state.editorBuffer, currentContent.c_str(), sizeof(state.editorBuffer) - 1);
-            state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
-            state.openTabs[state.activeTab].modified = true;
-        }
-        
-        AddOutputLog("[Dev] Code generated successfully");
-        strncpy(state.developmentResponse, result.generatedCode.c_str(), sizeof(state.developmentResponse) - 1);
-        state.developmentResponse[sizeof(state.developmentResponse) - 1] = '\0';
-    } else {
-        AddOutputLog("[Dev] Code generation failed: " + result.error);
-        std::string errorMsg = "Error: " + result.error;
-        strncpy(state.developmentResponse, errorMsg.c_str(), sizeof(state.developmentResponse) - 1);
-        state.developmentResponse[sizeof(state.developmentResponse) - 1] = '\0';
+    // 背景執行，UI 不阻塞；結果在 RenderDevelopmentAssistant 輪詢寫回
+    // 捕獲 sys 指標值而非在 worker 內重讀全域（配合 Shutdown 的 wait 保證生命期）
+    Potato::AI::IntelligentDevelopmentSystem* sys = g_DevSystem.get();
+    try {
+        state.devGenFuture = std::async(std::launch::async, [prompt, sys]() {
+            // DevSystem 內部狀態未同步——與 UI 端各處理器互斥
+            std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+            return sys->GenerateCode(prompt, "C++");
+        });
+    } catch (const std::exception& e) {
+        // worker 啟動失敗：立即解除旗標，避免 UI 卡在 Processing 狀態
+        state.developmentProcessing = false;
+        std::string msg = std::string("[Dev] Failed to start generation: ") + e.what();
+        AddOutputLog(msg);
+        CopyToBuffer(state.developmentResponse, sizeof(state.developmentResponse), msg);
+    }
+}
+
+void IDEGUI::PollDevelopmentResult() {
+    if (!state.developmentProcessing) return;
+    if (!state.devGenFuture.valid()) {
+        // 旗標已設但無有效 worker（啟動失敗等）：解除卡住狀態
+        state.developmentProcessing = false;
+        return;
+    }
+    if (state.devGenFuture.wait_for(std::chrono::milliseconds(0)) != std::future_status::ready) {
+        return;
     }
     
+    Potato::AI::CodeGenerationResult result;
+    try {
+        result = state.devGenFuture.get();
+    } catch (const std::exception& e) {
+        result.success = false;
+        result.error = e.what();
+    } catch (...) {
+        result.success = false;
+        result.error = "Unknown generation error";
+    }
+    
+    if (result.success) {
+        AddOutputLog("[Dev] Code generated successfully");
+    } else {
+        AddOutputLog("[Dev] Code generation failed: " + result.error);
+    }
+    // 寫回邏輯抽到 WriteGenerationResult(GuiTextUtils.h)——與 headless 測試共用
+    MingGoRTSIDE::WriteGenerationResult(result.success, result.generatedCode,
+                                        result.error, state.developmentResponse,
+                                        sizeof(state.developmentResponse));
     state.developmentProcessing = false;
 }
 
@@ -2643,7 +2895,11 @@ void IDEGUI::AnalyzeCodeWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    Potato::AI::CodeAnalysisResult result = g_DevSystem->AnalyzeCode(code, "C++");
+    Potato::AI::CodeAnalysisResult result;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        result = g_DevSystem->AnalyzeCode(code, "C++");
+    }
     
     AddOutputLog("[Dev] Code Analysis Results:");
     AddOutputLog("  Lines of Code: " + std::to_string(result.lineCount));
@@ -2666,7 +2922,11 @@ void IDEGUI::GenerateTestsWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    Potato::AI::TestGenerationResult result = g_DevSystem->GenerateTestsForFunction(code);
+    Potato::AI::TestGenerationResult result;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        result = g_DevSystem->GenerateTestsForFunction(code);
+    }
     
     if (result.success) {
         AddOutputLog("[Dev] Tests generated successfully");
@@ -2685,7 +2945,11 @@ void IDEGUI::GenerateDocumentationWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    std::string documentation = g_DevSystem->GenerateDocumentation(code);
+    std::string documentation;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        documentation = g_DevSystem->GenerateDocumentation(code);
+    }
     
     AddOutputLog("[Dev] Generated Documentation:");
     AddOutputLog(documentation);
@@ -2700,12 +2964,15 @@ void IDEGUI::FixBugWithAI() {
     std::string code(state.editorBuffer);
     std::string bugDescription = state.developmentPrompt;
     
-    std::string fixedCode = g_DevSystem->FixBug(code, bugDescription);
+    std::string fixedCode;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        fixedCode = g_DevSystem->FixBug(code, bugDescription);
+    }
     
     if (fixedCode != code) {
         // Update editor with fixed code
-        strncpy(state.editorBuffer, fixedCode.c_str(), sizeof(state.editorBuffer) - 1);
-        state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
+        CopyToBuffer(state.editorBuffer, sizeof(state.editorBuffer), fixedCode);
         if (state.activeTab >= 0) {
             state.openTabs[state.activeTab].modified = true;
         }
@@ -2722,18 +2989,20 @@ void IDEGUI::OptimizeCodeWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    std::vector<std::string> optimizations = g_DevSystem->SuggestOptimizations(code);
+    std::vector<std::string> optimizations;
+    std::string optimizedCode;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        optimizations = g_DevSystem->SuggestOptimizations(code);
+        optimizedCode = g_DevSystem->OptimizeCode(code);
+    }
     
     AddOutputLog("[Dev] Optimization Suggestions:");
     for (const auto& opt : optimizations) {
         AddOutputLog("  - " + opt);
     }
-    
-    // Also try to optimize the code
-    std::string optimizedCode = g_DevSystem->OptimizeCode(code);
     if (optimizedCode != code) {
-        strncpy(state.editorBuffer, optimizedCode.c_str(), sizeof(state.editorBuffer) - 1);
-        state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
+        CopyToBuffer(state.editorBuffer, sizeof(state.editorBuffer), optimizedCode);
         if (state.activeTab >= 0) {
             state.openTabs[state.activeTab].modified = true;
         }
@@ -2748,7 +3017,11 @@ void IDEGUI::ReviewCodeWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    std::string review = g_DevSystem->ReviewCode(code);
+    std::string review;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        review = g_DevSystem->ReviewCode(code);
+    }
     
     AddOutputLog("[Dev] Code Review:");
     AddOutputLog(review);
@@ -2759,6 +3032,9 @@ void IDEGUI::ShowDevelopmentAssistant() {
 }
 
 void IDEGUI::RenderDevelopmentAssistant() {
+    // 每幀輪詢背景生成結果（即使面板暫時關閉也要消化結果、解除旗標）
+    PollDevelopmentResult();
+    
     if (!state.showDevelopmentAssistant) return;
     
     ImGui::SetNextWindowPos(ImVec2(state.codeEditorPos.x + 50, 
@@ -2778,9 +3054,11 @@ void IDEGUI::RenderDevelopmentAssistant() {
                                ImVec2(-1, 80));
     
     // Action buttons
+    ImGui::BeginDisabled(state.developmentProcessing);
     if (ImGui::Button("Generate Code")) {
         GenerateCodeFromPrompt();
     }
+    ImGui::EndDisabled();
     ImGui::SameLine();
     if (ImGui::Button("Analyze Code")) {
         AnalyzeCodeWithAI();

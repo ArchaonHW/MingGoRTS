@@ -175,11 +175,11 @@ public:
     
     // Enhanced IDE-specific operations with context
     std::string GenerateCode(const std::string& description, GameDevAgentType preferredType, 
-                           const SimplifiedAI::Context& context);
-    std::string OptimizeAsset(const std::string& assetPath, const SimplifiedAI::Context& context);
-    std::string DesignLevel(const std::string& levelDescription, const SimplifiedAI::Context& context);
-    std::string AnalyzePerformance(const std::string& code, const SimplifiedAI::Context& context);
-    std::string OptimizeBuild(const std::string& buildConfig, const SimplifiedAI::Context& context);
+                           const SimplifiedAI::Context& context = SimplifiedAI::Context());
+    std::string OptimizeAsset(const std::string& assetPath, const SimplifiedAI::Context& context = SimplifiedAI::Context());
+    std::string DesignLevel(const std::string& levelDescription, const SimplifiedAI::Context& context = SimplifiedAI::Context());
+    std::string AnalyzePerformance(const std::string& code, const SimplifiedAI::Context& context = SimplifiedAI::Context());
+    std::string OptimizeBuild(const std::string& buildConfig, const SimplifiedAI::Context& context = SimplifiedAI::Context());
     
     // Enhanced collaboration
     void EnableCollaboration(bool enable);

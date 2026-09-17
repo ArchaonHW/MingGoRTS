@@ -5,6 +5,7 @@
 #include "ToolFramework.h"
 #include <iostream>
 #include <sstream>
+#include <cstring>
 #include <chrono>
 #include <fstream>
 #include <algorithm>

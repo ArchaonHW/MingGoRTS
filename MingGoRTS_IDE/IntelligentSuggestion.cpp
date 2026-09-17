@@ -15,9 +15,31 @@ namespace MingGoRTSIDE {
 // Intelligent Suggestion System
 // ============================================================================
 
+namespace {
+// SuggestionType 對應的權重鍵名——id 前綴與 suggestionWeights 共用它，
+// 讓 LearnFromFeedback 能從 id 回推類型
+const char* SuggestionTypeKey(SuggestionType type) {
+    switch (type) {
+        case SuggestionType::CodeCompletion: return "code_completion";
+        case SuggestionType::Refactoring: return "refactoring";
+        case SuggestionType::Optimization: return "optimization";
+        case SuggestionType::BugFix: return "bug_fix";
+        case SuggestionType::BestPractice: return "best_practice";
+        case SuggestionType::Documentation: return "documentation";
+        case SuggestionType::TestGeneration: return "test_generation";
+        case SuggestionType::Architectural: return "architectural";
+    }
+    return "code_completion";
+}
+} // namespace
+
 IntelligentSuggestionSystem::IntelligentSuggestionSystem()
-    : totalSuggestions(0)
-    , acceptedSuggestions(0) {
+    : textEmbedding(nullptr)
+    , nlpPipeline(nullptr)
+    , suggestionModel(nullptr)
+    , totalSuggestions(0)
+    , acceptedSuggestions(0)
+    , nextSuggestionId(0) {
 }
 
 IntelligentSuggestionSystem::~IntelligentSuggestionSystem() {
@@ -75,8 +97,10 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GenerateSuggestions(
     suggestions.insert(suggestions.end(), tests.begin(), tests.end());
     suggestions.insert(suggestions.end(), architectural.begin(), architectural.end());
     
-    // Set file location for all suggestions
+    // Set file location and stable id for all suggestions
     for (auto& suggestion : suggestions) {
+        suggestion.id = std::string(SuggestionTypeKey(suggestion.type)) +
+                        "_" + std::to_string(nextSuggestionId++);
         suggestion.filePath = filePath;
         suggestion.lineNumber = lineNumber;
         suggestion.columnNumber = columnNumber;
@@ -98,6 +122,7 @@ CodeAnalysis IntelligentSuggestionSystem::AnalyzeCode(const std::string& code,
                                                        const std::string& filePath) {
     CodeAnalysis analysis;
     analysis.filePath = filePath;
+    analysis.codeText = code;
     
     // Count lines
     std::istringstream stream(code);
@@ -257,9 +282,10 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GetBestPracticeRecommendati
         suggestions.push_back(suggestion);
     }
     
-    // Check for magic numbers
-    std::regex magicNumberRegex("\\b\\d{2,}\\b");
-    if (std::regex_search(analysis.filePath, magicNumberRegex)) {
+    // Check for magic numbers（掃描程式碼本文，不是檔案路徑）
+    // static 快取編譯結果——std::regex 建構昂貴，每次分析重建會拖慢 render thread
+    static const std::regex magicNumberRegex("\\b\\d{2,}\\b");
+    if (std::regex_search(analysis.codeText, magicNumberRegex)) {
         Suggestion suggestion;
         suggestion.type = SuggestionType::BestPractice;
         suggestion.title = "Use Named Constants";
@@ -338,15 +364,21 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GetArchitecturalSuggestions
 
 void IntelligentSuggestionSystem::LearnFromFeedback(const std::string& suggestionId, 
                                                       bool accepted) {
+    // id 格式為 "<typeKey>_<counter>"，以最後一個底線切出類型鍵
+    const size_t sep = suggestionId.rfind('_');
+    const std::string type = (sep == std::string::npos)
+        ? suggestionId : suggestionId.substr(0, sep);
+    auto it = suggestionWeights.find(type);
+
     if (accepted) {
         acceptedSuggestions++;
         acceptedSuggestionHistory.push_back(suggestionId);
-        
-        // Increase weight for this type of suggestion
-        std::string type = suggestionId.substr(0, suggestionId.find('_'));
-        if (suggestionWeights.find(type) != suggestionWeights.end()) {
-            suggestionWeights[type] = std::min(1.0f, suggestionWeights[type] + 0.05f);
+        if (it != suggestionWeights.end()) {
+            it->second = std::min(1.0f, it->second + 0.05f);
         }
+    } else if (it != suggestionWeights.end()) {
+        // 拒絕回饋：降低該類型權重，下限 0.1 避免永久沉底
+        it->second = std::max(0.1f, it->second - 0.05f);
     }
 }
 
@@ -357,18 +389,8 @@ float IntelligentSuggestionSystem::GetAcceptanceRate() const {
 
 float IntelligentSuggestionSystem::CalculateConfidence(const Suggestion& suggestion) {
     // Base confidence from type weight
-    std::string typeStr;
-    switch (suggestion.type) {
-        case SuggestionType::CodeCompletion: typeStr = "code_completion"; break;
-        case SuggestionType::Refactoring: typeStr = "refactoring"; break;
-        case SuggestionType::Optimization: typeStr = "optimization"; break;
-        case SuggestionType::BugFix: typeStr = "bug_fix"; break;
-        case SuggestionType::BestPractice: typeStr = "best_practice"; break;
-        case SuggestionType::Documentation: typeStr = "documentation"; break;
-        case SuggestionType::TestGeneration: typeStr = "test_generation"; break;
-        case SuggestionType::Architectural: typeStr = "architectural"; break;
-    }
-    
+    const std::string typeStr = SuggestionTypeKey(suggestion.type);
+
     float baseConfidence = 0.5f;
     if (suggestionWeights.find(typeStr) != suggestionWeights.end()) {
         baseConfidence = suggestionWeights[typeStr];
@@ -378,7 +400,8 @@ float IntelligentSuggestionSystem::CalculateConfidence(const Suggestion& suggest
 }
 
 std::string IntelligentSuggestionSystem::ExtractFunctionName(const std::string& line) {
-    std::regex funcRegex("\\b(\\w+)\\s*\\(");
+    // 每行都會呼叫——static 快取避免逐行重建 regex
+    static const std::regex funcRegex("\\b(\\w+)\\s*\\(");
     std::smatch match;
     if (std::regex_search(line, match, funcRegex)) {
         return match[1].str();

@@ -5,6 +5,11 @@ on:
     branches: [ main, develop ]
     types: [ opened, synchronize, reopened, edited ]
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   commitlint:
     name: Check Commit Messages
@@ -59,12 +64,17 @@ jobs:
           serialization
           time
           ai
+          ide
+          engine
+          gameplay
+          security
+          bmad
           build
           ci
           docs
         requireScope: false
-        subjectMinLength: 5
-        subjectMaxLength: 100
+        subjectPattern: '^.{5,100}$'
+        subjectPatternError: 'Subject must be between 5 and 100 characters.'
         validateSingleCommit: true
         validateSingleCommitMatchesPrTitle: false
         
@@ -118,6 +128,11 @@ jobs:
           - \`serialization\`: Serialization
           - \`time\`: Time Management
           - \`ai\`: AI System
+          - \`ide\`: MingGoRTS IDE
+          - \`engine\`: Engine-wide
+          - \`gameplay\`: Gameplay Systems
+          - \`security\`: Security Module
+          - \`bmad\`: BMAD Tooling
           - \`build\`: Build system
           - \`ci\`: CI/CD
           - \`docs\`: Documentation
