@@ -44,3 +44,10 @@ C++20 遊戲引擎 + MingGoRTS IDE，CMake 建置，無 UE5 依賴。BMAD v6 已
 - CTest 已啟用：`enable_testing()` + `POTATO_TESTS` 清單，`cd build && ctest -C Release`；新測試執行檔加進 `POTATO_TESTS` 即自動註冊
 - 玩法 demo：`DoctrineBattleDemo`（手寫腳本）、`AutoPlannerDemo`（AI 規劃）、`DuanqiaoDemo`（斷橋整合）皆為無頭測試，回傳非零即失敗
 - BattleRecorder/Roster 會寫出 JSON 檔到工作目錄——屬預期行為，勿當副作用刪除
+
+## Vendored 第三方依賴（external/ 例外規則）
+
+- 原則：不改 `external/` 既有內容；新增第三方庫僅允許「新增子目錄」形式：`external/<lib>/`
+- 必要條件：目錄內附 `README.md` 記錄 來源 URL / 版本 / license；實作巨集（如 `TINYGLTF_IMPLEMENTATION`、`STB_IMAGE_IMPLEMENTATION`）集中放在引擎目錄的單一 TU（例：`Rendering/TinyGltfImpl.cpp`），其他檔案不得重複定義
+- 引入前優先評估是否已有自研方案可複用（如 `Rendering/ImageCodec` 的零依賴 PNG）
+- 目前 vendored：`external/tinygltf/`（tinygltf v2.9.7 + nlohmann/json + stb_image/stb_image_write，glTF/VRM 載入用）
