@@ -283,7 +283,8 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GetBestPracticeRecommendati
     }
     
     // Check for magic numbers（掃描程式碼本文，不是檔案路徑）
-    std::regex magicNumberRegex("\\b\\d{2,}\\b");
+    // static 快取編譯結果——std::regex 建構昂貴，每次分析重建會拖慢 render thread
+    static const std::regex magicNumberRegex("\\b\\d{2,}\\b");
     if (std::regex_search(analysis.codeText, magicNumberRegex)) {
         Suggestion suggestion;
         suggestion.type = SuggestionType::BestPractice;
@@ -399,7 +400,8 @@ float IntelligentSuggestionSystem::CalculateConfidence(const Suggestion& suggest
 }
 
 std::string IntelligentSuggestionSystem::ExtractFunctionName(const std::string& line) {
-    std::regex funcRegex("\\b(\\w+)\\s*\\(");
+    // 每行都會呼叫——static 快取避免逐行重建 regex
+    static const std::regex funcRegex("\\b(\\w+)\\s*\\(");
     std::smatch match;
     if (std::regex_search(line, match, funcRegex)) {
         return match[1].str();
