@@ -38,12 +38,16 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-intelligent-suggestions.md`
   summary: Run intelligent-suggestion analysis off the render thread / cache compiled regexes — GenerateSuggestions constructs std::regex objects per call and scans the whole 8KB buffer synchronously each quiet-period.
   evidence: Blind Hunter review — std::regex built per call (e.g. magicNumberRegex in GetBestPracticeRecommendations); bounded but can hitch a frame on each analysis pass.
+  resolution: regex 快取已做（2026-09-17：magicNumberRegex/funcRegex 改為 function-local static const，不再每次重建）；render-thread 搬移仍 deferred——分析仍同步跑在 UI 執行緒的 quiet-period 後。
 - source_spec: `_bmad-output/implementation-artifacts/spec-intelligent-suggestions.md`
   summary: Replace file-scope raw-pointer AI globals (g_SuggestionSystem et al.) with owned instances guarded against double-Init; Initialize() return value currently ignored.
   evidence: Blind Hunter review — second IDEGUI instance overwrites/leaks the global; Shutdown timeout early-return leaves the pointer dangling.
+  resolution: 已修（2026-09-17）：六個 AI 全域改為 `std::unique_ptr`；ctor 加 `if (!g_DevSystem)` 防重複初始化；Shutdown 逾時分支保留「不釋放以避免 UAF」語義（unique_ptr 存活即洩漏）。
 - source_spec: `_bmad-output/implementation-artifacts/spec-render-training-data.md`
   summary: `NeuralLayer::Backward` calls `activationDerivative(lastOutput[i])` on the post-activation value — sigmoid derivative computes σ(y)·(1−σ(y)) instead of y·(1−y) (ReLU coincidentally correct). Gradients are distorted though sign is preserved; any fix changes training dynamics globally, so evaluate against AITestSuite before changing.
   evidence: Edge Case Hunter review of SynthDataDemo — AI/NeuralNetwork.cpp ~line 141.
+  resolution: 已修（2026-09-17）：Forward 改存 `lastPreActivation`（z），Backward 導數吃 z——sigmoid/tanh 梯度正確。驗證：AITestSuite 7/7 + headless AND 訓練 loss 0.25→0.0096 收斂。
 - source_spec: `_bmad-output/implementation-artifacts/spec-render-training-data.md`
   summary: `NeuralLayer` seeds its mt19937 from `std::random_device` with no seed API — in-tree NN init is non-reproducible. Consider a `NeuralNetwork`/`NeuralLayer` seed parameter (or Build(seed)) so callers don't need the SetWeights/SetBiases override workaround used in SynthDataDemo.
   evidence: Blind Hunter + Edge Case Hunter reviews.
+  resolution: 已修（2026-09-17）：`NeuralLayer::SetSeed`（重 seed + 重建權重）、`NeuralNetwork::Build(unsigned seed)` 重載、Train shuffle 改用成員 rng——同 seed 建構權重完全一致（headless 驗證）。
