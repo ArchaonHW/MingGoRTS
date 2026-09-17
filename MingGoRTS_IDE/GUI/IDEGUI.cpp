@@ -16,6 +16,7 @@
 #include <ctime>
 #include <iomanip>
 #include <future>
+#include <memory>
 #include <chrono>
 #include <cctype>
 #include <mutex>
@@ -24,15 +25,16 @@
 
 namespace MingGoRTSIDE {
 
-// Intelligent Development System instance
-static Potato::AI::IntelligentDevelopmentSystem* g_DevSystem = nullptr;
-static Potato::AI::DevelopmentAssistant* g_DevAssistant = nullptr;
-static Potato::AI::LLMManager* g_LLMManager = nullptr;
-static Potato::AI::KnowledgeGraph* g_KnowledgeGraph = nullptr;
-static Potato::AI::SelfReflection* g_SelfReflection = nullptr;
+// Intelligent Development System instance（unique_ptr：Shutdown 自動釋放，
+// 逾時分支刻意不 reset 等同保留原「洩漏以避免 UAF」語義）
+static std::unique_ptr<Potato::AI::IntelligentDevelopmentSystem> g_DevSystem;
+static std::unique_ptr<Potato::AI::DevelopmentAssistant> g_DevAssistant;
+static std::unique_ptr<Potato::AI::LLMManager> g_LLMManager;
+static std::unique_ptr<Potato::AI::KnowledgeGraph> g_KnowledgeGraph;
+static std::unique_ptr<Potato::AI::SelfReflection> g_SelfReflection;
 
 // 智能建議系統實例（規則式分析引擎，無外部依賴）
-static IntelligentSuggestionSystem* g_SuggestionSystem = nullptr;
+static std::unique_ptr<IntelligentSuggestionSystem> g_SuggestionSystem;
 
 // 使用者已關閉的建議標題集合——同一標題不再自動出現（id 每次生成皆不同，
 // 以 title 作為抑止鍵才能跨分析週期生效）
@@ -74,30 +76,33 @@ IDEGUI::IDEGUI()
     state.currentPath = "C:\\HWC\\MingGoRTS";
     
     // Initialize Intelligent Development System（本地管線為主，外部 LLM 可選）
-    g_LLMManager = new Potato::AI::LLMManager();
-    auto localClient = std::make_unique<Potato::AI::LocalModelClient>("llama-2-7b");
-    g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local, std::move(localClient));
-    g_LLMManager->SetDefaultProvider(Potato::AI::LLMProvider::Local);
-    
-    g_KnowledgeGraph = new Potato::AI::KnowledgeGraph();
-    g_SelfReflection = new Potato::AI::SelfReflection();
-    
-    // 種入引擎模組知識，供生成時參考專案上下文
-    g_KnowledgeGraph->AddRelationByName("AIAgent", "part-of", "AIAgentSystem");
-    g_KnowledgeGraph->AddRelationByName("DeveloperAgent", "is-a", "AIAgent");
-    g_KnowledgeGraph->AddRelationByName("IntelligentDevelopmentSystem", "uses", "LLMIntegration");
-    g_KnowledgeGraph->AddRelationByName("IntelligentDevelopmentSystem", "uses", "KnowledgeGraph");
-    
-    g_DevSystem = new Potato::AI::IntelligentDevelopmentSystem();
-    // 本地管線為主；已註冊的 Local 客戶端作為可選 LLM 後備（非擁有指標）
-    g_DevSystem->Initialize(
-        g_LLMManager->GetClient(Potato::AI::LLMProvider::Local), nullptr);
-    g_DevSystem->SetKnowledgeGraph(g_KnowledgeGraph);
-    g_DevSystem->SetSelfReflection(g_SelfReflection);
-    g_DevAssistant = new Potato::AI::DevelopmentAssistant(g_DevSystem);
+    // 防重複初始化：第二個 IDEGUI 實例共用全域，不重建也不覆蓋
+    if (!g_DevSystem) {
+        g_LLMManager = std::make_unique<Potato::AI::LLMManager>();
+        auto localClient = std::make_unique<Potato::AI::LocalModelClient>("llama-2-7b");
+        g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local, std::move(localClient));
+        g_LLMManager->SetDefaultProvider(Potato::AI::LLMProvider::Local);
 
-    g_SuggestionSystem = new IntelligentSuggestionSystem();
-    g_SuggestionSystem->Initialize();
+        g_KnowledgeGraph = std::make_unique<Potato::AI::KnowledgeGraph>();
+        g_SelfReflection = std::make_unique<Potato::AI::SelfReflection>();
+
+        // 種入引擎模組知識，供生成時參考專案上下文
+        g_KnowledgeGraph->AddRelationByName("AIAgent", "part-of", "AIAgentSystem");
+        g_KnowledgeGraph->AddRelationByName("DeveloperAgent", "is-a", "AIAgent");
+        g_KnowledgeGraph->AddRelationByName("IntelligentDevelopmentSystem", "uses", "LLMIntegration");
+        g_KnowledgeGraph->AddRelationByName("IntelligentDevelopmentSystem", "uses", "KnowledgeGraph");
+
+        g_DevSystem = std::make_unique<Potato::AI::IntelligentDevelopmentSystem>();
+        // 本地管線為主；已註冊的 Local 客戶端作為可選 LLM 後備（非擁有指標）
+        g_DevSystem->Initialize(
+            g_LLMManager->GetClient(Potato::AI::LLMProvider::Local), nullptr);
+        g_DevSystem->SetKnowledgeGraph(g_KnowledgeGraph.get());
+        g_DevSystem->SetSelfReflection(g_SelfReflection.get());
+        g_DevAssistant = std::make_unique<Potato::AI::DevelopmentAssistant>(g_DevSystem.get());
+
+        g_SuggestionSystem = std::make_unique<IntelligentSuggestionSystem>();
+        g_SuggestionSystem->Initialize();
+    }
 }
 
 IDEGUI::~IDEGUI() {
@@ -159,33 +164,21 @@ void IDEGUI::Shutdown() {
     state.developmentProcessing = false;
     
     if (g_DevAssistant) {
-        delete g_DevAssistant;
-        g_DevAssistant = nullptr;
+        g_DevAssistant.reset();
     }
     if (g_DevSystem) {
         // worker 仍在執行的情況已在上方逾時分支提前 return，此處可安全互斥
         std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
         g_DevSystem->Shutdown();
-        delete g_DevSystem;
-        g_DevSystem = nullptr;
+        g_DevSystem.reset();
     }
     if (g_SuggestionSystem) {
         g_SuggestionSystem->Shutdown();
-        delete g_SuggestionSystem;
-        g_SuggestionSystem = nullptr;
+        g_SuggestionSystem.reset();
     }
-    if (g_KnowledgeGraph) {
-        delete g_KnowledgeGraph;
-        g_KnowledgeGraph = nullptr;
-    }
-    if (g_SelfReflection) {
-        delete g_SelfReflection;
-        g_SelfReflection = nullptr;
-    }
-    if (g_LLMManager) {
-        delete g_LLMManager;
-        g_LLMManager = nullptr;
-    }
+    g_KnowledgeGraph.reset();
+    g_SelfReflection.reset();
+    g_LLMManager.reset();
     
     if (g_I18N) {
         g_I18N->Shutdown();
@@ -2845,7 +2838,7 @@ void IDEGUI::GenerateCodeFromPrompt() {
     
     // 背景執行，UI 不阻塞；結果在 RenderDevelopmentAssistant 輪詢寫回
     // 捕獲 sys 指標值而非在 worker 內重讀全域（配合 Shutdown 的 wait 保證生命期）
-    Potato::AI::IntelligentDevelopmentSystem* sys = g_DevSystem;
+    Potato::AI::IntelligentDevelopmentSystem* sys = g_DevSystem.get();
     try {
         state.devGenFuture = std::async(std::launch::async, [prompt, sys]() {
             // DevSystem 內部狀態未同步——與 UI 端各處理器互斥

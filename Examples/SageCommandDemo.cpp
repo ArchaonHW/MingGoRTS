@@ -17,7 +17,9 @@
 #include "Gameplay/Squad.h"
 #include "Gameplay/FlowField.h"
 
-#define GLFW_INCLUDE_NONE
+#ifndef GLFW_INCLUDE_NONE
+#define GLFW_INCLUDE_NONE // PotatoEngine PUBLIC 已定義；獨立編譯時自保
+#endif
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "imgui.h"
