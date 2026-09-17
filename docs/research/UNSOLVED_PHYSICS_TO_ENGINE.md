@@ -58,3 +58,28 @@ QuasiRandom 的塑性常數方向取樣，避免週期性條紋。
 - `MathUtils/CurlNoise.h` — 解析無散度湍流場（header-only）
 - `Examples/PhysicsMathTest.cpp` — 落體精度、能量守恆漂移、
   散度為零、決定性驗證 → CTest
+
+---
+
+## 附錄：VelocityVerlet 採用決策（P-2，2026-09-17）
+
+**消費點盤點**（`grep PhysicsWorld|PhysicsSystem|CreateWorld` 全倉掃描）：
+
+| 消費點 | 性質 | 結論 |
+|---|---|---|
+| `Examples/PhysicsTest.cpp` | API 行為測試 | 維持 Euler——測的是預設路徑 |
+| `Examples/PhysicsMathTest.cpp` | 精度對照 | 兩積分器皆覆蓋（本來就是它的用途） |
+| 生產碼（Gameplay/IDE/Scene/Rendering） | **無任何 PhysicsWorld 消費者** | — |
+
+**決策**：
+
+- **預設維持 Euler**——沒有現存消費者可切換，`SetIntegrator` 保持 opt-in。
+  改預設等於對未來呼叫端偷偷改語義，得不償失。
+- **新消費者建議用 VelocityVerlet** 的情境：拋射物彈道（P-1 風偏）、
+  回放敏感模擬（同 seed 下能量守恆讓漂移可預期）、長時間背景模擬。
+- **語義注意**：Verlet 模式下 `GetLinearVelocity` 讀到半步相位
+  （偏移 ≤½a·dt）；`ApplyImpulse` 作用於半步速度，效果等效。
+  未來消費者若做「讀速度 → 顯示/判斷」應知道這是半步值。
+
+**結論**：本批無程式碼切換——盤點完成、準則立好，待 P-1 或後續
+拋射物功能落地時依此表採用 Verlet。
