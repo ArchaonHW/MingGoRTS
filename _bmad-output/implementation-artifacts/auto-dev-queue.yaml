@@ -1,0 +1,96 @@
+# 智能自動開發項目佇列
+# 每個 item 走完：pick → spec (gds-quick-dev) → implement → verify → review → commit
+# 規則見 auto-dev-workflow.md
+version: 1
+updated: 2026-09-17
+
+queue:
+
+  # ---- 層級 C：合成資料管線擴充（渲染 → 訓練資料產生 第二期）----
+  - id: C-1
+    title: SynthDataDemo depth pass
+    source: spec-render-training-data 後續
+    summary: >
+      現有 RGBA capture 之外再加 depth 附件（GL_DEPTH_COMPONENT FBO 或
+      顏色編碼深度 shader），輸出每張樣本的深度圖 + labels.csv 加 depth 欄位，
+      供回歸/深度預測任務使用。
+    acceptance:
+      - output/synth_dataset/ 產出 img_XXXX_depth.png 與 RGB 並列
+      - dataset.json 標註 depth_format（near/far 正規化說明）
+      - 新增一個深度回歸訓練驗證（MSE 收斂 + 閾值 PASS）
+      - headless [SKIP] 語義不變；ctest 註冊
+    status: queued
+    size: M
+
+  - id: C-2
+    title: SynthDataDemo instance-segmentation pass
+    source: spec-render-training-data 後續
+    summary: >
+      第二 pass 以 instance-id 顏色渲染（每個 mesh 一個唯一 ID 色），
+      輸出分割 mask PNG；manifest 記錄 id→label 映射。
+      可與 C-1 共用 FBO pass 架構。
+    acceptance:
+      - img_XXXX_mask.png 產出，像素色 = instance id
+      - dataset.json 含 instance_map
+      - ctest PASS、MSVC+MinGW 編譯
+    status: queued
+    size: M
+
+  # ---- 層級 A：斷橋表現層 T-9~T-12 ----
+  - id: A-1
+    title: T-9 回合層 UI：卡槽欄 + 卡編輯器 + 地圖圖釘
+    source: brainstorming-session-2026-09-16 引擎任務
+    summary: >
+      doctrine 卡槽欄（4→7 槽）、卡內容編輯（觸發條件/動作下拉）、
+      地圖上可放圖釘作為條件錨點；內建新手套牌模板一鍵載入。
+    acceptance:
+      - BattlePlanner UI 可新增/拖放/刪除卡
+      - 模板載入後 10 分鐘內可開戰（對齊 brief 驗收）
+      - 既有 BattlePlanner 邏輯不回歸
+    status: queued
+    size: XL
+
+  - id: A-2
+    title: T-10 即時層 UI：狀態/士氣條 + CP 鈕 + 訊息流
+    source: brainstorming-session-2026-09-16 引擎任務
+    summary: >
+      戰鬥即時層 HUD：小隊狀態條、士氣可視化、CP 介入按鈕、
+      doctrine 觸發訊息流（哪張卡觸發、結果）。
+    status: queued
+    size: L
+
+  - id: A-3
+    title: T-11 戰後層：史官筆戰報 + 名冊 + 回放時間軸
+    source: brainstorming-session-2026-09-16 引擎任務
+    summary: >
+      戰後結算畫面：史官體文字戰報（逐字敲出）、傷亡名冊（有名有姓）、
+      回放時間軸可拖曳跳到事件點。吃 BattleRecorder 事件流。
+    status: queued
+    size: L
+
+  - id: A-4
+    title: T-12 單位視覺：膠囊體/色塊
+    source: brainstorming-session-2026-09-16 引擎任務
+    summary: >
+      戰場單位先用膠囊體+陣營色塊渲染（3D），支援選取框與血條。
+      依賴現有 Mesh + 簡單 shader；不接蒙皮動畫。
+    status: queued
+    size: M
+
+  # ---- 層級 B：殘留債務 ----
+  - id: B-1
+    title: IDE 建議分析移出 render thread
+    source: deferred-work.md
+    summary: >
+      GenerateSuggestions 仍在 UI 執行緒 quiet-period 後同步掃描 8KB。
+      regex 已快取；剩下是搬到背景執行緒 + 結果回投。
+    status: queued
+    size: M
+
+  - id: B-2
+    title: brainstorming-session 檔案提交決策
+    source: deferred-work.md
+    summary: session 檔長期有未暫存編輯；決定提交或保留工作檔。
+    status: blocked
+    note: 使用者檔案，需本人決定
+    size: S
