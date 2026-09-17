@@ -277,7 +277,7 @@ queue:
     acceptance:
       - 100 實體 × 6 候選的 Update 單幀 < 1ms（Release）
       - benchmark 進 QuantumTest 或獨立 target
-    status: queued
+    status: done
     size: S
 
   - id: Q-9
