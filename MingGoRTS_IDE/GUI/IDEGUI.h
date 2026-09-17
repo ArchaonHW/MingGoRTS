@@ -15,6 +15,7 @@
 #include <vector>
 #include <memory>
 #include <future>
+#include <unordered_map>
 
 namespace MingGoRTSIDE {
 
@@ -185,6 +186,10 @@ struct IDEGUIState {
     // 背景生成任務（非阻塞 UI）；worker 完成後在 render 迴圈輪詢寫回
     std::future<Potato::AI::CodeGenerationResult> devGenFuture;
     
+    // Card Gallery（武將名冊）state
+    bool showCardGallery = false;
+    int cardGallerySelected = -1;
+
     // AI / LLM 設定（Settings 面板可覆寫；預設讀自 POTATO_LLM_* 環境變數）
     char llmProvider[64];
     char llmModel[128];
@@ -301,6 +306,9 @@ public:
     void ReviewCodeWithAI();
     void ShowDevelopmentAssistant();
     void RenderDevelopmentAssistant();
+
+    // Card Gallery（武將名冊）：瀏覽 assets/cards 角色卡 + 立繪上屏
+    void RenderCardGallery();
     
     // File System
     std::vector<std::string> ScanDirectory(const std::string& path);
@@ -371,6 +379,27 @@ private:
     void DetectSyntaxErrors();
     void DetectStyleIssues();
     void DetectPotentialBugs();
+
+    // Card Gallery internals
+    struct CardEntry {
+        std::string jsonPath;
+        std::string id, name, epithet, rarity, faction, artRel;
+    };
+    struct CardTexture {
+        unsigned int id = 0;   // GLuint；不透過 GL 標頭保持此檔純 C++
+        int w = 0, h = 0;
+        bool failed = false;   // 解碼/上傳失敗——避免每帧重試
+    };
+    std::vector<CardEntry> cardEntries;
+    bool cardListScanned = false;
+    std::unordered_map<std::string, CardTexture> cardTextures;
+    std::future<int> cardBakeFuture;   // 背景「重新產生立繪」任務
+    int cardBakeTarget = -1;
+    void ScanCardGallery();
+    std::string ResolveCardArtPath(const CardEntry& card) const;
+    const CardTexture* EnsureCardTexture(const std::string& path);
+    void InvalidateCardTexture(const std::string& path);
+    void ReleaseCardTextures();
 };
 
 } // namespace MingGoRTSIDE

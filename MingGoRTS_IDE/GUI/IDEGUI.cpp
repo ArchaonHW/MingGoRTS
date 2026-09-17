@@ -8,6 +8,9 @@
 #include "../../AI/IntelligentDevelopmentSystem.h"
 #include "../../AI/KnowledgeGraph.h"
 #include "../../AI/SelfReflection.h"
+#include "../../Serialization/JsonParser.h"
+#include "../../Rendering/ImageCodec.h"
+#include <GLFW/glfw3.h>   // GL 1.1 texture API（此 target 未定義 GLFW_INCLUDE_NONE）
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -142,7 +145,10 @@ bool IDEGUI::Initialize(IDECore* ideCore) {
 
 void IDEGUI::Shutdown() {
     std::cout << "Shutting down MingGoRTS IDE GUI..." << std::endl;
-    
+
+    // GL context 仍有效（此函式在 ImGui_ImplOpenGL3_Shutdown 之前呼叫）
+    ReleaseCardTextures();
+
     // 等待背景生成任務完成，避免 worker 存取已刪除的 g_DevSystem
     if (state.devGenFuture.valid()) {
         // 有界等待：本地管線為確定性即時運算，5 秒足夠；
@@ -375,6 +381,7 @@ void IDEGUI::RenderMainMenu() {
             ImGui::MenuItem("Debugger", "F8", &state.showDebugger);
             ImGui::MenuItem("Git Panel", "F9", &state.showGitPanel);
             ImGui::MenuItem("Code Analysis", "F7", &state.showCodeAnalysis);
+            ImGui::MenuItem("Card Gallery", nullptr, &state.showCardGallery);
             ImGui::Separator();
             ImGui::MenuItem("Toolbar", nullptr, &state.showToolbar);
             ImGui::MenuItem("Status Bar", nullptr, &state.showStatusBar);
@@ -3101,6 +3108,247 @@ void IDEGUI::RenderDevelopmentAssistant() {
                                    ImGuiInputTextFlags_ReadOnly);
     }
     
+    ImGui::End();
+}
+
+// ============================================================
+// Card Gallery（武將名冊）：assets/cards 瀏覽 + 立繪上屏
+// ============================================================
+
+void IDEGUI::ScanCardGallery() {
+    cardEntries.clear();
+    std::string root = core ? core->GetConfig().workspacePath : ".";
+    std::error_code ec;
+
+    // assets/cards 解析：workspace 絕對路徑優先，cwd 相對前綴保底
+    std::filesystem::path cardsDir;
+    const std::filesystem::path candidates[] = {
+        std::filesystem::path(root) / "assets" / "cards",
+        "assets/cards", "../assets/cards", "../../assets/cards",
+        "../../../assets/cards",
+    };
+    for (const auto& c : candidates) {
+        if (std::filesystem::is_directory(c, ec)) { cardsDir = c; break; }
+    }
+    if (cardsDir.empty()) {
+        AddOutputLog("[CardGallery] 找不到 assets/cards 目錄");
+        cardListScanned = true;
+        return;
+    }
+
+    for (const auto& e :
+         std::filesystem::recursive_directory_iterator(cardsDir, ec)) {
+        if (e.path().extension() != ".json") continue;
+        std::ifstream f(e.path(), std::ios::binary);
+        if (!f) continue;
+        std::ostringstream ss;
+        ss << f.rdbuf();
+        Potato::JsonValue j = Potato::JsonValue::Parse(ss.str());
+        if (j["schema"].AsString() != "potato.character_card/1") continue;
+        CardEntry c;
+        c.jsonPath = e.path().string();
+        c.id      = j["id"].AsString();
+        c.name    = j["name"].AsString();
+        c.epithet = j["epithet"].AsString();
+        c.rarity  = j["rarity"].AsString();
+        c.faction = j["faction"].AsString();
+        c.artRel  = j["art"].AsString();
+        cardEntries.push_back(std::move(c));
+    }
+    std::sort(cardEntries.begin(), cardEntries.end(),
+              [](const CardEntry& a, const CardEntry& b) {
+                  return a.id < b.id;
+              });
+    cardListScanned = true;
+    AddOutputLog("[CardGallery] 掃描到 " +
+                 std::to_string(cardEntries.size()) + " 張角色卡");
+}
+
+// art 欄位（cards/art/x.png）→ 檔案系統路徑；空欄位按 <id>.png 慣例猜
+std::string IDEGUI::ResolveCardArtPath(const CardEntry& card) const {
+    std::string rel = card.artRel;
+    if (rel.empty() && !card.id.empty())
+        rel = "cards/art/" + card.id + ".png";
+    if (rel.empty()) return {};
+
+    std::string root = core ? core->GetConfig().workspacePath : ".";
+    std::error_code ec;
+    const std::filesystem::path bases[] = {
+        std::filesystem::path(root) / "assets",
+        "assets", "../assets", "../../assets", "../../../assets",
+    };
+    for (const auto& b : bases) {
+        std::filesystem::path p = b / rel;
+        if (std::filesystem::exists(p, ec))
+            return p.lexically_normal().string();
+    }
+    return {};
+}
+
+const IDEGUI::CardTexture*
+IDEGUI::EnsureCardTexture(const std::string& path) {
+    auto it = cardTextures.find(path);
+    if (it != cardTextures.end())
+        return it->second.failed ? nullptr : &it->second;
+
+    CardTexture tex;
+    std::ifstream f(path, std::ios::binary);
+    if (f) {
+        std::ostringstream ss;
+        ss << f.rdbuf();
+        std::string bytes = ss.str();
+        std::vector<Potato::uint8> rgba;
+        int w = 0, h = 0;
+        std::string err;
+        if (Potato::ImageCodec::DecodeImage(
+                reinterpret_cast<const Potato::uint8*>(bytes.data()),
+                bytes.size(), rgba, w, h, &err)) {
+            GLuint t = 0;
+            glGenTextures(1, &t);
+            glBindTexture(GL_TEXTURE_2D, t);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);  // RGBA8 任意寬度對齊
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, rgba.data());
+            tex.id = t;
+            tex.w = w;
+            tex.h = h;
+        } else {
+            tex.failed = true;
+            AddOutputLog("[CardGallery] 解碼失敗 " + path + ": " + err);
+        }
+    } else {
+        tex.failed = true;
+    }
+    auto res = cardTextures.emplace(path, tex);
+    return res.first->second.failed ? nullptr : &res.first->second;
+}
+
+void IDEGUI::InvalidateCardTexture(const std::string& path) {
+    auto it = cardTextures.find(path);
+    if (it != cardTextures.end()) {
+        if (it->second.id) glDeleteTextures(1, &it->second.id);
+        cardTextures.erase(it);
+    }
+}
+
+void IDEGUI::ReleaseCardTextures() {
+    for (auto& kv : cardTextures) {
+        if (kv.second.id) glDeleteTextures(1, &kv.second.id);
+    }
+    cardTextures.clear();
+}
+
+void IDEGUI::RenderCardGallery() {
+    if (!state.showCardGallery) return;
+    if (!cardListScanned) ScanCardGallery();
+
+    // 背景 rebake 完成 → invalidate texture 強迫下一帧重載
+    if (cardBakeFuture.valid() &&
+        cardBakeFuture.wait_for(std::chrono::seconds(0)) ==
+            std::future_status::ready) {
+        int rc = cardBakeFuture.get();
+        if (cardBakeTarget >= 0 &&
+            cardBakeTarget < static_cast<int>(cardEntries.size())) {
+            std::string art =
+                ResolveCardArtPath(cardEntries[cardBakeTarget]);
+            if (!art.empty()) InvalidateCardTexture(art);
+            AddOutputLog(rc == 0 ? "[CardGallery] 立繪重新產生完成"
+                                 : "[CardGallery] 立繪產生失敗");
+        }
+        cardBakeTarget = -1;
+    }
+
+    if (!ImGui::Begin("Card Gallery 武將名冊", &state.showCardGallery)) {
+        ImGui::End();
+        return;
+    }
+
+    if (ImGui::Button("Rescan")) cardListScanned = false;
+    ImGui::SameLine();
+    ImGui::TextDisabled("%zu cards", cardEntries.size());
+
+    ImGui::BeginChild("##cardlist", ImVec2(200, 0), true);
+    for (int i = 0; i < static_cast<int>(cardEntries.size()); ++i) {
+        const CardEntry& c = cardEntries[i];
+        bool hasArt = !ResolveCardArtPath(c).empty();
+        std::string label = c.name.empty() ? c.id : c.name;
+        if (!hasArt) label += "  [缺圖]";
+        if (ImGui::Selectable(label.c_str(),
+                              i == state.cardGallerySelected))
+            state.cardGallerySelected = i;
+    }
+    ImGui::EndChild();
+    ImGui::SameLine();
+
+    ImGui::BeginChild("##carddetail", ImVec2(0, 0), true);
+    int sel = state.cardGallerySelected;
+    if (sel < 0 || sel >= static_cast<int>(cardEntries.size())) {
+        ImGui::TextDisabled("從左側選擇一張角色卡");
+    } else {
+        const CardEntry& c = cardEntries[sel];
+        ImGui::Text("%s  %s", c.name.c_str(), c.epithet.c_str());
+        ImGui::TextDisabled("%s | %s | %s", c.id.c_str(),
+                            c.rarity.c_str(), c.faction.c_str());
+        ImGui::Separator();
+
+        std::string art = ResolveCardArtPath(c);
+        if (!art.empty()) {
+            const CardTexture* tex = EnsureCardTexture(art);
+            if (tex) {
+                float w = 256.0f;
+                float h = static_cast<float>(tex->h) *
+                          (w / static_cast<float>(tex->w));
+                ImGui::Image(ImTextureRef((ImTextureID)tex->id),
+                             ImVec2(w, h));
+            } else {
+                ImGui::TextColored(ImVec4(1, 0.3f, 0.3f, 1),
+                                   "圖片解碼失敗");
+            }
+            ImGui::TextDisabled("%s", c.artRel.c_str());
+        } else {
+            ImGui::TextColored(ImVec4(1, 0.3f, 0.3f, 1),
+                               "無立繪（art 欄位空且慣例路徑不存在）");
+        }
+
+        bool baking = cardBakeFuture.valid();
+        if (baking) ImGui::BeginDisabled();
+        if (ImGui::Button("重新產生立繪")) {
+            // baker exe 與輸出檔解析（輸出落在 assets/cards/art/<id>.png）
+            std::string root = core ? core->GetConfig().workspacePath : ".";
+            std::error_code bec;
+            std::filesystem::path baker =
+                std::filesystem::path(root) /
+                "build/bin/Release/PortraitBaker.exe";
+            if (!std::filesystem::exists(baker, bec))
+                baker = std::filesystem::path(root) /
+                        "build/bin/PortraitBaker.exe";
+
+            std::string out = art;
+            if (out.empty() && !c.id.empty()) {
+                std::filesystem::path p = std::filesystem::path(root) /
+                    "assets" / "cards" / "art" / (c.id + ".png");
+                out = p.string();
+            }
+            if (!std::filesystem::exists(baker, bec)) {
+                AddOutputLog("[CardGallery] 找不到 PortraitBaker.exe");
+            } else if (out.empty()) {
+                AddOutputLog("[CardGallery] 無法決定輸出路徑（card id 空）");
+            } else {
+                cardBakeTarget = sel;
+                cardBakeFuture = std::async(std::launch::async,
+                    [baker, cardJson = c.jsonPath, out]() {
+                        std::string cmd = "\"" + baker.string() + "\" \"" +
+                                          cardJson + "\" \"" + out + "\"";
+                        return std::system(cmd.c_str());
+                    });
+                AddOutputLog("[CardGallery] 重新產生立繪中...");
+            }
+        }
+        if (baking) ImGui::EndDisabled();
+    }
+    ImGui::EndChild();
     ImGui::End();
 }
 

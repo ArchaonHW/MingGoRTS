@@ -107,6 +107,7 @@ int main() {
         ideGUI.UpdateIntelligentSuggestions();
         ideGUI.RenderIntelligentSuggestions();
         ideGUI.RenderDevelopmentAssistant();
+        ideGUI.RenderCardGallery();
         ideGUI.RenderSettings();
         ideGUI.RenderHelp();
         ideGUI.RenderStatusBar();
