@@ -1,0 +1,26 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "ija_itagaki_seishiro",
+  "name": "板垣征四郎",
+  "courtesyName": "",
+  "epithet": "鋼軍之膽",
+  "rarity": "legendary",
+  "faction": "日軍",
+  "role": "commander",
+  "personality": { "aggression": 90, "discipline": 85, "cunning": 70 },
+  "stats": { "command": 84, "attack": 92, "defense": 70, "mobility": 78, "moraleAura": 80 },
+  "signatureDoctrine": {
+    "name": "鋼軍突進",
+    "trigger": "Always", "threshold": 0.0, "action": "AttackNearest",
+    "description": "第五師團的攻勢教條——不計代價正面碾壓,台兒莊前的鋼軍"
+  },
+  "cards": [
+    { "name": "見敵即撲", "trigger": "EnemyInRange", "action": "AttackNearest", "threshold": 8.0, "priority": 5, "cooldown": 0.0 },
+    { "name": "重創猶進", "trigger": "HealthBelow", "action": "AttackNearest", "threshold": 0.4, "priority": 15, "cooldown": 0.0 },
+    { "name": "推進", "trigger": "Always", "action": "AdvanceToObjective", "threshold": 0.0, "priority": 90, "cooldown": 0.0 }
+  ],
+  "portrait": { "build": "normal", "head": "cap", "beard": "mustache", "glasses": false },
+  "lore": "第五師團長,九一八主謀之一,所部號「鋼軍」,台兒莊遭李宗仁痛擊,戰後伏法。",
+  "historicalBattle": "台兒莊戰役 1938",
+  "art": "cards/art/ija_itagaki_seishiro.png"
+}

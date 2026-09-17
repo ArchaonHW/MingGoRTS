@@ -1,0 +1,38 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_li_zongren",
+  "name": "李宗仁",
+  "courtesyName": "德鄰",
+  "epithet": "台兒莊的磐石",
+  "rarity": "legendary",
+  "faction": "桂系",
+  "role": "commander",
+  "personality": {
+    "aggression": 55,
+    "discipline": 82,
+    "cunning": 68
+  },
+  "stats": {
+    "command": 92,
+    "attack": 78,
+    "defense": 90,
+    "mobility": 58,
+    "moraleAura": 88
+  },
+  "signatureDoctrine": {
+    "name": "台兒莊誘敵",
+    "trigger": "Outnumbered",
+    "threshold": 0.0,
+    "action": "HoldPosition",
+    "description": "寡不敵眾時死守陣地,誘敵深入後外圍合圍——台兒莊大捷的戰法"
+  },
+  "portrait": {
+    "build": "normal",
+    "head": "cap",
+    "beard": "none",
+    "glasses": false
+  },
+  "lore": "桂系首領,指揮台兒莊大捷,抗戰正面戰場首次大勝。後任中華民國代總統。",
+  "historicalBattle": "台兒莊大捷 1938",
+  "art": "cards/art/roc_li_zongren.png"
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_long_yun",
+  "name": "龍雲",
+  "courtesyName": "志舟",
+  "epithet": "雲南王",
+  "rarity": "rare",
+  "faction": "滇系",
+  "role": "commander",
+  "personality": { "aggression": 45, "discipline": 75, "cunning": 82 },
+  "stats": { "command": 72, "attack": 60, "defense": 80, "mobility": 58, "moraleAura": 72 },
+  "signatureDoctrine": {
+    "name": "據險自固",
+    "trigger": "Always", "threshold": 0.0, "action": "HoldPosition",
+    "description": "高原為城——滇軍善守山地險隘,不輕出擊不失寸土"
+  },
+  "cards": [
+    { "name": "敵近反擊", "trigger": "EnemyInRange", "action": "AttackNearest", "threshold": 4.0, "priority": 35, "cooldown": 10.0 },
+    { "name": "士氣重整", "trigger": "MoraleBelow", "action": "RetreatToRally", "threshold": 0.35, "priority": 28, "cooldown": 25.0 }
+  ],
+  "portrait": { "build": "normal", "head": "cap", "beard": "none", "glasses": false },
+  "lore": "滇系首領,主政雲南十八年,抗戰出兵出糧修滇緬路,彝人出身號稱云南王。",
+  "historicalBattle": "滇西抗戰 1942",
+  "art": "cards/art/roc_long_yun.png"
+}
