@@ -246,17 +246,23 @@ public:
     std::string ProcessRequest(const std::string& request);
     std::string ProcessCodeRequest(const std::string& code, const std::string& context);
     std::string ProcessBuildRequest(const std::string& buildConfig);
-    
+
+    // GUI 層注入的智能後端掛鉤（DevSystem 本地管線/LLM）。
+    // 非擁有——由 IDEGUI 在 g_DevSystem 就緒後設定；空表示無智能後端，
+    // ProcessRequest 退回 agent 的規則式回應。
+    void SetAssistantHook(std::function<std::string(const std::string&)> hook);
+
     bool IsAvailable() const { return available; }
     size_t GetActiveAgentCount() const;
-    
+
     IDEAgentManager* GetAgentManager() const { return agentManager.get(); }
     IDEContextManager* GetContextManager() const { return contextManager.get(); }
-    
+
 private:
     bool available;
     std::unique_ptr<IDEAgentManager> agentManager;
     std::unique_ptr<IDEContextManager> contextManager;
+    std::function<std::string(const std::string&)> assistantHook;
 };
 
 } // namespace MingGoRTSIDE

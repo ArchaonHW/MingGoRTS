@@ -9,6 +9,11 @@
 #include <vector>
 #include <unordered_map>
 #include <chrono>
+#include <atomic>
+#include <condition_variable>
+#include <cstdint>
+#include <mutex>
+#include <thread>
 
 namespace Potato {
 namespace AI {
@@ -99,11 +104,23 @@ public:
     bool Initialize();
     void Shutdown();
     
-    // Main suggestion generation
+    // Main suggestion generation（同步入口——測試與工具仍用；UI 請走非同步）
     std::vector<Suggestion> GenerateSuggestions(const std::string& code,
                                                 const std::string& filePath,
                                                 int lineNumber,
                                                 int columnNumber);
+
+    // 非同步分析：投遞快照到背景 worker，回傳 job id。
+    // 單槽 supersede——新 job 覆寫未執行的舊 job，執行中 job 完成時
+    // 若已有更新 job 排入則結果直接丟棄（stale），不積壓不追舊。
+    uint64_t SubmitAnalysis(const std::string& code,
+                            const std::string& filePath,
+                            int lineNumber,
+                            int columnNumber);
+
+    // UI 執行緒每幀輪詢：有完成結果則搬出並回 true。
+    // 呼叫端比對 doneJobId 是否為自己最後投遞的 id，過期結果自行丟棄。
+    bool PollResult(uint64_t& doneJobId, std::vector<Suggestion>& out);
     
     // Code analysis
     CodeAnalysis AnalyzeCode(const std::string& code, const std::string& filePath);
@@ -151,10 +168,33 @@ private:
     std::unordered_map<std::string, float> suggestionWeights;
     std::vector<std::string> acceptedSuggestionHistory;
     
-    // Statistics
-    size_t totalSuggestions;
-    size_t acceptedSuggestions;
-    size_t nextSuggestionId;  // 遞增序號，供 LearnFromFeedback 回推類型
+    // Statistics（atomic：worker 與 UI 執行緒都會碰）
+    std::atomic<size_t> totalSuggestions;
+    std::atomic<size_t> acceptedSuggestions;
+    std::atomic<size_t> nextSuggestionId;  // 遞增序號，供 LearnFromFeedback 回推類型
+
+    // ---- 非同步 worker（SubmitAnalysis/PollResult）----
+    struct AnalysisJob {
+        uint64_t id = 0;
+        std::string code;
+        std::string filePath;
+        int line = 0;
+        int col = 0;
+    };
+    std::thread worker_;
+    std::mutex queueMutex_;
+    std::condition_variable queueCv_;
+    AnalysisJob pendingJob_;
+    bool hasPendingJob_ = false;
+    bool workerStop_ = false;
+    std::mutex resultMutex_;
+    uint64_t doneJobId_ = 0;
+    std::vector<Suggestion> doneSuggestions_;
+    std::atomic<uint64_t> nextJobId_{0};
+    // suggestionWeights / acceptedSuggestionHistory 由 worker 讀、UI 寫
+    std::mutex sharedMutex_;
+
+    void WorkerMain();
     
     // Helper methods
     float CalculateConfidence(const Suggestion& suggestion);

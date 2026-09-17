@@ -43,29 +43,100 @@ IntelligentSuggestionSystem::IntelligentSuggestionSystem()
 }
 
 IntelligentSuggestionSystem::~IntelligentSuggestionSystem() {
+    Shutdown();
 }
 
 bool IntelligentSuggestionSystem::Initialize() {
     std::cout << "Initializing Intelligent Suggestion System...\n";
-    
+
     // Initialize suggestion weights
-    suggestionWeights = {
-        {"code_completion", 0.8f},
-        {"refactoring", 0.6f},
-        {"optimization", 0.7f},
-        {"bug_fix", 0.9f},
-        {"best_practice", 0.5f},
-        {"documentation", 0.4f},
-        {"test_generation", 0.6f},
-        {"architectural", 0.5f}
-    };
-    
+    {
+        std::lock_guard<std::mutex> lk(sharedMutex_);
+        suggestionWeights = {
+            {"code_completion", 0.8f},
+            {"refactoring", 0.6f},
+            {"optimization", 0.7f},
+            {"bug_fix", 0.9f},
+            {"best_practice", 0.5f},
+            {"documentation", 0.4f},
+            {"test_generation", 0.6f},
+            {"architectural", 0.5f}
+        };
+    }
+
+    // 背景分析 worker（B-1）：分析移出 render thread
+    {
+        std::lock_guard<std::mutex> lk(queueMutex_);
+        workerStop_ = false;
+    }
+    if (!worker_.joinable()) {
+        worker_ = std::thread(&IntelligentSuggestionSystem::WorkerMain, this);
+    }
+
     std::cout << "Intelligent Suggestion System initialized successfully\n";
     return true;
 }
 
 void IntelligentSuggestionSystem::Shutdown() {
     std::cout << "Shutting down Intelligent Suggestion System...\n";
+    {
+        std::lock_guard<std::mutex> lk(queueMutex_);
+        workerStop_ = true;
+        hasPendingJob_ = false;
+    }
+    queueCv_.notify_all();
+    if (worker_.joinable()) worker_.join();
+}
+
+uint64_t IntelligentSuggestionSystem::SubmitAnalysis(
+    const std::string& code,
+    const std::string& filePath,
+    int lineNumber,
+    int columnNumber) {
+
+    const uint64_t id = ++nextJobId_;
+    {
+        std::lock_guard<std::mutex> lk(queueMutex_);
+        // 單槽 supersede：直接覆寫未執行的舊 job
+        pendingJob_ = {id, code, filePath, lineNumber, columnNumber};
+        hasPendingJob_ = true;
+    }
+    queueCv_.notify_one();
+    return id;
+}
+
+bool IntelligentSuggestionSystem::PollResult(uint64_t& doneJobId,
+                                             std::vector<Suggestion>& out) {
+    std::lock_guard<std::mutex> lk(resultMutex_);
+    if (doneJobId_ == 0) return false;
+    doneJobId = doneJobId_;
+    out = std::move(doneSuggestions_);
+    doneSuggestions_.clear();
+    doneJobId_ = 0;
+    return true;
+}
+
+void IntelligentSuggestionSystem::WorkerMain() {
+    for (;;) {
+        AnalysisJob job;
+        {
+            std::unique_lock<std::mutex> lk(queueMutex_);
+            queueCv_.wait(lk, [&] { return workerStop_ || hasPendingJob_; });
+            if (workerStop_) return;
+            job = pendingJob_;
+            hasPendingJob_ = false;
+        }
+
+        std::vector<Suggestion> result = GenerateSuggestions(
+            job.code, job.filePath, job.line, job.col);
+
+        std::lock_guard<std::mutex> lk(resultMutex_);
+        // 執行期間已有更新快照排入 → 這份結果是 stale，直接丟棄
+        if (job.id == nextJobId_.load()) {
+            doneJobId_ = job.id;
+            doneSuggestions_ = std::move(result);
+        }
+    }
 }
 
 std::vector<Suggestion> IntelligentSuggestionSystem::GenerateSuggestions(
@@ -368,6 +439,7 @@ void IntelligentSuggestionSystem::LearnFromFeedback(const std::string& suggestio
     const size_t sep = suggestionId.rfind('_');
     const std::string type = (sep == std::string::npos)
         ? suggestionId : suggestionId.substr(0, sep);
+    std::lock_guard<std::mutex> lk(sharedMutex_);
     auto it = suggestionWeights.find(type);
 
     if (accepted) {
@@ -388,10 +460,11 @@ float IntelligentSuggestionSystem::GetAcceptanceRate() const {
 }
 
 float IntelligentSuggestionSystem::CalculateConfidence(const Suggestion& suggestion) {
-    // Base confidence from type weight
+    // Base confidence from type weight（worker/UI 共享，需上鎖）
     const std::string typeStr = SuggestionTypeKey(suggestion.type);
 
     float baseConfidence = 0.5f;
+    std::lock_guard<std::mutex> lk(sharedMutex_);
     if (suggestionWeights.find(typeStr) != suggestionWeights.end()) {
         baseConfidence = suggestionWeights[typeStr];
     }

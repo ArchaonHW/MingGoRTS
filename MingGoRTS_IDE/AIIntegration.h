@@ -14,6 +14,7 @@
 #include <queue>
 #include <chrono>
 #include <fstream>
+#include <functional>
 
 namespace MingGoRTSIDE {
 
@@ -192,6 +193,13 @@ public:
     // Context management
     void UpdateGlobalContext(const SimplifiedAI::Context& context);
     SimplifiedAI::Context GetGlobalContext() const;
+
+    // 智能後端掛鉤：設置後 GenerateCode/DesignLevel/AnalyzePerformance 等
+    // 會優先呼叫此後端（帶意圖標籤字首，如 "generate: "/"design: "），
+    // 回空才退回 agent 規則式回應。由 AIAgentInterface 轉發 GUI 層的 hook。
+    void SetBackend(std::function<std::string(const std::string&)> backend) {
+        backendHook = std::move(backend);
+    }
     
     // Memory persistence
     void SaveMemoriesToFile(const std::string& filePath);
@@ -202,6 +210,11 @@ private:
     std::unordered_map<std::string, std::unique_ptr<IDEAgent>> agents;
     bool collaborationEnabled;
     bool knowledgeSharingEnabled;
+    std::function<std::string(const std::string&)> backendHook;
+    std::string TryBackend(const char* tag, const std::string& task) const {
+        if (!backendHook) return std::string();
+        return backendHook(std::string(tag) + task);
+    }
     SimplifiedAI::Context globalContext;
     
     SimplifiedAI::AgentType ConvertAgentTypeToPotatoType(GameDevAgentType type);

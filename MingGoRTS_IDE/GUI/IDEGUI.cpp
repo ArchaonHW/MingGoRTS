@@ -47,6 +47,9 @@ static std::unordered_set<std::string> g_DismissedSuggestionTitles;
 // 背景生成 worker 與 UI 端各處理器共用此 mutex 互斥
 static std::mutex g_DevSystemMutex;
 
+// 建議系統互斥已由 IntelligentSuggestionSystem 內建（sharedMutex_ +
+// worker 自持有）——UI 端不再需要外部 mutex / future 管理
+
 // GetEnvVar / CopyToBuffer 移至 GuiTextUtils.h（header-only，供煙霧測試直接覆蓋）
 
 IDEGUI::IDEGUI()
@@ -132,6 +135,45 @@ bool IDEGUI::Initialize(IDECore* ideCore) {
     // Setup ImGui style
     SetupImGuiStyle();
     
+    // AI Agent 智能後端掛鉤：agent 面板的問答走 DevSystem 本地管線
+    // （可識別意圖產程式碼，否則回離線分析摘要）；與背景 worker 互斥
+    if (core && core->GetAIInterface()) {
+        core->GetAIInterface()->SetAssistantHook(
+            [](const std::string& q) -> std::string {
+                std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+                if (!g_DevSystem) return std::string();
+                // ProcessRequest 會帶意圖標籤轉送；依標籤走對應管線
+                auto stripTag = [&q](const char* tag, std::string& out) -> bool {
+                    const size_t len = std::strlen(tag);
+                    if (q.rfind(tag, 0) != 0) return false;
+                    out = q.substr(len);
+                    return true;
+                };
+                std::string body;
+                if (stripTag("analyze: ", body) || stripTag("perf: ", body) ||
+                    stripTag("build: ", body)) {
+                    // 分析/效能/建置意圖：對請求本文跑離線分析
+                    auto analysis = g_DevSystem->AnalyzeCode(body, "C++");
+                    std::string out = "離線分析: " + std::to_string(analysis.lineCount) +
+                                      " 行, 複雜度 " + std::to_string(analysis.complexity) +
+                                      ", 品質分 " + std::to_string(static_cast<int>(analysis.qualityScore));
+                    for (const auto& iss : analysis.issues) out += "\n  - " + iss;
+                    for (const auto& sug : analysis.suggestions) out += "\n  * " + sug;
+                    return out;
+                }
+                // generate:/design:/chat:/asset: 皆走本地生成管線（NLP 意圖解析）
+                if (!stripTag("generate: ", body) && !stripTag("design: ", body) &&
+                    !stripTag("chat: ", body) && !stripTag("asset: ", body)) {
+                    body = q;
+                }
+                auto gen = g_DevSystem->GenerateCode(body, "C++");
+                if (gen.success) {
+                    return std::string("本地生成:\n") + gen.generatedCode;
+                }
+                return "無法辨識請求——試著加上「生成/分析/建置/關卡」等關鍵字";
+            });
+    }
+
     // Initialize AI conversation
     state.aiConversation.push_back("AI Assistant: Hello! I'm ready to help with your game development.");
     
@@ -179,6 +221,7 @@ void IDEGUI::Shutdown() {
         g_DevSystem.reset();
     }
     if (g_SuggestionSystem) {
+        // worker 由 system 自持有——Shutdown 內 join，無需外部等待
         g_SuggestionSystem->Shutdown();
         g_SuggestionSystem.reset();
     }
@@ -766,6 +809,15 @@ void IDEGUI::RenderAIAgentPanel() {
         ImGui::PushStyleColor(ImGuiCol_Text, collabEnabled ? ImVec4(0.5f, 0.8f, 0.5f, 1.0f) : ImVec4(0.8f, 0.5f, 0.5f, 1.0f));
         ImGui::Text("%s: %s", T(TranslationKey::AIAgent_Collaboration).c_str(), collabEnabled ? "Enabled" : "Disabled");
         ImGui::PopStyleColor();
+
+        // Agent 名冊
+        for (auto* ag : core->GetAIInterface()->GetAgentManager()->GetAllAgents()) {
+            ImGui::Bullet();
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.7f, 0.85f, 1.0f, 1.0f));
+            auto* pa = ag->GetPotatoAgent();
+            ImGui::Text("%s", pa ? pa->GetDesc().name.c_str() : "(unnamed)");
+            ImGui::PopStyleColor();
+        }
     } else {
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
         ImGui::Text("No AI Agent Manager initialized");
@@ -2500,11 +2552,14 @@ void IDEGUI::UpdateIntelligentSuggestions() {
     }
 
     // 去抖動：內容（含檔案路徑）變更時重設計時器，
-    // 停止編輯滿 500ms 才重跑全檔分析，避免打字途中洗掉使用者正在看的建議
+    // 停止編輯滿 500ms 才重跑全檔分析，避免打字途中洗掉使用者正在看的建議。
+    // 分析在 IntelligentSuggestionSystem 內建 worker 執行（SubmitAnalysis），
+    // render thread 只做投遞與輪詢寫回；單槽 supersede，不積壓舊 job。
     static size_t s_contentHash = 0;
     static bool s_analysisPending = false;
     static auto s_lastEditTime = std::chrono::steady_clock::now();
     static size_t s_shownSignature = 0;
+    static uint64_t s_pendingJobId = 0;
 
     const std::string hashInput = std::string(tab.buffer) + "\x1F" + tab.filePath;
     const size_t contentHash = std::hash<std::string>{}(hashInput);
@@ -2515,39 +2570,45 @@ void IDEGUI::UpdateIntelligentSuggestions() {
         s_lastEditTime = now;
         s_analysisPending = true;
     }
+
+    // 收取背景分析結果（非阻塞輪詢；只套用最新投遞的 job）
+    uint64_t doneId = 0;
+    std::vector<Suggestion> done;
+    if (g_SuggestionSystem->PollResult(doneId, done) &&
+        doneId == s_pendingJobId) {
+        // 過濾已被使用者關閉過的建議（以標題為抑止鍵）
+        done.erase(
+            std::remove_if(done.begin(), done.end(),
+                [](const Suggestion& s) {
+                    return g_DismissedSuggestionTitles.count(s.title) > 0;
+                }),
+            done.end());
+
+        if (done.empty()) {
+            state.currentSuggestions.clear();
+            state.showSuggestions = false;
+        } else {
+            size_t signature = 0;
+            for (const auto& s : done) {
+                signature ^= std::hash<std::string>{}(s.title);
+            }
+            if (signature != s_shownSignature) {
+                s_shownSignature = signature;
+                state.showSuggestions = true;
+            }
+            state.currentSuggestions = std::move(done);
+        }
+    }
+
     if (!s_analysisPending) return;
     if (now - s_lastEditTime < std::chrono::milliseconds(500)) return;
+
     s_analysisPending = false;
-
-    std::vector<Suggestion> suggestions = g_SuggestionSystem->GenerateSuggestions(
-        std::string(tab.buffer), tab.filePath, tab.currentLine, tab.currentColumn);
-
-    // 過濾已被使用者關閉過的建議（以標題為抑止鍵）
-    suggestions.erase(
-        std::remove_if(suggestions.begin(), suggestions.end(),
-            [](const Suggestion& s) {
-                return g_DismissedSuggestionTitles.count(s.title) > 0;
-            }),
-        suggestions.end());
-
-    if (suggestions.empty()) {
-        state.currentSuggestions.clear();
-        state.showSuggestions = false;
-        return;
-    }
-
-    // 建議集合有實質變化才自動重開面板；
-    // 否則保留使用者手動關閉的狀態
-    size_t signature = 0;
-    for (const auto& s : suggestions) {
-        signature ^= std::hash<std::string>{}(s.title);
-    }
-    if (signature != s_shownSignature) {
-        s_shownSignature = signature;
-        state.showSuggestions = true;
-    }
-
-    state.currentSuggestions = std::move(suggestions);
+    // 投遞快照給內建 worker——worker 不讀 GUI state，
+    // 生命期由 system 自持的 thread + Shutdown join 保證
+    s_pendingJobId = g_SuggestionSystem->SubmitAnalysis(
+        std::string(tab.buffer), tab.filePath,
+        tab.currentLine, tab.currentColumn);
 }
 
 void IDEGUI::RenderIntelligentSuggestions() {
@@ -2647,6 +2708,7 @@ void IDEGUI::ApplySuggestion(const Suggestion& suggestion) {
 
 void IDEGUI::LearnFromSuggestion(const std::string& suggestionId, bool accepted) {
     if (g_SuggestionSystem) {
+        // 權重/歷史的執行緒互斥由 system 內部 sharedMutex_ 保證
         g_SuggestionSystem->LearnFromFeedback(suggestionId, accepted);
     }
 
@@ -3339,9 +3401,8 @@ void IDEGUI::RenderCardGallery() {
                 cardBakeTarget = sel;
                 cardBakeFuture = std::async(std::launch::async,
                     [baker, cardJson = c.jsonPath, out]() {
-                        std::string cmd = "\"" + baker.string() + "\" \"" +
-                                          cardJson + "\" \"" + out + "\"";
-                        return std::system(cmd.c_str());
+                        // 無 shell 啟動：參數獨立傳遞，無注入面
+                        return RunProcess(baker.string(), {cardJson, out});
                     });
                 AddOutputLog("[CardGallery] 重新產生立繪中...");
             }
