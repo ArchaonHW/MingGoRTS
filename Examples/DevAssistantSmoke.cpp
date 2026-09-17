@@ -210,6 +210,21 @@ int main() {
               "local pipeline wins over configured llmClient");
     }
 
+    // 14) async 寫回 seam：WriteGenerationResult 與 PollDevelopmentResult 共用路徑
+    {
+        char resp[128];
+        std::memset(resp, 0x7F, sizeof(resp));
+        MingGoRTSIDE::WriteGenerationResult(true, "class Foo {};", "", resp, sizeof(resp));
+        Check(std::strcmp(resp, "class Foo {};") == 0,
+              "write-back seam: success writes generated code");
+
+        std::memset(resp, 0x7F, sizeof(resp));
+        MingGoRTSIDE::WriteGenerationResult(false, "", "unrecognized prompt",
+                                            resp, sizeof(resp));
+        Check(std::strcmp(resp, "Error: unrecognized prompt") == 0,
+              "write-back seam: failure writes 'Error: ...'");
+    }
+
     std::printf("\n%s (%d failures)\n", failures == 0 ? "ALL PASS" : "FAILURES", failures);
     return failures == 0 ? 0 : 1;
 }

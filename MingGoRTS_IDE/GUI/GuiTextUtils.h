@@ -44,4 +44,12 @@ inline void CopyToBuffer(char* dst, size_t dstSize, const std::string& src) {
     dst[pos] = '\0';
 }
 
+// DevAssistant 生成結果 → 固定 buffer 的寫回 seam（UI-free,可無頭測試）：
+// 成功寫入 generatedCode,失敗寫入 "Error: <error>"。
+// PollDevelopmentResult 與 headless 測試共用此路徑。
+inline void WriteGenerationResult(bool success, const std::string& generatedCode,
+                                  const std::string& error, char* dst, size_t dstSize) {
+    CopyToBuffer(dst, dstSize, success ? generatedCode : "Error: " + error);
+}
+
 } // namespace MingGoRTSIDE

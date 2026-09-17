@@ -2885,13 +2885,13 @@ void IDEGUI::PollDevelopmentResult() {
     
     if (result.success) {
         AddOutputLog("[Dev] Code generated successfully");
-        CopyToBuffer(state.developmentResponse, sizeof(state.developmentResponse),
-                     result.generatedCode);
     } else {
         AddOutputLog("[Dev] Code generation failed: " + result.error);
-        CopyToBuffer(state.developmentResponse, sizeof(state.developmentResponse),
-                     "Error: " + result.error);
     }
+    // 寫回邏輯抽到 WriteGenerationResult(GuiTextUtils.h)——與 headless 測試共用
+    MingGoRTSIDE::WriteGenerationResult(result.success, result.generatedCode,
+                                        result.error, state.developmentResponse,
+                                        sizeof(state.developmentResponse));
     state.developmentProcessing = false;
 }
 
