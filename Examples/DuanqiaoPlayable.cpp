@@ -21,6 +21,8 @@
 #include "Gameplay/PlanningDeck.h"
 #include "Gameplay/EnemyGeneral.h"
 #include "Gameplay/BattleResources.h"
+#include "Gameplay/BattleRecorder.h"
+#include "Gameplay/Roster.h"
 #include "Gameplay/QuantumFog.h"
 #include "MathUtils/Matrix4.h"
 
@@ -302,6 +304,11 @@ int main() {
         std::printf("  [戰報] %s\n", e.c_str());
     });
 
+    // T-11 戰後素材:T-7 錄製器包在事件回調外層(錄下全部戰報)
+    BattleRecorder recorder;
+    recorder.Attach(battle);
+    Roster roster;
+
     // ---- 場景:地形 ----
     SceneGraph scene;
     auto root = MakeShared<SceneNode>("root");
@@ -375,6 +382,24 @@ int main() {
     if (northRally) battle.SetObjective(1, northRally->pos);
     if (northRally) battle.SetRallyPoint(0, northRally->pos);
     if (southCamp)  battle.SetRallyPoint(1, southCamp->pos);
+
+    // T-8 名冊:兩軍具名隊長入冊(陣亡=戰後哀悼/戰果清單素材)
+    {
+        const char* capNames0[] = {"周鐵槍", "陳守拙", "林燕翼", "石敢當"};
+        const char* relics0[] = {"斷刃", "舊旗", "竹哨", "平安符"};
+        const char* capNames1[] = {"格洛克", "血手布魯", "獨眼斯卡", "老槐"};
+        int i0 = 0, i1 = 0;
+        for (const auto& sq : battle.GetSquads()) {
+            if (sq->GetTeam() == 0 && i0 < 4) {
+                roster.Enroll(sq.get(), capNames0[i0], "captain",
+                              relics0[i0]);
+                ++i0;
+            } else if (sq->GetTeam() == 1 && i1 < 4) {
+                roster.Enroll(sq.get(), capNames1[i1], "captain");
+                ++i1;
+            }
+        }
+    }
 
     EnemyGeneral glock = EnemyGeneral::MakeGlock();
     glock.ApplyTo(battle, 1);
@@ -648,6 +673,7 @@ int main() {
         }
 
         battle.Update(dt);
+        roster.Update(battle); // T-8:殲滅偵測→記陣亡
         sync.Sync(battle);
 
         // ---- 渲染 ----
@@ -964,6 +990,111 @@ int main() {
                          ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
             ImGui::SetWindowFontScale(2.2f);
             ImGui::TextColored(col, "%s", txt);
+            ImGui::End();
+
+            // ---- T-11 戰後層:史官筆戰報 + 名冊 + 回放時間軸 ----
+            static std::string chronicler;
+            static float endedAt = -1.0f;
+            static float replayCursor = 0.0f;
+            if (endedAt < 0.0f) {
+                endedAt = (float)now;
+                // 史官體戰報:逐字敲出
+                std::string r = "史官曰：斷橋之役，";
+                r += battle.GetOutcome() == BattleOutcome::Victory
+                         ? "我軍克敵，奪南岸而還。"
+                     : battle.GetOutcome() == BattleOutcome::Defeat
+                         ? "我軍失利，退守北岸。"
+                         : "兩軍相持，鳴金收兵。";
+                char buf[128];
+                std::snprintf(buf, sizeof(buf),
+                              "戰歷 %.0f 秒，大小戰報 %zu 則。",
+                              battle.GetElapsed(), recorder.Count());
+                r += buf;
+                for (const auto& e : roster.GetEntries()) {
+                    if (e.team == 0 && !e.alive) {
+                        r += "「" + e.name + "」隊長殉國";
+                        if (!e.relic.empty()) r += "，遺「" + e.relic + "」";
+                        r += "。";
+                    }
+                }
+                for (const auto& e : roster.GetEntries()) {
+                    if (e.team == 0 && e.alive)
+                        r += "「" + e.name + "」得全。";
+                }
+                for (const auto& e : roster.GetEntries()) {
+                    if (e.team == 1 && !e.alive)
+                        r += "斬敵「" + e.name + "」。";
+                }
+                chronicler = r;
+            }
+            // 逐字敲出(30 字/秒);退回 UTF-8 字元邊界,避免切出亂碼
+            size_t shown =
+                std::min(chronicler.size(),
+                         (size_t)((now - endedAt) * 30.0));
+            while (shown < chronicler.size() && shown > 0 &&
+                   (chronicler[shown] & 0xC0) == 0x80) {
+                --shown;
+            }
+            const float maxT = recorder.Count() > 0
+                                   ? recorder.GetRecords().back().t : 0.0f;
+
+            ImGui::SetNextWindowPos(ImVec2(ww * 0.5f - 330, wh * 0.42f),
+                                    ImGuiCond_Always);
+            ImGui::SetNextWindowSize(ImVec2(660, 0), ImGuiCond_Always);
+            ImGui::Begin("戰後結算", nullptr,
+                         ImGuiWindowFlags_NoCollapse |
+                             ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::TextWrapped("%s", chronicler.substr(0, shown).c_str());
+            ImGui::Separator();
+
+            // 名冊:兩欄(我軍 | 敵軍)
+            ImGui::Columns(2, "roster", true);
+            ImGui::TextDisabled("我軍名冊");
+            for (const auto& e : roster.GetEntries()) {
+                if (e.team != 0) continue;
+                if (e.alive) {
+                    ImGui::TextColored(ImVec4(0.6f, 1.0f, 0.6f, 1.0f),
+                                       "%s(%s)生還", e.name.c_str(),
+                                       e.squadName.c_str());
+                } else {
+                    ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.5f, 1.0f),
+                                       "%s(%s)陣亡 %.0fs",
+                                       e.name.c_str(), e.squadName.c_str(),
+                                       e.deathTime);
+                }
+                if (!e.relic.empty())
+                    ImGui::TextDisabled("  遺物:%s", e.relic.c_str());
+            }
+            ImGui::NextColumn();
+            ImGui::TextDisabled("敵軍名冊");
+            for (const auto& e : roster.GetEntries()) {
+                if (e.team != 1) continue;
+                ImGui::TextColored(
+                    e.alive ? ImVec4(0.9f, 0.8f, 0.4f, 1.0f)
+                            : ImVec4(0.7f, 0.7f, 0.7f, 1.0f),
+                    "%s(%s)%s", e.name.c_str(), e.squadName.c_str(),
+                    e.alive ? "在逃" : "授首");
+            }
+            ImGui::Columns(1);
+            ImGui::Separator();
+
+            // 回放時間軸:拖曳跳到事件點
+            ImGui::Text("回放時間軸(%zu 則)", recorder.Count());
+            ImGui::SliderFloat("##timeline", &replayCursor, 0.0f, maxT,
+                               "%.1fs");
+            ImGui::BeginChild("replaylist", ImVec2(0, 130), true);
+            int lastIdx = -1;
+            for (int i = 0; i < (int)recorder.Count(); ++i) {
+                if (recorder.GetRecords()[i].t <= replayCursor) lastIdx = i;
+            }
+            const int from = std::max(0, lastIdx - 9);
+            for (int i = from; i <= lastIdx; ++i) {
+                const auto& rec = recorder.GetRecords()[i];
+                ImGui::TextDisabled("[%5.1fs] %s", rec.t,
+                                    rec.event.c_str());
+            }
+            if (lastIdx >= 0) ImGui::SetScrollHereY(1.0f);
+            ImGui::EndChild();
             ImGui::End();
         }
 

@@ -93,7 +93,13 @@ queue:
     summary: >
       戰後結算畫面：史官體文字戰報（逐字敲出）、傷亡名冊（有名有姓）、
       回放時間軸可拖曳跳到事件點。吃 BattleRecorder 事件流。
-    status: queued
+    status: done
+    note: >
+      DuanqiaoPlayable 接 BattleRecorder（包在事件回調外層）+
+      Roster（兩軍具名隊長入冊，我軍帶遺物）。戰果確定後出
+      「戰後結算」窗：史官體戰報逐字敲出（UTF-8 邊界對齊）、
+      雙欄名冊（生還綠/陣亡紅+時刻+遺物、敵軍在逃/授首）、
+      回放時間軸 SliderFloat 拖曳跳到事件點（末 10 則自動捲底）。
     size: L
 
   - id: A-4
