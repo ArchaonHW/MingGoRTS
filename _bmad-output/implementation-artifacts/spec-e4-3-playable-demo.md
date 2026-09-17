@@ -2,7 +2,7 @@
 title: 'E4-3 斷橋可玩 demo（點選→移動→交戰）+ A-4 膠囊體單位'
 type: 'feature'
 created: '2026-09-17'
-status: 'in-review'
+status: 'done'
 baseline_commit: '6e5d8e4'
 context:
   - AGENTS.md

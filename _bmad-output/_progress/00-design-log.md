@@ -5,6 +5,20 @@
 - Spec: `_bmad-output/implementation-artifacts/spec-ide-dev-assistant.md` (status: approved 2026-09-17, baseline d5eff75)
 - Branch: `feat/gameplay-doctrine-battle`（dev-assistant 工作來自 `feat/engine-security-hardening` 系列 commit）
 - Activity: [T] Acceptance Testing — 2026-09-17 重跑驗證 PASS（smoke 18/18、ctest 12/12、banned 0），已簽核 SO-001
+- 立繪產線（2026-09-17）：`PortraitRenderer`（VRM→PNG 蒙皮/A-pose/打光/批量/labels.csv）+ `PortraitBaker`（引擎內 2D 分層卡面，取代 PIL）；`EnemyGeneral` 補 art/faction/rarity/id 解析、`RosterEntry.art` 欄位；ctest 28/28 PASS
+
+## Progress
+
+### 2026-09-17 — Evolution: Card Gallery（武將名冊）立繪上屏
+- IDE 新增 Card Gallery 面板（View menu）：掃描 assets/cards/**/*.json，
+  左列清單（缺圖紅標）+ 右側立繪/metadata；`art` 空時按
+  `cards/art/<id>.png` 慣例 fallback
+- ImageCodec→GL texture lazy cache + Shutdown 釋放；「重新產生立繪」
+  按鈕背景呼叫 PortraitBaker 完成後 invalidate texture
+- 附帶修正：NeuralGraphicsTest SR 門檻 flake（1200 epoch 不足，
+  27.85 < bilinear 28.07dB）→ 4000 epoch 後 41.34dB 穩定通過
+- 驗證：MSVC Release 建置乾淨、ctest 31/31 PASS、banned 掃描 0
+- 範圍/計畫：`_bmad-output/_progress/evolution/card-gallery/scope.md`
 
 ## Design Loop Status
 
@@ -41,3 +55,32 @@
 - [x] 無外部 LLM 時，可識別 prompt → response view 出現合成 C++（smoke 驗證本地管線；UI async poll 寫回）
 - [x] 不可識別 prompt → 明確錯誤訊息，不 hang/crash/改 editor（smoke 驗證）
 - [x] MSVC `cmake --build` 通過；無新增 banned function
+
+---
+
+# E4-3 斷橋可玩 demo + E4-1 overlay 收尾(2026-09-17,commit d4eb1e4)
+
+## Review 結果(三路:blind/edge-case/acceptance)
+
+**已修 patch:**
+- `MakeBox` 面表抄錯三頂點(+X/-X/-Y 面非平面)→ 對照 BattleRenderDemo 正確版修正(critical)
+- `Intervene` 兩重載不拒 routing 小隊 → CP 被扣但指令同幀被強制撤退覆寫 → 加 `IsRouting()` 拒絕
+- squad 目標 Intervene:加目標驗證(自己/同隊/潰逃敵軍拒絕;非 Engage 退化為位置指令)
+- `SetOverlayMeshes` 契約補完:nullptr 真拆節點、重設 mesh/barY/barWidth 更新既有節點、Detach 清 selected
+- 選取環 y 0.05→0.22(原位置在橋板體積內被遮擋);血條平躺→直立 XY(俯角下原只剩 ~2px)
+- squad 包圍球放大至涵蓋 overlay(防 hierarchical culling 提早剔除血條)
+- `BattlePicker::PickSquad` 略過 routing 小隊
+- demo:`SetCommandPoints(0,5)` 移到 ApplyPlan 後(否則被建議值 2 覆寫);eventLog 先於 battle 宣告、SetEventCallback 移到 CreateSquad 前(早期事件不再丟);HiDPI 游標×fb/win 比例 + 視窗外不點選;滾輪 gating `!io.WantCaptureMouse`;L/R 鍵獨立處理;字型 fallback;早退走 shutdownAll;`<algorithm>`/`GLFW_INCLUDE_NONE`
+
+**defer/reject:** interventionUntil 語義兩重載一致(皆剩餘秒數,非 deadline)——非 bug;暫停下可下單為 RTS 慣例保留;interventionUntil 不清死鍵(append-only,無害)
+
+## Spec deviation
+- overlay 掛 squad 節點子層(非 spec 原註的 parentNode):子層自動跟隨、squad 不旋轉無繼承問題;Design Notes 已改述
+
+## 驗證
+- MSVC:DuanqiaoPlayable/BattleSceneTest/BattlePickerTest 建置過;ctest 4/4(SceneTest 16 PASS 含新 nullptr 拆除斷言)
+- MinGW:DuanqiaoPlayable/BattleSceneTest 建置過;SceneTest 16 PASS
+
+## Commit 拆分
+- 本工作單獨 commit d4eb1e4(pathspec 提交);CMakeLists 其餘 hunks(NeuralNetwork/AIAgentSmoke/QuasiRandomTest 等)屬平行 session 工作,未捲入
+- 落地分支為 feat/game-backend-services(平行 session 已切換原 gameplay 分支)
