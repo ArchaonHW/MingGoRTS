@@ -126,7 +126,7 @@ void AgentManagerPanel::RenderAgentList() {
             std::cout << "  無代理" << std::endl;
         } else {
             for (size_t i = 0; i < agents.size(); ++i) {
-                auto agent = agents[i];
+                const auto& agent = agents[i];
                 std::cout << "  [" << i << "] " << agent->GetName();
                 std::cout << " (" << (agent->IsActive() ? "活躍" : "停用") << ")";
                 std::cout << " 類型: " << static_cast<int>(agent->GetType());
