@@ -1,6 +1,6 @@
 # Spec: 智慧建議分析移出 render thread（B-1）
 
-status: draft
+status: done
 source: deferred-work.md / auto-dev-queue.yaml B-1
 
 ## Intent

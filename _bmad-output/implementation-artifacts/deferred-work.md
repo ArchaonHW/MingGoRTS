@@ -38,7 +38,7 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-intelligent-suggestions.md`
   summary: Run intelligent-suggestion analysis off the render thread / cache compiled regexes — GenerateSuggestions constructs std::regex objects per call and scans the whole 8KB buffer synchronously each quiet-period.
   evidence: Blind Hunter review — std::regex built per call (e.g. magicNumberRegex in GetBestPracticeRecommendations); bounded but can hitch a frame on each analysis pass.
-  resolution: regex 快取已做（2026-09-17：magicNumberRegex/funcRegex 改為 function-local static const，不再每次重建）；render-thread 搬移仍 deferred——分析仍同步跑在 UI 執行緒的 quiet-period 後。
+  resolution: 已全修（2026-09-17）：regex 改 function-local static const 快取；分析搬離 render thread——debounce 滿 500ms 後 `std::async` 背景跑 GenerateSuggestions，render thread 只輪詢 future；過期結果以 inflight-hash 丟棄、LearnFromFeedback 與 worker 以 `g_SuggestionMutex` 互斥、Shutdown 有界等待 2s 後才 reset。
 - source_spec: `_bmad-output/implementation-artifacts/spec-intelligent-suggestions.md`
   summary: Replace file-scope raw-pointer AI globals (g_SuggestionSystem et al.) with owned instances guarded against double-Init; Initialize() return value currently ignored.
   evidence: Blind Hunter review — second IDEGUI instance overwrites/leaks the global; Shutdown timeout early-return leaves the pointer dangling.
@@ -51,3 +51,12 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
   summary: `NeuralLayer` seeds its mt19937 from `std::random_device` with no seed API — in-tree NN init is non-reproducible. Consider a `NeuralNetwork`/`NeuralLayer` seed parameter (or Build(seed)) so callers don't need the SetWeights/SetBiases override workaround used in SynthDataDemo.
   evidence: Blind Hunter + Edge Case Hunter reviews.
   resolution: 已修（2026-09-17）：`NeuralLayer::SetSeed`（重 seed + 重建權重）、`NeuralNetwork::Build(unsigned seed)` 重載、Train shuffle 改用成員 rng——同 seed 建構權重完全一致（headless 驗證）。
+- source_spec: `_bmad-output/implementation-artifacts/spec-game-backend-services.md`
+  summary: Add DELETE endpoints (or a documented retention policy) for /api/replays and /api/rosters — currently the only way to remove a bad upload is deleting the H2 files.
+  evidence: Blind-hunter review — services accept unauthenticated writes forever with no removal path; deferred because DELETE adds public API surface the spec's intent did not request.
+- source_spec: `_bmad-output/implementation-artifacts/spec-game-backend-services.md`
+  summary: Extract a services-common Maven module for the duplicated parse/json/badRequest/notFound helpers in RosterController and ReplayController.
+  evidence: Blind-hunter review — two controllers already diverge in style (StringBuilder concat vs record serialization); a shared module is a structural refactor beyond this change's scope.
+- source_spec: `_bmad-output/implementation-artifacts/spec-game-backend-services.md`
+  summary: Manage H2 schema with Flyway instead of ddl-auto=update, and wire Maven into CI when Java services are expected to build in CI.
+  evidence: Blind-hunter + verification-gap reviews — schema drift is unmanaged and Java tests never run in CI; both were explicitly out of this spec's boundaries.
