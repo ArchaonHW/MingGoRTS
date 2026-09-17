@@ -10,6 +10,7 @@
 #include "Gameplay/QuantumFog.h"
 #include "Gameplay/BattleResources.h"
 #include "Gameplay/BattleController.h"
+#include "Gameplay/EnemyGeneral.h"
 
 #include <algorithm>
 #include <cmath>
@@ -328,6 +329,151 @@ static void TestQuantumFogEntangle() {
     CHECK(hSame, "Probe 不觸發糾纏");
 }
 
+static void TestQuantumFogPersonality() {
+    printf("-- QuantumFog Personality Priors --\n");
+
+    EnemyGeneral aggro, cautious;
+    CHECK(aggro.LoadFromString(
+              R"({"name":"猛將","personality":{"aggression":95,"discipline":50,"cunning":10}})"),
+          "侵略卡載入");
+    CHECK(cautious.LoadFromString(
+              R"({"name":"老狐","personality":{"aggression":10,"discipline":90,"cunning":50}})"),
+          "謹慎卡載入");
+
+    const Vector2 center(5, 5);
+    const Vector2 enemyDir(0, 1); // 敵方在北
+    const float radius = 3.0f;
+    const Vector2 biasA = aggro.FogBiasPoint(center, enemyDir, radius);
+    const Vector2 biasC = cautious.FogBiasPoint(center, enemyDir, radius);
+    CHECK(biasA.y > center.y, "侵略型偏置前推");
+    CHECK(biasC.y < center.y, "謹慎型偏置後縮");
+    CHECK(aggro.FogPriorScale() > cautious.FogPriorScale(),
+          "紀律型先驗更集中");
+
+    // 同幾何不同人格 → 先驗分佈可測差異
+    // (兩個 fog 實例各自首個 AddEntityCloud 用相同 seed → 候選佈局一致)
+    QuantumFog fogA(5.0f, 1, 1), fogC(5.0f, 1, 1);
+    const int ea = fogA.AddEntityCloud("甲", 0, center, radius, 8, 0.8f,
+                                     &biasA, aggro.FogPriorScale());
+    const int ec = fogC.AddEntityCloud("乙", 0, center, radius, 8, 0.8f,
+                                     &biasC, cautious.FogPriorScale());
+    CHECK(ea >= 0 && ec >= 0, "雙方雲建立");
+    // 同 seed 前提顯式斷言:兩實例首次 AddEntityCloud 候選佈局應一致
+    const auto& candsA = fogA.GetEntity(ea)->candidates;
+    const auto& candsC = fogC.GetEntity(ec)->candidates;
+    bool sameLayout = candsA.size() == candsC.size();
+    for (size_t i = 0; sameLayout && i < candsA.size(); ++i) {
+        sameLayout = std::abs(candsA[i].x - candsC[i].x) < 1e-4f &&
+                     std::abs(candsA[i].y - candsC[i].y) < 1e-4f;
+    }
+    CHECK(sameLayout, "同 seed 候選佈局一致(比較有效)");
+    auto frontMass = [center](const QuantumFog& f, int id) {
+        double s = 0.0;
+        for (const auto& c : f.GetCloud(id)) {
+            if (c.first.y > center.y) s += c.second;
+        }
+        return s;
+    };
+    CHECK(frontMass(fogA, ea) > frontMass(fogC, ec),
+          "侵略型前線先驗質量更高");
+
+    // 狡詐軸:enemyDir=(0,1) 時 perp=(-1,0) → 高狡詐偏置偏 -x 側翼
+    EnemyGeneral sly;
+    CHECK(sly.LoadFromString(
+              R"({"name":"詐將","personality":{"aggression":50,"discipline":50,"cunning":90}})"),
+          "狡詐卡載入");
+    const Vector2 biasS = sly.FogBiasPoint(center, enemyDir, radius);
+    CHECK(biasS.x < center.x, "狡詐型偏置側翼(-x)");
+    CHECK(std::abs(biasS.y - center.y) < 1e-4f, "狡詐型不前後偏移");
+
+    // 無卡(三軸預設 50) → 中立:bias=center、scale=1.0
+    EnemyGeneral blank;
+    const Vector2 biasB = blank.FogBiasPoint(center, enemyDir, radius);
+    CHECK(std::abs(biasB.x - center.x) < 1e-4f &&
+              std::abs(biasB.y - center.y) < 1e-4f,
+          "無卡退回中立偏置");
+    CHECK(std::abs(blank.FogPriorScale() - 1.0f) < 1e-4f,
+          "無卡退回中立集中度");
+    // 零向量退化安全
+    const Vector2 zeroBias =
+        aggro.FogBiasPoint(center, Vector2(0, 0), radius);
+    CHECK(std::abs(zeroBias.x - center.x) < 1e-4f &&
+              std::abs(zeroBias.y - center.y) < 1e-4f,
+          "零方向退回 center");
+}
+
+// ---- Q-5：可注入隨機源後端 ----
+void TestRandomSourceInjection() {
+    printf("-- RandomSource injection --\n");
+    using Quantum::IRandomSource;
+    using Quantum::SeededRandomSource;
+    using Quantum::EntropyRandomSource;
+
+    // 同 seed 逐位一致（回放可重現）
+    {
+        SeededRandomSource a(42), b(42), c(43);
+        bool same = true, diff = false;
+        for (int i = 0; i < 32; ++i) {
+            if (a.NextU64() != b.NextU64()) same = false;
+        }
+        for (int i = 0; i < 32; ++i) {
+            if (c.NextU64() != SeededRandomSource(42).NextU64())
+                diff = true; // 序列從頭一致才對——這裡應 diff
+        }
+        CHECK(same, "SeededRandomSource 同 seed 逐位一致");
+        CHECK(diff, "不同 seed 產生不同序列");
+    }
+
+    // Entropy 後端可建構且產出 [0,1)
+    {
+        EntropyRandomSource e;
+        bool inRange = true;
+        for (int i = 0; i < 16; ++i) {
+            const double v = e.NextDouble();
+            if (!(v >= 0.0 && v < 1.0)) inRange = false;
+        }
+        CHECK(inRange, "EntropyRandomSource.NextDouble ∈ [0,1)");
+    }
+
+    // 劇本源：固定回傳 → Measure 結果可預測
+    struct FixedSource : IRandomSource {
+        uint64_t v;
+        explicit FixedSource(uint64_t x) : v(x) {}
+        uint64_t NextU64() override { return v; }
+    };
+    {
+        // roll=0 → 命中第一個基態
+        Qudit q0(4, std::unique_ptr<IRandomSource>(
+                        new FixedSource(0)));
+        CHECK(q0.Measure() == 0, "注入源 roll=0 → 基態 0");
+        // roll≈1 → 命中末基態
+        Qudit q1(4, std::unique_ptr<IRandomSource>(
+                        new FixedSource(~uint64_t(0))));
+        CHECK(q1.Measure() == 3, "注入源 roll≈1 → 基態 3");
+    }
+    {
+        // QuantumBitSource 注入源接管擲骰
+        // （Born 慣例 roll < P(1) → 1，roll=0 → bit 1）
+        Quantum::QuantumBitSource qs(
+            std::unique_ptr<IRandomSource>(new FixedSource(0)));
+        CHECK(qs.NextBit(), "注入源 roll=0 → bit 1");
+        CHECK(qs.NextDouble() == 0.0, "注入源接管 NextDouble");
+        // 傳統 seed 路徑不回歸
+        Quantum::QuantumBitSource qa(7), qb(7);
+        bool seqSame = true;
+        for (int i = 0; i < 32; ++i)
+            if (qa.NextBit() != qb.NextBit()) seqSame = false;
+        CHECK(seqSame, "seed 路徑同 seed 一致");
+    }
+    {
+        // QubitRegister 注入源（roll < P(1)=0.5 → 測得 1）
+        QubitRegister reg(2, std::unique_ptr<IRandomSource>(
+                               new FixedSource(0)));
+        reg.H(0);
+        CHECK(reg.Measure(0), "暫存器注入源 roll=0 → 測得 1");
+    }
+}
+
 int main() {
     printf("=== QuantumTest ===\n");
     TestQubitRegister();
@@ -335,6 +481,8 @@ int main() {
     TestQuantumFog();
     TestQuantumFogProbe();
     TestQuantumFogEntangle();
+    TestQuantumFogPersonality();
+    TestRandomSourceInjection();
 
     if (g_failures == 0) {
         printf("ALL CHECKS PASSED\n");

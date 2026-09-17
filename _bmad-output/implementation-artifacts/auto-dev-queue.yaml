@@ -209,7 +209,13 @@ queue:
     acceptance:
       - 不同人格卡產生的 priors 分佈有測得出的差異
       - 無卡/缺欄位退回均勻先驗，不崩潰
-    status: queued
+    status: done
+    note: >
+      已落地（spec-q4-personality-priors.md）：EnemyGeneral
+      FogBiasPoint（aggression→敵向前推、cunning→左翼）+
+      FogPriorScale（discipline→先驗集中度）；AddEntityCloud
+      接 priorScale；DuanqiaoPlayable 用格洛克人格偏置雲。
+      QuantumTest 覆蓋差異/退化/缺欄位。
     size: S
 
   - id: Q-5
@@ -222,7 +228,15 @@ queue:
     acceptance:
       - 兩後端可切換；seeded 後端同 seed 結果逐位一致
       - 不引入網路依賴；既有 API 行為不變
-    status: queued
+    status: done
+    note: >
+      新增 Quantum/RandomSource.h：IRandomSource 縫 +
+      SeededRandomSource（mt19937_64，同 seed 逐位一致）+
+      EntropyRandomSource（random_device 拼 64-bit）；
+      HTTP QRNG 走介面不附網路依賴。QubitRegister/Qudit/
+      QuantumBitSource 加 unique_ptr<IRandomSource> 建構注入，
+      測量走 Roll()：注入源優先、空則內建 seeded RNG。
+      QuantumTest 新增注入段（劇本源驗證塌縮可預測）。
     size: S
 
   - id: Q-6
