@@ -3,6 +3,7 @@
 #include "MathUtils/Vector2.h"
 #include "Quantum/Qudit.h"
 
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -53,6 +54,12 @@ public:
 
     void BindResources(BattleResources* res) { this->resources = res; }
 
+    // Q-6：觀測/塌縮/情報過期等態變化發事件（BattleController 接到
+    // Emit → BattleRecorder 可錄）。回放時間軸因此能重現雲變化。
+    void SetEventCallback(std::function<void(const std::string&)> cb) {
+        onEvent = std::move(cb);
+    }
+
     // 註冊一支敵軍的疊加態。priors 長度須等於 candidates；空則均勻。
     int AddEntity(const std::string& name, int team,
                   const std::vector<Vector2>& candidates,
@@ -63,11 +70,14 @@ public:
     // 叢聚）。biasPoint 不為 nullptr 時，先驗機率依與其距離做高斯
     // 遞減（σ = radius/2）；否則以 suspectedCenter 為中心。
     // 產生失敗（候選 < 2）時退回 R2 準隨機圓盤散佈。
+    // priorScale（Q-4）：先驗高斯的 σ 縮放（= radius/2·scale），
+    // <1 更集中、>1 更鬆散；<=0 視為 1.0。
     // 回傳 entityId，失敗回 -1。
     int AddEntityCloud(const std::string& name, int team,
                        Vector2 suspectedCenter, float radius, int count,
                        float minSpacing,
-                       const Vector2* biasPoint = nullptr);
+                       const Vector2* biasPoint = nullptr,
+                       float priorScale = 1.0f);
 
     // 觀測：扣情報點 → 塌縮到最接近 truePos 的候選 → 揭露真實位置。
     // 情報不足或實體不存在回傳 false。
@@ -98,6 +108,11 @@ public:
 
     void Update(float dt);
 
+    // ---- Q-6 疊加態存檔（potato.quantum_fog/1）----
+    // 含 candidates/priors/振幅(re,im)/revealed/timer/糾纏表/seedCounter
+    bool SaveToFile(const std::string& path) const;
+    bool LoadFromFile(const std::string& path);
+
     // ---- 查詢 ----
     bool IsRevealed(int entityId) const;
     Vector2 GetRevealedPos(int entityId) const;
@@ -118,9 +133,14 @@ private:
         std::vector<int> b2a;
     };
 
+    void Emit(const std::string& msg) const {
+        if (onEvent) onEvent(msg);
+    }
+
     std::vector<UncertainEntity> entities;
     std::vector<EntangleLink> links;
     BattleResources* resources = nullptr;
+    std::function<void(const std::string&)> onEvent;
     float intelDuration;
     int intelCost;
     int probeCost;

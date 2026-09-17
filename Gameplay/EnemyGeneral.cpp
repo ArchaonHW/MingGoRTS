@@ -56,9 +56,9 @@ bool EnemyGeneral::LoadFromString(const std::string& json) {
     cardId = root["id"].AsString();
 
     const JsonValue& p = root["personality"];
-    aggression = p["aggression"].AsFloat(aggression);
-    discipline = p["discipline"].AsFloat(discipline);
-    cunning = p["cunning"].AsFloat(cunning);
+    aggression = std::clamp(p["aggression"].AsFloat(aggression), 0.0f, 100.0f);
+    discipline = std::clamp(p["discipline"].AsFloat(discipline), 0.0f, 100.0f);
+    cunning = std::clamp(p["cunning"].AsFloat(cunning), 0.0f, 100.0f);
 
     cards.clear();
     const JsonValue& sig = root["signatureDoctrine"];
@@ -158,6 +158,25 @@ void EnemyGeneral::ApplyTo(BattleController& battle, int team) const {
             BuildDoctrineFor(*mine[i], static_cast<int>(i),
                              static_cast<int>(mine.size())));
     }
+}
+
+Vector2 EnemyGeneral::FogBiasPoint(Vector2 center, Vector2 enemyDir,
+                                   float radius) const {
+    const float len = enemyDir.Length();
+    if (len < 1e-4f) return center; // 無方向資訊 → 中立
+    const Vector2 dir = enemyDir * (1.0f / len);
+    const Vector2 perp(-dir.y, dir.x); // 左側翼
+
+    // 侵略:50 中立,±0.8r 沿敵向偏移(90→前推 0.64r)
+    // 狡詐:50 中立,±0.4r 側翼偏移(90→+0.32r 左翼)
+    const float fwd = (aggression / 100.0f - 0.5f) * 1.6f * radius;
+    const float flank = (cunning / 100.0f - 0.5f) * 0.8f * radius;
+    return center + dir * fwd + perp * flank;
+}
+
+float EnemyGeneral::FogPriorScale() const {
+    // 紀律 → 先驗集中度:100→0.6(守位集中),0→1.4(鬆散),50→1.0
+    return 1.4f - 0.8f * (discipline / 100.0f);
 }
 
 } // namespace Gameplay

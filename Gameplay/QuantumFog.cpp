@@ -2,9 +2,13 @@
 
 #include "BattleResources.h"
 #include "MathUtils/QuasiRandom.h"
+#include "Serialization/JsonParser.h"
 
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
+#include <fstream>
+#include <sstream>
 
 namespace Potato {
 namespace Gameplay {
@@ -39,7 +43,7 @@ int QuantumFog::AddEntity(const std::string& name, int team,
 int QuantumFog::AddEntityCloud(const std::string& name, int team,
                                Vector2 suspectedCenter, float radius,
                                int count, float minSpacing,
-                               const Vector2* biasPoint) {
+                               const Vector2* biasPoint, float priorScale) {
     if (radius <= 0.0f || count < 2) return -1;
 
     const uint64_t seed = seedCounter * 2654435761ULL;
@@ -59,7 +63,9 @@ int QuantumFog::AddEntityCloud(const std::string& name, int team,
 
     // 先驗：依與 bias（預設 = suspectedCenter）的距離高斯遞減
     const Vector2 bias = biasPoint ? *biasPoint : suspectedCenter;
-    const double sigma = static_cast<double>(radius) * 0.5;
+    const double sigma =
+        static_cast<double>(radius) * 0.5 *
+        static_cast<double>(priorScale > 0.0f ? priorScale : 1.0f);
     const double invTwoSigmaSq = 1.0 / (2.0 * sigma * sigma);
     std::vector<double> priors(candidates.size());
     double total = 0.0;
@@ -69,7 +75,7 @@ int QuantumFog::AddEntityCloud(const std::string& name, int team,
         priors[i] = w;
         total += w;
     }
-    if (total <= 0.0) return -1;
+    if (!(total > 0.0)) return -1; // !(>0) 同時擋掉 NaN/0/負值
     for (double& p : priors) p /= total;
 
     return AddEntity(name, team, candidates, priors);
@@ -91,7 +97,10 @@ bool QuantumFog::Observe(int entityId, const Vector2& truePos) {
         return false;
     }
 
-    PropagateEntanglement(entityId, CollapseNear(e, truePos));
+    const int hit = CollapseNear(e, truePos);
+    Emit("fog:observe #" + std::to_string(entityId) + " " + e.name +
+         " → 候選" + std::to_string(hit));
+    PropagateEntanglement(entityId, hit);
     return true;
 }
 
@@ -105,7 +114,10 @@ bool QuantumFog::Reveal(int entityId, const Vector2& truePos) {
         e.revealTimer = intelDuration;
         return true;
     }
-    PropagateEntanglement(entityId, CollapseNear(e, truePos));
+    const int hit = CollapseNear(e, truePos);
+    Emit("fog:reveal #" + std::to_string(entityId) + " " + e.name +
+         " → 候選" + std::to_string(hit));
+    PropagateEntanglement(entityId, hit);
     return true;
 }
 
@@ -131,6 +143,8 @@ bool QuantumFog::EliminateCandidate(int entityId, int candidateIndex) {
     probs[candidateIndex] = 0.0;
     e->priors[candidateIndex] = 0.0; // 過期重建時同樣排除
     e->state.SetProbabilities(probs);
+    Emit("fog:eliminate #" + std::to_string(entityId) + " " + e->name +
+         " 消去候選" + std::to_string(candidateIndex));
     return true;
 }
 
@@ -165,6 +179,8 @@ bool QuantumFog::Probe(int entityId, const Vector2& truePos, float strength) {
         return false;
     }
     e.state.SetProbabilities(probs);
+    Emit("fog:probe #" + std::to_string(entityId) + " " + e.name +
+         " 雲收縮");
     return true;
 }
 
@@ -260,6 +276,8 @@ void QuantumFog::PropagateEntanglement(int entityId, int candIdx) {
         }
         probs[corrIdx] += 0.7;
         p.state.SetProbabilities(probs);
+        Emit("fog:entangle #" + std::to_string(entityId) + " → #" +
+             std::to_string(partnerId) + " " + p.name + " 雲集中");
     }
 }
 
@@ -276,7 +294,11 @@ int QuantumFog::ObserveRandom(int entityId) {
     e.revealed = true;
     e.revealedPos = e.candidates[outcome];
     e.revealTimer = intelDuration;
-    if (!was) PropagateEntanglement(entityId, outcome);
+    if (!was) {
+        Emit("fog:observe #" + std::to_string(entityId) + " " + e.name +
+             " → 候選" + std::to_string(outcome));
+        PropagateEntanglement(entityId, outcome);
+    }
     return outcome;
 }
 
@@ -289,6 +311,7 @@ void QuantumFog::Update(float dt) {
                     // 情報過期：回到疊加態（以先驗分佈重建）
                     e.revealed = false;
                     e.state.SetProbabilities(e.priors);
+                    Emit("fog:expire " + e.name + " 情報過期回雲");
                 }
             }
         } else {
@@ -331,6 +354,126 @@ const UncertainEntity* QuantumFog::GetEntity(int entityId) const {
         return nullptr;
     }
     return &entities[entityId];
+}
+
+// ---- Q-6 疊加態存檔 ----
+
+static std::string FogEscapeJson(const std::string& s) {
+    std::string out;
+    for (char c : s) {
+        switch (c) {
+        case '"':  out += "\\\""; break;
+        case '\\': out += "\\\\"; break;
+        case '\n': out += "\\n"; break;
+        case '\t': out += "\\t"; break;
+        default:
+            if (static_cast<unsigned char>(c) < 0x20) {
+                char buf[8];
+                std::snprintf(buf, sizeof(buf), "\\u%04x", c);
+                out += buf;
+            } else {
+                out += c;
+            }
+        }
+    }
+    return out;
+}
+
+bool QuantumFog::SaveToFile(const std::string& path) const {
+    std::ofstream f(path);
+    if (!f) return false;
+    f << "{\n"
+      << "  \"schema\": \"potato.quantum_fog/1\",\n"
+      << "  \"intel_duration\": " << intelDuration << ",\n"
+      << "  \"observe_cost\": " << intelCost << ",\n"
+      << "  \"probe_cost\": " << probeCost << ",\n"
+      << "  \"seed_counter\": " << seedCounter << ",\n"
+      << "  \"entities\": [\n";
+    for (size_t i = 0; i < entities.size(); ++i) {
+        const auto& e = entities[i];
+        f << "    {\"name\": \"" << FogEscapeJson(e.name) << "\", "
+          << "\"team\": " << e.team << ", "
+          << "\"revealed\": " << (e.revealed ? "true" : "false") << ", "
+          << "\"revealed_pos\": [" << e.revealedPos.x << ", "
+          << e.revealedPos.y << "], "
+          << "\"reveal_timer\": " << e.revealTimer << ",\n"
+          << "     \"candidates\": [";
+        for (size_t j = 0; j < e.candidates.size(); ++j) {
+            f << "[" << e.candidates[j].x << ", " << e.candidates[j].y
+              << "]" << (j + 1 < e.candidates.size() ? ", " : "");
+        }
+        f << "],\n     \"priors\": [";
+        for (size_t j = 0; j < e.priors.size(); ++j) {
+            f << e.priors[j] << (j + 1 < e.priors.size() ? ", " : "");
+        }
+        f << "],\n     \"amplitudes\": [";
+        const auto& amps = e.state.Amplitudes();
+        for (size_t j = 0; j < amps.size(); ++j) {
+            f << "[" << amps[j].real() << ", " << amps[j].imag() << "]"
+              << (j + 1 < amps.size() ? ", " : "");
+        }
+        f << "]}" << (i + 1 < entities.size() ? ",\n" : "\n");
+    }
+    f << "  ],\n  \"entanglements\": [";
+    for (size_t i = 0; i < links.size(); ++i) {
+        f << "{\"a\": " << links[i].a << ", \"b\": " << links[i].b << "}"
+          << (i + 1 < links.size() ? ", " : "");
+    }
+    f << "]\n}\n";
+    return f.good();
+}
+
+bool QuantumFog::LoadFromFile(const std::string& path) {
+    std::ifstream f(path);
+    if (!f) return false;
+    std::ostringstream ss;
+    ss << f.rdbuf();
+    JsonValue root;
+    if (!JsonValue::ParseOk(ss.str(), root)) return false;
+    if (root["schema"].AsString() != "potato.quantum_fog/1") return false;
+
+    entities.clear();
+    links.clear();
+    for (const auto& je : root["entities"].AsArray()) {
+        const auto& jc = je["candidates"].AsArray();
+        if (jc.size() < 2) return false;
+
+        std::vector<Vector2> candidates;
+        candidates.reserve(jc.size());
+        for (const auto& c : jc) {
+            candidates.emplace_back(c[0].AsFloat(), c[1].AsFloat());
+        }
+        std::vector<double> priors;
+        for (const auto& p : je["priors"].AsArray()) {
+            priors.push_back(p.AsNumber());
+        }
+        std::vector<Qudit::Amplitude> amps;
+        for (const auto& a : je["amplitudes"].AsArray()) {
+            amps.emplace_back(a[0].AsNumber(), a[1].AsNumber());
+        }
+
+        const int id = AddEntity(je["name"].AsString(), je["team"].AsInt(1),
+                                 candidates, priors);
+        if (id < 0) return false;
+        UncertainEntity& e = entities[id];
+        if (amps.size() == candidates.size() &&
+            e.state.SetAmplitudes(amps)) {
+            // 振幅含相位，直接還原
+        } else {
+            e.state.SetProbabilities(e.priors);
+        }
+        e.revealed = je["revealed"].AsBool();
+        e.revealedPos = Vector2(je["revealed_pos"][0].AsFloat(),
+                                je["revealed_pos"][1].AsFloat());
+        e.revealTimer = je["reveal_timer"].AsFloat();
+    }
+    for (const auto& jl : root["entanglements"].AsArray()) {
+        Entangle(jl["a"].AsInt(-1), jl["b"].AsInt(-1));
+    }
+    const uint64_t sc =
+        static_cast<uint64_t>(root["seed_counter"].AsNumber(0.0));
+    if (sc > seedCounter) seedCounter = sc; // 新實體 seed 不回跳
+    return true;
 }
 
 } // namespace Gameplay

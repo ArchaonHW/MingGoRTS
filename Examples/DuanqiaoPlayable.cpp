@@ -419,15 +419,21 @@ int main() {
         // 雲心朝敵軍進攻方向偏移 1.5 格:不洩漏真實位置,
         // 靠偵查/觀測才能確定敵人在哪
         Vector2 center = es->GetPosition();
+        Vector2 advanceDir(0.0f, 0.0f);
         if (northRally) {
             Vector2 dir = northRally->pos - center;
             const float len = dir.Length();
-            if (len > 1e-4f) center = center + dir * (1.5f / len);
+            if (len > 1e-4f) {
+                advanceDir = dir * (1.0f / len);
+                center = center + dir * (1.5f / len);
+            }
         }
+        // Q-4 人格先驗:格洛克侵略 90 → 偏置點推向敵方前線
+        const Vector2 bias = glock.FogBiasPoint(center, advanceDir, 3.5f);
         const int id = fog.AddEntityCloud(
             es->GetName(), /*觀測方=*/0, center,
             /*radius=*/3.5f, /*count=*/6, /*minSpacing=*/1.2f,
-            southCamp ? &southCamp->pos : nullptr);
+            &bias, glock.FogPriorScale());
         if (id >= 0) battle.BindFogSquad(es, id);
     }
     // Q-2 糾纏:e0/e1 同向機動——觀測其一,另一朵雲向同向候選收縮

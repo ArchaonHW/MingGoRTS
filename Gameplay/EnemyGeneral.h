@@ -2,6 +2,7 @@
 
 #include "Core/CoreTypes.h"
 #include "Doctrine.h"
+#include "MathUtils/Vector2.h"
 
 #include <string>
 #include <vector>
@@ -55,12 +56,24 @@ public:
     DoctrineSet BuildDoctrineFor(const Squad& squad, int squadRank,
                                  int squadCount) const;
 
+    // 敵情霧先驗偏置（Q-4）：侵略高 → 偏置點推向 enemyDir；
+    // 狡詐高 → 偏向 enemyDir 垂直的側翼。enemyDir 零向量時回傳
+    // center（退化安全）。回傳值餵給 QuantumFog::AddEntityCloud
+    // 的 biasPoint。
+    Vector2 FogBiasPoint(Vector2 center, Vector2 enemyDir,
+                         float radius) const;
+    // 紀律 → 先驗集中度：高紀律守位 → 雲更集中（<1）；
+    // 預設人格（50）回 1.0。
+    float FogPriorScale() const;
+
     // 對整隊敵軍套用：強者帶簽名卡主攻、弱者依人格守/伏
     void ApplyTo(BattleController& battle, int team) const;
 
+    // doctrine 卡 action 字串 → 列舉（供測試/工具直接驗證映射）
+    static DoctrineAction ActionFromString(const std::string& s);
+
 private:
     static DoctrineTrigger TriggerFromString(const std::string& s);
-    static DoctrineAction ActionFromString(const std::string& s);
 
     std::string name = "未知敵將";
     std::string epithet;
