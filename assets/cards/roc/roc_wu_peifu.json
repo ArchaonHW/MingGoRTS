@@ -1,0 +1,25 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_wu_peifu",
+  "name": "吳佩孚",
+  "courtesyName": "子玉",
+  "epithet": "玉帥",
+  "rarity": "epic",
+  "faction": "直系",
+  "role": "commander",
+  "personality": { "aggression": 50, "discipline": 88, "cunning": 72 },
+  "stats": { "command": 84, "attack": 70, "defense": 84, "mobility": 62, "moraleAura": 78 },
+  "signatureDoctrine": {
+    "name": "中軍不動",
+    "trigger": "Always", "threshold": 0.0, "action": "HoldPosition",
+    "description": "洛陽虎踞,中軍如山——直系用兵最重陣形完整,不輕動"
+  },
+  "cards": [
+    { "name": "友軍策應", "trigger": "AllyEngaged", "action": "DefendNearestAlly", "threshold": 0.0, "priority": 55, "cooldown": 12.0 },
+    { "name": "潰線收攏", "trigger": "MoraleBelow", "action": "RetreatToRally", "threshold": 0.4, "priority": 25, "cooldown": 25.0 }
+  ],
+  "portrait": { "build": "normal", "head": "cap", "beard": "mustache", "glasses": false },
+  "lore": "直系首領,常勝將軍,登《時代》封面中國第一人,晚年拒附日,遇刺身亡。",
+  "historicalBattle": "第一次直奉戰爭 1922",
+  "art": "cards/art/roc_wu_peifu.png"
+}

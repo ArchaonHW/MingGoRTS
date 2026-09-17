@@ -44,6 +44,13 @@ public:
     float GetDiscipline() const { return discipline; }
     float GetCunning() const { return cunning; }
 
+    // 立繪/卡面資產路徑（卡片 "art" 欄位，相對 assets/ 根目錄）；
+    // UI 顯示立繪時以此路徑載入 PNG。卡片未指定時為空字串。
+    const std::string& GetArtPath() const { return artPath; }
+    const std::string& GetFaction() const { return faction; }
+    const std::string& GetRarity() const { return rarity; }
+    const std::string& GetCardId() const { return cardId; }
+
     // 為某支小隊生成 doctrine（人格 × 簽名卡 × 小隊角色）
     DoctrineSet BuildDoctrineFor(const Squad& squad, int squadRank,
                                  int squadCount) const;
@@ -57,6 +64,10 @@ private:
 
     std::string name = "未知敵將";
     std::string epithet;
+    std::string artPath;   // 立繪 PNG（cards/art/...）
+    std::string faction;
+    std::string rarity;
+    std::string cardId;
     float aggression = 50.0f;
     float discipline = 50.0f;
     float cunning = 50.0f;

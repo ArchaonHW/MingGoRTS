@@ -49,6 +49,10 @@ bool EnemyGeneral::LoadFromString(const std::string& json) {
     }
     name = root["name"].AsString(name);
     epithet = root["epithet"].AsString();
+    artPath = root["art"].AsString();
+    faction = root["faction"].AsString();
+    rarity = root["rarity"].AsString();
+    cardId = root["id"].AsString();
 
     const JsonValue& p = root["personality"];
     aggression = p["aggression"].AsFloat(aggression);

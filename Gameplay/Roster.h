@@ -32,6 +32,7 @@ struct RosterEntry {
     bool alive = true;
     float deathTime = -1.0f;  // 陣亡的遊戲時間；-1 = 仍在世
     std::string relic;        // 遺物（掉落物，供戰後拾取/紀念）
+    std::string art;          // 立繪 PNG 路徑（cards/art/...），UI 顯示用
 };
 
 class Roster {
@@ -39,7 +40,8 @@ public:
     // 部署階段登記隊長；rank 僅接受 "captain" 以上語義（自由字串）
     void Enroll(const Squad* squad, const std::string& name,
                 const std::string& rank = "captain",
-                const std::string& relic = "");
+                const std::string& relic = "",
+                const std::string& art = "");
 
     // 每 tick 呼叫：偵測小隊殲滅 → 記陣亡（重複呼叫安全）
     void Update(const BattleController& battle);

@@ -10,7 +10,8 @@ namespace Potato {
 namespace Gameplay {
 
 void Roster::Enroll(const Squad* squad, const std::string& name,
-                    const std::string& rank, const std::string& relic) {
+                    const std::string& rank, const std::string& relic,
+                    const std::string& art) {
     if (!squad) {
         return;
     }
@@ -20,6 +21,7 @@ void Roster::Enroll(const Squad* squad, const std::string& name,
     e.squadName = squad->GetName();
     e.team = squad->GetTeam();
     e.relic = relic;
+    e.art = art;
     entries.push_back(e);
     watched.push_back(squad);
 }
@@ -67,7 +69,8 @@ bool Roster::SaveToFile(const std::string& path) const {
           << "\", \"team\": " << e.team
           << ", \"alive\": " << (e.alive ? "true" : "false")
           << ", \"deathTime\": " << e.deathTime
-          << ", \"relic\": \"" << Esc(e.relic) << "\"}"
+          << ", \"relic\": \"" << Esc(e.relic) << "\""
+          << ", \"art\": \"" << Esc(e.art) << "\"}"
           << (i + 1 < entries.size() ? ",\n" : "\n");
     }
     f << "  ]\n}\n";
@@ -96,6 +99,7 @@ bool Roster::LoadFromFile(const std::string& path) {
         e.alive = j["alive"].AsBool(true);
         e.deathTime = j["deathTime"].AsFloat(-1.0f);
         e.relic = j["relic"].AsString();
+        e.art = j["art"].AsString();
         entries.push_back(e);
         watched.push_back(nullptr); // 讀回的名冊不再追蹤即時物件
     }
