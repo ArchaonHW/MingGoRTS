@@ -65,6 +65,18 @@ void Squad::ApplyCasualties(int count) {
     }
 }
 
+void Squad::AdjustMorale(float delta) {
+    if (members <= 0) {
+        return;
+    }
+    morale = std::clamp(morale + delta, 0.0f, 1.0f);
+    // 士氣歸零 → 潰逃（與傷亡歸零同型；潰逃為終態，不復歸）
+    if (!routing && morale <= 0.0f) {
+        routing = true;
+        order = SquadOrder::Retreat;
+    }
+}
+
 void Squad::RecoverMorale(float dt) {
     if (!engaged && !routing) {
         morale = std::min(1.0f, morale + 0.02f * dt);

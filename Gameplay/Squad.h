@@ -59,6 +59,9 @@ public:
 
     // 造成傷亡：members 減少並依傷亡比例扣 morale
     void ApplyCasualties(int count);
+    // 指揮層（SageCommand 政策效果等）直接調整士氣；不造成傷亡。
+    // 士氣歸零同樣觸發潰逃（routing），已潰逃者不會因士氣回升而復歸。
+    void AdjustMorale(float delta);
     // 士氣回復（每秒），僅未接戰時
     void RecoverMorale(float dt);
 
