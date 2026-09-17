@@ -51,3 +51,9 @@ C++20 遊戲引擎 + MingGoRTS IDE，CMake 建置，無 UE5 依賴。BMAD v6 已
 - 必要條件：目錄內附 `README.md` 記錄 來源 URL / 版本 / license；實作巨集（如 `TINYGLTF_IMPLEMENTATION`、`STB_IMAGE_IMPLEMENTATION`）集中放在引擎目錄的單一 TU（例：`Rendering/TinyGltfImpl.cpp`），其他檔案不得重複定義
 - 引入前優先評估是否已有自研方案可複用（如 `Rendering/ImageCodec` 的零依賴 PNG）
 - 目前 vendored：`external/tinygltf/`（tinygltf v2.9.7 + nlohmann/json + stb_image/stb_image_write，glTF/VRM 載入用）
+
+## 已知環境坑：MinGW libstdc++ DLL 錯配
+
+- 在 git-bash 手工 `g++` 編出的 binary 會依 PATH 載入 `libstdc++-6.dll`——`C:\Program Files\Git\mingw64\bin` 若排在 scoop MinGW 前面，會載到**版本不符的 DLL**，`-O1/-O2` 下 segfault（`-O0` 僥倖通過）。
+- 解法：執行前 `export PATH="/c/Users/potat/scoop/apps/mingw/16.2.0-rt_v14-rev1/bin:$PATH"`，或連結時加 `-static-libstdc++ -static-libgcc`。
+- `build-mingw/bin/` 的 CMake 產物不受影響（ctest 全部正常）。
