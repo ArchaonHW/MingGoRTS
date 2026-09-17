@@ -250,7 +250,7 @@ queue:
       - 存檔→讀檔後 GetCloud 分佈一致（±1e-6）
       - recorder 事件含 entityId 與候選分佈摘要
       - BattleRecorderTest 無回歸
-    status: queued
+    status: done
     size: M
 
   - id: Q-7

@@ -205,10 +205,11 @@ void BattleController::Update(float realDt) {
             if (!ent) continue;
 
             // 正面：敵對方小隊進入真身接觸範圍 → 揭露(已揭露則刷新時效)
+            // 潰逃中的小隊失控逃亡,不算有效觀察者
             bool inContact = false;
             for (const auto& other : squads) {
                 if (other->GetTeam() == target->GetTeam() ||
-                    other->IsEliminated()) {
+                    other->IsEliminated() || other->IsRouting()) {
                     continue;
                 }
                 if ((other->GetPosition() - target->GetPosition()).Length() <=
@@ -225,13 +226,32 @@ void BattleController::Update(float realDt) {
                 continue;
             }
 
-            // 負面：目視覆蓋候選格但真身不在那 → 消去該候選(雲縮小,
-            // Scout 才不會卡在同一格 modal 上空轉)
             if (!fog->IsRevealed(entityId)) {
+                // 情報過期回疊加：還在 Engage 隱形目標的小隊失去目標,
+                // 退回駐守,不再追著看不見的敵人跑
+                for (const auto& other : squads) {
+                    if (other->GetTeam() == target->GetTeam() ||
+                        other->IsEliminated() || other->IsRouting()) {
+                        continue;
+                    }
+                    if (other->GetOrder() == SquadOrder::Engage &&
+                        other->GetEngageTarget() == target) {
+                        other->IssueOrder(SquadOrder::Hold,
+                                          other->GetPosition());
+                    }
+                }
+
+                // 負面：目視覆蓋候選格但真身不在那 → 消去該候選(雲縮小,
+                // Scout 才不會卡在同一格 modal 上空轉)
                 for (size_t ci = 0; ci < ent->candidates.size(); ++ci) {
+                    // 候選格就是真身所在 → 目視到的是「有人」而非「沒人」
+                    if ((ent->candidates[ci] - target->GetPosition())
+                            .Length() <= fogRevealRange) {
+                        continue;
+                    }
                     for (const auto& other : squads) {
                         if (other->GetTeam() == target->GetTeam() ||
-                            other->IsEliminated()) {
+                            other->IsEliminated() || other->IsRouting()) {
                             continue;
                         }
                         if ((other->GetPosition() - ent->candidates[ci])
@@ -324,7 +344,29 @@ Squad* BattleController::FindNearestEngagedAlly(const Squad& squad) const {
 }
 
 void BattleController::BindFog(QuantumFog* f) {
+    // 舊 fog 若持有指向本 controller 的事件回調,先清掉再換綁,
+    // 避免解綁後 fog 透過懸空 this 回呼
+    if (fog && fog != f) {
+        fog->SetEventCallback(nullptr);
+    }
     fog = f;
+    // Q-6：fog 態變化（觀測/揭露/消去/過期/糾纏/探測）併入戰報流,
+    // BattleRecorder 因此能錄下機率雲變化供回放時間軸重現
+    if (fog) {
+        fog->SetEventCallback(
+            [this](const std::string& msg) { Emit(msg); });
+    }
+    // (重)綁定時清掉超出新 fog 範圍的舊綁定——失效 entityId
+    // 會讓小隊永久隱形又沒有機率雲;解綁(nullptr)則全清
+    for (auto it = fogEntities.begin(); it != fogEntities.end();) {
+        const bool stale = !fog || it->second < 0 ||
+            it->second >= static_cast<int>(fog->EntityCount());
+        if (stale) {
+            it = fogEntities.erase(it);
+        } else {
+            ++it;
+        }
+    }
 }
 
 void BattleController::BindFogSquad(Squad* squad, int entityId) {
@@ -333,6 +375,12 @@ void BattleController::BindFogSquad(Squad* squad, int entityId) {
     if (fog && (entityId < 0 ||
                 entityId >= static_cast<int>(fog->EntityCount()))) {
         return;
+    }
+    // 一個 entity 只能對應一支小隊;重複綁定會讓 GetFogSquad 結果不固定
+    for (const auto& kv : fogEntities) {
+        if (kv.second == entityId && kv.first != squad) {
+            return;
+        }
     }
     fogEntities[squad] = entityId;
 }
@@ -540,6 +588,11 @@ void BattleController::ResolveCombat(float dt) {
             Squad* b = squads[j].get();
             if (b->IsEliminated() || b->IsRouting() ||
                 a->GetTeam() == b->GetTeam()) {
+                continue;
+            }
+            // 霧中未揭露的小隊對敵方不可見——engageRange 大於
+            // fogRevealRange 時也不能隔空交戰(無 fog 時不付查表成本)
+            if (fog && (IsHiddenByFog(*a) || IsHiddenByFog(*b))) {
                 continue;
             }
             float dist = (a->GetPosition() - b->GetPosition()).Length();

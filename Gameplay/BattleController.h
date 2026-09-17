@@ -114,7 +114,9 @@ public:
     QuantumFog* GetFog() const { return fog; }
     int GetFogEntityId(const Squad* squad) const;
     Squad* GetFogSquad(int entityId) const;
-    void SetFogRevealRange(float cells) { fogRevealRange = cells; }
+    void SetFogRevealRange(float cells) {
+        if (cells > 0.0f) fogRevealRange = cells; // NaN/非正數忽略
+    }
 
     // 每幀呼叫：realDt 為真實秒數，內部乘 timeScale
     void Update(float realDt);

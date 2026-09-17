@@ -4,6 +4,7 @@
 
 #include "Gameplay/BattleController.h"
 #include "Gameplay/BattleResources.h"
+#include "Gameplay/EnemyGeneral.h"
 #include "Gameplay/QuantumFog.h"
 
 #include <cmath>
@@ -72,6 +73,20 @@ int main() {
         Check(fog.Observe(eid, enemy->GetPosition()) && res.GetIntel(0) == 2,
               "已揭露重複觀測不扣點");
 
+        // [2b] 再觀測刷新情報時效與真值位置(敵軍移動後重報)
+        enemy->IssueOrder(SquadOrder::MoveTo, Vector2(15, 9));
+        RunUntil(battle, 4.0f, [&] {
+            return (enemy->GetPosition() - Vector2(15, 9)).Length() < 0.3f;
+        });
+        const Vector2 newTruePos = enemy->GetPosition();
+        Check(fog.Observe(eid, newTruePos), "再觀測刷新情報");
+        for (int i = 0; i < 30; ++i) battle.Update(0.1f); // 3s < 5s 時效
+        Check(fog.IsRevealed(eid), "刷新後時效內仍揭露");
+        rp = fog.GetRevealedPos(eid);
+        Check((rp - newTruePos).Length() < 0.05f &&
+                  std::fabs(rp.y - 7.0f) > 0.5f,
+              "揭露位置更新為新真值", rp.y, newTruePos.y);
+
         // [3] 情報時效到期 → 回疊加態(雙方距離 13 格,不會接觸揭露)
         Check(RunUntil(battle, 8.0f, [&] { return !fog.IsRevealed(eid); }),
               "時效到期回疊加態");
@@ -96,6 +111,12 @@ int main() {
             {0.2, 0.6, 0.2});
         battle.BindFogSquad(enemy, eid);
 
+        // 戰報計數:持續接觸只能發一次「目擊」,不可每幀洗版
+        int spottedEvents = 0;
+        battle.SetEventCallback([&](const std::string& e) {
+            if (e.find("目擊") != std::string::npos) ++spottedEvents;
+        });
+
         // Scout:Always → 往最近未揭露雲的 modal 候選移動
         DoctrineSet scoutDoc;
         scoutDoc.AddRule({DoctrineTrigger::Always, DoctrineAction::Scout,
@@ -117,6 +138,11 @@ int main() {
               "接近後接觸揭露");
         Check(res.GetIntel(0) == 2, "接觸揭露不扣情報",
               (float)res.GetIntel(0), 2.0f);
+
+        // [5b] 維持接觸再跑 3s——目擊戰報只能發一次
+        for (int i = 0; i < 30; ++i) battle.Update(0.1f);
+        Check(spottedEvents == 1, "持續接觸只發一次目擊戰報",
+              (float)spottedEvents, 1.0f);
     }
 
     // ---- 未綁 fog 時 Scout 退回 Hold(無回歸)----
@@ -168,6 +194,64 @@ int main() {
                       std::fabs(cloud[0].first.y - 12.0f) < 1e-3f,
                   "殘存候選為真身所在格", cloud[0].first.x, 15.0f);
         }
+    }
+
+    // ---- 隱形敵軍不可被介入/自動索敵;綁定驗證;action 字串映射 ----
+    {
+        BattleController battle(20, 15, 1.0f);
+        BattleResources res;
+        res.Setup(battle, 0, /*intel=*/2, /*cp=*/2);
+
+        QuantumFog fog(5.0f, 1);
+        fog.BindResources(&res);
+        battle.BindFog(&fog);
+        battle.SetFogRevealRange(2.0f);
+
+        // 相距 4 格 > fogRevealRange:保持隱形;候選格也都不在目視內
+        Squad* player = battle.CreateSquad("前鋒", 0, Vector2(10, 5), 20);
+        Squad* enemy = battle.CreateSquad("伏兵", 1, Vector2(10, 9), 20);
+
+        // 無效 entityId(-1 / >= EntityCount)的綁定被拒
+        battle.BindFogSquad(player, -1);
+        battle.BindFogSquad(player, 99);
+        Check(battle.GetFogEntityId(player) == -1, "無效 entityId 綁定被拒");
+
+        const int eid = fog.AddEntity("伏兵", 0,
+                                    {Vector2(6, 9), Vector2(14, 9)},
+                                    {0.5, 0.5});
+        battle.BindFogSquad(enemy, eid);
+
+        // 範圍內只有隱形敵軍:EnemyInRange→AttackNearest 不得觸發
+        DoctrineSet doc;
+        doc.AddRule({DoctrineTrigger::EnemyInRange,
+                     DoctrineAction::AttackNearest, 6.0f, 1});
+        doc.AddRule({DoctrineTrigger::Always, DoctrineAction::HoldPosition,
+                     0.0f, 90});
+        battle.AssignDoctrine(player, doc);
+        battle.BeginExecution();
+
+        // 隱形目標的 Engage 介入被拒,且不扣 CP
+        Check(!battle.Intervene(player, SquadOrder::Engage, enemy),
+              "Engage 隱形敵軍被拒");
+        Check(battle.GetCommandPoints(0) == 2, "失敗介入不扣 CP",
+              (float)battle.GetCommandPoints(0), 2.0f);
+
+        for (int i = 0; i < 10; ++i) battle.Update(0.1f);
+        Check(player->GetOrder() == SquadOrder::Hold &&
+                  player->GetEngageTarget() == nullptr,
+              "只見隱形敵軍時 doctrine 不索敵");
+
+        // 揭露後同一個 Engage 介入成立且扣 CP
+        fog.Reveal(eid, enemy->GetPosition());
+        Check(battle.Intervene(player, SquadOrder::Engage, enemy),
+              "揭露後 Engage 成立");
+        Check(battle.GetCommandPoints(0) == 1, "成功介入扣 1 CP",
+              (float)battle.GetCommandPoints(0), 1.0f);
+
+        // doctrine 卡 action 字串映射含 Scout
+        Check(EnemyGeneral::ActionFromString("Scout") ==
+                  DoctrineAction::Scout,
+              "ActionFromString 支援 Scout");
     }
 
     printf("\n=== 結果: %d PASS, %d FAIL ===\n", g_pass, g_fail);

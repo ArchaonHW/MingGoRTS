@@ -86,9 +86,32 @@ bool QuantumFog::Observe(int entityId, const Vector2& truePos) {
         return false;
     }
     UncertainEntity& e = entities[entityId];
-    if (e.revealed) { // 已揭露不重複扣點,但刷新真值與時效
+    if (e.revealed) {
+        // Q-7 相位干涉:同 tick(fogTime 未推進)二次觀測 → 相位差決定
+        // 建設性(時效加成)或破壞性(觀測被拒)
+        if (interference && !e.phases.empty() &&
+            e.lastObserveAt == fogTime) {
+            const int tgt = NearestCandidate(e, truePos);
+            const int modal = ModalCandidate(e);
+            const double c =
+                std::cos(e.phases[tgt] - e.phases[modal]);
+            e.lastObserveAt = fogTime;
+            if (c < 0.0) {
+                Emit("fog:interference #" + std::to_string(entityId) +
+                     " " + e.name + " 破壞性干涉,觀測被拒");
+                return false;
+            }
+            // 建設性:情報穿透——刷新時效再 +50%
+            e.revealedPos = truePos;
+            e.revealTimer = intelDuration * 1.5f;
+            Emit("fog:interference #" + std::to_string(entityId) + " " +
+                 e.name + " 建設性干涉,時效加成");
+            return true;
+        }
+        // 已揭露不重複扣點,但刷新真值與時效
         e.revealedPos = truePos;
         e.revealTimer = intelDuration;
+        e.lastObserveAt = fogTime;
         return true;
     }
 
@@ -98,6 +121,7 @@ bool QuantumFog::Observe(int entityId, const Vector2& truePos) {
     }
 
     const int hit = CollapseNear(e, truePos);
+    e.lastObserveAt = fogTime;
     Emit("fog:observe #" + std::to_string(entityId) + " " + e.name +
          " → 候選" + std::to_string(hit));
     PropagateEntanglement(entityId, hit);
@@ -447,7 +471,7 @@ bool QuantumFog::LoadFromFile(const std::string& path) {
         for (const auto& p : je["priors"].AsArray()) {
             priors.push_back(p.AsNumber());
         }
-        std::vector<Qudit::Amplitude> amps;
+        std::vector<Quantum::Qudit::Amplitude> amps;
         for (const auto& a : je["amplitudes"].AsArray()) {
             amps.emplace_back(a[0].AsNumber(), a[1].AsNumber());
         }

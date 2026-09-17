@@ -474,6 +474,80 @@ void TestRandomSourceInjection() {
     }
 }
 
+// ---- Q-6：疊加態存檔 + 事件流 ----
+void TestQuantumFogSaveLoad() {
+    printf("-- QuantumFog save/load --\n");
+    const char* path = "quantum_fog_test_save.json";
+
+    QuantumFog fog(30.0f, 1, 1);
+    std::vector<std::string> events;
+    fog.SetEventCallback(
+        [&events](const std::string& m) { events.push_back(m); });
+
+    const int id = fog.AddEntityCloud("測試隊", 1, Vector2(5, 5),
+                                    3.0f, 6, 1.0f);
+    CHECK(id >= 0, "存檔用雲建立");
+    fog.Probe(id, Vector2(5.2f, 5.0f), 0.4f);
+    fog.Observe(id, Vector2(5.1f, 5.1f));
+    fog.Entangle(id, fog.AddEntityCloud("僚隊", 1, Vector2(9, 5),
+                                      3.0f, 6, 1.0f));
+
+    // 事件流:觀測+探測都有錄
+    bool sawObserve = false, sawProbe = false;
+    for (const auto& m : events) {
+        if (m.find("fog:observe") != std::string::npos) sawObserve = true;
+        if (m.find("fog:probe") != std::string::npos) sawProbe = true;
+    }
+    CHECK(sawObserve, "觀測發 fog 事件");
+    CHECK(sawProbe, "探測發 fog 事件");
+
+    // 存 → 讀 → 雲分佈一致
+    CHECK(fog.SaveToFile(path), "存檔成功");
+    QuantumFog fog2(30.0f, 1, 1);
+    CHECK(fog2.LoadFromFile(path), "讀檔成功");
+    CHECK(fog2.EntityCount() == fog.EntityCount(), "實體數一致");
+    const auto c1 = fog.GetCloud(id);
+    const auto c2 = fog2.GetCloud(id);
+    CHECK(c1.size() == c2.size(), "雲候選數一致");
+    bool match = c1.size() == c2.size();
+    for (size_t i = 0; match && i < c1.size(); ++i) {
+        if (std::abs(c1[i].first.x - c2[i].first.x) > 1e-6f ||
+            std::abs(c1[i].first.y - c2[i].first.y) > 1e-6f ||
+            std::abs(c1[i].second - c2[i].second) > 1e-6) {
+            match = false;
+        }
+    }
+    CHECK(match, "存讀後雲分佈一致(±1e-6)");
+    CHECK(fog2.IsRevealed(id) == fog.IsRevealed(id), "revealed 狀態一致");
+    CHECK(fog2.EntangledPartner(id) == fog.EntangledPartner(id),
+          "糾纏關係一致");
+
+    // 未揭露態 round-trip:expired 後雲仍一致
+    QuantumFog fog3(0.001f, 1, 1);
+    const int id3 = fog3.AddEntityCloud("退相干隊", 1, Vector2(2, 2),
+                                      2.0f, 5, 0.8f);
+    fog3.Observe(id3, Vector2(2.1f, 2.1f));
+    bool sawExpire = false;
+    fog3.SetEventCallback(
+        [&sawExpire](const std::string& m) {
+            if (m.find("fog:expire") != std::string::npos)
+                sawExpire = true;
+        });
+    fog3.Update(1.0f); // 情報過期
+    CHECK(sawExpire, "情報過期發 fog:expire 事件");
+    CHECK(!fog3.IsRevealed(id3), "過期後回疊加態");
+    CHECK(fog3.SaveToFile(path), "未揭露態存檔");
+    QuantumFog fog4(30.0f, 1, 1);
+    CHECK(fog4.LoadFromFile(path), "未揭露態讀檔");
+    const auto d1 = fog3.GetCloud(id3);
+    const auto d2 = fog4.GetCloud(0);
+    bool dmatch = d1.size() == d2.size();
+    for (size_t i = 0; dmatch && i < d1.size(); ++i) {
+        if (std::abs(d1[i].second - d2[i].second) > 1e-6) dmatch = false;
+    }
+    CHECK(dmatch, "未揭露雲分佈一致(±1e-6)");
+}
+
 int main() {
     printf("=== QuantumTest ===\n");
     TestQubitRegister();
@@ -483,6 +557,7 @@ int main() {
     TestQuantumFogEntangle();
     TestQuantumFogPersonality();
     TestRandomSourceInjection();
+    TestQuantumFogSaveLoad();
 
     if (g_failures == 0) {
         printf("ALL CHECKS PASSED\n");
