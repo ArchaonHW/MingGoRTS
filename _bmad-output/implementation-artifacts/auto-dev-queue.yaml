@@ -78,7 +78,13 @@ queue:
     summary: >
       戰鬥即時層 HUD：小隊狀態條、士氣可視化、CP 介入按鈕、
       doctrine 觸發訊息流（哪張卡觸發、結果）。
-    status: queued
+    status: done
+    note: >
+      「全軍」面板：每隊 Selectable（點選同步場景選取）、
+      兵力條（綠→紅漸變）、士氣條（藍系/潰逃轉紅+標註）、
+      命令名；選中隊下方 CP 介入按鈕列（攻進目標/撤回集結/
+      原地駐守，CP=0 自動 disable）。doctrine 觸發訊息流為
+      既有 Emit（trigger→action 已在戰況窗）。
     size: L
 
   - id: A-3

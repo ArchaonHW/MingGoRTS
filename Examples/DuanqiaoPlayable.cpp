@@ -406,7 +406,10 @@ int main() {
         if (id >= 0) battle.BindFogSquad(es, id);
     }
     // Q-2 糾纏:e0/e1 同向機動——觀測其一,另一朵雲向同向候選收縮
-    fog.Entangle(battle.GetFogEntityId(e0), battle.GetFogEntityId(e1));
+    if (!fog.Entangle(battle.GetFogEntityId(e0),
+                      battle.GetFogEntityId(e1))) {
+        printf("[fog] 糾纏建立失敗(e0/e1)\n");
+    }
 
     // ---- T-9 回合層牌組:Init 收隊 → AI 參謀模板起手 → 玩家可編輯 ----
     PlanningDeck deck;
@@ -857,6 +860,80 @@ int main() {
             }
             ImGui::SameLine();
             ImGui::TextDisabled("寫好劇本再開戰;CP 留給救火");
+            ImGui::End();
+        }
+
+        // ---- T-10 全軍狀態列:每隊兵力/士氣條 + CP 介入按鈕 ----
+        if (!planningPhase) {
+            ImGui::SetNextWindowPos(ImVec2((float)ww - 272.0f, 8.0f),
+                                    ImGuiCond_Always);
+            ImGui::SetNextWindowSize(ImVec2(264, 0), ImGuiCond_Always);
+            ImGui::Begin("全軍", nullptr,
+                         ImGuiWindowFlags_NoCollapse |
+                             ImGuiWindowFlags_AlwaysAutoResize);
+            for (const auto& sq : battle.GetSquads()) {
+                if (sq->GetTeam() != 0) continue;
+                const bool sel = (sq.get() == selected);
+                if (ImGui::Selectable(sq->GetName().c_str(), sel)) {
+                    selected = sq.get();
+                    sync.SetSelectedSquad(selected);
+                }
+                // 兵力條(綠→紅)
+                const float hp = sq->GetHealthPct();
+                ImGui::PushStyleColor(ImGuiCol_PlotHistogram,
+                    ImVec4(1.0f - hp, hp * 0.85f, 0.15f, 1.0f));
+                char hpLbl[48];
+                std::snprintf(hpLbl, sizeof(hpLbl), "兵力 %d/%d",
+                              sq->GetMembers(), sq->GetMaxMembers());
+                ImGui::ProgressBar(hp, ImVec2(-1, 0), hpLbl);
+                ImGui::PopStyleColor();
+                // 士氣條(藍系;潰逃標紅)
+                const float mo = sq->GetMorale();
+                ImGui::PushStyleColor(ImGuiCol_PlotHistogram,
+                    sq->IsRouting()
+                        ? ImVec4(0.9f, 0.2f, 0.2f, 1.0f)
+                        : ImVec4(0.25f, 0.45f + mo * 0.3f, 0.95f, 1.0f));
+                char moLbl[48];
+                std::snprintf(moLbl, sizeof(moLbl),
+                              sq->IsRouting() ? "士氣 %.0f%% 潰逃中"
+                                              : "士氣 %.0f%%",
+                              mo * 100.0f);
+                ImGui::ProgressBar(mo, ImVec2(-1, 0), moLbl);
+                ImGui::PopStyleColor();
+                ImGui::TextDisabled("命令: %s", OrderName(sq->GetOrder()));
+                ImGui::Separator();
+            }
+
+            // CP 介入按鈕列(對齊右鍵語義;CP 不足自動 disable)
+            if (selected && !selected->IsEliminated()) {
+                const int cp = battle.GetCommandPoints(0);
+                ImGui::Text("CP 介入(%d)", cp);
+                ImGui::BeginDisabled(cp <= 0);
+                if (ImGui::Button("攻進目標")) {
+                    if (battle.Intervene(selected, SquadOrder::AttackMove,
+                                         battle.GetObjective(0))) {
+                        eventLog.push_back("CP: " + selected->GetName() +
+                                           " 攻進目標");
+                    }
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("撤回集結")) {
+                    if (battle.Intervene(selected, SquadOrder::Retreat,
+                                         battle.GetRallyPoint(0))) {
+                        eventLog.push_back("CP: " + selected->GetName() +
+                                           " 撤退");
+                    }
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("原地駐守")) {
+                    if (battle.Intervene(selected, SquadOrder::Hold,
+                                         selected->GetPosition())) {
+                        eventLog.push_back("CP: " + selected->GetName() +
+                                           " 駐守");
+                    }
+                }
+                ImGui::EndDisabled();
+            }
             ImGui::End();
         }
 
