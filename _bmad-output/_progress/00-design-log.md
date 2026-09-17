@@ -84,3 +84,30 @@
 ## Commit 拆分
 - 本工作單獨 commit d4eb1e4(pathspec 提交);CMakeLists 其餘 hunks(NeuralNetwork/AIAgentSmoke/QuasiRandomTest 等)屬平行 session 工作,未捲入
 - 落地分支為 feat/game-backend-services(平行 session 已切換原 gameplay 分支)
+
+---
+
+# Q-1 QuantumFog 接入斷橋(2026-09-17,commit aa51f42)
+
+## 機制
+
+敵軍開戰即疊加態:6 候選格機率雲(藍噪散佈,先驗偏向南岸敵營,雲心朝進攻方向偏 1.5 格不洩真值)。揭露雙路徑:情報點觀測(intel=4/cost=1/時效 25s)或小隊接觸(3 格內,免費且刷新時效)。負面觀測:目視覆蓋候選格但無人→消去該候選,雲縮小。
+
+## Review 修復(2 路:blind + acceptance)
+
+- Scout 卡死(走到 modal 格但真身不在範圍→永遠 Hold)→ 負面觀測讓雲隨偵查縮小,Scout 自然推進
+- 情報洩漏:doctrine 感知(EnemyInRange/outnumbered)與 Engage 用真實位置 → IsHiddenByFog 全面閘控
+- 雲心=真實出生點洩漏真值 → suspectedCenter 偏移
+- Detach/SetFog 不清 fog 指標與 fogNodes → 補清
+- marker 子節點超過篩選後雲大小 → 逐個 SetActive
+- 接觸揭露 Emit 改為迭代外批次發送(callback reentrancy 防禦)且僅新揭露才發
+- BindFogSquad 驗證 entityId;EnemyGeneral 補 Scout 字串映射;HUD 未揭露數跳過全滅
+
+## defer
+
+- 已 Engage 中的敵軍回雲後 order 不清空(接觸再現會重新揭露,自癒)
+- 全滅但未揭露的 entity 殘留(不影響顯示)
+
+## 驗證
+
+MSVC+MinGW 建置過;QuantumFogBattleTest 17 PASS(觀測扣點/重複不扣/時效回雲/接觸免費/Scout 目標/負面觀測/無 fog 退回);BattleSceneTest 22 PASS;既有測試無回歸。

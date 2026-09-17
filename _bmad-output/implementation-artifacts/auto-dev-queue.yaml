@@ -2,7 +2,7 @@
 # 每個 item 走完：pick → spec (gds-quick-dev) → implement → verify → review → commit
 # 規則見 auto-dev-workflow.md
 version: 1
-updated: 2026-09-17
+updated: 2026-09-17 (Q 層新增)
 
 queue:
 
@@ -74,7 +74,10 @@ queue:
     summary: >
       戰場單位先用膠囊體+陣營色塊渲染（3D），支援選取框與血條。
       依賴現有 Mesh + 簡單 shader；不接蒙皮動畫。
-    status: queued
+    status: done
+    note: >
+      隨 E4-3 交付（commit d4eb1e4）：MakeCapsule lathe mesh + 隊色、
+      選取環、直立血條（綠→紅漸變）；潰逃壓暗 / 全滅隱藏。
     size: M
 
   # ---- 層級 B：殘留債務 ----
@@ -84,7 +87,12 @@ queue:
     summary: >
       GenerateSuggestions 仍在 UI 執行緒 quiet-period 後同步掃描 8KB。
       regex 已快取；剩下是搬到背景執行緒 + 結果回投。
-    status: queued
+    status: done
+    note: >
+      實作為 IntelligentSuggestionSystem 內建 worker（SubmitAnalysis/
+      PollResult，單槽 supersede）；IDEGUI 改投遞+輪詢，
+      std::async/future 機制移除；DevAssistantSmoke §19 新增
+      submit→poll/supersede/shutdown 測試。
     size: M
 
   - id: B-2
@@ -94,3 +102,139 @@ queue:
     status: blocked
     note: 使用者檔案，需本人決定
     size: S
+
+  # ---- 層級 Q：量子批次（疊加態機制深化）----
+  # 依據：docs/research/QUANTUM_DEVELOPMENT_RESEARCH.md +
+  #       _bmad-output/research/quantum-gameplay-modeling-2026-09-17/research.md
+  # 現況：QubitRegister（≤16 qubit statevector）/ Qudit / QuantumFog
+  #       （Observe 塌縮 + Diffuse 退相干 + 情報時效）已落地，
+  #       QuantumTest 入 ctest、QuantumFogDemo 為 ImGui 視覺驗證。
+  # 已拒絕：真 QPU 硬體、量子尋路/QAOA（對 flow-field 無優勢）。
+
+  - id: Q-1
+    title: QuantumFog 接入斷橋戰場（核心整合）
+    source: quantum-gameplay-modeling research §2
+    summary: >
+      敵方小隊進場時註冊為 UncertainEntity（候選格由人格/地形推先驗）；
+      未觀測小隊以機率雲渲染（GetCloud），情報卡或偵查 doctrine 動作
+      觸發 Observe 塌縮；情報時效到回疊加。BattleSceneSync 需同步
+      revealed 狀態與雲分佈到場景層。
+    acceptance:
+      - DuanqiaoPlayable 中未觀測敵軍顯示機率雲而非實體標記
+      - 情報點消費 → Observe → 顯示真實位置；intelDuration 過期回雲
+      - doctrine「偵查」類 action 可觸發觀測（走既有 ActionType 或新增）
+      - QuantumFogTest / BattleControllerTest / DoctrineBattleDemo 無回歸
+    status: done
+    note: >
+      commit aa51f42。Reveal(免費)/EliminateCandidate(負面觀測消雲)、
+      Scout doctrine、IsHiddenByFog 感知閘、sync 雲標記、demo 情報經濟。
+      兩路 review 修完:Scout 卡死、情報洩漏、marker 殘留、Detach 懸空。
+    size: XL
+
+  - id: Q-2
+    title: 糾纏小隊：測 A 即知 B
+    source: research §5 limits「multi-entity correlations 未暴露」
+    summary: >
+      QuantumFog.Entangle(a, b)：觀測 A 時 B 同步塌縮到相關候選
+      （如佯攻隊與主力同向）。實作用共享 joint qudit
+      （dim = candA × candB）；QubitRegister 的 CNOT 為位元級參考。
+      doctrine 卡範例：「連坐偵查」。
+    acceptance:
+      - Entangle API + 測試：observe A 後 B 機率集中於相關候選格
+      - 單獨觀測 B 的行為（對稱/非對稱）在 spec 寫死
+      - 至少一張 doctrine 卡或 demo 情境使用 Entangle
+    status: queued
+    size: M
+
+  - id: Q-3
+    title: 弱觀測 Probe：廉價部分塌縮
+    source: 情報點經濟（brief：觀察/道權主題）
+    summary: >
+      Probe(entityId, strength)：不付全額情報點，機率雲向真值方向
+      收縮（amplitude reweight）但不完全塌縮——弱測量。
+      花費與收縮強度掛鉤，可連續逼近。
+    acceptance:
+      - Probe 後候選機率方差下降且仍 >1 個非零候選
+      - 費用 < Observe；重複 Probe 可逼近塌縮
+      - QuantumTest 覆蓋機率單調收斂 + 不歸一化防護
+    status: queued
+    size: M
+
+  - id: Q-4
+    title: 敵將人格 → 先驗機率
+    source: assets/cards/*.json personality 欄位 + EnemyGeneral
+    summary: >
+      角色卡 personality（aggression/caution 等）偏置 AddEntity 的
+      priors：侵略型靠前線候選格、謹慎型靠後方/伏擊格。
+      BattleController 建敵軍時讀卡注入。
+    acceptance:
+      - 不同人格卡產生的 priors 分佈有測得出的差異
+      - 無卡/缺欄位退回均勻先驗，不崩潰
+    status: queued
+    size: S
+
+  - id: Q-5
+    title: QuantumBitSource 後端落地
+    source: research §1「QuantumBitSource seam」
+    summary: >
+      已宣告的隨機源縫補實：預設 mt19937_64（seeded，回放可重現）、
+      OS entropy（std::random_device）後端；HTTP QRNG 僅留介面不實作。
+      QubitRegister/Qudit 建構可注入。
+    acceptance:
+      - 兩後端可切換；seeded 後端同 seed 結果逐位一致
+      - 不引入網路依賴；既有 API 行為不變
+    status: queued
+    size: S
+
+  - id: Q-6
+    title: 疊加態存檔 + 回放事件
+    source: BattleRecorder / Roster 既有管線
+    summary: >
+      QuantumFog 序列化（candidates+priors+amplitudes+revealed+timer）
+      進 battle save；Observe/Collapse/Expire 發 recorder 事件，
+      回放時間軸可重現機率雲變化。
+    acceptance:
+      - 存檔→讀檔後 GetCloud 分佈一致（±1e-6）
+      - recorder 事件含 entityId 與候選分佈摘要
+      - BattleRecorderTest 無回歸
+    status: queued
+    size: M
+
+  - id: Q-7
+    title: 相位干涉 doctrine（實驗性）
+    source: research §4「interference mechanics：相位存在但無玩法消費」
+    summary: >
+      Qudit 振幅相位目前恆 0。新 doctrine 條件：同 tick 兩次觀測
+      作用同一實體時相位干涉——建設性（情報穿透加成）或
+      破壞性（情報被拒/部分被拒）。需 Qudit 支援帶相位初始化。
+    acceptance:
+      - Qudit 相位初始化 API（不破壞既有機率語義）
+      - doctrine 條件範例 + QuantumTest 覆干涉雙向結果
+      - 功能開關可關閉（experimental flag）
+    status: queued
+    size: M
+    note: 設計風險最高——先做機制原型驗手感，再決定進正式牌組
+
+  - id: Q-8
+    title: 大規模疊加態效能
+    source: research §5 state space limits
+    summary: >
+      50+ 實體 × 多候選的 qudit Update/Observe 成本量測；
+      超標時做 LOD（遠距實體粗格化或共享 qudit 池）或數量上限。
+    acceptance:
+      - 100 實體 × 6 候選的 Update 單幀 < 1ms（Release）
+      - benchmark 進 QuantumTest 或獨立 target
+    status: queued
+    size: S
+
+  - id: Q-9
+    title: 量子偵查教學情境
+    source: QuantumFogDemo 後續
+    summary: >
+      腳本化教學關卡：引導玩家走 observe → probe → 情報時效 循環。
+      吃 DuanqiaoPlayable 殼，不依賴外部檔案。
+    acceptance:
+      - 三段引導可完成、可重看
+      - 全離線資源
+    status: queued
+    size: M
