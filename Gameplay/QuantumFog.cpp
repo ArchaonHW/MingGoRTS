@@ -208,15 +208,44 @@ bool QuantumFog::Probe(int entityId, const Vector2& truePos, float strength) {
     return true;
 }
 
-int QuantumFog::CollapseNear(UncertainEntity& e, const Vector2& truePos) {
-    // 塌縮到距真值最近的候選態
+int QuantumFog::NearestCandidate(const UncertainEntity& e,
+                                 const Vector2& pos) const {
     int best = 0;
     float bestDist = 1e30f;
     for (int i = 0; i < static_cast<int>(e.candidates.size()); ++i) {
-        const Vector2 d = e.candidates[i] - truePos;
+        const Vector2 d = e.candidates[i] - pos;
         const float dist = d.x * d.x + d.y * d.y;
         if (dist < bestDist) { bestDist = dist; best = i; }
     }
+    return best;
+}
+
+int QuantumFog::ModalCandidate(const UncertainEntity& e) const {
+    const std::vector<double> probs = e.state.Probabilities();
+    int best = 0;
+    for (int i = 1; i < static_cast<int>(probs.size()); ++i) {
+        if (probs[i] > probs[best]) best = i;
+    }
+    return best;
+}
+
+bool QuantumFog::SetEntityPhases(int entityId,
+                                 const std::vector<double>& phases) {
+    if (entityId < 0 || entityId >= static_cast<int>(entities.size())) {
+        return false;
+    }
+    UncertainEntity& e = entities[entityId];
+    e.phases.assign(e.candidates.size(), 0.0);
+    for (size_t i = 0; i < phases.size() && i < e.phases.size(); ++i) {
+        e.phases[i] = phases[i];
+    }
+    e.state.SetPhases(e.phases); // 振幅帶相位——decoherence 會沖掉
+    return true;
+}
+
+int QuantumFog::CollapseNear(UncertainEntity& e, const Vector2& truePos) {
+    // 塌縮到距真值最近的候選態
+    const int best = NearestCandidate(e, truePos);
     e.state.CollapseTo(best);
     e.revealed = true;
     e.revealedPos = truePos;
@@ -327,6 +356,7 @@ int QuantumFog::ObserveRandom(int entityId) {
 }
 
 void QuantumFog::Update(float dt) {
+    fogTime += dt; // 時鐘推進 → 跨 tick 的觀測不再構成「同刻雙測」
     for (auto& e : entities) {
         if (e.revealed) {
             if (intelDuration > 0.0f) {

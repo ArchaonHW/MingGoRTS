@@ -28,6 +28,8 @@ struct UncertainEntity {
     bool revealed = false;
     Vector2 revealedPos;               // 塌縮後的真實位置
     float revealTimer = 0.0f;          // 情報時效倒數（秒）
+    std::vector<double> phases;        // Q-7 候選相位（空 = 無相位資訊）
+    double lastObserveAt = -1.0;       // 上次情報觀測的 fog 時鐘（干涉判定用）
 
     UncertainEntity(int dim, uint64_t seed)
         : state(dim, seed) {}
@@ -106,6 +108,14 @@ public:
     // 糾纏對象的 entityId；-1 = 未糾纏或無效
     int EntangledPartner(int entityId) const;
 
+    // ---- Q-7 相位干涉（實驗,預設關閉） ----
+    // 注入候選相位（長度不足補 0、超出截斷）；同 tick 對同一實體
+    // 二次觀測時,新目標候選與當前主峰的相位差 cos<0 → 觀測被拒,
+    // cos>=0 → 刷新並加成時效。flag 關閉時行為與 Q-1 完全一致。
+    bool SetEntityPhases(int entityId, const std::vector<double>& phases);
+    void SetInterferenceEnabled(bool on) { interference = on; }
+    bool InterferenceEnabled() const { return interference; }
+
     void Update(float dt);
 
     // ---- Q-6 疊加態存檔（potato.quantum_fog/1）----
@@ -126,6 +136,9 @@ private:
     int CollapseNear(UncertainEntity& e, const Vector2& truePos);
     // 糾纏傳遞：entityId 塌縮到 candIdx 時,集中其未揭露糾纏對象
     void PropagateEntanglement(int entityId, int candIdx);
+    int NearestCandidate(const UncertainEntity& e,
+                         const Vector2& pos) const;
+    int ModalCandidate(const UncertainEntity& e) const;
 
     struct EntangleLink {
         int a, b;
@@ -144,6 +157,8 @@ private:
     float intelDuration;
     int intelCost;
     int probeCost;
+    double fogTime = 0.0;      // Q-7 干涉判定用的 fog 時鐘
+    bool interference = false; // Q-7 實驗開關(預設關)
     uint64_t seedCounter = 1;
 };
 

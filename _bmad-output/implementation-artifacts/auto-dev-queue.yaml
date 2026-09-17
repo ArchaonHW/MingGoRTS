@@ -264,7 +264,7 @@ queue:
       - Qudit 相位初始化 API（不破壞既有機率語義）
       - doctrine 條件範例 + QuantumTest 覆干涉雙向結果
       - 功能開關可關閉（experimental flag）
-    status: queued
+    status: done
     size: M
     note: 設計風險最高——先做機制原型驗手感，再決定進正式牌組
 

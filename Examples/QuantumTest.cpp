@@ -402,6 +402,65 @@ static void TestQuantumFogPersonality() {
           "零方向退回 center");
 }
 
+static void TestQuantumFogInterference() {
+    printf("-- QuantumFog Interference --\n");
+
+    BattleController battle(10, 10, 1.0f);
+    BattleResources res;
+    res.Setup(battle, /*team=*/0, /*intel=*/8, /*cp=*/0);
+
+    QuantumFog fog(/*duration=*/5.0f, /*observe=*/1, /*probe=*/1);
+    fog.BindResources(&res);
+    const int id = fog.AddEntity("幻影隊", 0,
+                                 {Vector2(0, 0), Vector2(4, 0)},
+                                 {0.5, 0.5});
+    CHECK(fog.SetEntityPhases(id, {0.0, 3.141592653589793}),
+          "相位注入");
+    CHECK(!fog.SetEntityPhases(99, {0.0}), "無效相位注入拒絕");
+
+    // flag 關閉(預設):同 tick 二次觀測仍是免費刷新——Q-1 行為不變
+    CHECK(!fog.InterferenceEnabled(), "干涉預設關閉");
+    CHECK(fog.Observe(id, Vector2(0.1f, 0.1f)), "首次觀測");
+    CHECK(fog.Observe(id, Vector2(3.9f, 0.1f)),
+          "flag 關閉二次觀測仍刷新");
+    fog.Update(6.0f);
+    CHECK(!fog.IsRevealed(id), "過期回雲");
+
+    // flag 開啟:同 tick 二次觀測,目標相位差 π → 破壞性拒絕
+    fog.SetInterferenceEnabled(true);
+    CHECK(fog.InterferenceEnabled(), "干涉開關生效");
+    CHECK(fog.Observe(id, Vector2(0.1f, 0.1f)), "重觀測(主峰=候選0)");
+    CHECK(!fog.Observe(id, Vector2(3.9f, 0.1f)),
+          "破壞性干涉觀測被拒");
+    CHECK(std::abs(fog.GetRevealedPos(id).x - 0.1f) < 0.01f,
+          "被拒觀測不改寫真值");
+
+    // 跨 tick(fogTime 推進) → 不構成同刻雙測,普通刷新
+    fog.Update(0.1f);
+    CHECK(fog.Observe(id, Vector2(3.9f, 0.1f)), "跨 tick 不干涉");
+    CHECK(std::abs(fog.GetRevealedPos(id).x - 3.9f) < 0.01f,
+          "跨 tick 真值刷新");
+
+    // 建設性:目標與主峰同相位 → 時效加成 1.5x
+    fog.Update(6.0f);
+    CHECK(fog.SetEntityPhases(id, {0.0, 0.0}), "同相相位注入");
+    CHECK(fog.Observe(id, Vector2(0.1f, 0.1f)), "建設性:首觀測");
+    CHECK(fog.Observe(id, Vector2(3.9f, 0.1f)),
+          "建設性:同相二次觀測");
+    fog.Update(6.0f); // 超過 1x 時效(5s)但未滿 1.5x(7.5s)
+    CHECK(fog.IsRevealed(id), "建設性干涉時效加成");
+    fog.Update(2.0f); // 累計 8s > 7.5s
+    CHECK(!fog.IsRevealed(id), "加成時效終究過期");
+
+    // Qudit 相位 API:機率分佈不受相位影響
+    Quantum::Qudit q(2, 7);
+    q.SetProbabilities({0.7, 0.3});
+    CHECK(q.SetPhases({0.0, 1.234}), "Qudit 相位注入");
+    CHECK(std::abs(q.Probability(0) - 0.7) < 1e-9 &&
+              std::abs(q.Probability(1) - 0.3) < 1e-9,
+          "相位不改機率語義");
+}
+
 // ---- Q-5：可注入隨機源後端 ----
 void TestRandomSourceInjection() {
     printf("-- RandomSource injection --\n");
@@ -556,6 +615,7 @@ int main() {
     TestQuantumFogProbe();
     TestQuantumFogEntangle();
     TestQuantumFogPersonality();
+    TestQuantumFogInterference();
     TestRandomSourceInjection();
     TestQuantumFogSaveLoad();
 
