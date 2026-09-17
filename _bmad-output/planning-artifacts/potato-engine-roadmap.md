@@ -36,7 +36,7 @@ RTS 要畫出數百單位,目前 renderer 與場景圖脫鉤是最大缺口。
 ### E2 · 物理補強 (P0→P1)
 | # | Story | 說明 | 依賴 |
 |---|---|---|---|
-| E2-1 | Raycast 精確化 | OBB/sphere ray 測試 — **RTS 點選單位的核心**,目前 Raycast 只有簡化版 | — |
+| E2-1 | Raycast 精確化 | ✅ 已完成 — RayVsSphere/RayVsOBB(slab) + `BattlePicker` 螢幕點選層（PhysicsTest/BattlePickerTest）| — |
 | E2-2 | Contact manifold | 多接觸點 box-box,解決箱子堆疊抖動 | E1 無關 |
 | E2-3 | Trigger volume | 只報事件不解析 — 區域偵測/技能範圍 | — |
 | E2-4 | CCD (speculative/TOI) | 高速物體防穿隧 | E2-1 |
@@ -67,7 +67,7 @@ RTS 要畫出數百單位,目前 renderer 與場景圖脫鉤是最大缺口。
 
 ```
 Sprint A (已完成):   E3-1 JSON parser → E1-1 SceneRenderer → E4-2 FlowField 實測
-Sprint B (下一步):   E2-1 raycast 點選 → E4-1 Squad↔Scene 綁定 → E4-3 可玩 demo
+Sprint B (進行中):   E2-1 raycast 點選 ✅ → E4-1 Squad↔Scene 綁定 → E4-3 可玩 demo
 Sprint C (視覺):     E1-2 instancing → E1-4 debug draw → E2-3 trigger volume
 Sprint D (補強):     E1-3 陰影 → E2-2 contact manifold → E5-1 async loading
 Sprint E (收尾):     E3-2 round-trip → E3-3 版本容錯 → E5-2 input mapping → E5-3 audio
