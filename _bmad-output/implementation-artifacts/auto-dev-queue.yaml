@@ -305,7 +305,13 @@ queue:
       - 機率雲標記隨時間平滑漂移且不回跳（場連續性）
       - 強度參數=0 時行為與現況一致（可關閉）
       - QuantumFogBattleTest / BattleSceneTest 無回歸
-    status: queued
+    status: done
+    note: >
+      BattleSceneSync::SetFogDrift(field, strength)——雲標記 XZ 疊加
+      TurbulenceField::Sample(pos, elapsed) × strength，場連續故
+      平滑不跳；strength=0/nullptr 行為不變。BattleSceneTest [14]
+      五斷言（漂移生效有界/XZ-only/關閉回原位）；DuanqiaoPlayable
+      接 0.4·CELL 漂移。彈道風偏留給未來拋射物系統。
     size: M
 
   - id: P-2
@@ -319,7 +325,12 @@ queue:
     acceptance:
       - 列出所有 PhysicsWorld 消費點 + 各自的切換結論與理由
       - 若有切換：對應測試不回歸
-    status: queued
+    status: done
+    note: >
+      全倉盤點：生產碼無任何 PhysicsWorld 消費者（僅 Physics 模組
+      + 兩個測試）。決策：預設維持 Euler（無可切換對象、不改語義），
+      新消費者（拋射物/回放敏感/長時間模擬）建議 opt-in Verlet；
+      半步相位語義已記錄。見 UNSOLVED_PHYSICS_TO_ENGINE 附錄。
     size: S
 
   # ---- 層級 C 延伸：立繪訓練資料 ----

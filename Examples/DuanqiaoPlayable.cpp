@@ -24,6 +24,7 @@
 #include "Gameplay/BattleRecorder.h"
 #include "Gameplay/Roster.h"
 #include "Gameplay/QuantumFog.h"
+#include "MathUtils/CurlNoise.h"
 #include "MathUtils/Matrix4.h"
 
 #include <glad/glad.h>
@@ -468,6 +469,11 @@ int main() {
     sync.SetOverlayMeshes(ringMesh, barBgMesh, barFillMesh, 2.0f * CELL, 1.2f);
     sync.SetFog(&fog);
     sync.SetFogMarkerMesh(cloudMesh);
+    // P-1 湍流漂移:機率雲標記疊加無散度微擾,不確定性「活」起來;
+    // strength=0 可關閉(預設行為不變)
+    Quasi::TurbulenceField fogTurb(/*octaves=*/6, /*seed=*/42,
+                                  /*baseFreq=*/0.15f, /*baseAmp=*/1.0f);
+    sync.SetFogDrift(&fogTurb, 0.4f * CELL);
     sync.Sync(battle);
 
     // T-9 圖釘:objective(紅)/rally(藍)——Planning 中 Alt+點地移動,

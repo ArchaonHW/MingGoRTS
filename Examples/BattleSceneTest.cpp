@@ -5,6 +5,7 @@
 #include "Gameplay/BattleController.h"
 #include "Gameplay/BattleSceneSync.h"
 #include "Gameplay/QuantumFog.h"
+#include "MathUtils/CurlNoise.h"
 #include "Scene/SceneNode.h"
 #include "Rendering/SceneRenderer.h"
 #include "Rendering/RenderableComponent.h"
@@ -13,6 +14,7 @@
 
 #include <cstdio>
 #include <cmath>
+#include <string>
 
 using namespace Potato;
 using namespace Potato::Gameplay;
@@ -161,6 +163,19 @@ int main() {
               fogNode->GetChildren().size() == 2,
           "機率雲標記節點(2 候選)");
 
+    // 標記子節點版面:位置 = 候選格*CELL(y 抬半格),scale = 0.4+2*機率
+    if (fogNode && fogNode->GetChildren().size() == 2) {
+        const auto& fc = fogNode->GetChildren();
+        Vector3 p0 = fc[0]->GetLocalPosition();
+        Check(std::fabs(p0.x - 18.0f) < 1e-4f &&
+                  std::fabs(p0.y - 1.0f) < 1e-4f &&
+                  std::fabs(p0.z - 20.0f) < 1e-4f,
+              "標記位置=候選(9,10)*CELL", p0.x, 18.0f);
+        Check(std::fabs(fc[0]->GetLocalScale().x - 1.4f) < 0.05f,
+              "標記 scale∝機率(0.5→1.4)",
+              fc[0]->GetLocalScale().x, 1.4f);
+    }
+
     // [13] 揭露 → 真身現、雲標記隱;過期 → 回雲;全滅 → 連雲一起藏
     fog.Reveal(gid, ghost->GetPosition());
     sync.Sync(battle);
@@ -169,9 +184,56 @@ int main() {
     fog.Update(40.0f); // 情報時效 30s,過期回疊加
     sync.Sync(battle);
     Check(fogNode && fogNode->IsActive(), "時效過期雲標記復活");
+
+    // 候選被負面觀測消去後,多餘的標記子節點關閉而不是留在原位
+    fog.EliminateCandidate(gid, 0);
+    sync.Sync(battle);
+    if (fogNode) {
+        int activeMarkers = 0;
+        for (auto& c : fogNode->GetChildren()) {
+            if (c->IsActive()) ++activeMarkers;
+        }
+        Check(activeMarkers == 1, "候選消去後多餘標記關閉",
+              (float)activeMarkers, 1.0f);
+    }
     ghost->ApplyCasualties(99);
     sync.Sync(battle);
     Check(fogNode && !fogNode->IsActive(), "全滅後雲標記隱藏");
+
+    // [14] P-1 湍流漂移：strength=0 標記在候選格；開場後平滑偏移、
+    //      關閉後回到原位（場連續性 → 無跳動）
+    Squad* wisp = battle.CreateSquad("幽靈隊", 1, Vector2(5, 5), 10);
+    const int wid = fog.AddEntity("幽靈隊", 0,
+                                  {Vector2(5, 5), Vector2(7, 5)},
+                                  {0.5, 0.5});
+    battle.BindFogSquad(wisp, wid);
+    sync.Sync(battle);
+    const std::string wispName = "__fog_e" + std::to_string(wid);
+    SceneNode* wispNode = findChild(units, wispName.c_str());
+    Check(wispNode && wispNode->GetChildren().size() >= 1,
+          "漂移測試用雲標記存在");
+    const Vector3 basePos =
+        wispNode->GetChildren()[0]->GetLocalPosition();
+    Check(std::abs(basePos.x - 5.0f * CELL) < 1e-4f,
+          "無漂移時標記在候選格");
+
+    Quasi::TurbulenceField drift(6, /*seed=*/7, 0.15f, 1.0f);
+    sync.SetFogDrift(&drift, 0.5f);
+    sync.Sync(battle);
+    const Vector3 driftPos =
+        wispNode->GetChildren()[0]->GetLocalPosition();
+    const float moved = (driftPos - basePos).Length();
+    Check(moved > 1e-4f && moved < 2.0f,
+          "漂移生效且不爆衝（偏移有界）");
+    Check(std::abs(driftPos.y - basePos.y) < 1e-6f,
+          "漂移僅作用於 XZ 平面");
+
+    sync.SetFogDrift(nullptr, 0.0f);
+    sync.Sync(battle);
+    const Vector3 restored =
+        wispNode->GetChildren()[0]->GetLocalPosition();
+    Check((restored - basePos).Length() < 1e-4f,
+          "關閉漂移後標記回候選格（strength=0 行為不變）");
 
     sync.Detach();
     Check(sync.BindingCount() == 0, "Detach 清空綁定");

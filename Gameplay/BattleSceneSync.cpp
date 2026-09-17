@@ -1,5 +1,6 @@
 #include "BattleSceneSync.h"
 
+#include "MathUtils/CurlNoise.h"
 #include "QuantumFog.h"
 #include "BattleController.h"
 #include "Squad.h"
@@ -185,8 +186,9 @@ void BattleSceneSync::Sync(BattleController& battle) {
         for (size_t id = 0; id < fog->EntityCount(); ++id) {
             const int eid = static_cast<int>(id);
             const Squad* owner = battle.GetFogSquad(eid);
-            const bool hide = fog->IsRevealed(eid) ||
-                              (owner && owner->IsEliminated());
+            // 無主雲(entity 沒綁 squad)無法被觀測/接觸,永不顯示
+            const bool hide = fog->IsRevealed(eid) || !owner ||
+                              owner->IsEliminated();
             auto it = fogNodes.find(eid);
             if (hide) {
                 if (it != fogNodes.end()) it->second->SetActive(false);
@@ -204,9 +206,16 @@ void BattleSceneSync::Sync(BattleController& battle) {
                     continue;
                 }
                 c->SetActive(true);
-                c->SetLocalPosition(
-                    Vector3(cloud[i].first.x * cellSize, 0.5f * cellSize,
-                            cloud[i].first.y * cellSize));
+                Vector3 mpos(cloud[i].first.x * cellSize, 0.5f * cellSize,
+                             cloud[i].first.y * cellSize);
+                if (fogDrift && fogDriftStrength > 0.0f) {
+                    // P-1：場在 (pos,t) 連續 → 標記平滑漂移不跳動
+                    const Vector3 dv =
+                        fogDrift->Sample(mpos, battle.GetElapsed());
+                    mpos.x += dv.x * fogDriftStrength;
+                    mpos.z += dv.z * fogDriftStrength;
+                }
+                c->SetLocalPosition(mpos);
                 const float s = 0.4f + static_cast<float>(cloud[i].second) * 2.0f;
                 c->SetLocalScale(Vector3(s, s, s));
             }
@@ -237,7 +246,23 @@ void BattleSceneSync::SetOverlayMeshes(SharedPtr<Mesh> ring,
 
 void BattleSceneSync::SetFog(const QuantumFog* f) {
     fog = f;
-    fogNodes.clear(); // 換 fog 物件後舊標記依 entityId 對不上,重建
+    // 換綁/解綁後舊標記的 entityId 對不上新 fog——先把節點
+    // 從場景摘除(否則殘留永遠顯示的舊雲),再清空映射表
+    for (auto& kv : fogNodes) {
+        if (kv.second) {
+            kv.second->SetActive(false);
+            if (parentNode) {
+                parentNode->RemoveChild(kv.second.get());
+            }
+        }
+    }
+    fogNodes.clear();
+}
+
+void BattleSceneSync::SetFogDrift(const Quasi::TurbulenceField* field,
+                                  float strength) {
+    fogDrift = field;
+    fogDriftStrength = strength;
 }
 
 void BattleSceneSync::SetFogMarkerMesh(SharedPtr<Mesh> mesh) {

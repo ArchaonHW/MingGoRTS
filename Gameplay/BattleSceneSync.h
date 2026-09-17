@@ -12,6 +12,7 @@ class SceneGraph;
 class SceneNode;
 class Mesh;
 class RenderableComponent;
+namespace Quasi { class TurbulenceField; }
 
 namespace Gameplay {
 
@@ -59,6 +60,10 @@ public:
     // 機率雲標記(__fog_e<id> 節點,每候選一子節點,scale∝機率)。
     void SetFog(const QuantumFog* fog);
     void SetFogMarkerMesh(SharedPtr<Mesh> mesh);
+    // P-1 湍流漂移：雲標記位置疊加無散度微擾（場連續→平滑不回跳）。
+    // strength 是世界單位偏移量級；0（預設）= 行為與無場一致。
+    // field 生命週期由呼叫端持有；nullptr 關閉。
+    void SetFogDrift(const Quasi::TurbulenceField* field, float strength);
 
     // 選取的小隊(顯示選取環);nullptr 取消選取
     void SetSelectedSquad(const Squad* squad);
@@ -94,6 +99,8 @@ private:
     SharedPtr<Mesh> ringMesh, barBgMesh, barFillMesh;
     const QuantumFog* fog = nullptr;
     SharedPtr<Mesh> fogMarkerMesh;
+    const Quasi::TurbulenceField* fogDrift = nullptr;
+    float fogDriftStrength = 0.0f;
     const Squad* selected = nullptr;
     float barY = 2.0f;
     float barWidth = 1.2f;
