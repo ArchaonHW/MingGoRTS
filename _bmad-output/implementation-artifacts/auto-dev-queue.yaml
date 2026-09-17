@@ -61,7 +61,15 @@ queue:
       - BattlePlanner UI 可新增/拖放/刪除卡
       - 模板載入後 10 分鐘內可開戰（對齊 brief 驗收）
       - 既有 BattlePlanner 邏輯不回歸
-    status: queued
+    status: done
+    note: >
+      PlanningDeck（headless 牌組模型：Init/AddRule/SetRule/
+      SwapRules/Validate/Commit + LoadPlannerTemplate 保留 rationale）
+      + PlanningDeckTest 30 項全過。DuanqiaoPlayable 開場進
+      Planning phase：三欄卡編輯器、Alt+點移 objective/rally 圖釘、
+      AI 參謀一鍵載入、開戰 Commit+BeginExecution。
+      DoctrineSet 補 Rules()/RemoveRule；BattleController 補
+      GetDoctrine 回讀。
     size: XL
 
   - id: A-2

@@ -52,6 +52,11 @@ public:
     Squad* CreateSquad(const std::string& name, int team,
                        const Vector2& pos, int members);
     void AssignDoctrine(Squad* squad, const DoctrineSet& doctrine);
+    // 讀回已指派的 doctrine（PlanningDeck 回讀用）；未指派回 nullptr
+    const DoctrineSet* GetDoctrine(const Squad* squad) const {
+        auto it = doctrines.find(const_cast<Squad*>(squad));
+        return it != doctrines.end() ? &it->second : nullptr;
+    }
     void SetObjective(int team, const Vector2& pos);
     void SetRallyPoint(int team, const Vector2& pos);
     void SetCommandPoints(int team, int points);

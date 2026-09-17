@@ -14,6 +14,14 @@ void DoctrineSet::AddRule(const DoctrineRule& rule) {
               });
 }
 
+bool DoctrineSet::RemoveRule(size_t index) {
+    if (index >= rules.size()) {
+        return false;
+    }
+    rules.erase(rules.begin() + static_cast<std::ptrdiff_t>(index));
+    return true;
+}
+
 bool DoctrineSet::TriggerMatches(const DoctrineRule& rule, const SquadContext& ctx) {
     switch (rule.trigger) {
     case DoctrineTrigger::Always:

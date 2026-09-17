@@ -99,6 +99,11 @@ public:
     void Clear() { rules.clear(); }
     size_t Count() const { return rules.size(); }
 
+    // 唯讀存取（PlanningDeck/卡編輯器要列出規則）；依 priority 升序
+    const std::vector<DoctrineRule>& Rules() const { return rules; }
+    // 移除第 index 條（index 依 Rules() 序）；越界回 false
+    bool RemoveRule(size_t index);
+
     // 評估並回傳命中的 action；沒有任何規則成立時回傳 HoldPosition
     DoctrineAction Evaluate(const SquadContext& ctx) const;
     const DoctrineRule* GetMatchedRule() const { return lastMatched; }

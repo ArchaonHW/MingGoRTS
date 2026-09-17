@@ -18,6 +18,7 @@
 #include "Gameplay/BattlePicker.h"
 #include "Gameplay/BattleMap.h"
 #include "Gameplay/BattlePlanner.h"
+#include "Gameplay/PlanningDeck.h"
 #include "Gameplay/EnemyGeneral.h"
 #include "Gameplay/BattleResources.h"
 #include "Gameplay/QuantumFog.h"
@@ -378,9 +379,7 @@ int main() {
     EnemyGeneral glock = EnemyGeneral::MakeGlock();
     glock.ApplyTo(battle, 1);
     BattlePlanner planner;
-    planner.ApplyPlan(battle, planner.GeneratePlan(battle, 0));
-    // 情報/CP 走 BattleResources(fog 觀測扣點要它);ApplyPlan 會覆寫
-    // 玩家 CP(建議值 2),故資源設定必須在規劃之後
+    // 情報/CP 走 BattleResources(fog 觀測扣點要它)
     BattleResources res;
     res.Setup(battle, 0, /*intel=*/8, /*cp=*/5);
     res.Setup(battle, 1, /*intel=*/0, /*cp=*/3);
@@ -406,15 +405,27 @@ int main() {
             southCamp ? &southCamp->pos : nullptr);
         if (id >= 0) battle.BindFogSquad(es, id);
     }
+    // Q-2 糾纏:e0/e1 同向機動——觀測其一,另一朵雲向同向候選收縮
+    fog.Entangle(battle.GetFogEntityId(e0), battle.GetFogEntityId(e1));
 
+    // ---- T-9 回合層牌組:Init 收隊 → AI 參謀模板起手 → 玩家可編輯 ----
+    PlanningDeck deck;
+    deck.Init(battle, 0);
+    deck.LoadPlannerTemplate(planner, battle, 0);
     // 後衛改當偵查兵:低血撤退 > 遇敵應戰 > 無事就往最近的雲走
-    DoctrineSet scoutDoc;
-    scoutDoc.AddRule({DoctrineTrigger::HealthBelow,
-                      DoctrineAction::RetreatToRally, 0.3f, 1});
-    scoutDoc.AddRule({DoctrineTrigger::EnemyInRange,
-                      DoctrineAction::AttackNearest, 3.0f, 10});
-    scoutDoc.AddRule({DoctrineTrigger::Always, DoctrineAction::Scout, 0.0f, 90});
-    battle.AssignDoctrine(rearGuard, scoutDoc);
+    {
+        const int di = deck.FindDeck(rearGuard);
+        if (di >= 0) {
+            auto& d = deck.Deck(di);
+            d.rules.clear();
+            d.rules.push_back({DoctrineTrigger::HealthBelow,
+                               DoctrineAction::RetreatToRally, 0.3f, 1});
+            d.rules.push_back({DoctrineTrigger::EnemyInRange,
+                               DoctrineAction::AttackNearest, 3.0f, 10});
+            d.rules.push_back({DoctrineTrigger::Always,
+                               DoctrineAction::Scout, 0.0f, 90});
+        }
+    }
 
     // ---- Gameplay → 場景 ----
     BattleSceneSync sync;
@@ -425,7 +436,15 @@ int main() {
     sync.SetFogMarkerMesh(cloudMesh);
     sync.Sync(battle);
 
-    battle.BeginExecution();
+    // T-9 圖釘:objective(紅)/rally(藍)——Planning 中 Alt+點地移動,
+    // 開戰後仍顯示作為戰場錨點
+    auto objPinNode = AddStaticBox(root, pinMesh, Vector3(0, 0.9f, 0),
+                                   Vector3(0.9f, 0.25f, 0.25f), "objpin", CELL);
+    auto rallyPinNode = AddStaticBox(root, pinMesh, Vector3(0, 0.9f, 0),
+                                     Vector3(0.25f, 0.45f, 0.95f), "rallypin",
+                                     CELL);
+
+    // 開戰前停留 Planning phase;battle 保持 Deployment 不 tick
 
     // ---- 相機:RTS 高位俯視,WASD 平移、滾輪升降 ----
     Camera cam;
@@ -438,6 +457,8 @@ int main() {
     sceneRenderer.SetDefaultShader(unitShader);
 
     Squad* selected = nullptr;
+    bool planningPhase = true;  // T-9:開戰前停在回合層編牌
+    int curDeck = 0, curRule = -1; // 牌組 UI 選中態
     bool paused = false;
     float speedScale = 1.0f;
     bool prevL = false, prevR = false, prevSpace = false, prevEsc = false;
@@ -493,6 +514,16 @@ int main() {
 
         battle.SetTimeScale(paused ? 0.0f : speedScale);
 
+        // ---- 圖釘位置同步(Planning 中可拖移,執行中固定顯示)----
+        {
+            Vector2 op = battle.GetObjective(0);
+            objPinNode->SetLocalPosition(
+                Vector3(op.x * CELL, 0.9f, op.y * CELL));
+            Vector2 rp = battle.GetRallyPoint(0);
+            rallyPinNode->SetLocalPosition(
+                Vector3(rp.x * CELL, 0.9f, rp.y * CELL));
+        }
+
         // ---- 滑鼠點選/下令(只在執行中且未分勝負)----
         bool live = battle.GetPhase() == BattlePhase::Execution &&
                     battle.GetOutcome() == BattleOutcome::Ongoing;
@@ -506,6 +537,28 @@ int main() {
         bool rmb = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
         bool lClick = lmb && !prevL, rClick = rmb && !prevR;
         prevL = lmb; prevR = rmb;
+
+        // ---- Planning:Alt+左鍵=移 objective 圖釘 / Alt+右鍵=移 rally ----
+        if (planningPhase && cursorIn && !io.WantCaptureMouse &&
+            (lClick || rClick)) {
+            const bool alt =
+                glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS ||
+                glfwGetKey(window, GLFW_KEY_RIGHT_ALT) == GLFW_PRESS;
+            if (alt) {
+                PickRay ray = BattlePicker::ScreenToWorldRay(cam, fmx, fmy);
+                Vector3 g;
+                if (BattlePicker::IntersectGround(ray, 0.0f, g)) {
+                    Vector2 cell = BattlePicker::WorldToCell(g, CELL);
+                    cell.x = std::max(0.0f, std::min(cell.x, (float)GW - 0.5f));
+                    cell.y = std::max(0.0f, std::min(cell.y, (float)GH - 0.5f));
+                    if (lClick) battle.SetObjective(0, cell);
+                    else        battle.SetRallyPoint(0, cell);
+                    eventLog.push_back(lClick ? "目標點已移動"
+                                              : "集結點已移動");
+                    if (eventLog.size() > 8) eventLog.pop_front();
+                }
+            }
+        }
 
         if (live && cursorIn && !io.WantCaptureMouse && (lClick || rClick)) {
             PickRay ray = BattlePicker::ScreenToWorldRay(cam, fmx, fmy);
@@ -531,6 +584,12 @@ int main() {
                             ok = ts && fog.Observe(eid, ts->GetPosition());
                             msg = ok ? "觀測塌縮:" + ts->GetName()
                                      : "觀測失敗(情報不足)";
+                            const int pid = fog.EntangledPartner(eid);
+                            if (ok && pid >= 0 && !fog.IsRevealed(pid)) {
+                                if (Squad* ps = battle.GetFogSquad(pid))
+                                    msg += " 糾纏→" + ps->GetName() +
+                                           "雲收縮";
+                            }
                         } else {
                             ok = ts && fog.Probe(eid, ts->GetPosition(), 0.4f);
                             if (ok) {
@@ -632,7 +691,174 @@ int main() {
         ImGui::TextDisabled("左鍵選取 | 點雲探測(1情報) | Shift+點雲觀測(2情報)");
         ImGui::TextDisabled("右鍵下令 | Space 暫停 | 1/2/3 倍速");
         ImGui::TextDisabled("WASD 平移 | 滾輪縮放 | Esc 取消選取");
+        if (planningPhase)
+            ImGui::TextDisabled("Alt+左鍵=移目標點 | Alt+右鍵=移集結點");
         ImGui::End();
+
+        // ---- T-9 回合層:作戰計畫視窗(三欄:小隊/卡槽/編輯器)----
+        if (planningPhase) {
+            ImGui::SetNextWindowPos(ImVec2(ww * 0.5f - 330, 40),
+                                    ImGuiCond_FirstUseEver);
+            ImGui::SetNextWindowSize(ImVec2(660, 420), ImGuiCond_FirstUseEver);
+            ImGui::Begin("作戰計畫 — 戰前軍議", nullptr,
+                         ImGuiWindowFlags_NoCollapse);
+
+            if (curDeck >= deck.SquadCount()) curDeck = 0;
+            auto& cd = deck.Deck(curDeck);
+            if (curRule >= (int)cd.rules.size()) curRule = -1;
+
+            // 左欄:小隊清單
+            ImGui::BeginChild("squads", ImVec2(150, 300), true);
+            for (int i = 0; i < deck.SquadCount(); ++i) {
+                const auto& d = deck.Deck(i);
+                char lbl[64];
+                std::snprintf(lbl, sizeof(lbl), "%s (%d/%d)",
+                              d.squad ? d.squad->GetName().c_str() : "?",
+                              (int)d.rules.size(), deck.SlotCap());
+                if (ImGui::Selectable(lbl, i == curDeck)) {
+                    curDeck = i;
+                    curRule = -1;
+                }
+            }
+            ImGui::EndChild();
+            ImGui::SameLine();
+
+            // 中欄:卡槽列
+            ImGui::BeginChild("slots", ImVec2(230, 300), true);
+            for (int i = 0; i < (int)cd.rules.size(); ++i) {
+                const auto& r = cd.rules[i];
+                char lbl[96];
+                std::snprintf(lbl, sizeof(lbl), "[%d] %s(%.1f) → %s",
+                              r.priority, TriggerName(r.trigger),
+                              r.threshold, ActionName(r.action));
+                ImGui::PushID(i);
+                if (ImGui::Selectable(lbl, i == curRule)) curRule = i;
+                ImGui::PopID();
+            }
+            if (ImGui::Button("＋ 新增卡") &&
+                (int)cd.rules.size() < deck.SlotCap()) {
+                deck.AddRule(curDeck, {DoctrineTrigger::Always,
+                                       DoctrineAction::HoldPosition,
+                                       0.0f, 90});
+                curRule = (int)cd.rules.size() - 1;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("－ 刪除") && curRule >= 0) {
+                deck.RemoveRule(curDeck, curRule);
+                --curRule;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("↑") && curRule > 0) {
+                deck.SwapRules(curDeck, curRule, curRule - 1);
+                --curRule;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("↓") && curRule >= 0 &&
+                curRule < (int)cd.rules.size() - 1) {
+                deck.SwapRules(curDeck, curRule, curRule + 1);
+                ++curRule;
+            }
+            ImGui::EndChild();
+            ImGui::SameLine();
+
+            // 右欄:卡編輯器 + AI 理由
+            ImGui::BeginChild("editor", ImVec2(0, 300), true);
+            if (curRule >= 0 && curRule < (int)cd.rules.size()) {
+                DoctrineRule r = cd.rules[curRule];
+                bool changed = false;
+
+                static const DoctrineTrigger kTriggers[] = {
+                    DoctrineTrigger::Always, DoctrineTrigger::HealthBelow,
+                    DoctrineTrigger::MoraleBelow, DoctrineTrigger::EnemyInRange,
+                    DoctrineTrigger::UnderAttack, DoctrineTrigger::Outnumbered,
+                    DoctrineTrigger::AllyEngaged,
+                    DoctrineTrigger::ObjectiveReached};
+                static const DoctrineAction kActions[] = {
+                    DoctrineAction::AttackNearest,
+                    DoctrineAction::AttackWeakest,
+                    DoctrineAction::AdvanceToObjective,
+                    DoctrineAction::HoldPosition,
+                    DoctrineAction::RetreatToRally,
+                    DoctrineAction::DefendNearestAlly, DoctrineAction::Scout};
+
+                int ti = 0, ai = 0;
+                for (int i = 0; i < 8; ++i)
+                    if (kTriggers[i] == r.trigger) ti = i;
+                for (int i = 0; i < 7; ++i)
+                    if (kActions[i] == r.action) ai = i;
+
+                if (ImGui::BeginCombo("觸發條件", TriggerName(r.trigger))) {
+                    for (int i = 0; i < 8; ++i) {
+                        if (ImGui::Selectable(TriggerName(kTriggers[i]),
+                                              i == ti)) {
+                            r.trigger = kTriggers[i];
+                            changed = true;
+                        }
+                    }
+                    ImGui::EndCombo();
+                }
+                if (ImGui::BeginCombo("動作", ActionName(r.action))) {
+                    for (int i = 0; i < 7; ++i) {
+                        if (ImGui::Selectable(ActionName(kActions[i]),
+                                              i == ai)) {
+                            r.action = kActions[i];
+                            changed = true;
+                        }
+                    }
+                    ImGui::EndCombo();
+                }
+                changed |= ImGui::DragFloat("參數(血/士氣/距離)",
+                                            &r.threshold, 0.05f, 0.0f, 20.0f);
+                changed |= ImGui::InputInt("優先級", &r.priority);
+                changed |= ImGui::DragFloat("冷卻秒", &r.cooldown, 0.5f,
+                                            0.0f, 60.0f);
+                if (changed) {
+                    deck.SetRule(curDeck, curRule, r);
+                    // priority 變動會重排——找回同一條規則的位置
+                    for (int i = 0; i < (int)cd.rules.size(); ++i) {
+                        const auto& x = cd.rules[i];
+                        if (x.trigger == r.trigger && x.action == r.action &&
+                            x.priority == r.priority &&
+                            x.threshold == r.threshold) {
+                            curRule = i;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                ImGui::TextDisabled("選一張卡編輯");
+            }
+            ImGui::Separator();
+            const std::string& ra = deck.Rationale(cd.squad);
+            if (!ra.empty()) {
+                ImGui::TextWrapped("AI 參謀: %s", ra.c_str());
+            }
+            ImGui::EndChild();
+
+            // 底部:模板/警告/開戰
+            ImGui::Separator();
+            if (ImGui::Button("AI 參謀規劃")) {
+                deck.LoadPlannerTemplate(planner, battle, 0);
+                curRule = -1;
+            }
+            if (!deck.Summary().empty()) {
+                ImGui::SameLine();
+                ImGui::TextDisabled("%s", deck.Summary().c_str());
+            }
+            for (const auto& w : deck.Validate()) {
+                ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.2f, 1.0f), "%s",
+                                   w.c_str());
+            }
+            if (ImGui::Button("開 戰", ImVec2(120, 32))) {
+                deck.Commit(battle);
+                battle.BeginExecution();
+                planningPhase = false;
+                eventLog.push_back("作戰計畫已下達——開戰");
+            }
+            ImGui::SameLine();
+            ImGui::TextDisabled("寫好劇本再開戰;CP 留給救火");
+            ImGui::End();
+        }
 
         // 事件流(ImGui 座標是 window 空間;視窗最小化時 wh=0,clamp 防負值)
         ImGui::SetNextWindowPos(ImVec2(8, std::max(0.0f, (float)wh - 190.0f)),
