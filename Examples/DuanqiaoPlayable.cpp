@@ -3,7 +3,8 @@
 // 管線: BattleMap(duanqiao.json) → BattleController(doctrine 執行)
 //       → BattleSceneSync(小隊節點+選取環+血條) → SceneRenderer → OpenGL
 // 操作: 左鍵選取我軍小隊 / 右鍵地面=AttackMove、右鍵敵軍=Engage(皆走 CP 介入)
-//       Space 暫停 / 1,2,3 倍速 0.5,1,2 / WASD 平移視角 / 滾輪縮放 / Esc 取消選取
+//       左鍵點敵情機率雲=花情報點觀測塌縮 / Space 暫停 / 1,2,3 倍速
+//       WASD 平移視角 / 滾輪縮放 / Esc 取消選取
 // 無顯示環境: 印 [SKIP] 並以 0 結束(不進 POTATO_TESTS)
 
 #include "Rendering/OpenGLRenderer.h"
@@ -18,6 +19,7 @@
 #include "Gameplay/BattlePlanner.h"
 #include "Gameplay/EnemyGeneral.h"
 #include "Gameplay/BattleResources.h"
+#include "Gameplay/QuantumFog.h"
 #include "MathUtils/Matrix4.h"
 
 #include <glad/glad.h>
@@ -194,6 +196,28 @@ static SharedPtr<SceneNode> AddStaticBox(SharedPtr<SceneNode> parent,
 static double g_scroll = 0.0;
 static void ScrollCallback(GLFWwindow*, double, double yoff) { g_scroll += yoff; }
 
+// 點選機率雲:ray 與雲高平面求交,取最近候選格的 entity(-1 = 沒點到)
+static int PickFogCloud(const QuantumFog& fog, const BattleController& battle,
+                        const PickRay& ray, float cell) {
+    Vector3 g;
+    if (!BattlePicker::IntersectGround(ray, 0.5f * cell, g)) return -1;
+    int best = -1;
+    float bestDist = 0.9f * cell;
+    for (size_t id = 0; id < fog.EntityCount(); ++id) {
+        const int eid = static_cast<int>(id);
+        if (fog.IsRevealed(eid)) continue;
+        const Squad* owner = battle.GetFogSquad(eid);
+        if (!owner || owner->IsEliminated()) continue; // 無主雲不可觀測
+        for (const auto& c : fog.GetCloud(eid)) {
+            const float dx = c.first.x * cell - g.x;
+            const float dz = c.first.y * cell - g.z;
+            const float d = std::sqrt(dx * dx + dz * dz);
+            if (d < bestDist) { bestDist = d; best = eid; }
+        }
+    }
+    return best;
+}
+
 static const char* OrderName(SquadOrder o) {
     switch (o) {
     case SquadOrder::Hold:       return "駐守";
@@ -291,6 +315,7 @@ int main() {
     // 血條直立(XY 面朝相機):平躺版在 63° 俯角下只剩 ~2px 不可讀
     auto barBgMesh  = MakeShared<Mesh>(MakeBox(1.0f, 0.16f, 0.03f));
     auto barFillMesh = MakeShared<Mesh>(MakeBox(0.96f, 0.11f, 0.04f));
+    auto cloudMesh  = MakeShared<Mesh>(MakeBox(0.7f, 0.7f, 0.7f)); // 機率雲標記
 
     auto groundNode = AddStaticBox(root, groundMesh,
                                    Vector3(FW / 2, -0.15f, FH / 2),
@@ -339,30 +364,63 @@ int main() {
     battle.CreateSquad("前鋒", 0, Vector2(8.0f, 3.0f),  30);
     battle.CreateSquad("中軍", 0, Vector2(12.0f, 2.5f), 30);
     battle.CreateSquad("左翼", 0, Vector2(16.0f, 3.0f), 25);
-    battle.CreateSquad("後衛", 0, Vector2(12.0f, 4.5f), 15);
-    battle.CreateSquad("格洛克親衛", 1, Vector2(12.0f, 12.0f), 35);
-    battle.CreateSquad("蠻兵隊",     1, Vector2(9.0f, 12.5f),  25);
-    battle.CreateSquad("掠奪隊",     1, Vector2(15.0f, 12.5f), 25);
-    battle.CreateSquad("守橋隊",     1, Vector2(12.0f, 10.5f), 20);
+    Squad* rearGuard = battle.CreateSquad("後衛", 0, Vector2(12.0f, 4.5f), 15);
+    Squad* e0 = battle.CreateSquad("格洛克親衛", 1, Vector2(12.0f, 12.0f), 35);
+    Squad* e1 = battle.CreateSquad("蠻兵隊",     1, Vector2(9.0f, 12.5f),  25);
+    Squad* e2 = battle.CreateSquad("掠奪隊",     1, Vector2(15.0f, 12.5f), 25);
+    Squad* e3 = battle.CreateSquad("守橋隊",     1, Vector2(12.0f, 10.5f), 20);
     if (southCamp)  battle.SetObjective(0, southCamp->pos);
     if (northRally) battle.SetObjective(1, northRally->pos);
     if (northRally) battle.SetRallyPoint(0, northRally->pos);
     if (southCamp)  battle.SetRallyPoint(1, southCamp->pos);
-    battle.SetCommandPoints(1, 3);
 
     EnemyGeneral glock = EnemyGeneral::MakeGlock();
     glock.ApplyTo(battle, 1);
     BattlePlanner planner;
     planner.ApplyPlan(battle, planner.GeneratePlan(battle, 0));
-    // ApplyPlan 會覆寫玩家 CP(建議值 2)——demo 要 5 點,必須在規劃之後設
-    battle.SetCommandPoints(0, 5);
+    // 情報/CP 走 BattleResources(fog 觀測扣點要它);ApplyPlan 會覆寫
+    // 玩家 CP(建議值 2),故資源設定必須在規劃之後
+    BattleResources res;
+    res.Setup(battle, 0, /*intel=*/4, /*cp=*/5);
+    res.Setup(battle, 1, /*intel=*/0, /*cp=*/3);
     BattleResources::ApplyMoraleRule(battle);
+
+    // ---- Q-1 敵情霧:敵軍以疊加態存在,觀測或接觸才塌縮 ----
+    QuantumFog fog(/*intelDuration=*/25.0f, /*cost=*/1);
+    fog.BindResources(&res);
+    battle.BindFog(&fog);
+    for (Squad* es : {e0, e1, e2, e3}) {
+        // 雲心朝敵軍進攻方向偏移 1.5 格:不洩漏真實位置,
+        // 靠偵查/觀測才能確定敵人在哪
+        Vector2 center = es->GetPosition();
+        if (northRally) {
+            Vector2 dir = northRally->pos - center;
+            const float len = dir.Length();
+            if (len > 1e-4f) center = center + dir * (1.5f / len);
+        }
+        const int id = fog.AddEntityCloud(
+            es->GetName(), /*觀測方=*/0, center,
+            /*radius=*/3.5f, /*count=*/6, /*minSpacing=*/1.2f,
+            southCamp ? &southCamp->pos : nullptr);
+        if (id >= 0) battle.BindFogSquad(es, id);
+    }
+
+    // 後衛改當偵查兵:低血撤退 > 遇敵應戰 > 無事就往最近的雲走
+    DoctrineSet scoutDoc;
+    scoutDoc.AddRule({DoctrineTrigger::HealthBelow,
+                      DoctrineAction::RetreatToRally, 0.3f, 1});
+    scoutDoc.AddRule({DoctrineTrigger::EnemyInRange,
+                      DoctrineAction::AttackNearest, 3.0f, 10});
+    scoutDoc.AddRule({DoctrineTrigger::Always, DoctrineAction::Scout, 0.0f, 90});
+    battle.AssignDoctrine(rearGuard, scoutDoc);
 
     // ---- Gameplay → 場景 ----
     BattleSceneSync sync;
     sync.Attach(battle, scene, CELL);
     sync.SetUnitMesh(capMesh);
     sync.SetOverlayMeshes(ringMesh, barBgMesh, barFillMesh, 2.0f * CELL, 1.2f);
+    sync.SetFog(&fog);
+    sync.SetFogMarkerMesh(cloudMesh);
     sync.Sync(battle);
 
     battle.BeginExecution();
@@ -452,11 +510,33 @@ int main() {
             // 左右鍵獨立處理:同幀雙擊不會把右鍵指令吞掉
             if (lClick) {
                 Squad* hit = BattlePicker::PickSquad(battle, 0, ray, CELL);
-                selected = hit;
-                sync.SetSelectedSquad(hit);
+                if (hit) {
+                    selected = hit;
+                    sync.SetSelectedSquad(hit);
+                } else {
+                    // 點到敵情雲 → 花情報點觀測塌縮
+                    const int eid = PickFogCloud(fog, battle, ray, CELL);
+                    if (eid >= 0) {
+                        Squad* ts = battle.GetFogSquad(eid);
+                        if (ts && fog.Observe(eid, ts->GetPosition())) {
+                            eventLog.push_back("觀測塌縮:" + ts->GetName());
+                        } else {
+                            eventLog.push_back("觀測失敗(情報不足)");
+                        }
+                        if (eventLog.size() > 8) eventLog.pop_front();
+                    } else {
+                        selected = nullptr;
+                        sync.SetSelectedSquad(nullptr);
+                    }
+                }
             }
             if (rClick && selected) {
                 Squad* enemy = BattlePicker::PickSquad(battle, 1, ray, CELL);
+                // 未揭露的敵軍不可被 Engage(看不見的打不到)
+                if (enemy) {
+                    const int fid = battle.GetFogEntityId(enemy);
+                    if (fid >= 0 && !fog.IsRevealed(fid)) enemy = nullptr;
+                }
                 bool ok = false;
                 if (enemy) {
                     ok = battle.Intervene(selected, SquadOrder::Engage, enemy);
@@ -505,9 +585,16 @@ int main() {
                     battle.GetPhase() == BattlePhase::Execution ? "執行" :
                     battle.GetPhase() == BattlePhase::Deployment ? "部署" : "結算",
                     paused ? "(暫停)" : "");
-        ImGui::Text("CP: %d   倍速: %.1fx   時間: %.0fs",
-                    battle.GetCommandPoints(0), paused ? 0.0f : speedScale,
-                    battle.GetElapsed());
+        int hiddenFoes = 0;
+        for (size_t id = 0; id < fog.EntityCount(); ++id) {
+            const Squad* owner = battle.GetFogSquad((int)id);
+            if (owner && owner->IsEliminated()) continue; // 全滅不算「未揭露」
+            if (!fog.IsRevealed((int)id)) ++hiddenFoes;
+        }
+        ImGui::Text("CP: %d   情報: %d   倍速: %.1fx   時間: %.0fs",
+                    battle.GetCommandPoints(0), res.GetIntel(0),
+                    paused ? 0.0f : speedScale, battle.GetElapsed());
+        ImGui::Text("未揭露敵軍: %d / %d", hiddenFoes, (int)fog.EntityCount());
         ImGui::Separator();
         if (selected) {
             ImGui::Text("選取: %s", selected->GetName().c_str());
@@ -519,7 +606,7 @@ int main() {
             ImGui::TextDisabled("未選取小隊(左鍵點選)");
         }
         ImGui::Separator();
-        ImGui::TextDisabled("左鍵選取 | 右鍵下令 | Space 暫停 | 1/2/3 倍速");
+        ImGui::TextDisabled("左鍵選取/點雲觀測 | 右鍵下令 | Space 暫停 | 1/2/3 倍速");
         ImGui::TextDisabled("WASD 平移 | 滾輪縮放 | Esc 取消選取");
         ImGui::End();
 
@@ -559,6 +646,7 @@ int main() {
         renderer.SwapBuffers();
     }
 
+    battle.BindFog(nullptr); // fog 是 local,先於 battle 解構——解綁防懸空
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();

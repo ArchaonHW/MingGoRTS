@@ -16,6 +16,8 @@
 namespace Potato {
 namespace Gameplay {
 
+class QuantumFog;
+
 /**
  * 戰鬥階段：對應「回合層 → 即時層 → 戰後」的三拍循環
  */
@@ -98,6 +100,17 @@ public:
     bool Intervene(Squad* squad, SquadOrder order, const Squad* target,
                    float holdSeconds = 5.0f);
 
+    // ---- 量子敵情霧（Q-1，可選）----
+    // 綁定後：Update 會推 fog（情報時效/退相干），我軍小隊進入
+    // fogRevealRange 格內的未揭露敵軍自動免費揭露（接觸偵查）。
+    void BindFog(QuantumFog* fog);
+    // 把一支小隊與 fog entity 關聯（entity 的疊加雲代表這支小隊）
+    void BindFogSquad(Squad* squad, int entityId);
+    QuantumFog* GetFog() const { return fog; }
+    int GetFogEntityId(const Squad* squad) const;
+    Squad* GetFogSquad(int entityId) const;
+    void SetFogRevealRange(float cells) { fogRevealRange = cells; }
+
     // 每幀呼叫：realDt 為真實秒數，內部乘 timeScale
     void Update(float realDt);
 
@@ -121,6 +134,10 @@ private:
     Squad* FindNearestEnemy(const Squad& squad, float maxDist) const;
     Squad* FindWeakestEnemy(const Squad& squad, float maxDist) const;
     Squad* FindNearestEngagedAlly(const Squad& squad) const;
+    // Scout 目標：最近未揭露敵情雲的最高機率候選格；無則回 false
+    bool FindScoutTarget(const Squad& squad, Vector2& out) const;
+    // squad 綁定了未揭露的敵情實體 → 對 doctrine/Engage 層不可見
+    bool IsHiddenByFog(const Squad& squad) const;
 
     FlowField field;                                  // 地形/障礙定義
     std::unordered_map<int, UniquePtr<FlowField>> teamFields; // 各隊目標場
@@ -132,6 +149,9 @@ private:
     std::unordered_map<Squad*, float> interventionUntil; // 剩餘覆寫秒數
     std::unordered_map<Squad*, float> damageBuffer;      // 小數傷害累積
     std::unordered_map<Squad*, SquadContext> contexts;
+    QuantumFog* fog = nullptr;                     // Q-1 敵情霧（外層持有）
+    std::unordered_map<Squad*, int> fogEntities;   // squad → fog entityId
+    float fogRevealRange = 3.0f;                   // 接觸偵查距離（格）
 
     BattlePhase phase;
     BattleOutcome outcome;

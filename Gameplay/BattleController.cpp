@@ -1,5 +1,7 @@
 #include "BattleController.h"
 
+#include "QuantumFog.h"
+
 #include <algorithm>
 #include <cmath>
 #include <sstream>
@@ -120,7 +122,8 @@ bool BattleController::Intervene(Squad* squad, SquadOrder order,
         return Intervene(squad, order, target->GetPosition(), holdSeconds);
     }
     if (!target || target->IsEliminated() || target->IsRouting() ||
-        target == squad || (squad && target->GetTeam() == squad->GetTeam())) {
+        target == squad || (squad && target->GetTeam() == squad->GetTeam()) ||
+        IsHiddenByFog(*target)) {
         return false;
     }
     if (phase != BattlePhase::Execution || !squad || squad->IsEliminated() ||
@@ -187,6 +190,65 @@ void BattleController::Update(float realDt) {
     }
 
     ResolveCombat(dt);
+
+    // Q-1 敵情霧：情報時效/退相干推進 + 接觸偵查（正負面觀測）
+    if (fog) {
+        fog->Update(dt);
+        // Emit 會跑使用者 callback,蒐集起來離開 fogEntities 迭代再發,
+        // 避免 callback 裡 BindFogSquad/CreateSquad 造成 map 重雜湊
+        std::vector<const Squad*> spotted;
+        for (const auto& kv : fogEntities) {
+            Squad* target = kv.first;
+            const int entityId = kv.second;
+            if (!target || target->IsEliminated()) continue;
+            const UncertainEntity* ent = fog->GetEntity(entityId);
+            if (!ent) continue;
+
+            // 正面：敵對方小隊進入真身接觸範圍 → 揭露(已揭露則刷新時效)
+            bool inContact = false;
+            for (const auto& other : squads) {
+                if (other->GetTeam() == target->GetTeam() ||
+                    other->IsEliminated()) {
+                    continue;
+                }
+                if ((other->GetPosition() - target->GetPosition()).Length() <=
+                    fogRevealRange) {
+                    inContact = true;
+                    break;
+                }
+            }
+            if (inContact) {
+                const bool was = fog->IsRevealed(entityId);
+                if (fog->Reveal(entityId, target->GetPosition()) && !was) {
+                    spotted.push_back(target);
+                }
+                continue;
+            }
+
+            // 負面：目視覆蓋候選格但真身不在那 → 消去該候選(雲縮小,
+            // Scout 才不會卡在同一格 modal 上空轉)
+            if (!fog->IsRevealed(entityId)) {
+                for (size_t ci = 0; ci < ent->candidates.size(); ++ci) {
+                    for (const auto& other : squads) {
+                        if (other->GetTeam() == target->GetTeam() ||
+                            other->IsEliminated()) {
+                            continue;
+                        }
+                        if ((other->GetPosition() - ent->candidates[ci])
+                                .Length() <= fogRevealRange) {
+                            fog->EliminateCandidate(entityId,
+                                                    static_cast<int>(ci));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        for (const Squad* s : spotted) {
+            Emit(s->GetName() + " 被我軍目擊（接觸偵查）");
+        }
+    }
+
     CheckOutcome();
 }
 
@@ -204,12 +266,18 @@ SquadContext BattleController::BuildContext(const Squad& squad) const {
     return ctx;
 }
 
+bool BattleController::IsHiddenByFog(const Squad& squad) const {
+    if (!fog) return false;
+    auto it = fogEntities.find(const_cast<Squad*>(&squad));
+    return it != fogEntities.end() && !fog->IsRevealed(it->second);
+}
+
 Squad* BattleController::FindNearestEnemy(const Squad& squad, float maxDist) const {
     Squad* best = nullptr;
     float bestDist = maxDist;
     for (const auto& other : squads) {
         if (other->GetTeam() == squad.GetTeam() || other->IsEliminated() ||
-            other->IsRouting()) {
+            other->IsRouting() || IsHiddenByFog(*other)) {
             continue;
         }
         float d = (other->GetPosition() - squad.GetPosition()).Length();
@@ -226,7 +294,7 @@ Squad* BattleController::FindWeakestEnemy(const Squad& squad, float maxDist) con
     int lowest = 0x7fffffff;
     for (const auto& other : squads) {
         if (other->GetTeam() == squad.GetTeam() || other->IsEliminated() ||
-            other->IsRouting()) {
+            other->IsRouting() || IsHiddenByFog(*other)) {
             continue;
         }
         float d = (other->GetPosition() - squad.GetPosition()).Length();
@@ -255,6 +323,63 @@ Squad* BattleController::FindNearestEngagedAlly(const Squad& squad) const {
     return best;
 }
 
+void BattleController::BindFog(QuantumFog* f) {
+    fog = f;
+}
+
+void BattleController::BindFogSquad(Squad* squad, int entityId) {
+    if (!squad) return;
+    // fog 已綁時驗證 id,無效綁定會讓小隊永遠隱形又沒有雲
+    if (fog && (entityId < 0 ||
+                entityId >= static_cast<int>(fog->EntityCount()))) {
+        return;
+    }
+    fogEntities[squad] = entityId;
+}
+
+int BattleController::GetFogEntityId(const Squad* squad) const {
+    auto it = fogEntities.find(const_cast<Squad*>(squad));
+    return it != fogEntities.end() ? it->second : -1;
+}
+
+Squad* BattleController::GetFogSquad(int entityId) const {
+    for (const auto& kv : fogEntities) {
+        if (kv.second == entityId) return kv.first;
+    }
+    return nullptr;
+}
+
+bool BattleController::FindScoutTarget(const Squad& squad,
+                                       Vector2& out) const {
+    if (!fog) return false;
+    float bestDist = 1e30f;
+    bool found = false;
+    for (const auto& kv : fogEntities) {
+        const Squad* target = kv.first;
+        const int entityId = kv.second;
+        // 只偵查敵對方、未全滅、未揭露的實體
+        if (!target || target->GetTeam() == squad.GetTeam() ||
+            target->IsEliminated() || fog->IsRevealed(entityId)) {
+            continue;
+        }
+        const auto cloud = fog->GetCloud(entityId);
+        if (cloud.empty()) continue;
+        // modal 候選格 = 機率最大者
+        const Vector2 modal =
+            std::max_element(cloud.begin(), cloud.end(),
+                             [](const auto& a, const auto& b) {
+                                 return a.second < b.second;
+                             })->first;
+        const float d = (modal - squad.GetPosition()).Length();
+        if (d < bestDist) {
+            bestDist = d;
+            out = modal;
+            found = true;
+        }
+    }
+    return found;
+}
+
 void BattleController::UpdateContexts() {
     for (auto& squad : squads) {
         SquadContext ctx;
@@ -273,6 +398,7 @@ void BattleController::UpdateContexts() {
         int enemyMembers = 0;
         for (const auto& other : squads) {
             if (other->GetTeam() != squad->GetTeam() && !other->IsEliminated() &&
+                !IsHiddenByFog(*other) &&
                 (other->GetPosition() - squad->GetPosition()).Length() <=
                     squad->GetEngageRange() * 3.0f) {
                 enemyMembers += other->GetMembers();
@@ -369,6 +495,16 @@ void BattleController::EvaluateDoctrines() {
             Squad* ally = FindNearestEngagedAlly(*squad);
             if (ally) {
                 squad->IssueOrder(SquadOrder::MoveTo, ally->GetPosition());
+            }
+            break;
+        }
+        case DoctrineAction::Scout: {
+            Vector2 dest;
+            if (FindScoutTarget(*squad, dest)) {
+                squad->IssueOrder(SquadOrder::AttackMove, dest);
+            } else {
+                // 沒有未揭露的敵情雲——退回駐守
+                squad->IssueOrder(SquadOrder::Hold, squad->GetPosition());
             }
             break;
         }

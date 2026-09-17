@@ -27,6 +27,7 @@ DoctrineAction EnemyGeneral::ActionFromString(const std::string& s) {
     if (s == "AdvanceToObjective") return DoctrineAction::AdvanceToObjective;
     if (s == "RetreatToRally") return DoctrineAction::RetreatToRally;
     if (s == "DefendNearestAlly") return DoctrineAction::DefendNearestAlly;
+    if (s == "Scout") return DoctrineAction::Scout;
     return DoctrineAction::HoldPosition;
 }
 

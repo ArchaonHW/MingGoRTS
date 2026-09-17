@@ -4,6 +4,7 @@
 
 #include "Gameplay/BattleController.h"
 #include "Gameplay/BattleSceneSync.h"
+#include "Gameplay/QuantumFog.h"
 #include "Scene/SceneNode.h"
 #include "Rendering/SceneRenderer.h"
 #include "Rendering/RenderableComponent.h"
@@ -141,6 +142,36 @@ int main() {
           findChild(blueNode, "__hp_bg") == nullptr &&
           findChild(blueNode, "__hp_fill") == nullptr,
           "傳 nullptr 清除 overlay 節點");
+
+    // [12] Q-1 敵情霧:未揭露的 bound squad 藏真身,機率雲標記掛 __battle_units
+    QuantumFog fog(30.0f, 1);
+    Squad* ghost = battle.CreateSquad("幻影隊", 1, Vector2(10, 10), 10);
+    const int gid = fog.AddEntity("幻影隊", /*觀測方=*/0,
+                                  {Vector2(9, 10), Vector2(11, 10)},
+                                  {0.5, 0.5});
+    battle.BindFog(&fog);
+    battle.BindFogSquad(ghost, gid);
+    sync.SetFog(&fog);
+    sync.Sync(battle);
+    SceneNode* ghostNode = sync.GetNodeFor(ghost);
+    Check(ghostNode && !ghostNode->IsActive(), "未揭露敵軍節點隱藏");
+    SceneNode* units = findChild(root.get(), "__battle_units");
+    SceneNode* fogNode = units ? findChild(units, "__fog_e0") : nullptr;
+    Check(fogNode && fogNode->IsActive() &&
+              fogNode->GetChildren().size() == 2,
+          "機率雲標記節點(2 候選)");
+
+    // [13] 揭露 → 真身現、雲標記隱;過期 → 回雲;全滅 → 連雲一起藏
+    fog.Reveal(gid, ghost->GetPosition());
+    sync.Sync(battle);
+    Check(ghostNode && ghostNode->IsActive(), "揭露後節點恢復顯示");
+    Check(fogNode && !fogNode->IsActive(), "揭露後雲標記隱藏");
+    fog.Update(40.0f); // 情報時效 30s,過期回疊加
+    sync.Sync(battle);
+    Check(fogNode && fogNode->IsActive(), "時效過期雲標記復活");
+    ghost->ApplyCasualties(99);
+    sync.Sync(battle);
+    Check(fogNode && !fogNode->IsActive(), "全滅後雲標記隱藏");
 
     sync.Detach();
     Check(sync.BindingCount() == 0, "Detach 清空綁定");

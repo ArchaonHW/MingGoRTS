@@ -37,7 +37,8 @@ enum class DoctrineAction {
     AdvanceToObjective, // 沿 flow field 往目標推進
     HoldPosition,       // 原地駐守
     RetreatToRally,     // 撤往集結點
-    DefendNearestAlly   // 移向最近的接戰友軍
+    DefendNearestAlly,  // 移向最近的接戰友軍
+    Scout               // 偵查：移向最近的未揭露敵情雲（接觸後免費揭露）
 };
 
 /**

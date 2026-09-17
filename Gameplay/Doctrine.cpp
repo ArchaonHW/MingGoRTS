@@ -74,6 +74,7 @@ const char* ActionName(DoctrineAction action) {
     case DoctrineAction::HoldPosition: return "HoldPosition";
     case DoctrineAction::RetreatToRally: return "RetreatToRally";
     case DoctrineAction::DefendNearestAlly: return "DefendNearestAlly";
+    case DoctrineAction::Scout: return "Scout";
     }
     return "Unknown";
 }

@@ -1,4 +1,6 @@
 #include "BattleSceneSync.h"
+
+#include "QuantumFog.h"
 #include "BattleController.h"
 #include "Squad.h"
 
@@ -6,6 +8,7 @@
 #include "Rendering/RenderableComponent.h"
 
 #include <algorithm>
+#include <string>
 #include <unordered_set>
 
 namespace Potato {
@@ -131,6 +134,16 @@ void BattleSceneSync::Sync(BattleController& battle) {
     for (auto& b : bindings) {
         Squad* squad = b.squad;
 
+        // Q-1 敵情霧:未揭露的 bound squad 藏真身(overlay 為子節點一併隱藏)
+        if (fog) {
+            const int fid = battle.GetFogEntityId(squad);
+            if (fid >= 0 && !fog->IsRevealed(fid)) {
+                b.node->SetActive(false);
+                continue;
+            }
+            b.node->SetActive(true); // 揭露狀態恢復顯示(全滅由下方再隱)
+        }
+
         if (squad->IsEliminated()) {
             b.node->SetActive(false);
             if (b.ringNode) b.ringNode->SetActive(false);
@@ -166,6 +179,39 @@ void BattleSceneSync::Sync(BattleController& battle) {
             }
         }
     }
+
+    // Q-1:機率雲標記——每個未揭露 entity 一組候選標記,scale∝機率
+    if (fog) {
+        for (size_t id = 0; id < fog->EntityCount(); ++id) {
+            const int eid = static_cast<int>(id);
+            const Squad* owner = battle.GetFogSquad(eid);
+            const bool hide = fog->IsRevealed(eid) ||
+                              (owner && owner->IsEliminated());
+            auto it = fogNodes.find(eid);
+            if (hide) {
+                if (it != fogNodes.end()) it->second->SetActive(false);
+                continue;
+            }
+            SceneNode* node = EnsureFogNode(eid);
+            if (!node) continue;
+            node->SetActive(true);
+            const auto cloud = fog->GetCloud(eid);
+            const auto& children = node->GetChildren();
+            for (size_t i = 0; i < children.size(); ++i) {
+                SceneNode* c = children[i].get();
+                if (i >= cloud.size()) {
+                    c->SetActive(false); // 低機率候選被 GetCloud 篩掉,標記也藏
+                    continue;
+                }
+                c->SetActive(true);
+                c->SetLocalPosition(
+                    Vector3(cloud[i].first.x * cellSize, 0.5f * cellSize,
+                            cloud[i].first.y * cellSize));
+                const float s = 0.4f + static_cast<float>(cloud[i].second) * 2.0f;
+                c->SetLocalScale(Vector3(s, s, s));
+            }
+        }
+    }
 }
 
 void BattleSceneSync::SetUnitMesh(SharedPtr<Mesh> mesh) {
@@ -189,6 +235,42 @@ void BattleSceneSync::SetOverlayMeshes(SharedPtr<Mesh> ring,
     }
 }
 
+void BattleSceneSync::SetFog(const QuantumFog* f) {
+    fog = f;
+    fogNodes.clear(); // 換 fog 物件後舊標記依 entityId 對不上,重建
+}
+
+void BattleSceneSync::SetFogMarkerMesh(SharedPtr<Mesh> mesh) {
+    fogMarkerMesh = std::move(mesh);
+    for (auto& kv : fogNodes) {
+        for (auto& c : kv.second->GetChildren()) {
+            if (auto* rc = c->GetRenderable()) rc->mesh = fogMarkerMesh;
+        }
+    }
+}
+
+SceneNode* BattleSceneSync::EnsureFogNode(int entityId) {
+    auto it = fogNodes.find(entityId);
+    if (it != fogNodes.end()) return it->second.get();
+    if (!fog || !parentNode) return nullptr;
+    const UncertainEntity* e = fog->GetEntity(entityId);
+    if (!e) return nullptr;
+
+    auto node = MakeShared<SceneNode>("__fog_e" + std::to_string(entityId));
+    for (size_t i = 0; i < e->candidates.size(); ++i) {
+        auto c = MakeShared<SceneNode>("__fog_c" + std::to_string(i));
+        auto rc = MakeShared<RenderableComponent>();
+        rc->mesh = fogMarkerMesh;
+        rc->color = Vector3(0.55f, 0.45f, 0.85f); // 敵情雲:紫灰
+        rc->boundingRadius = cellSize * 1.5f;
+        c->SetRenderable(rc);
+        node->AddChild(c);
+    }
+    parentNode->AddChild(node);
+    fogNodes[entityId] = node;
+    return node.get();
+}
+
 void BattleSceneSync::SetSelectedSquad(const Squad* squad) {
     selected = squad;
 }
@@ -206,6 +288,9 @@ void BattleSceneSync::Detach() {
     }
     parentNode.reset();
     bindings.clear();
+    fogNodes.clear();   // 標記節點隨 parentNode 子樹一起釋放
+    fog = nullptr;      // 外層持有的 fog 不隨綁定續命
+    fogMarkerMesh.reset();
     selected = nullptr; // 綁定已清,選取指標不得留給下一場 battle
     scene = nullptr;
 }

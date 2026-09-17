@@ -71,6 +71,14 @@ public:
     // 情報不足或實體不存在回傳 false。
     bool Observe(int entityId, const Vector2& truePos);
 
+    // 免情報點揭露（物理偵查：小隊目視接觸）。已揭露者僅更新位置。
+    bool Reveal(int entityId, const Vector2& truePos);
+
+    // 負面觀測：把某候選格機率歸零並重新歸一化
+    // （小隊目視覆蓋該格但沒看到人——「這裡沒有敵軍」也是情報）。
+    // 已揭露/實體或索引無效/候選已為零/只剩最後一個非零候選時回 false。
+    bool EliminateCandidate(int entityId, int candidateIndex);
+
     // 純 Born-rule 觀測（無真值來源時）：回傳命中的候選 index，-1 表示失敗
     int ObserveRandom(int entityId);
 
@@ -85,6 +93,8 @@ public:
     size_t EntityCount() const { return entities.size(); }
 
 private:
+    void CollapseNear(UncertainEntity& e, const Vector2& truePos);
+
     std::vector<UncertainEntity> entities;
     BattleResources* resources = nullptr;
     float intelDuration;

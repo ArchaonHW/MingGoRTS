@@ -79,13 +79,55 @@ bool QuantumFog::Observe(int entityId, const Vector2& truePos) {
         return false;
     }
     UncertainEntity& e = entities[entityId];
-    if (e.revealed) return true;  // 已揭露不重複扣點
+    if (e.revealed) { // 已揭露不重複扣點,但刷新真值與時效
+        e.revealedPos = truePos;
+        e.revealTimer = intelDuration;
+        return true;
+    }
 
     // 情報點 = 觀測成本；資源不足則觀測失敗（態不塌縮）
     if (resources && !resources->SpendIntel(e.team, intelCost)) {
         return false;
     }
 
+    CollapseNear(e, truePos);
+    return true;
+}
+
+bool QuantumFog::Reveal(int entityId, const Vector2& truePos) {
+    if (entityId < 0 || entityId >= static_cast<int>(entities.size())) {
+        return false;
+    }
+    CollapseNear(entities[entityId], truePos);
+    return true;
+}
+
+bool QuantumFog::EliminateCandidate(int entityId, int candidateIndex) {
+    UncertainEntity* e =
+        (entityId >= 0 && entityId < static_cast<int>(entities.size()))
+            ? &entities[entityId]
+            : nullptr;
+    if (!e || e->revealed || candidateIndex < 0 ||
+        candidateIndex >= static_cast<int>(e->candidates.size())) {
+        return false;
+    }
+    std::vector<double> probs = e->state.Probabilities();
+    if (probs[candidateIndex] <= 1e-9) return false;
+
+    // 真值必在雲中——不得消到一個候選都不剩
+    int nonzero = 0;
+    for (double p : probs) {
+        if (p > 1e-9) ++nonzero;
+    }
+    if (nonzero <= 1) return false;
+
+    probs[candidateIndex] = 0.0;
+    e->priors[candidateIndex] = 0.0; // 過期重建時同樣排除
+    e->state.SetProbabilities(probs);
+    return true;
+}
+
+void QuantumFog::CollapseNear(UncertainEntity& e, const Vector2& truePos) {
     // 塌縮到距真值最近的候選態
     int best = 0;
     float bestDist = 1e30f;
@@ -98,7 +140,6 @@ bool QuantumFog::Observe(int entityId, const Vector2& truePos) {
     e.revealed = true;
     e.revealedPos = truePos;
     e.revealTimer = intelDuration;
-    return true;
 }
 
 int QuantumFog::ObserveRandom(int entityId) {

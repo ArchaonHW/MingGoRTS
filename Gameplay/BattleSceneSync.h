@@ -3,6 +3,7 @@
 #include "Core/CoreTypes.h"
 #include "MathUtils/Vector3.h"
 
+#include <unordered_map>
 #include <vector>
 
 namespace Potato {
@@ -16,6 +17,7 @@ namespace Gameplay {
 
 class BattleController;
 class Squad;
+class QuantumFog;
 
 /**
  * 戰鬥→場景同步器(E4:Gameplay 接上場景圖/渲染管線)
@@ -52,6 +54,12 @@ public:
                           SharedPtr<Mesh> barFill, float barY = 2.0f,
                           float barWidth = 1.2f);
 
+    // ---- 敵情霧(Q-1)----
+    // 綁定後:未揭露的 bound squad 節點隱藏,改在 parentNode 下顯示
+    // 機率雲標記(__fog_e<id> 節點,每候選一子節點,scale∝機率)。
+    void SetFog(const QuantumFog* fog);
+    void SetFogMarkerMesh(SharedPtr<Mesh> mesh);
+
     // 選取的小隊(顯示選取環);nullptr 取消選取
     void SetSelectedSquad(const Squad* squad);
     const Squad* GetSelectedSquad() const { return selected; }
@@ -75,13 +83,17 @@ private:
 
     void CreateBinding(Squad* squad);
     void EnsureOverlay(Binding& b);
+    SceneNode* EnsureFogNode(int entityId);
     static Vector3 TeamColor(int team);
 
     std::vector<Binding> bindings;
+    std::unordered_map<int, SharedPtr<SceneNode>> fogNodes;
     SharedPtr<SceneNode> parentNode;
     SceneGraph* scene = nullptr;
     SharedPtr<Mesh> unitMesh;
     SharedPtr<Mesh> ringMesh, barBgMesh, barFillMesh;
+    const QuantumFog* fog = nullptr;
+    SharedPtr<Mesh> fogMarkerMesh;
     const Squad* selected = nullptr;
     float barY = 2.0f;
     float barWidth = 1.2f;
