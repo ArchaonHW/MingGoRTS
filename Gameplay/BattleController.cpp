@@ -147,6 +147,15 @@ void BattleController::Update(float realDt) {
     }
 
     for (auto& squad : squads) {
+        // 潰逃小隊可能留著陳舊 orderTarget（如敵方 objective），
+        // doctrine 又跳過潰逃隊——每 tick 重指集結點，確保往己方撤退
+        // （同時修正 ApplyCasualties 潰逃路徑留下的舊目標）
+        if (squad->IsRouting()) {
+            auto rIt = rallyPoints.find(squad->GetTeam());
+            if (rIt != rallyPoints.end()) {
+                squad->IssueOrder(SquadOrder::Retreat, rIt->second);
+            }
+        }
         squad->Update(dt, GetTeamField(squad->GetTeam()));
     }
 

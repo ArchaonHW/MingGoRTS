@@ -111,7 +111,7 @@ int main() {
         Check(std::fabs(sage.GetCorruption() - 4.0f) < 0.01f,
               "木火期墮落折扣 +4", sage.GetCorruption(), 4.0f);
 
-        // 連續施逆策（欺天 25×0.5=12.5）直到墮落滿；滿後必須拒絕
+        // 連續施逆策（欺天 25×0.5=12.5）累墮；敵軍全潰後無可作用 → false
         int applied = 0;
         while (sage.ApplyPolicy(Policy::DeceiveHeaven, battle)) {
             ++applied;
@@ -119,6 +119,18 @@ int main() {
                 break;
             }
         }
+        Check(applied >= 4, "逆策可連續累墮",
+              static_cast<float>(applied), 4.0f);
+        Check(sage.GetCorruption() > 4.0f, "墮落持續累積",
+              sage.GetCorruption(), 12.5f);
+        float cNow = sage.GetCorruption();
+        Check(!sage.ApplyPolicy(Policy::DeceiveHeaven, battle),
+              "敵軍全潰後無可作用 → false");
+        Check(sage.GetCorruption() == cNow, "空放逆策不加墮落",
+              sage.GetCorruption(), cNow);
+
+        // 墮落補滿 → 失格，之後逆策一律拒絕
+        sage.AddCorruption(200.0f);
         Check(sage.GetCorruption() >= 100.0f, "墮落達 100",
               sage.GetCorruption(), 100.0f);
         Check(sage.GetOutcome() == SageOutcome::Fallen,
@@ -372,6 +384,107 @@ int main() {
         sage3.AddCorruption(100.0f);
         Check(sage3.ResolveOutcome(battle) == SageOutcome::Fallen,
               "失格優先於治平無勝");
+    }
+
+    // ---------------------------------------------------------------
+    printf("\n[10] 逆策命令干擾：Execution 惑敵落地、Deployment 拒絕、無敵拒絕\n");
+    {
+        // Deployment 階段：命令干擾成分無法落地 → 拒絕且不收墮落
+        BattleController battle(20, 15, 1.0f);
+        BuildBattle(battle);
+        SageCommand sage;
+
+        Check(!sage.ApplyPolicy(Policy::ConfuseEnemy, battle),
+              "Deployment 惑敵回傳 false");
+        Check(sage.GetCorruption() == 0.0f, "拒絕不收墮落",
+              sage.GetCorruption(), 0.0f);
+
+        // Execution 階段（規劃後敵方有 CP）→ 敵隊被覆寫為撤退
+        BattlePlanner planner;
+        for (int team = 0; team <= 1; ++team) {
+            BattlePlanner::Plan plan = planner.GeneratePlan(battle, team);
+            planner.ApplyPlan(battle, plan);
+        }
+        battle.BeginExecution();
+        Check(sage.ApplyPolicy(Policy::ConfuseEnemy, battle),
+              "Execution 惑敵回傳 true");
+        bool anyRetreat = false;
+        for (const auto& s : battle.GetSquads()) {
+            if (s->GetTeam() == 1 && s->GetOrder() == SquadOrder::Retreat) {
+                anyRetreat = true;
+            }
+        }
+        Check(anyRetreat, "敵隊命令被干擾為 Retreat");
+        Check(sage.GetCorruption() > 0.0f, "落地逆策收墮落",
+              sage.GetCorruption(), 5.0f);
+
+        // 無存活敵隊 → 敵方政策一律 false 且不加墮落
+        BattleController b2(20, 15, 1.0f);
+        BuildBattle(b2);
+        SageCommand sage2;
+        for (const auto& s : b2.GetSquads()) {
+            if (s->GetTeam() == 1) {
+                s->ApplyCasualties(999);
+            }
+        }
+        Check(!sage2.ApplyPolicy(Policy::SlanderEnemy, b2),
+              "無敵可害：讒敵回傳 false");
+        Check(!sage2.ApplyPolicy(Policy::BribeEnemy, b2),
+              "無敵可害：餌敵回傳 false");
+        Check(!sage2.ApplyPolicy(Policy::Terrorize, b2),
+              "無敵可害：威嚇回傳 false");
+        Check(sage2.GetCorruption() == 0.0f, "無效政策不加墮落",
+              sage2.GetCorruption(), 0.0f);
+    }
+
+    // ---------------------------------------------------------------
+    printf("\n[11] Tick 結算不重複 emit；潰逃小隊重指集結點\n");
+    {
+        BattleController battle(20, 15, 1.0f);
+        BuildBattle(battle);
+        SageCommand sage;
+
+        int subdueEvents = 0;
+        sage.SetEventCallback([&subdueEvents](const std::string& msg) {
+            if (msg.find("不戰而屈人之兵") != std::string::npos) {
+                ++subdueEvents;
+            }
+        });
+
+        sage.ApplyPolicy(Policy::EstablishState, battle); // 民心 60
+        battle.BeginExecution();
+        for (const auto& s : battle.GetSquads()) {
+            if (s->GetTeam() == 1) {
+                s->ApplyCasualties(4);
+                s->AdjustMorale(-1.0f);
+            }
+        }
+        battle.Update(0.1f);
+        Check(battle.GetPhase() == BattlePhase::Resolution, "戰鬥結束");
+
+        // Resolution 中連續 Tick——無勝而勝事件只能 emit 一次
+        sage.Tick(0.1f, battle);
+        sage.Tick(0.1f, battle);
+        sage.Tick(0.1f, battle);
+        Check(sage.GetOutcome() == SageOutcome::SubdueWithoutWar,
+              "結算 = 無勝而勝");
+        Check(subdueEvents == 1, "無勝而勝事件只觸發一次",
+              static_cast<float>(subdueEvents), 1.0f);
+
+        // 潰逃小隊留著陳舊 orderTarget → Update 後應重指集結點
+        BattleController b3(20, 15, 1.0f);
+        BuildBattle(b3);
+        b3.BeginExecution();
+        Squad* enemy = FirstSquadOf(b3, 1);
+        // 先給它一個指向我方目標的舊命令，再讓它潰逃
+        enemy->IssueOrder(SquadOrder::AttackMove, b3.GetObjective(1));
+        enemy->AdjustMorale(-1.0f);
+        Check(enemy->IsRouting(), "敵隊進入潰逃");
+        b3.Update(0.1f);
+        Vector2 rally = b3.GetRallyPoint(1);
+        Vector2 tgt = enemy->GetOrderTarget();
+        Check((tgt - rally).Length() < 0.01f, "潰逃小隊重指集結點",
+              tgt.x, rally.x);
     }
 
     printf("\n=== 結果: %d PASS, %d FAIL ===\n", g_pass, g_fail);

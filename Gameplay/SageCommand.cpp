@@ -124,7 +124,8 @@ void SageCommand::CheckSigns() {
         ++signLevel;
         Emit(std::string("[道權] 墮落徵象顯現：") + SignName(signLevel));
     }
-    if (corruption >= CORRUPTION_MAX && outcome == SageOutcome::Ongoing) {
+    // 失格優先：無論戰場勝負是否已結算，墮落達頂一律翻為 Fallen
+    if (corruption >= CORRUPTION_MAX && outcome != SageOutcome::Fallen) {
         outcome = SageOutcome::Fallen;
         Emit("[道權] 墮落達頂——以勝負代是非，至聖者失格，勝負無效");
     }
@@ -196,8 +197,8 @@ int SageCommand::ApplyEnemyMorale(BattleController& battle, float delta,
     return affected;
 }
 
-void SageCommand::TryDisruptEnemy(BattleController& battle, int maxSquads,
-                                  float holdSeconds) {
+int SageCommand::TryDisruptEnemy(BattleController& battle, int maxSquads,
+                                 float holdSeconds) {
     // 與玩家 CP 介入同型：覆寫敵隊命令為撤退，消耗的是敵方 CP
     Vector2 rally = battle.HasRallyPoint(enemyTeam)
         ? battle.GetRallyPoint(enemyTeam)
@@ -215,6 +216,7 @@ void SageCommand::TryDisruptEnemy(BattleController& battle, int maxSquads,
             ++done;
         }
     }
+    return done;
 }
 
 bool SageCommand::ApplyPolicy(Policy policy, BattleController& battle) {
@@ -237,10 +239,18 @@ bool SageCommand::ApplyPolicy(Policy policy, BattleController& battle) {
             Emit("[策權] 墮落已滿，逆策拒絕");
             return false;
         }
+        // 惑敵/破壞含命令干擾成分（Intervene 需即時層）——
+        // 非 Execution 施行等同空放，拒絕並不收墮落
+        if ((policy == Policy::ConfuseEnemy || policy == Policy::Sabotage) &&
+            battle.GetPhase() != BattlePhase::Execution) {
+            Emit("[策權] 惑敵/破壞需在即時層（Execution）施行");
+            return false;
+        }
     }
 
     const float f = EffectFactor();
     float corruptionCost = 0.0f;
+    int enemiesAffected = 0;
 
     switch (policy) {
     // ---- 正六策：修己安人，不涉敵、不累墮 ----
@@ -277,39 +287,52 @@ bool SageCommand::ApplyPolicy(Policy policy, BattleController& battle) {
         break;
 
     // ---- 逆六策：傷敵取利，累積墮落 ----
-    case Policy::SlanderEnemy:
-        ApplyEnemyMorale(battle, -0.15f * f, false);
+    case Policy::SlanderEnemy: {
+        Squad* target = FindNearestEnemy(battle); // 讒敵指定最近敵隊
+        if (target) {
+            target->AdjustMorale(-0.15f * f);
+            enemiesAffected = 1;
+        }
         corruptionCost = 8.0f;
         break;
+    }
     case Policy::ConfuseEnemy:
-        ApplyEnemyMorale(battle, -0.05f * f, false);
-        TryDisruptEnemy(battle, 2, 4.0f);
+        enemiesAffected += ApplyEnemyMorale(battle, -0.05f * f, false);
+        enemiesAffected += TryDisruptEnemy(battle, 2, 4.0f);
         corruptionCost = 10.0f;
         break;
     case Policy::BribeEnemy: {
         Squad* target = FindStrongestEnemy(battle);
         if (target) {
             target->AdjustMorale(-0.25f * f);
+            enemiesAffected = 1;
         }
         corruptionCost = 14.0f;
         break;
     }
     case Policy::Terrorize:
-        ApplyEnemyMorale(battle, -0.08f * f, true);
+        enemiesAffected += ApplyEnemyMorale(battle, -0.08f * f, true);
         corruptionCost = 16.0f;
         break;
     case Policy::Sabotage:
-        ApplyEnemyMorale(battle, -0.10f * f, true);
-        TryDisruptEnemy(battle, 2, 3.0f);
+        enemiesAffected += ApplyEnemyMorale(battle, -0.10f * f, true);
+        enemiesAffected += TryDisruptEnemy(battle, 2, 3.0f);
         corruptionCost = 18.0f;
         break;
     case Policy::DeceiveHeaven:
-        ApplyEnemyMorale(battle, -0.20f * f, true);
+        enemiesAffected += ApplyEnemyMorale(battle, -0.20f * f, true);
         corruptionCost = 25.0f;
         break;
+    default:
+        return false; // 越界 Policy 值不得假裝成功
     }
 
     if (heretic) {
+        // 無可作用敵隊 = 空放：拒絕且不收墮落
+        if (enemiesAffected == 0) {
+            Emit("[策權] 無可作用之敵——逆策空放，不收墮落");
+            return false;
+        }
         AddCorruption(corruptionCost * CorruptionFactor());
     }
 
@@ -370,6 +393,17 @@ void SageCommand::UpdateBattleStats(const BattleController& battle) {
 }
 
 void SageCommand::Tick(float dt, const BattleController& battle) {
+    // 負 dt 會讓封邪衰減反向無界——一律夾到非負
+    if (dt < 0.0f) {
+        dt = 0.0f;
+    }
+
+    // 本物件跨戰鬥重用時，舊 squad 指標可能已被回收（ABA）——
+    // 部署階段清空歸附計數集
+    if (battle.GetPhase() == BattlePhase::Deployment) {
+        routedCounted.clear();
+    }
+
     // 封邪中：墮落衰減、秩序回升
     if (hereticSealed) {
         corruption = std::max(0.0f, corruption - SEAL_CORRUPTION_DECAY * dt);
@@ -388,10 +422,12 @@ void SageCommand::Tick(float dt, const BattleController& battle) {
 
     UpdateBattleStats(battle);
 
-    // 結局更新：墮落滿即失格；戰後按勝利型態結算
+    // 結局更新：墮落滿即失格；戰後只在未定結局時結算一次
+    // （否則無勝而勝等事件會每 tick 重複 emit）
     if (corruption >= CORRUPTION_MAX) {
         CheckSigns();
-    } else if (battle.GetPhase() == BattlePhase::Resolution) {
+    } else if (battle.GetPhase() == BattlePhase::Resolution &&
+               outcome == SageOutcome::Ongoing) {
         ResolveOutcome(battle);
     }
 }

@@ -53,6 +53,13 @@ enum class Policy {
     DeceiveHeaven       // 欺天：敵全軍士氣大降，墮落成本最高
 };
 
+// 正/逆策以列舉次序分界（IsHereticPolicy 依賴此序）——插入新值不得越界
+static_assert(static_cast<int>(Policy::SlanderEnemy) ==
+                  static_cast<int>(Policy::RallyTroops) + 1,
+              "Policy 邊界：SlanderEnemy 必須緊接 RallyTroops（正六策之後）");
+static_assert(static_cast<int>(Policy::DeceiveHeaven) == 11,
+              "Policy 邊界：DeceiveHeaven 必須是最後一個值");
+
 /**
  * 至聖者結局
  */
@@ -141,7 +148,7 @@ private:
     Squad* FindNearestEnemy(BattleController& battle) const;
     Squad* FindStrongestEnemy(BattleController& battle) const;
     int ApplyEnemyMorale(BattleController& battle, float delta, bool all);
-    void TryDisruptEnemy(BattleController& battle, int maxSquads, float holdSeconds);
+    int TryDisruptEnemy(BattleController& battle, int maxSquads, float holdSeconds);
 
     int playerTeam;
     int enemyTeam;

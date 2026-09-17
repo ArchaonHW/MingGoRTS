@@ -482,7 +482,12 @@ int main() {
     }
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
-    gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        fprintf(stderr, "Failed to initialize GL loader (glad)\n");
+        glfwDestroyWindow(window);
+        glfwTerminate();
+        return 1;
+    }
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
