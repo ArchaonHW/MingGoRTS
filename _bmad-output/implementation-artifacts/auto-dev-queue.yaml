@@ -2,7 +2,7 @@
 # 每個 item 走完：pick → spec (gds-quick-dev) → implement → verify → review → commit
 # 規則見 auto-dev-workflow.md
 version: 1
-updated: 2026-09-17 (Q 層新增)
+updated: 2026-09-17 (C-1 done; G 層參考作機制新增)
 
 queue:
 
@@ -19,7 +19,14 @@ queue:
       - dataset.json 標註 depth_format（near/far 正規化說明）
       - 新增一個深度回歸訓練驗證（MSE 收斂 + 閾值 PASS）
       - headless [SKIP] 語義不變；ctest 註冊
-    status: queued
+    status: done
+    note: >
+      glReadPixels GL_DEPTH_COMPONENT 讀回 depth renderbuffer，
+      每筆產 img_XXXX_depth.png（ortho 線性深度，近亮遠暗）；
+      labels.csv 加 depth_file 欄、dataset.json 加 depth 區塊；
+      深度回歸驗證：16x16 反轉深度 → (posX,posZ) sigmoid 回歸，
+      平均誤差 0.060 < 0.15 閾值。踩坑：深度特徵全≈1 會讓
+      relu 層壞死（loss 卡常數），改用 1-d 反轉特徵後收斂。
     size: M
 
   - id: C-2
@@ -33,7 +40,14 @@ queue:
       - img_XXXX_mask.png 產出，像素色 = instance id
       - dataset.json 含 instance_map
       - ctest PASS、MSVC+MinGW 編譯
-    status: queued
+    status: done
+    note: >
+      第二 pass 以 kMaskFragSrc 平色 shader 重渲染同場景；
+      InstanceColor() 8 色調色盤（instance 1 = 紅）；每筆產
+      img_XXXX_mask.png、labels.csv 加 mask_file 欄、
+      dataset.json 加 segmentation.instance_map；內建驗證
+      每張 mask 前景像素 >0 且色值匹配（實測最小 151 px、
+      異色 0）。MSVC+MinGW 皆 PASS。
     size: M
 
   # ---- 層級 A：斷橋表現層 T-9~T-12 ----
@@ -238,3 +252,186 @@ queue:
       - 全離線資源
     status: queued
     size: M
+
+  # ---- 層級 P：物理批次後續（UNSOLVED_PHYSICS_TO_ENGINE 消費端）----
+
+  - id: P-1
+    title: TurbulenceField 接入戰場（霧漂移/風偏）
+    source: UNSOLVED_PHYSICS_TO_ENGINE §2 + Q-1 落地後
+    summary: >
+      CurlNoise 湍流場目前只有測試消費。接到 DuanqiaoPlayable：
+      機率雲標記位置疊加無散度微擾（視覺漂移），或砲彈/投射物
+      彈道風偏。需定義「風場強度」參數進 battle config。
+    acceptance:
+      - 機率雲標記隨時間平滑漂移且不回跳（場連續性）
+      - 強度參數=0 時行為與現況一致（可關閉）
+      - QuantumFogBattleTest / BattleSceneTest 無回歸
+    status: queued
+    size: M
+
+  - id: P-2
+    title: VelocityVerlet 採用決策（哪些系統切過去）
+    source: PhysicsMathTest 驗證結論
+    summary: >
+      Verlet 已證明對拋物線/長時間模擬嚴格優於 Euler。
+      盤點哪些 PhysicsWorld 消費者需要：戰鬥回放、拋射物、
+      長時間背景模擬 → 決定切換或維持 Euler 預設。
+      注意半步相位語義對 GetLinearVelocity 呼叫端的影響。
+    acceptance:
+      - 列出所有 PhysicsWorld 消費點 + 各自的切換結論與理由
+      - 若有切換：對應測試不回歸
+    status: queued
+    size: S
+
+  # ---- 層級 C 延伸：立繪訓練資料 ----
+
+  - id: C-3
+    title: PortraitRenderer 多通道訓練資料（depth/normal）
+    source: C-1 depth pass 模式 + VRM 立繪管線
+    summary: >
+      立繪烘焙除了 RGB 外，同 FBO 產 depth PNG（GL_DEPTH_COMPONENT
+      讀回，C-1 模式）與 normal PNG（法線著色 pass 或 MToon 通道），
+      形成 VRM 角色多角度訓練集：img_XXXX_{rgb,depth,normal}.png +
+      manifest.json（姿勢/鏡位/camera 參數標註）。
+    acceptance:
+      - 每張立繪產出 rgb+depth+normal 三通道 PNG
+      - manifest 記錄 camera yaw/pitch/dist、姿勢 ID、模型來源
+      - 至少一個 3-VRM × N-姿勢 batch 產出驗證
+    status: queued
+    size: L
+    note: 需先定義 normal pass 著色器（world-space 或 view-space 法線）
+
+  # ---- 層級 G：參考作機制（REFERENCE_GAMES_MECHANICS.md）----
+  # Total War / Mount&Blade / HOI4 / ELIN 萃取；建議批次順序見研究文件
+
+  - id: G-1
+    title: 士氣連鎖潰逃（TW chain rout）
+    source: Total War
+    summary: >
+      潰逃中的小隊對半徑內同隊友軍施加士氣減益；一隊崩盤可觸發
+      連鎖。現有 Squad.morale/routing 上加傳染項即可，不改狀態機。
+    acceptance:
+      - A 潰逃時範圍內友軍 morale 下降（可配置衰減）
+      - 範圍外/敵軍不受影響；連鎖可被高士氣部隊擋住
+      - DoctrineBattleDemo 無回歸；新增斷言進 BattleSceneTest 或獨立測試
+    status: queued
+    size: S
+    note: BattleController 目前平行 session 熱區——實作前先確認檔案穩定
+
+  - id: G-3
+    title: 疲勞系統（TW fatigue）
+    source: Total War
+    summary: >
+      Squad 加 stamina：移動/交戰消耗、駐守回復；疲憊（<閾值）時
+      降移速與輸出。doctrine 可加 StaminaBelow 觸發（後續）。
+    acceptance:
+      - stamina 0~1，跑動耗損、駐守回復，數值可測
+      - 疲憊懲罰生效（速度或攻擊修正任一）
+    status: queued
+    size: S
+
+  - id: G-2
+    title: 兵種克制 + 戰線寬度（TW/HOI4）
+    source: Total War + HOI4
+    summary: >
+      Squad 加 unitClass（infantry/archer/cavalry），ResolveCombat
+      套克制矩陣修正；同時交戰上限（combat width）限制圍毆。
+    acceptance:
+      - 克制關係產生可測的傷害差（騎>弓>步>騎三角）
+      - combat width 超過時多出者只圍觀不輸出
+      - EnemyGeneral 卡可標兵種
+    status: queued
+    size: M
+
+  - id: G-4
+    title: 地形加成（高地/伏擊/減速）
+    source: Total War
+    summary: >
+      FlowField 格子加 terrain flag（height/forest/mud），戰鬥解析
+      時吃位置修正：高地射程/傷害加成、森林被命中減免、泥濘減速。
+      BattleMap JSON schema 加 terrain 層。
+    acceptance:
+      - 地圖可標 terrain 且 loader 讀取
+      - 高地 vs 平地的傷害差可測
+      - BattleMap 無 terrain 欄位時退回全平地
+    status: queued
+    size: M
+
+  - id: G-7
+    title: 戰後流轉：戰利品 + 傷兵恢復（M&B）
+    source: Mount & Blade
+    summary: >
+      戰鬥結算後：Roster 的 casualties 分「傷兵（可恢復）/陣亡」，
+      戰利品依殲滅數入帳 BattleResources；下一場可見恢復結果。
+    acceptance:
+      - 戰後報告含傷亡分類與戰利品清單
+      - 傷兵恢復率可配置；回放記錄戰後事件
+    status: queued
+    size: M
+
+  - id: G-6
+    title: 小隊編制模板（HOI4 division designer）
+    source: HOI4
+    summary: >
+      Squad 模板 JSON：組成/人數/兵種/成本；編成階段用模板建隊，
+      預算限制下配兵。吃 assets/cards 的 schema 風格。
+    acceptance:
+      - 模板檔可載入並建出對應 squad
+      - 預算超支時拒絕或降規（寫死規則）
+    status: queued
+    size: L
+
+  - id: G-5
+    title: 作戰計畫箭頭（HOI4 battle plan → doctrine）
+    source: HOI4
+    summary: >
+      回合層 UI 畫進攻箭頭/戰線 → 轉譯成 doctrine 規則集 +
+      計畫加成（CP/情報）；執行層依計畫跑、可中途介入。
+      這是 A-1 回合層 UI 的旗艦功能。
+    acceptance:
+      - 畫箭頭能產出合法 DoctrineSet（序列化可驗證）
+      - 計畫加成數值在執行層生效
+    status: queued
+    size: XL
+    note: 依賴 A-1；先不動工
+
+  - id: G-9
+    title: 戰鬥間整補循環（ELIN 基地層）
+    source: ELIN
+    summary: >
+      戰鬥間的 meta 層：兵員招募/傷兵恢復（接 G-7）/裝備補充/
+      doctrine 卡解鎖。資源跨場累積。
+    acceptance:
+      - 兩場戰鬥之間有整補介面且狀態跨場持續
+      - 招募/恢復消費戰利品資源
+    status: queued
+    size: XL
+    note: 依賴 G-7；meta 層是本專案最大缺口
+
+  - id: G-10
+    title: 程序戰場生成（ELIN × NeuralTerrainGen）
+    source: ELIN + 既有 NeuralTerrainGen
+    summary: >
+      seeded 生成 BattleMap JSON：NeuralTerrainGen 產 heightmap →
+      規則化為格子地形（河/橋/高地/森林）→ 直接餵 BattleMap loader。
+      對齊 SynthDataDemo 的「渲染→資料」思路，這裡是「生成→關卡」。
+    acceptance:
+      - seed 可重現同一張圖；異 seed 產出可辨差異
+      - 產出的 JSON 通過 BattleMap loader + 可打一場
+      - headless 測試（不需視窗）
+    status: queued
+    size: M
+
+  - id: G-8
+    title: 玩家將軍親臨（M&B commander）
+    source: Mount & Blade
+    summary: >
+      我軍方加一支「將軍衛隊」可控單位：手動技能（喊話士氣/
+      突擊）走 CP；將軍陣亡直接戰敗。為俯視 RTS 版的親臨，
+      不做第一人稱。
+    acceptance:
+      - 將軍單位可被選取/下令，陣亡觸發落敗結局
+      - 至少一個主動技能走 CP
+    status: queued
+    size: L
+    note: 依賴 DuanqiaoPlayable 穩定
