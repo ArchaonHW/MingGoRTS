@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
+#include <limits>
 
 using namespace Potato;
 using namespace Potato::Quantum;
@@ -161,7 +162,9 @@ static void TestQuantumFogProbe() {
     // 無效輸入不扣點
     CHECK(!fog.Probe(-1, truePos, 0.4f), "無效 id 探測失敗");
     CHECK(!fog.Probe(id, truePos, 0.0f), "strength<=0 探測失敗");
-    CHECK(!fog.Probe(id, truePos, 0.0f / 0.0f), "NaN strength 探測失敗");
+    CHECK(!fog.Probe(id, truePos,
+                     std::numeric_limits<float>::quiet_NaN()),
+          "NaN strength 探測失敗");
     CHECK(res.GetIntel(0) == 4, "失敗探測不扣點");
 
     // 探測:扣 1 情報 < 觀測 2;機率向真值收縮但不塌縮
@@ -215,12 +218,123 @@ static void TestQuantumFogProbe() {
     CHECK(res.GetIntel(0) == 1, "已揭露探測不扣點");
 }
 
+static void TestQuantumFogEntangle() {
+    printf("-- QuantumFog Entangle --\n");
+
+    BattleController battle(10, 10, 1.0f);
+    BattleResources res;
+    res.Setup(battle, /*team=*/0, /*intel=*/6, /*cp=*/0);
+
+    QuantumFog fog(5.0f, /*observe=*/2, /*probe=*/1);
+    fog.BindResources(&res);
+
+    // A/B 雲同構(B = A + (10,0)):相對偏移一致 → idx 對 idx 相關
+    const int a = fog.AddEntity("佯攻隊", 0,
+        {Vector2(0, 0), Vector2(0, 4), Vector2(4, 0)});
+    const int b = fog.AddEntity("主力隊", 0,
+        {Vector2(10, 0), Vector2(10, 4), Vector2(14, 0)});
+
+    CHECK(!fog.Entangle(a, a), "自我糾纏拒絕");
+    CHECK(!fog.Entangle(a, 99), "無效 id 糾纏拒絕");
+    CHECK(fog.Entangle(a, b), "糾纏建立");
+    CHECK(!fog.Entangle(a, b), "重複糾纏拒絕");
+    CHECK(fog.EntangledPartner(a) == b, "A 對象是 B");
+    CHECK(fog.EntangledPartner(b) == a, "對稱:B 對象是 A");
+    CHECK(fog.EntangledPartner(99) == -1, "無效查詢 -1");
+
+    // 觀測 A(真值近候選1) → B 集中到同向候選 (10,4),仍不揭露
+    CHECK(fog.Observe(a, Vector2(0.2f, 3.9f)), "觀測 A");
+    CHECK(res.GetIntel(0) == 4, "糾纏傳遞不另扣點");
+    CHECK(!fog.IsRevealed(b), "B 未揭露");
+    double maxP = 0.0;
+    Vector2 maxPos;
+    for (const auto& c : fog.GetCloud(b)) {
+        if (c.second > maxP) { maxP = c.second; maxPos = c.first; }
+    }
+    CHECK(maxP > 0.6, "B 機率集中(blend 0.7)");
+    CHECK(std::abs(maxPos.x - 10.0f) < 0.01f &&
+          std::abs(maxPos.y - 4.0f) < 0.01f, "集中到同向候選");
+
+    // 對稱:A 過期回雲後觀測 B → A 集中到同向候選 (0,0)
+    fog.Update(6.0f);
+    CHECK(!fog.IsRevealed(a), "A 情報過期回雲");
+    CHECK(fog.Observe(b, Vector2(10.1f, 0.1f)), "觀測 B");
+    maxP = 0.0;
+    for (const auto& c : fog.GetCloud(a)) {
+        if (c.second > maxP) { maxP = c.second; maxPos = c.first; }
+    }
+    CHECK(std::abs(maxPos.x) < 0.01f && std::abs(maxPos.y) < 0.01f,
+          "對稱:A 集中到同向候選");
+    CHECK(!fog.IsRevealed(a), "A 仍未揭露");
+
+    // 已消去的相關候選不復活(硬證據優先於糾纏推測)
+    const int c2 = fog.AddEntity("斥候甲", 0,
+        {Vector2(0, 6), Vector2(0, 9), Vector2(4, 6)});
+    const int d = fog.AddEntity("斥候乙", 0,
+        {Vector2(10, 6), Vector2(10, 9), Vector2(14, 6)});
+    CHECK(fog.Entangle(c2, d), "第二對糾纏建立");
+    CHECK(fog.EliminateCandidate(d, 1), "消去 D 候選1");
+    res.Setup(battle, 0, /*intel=*/4, /*cp=*/0);
+    CHECK(fog.Observe(c2, Vector2(0.1f, 8.9f)), "觀測 C(近候選1)");
+    bool revived = false;
+    for (const auto& e : fog.GetCloud(d)) {
+        if (std::abs(e.first.x - 10.0f) < 0.01f &&
+            std::abs(e.first.y - 9.0f) < 0.01f) revived = true;
+    }
+    CHECK(!revived, "消去的相關候選不復活");
+
+    // 已揭露對象不受糾纏影響
+    CHECK(fog.Reveal(d, Vector2(14.0f, 6.0f)), "接觸揭露 D");
+    const Vector2 dp = fog.GetRevealedPos(d);
+    fog.Reveal(c2, Vector2(0.0f, 6.0f)); // 對象 d 已揭露,Propagate 跳過
+    CHECK(std::abs(fog.GetRevealedPos(d).x - dp.x) < 0.01f,
+          "已揭露對象不被糾纏改寫");
+
+    // 接觸揭露也傳遞糾纏,但只在塌縮轉換一次——每 tick Reveal 不複利
+    const int e3 = fog.AddEntity("伏兵甲", 0,
+        {Vector2(6, 0), Vector2(6, 4), Vector2(9, 0)});
+    const int f = fog.AddEntity("伏兵乙", 0,
+        {Vector2(16, 0), Vector2(16, 4), Vector2(19, 0)});
+    CHECK(fog.Entangle(e3, f), "第三對糾纏建立");
+    CHECK(fog.Reveal(e3, Vector2(6.1f, 3.9f)), "接觸揭露 E");
+    maxP = 0.0;
+    for (const auto& c : fog.GetCloud(f)) {
+        if (c.second > maxP) { maxP = c.second; maxPos = c.first; }
+    }
+    CHECK(maxP > 0.6, "接觸揭露也傳遞糾纏");
+    CHECK(std::abs(maxPos.x - 16.0f) < 0.01f &&
+          std::abs(maxPos.y - 4.0f) < 0.01f, "集中到同向候選");
+    // 模擬持續接觸:重複 Reveal → 對方雲不複利收縮
+    fog.Reveal(e3, Vector2(6.1f, 3.9f));
+    fog.Reveal(e3, Vector2(6.1f, 3.9f));
+    double maxP2 = 0.0;
+    for (const auto& c : fog.GetCloud(f)) maxP2 = std::max(maxP2, c.second);
+    CHECK(std::abs(maxP2 - maxP) < 1e-9, "重複接觸不複利收縮");
+
+    // Probe 不觸發糾纏(弱測量不構成 joint 測量)
+    const int g = fog.AddEntity("遊騎甲", 0,
+        {Vector2(0, 12), Vector2(0, 15), Vector2(4, 12)});
+    const int h = fog.AddEntity("遊騎乙", 0,
+        {Vector2(10, 12), Vector2(10, 15), Vector2(14, 12)});
+    CHECK(fog.Entangle(g, h), "第四對糾纏建立");
+    res.Setup(battle, 0, /*intel=*/4, /*cp=*/0);
+    const auto hBefore = fog.GetCloud(h);
+    CHECK(fog.Probe(g, Vector2(0.1f, 14.9f), 0.5f), "探測 G");
+    const auto hAfter = fog.GetCloud(h);
+    bool hSame = hAfter.size() == hBefore.size();
+    for (size_t i = 0; hSame && i < hBefore.size(); ++i) {
+        hSame = std::abs(hAfter[i].second - hBefore[i].second) < 1e-9;
+    }
+    CHECK(hSame, "Probe 不觸發糾纏");
+}
+
 int main() {
     printf("=== QuantumTest ===\n");
     TestQubitRegister();
     TestQudit();
     TestQuantumFog();
     TestQuantumFogProbe();
+    TestQuantumFogEntangle();
 
     if (g_failures == 0) {
         printf("ALL CHECKS PASSED\n");

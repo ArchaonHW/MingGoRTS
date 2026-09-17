@@ -89,6 +89,13 @@ public:
     // 純 Born-rule 觀測（無真值來源時）：回傳命中的候選 index，-1 表示失敗
     int ObserveRandom(int entityId);
 
+    // 糾纏（Q-2）：兩實體疊加態相關——一方塌縮時，未揭露的另一方
+    // 機率向「同向候選」（雲質心相對偏移最近者）集中 0.7，但不揭露。
+    // 1:1、雙向對稱；a==b/無效 id/任一方已糾纏回 false。
+    bool Entangle(int a, int b);
+    // 糾纏對象的 entityId；-1 = 未糾纏或無效
+    int EntangledPartner(int entityId) const;
+
     void Update(float dt);
 
     // ---- 查詢 ----
@@ -100,9 +107,19 @@ public:
     size_t EntityCount() const { return entities.size(); }
 
 private:
-    void CollapseNear(UncertainEntity& e, const Vector2& truePos);
+    // 回傳塌縮到的候選 index
+    int CollapseNear(UncertainEntity& e, const Vector2& truePos);
+    // 糾纏傳遞：entityId 塌縮到 candIdx 時,集中其未揭露糾纏對象
+    void PropagateEntanglement(int entityId, int candIdx);
+
+    struct EntangleLink {
+        int a, b;
+        std::vector<int> a2b; // A 候選 i → B 相關候選
+        std::vector<int> b2a;
+    };
 
     std::vector<UncertainEntity> entities;
+    std::vector<EntangleLink> links;
     BattleResources* resources = nullptr;
     float intelDuration;
     int intelCost;

@@ -91,7 +91,7 @@ bool QuantumFog::Observe(int entityId, const Vector2& truePos) {
         return false;
     }
 
-    CollapseNear(e, truePos);
+    PropagateEntanglement(entityId, CollapseNear(e, truePos));
     return true;
 }
 
@@ -99,7 +99,13 @@ bool QuantumFog::Reveal(int entityId, const Vector2& truePos) {
     if (entityId < 0 || entityId >= static_cast<int>(entities.size())) {
         return false;
     }
-    CollapseNear(entities[entityId], truePos);
+    UncertainEntity& e = entities[entityId];
+    if (e.revealed) { // 已揭露僅刷新真值/時效——糾纏只在塌縮轉換時傳遞
+        e.revealedPos = truePos;
+        e.revealTimer = intelDuration;
+        return true;
+    }
+    PropagateEntanglement(entityId, CollapseNear(e, truePos));
     return true;
 }
 
@@ -162,7 +168,7 @@ bool QuantumFog::Probe(int entityId, const Vector2& truePos, float strength) {
     return true;
 }
 
-void QuantumFog::CollapseNear(UncertainEntity& e, const Vector2& truePos) {
+int QuantumFog::CollapseNear(UncertainEntity& e, const Vector2& truePos) {
     // 塌縮到距真值最近的候選態
     int best = 0;
     float bestDist = 1e30f;
@@ -175,6 +181,86 @@ void QuantumFog::CollapseNear(UncertainEntity& e, const Vector2& truePos) {
     e.revealed = true;
     e.revealedPos = truePos;
     e.revealTimer = intelDuration;
+    return best;
+}
+
+bool QuantumFog::Entangle(int a, int b) {
+    if (a == b || !GetEntity(a) || !GetEntity(b)) return false;
+    if (EntangledPartner(a) >= 0 || EntangledPartner(b) >= 0) return false;
+
+    // 同向機動假設:以雲質心為原點的相對偏移最近者即相關候選
+    // (佯攻偏其雲心北側 → 主力也偏其雲心北側)
+    auto centroid = [](const std::vector<Vector2>& c) {
+        Vector2 m(0.0f, 0.0f);
+        for (const Vector2& p : c) m = m + p;
+        return m * (1.0f / static_cast<float>(c.size()));
+    };
+    auto corr = [](const std::vector<Vector2>& from, const Vector2& cf,
+                   const std::vector<Vector2>& to, const Vector2& ct) {
+        std::vector<int> map(from.size());
+        for (size_t i = 0; i < from.size(); ++i) {
+            const Vector2 rel = from[i] - cf;
+            int best = 0;
+            float bestDist = 1e30f;
+            for (size_t j = 0; j < to.size(); ++j) {
+                const Vector2 d = (to[j] - ct) - rel;
+                const float dist = d.x * d.x + d.y * d.y;
+                if (dist < bestDist) { bestDist = dist; best = (int)j; }
+            }
+            map[i] = best;
+        }
+        return map;
+    };
+
+    const auto& ea = entities[a];
+    const auto& eb = entities[b];
+    const Vector2 ca = centroid(ea.candidates);
+    const Vector2 cb = centroid(eb.candidates);
+    EntangleLink link;
+    link.a = a;
+    link.b = b;
+    link.a2b = corr(ea.candidates, ca, eb.candidates, cb);
+    link.b2a = corr(eb.candidates, cb, ea.candidates, ca);
+    links.push_back(std::move(link));
+    return true;
+}
+
+int QuantumFog::EntangledPartner(int entityId) const {
+    for (const auto& l : links) {
+        if (l.a == entityId) return l.b;
+        if (l.b == entityId) return l.a;
+    }
+    return -1;
+}
+
+void QuantumFog::PropagateEntanglement(int entityId, int candIdx) {
+    if (candIdx < 0) return;
+    for (const auto& l : links) {
+        int partnerId = -1;
+        int corrIdx = -1;
+        if (l.a == entityId && candIdx < (int)l.a2b.size()) {
+            partnerId = l.b;
+            corrIdx = l.a2b[candIdx];
+        } else if (l.b == entityId && candIdx < (int)l.b2a.size()) {
+            partnerId = l.a;
+            corrIdx = l.b2a[candIdx];
+        } else {
+            continue;
+        }
+        UncertainEntity& p = entities[partnerId];
+        if (p.revealed || corrIdx < 0 ||
+            corrIdx >= (int)p.candidates.size()) {
+            continue;
+        }
+        std::vector<double> probs = p.state.Probabilities();
+        if (probs[corrIdx] <= 1e-9) continue; // 已消去的候選不復活
+        // blend 0.7:強烈集中但保留殘餘不確定——糾纏是推測非親見
+        for (size_t j = 0; j < probs.size(); ++j) {
+            probs[j] *= 0.3;
+        }
+        probs[corrIdx] += 0.7;
+        p.state.SetProbabilities(probs);
+    }
 }
 
 int QuantumFog::ObserveRandom(int entityId) {
@@ -185,10 +271,12 @@ int QuantumFog::ObserveRandom(int entityId) {
     if (resources && !resources->SpendIntel(e.team, intelCost)) {
         return -1;
     }
+    const bool was = e.revealed;
     const int outcome = e.state.Measure();
     e.revealed = true;
     e.revealedPos = e.candidates[outcome];
     e.revealTimer = intelDuration;
+    if (!was) PropagateEntanglement(entityId, outcome);
     return outcome;
 }
 
