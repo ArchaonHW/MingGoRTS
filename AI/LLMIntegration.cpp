@@ -308,10 +308,20 @@ std::vector<float> OpenAIClient::GenerateEmbedding(
     const std::string& text,
     const std::string& model) {
 
-    // HTTP transport 未接入——回傳空向量，上層（RAG）對空 embedding 已降級處理
-    (void)text;
-    (void)model;
-    return {};
+    if (text.empty()) return {};
+    std::string m = model.empty() ? "text-embedding-ada-002" : model;
+    std::stringstream json;
+    json << "{\"input\":\"" << EscapeJson(text)
+         << "\",\"model\":\"" << EscapeJson(m) << "\"}";
+    std::string resp = MakeRequest("/embeddings", json.str());
+    if (resp.empty()) return {};
+
+    JsonValue root;
+    if (!JsonValue::ParseOk(resp, root)) return {};
+    std::vector<float> emb;
+    for (const JsonValue& v : root["data"][0]["embedding"].AsArray())
+        emb.push_back(v.AsFloat());
+    return emb;
 }
 
 std::vector<std::vector<float>> OpenAIClient::GenerateEmbeddings(
