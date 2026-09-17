@@ -2866,7 +2866,15 @@ void IDEGUI::ConfigureDevSystemLLM() {
     std::string key(state.llmApiKey);
 
     Potato::AI::ILLMClient* client = nullptr;
-    if (!key.empty()) {
+    if (provider == "ollama") {
+        // Ollama 免 API key——模型名取自 llmModel，伺服器走預設 localhost:11434
+        std::string model(state.llmModel);
+        if (model.empty()) model = "llama3";
+        auto c = std::make_unique<Potato::AI::LocalModelClient>(model);
+        client = c.get();
+        g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local,
+                                     std::move(c));
+    } else if (!key.empty()) {
         if (provider == "openai") {
             auto c = std::make_unique<Potato::AI::OpenAIClient>(key);
             client = c.get();

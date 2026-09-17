@@ -305,8 +305,11 @@ public:
 private:
     std::string modelPath;
     void* modelHandle;  // Opaque handle to model
+    std::string lastLocalError;
     
-    std::string MakeLocalRequest(const std::string& prompt);
+    std::string MakeLocalRequest(const std::string& prompt,
+                                 const std::string& baseURL,
+                                 const std::string& model);
     LLMResponse ParseLocalResponse(const std::string& response);
 };
 

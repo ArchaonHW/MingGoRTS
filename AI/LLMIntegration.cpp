@@ -626,7 +626,10 @@ LLMResponse LocalModelClient::ChatCompletion(
     }
     prompt << "Assistant:";
     
-    std::string localResponse = MakeLocalRequest(prompt.str());
+    std::string baseURL = config.baseURL.empty()
+        ? "http://localhost:11434" : config.baseURL;
+    std::string model = config.model.empty() ? modelPath : config.model;
+    std::string localResponse = MakeLocalRequest(prompt.str(), baseURL, model);
     response = ParseLocalResponse(localResponse);
     
     return response;
@@ -664,11 +667,31 @@ std::vector<float> LocalModelClient::GenerateEmbedding(
     const std::string& text,
     const std::string& model) {
 
-    // 無推論後端——回傳空向量。RAG 層對空 embedding 已降級處理
-    // （InMemoryVectorDB 跳過空 embedding 的 chunk）。
-    (void)text;
+    // Ollama /api/embeddings；無 HTTP 層的平台回傳空向量，
+    // RAG 層對空 embedding 已降級處理。
+    if (text.empty()) return {};
+#ifdef _WIN32
+    std::string m = model.empty()
+        ? (modelPath.empty() ? "nomic-embed-text" : modelPath) : model;
+    std::stringstream json;
+    json << "{\"model\":\"" << EscapeJson(m)
+         << "\",\"prompt\":\"" << EscapeJson(text) << "\"}";
+    std::string body, err;
+    int status = 0;
+    std::vector<std::string> headers = {"Content-Type: application/json"};
+    if (!HttpPostWinHttp("http://localhost:11434/api/embeddings",
+                         headers, json.str(), status, body, err))
+        return {};
+    JsonValue root;
+    if (!JsonValue::ParseOk(body, root)) return {};
+    std::vector<float> emb;
+    for (const JsonValue& v : root["embedding"].AsArray())
+        emb.push_back(v.AsFloat());
+    return emb;
+#else
     (void)model;
     return {};
+#endif
 }
 
 std::vector<std::vector<float>> LocalModelClient::GenerateEmbeddings(
@@ -691,17 +714,11 @@ std::string LocalModelClient::GetDefaultModel() {
 }
 
 bool LocalModelClient::LoadModel(const std::string& modelPath) {
-    // 本地推論後端（llama.cpp/Ollama）未接入——誠實回報失敗。
-    // 檔案存在也不假裝能跑：modelHandle 保持 nullptr，
-    // MakeLocalRequest 會據此回傳空 → 上層收到 success=false。
-    std::ifstream f(modelPath, std::ios::binary);
-    if (!f.good()) {
-        std::cerr << "LocalModelClient: model file not found: " << modelPath << std::endl;
-    } else {
-        std::cerr << "LocalModelClient: inference backend not implemented, "
-                     "cannot run: " << modelPath << std::endl;
-    }
-    return false;
+    // Ollama 模式：modelPath 即伺服器端模型名（如 "llama3"），
+    // 不做檔案檢查——模型存不存在由伺服器在推論時回報。
+    if (modelPath.empty()) return false;
+    this->modelPath = modelPath;
+    return true;
 }
 
 void LocalModelClient::UnloadModel() {
@@ -711,19 +728,54 @@ void LocalModelClient::UnloadModel() {
     }
 }
 
-std::string LocalModelClient::MakeLocalRequest(const std::string& prompt) {
-    // 本地推論後端未接入；modelHandle 永遠是 nullptr（LoadModel 誠實失敗）。
-    // 回傳空 → ParseLocalResponse 上報失敗，不回假文字。
+std::string LocalModelClient::MakeLocalRequest(const std::string& prompt,
+                                               const std::string& baseURL,
+                                               const std::string& model) {
+    lastLocalError.clear();
+    if (model.empty()) {
+        lastLocalError = "no model specified";
+        return {};
+    }
+#ifdef _WIN32
+    // Ollama /api/generate（stream=false 回單一 JSON）
+    std::stringstream json;
+    json << "{\"model\":\"" << EscapeJson(model)
+         << "\",\"prompt\":\"" << EscapeJson(prompt)
+         << "\",\"stream\":false}";
+    std::string body, err;
+    int status = 0;
+    std::vector<std::string> headers = {"Content-Type: application/json"};
+    if (!HttpPostWinHttp(baseURL + "/api/generate", headers, json.str(),
+                         status, body, err)) {
+        lastLocalError = "ollama unreachable: " + err;
+        return {};
+    }
+    JsonValue root;
+    if (!JsonValue::ParseOk(body, root)) {
+        lastLocalError = "invalid ollama response";
+        return {};
+    }
+    const JsonValue& e = root["error"];
+    if (e.IsString()) {
+        lastLocalError = e.AsString();
+        return {};
+    }
+    return root["response"].AsString();
+#else
     (void)prompt;
-    if (!modelHandle) return std::string();
-    return std::string();
+    (void)baseURL;
+    lastLocalError = "HTTP transport unavailable on this platform";
+    return {};
+#endif
 }
 
 LLMResponse LocalModelClient::ParseLocalResponse(const std::string& response) {
     LLMResponse resp;
     if (response.empty()) {
         resp.success = false;
-        resp.error = "Local model inference unavailable (backend not implemented)";
+        resp.error = lastLocalError.empty()
+            ? "Local model inference unavailable"
+            : "Local model inference failed: " + lastLocalError;
         return resp;
     }
     resp.content = response;
