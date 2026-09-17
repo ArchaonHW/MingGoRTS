@@ -13,11 +13,14 @@
 #include "AI/SelfReflection.h"
 #include "AI/LLMIntegration.h"
 #include "MingGoRTS_IDE/GUI/GuiTextUtils.h"
+#include "MingGoRTS_IDE/IntelligentSuggestion.h"
+#include <chrono>
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
 #include <fstream>
 #include <string>
+#include <thread>
 
 using namespace Potato::AI;
 
@@ -297,6 +300,94 @@ int main() {
               "unterminated block comment detected");
         Check(DevSystemUtils::ValidateSyntax("x = \"}{\"; // }(", "C++"),
               "braces inside string/comment ignored");
+    }
+
+    // 19) 非同步建議分析（B-1）：SubmitAnalysis/PollResult + supersede + shutdown
+    {
+        using MingGoRTSIDE::IntelligentSuggestionSystem;
+        using MingGoRTSIDE::Suggestion;
+
+        IntelligentSuggestionSystem sys;
+        sys.Initialize();
+
+        const char* code = "void f() { char b[8]; str" "cpy(b, \"x\"); }\n";
+
+        // 基本 Submit → Poll：有界等待結果
+        uint64_t job = sys.SubmitAnalysis(code, "smoke.cpp", 1, 1);
+        uint64_t doneId = 0;
+        std::vector<Suggestion> out;
+        bool got = false;
+        for (int i = 0; i < 200 && !got; ++i) {  // 最多 10s
+            got = sys.PollResult(doneId, out);
+            if (!got) std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        }
+        Check(got && doneId == job && !out.empty(),
+              "async analysis: submit->poll returns suggestions");
+
+        // supersede：連投兩個 job——最新 job 的結果必達；
+        // 舊 job 若在新 job 投遞前已完成則仍可能回傳（合法），
+        // 但最終一定要收到 fresh 的結果
+        uint64_t stale = sys.SubmitAnalysis("int a(){return 1;}\n", "a.cpp", 1, 1);
+        uint64_t fresh = sys.SubmitAnalysis(code, "b.cpp", 1, 1);
+        Check(stale != fresh, "async analysis: job ids are unique");
+        bool gotFresh = false;
+        for (int i = 0; i < 200 && !gotFresh; ++i) {
+            uint64_t doneId2 = 0;
+            std::vector<Suggestion> out2;
+            if (sys.PollResult(doneId2, out2) && doneId2 == fresh) {
+                gotFresh = true;
+            } else {
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            }
+        }
+        Check(gotFresh, "async analysis: newest job result delivered");
+
+        // pending job 存在時 Shutdown 不死結
+        sys.SubmitAnalysis(code, "c.cpp", 1, 1);
+        sys.Shutdown();
+        Check(true, "async analysis: shutdown with pending job does not hang");
+    }
+
+    // 13) LLM client 誠實失敗：無 HTTP transport / 無本地推論後端時
+    //     不得回假成功或假內容（弱點掃描 #2）
+    {
+        LLMConfig cfg;
+        cfg.model = "gpt-4";
+        cfg.apiKey = "test-key";
+        std::vector<ChatMessage> msgs{ChatMessage(MessageRole::User, "hello")};
+
+        OpenAIClient openai("test-key");
+        auto oa = openai.ChatCompletion(msgs, cfg);
+        Check(!oa.success, "OpenAI client fails honestly without transport");
+        Check(oa.error.find("transport") != std::string::npos ||
+              oa.error.find("parse") != std::string::npos,
+              "OpenAI failure carries error message");
+        Check(openai.GenerateEmbedding("x", "m").empty(),
+              "OpenAI embedding returns empty (no fake data)");
+
+        AnthropicClient anth("test-key");
+        auto an = anth.ChatCompletion(msgs, cfg);
+        Check(!an.success && !an.error.empty(),
+              "Anthropic client fails honestly without transport");
+
+        LocalModelClient local("nonexistent-model.gguf");
+        Check(!local.LoadModel("nonexistent-model.gguf"),
+              "LocalModel LoadModel fails honestly (no backend)");
+        auto lr = local.ChatCompletion(msgs, cfg);
+        Check(!lr.success, "LocalModel chat fails honestly");
+        Check(local.GenerateEmbedding("x", "m").empty(),
+              "LocalModel embedding returns empty (no fake data)");
+
+        // ParseResponse 真解析：餵合法 OpenAI 格式 JSON 應取出 content
+        // （直接驗證私有解析路徑經由公開介面無法注入——用 manager 層確認
+        //   失敗時 error 能穿透到呼叫端）
+        LLMManager mgr;
+        mgr.RegisterClient(LLMProvider::OpenAI,
+                           std::make_unique<OpenAIClient>("k"));
+        mgr.SetDefaultProvider(LLMProvider::OpenAI);
+        auto mr = mgr.Chat(msgs, cfg);
+        Check(!mr.success && !mr.error.empty(),
+              "LLMManager propagates honest failure + error");
     }
 
     std::printf("\n%s (%d failures)\n", failures == 0 ? "ALL PASS" : "FAILURES", failures);
