@@ -15,8 +15,140 @@
 #include <cstdio>
 #include <cstring>
 
+#ifdef _WIN32
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#include <winhttp.h>
+#if defined(_MSC_VER)
+#pragma comment(lib, "winhttp.lib")
+#endif
+#endif
+
 namespace Potato {
 namespace AI {
+
+namespace {
+
+#ifdef _WIN32
+// UTF-8 → UTF-16（WinHTTP API 皆為寬字元）
+std::wstring Utf8ToWide(const std::string& s) {
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), (int)s.size(), nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring w((size_t)n, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), (int)s.size(), &w[0], n);
+    return w;
+}
+
+// 解析 scheme://host[:port][/path]
+struct ParsedUrl {
+    bool secure = true;
+    std::wstring host;
+    INTERNET_PORT port = 443;
+    std::wstring path = L"/";
+};
+
+bool ParseHttpUrl(const std::string& url, ParsedUrl& out) {
+    std::string u = url;
+    if (u.rfind("https://", 0) == 0) { out.secure = true;  u.erase(0, 8); }
+    else if (u.rfind("http://", 0) == 0) { out.secure = false; u.erase(0, 7); }
+    else return false;
+    size_t slash = u.find('/');
+    std::string hostport = (slash == std::string::npos) ? u : u.substr(0, slash);
+    std::string path = (slash == std::string::npos) ? "/" : u.substr(slash);
+    size_t colon = hostport.rfind(':');
+    if (colon != std::string::npos) {
+        int p = std::atoi(hostport.substr(colon + 1).c_str());
+        if (p <= 0 || p > 65535) return false;
+        out.port = (INTERNET_PORT)p;
+        hostport.erase(colon);
+    } else {
+        out.port = out.secure ? 443 : 80;
+    }
+    if (hostport.empty() || hostport.size() > 253) return false;
+    out.host = Utf8ToWide(hostport);
+    out.path = Utf8ToWide(path);
+    return !out.host.empty();
+}
+
+// HTTPS POST（WinHTTP）。成功回 true 並填 outBody；失敗回 false + errMsg。
+// headers 為 "Name: Value" 列表。回應體上限 16MB 防 OOM。
+bool HttpPostWinHttp(const std::string& url,
+                     const std::vector<std::string>& headers,
+                     const std::string& body,
+                     int& outStatus, std::string& outBody,
+                     std::string& errMsg) {
+    ParsedUrl pu;
+    if (!ParseHttpUrl(url, pu)) {
+        errMsg = "invalid URL: " + url;
+        return false;
+    }
+    HINTERNET session = WinHttpOpen(L"PotatoEngine-LLM/1.0",
+        WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY, WINHTTP_NO_PROXY_NAME,
+        WINHTTP_NO_PROXY_BYPASS, 0);
+    if (!session) { errMsg = "WinHttpOpen failed"; return false; }
+    // LLM 回應可能較慢：resolve/connect 10s、send 30s、receive 120s
+    WinHttpSetTimeouts(session, 10000, 10000, 30000, 120000);
+    bool ok = false;
+    HINTERNET connect = WinHttpConnect(session, pu.host.c_str(), pu.port, 0);
+    if (connect) {
+        HINTERNET req = WinHttpOpenRequest(connect, L"POST", pu.path.c_str(),
+            nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES,
+            pu.secure ? WINHTTP_FLAG_SECURE : 0);
+        if (req) {
+            for (const auto& h : headers) {
+                std::wstring wh = Utf8ToWide(h);
+                if (!wh.empty())
+                    WinHttpAddRequestHeaders(req, wh.c_str(), (DWORD)-1,
+                        WINHTTP_ADDREQ_FLAG_ADD);
+            }
+            if (WinHttpSendRequest(req, WINHTTP_NO_ADDITIONAL_HEADERS, 0,
+                    (LPVOID)body.data(), (DWORD)body.size(),
+                    (DWORD)body.size(), 0) &&
+                WinHttpReceiveResponse(req, nullptr)) {
+                DWORD status = 0, sz = sizeof(status);
+                WinHttpQueryHeaders(req,
+                    WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
+                    WINHTTP_HEADER_NAME_BY_INDEX, &status, &sz,
+                    WINHTTP_NO_HEADER_INDEX);
+                outStatus = (int)status;
+                outBody.clear();
+                char buf[16384];
+                DWORD read = 0;
+                const size_t kMaxBody = 16u * 1024 * 1024;
+                while (WinHttpReadData(req, buf, sizeof(buf), &read) && read > 0) {
+                    outBody.append(buf, read);
+                    if (outBody.size() > kMaxBody) {
+                        errMsg = "response body exceeds 16MB limit";
+                        WinHttpCloseHandle(req);
+                        WinHttpCloseHandle(connect);
+                        WinHttpCloseHandle(session);
+                        return false;
+                    }
+                }
+                ok = true;
+            } else {
+                errMsg = "WinHTTP send/receive failed (err=" +
+                         std::to_string(GetLastError()) + ")";
+            }
+            WinHttpCloseHandle(req);
+        } else {
+            errMsg = "WinHttpOpenRequest failed";
+        }
+        WinHttpCloseHandle(connect);
+    } else {
+        errMsg = "WinHttpConnect failed (err=" +
+                 std::to_string(GetLastError()) + ")";
+    }
+    WinHttpCloseHandle(session);
+    return ok;
+}
+#endif // _WIN32
+
+} // anonymous namespace
+
 
 // 跳脫 JSON 字串中的特殊字元，防止產生不合法 JSON 與注入
 static std::string EscapeJson(const std::string& input) {
@@ -202,13 +334,31 @@ std::string OpenAIClient::GetDefaultModel() {
 }
 
 std::string OpenAIClient::MakeRequest(const std::string& endpoint, const std::string& jsonBody) {
-    // HTTP transport 尚未接入（需 WinHTTP/libcurl 或 socket 層）。
-    // 回傳空字串 → ParseResponse 誠實上報失敗，不再回假資料。
-    // 接入點：對 baseURL + endpoint 發 POST、body = jsonBody、
-    // header 帶 "Authorization: Bearer <apiKey>" 與 "Content-Type: application/json"。
+    lastTransportError.clear();
+#ifdef _WIN32
+    std::string body, err;
+    int status = 0;
+    std::vector<std::string> headers = {
+        "Authorization: Bearer " + apiKey,
+        "Content-Type: application/json"
+    };
+    if (!HttpPostWinHttp(baseURL + endpoint, headers, jsonBody,
+                         status, body, err)) {
+        lastTransportError = "HTTP transport failed: " + err;
+        return {};
+    }
+    if (status < 200 || status >= 300) {
+        // 非 2xx：body 仍可能是 JSON 錯誤物件，留給 ParseResponse 解析
+        if (body.empty())
+            lastTransportError = "HTTP " + std::to_string(status);
+    }
+    return body;
+#else
     (void)endpoint;
     (void)jsonBody;
-    return std::string();
+    lastTransportError = "HTTP transport unavailable on this platform";
+    return {};
+#endif
 }
 
 LLMResponse OpenAIClient::ParseResponse(const std::string& jsonResponse) {
@@ -216,7 +366,9 @@ LLMResponse OpenAIClient::ParseResponse(const std::string& jsonResponse) {
 
     if (jsonResponse.empty()) {
         response.success = false;
-        response.error = "LLM request failed: HTTP transport not implemented (OpenAI)";
+        response.error = lastTransportError.empty()
+            ? "LLM request failed (OpenAI)"
+            : "LLM request failed (OpenAI): " + lastTransportError;
         return response;
     }
 
@@ -356,12 +508,29 @@ std::string AnthropicClient::GetDefaultModel() {
 }
 
 std::string AnthropicClient::MakeRequest(const std::string& endpoint, const std::string& jsonBody) {
-    // HTTP transport 尚未接入——同 OpenAIClient::MakeRequest 的說明。
-    // 接入點：POST baseURL + endpoint，header 帶 "x-api-key" 與
-    // "anthropic-version"，body = jsonBody。
+    lastTransportError.clear();
+#ifdef _WIN32
+    std::string body, err;
+    int status = 0;
+    std::vector<std::string> headers = {
+        "x-api-key: " + apiKey,
+        "anthropic-version: 2023-06-01",
+        "Content-Type: application/json"
+    };
+    if (!HttpPostWinHttp(baseURL + endpoint, headers, jsonBody,
+                         status, body, err)) {
+        lastTransportError = "HTTP transport failed: " + err;
+        return {};
+    }
+    if ((status < 200 || status >= 300) && body.empty())
+        lastTransportError = "HTTP " + std::to_string(status);
+    return body;
+#else
     (void)endpoint;
     (void)jsonBody;
-    return std::string();
+    lastTransportError = "HTTP transport unavailable on this platform";
+    return {};
+#endif
 }
 
 LLMResponse AnthropicClient::ParseResponse(const std::string& jsonResponse) {
@@ -369,7 +538,9 @@ LLMResponse AnthropicClient::ParseResponse(const std::string& jsonResponse) {
 
     if (jsonResponse.empty()) {
         response.success = false;
-        response.error = "LLM request failed: HTTP transport not implemented (Anthropic)";
+        response.error = lastTransportError.empty()
+            ? "LLM request failed (Anthropic)"
+            : "LLM request failed (Anthropic): " + lastTransportError;
         return response;
     }
 
