@@ -316,9 +316,16 @@ queue:
       - 每張立繪產出 rgb+depth+normal 三通道 PNG
       - manifest 記錄 camera yaw/pitch/dist、姿勢 ID、模型來源
       - 至少一個 3-VRM × N-姿勢 batch 產出驗證
-    status: queued
+    status: done
     size: L
-    note: 需先定義 normal pass 著色器（world-space 或 view-space 法線）
+    note: >
+      --channels rgb,depth,normal + --poses/--pitch/--manifest；
+      normal pass = view-space n*0.5+0.5（vViewNormal varying，
+      alphaCutoff 保留髮卡鏤空）；depth 正規化到模型 z 厚度
+      （全 far-plane 只剩 ~23 灰階已修正）；manifest.json 記
+      yaw/pitch/camera_distance/pose/model。實跑驗證：
+      3 VRM × 2 pose × 3 yaw = 54 PNG + manifest 18 entries，
+      深度對比度目視確認（臉亮臂暗背景黑）。
 
   # ---- 層級 G：參考作機制（REFERENCE_GAMES_MECHANICS.md）----
   # Total War / Mount&Blade / HOI4 / ELIN 萃取；建議批次順序見研究文件
