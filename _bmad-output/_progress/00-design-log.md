@@ -148,3 +148,26 @@ MSVC+MinGW 建置過;QuantumTest +20 checks(單調收斂/逼近塌縮仍不揭�
 ## 驗證
 
 MSVC+MinGW 建置過;QuantumTest Entangle 段落 ~20 checks;ctest 6/6。平行 session 的 DuanqiaoPlayable hunks(A-1/A-2)被其 commit 捲入先行,本 commit 僅 fog 核心+測試+spec。
+
+---
+
+# 2026-09-17 — Q-4 敵將人格→先驗(67dde3d)
+
+## 做法
+
+`EnemyGeneral::FogBiasPoint(center, enemyDir, radius)`:侵略沿敵向偏移 (a−0.5)·1.6r,狡詐沿垂直側翼 (c−0.5)·0.8r,50=中立;`FogPriorScale()` = 1.4−0.8·d 縮放先驗高斯 σ(紀律高→雲集中)。`AddEntityCloud` 加 `priorScale` 尾參(向後相容)。demo 格洛克(侵略90)四朵敵雲偏北岸前線,southCamp 場景偏置由人格偏置取代。
+
+## Review 修復(1 路,全 Low)
+
+- `AddEntityCloud`/`Qudit::SetProbabilities` 的 `total<=0` 擋不住 NaN → `!(total>0)`
+- 人格軸 LoadFromString 不 clamp → 越界卡產生極端/靜默錯誤偏置 → clamp 0~100
+- 測試補:同 seed 佈局前提顯式斷言、狡詐軸斷言、frontMass 綁 center.y
+
+## 已知非我事項
+
+- 平行 session 未提交的 QuantumFogBattleTest「[2b] 揭露位置更新為新真值」deterministic FAIL(敵軍 4s 內走不到 (15,9),停在 y=8.6);語義上與我的 Reveal 早退無關(revealedPos 刷新行為相同),屬其測試時序假設錯誤
+- 平行 session 的 Q-6 fog 存檔/Emit 程式碼混入本 commit 的 QuantumFog.h/.cpp(同檔 hunks,pathspec 無法分離),建置+測試已驗過
+
+## 驗證
+
+MSVC+MinGW 建置過;QuantumTest Personality 段落 ~12 checks;其餘 ctest 無回歸。
