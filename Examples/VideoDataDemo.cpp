@@ -55,22 +55,41 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 out vec3 vNormal;
+out vec3 vWorld;
 void main() {
     vNormal = mat3(transpose(inverse(model))) * aNormal;
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    vec4 wp = model * vec4(aPos, 1.0);
+    vWorld = wp.xyz;
+    gl_Position = projection * view * wp;
 }
 )";
 
 static const char* UNIT_FRAG = R"(
 #version 330 core
 in vec3 vNormal;
+in vec3 vWorld;
 uniform vec3 uColor;
 uniform vec3 uLightDir;
+uniform vec3 uCamPos;
 out vec4 FragColor;
 void main() {
     vec3 n = normalize(vNormal);
-    float diff = max(dot(n, normalize(uLightDir)), 0.0);
-    vec3 col = uColor * (0.30 + 0.75 * diff);
+    vec3 l = normalize(uLightDir);
+    float diff = max(dot(n, l), 0.0);
+    // 半球環境光:天空冷色/地表暖色,比平底 ambient 有立體感
+    vec3 amb = mix(vec3(0.12,0.10,0.08), vec3(0.22,0.26,0.34),
+                   n.y * 0.5 + 0.5);
+    vec3 col = uColor * (amb + 0.85 * diff);
+    // Blinn 高光:單位頂面受光給一點金屬感
+    vec3 v = normalize(uCamPos - vWorld);
+    vec3 h = normalize(l + v);
+    col += vec3(0.25) * pow(max(dot(n, h), 0.0), 48.0) * diff;
+    // 戰術格線:只畫在低矮表面(地面/橋面),格子=CELL 2m
+    if (vWorld.y < 0.15) {
+        vec2 g = abs(fract(vWorld.xz * 0.5) - 0.5);
+        float line = smoothstep(0.46, 0.5, max(g.x, g.y));
+        col = mix(col, col * 0.5, line * 0.7);
+    }
     FragColor = vec4(col, 1.0);
 }
 )";
@@ -127,6 +146,9 @@ struct Args {
     int w = 640, h = 360;
     unsigned seed = 42;
     bool mp4 = true; // ffmpeg 不在 PATH 時自動退化為純 PNG 影格
+    int ssaa = 1;    // 超採樣倍率(2 = 4x 像素再盒式降採,消鋸齒)
+    int crf = 18;    // x264 品質
+    std::string preset = "slow"; // x264 preset(白名單,非法退回 medium)
 };
 static bool ParseInt(const char* s, int& out) {
     if (!s || !*s) return false;
@@ -167,6 +189,16 @@ static bool ParseArgs(int argc, char** argv, Args& a) {
             const char* v = need(k); if (!v) return false; a.seed = (unsigned)std::strtoul(v, nullptr, 10);
         } else if (!std::strcmp(k, "--no-mp4")) {
             a.mp4 = false;
+        } else if (!std::strcmp(k, "--ssaa")) {
+            const char* v = need(k);
+            if (!v || !ParseInt(v, a.ssaa) || a.ssaa < 1 || a.ssaa > 4) {
+                return false;
+            }
+        } else if (!std::strcmp(k, "--crf")) {
+            const char* v = need(k);
+            if (!v || !ParseInt(v, a.crf)) return false;
+        } else if (!std::strcmp(k, "--preset")) {
+            const char* v = need(k); if (!v) return false; a.preset = v;
         } else {
             printf("未知參數 %s\n", k);
             return false;
@@ -207,6 +239,28 @@ static void FlipRows(std::vector<uint8_t>& img, int w, int h) {
     img.swap(tmp);
 }
 
+// f×f 盒式降採(SSAA 後端);要求 sw/sh 可被 f 整除
+static void Downsample(const std::vector<uint8_t>& src, int sw, int sh,
+                       int f, std::vector<uint8_t>& dst) {
+    const int dw = sw / f, dh = sh / f;
+    dst.assign((size_t)dw * dh * 4, 0);
+    for (int y = 0; y < dh; ++y) {
+        for (int x = 0; x < dw; ++x) {
+            for (int c = 0; c < 4; ++c) {
+                int sum = 0;
+                for (int j = 0; j < f; ++j) {
+                    for (int i = 0; i < f; ++i) {
+                        sum += src[((size_t)(y * f + j) * sw +
+                                    (size_t)(x * f + i)) * 4 + c];
+                    }
+                }
+                dst[((size_t)y * dw + (size_t)x) * 4 + c] =
+                    (uint8_t)(sum / (f * f));
+            }
+        }
+    }
+}
+
 static const char* OutcomeName(BattleOutcome o) {
     switch (o) {
     case BattleOutcome::Victory: return "victory";
@@ -220,7 +274,8 @@ int main(int argc, char** argv) {
     Args args;
     if (!ParseArgs(argc, argv, args)) {
         printf("用法: VideoDataDemo --out DIR [--episodes N] [--seconds S] "
-               "[--fps F] [--size WxH] [--seed S] [--no-mp4]\n");
+               "[--fps F] [--size WxH] [--seed S] [--no-mp4] "
+               "[--ssaa N] [--crf N] [--preset slow]\n");
         return 1;
     }
     const int W = args.w, H = args.h;
@@ -230,8 +285,10 @@ int main(int argc, char** argv) {
     const int totalFrames = (int)(args.seconds * args.fps);
 
     // ---- 離屏擷取(Media/HeadlessCapture:隱藏窗口+FBO+top-down 語意)----
+    // SSAA:擷取解析度 = 輸出 × ssaa,Grab 後盒式降採回 W×H
     Media::HeadlessCapture cap;
-    if (!cap.Begin(W, H)) {
+    const int CW = W * args.ssaa, CH = H * args.ssaa;
+    if (!cap.Begin(CW, CH)) {
         printf("無 GL 環境——隱藏窗口建立失敗,skip\n");
         return 0; // 工具性質:skip 不當失敗
     }
@@ -255,6 +312,7 @@ int main(int argc, char** argv) {
     cam.SetTarget(Vector3(FIELD_W / 2, 0.0f, FIELD_H / 2 - 3.0f));
     cam.SetPerspective(50.0f * 3.14159265f / 180.0f, (float)W / H,
                        0.1f, 300.0f);
+    unitShader->SetUniformVec3("uCamPos", cam.GetPosition());
 
     std::error_code ec;
     fs::create_directories(args.out, ec);
@@ -348,10 +406,13 @@ int main(int argc, char** argv) {
         // ---- 編碼器(Media/VideoEncoder;ffmpeg 缺席 → 純 PNG 影格)----
         Media::VideoEncoder enc;
         const fs::path mp4Path = epDir / (std::string(epName) + ".mp4");
+        Media::EncodeQuality eq;
+        eq.crf = args.crf;
+        eq.preset = args.preset.c_str();
         const bool encoding =
             args.mp4 && enc.Open(mp4Path.string(), W, H, args.fps,
                                  Media::PixelFormat::RGBA,
-                                 (epDir / "ffmpeg.log").string());
+                                 (epDir / "ffmpeg.log").string(), eq);
         if (args.mp4 && !encoding) {
             printf("  [ep%d] ffmpeg 不可用,僅產 PNG 影格\n", ep);
         }
@@ -364,22 +425,28 @@ int main(int argc, char** argv) {
             sync.Sync(battle);
 
             // Grab:綁 FBO+設 viewport+讀回+翻成 top-down(與 bbox 座標同向)
-            const std::vector<uint8_t> rgba = cap.Grab([&] {
+            const std::vector<uint8_t> hi = cap.Grab([&] {
                 glClearColor(0.07f, 0.09f, 0.13f, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 sceneRenderer.Render(scene, cam);
                 return true;
             });
-            if (rgba.empty()) continue; // 該幀放棄:不寫影格也不寫標註
+            if (hi.empty()) continue; // 該幀放棄:不寫影格也不寫標註
+            std::vector<uint8_t> frame;
+            if (args.ssaa > 1) {
+                Downsample(hi, CW, CH, args.ssaa, frame);
+            } else {
+                frame = hi;
+            }
             if (encoding) {
-                encBuf = rgba; // VideoEncoder 走 bottom-up(vflip 修正),翻回
+                encBuf = frame; // VideoEncoder 走 bottom-up(vflip),翻回
                 FlipRows(encBuf, W, H);
                 enc.WriteFrame(encBuf.data(), encBuf.size());
             }
             char imgName[32];
             std::snprintf(imgName, sizeof(imgName), "img_%05d.png", f);
             ImageCodec::WritePNGFile((epDir / imgName).string(), W, H,
-                                     rgba.data());
+                                     frame.data());
 
             // ---- 逐幀標註 ----
             jsonl << "{\"f\":" << f
@@ -457,12 +524,18 @@ int main(int argc, char** argv) {
                 // 結束後補 12 幀定格(事件收尾供時序模型學習)
                 const int tail = std::min(12, totalFrames - f - 1);
                 for (int g = 1; g <= tail; ++g) {
-                    const std::vector<uint8_t> tailPx = cap.Grab([&] {
+                    const std::vector<uint8_t> hi = cap.Grab([&] {
                         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                         sceneRenderer.Render(scene, cam);
                         return true;
                     });
-                    if (tailPx.empty()) continue;
+                    if (hi.empty()) continue;
+                    std::vector<uint8_t> tailPx;
+                    if (args.ssaa > 1) {
+                        Downsample(hi, CW, CH, args.ssaa, tailPx);
+                    } else {
+                        tailPx = hi;
+                    }
                     if (encoding) {
                         encBuf = tailPx;
                         FlipRows(encBuf, W, H);
@@ -491,6 +564,9 @@ int main(int argc, char** argv) {
              << "\",\"frames\":" << framesWritten
              << ",\"fps\":" << args.fps << ",\"w\":" << W
              << ",\"h\":" << H
+             << ",\"ssaa\":" << args.ssaa
+             << ",\"crf\":" << args.crf
+             << ",\"preset\":\"" << args.preset << "\""
              << ",\"mp4\":" << (encoding ? "true" : "false") << "}\n";
 
         epNames.push_back(epName);
