@@ -592,8 +592,13 @@ queue:
       - 檔案顯示判詞（聽聞）與驗證後真相的分層呈現
       - 低估偏差為固定規則；觀測後判詞更新
       - 狡詐高者放假判詞有測試覆蓋
-    status: queued
+    status: done
     size: M
+    note: >
+      Gameplay/GeneralDossier（並行 session）：聽聞值 = 真值×0.8
+      系統性低估；判詞依顯性軸產出（好戰/守紀/中庸等），
+      狡詐 ≥70 放假判詞掩真軸；Verify 觀測後回填真值、
+      揭發假判詞。GeneralDossierTest 21/21 PASS。
 
   - id: N-3
     title: 對手軍師反制牌組（ledger leaks）
