@@ -1,6 +1,7 @@
 #include "BattleController.h"
 
 #include "QuantumFog.h"
+#include "SquadTemplate.h"
 
 #include <algorithm>
 #include <cmath>
@@ -25,6 +26,24 @@ Squad* BattleController::CreateSquad(const std::string& name, int team,
     squads.push_back(std::move(squad));
     Emit(name + " deployed (team " + std::to_string(team) + ")");
     return ptr;
+}
+
+Squad* BattleController::CreateSquadFromTemplate(const SquadTemplate& tpl,
+                                                 int team,
+                                                 const Vector2& pos,
+                                                 int& budget) {
+    // 規則寫死：超支一律拒絕不降規；budget < 0 = 無限
+    if (budget >= 0 && tpl.cost > budget) {
+        Emit("template " + tpl.id + " refused: cost " +
+             std::to_string(tpl.cost) + " > budget " +
+             std::to_string(budget));
+        return nullptr;
+    }
+    Squad* s = tpl.Instantiate(*this, tpl.name, team, pos);
+    if (s && budget >= 0) {
+        budget -= tpl.cost;
+    }
+    return s;
 }
 
 void BattleController::AssignDoctrine(Squad* squad, const DoctrineSet& doctrine) {
@@ -139,6 +158,53 @@ bool BattleController::Intervene(Squad* squad, SquadOrder order,
     squad->IssueOrder(order, target);
     interventionUntil[squad] = holdSeconds;
     Emit("CP intervention on " + squad->GetName());
+    return true;
+}
+
+bool BattleController::GeneralRally(Squad* general, float radius,
+                                    float moraleBoost) {
+    if (phase != BattlePhase::Execution || !general ||
+        !general->IsGeneralGuard() ||
+        general->IsEliminated() || general->IsRouting()) {
+        return false;
+    }
+    int team = general->GetTeam();
+    if (GetCommandPoints(team) <= 0) {
+        Emit("General rally denied: no command points");
+        return false;
+    }
+    commandPoints[team]--;
+    int affected = 0;
+    for (auto& squad : squads) {
+        if (squad->GetTeam() != team || squad->IsEliminated() ||
+            squad->IsRouting()) {
+            continue;
+        }
+        if ((squad->GetPosition() - general->GetPosition()).Length()
+                <= radius) {
+            squad->AdjustMorale(moraleBoost);
+            ++affected;
+        }
+    }
+    Emit(general->GetName() + " rally shout (" +
+         std::to_string(affected) + " squads heartened)");
+    return true;
+}
+
+bool BattleController::GeneralCharge(Squad* general, float seconds) {
+    if (phase != BattlePhase::Execution || !general ||
+        !general->IsGeneralGuard() ||
+        general->IsEliminated() || general->IsRouting()) {
+        return false;
+    }
+    int team = general->GetTeam();
+    if (GetCommandPoints(team) <= 0) {
+        Emit("General charge denied: no command points");
+        return false;
+    }
+    commandPoints[team]--;
+    general->StartCharge(seconds);
+    Emit(general->GetName() + " leads the charge!");
     return true;
 }
 
@@ -709,12 +775,28 @@ void BattleController::ResolveCombat(float dt) {
 
 void BattleController::CheckOutcome() {
     bool alive[2] = {false, false};
+    bool generalSlain[2] = {false, false};
     for (const auto& squad : squads) {
+        int t = squad->GetTeam() == 0 ? 0 : 1;
         if (!squad->IsEliminated() && !squad->IsRouting()) {
-            alive[squad->GetTeam() == 0 ? 0 : 1] = true;
+            alive[t] = true;
+        }
+        // G-8：將軍衛隊全滅即敗；潰逃不算陣亡，將軍可被擊退再回來
+        if (squad->IsGeneralGuard() && squad->IsEliminated()) {
+            generalSlain[t] = true;
         }
     }
-    if (!alive[0] && !alive[1]) {
+    // 衛隊陣亡優先於一般消滅判定（雙方衛隊同歿 → 平手）
+    if (generalSlain[0] || generalSlain[1]) {
+        Emit("general slain!");
+        if (generalSlain[0] && generalSlain[1]) {
+            outcome = BattleOutcome::Draw;
+        } else if (generalSlain[0]) {
+            outcome = BattleOutcome::Defeat;
+        } else {
+            outcome = BattleOutcome::Victory;
+        }
+    } else if (!alive[0] && !alive[1]) {
         outcome = BattleOutcome::Draw;
     } else if (!alive[1]) {
         outcome = BattleOutcome::Victory;

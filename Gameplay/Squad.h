@@ -77,6 +77,15 @@ public:
     UnitClass GetUnitClass() const { return unitClass; }
     void SetUnitClass(UnitClass c) { unitClass = c; }
 
+    // 將軍衛隊（G-8）：旗標本身不改變戰鬥行為；
+    // 全滅 → BattleController 直接判該隊落敗（潰逃不算）
+    void SetGeneralGuard(bool v) { generalGuard = v; }
+    bool IsGeneralGuard() const { return generalGuard; }
+
+    // 帶隊突擊（G-8）：chargeTimer > 0 時速度/火力 ×1.5，自然衰減
+    void StartCharge(float seconds);
+    bool IsCharging() const { return chargeTimer > 0.0f; }
+
     // 疲勞參數（每秒速率 / 閾值 / 疲憊移速倍率）
     void SetStaminaParams(float drainMove, float drainCombat,
                           float regen, float threshold, float penaltyMul);
@@ -120,6 +129,10 @@ private:
     float engageRange;    // 接戰距離（世界單位）
     float damagePerMember;// 每名成員每秒傷害
     UnitClass unitClass = UnitClass::Infantry; // G-2 兵種
+
+    // 將軍衛隊（G-8）與帶隊突擊計時
+    bool generalGuard = false;
+    float chargeTimer = 0.0f;
 
     // 疲勞（G-3）：移動/交戰消耗，駐守回復；低於閾值移速打折
     float stamina;

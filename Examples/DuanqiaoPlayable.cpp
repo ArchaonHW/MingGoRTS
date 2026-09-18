@@ -26,6 +26,8 @@
 #include "Gameplay/QuantumFog.h"
 #include "MathUtils/CurlNoise.h"
 #include "MathUtils/Matrix4.h"
+#include "DemoAssets.h"
+#include "UITheme.h"
 
 #include <glad/glad.h>
 #ifndef GLFW_INCLUDE_NONE
@@ -234,6 +236,94 @@ static const char* OrderName(SquadOrder o) {
     return "?";
 }
 
+// ---- U-1 遊戲殼：Title → Battle → (回 Title | 離開) ----
+enum class ShellScreen { Title, Battle, Quit };
+
+// 標題頁單幀：置中視窗 + 開戰/說明/設定/離開。
+// theme/uiScale 由設定頁就地修改；applied* 追蹤已套用的值。
+static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
+                              UITheme::Id& theme, float& uiScale,
+                              ImFont* fontSans, ImFont* fontSerif,
+                              UITheme::Id& appliedTheme, float& appliedScale) {
+    renderer.PollEvents();
+
+    int dw = 0, dh = 0, ww = 0, wh = 0;
+    glfwGetFramebufferSize(window, &dw, &dh);
+    glfwGetWindowSize(window, &ww, &wh);
+    if (dw > 0 && dh > 0) renderer.SetViewport(0, 0, dw, dh);
+    const ImVec4 cc = UITheme::ClearColor(theme);
+    renderer.SetClearColor(Vector3(cc.x, cc.y, cc.z));
+
+    ImGuiIO& io = ImGui::GetIO();
+    if (appliedTheme != theme) {
+        UITheme::Apply(ImGui::GetStyle(), theme);
+        appliedTheme = theme;
+    }
+    if (uiScale != appliedScale) {
+        ImGui::GetStyle().ScaleAllSizes(uiScale / appliedScale);
+        appliedScale = uiScale;
+    }
+    io.FontGlobalScale = uiScale;
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    ImGui::PushFont(theme == UITheme::Id::WarMap ? fontSerif : fontSans,
+                    18.0f);
+
+    ShellScreen next = ShellScreen::Title;
+    static bool showHelp = false, showSettings = false;
+
+    ImGui::SetNextWindowPos(ImVec2(ww * 0.5f, wh * 0.46f), ImGuiCond_Always,
+                            ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowSize(ImVec2(430, 0), ImGuiCond_Always);
+    ImGui::Begin("##title", nullptr,
+                 ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove |
+                     ImGuiWindowFlags_AlwaysAutoResize |
+                     ImGuiWindowFlags_NoBackground);
+
+    ImGui::PushFont(fontSerif, 34.0f);
+    const char* title = "斷 橋 攻 防 戰";
+    ImGui::SetCursorPosX((ImGui::GetWindowWidth() -
+                          ImGui::CalcTextSize(title).x) * 0.5f);
+    ImGui::TextUnformatted(title);
+    ImGui::PopFont();
+    ImGui::TextDisabled("寫下教令,然後看它自己打。");
+    ImGui::Separator();
+    ImGui::Spacing();
+
+    if (ImGui::Button("開 戰", ImVec2(-1, 34))) {
+        next = ShellScreen::Battle;
+    }
+    if (ImGui::Button("操作說明", ImVec2(-1, 0))) showHelp = !showHelp;
+    if (showHelp) {
+        ImGui::PushTextWrapPos();
+        ImGui::TextUnformatted(
+            "規劃:編排教條卡(觸發→動作),Alt+拖移圖釘,開戰。\n"
+            "執行:左鍵選隊,右鍵下令耗 CP;點雲探測(1情報),"
+            "Shift+點雲觀測(2情報);接觸 3 格內免費揭露。\n"
+            "Space 暫停,WASD 平移,滾輪升降,Esc 取消選取。");
+        ImGui::PopTextWrapPos();
+    }
+    if (ImGui::Button("設 定", ImVec2(-1, 0))) showSettings = !showSettings;
+    if (showSettings) {
+        int t = (int)theme;
+        if (ImGui::Combo("主題", &t, "現代軍事\0泥濘沙盤\0")) {
+            theme = (UITheme::Id)t;
+        }
+        ImGui::SliderFloat("介面縮放", &uiScale, 1.0f, 1.5f, "%.2fx");
+    }
+    if (ImGui::Button("離 開", ImVec2(-1, 0))) next = ShellScreen::Quit;
+
+    ImGui::End();
+    ImGui::PopFont();
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    renderer.SwapBuffers();
+    return next;
+}
+
 int main() {
     const int W = 1440, H = 810;
 
@@ -251,20 +341,27 @@ int main() {
     GLFWwindow* window = static_cast<GLFWwindow*>(renderer.GetWindowHandle());
     glfwSetScrollCallback(window, ScrollCallback);
 
-    // ImGui(中文字型:微軟正黑體;缺檔退回內建字,中文會顯示 ?)
+    // ImGui + U-1 字體自包含:assets/fonts/ 的 OFL Noto;缺檔退回內建字
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
     ImGuiIO& io = ImGui::GetIO();
-    const char* kFont = "C:/Windows/Fonts/msjh.ttc";
-    ImFont* font = nullptr;
-    if (std::filesystem::exists(kFont)) {
-        font = io.Fonts->AddFontFromFileTTF(kFont, 18.0f, nullptr,
-                                            io.Fonts->GetGlyphRangesChineseFull());
+    ImFont* fontSans =
+        UITheme::LoadFont(io, DemoAssets::Resolve("fonts/NotoSansTC-Regular.otf"), 18.0f);
+    ImFont* fontSerif =
+        UITheme::LoadFont(io, DemoAssets::Resolve("fonts/NotoSerifTC-Regular.otf"), 18.0f);
+    if (!fontSans && !fontSerif) {
+        io.Fonts->AddFontDefault(); // 字體缺檔也要保證 atlas 非空
     }
-    if (!font) io.Fonts->AddFontDefault(); // 字型缺檔/損毀也要保證 atlas 非空
+    io.FontDefault = fontSans ? fontSans : io.Fonts->Fonts[0];
+
+    // U-1 殼層狀態:主題/UI 縮放在標題頁設定頁修改
+    UITheme::Id theme = UITheme::Id::TacticalSim;
+    UITheme::Id appliedTheme = theme;
+    float uiScale = 1.0f, appliedScale = 1.0f;
+    UITheme::Apply(ImGui::GetStyle(), theme);
 
     // ImGui/renderer 已初始化後的失敗路徑都要走這個清理
     auto shutdownAll = [&]() {
@@ -283,9 +380,22 @@ int main() {
     unitShader->Bind();
     unitShader->SetUniformVec3("uLightDir", Vector3(-0.4f, 1.0f, -0.35f));
 
+    // U-1 殼層外迴圈:Title ↔ Battle;整場戰鬥在內層 scope,
+    // 出 scope 所有 stack 物件析構 = 乾淨重置(回主選單可再戰)
+    ShellScreen screen = ShellScreen::Title;
+    while (screen != ShellScreen::Quit && !renderer.ShouldClose()) {
+        if (screen == ShellScreen::Title) {
+            screen = TitleFrame(window, renderer, theme, uiScale,
+                                fontSans, fontSerif, appliedTheme,
+                                appliedScale);
+            continue;
+        }
+        bool backToTitle = false;
+        { // ---- 戰鬥場次 scope 開始(內部維持原縮排以保 diff 最小) ----
+
     // ---- 地圖 ----
     BattleMap map;
-    if (!map.LoadFromFile("assets/maps/duanqiao.json")) {
+    if (!map.LoadFromFile(DemoAssets::Resolve("maps/duanqiao.json").c_str())) {
         std::fprintf(stderr, "cannot load assets/maps/duanqiao.json\n");
         shutdownAll();
         return 1;
@@ -375,6 +485,10 @@ int main() {
     battle.CreateSquad("中軍", 0, Vector2(12.0f, 2.5f), 30);
     battle.CreateSquad("左翼", 0, Vector2(16.0f, 3.0f), 25);
     Squad* rearGuard = battle.CreateSquad("後衛", 0, Vector2(12.0f, 4.5f), 15);
+    // G-8 將軍親臨：衛隊全滅即敗（潰逃不算），技能走 CP
+    Squad* generalGuard =
+        battle.CreateSquad("將軍衛隊", 0, Vector2(12.0f, 1.0f), 10);
+    generalGuard->SetGeneralGuard(true);
     Squad* e0 = battle.CreateSquad("格洛克親衛", 1, Vector2(12.0f, 12.0f), 35);
     Squad* e1 = battle.CreateSquad("蠻兵隊",     1, Vector2(9.0f, 12.5f),  25);
     Squad* e2 = battle.CreateSquad("掠奪隊",     1, Vector2(15.0f, 12.5f), 25);
@@ -511,7 +625,7 @@ int main() {
 
     std::printf("斷橋可玩 demo — 左鍵選取,右鍵下令(CP),Space 暫停\n");
 
-    while (!renderer.ShouldClose()) {
+    while (!renderer.ShouldClose() && !backToTitle) {
         renderer.PollEvents();
         double now = glfwGetTime();
         float dt = (float)std::min(now - prevTime, 0.1);
@@ -694,7 +808,10 @@ int main() {
         sync.Sync(battle);
 
         // ---- 渲染 ----
-        renderer.SetClearColor(Vector3(0.07f, 0.09f, 0.13f));
+        { // U-1:clear color 跟主題走
+            const ImVec4 cc = UITheme::ClearColor(theme);
+            renderer.SetClearColor(Vector3(cc.x, cc.y, cc.z));
+        }
         renderer.Clear();
         renderer.EnableDepthTest(true);
         renderer.EnableCulling(false); // 手排頂點繞序不保證 CCW
@@ -704,6 +821,9 @@ int main() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        ImGui::PushFont(theme == UITheme::Id::WarMap ? fontSerif
+                                                   : fontSans,
+                        18.0f);
 
         ImGui::SetNextWindowPos(ImVec2(8, 8), ImGuiCond_Always);
         ImGui::SetNextWindowSize(ImVec2(300, 0), ImGuiCond_Always);
@@ -975,6 +1095,21 @@ int main() {
                                            " 駐守");
                     }
                 }
+                // G-8 將軍技能(僅衛隊顯示;同樣走 CP)
+                if (selected->IsGeneralGuard()) {
+                    ImGui::SameLine();
+                    if (ImGui::Button("將軍激勵")) {
+                        if (battle.GeneralRally(selected)) {
+                            eventLog.push_back("將軍激勵:全軍振奮");
+                        }
+                    }
+                    ImGui::SameLine();
+                    if (ImGui::Button("帶隊突擊")) {
+                        if (battle.GeneralCharge(selected)) {
+                            eventLog.push_back("帶隊突擊:衛隊衝鋒!");
+                        }
+                    }
+                }
                 ImGui::EndDisabled();
             }
             ImGui::End();
@@ -1112,9 +1247,14 @@ int main() {
             }
             if (lastIdx >= 0) ImGui::SetScrollHereY(1.0f);
             ImGui::EndChild();
+            ImGui::Separator();
+            if (ImGui::Button("返回主選單", ImVec2(150, 30))) {
+                backToTitle = true;
+            }
             ImGui::End();
         }
 
+        ImGui::PopFont();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -1122,6 +1262,12 @@ int main() {
     }
 
     battle.BindFog(nullptr); // fog 是 local,先於 battle 解構——解綁防懸空
+
+        } // ---- 戰鬥場次 scope 結束:battle/fog/scene 全數析構 ----
+        screen = renderer.ShouldClose() ? ShellScreen::Quit
+                                        : ShellScreen::Title;
+    }
+
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();

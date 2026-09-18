@@ -530,9 +530,14 @@ queue:
     acceptance:
       - 將軍單位可被選取/下令，陣亡觸發落敗結局
       - 至少一個主動技能走 CP
-    status: queued
+    status: done
+    note: >
+      Squad::IsGeneralGuard 旗標（不開子類）；CheckOutcome 衛隊全滅即敗
+      （潰逃不算、雙方同歿平手）；GeneralRally 半徑 6 士氣+0.3、
+      GeneralCharge 6s 速度/火力×1.5（chargeTimer+getter 疊乘仿 G-3）；
+      各扣 1 CP。DuanqiaoPlayable 衛隊+兩顆 CP 鈕。
+      GeneralGuardTest 25/25 MSVC+MinGW。
     size: L
-    note: 依賴 DuanqiaoPlayable 穩定
 
   # ---- 層級 N：敘事系統（narrative-design.md → E-11）----
   # 依據：_bmad-output/narrative-design.md §Narrative System Requirements

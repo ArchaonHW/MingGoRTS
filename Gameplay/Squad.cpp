@@ -33,7 +33,17 @@ Squad::Squad(const std::string& squadName, int teamId,
 }
 
 float Squad::GetEffectiveSpeed() const {
-    return speed * (stamina < exhaustedThreshold ? exhaustedSpeedMul : 1.0f);
+    float s = speed * (stamina < exhaustedThreshold ? exhaustedSpeedMul : 1.0f);
+    if (chargeTimer > 0.0f) {
+        s *= 1.5f; // G-8 帶隊突擊
+    }
+    return s;
+}
+
+void Squad::StartCharge(float seconds) {
+    if (seconds > 0.0f) {
+        chargeTimer = seconds;
+    }
 }
 
 void Squad::SetStaminaParams(float drainMove, float drainCombat,
@@ -50,7 +60,11 @@ float Squad::GetAttackDPS() const {
     if (routing || members <= 0) {
         return 0.0f;
     }
-    return damagePerMember * members;
+    float dps = damagePerMember * members;
+    if (chargeTimer > 0.0f) {
+        dps *= 1.5f; // G-8 帶隊突擊
+    }
+    return dps;
 }
 
 void Squad::IssueOrder(SquadOrder newOrder, const Vector2& target) {
@@ -105,6 +119,10 @@ void Squad::RecoverMorale(float dt) {
 void Squad::Update(float dt, const FlowField* field) {
     if (members <= 0) {
         return;
+    }
+
+    if (chargeTimer > 0.0f) {
+        chargeTimer = std::max(0.0f, chargeTimer - dt);
     }
 
     if (routing) {

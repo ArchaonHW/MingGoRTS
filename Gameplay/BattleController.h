@@ -12,13 +12,13 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
-#include <unordered_set>
 #include <vector>
 
 namespace Potato {
 namespace Gameplay {
 
 class QuantumFog;
+struct SquadTemplate;
 
 /**
  * 戰鬥階段：對應「回合層 → 即時層 → 戰後」的三拍循環
@@ -53,6 +53,10 @@ public:
     // ---- 部署階段 ----
     Squad* CreateSquad(const std::string& name, int team,
                        const Vector2& pos, int members);
+    // G-6 編制模板建隊：預算足→成隊+扣帳、不足→nullptr+預算不動
+    // （budget < 0 = 無限預算）。規則寫死：超支一律拒絕不降規。
+    Squad* CreateSquadFromTemplate(const SquadTemplate& tpl, int team,
+                                   const Vector2& pos, int& budget);
     void AssignDoctrine(Squad* squad, const DoctrineSet& doctrine);
     // 讀回已指派的 doctrine（PlanningDeck 回讀用）；未指派回 nullptr
     const DoctrineSet* GetDoctrine(const Squad* squad) const {
@@ -119,6 +123,13 @@ public:
     // 指定敵隊版本：Engage 等需要 squad 目標的命令用；target 全滅回 false
     bool Intervene(Squad* squad, SquadOrder order, const Squad* target,
                    float holdSeconds = 5.0f);
+
+    // G-8 將軍親臨技能（各扣 1 CP；回傳 false = CP 不足/非衛隊/已出局）
+    // 將軍激勵：半徑 6 格內同隊友軍士氣 +0.30（含衛隊自身）
+    bool GeneralRally(Squad* general, float radius = 6.0f,
+                      float moraleBoost = 0.30f);
+    // 帶隊突擊：衛隊 6 秒內速度/火力 ×1.5
+    bool GeneralCharge(Squad* general, float seconds = 6.0f);
 
     // ---- 量子敵情霧（Q-1，可選）----
     // 綁定後：Update 會推 fog（情報時效/退相干），我軍小隊進入
