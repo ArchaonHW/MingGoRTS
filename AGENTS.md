@@ -44,6 +44,7 @@ C++20 遊戲引擎 + MingGoRTS IDE，CMake 建置，無 UE5 依賴。BMAD v6 已
 - CTest 已啟用：`enable_testing()` + `POTATO_TESTS` 清單，`cd build && ctest -C Release`；新測試執行檔加進 `POTATO_TESTS` 即自動註冊
 - 玩法 demo：`DoctrineBattleDemo`（手寫腳本）、`AutoPlannerDemo`（AI 規劃）、`DuanqiaoDemo`（斷橋整合）皆為無頭測試，回傳非零即失敗
 - BattleRecorder/Roster 會寫出 JSON 檔到工作目錄——屬預期行為，勿當副作用刪除
+- MSBuild 增量建置只比對時間戳：若 .obj 比 .cpp 新但內容是舊版（平行工具寫檔時保留 mtime 所致），測試會跑「看不見的舊碼」。症狀：原始碼檢查正確但行為不符。修法：`touch <file>.cpp` 或 rebuild 該 target；診斷可用 `dumpbin -SYMBOLS <obj>` 確認是否引用預期符號
 
 ## Vendored 第三方依賴（external/ 例外規則）
 
