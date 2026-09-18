@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>MingGoRTS · 戰後 · 水墨史卷 post-battle-chronicle</title>
+<style>
+/* ==========================================================================
+   戰後 · 水墨史卷 POST-BATTLE CHRONICLE (ink-chronicle personality)
+   Rationale: 結算不是報表,是史官收筆的一頁——「戰勝」二字先落墨,
+   名冊以青墨記生、赭朱記歿,回放是一橫長筆、事件是筆上的墨點。
+   陣亡者以淡墨與「殞」小印致哀,整卷留白即肅穆。
+   ==========================================================================
+   PALETTE (沿用 direction-ink-chronicle.html,新增項已標註 NEW)
+   paper      #efe7d4  宣紙底
+   paper-warm #e8ddc4  紙色暖沉區
+   slip       #f4edda  籤條/遺物箋紙
+   ink        #2e2c26  濃墨
+   ink-soft   #55524a  淡墨
+   ink-faint  rgba(46,44,38,.35)  飛白
+   vermilion  #a33b28  朱砂(印章、陣亡、警示)
+   vermilion-dk #8a3a26  敵軍赭朱(授首)
+   friendly   #3a382f  友軍墨團
+   morale     #7a6a3a  士氣赭
+   livegreen  #4a5d3a  NEW 生還青綠墨
+   mourning   rgba(46,44,38,.45) NEW 服喪淡墨(殉職列)
+   衍生色階(同族):
+     #d9cfae 卷外底色(body) / rgba(120,110,85,*) 紙纖維絲紋
+   ========================================================================== */
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:#d9cfae;}
+body{font-family:"PMingLiU","Noto Serif TC","Songti TC",serif;color:#2e2c26;}
+.stage{position:relative;width:1920px;height:1080px;margin:0 auto;overflow:hidden;
+  background:
+    radial-gradient(ellipse 800px 500px at 24% 18%, rgba(46,44,38,.07), transparent 70%),
+    radial-gradient(ellipse 1100px 600px at 70% 60%, rgba(232,221,196,.6), transparent 75%),
+    radial-gradient(ellipse 600px 400px at 88% 20%, rgba(46,44,38,.05), transparent 70%),
+    #efe7d4;}
+.stage::before{content:"";position:absolute;inset:0;opacity:.5;
+  background:repeating-linear-gradient(0deg, rgba(120,110,85,.05) 0 1px, transparent 1px 5px);}
+.stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 120px rgba(120,100,60,.28);}
+
+/* 筆觸線 */
+.brush{height:7px;border-radius:50%;
+  background:linear-gradient(90deg,transparent,#2e2c26 12%,#2e2c26 60%,
+    rgba(46,44,38,.7) 85%,transparent);}
+.brush.thin{height:4px;}
+.vbrush{width:4px;border-radius:50%;
+  background:linear-gradient(180deg,transparent,#2e2c26 12%,#2e2c26 60%,
+    rgba(46,44,38,.7) 85%,transparent);}
+
+/* ---------- 卷首題字(左緣直書) ---------- */
+.vtitle{position:absolute;left:34px;top:88px;writing-mode:vertical-rl;
+  font-size:34px;font-weight:bold;letter-spacing:.4em;color:#2e2c26;}
+.vtitle .sub{font-size:12px;letter-spacing:.5em;color:#55524a;margin-right:14px;}
+.vseal{position:absolute;left:44px;top:660px;width:44px;height:44px;background:#a33b28;
+  color:#efe7d4;display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:bold;box-shadow:2px 3px 6px rgba(80,30,15,.35);
+  transform:rotate(-2deg);border-radius:3px;}
+
+/* ---------- 卷上小注 ---------- */
+.headnote{position:absolute;right:56px;top:38px;display:flex;gap:26px;align-items:baseline;
+  font-size:14px;letter-spacing:.2em;color:#2e2c26;}
+.headnote .k{font-size:11px;letter-spacing:.3em;color:#55524a;}
+.headnote .key{border:1px solid #55524a;padding:1px 8px;font-size:11px;border-radius:2px;
+  color:#55524a;}
+
+/* ---------- 戰果榜:戰勝大書 ---------- */
+.banner{position:absolute;left:560px;top:64px;width:800px;text-align:center;}
+.banner .win{font-size:118px;font-weight:bold;letter-spacing:.32em;color:#2e2c26;
+  text-indent:.32em;line-height:1.05;
+  text-shadow:3px 4px 0 rgba(46,44,38,.12);}
+.banner .bline{width:460px;margin:14px auto 10px;}
+.banner .rungs{font-size:14px;letter-spacing:.3em;color:#55524a;}
+.banner .rungs b{color:#2e2c26;border-bottom:2px solid #a33b28;padding:0 3px 1px;}
+.banner .hint{margin-top:8px;font-size:14px;letter-spacing:.15em;color:#a33b28;}
+
+/* ---------- 史官戰報:編年體直筆 ---------- */
+.report{position:absolute;left:196px;top:330px;width:664px;}
+.report .rh{display:flex;align-items:baseline;gap:14px;margin-bottom:4px;}
+.report .rh .t{font-size:22px;font-weight:bold;letter-spacing:.5em;}
+.report .rh .s{font-size:11px;color:#55524a;letter-spacing:.25em;}
+.report .prose{margin-top:14px;font-size:20px;line-height:2.05;letter-spacing:.08em;
+  color:#2e2c26;}
+.report .prose .red{color:#a33b28;}
+.cursor{display:inline-block;width:13px;height:22px;background:#2e2c26;
+  vertical-align:-3px;margin-left:4px;animation:blink 1.1s steps(2,start) infinite;}
+@keyframes blink{0%{opacity:1;}50%{opacity:.15;}100%{opacity:1;}}
+.report .tail{margin-top:10px;font-size:11px;color:#55524a;letter-spacing:.25em;}
+
+/* ---------- 右緣朱批直書 ---------- */
+.vnote{position:absolute;left:896px;top:340px;writing-mode:vertical-rl;
+  font-size:14px;letter-spacing:.45em;color:#8a3a26;
+  border-left:1px solid rgba(138,58,38,.45);padding-left:8px;}
+
+/* ---------- 名冊:兩欄 ---------- */
+.roster{position:absolute;left:960px;top:300px;width:900px;display:flex;gap:44px;}
+.rcol{flex:1;}
+.rcol .ch{display:flex;align-items:baseline;gap:12px;margin-bottom:4px;}
+.rcol .ch .t{font-size:21px;font-weight:bold;letter-spacing:.4em;}
+.rcol .ch .c{font-size:11px;color:#55524a;letter-spacing:.2em;}
+.glab{font-size:12px;letter-spacing:.35em;margin:16px 0 6px;}
+.glab.live{color:#4a5d3a;}
+.glab.dead{color:#a33b28;}
+.rrow{display:flex;align-items:baseline;gap:10px;padding:8px 2px;
+  border-bottom:1px solid rgba(46,44,38,.15);font-size:15px;}
+.rrow .nm{font-weight:bold;letter-spacing:.1em;min-width:88px;}
+.rrow .tm{font-size:11px;color:#55524a;letter-spacing:.1em;
+  font-family:"Microsoft JhengHei",sans-serif;}
+.rrow .fate{margin-left:auto;font-size:12px;letter-spacing:.2em;}
+.rrow.live .nm,.rrow.live .fate{color:#4a5d3a;}
+.rrow.dead .nm,.rrow.dead .fate{color:#a33b28;}
+.rrow .relic{font-size:10px;color:#55524a;border:1px solid rgba(85,82,74,.6);
+  background:#f4edda;padding:1px 7px;border-radius:2px;letter-spacing:.1em;}
+/* 敵軍欄 */
+.rrow.eflee .nm{color:#55524a;} .rrow.eflee .fate{color:#55524a;}
+.rrow.eslain .nm,.rrow.eslain .fate{color:#8a3a26;}
+.rrow.esub .nm,.rrow.esub .fate{color:#2e2c26;}
+.rrow .sub2{display:block;font-size:10px;color:#a33b28;letter-spacing:.1em;margin-top:2px;}
+/* 狀態變體:殉職班長服喪列(淡墨+殞小印) */
+.rrow.mourn{opacity:.5;background:linear-gradient(90deg,rgba(46,44,38,.05),transparent);}
+.mseal{flex:none;width:22px;height:22px;border:1.5px solid #a33b28;color:#a33b28;
+  font-size:11px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:2px;transform:rotate(-6deg);background:rgba(163,59,40,.06);}
+
+/* ---------- 回放:一橫長筆 + 墨點事件 ---------- */
+.replay{position:absolute;left:196px;top:806px;width:1530px;}
+.replay .ph{display:flex;align-items:baseline;gap:14px;margin-bottom:18px;}
+.replay .ph .t{font-size:15px;font-weight:bold;letter-spacing:.45em;}
+.replay .ph .s{font-size:11px;color:#55524a;letter-spacing:.2em;}
+.rline-wrap{position:relative;height:78px;}
+.rline{position:absolute;left:0;top:38px;width:100%;height:6px;border-radius:50%;
+  background:linear-gradient(90deg,transparent,#2e2c26 4%,#2e2c26 60%,
+    rgba(46,44,38,.7) 88%,transparent);}
+.edot{position:absolute;top:31px;width:14px;height:14px;border-radius:50%;
+  background:#2e2c26;box-shadow:0 0 0 3px rgba(46,44,38,.12),0 2px 4px rgba(60,50,30,.3);}
+.edot.dead{width:17px;height:17px;top:29px;background:#a33b28;
+  box-shadow:0 0 0 4px rgba(163,59,40,.15),0 2px 4px rgba(80,30,15,.35);}
+.elbl{position:absolute;font-size:12px;letter-spacing:.12em;color:#2e2c26;
+  white-space:nowrap;text-align:center;transform:translateX(-50%);}
+.elbl .tm{display:block;font-size:10px;color:#55524a;letter-spacing:.1em;
+  font-family:"Microsoft JhengHei",sans-serif;}
+.elbl.up{top:0;} .elbl.dn{top:56px;}
+.elbl.dead .tm{color:#a33b28;}
+/* 拖曳柄:圈在筆上的墨環 */
+.scrub{position:absolute;top:24px;width:26px;height:26px;border-radius:50%;
+  border:2.5px solid #2e2c26;background:rgba(239,231,212,.9);transform:translateX(-50%);
+  box-shadow:0 2px 5px rgba(60,50,30,.4);}
+.scrub::after{content:"";position:absolute;left:50%;top:-14px;width:1.5px;height:12px;
+  background:#2e2c26;}
+.scrub-tag{position:absolute;top:56px;transform:translateX(-50%);font-size:11px;
+  color:#2e2c26;letter-spacing:.15em;white-space:nowrap;
+  border:1px solid #2e2c26;padding:1px 8px;background:#f4edda;border-radius:2px;}
+.tend{position:absolute;top:56px;font-size:10px;color:#55524a;letter-spacing:.15em;
+  font-family:"Microsoft JhengHei",sans-serif;}
+
+/* ---------- 卷末:行動印鈕 ---------- */
+.actions{position:absolute;right:64px;bottom:56px;display:flex;gap:22px;align-items:center;}
+.abtn{display:flex;align-items:center;justify-content:center;height:62px;padding:0 30px;
+  font-size:20px;font-weight:bold;letter-spacing:.3em;border-radius:4px;}
+.abtn.go{background:#a33b28;color:#efe7d4;transform:rotate(-1.5deg);
+  box-shadow:3px 4px 8px rgba(80,30,15,.4),inset 0 0 0 3px rgba(239,231,212,.3);}
+.abtn.back{border:2px solid #2e2c26;color:#2e2c26;transform:rotate(1deg);
+  background:rgba(46,44,38,.04);box-shadow:2px 3px 6px rgba(60,50,30,.25);}
+.abtn small{display:block;font-size:9px;letter-spacing:.2em;font-weight:normal;
+  margin-top:3px;text-align:center;}
+.dirnote{position:absolute;left:44px;bottom:22px;font-size:12px;color:#55524a;
+  letter-spacing:.3em;}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <!-- 卷首題字 -->
+  <div class="vtitle"><span class="sub">民國十六年 · 九月既望</span>斷 橋 之 役</div>
+  <div class="vseal">史</div>
+
+  <!-- 卷上小注 -->
+  <div class="headnote">
+    <span><span class="k">記錄</span>史官隨軍 · 當夜直筆</span>
+    <span><span class="k">戰時</span><b style="font-size:20px;">04:30</b></span>
+    <span class="key">空白鍵 · 回放</span>
+  </div>
+
+  <!-- 戰果榜 -->
+  <div class="banner">
+    <div class="win">戰勝</div>
+    <div class="brush bline"></div>
+    <div class="rungs">戰果階梯 — <b>勝</b> → 捷 → 不戰屈兵</div>
+    <div class="hint">距「不戰屈兵」尚缺 2 支降卒</div>
+  </div>
+
+  <!-- 史官戰報 -->
+  <div class="report">
+    <div class="rh"><span class="t">史 官 戰 報</span><span class="s">編年體 · 墨未乾</span></div>
+    <div class="brush thin"></div>
+    <div class="prose">
+      九月既望,斷橋之役。前鋒營接敵於橋南,<br>
+      後衛不動如山,砲隊三發而止。<br>
+      <span class="red">林班長殿後殉職,年廿四。</span>老周亦歿,<br>
+      遺家書各一。敵潰,第3縱隊授首。<span class="cursor"></span>
+    </div>
+    <div class="tail">史官直筆 · 錄至 03:05 敵遁北岸</div>
+  </div>
+
+  <!-- 右緣朱批 -->
+  <div class="vnote">殞者三 · 傷者五 · 降者八</div>
+
+  <!-- 名冊兩欄 -->
+  <div class="roster">
+    <div class="rcol">
+      <div class="ch"><span class="t">名 冊 · 我 軍</span><span class="c">存廿一 · 歿三</span></div>
+      <div class="brush thin"></div>
+      <div class="glab live">— 生還 —</div>
+      <div class="rrow live"><span class="nm">趙有德</span><span class="tm">排長</span><span class="fate">生還</span></div>
+      <div class="rrow live"><span class="nm">石　頭</span><span class="tm">列兵</span><span class="fate">生還</span></div>
+      <div class="rrow live"><span class="nm">陳二郎</span><span class="tm">列兵</span><span class="fate">生還</span></div>
+      <div class="rrow live"><span class="nm">王鐵柱</span><span class="tm">列兵</span><span class="fate">生還 · 等十七人</span></div>
+      <div class="glab dead">— 陣亡 —</div>
+      <div class="rrow dead mourn">
+        <span class="mseal">殞</span><span class="nm">林班長</span>
+        <span class="tm">02:14 殉於橋南</span>
+        <span class="relic">遺物 · 家書</span><span class="fate">陣亡</span></div>
+      <div class="rrow dead"><span class="nm" style="margin-left:32px;">老　周</span>
+        <span class="tm">02:58</span>
+        <span class="relic">遺物 · 家書</span><span class="fate">陣亡</span></div>
+      <div class="rrow dead"><span class="nm" style="margin-left:32px;">鄭阿梗</span>
+        <span class="tm">03:01</span><span class="fate">陣亡</span></div>
+    </div>
+    <div class="rcol">
+      <div class="ch"><span class="t">敵 軍</span><span class="c">潰一 · 授首一 · 降八</span></div>
+      <div class="brush thin"></div>
+      <div class="glab" style="color:#55524a;">— 敵 部 —</div>
+      <div class="rrow eflee"><span class="nm">格洛克部</span>
+        <span class="tm">03:05</span><span class="fate">潰逃 · 遁北岸</span></div>
+      <div class="rrow eslain"><span class="nm">第3縱隊</span>
+        <span class="tm">02:40</span><span class="fate">授首</span></div>
+      <div class="rrow esub"><span class="nm">降　卒</span>
+        <span class="tm">八人</span>
+        <span class="fate">收押<span class="sub2">再降二,可致「不戰屈兵」</span></span></div>
+      <div class="vbrush" style="height:120px;margin:26px auto 0;opacity:.4;"></div>
+      <div style="text-align:center;font-size:11px;color:#55524a;letter-spacing:.3em;margin-top:8px;">
+        敵情已錄 · 歸檔</div>
+    </div>
+  </div>
+
+  <!-- 回放長筆 -->
+  <div class="replay">
+    <div class="ph"><span class="t">回 放 · 戰 錄</span><span class="s">拖墨環以巡戰</span></div>
+    <div class="rline-wrap">
+      <div class="rline"></div>
+      <span class="tend" style="left:0;">00:00</span>
+      <span class="tend" style="right:0;">04:30</span>
+      <div class="edot" style="left:355px;"></div>
+      <div class="elbl up" style="left:362px;"><span class="tm">01:12</span>觀測</div>
+      <div class="edot dead" style="left:660px;"></div>
+      <div class="elbl dead dn" style="left:668px;"><span class="tm">02:14</span>陣亡</div>
+      <div class="edot" style="left:910px;"></div>
+      <div class="elbl up" style="left:917px;"><span class="tm">03:05</span>潰逃</div>
+      <div class="scrub" style="left:760px;"></div>
+      <div class="scrub-tag" style="left:760px;">◆ 02:36 · 回放中</div>
+    </div>
+  </div>
+
+  <!-- 行動印鈕 -->
+  <div class="actions">
+    <div class="abtn back">返回整備</div>
+    <div class="abtn go">再啟戰局</div>
+  </div>
+
+  <div class="dirnote">戰後史卷 — 墨未乾,名已錄。</div>
+</div>
+</body>
+</html>
