@@ -2,7 +2,7 @@
 # 每個 item 走完：pick → spec (gds-quick-dev) → implement → verify → review → commit
 # 規則見 auto-dev-workflow.md
 version: 1
-updated: 2026-09-18 (Q-9 done; N 層敘事系統新增)
+updated: 2026-09-18 (U-1 done; N 層敘事系統新增)
 
 queue:
 
@@ -625,3 +625,18 @@ queue:
     status: queued
     size: S
     note: 依賴 E-7 戰役框架；純文字/UI 層
+
+  # ---- 層級 U：demo 化 ----
+  - id: U-1
+    title: 垂直切片 demo（標題殼 + 主題系統 + 字體自包含 + 打包）
+    source: 2026-09-18 評估 B 決策 + UX phasing(tactical-sim/war-map 先行)
+    summary: >
+      DuanqiaoPlayable 從 dev 工具升級為可散布 demo：Title→Battle→Title
+      殼迴圈、token 驅動雙主題、OFL Noto 字體打包、exe-relative 資產
+      resolver、tools/package_demo.bat 產出 dist/。
+    status: done
+    note: >
+      殼層+主題程式碼隨平行 session G-8 commit 65a4227 入庫（方向反轉
+      的掃入）；本 commit 補 DemoAssets.h/UITheme.h/fonts/tools/spec。
+      dist 包 32MB:exe+maps+fonts+README。
+    size: L
