@@ -86,6 +86,20 @@ int main() {
               plan2.BonusIntel() == 2 && plan2.BonusCP() == 1,
           "加成回讀");
     Check(!plan2.FromJson("{bad"), "壞 plan JSON 拒絕");
+    // 壞箭頭（from 只有一維）→ false 且既有計畫原封不動
+    Check(!plan2.FromJson(
+              "{\"schema\":\"potato.battle_plan/1\",\"arrows\":["
+              "{\"squad\":\"x\",\"from\":[1],\"to\":[2,2]}]}"),
+          "壞箭頭欄位拒絕");
+    Check(plan2.ArrowCount() == 2 && plan2.HasRallyPoint(),
+          "壞 JSON 不動既有計畫");
+    // 缺 has_rally 欄位的合法 JSON → hasRally 歸零（不留舊值）
+    BattlePlan plan3;
+    plan3.SetRallyPoint(Vector2(5, 5));
+    Check(plan3.FromJson(
+              "{\"schema\":\"potato.battle_plan/1\",\"arrows\":[]}"),
+          "無 rally 欄位可讀");
+    Check(!plan3.HasRallyPoint(), "缺 has_rally → 集結點清除");
 
     // ---- [4] Apply：專屬箭頭 + 通用兜底 + 計畫加成 ----
     printf("\n[4] Apply\n");
@@ -114,6 +128,15 @@ int main() {
 
     // 敵隊不受我方計畫影響
     Check(battle.GetDoctrine(enemy) == nullptr, "敵軍無我方 doctrine");
+
+    // 重複 Apply：倍率不疊乘、補給不重複入帳
+    Check(plan.Apply(battle, &res, 0) == 2, "重複 Apply 仍回指派數");
+    Check(std::fabs(vanguard->GetDamagePerMember() - baseDpm * 1.15f) <
+              1e-4f,
+          "重複 Apply 不疊乘攻擊");
+    Check(res.GetIntel(0) == 7 && res.GetCP(0) == 3 &&
+              battle.GetCommandPoints(0) == 3,
+          "重複 Apply 不重複補給");
 
     // ---- [5] 執行層：沿箭頭推進 ----
     printf("\n[5] 執行層生效\n");

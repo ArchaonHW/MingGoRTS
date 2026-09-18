@@ -20,6 +20,16 @@ void BattlePlan::AddArrow(const std::string& squadName, const Vector2& from,
     arrows.push_back(a);
 }
 
+bool BattlePlan::RemoveArrowFor(const std::string& squadName) {
+    for (auto it = arrows.begin(); it != arrows.end(); ++it) {
+        if (it->squadName == squadName) {
+            arrows.erase(it);
+            return true;
+        }
+    }
+    return false;
+}
+
 void BattlePlan::SetRallyPoint(const Vector2& p) {
     rallyPoint = p;
     hasRally = true;
@@ -79,19 +89,27 @@ int BattlePlan::Apply(BattleController& battle, BattleResources* res,
         }
         battle.AssignDoctrine(squad, ArrowToDoctrine(*arrow));
         battle.SetSquadObjective(squad, arrow->to);
-        if (attackMul != 1.0f) {
-            squad->SetDamagePerMember(squad->GetDamagePerMember() * attackMul);
+        // 計畫加成依 Squad::planAttackMul 正規化：重複 Apply 同倍率
+        // 不疊乘；換一份倍率不同的計畫會先除回舊倍率再乘新倍率
+        const float prevMul = squad->GetPlanAttackMul();
+        if (attackMul != prevMul) {
+            squad->SetDamagePerMember(
+                squad->GetDamagePerMember() / prevMul * attackMul);
+            squad->SetPlanAttackMul(attackMul);
         }
         ++assigned;
     }
 
+    // 集結點寫入本身是冪等的；intel/CP 只入帳一次——重複 Apply
+    // 不重複補給；且至少要有一支小隊獲指派才發放（空計畫不白拿加成）
     if (assigned > 0) {
         if (hasRally) {
             battle.SetRallyPoint(team, rallyPoint);
         }
-        if (res) {
+        if (res && !bonusCredited) {
             res->AddIntel(team, bonusIntel);
             res->AddCP(battle, team, bonusCP);
+            bonusCredited = true;
         }
     }
     return assigned;
@@ -127,7 +145,8 @@ bool BattlePlan::FromJson(const std::string& json) {
         root["schema"].AsString() != "potato.battle_plan/1") {
         return false;
     }
-    arrows.clear();
+    // 先全部解析進暫存——任一欄位壞掉就整筆作廢，不動既有計畫
+    std::vector<PlanArrow> parsed;
     for (const JsonValue& a : root["arrows"].AsArray()) {
         const auto& f = a["from"].AsArray();
         const auto& t = a["to"].AsArray();
@@ -139,19 +158,27 @@ bool BattlePlan::FromJson(const std::string& json) {
         arrow.from = Vector2(f[0].AsFloat(), f[1].AsFloat());
         arrow.to = Vector2(t[0].AsFloat(), t[1].AsFloat());
         arrow.priority = a["priority"].AsInt(30);
-        arrows.push_back(arrow);
+        parsed.push_back(arrow);
     }
+    Vector2 newRally = rallyPoint;
     const auto& r = root["rally"].AsArray();
     if (r.size() == 2) {
-        rallyPoint = Vector2(r[0].AsFloat(), r[1].AsFloat());
+        newRally = Vector2(r[0].AsFloat(), r[1].AsFloat());
     }
-    hasRally = root["has_rally"].AsBool(false);
-    attackMul = root["attack_mul"].AsFloat(1.0f);
-    if (attackMul <= 0.0f) {
-        attackMul = 1.0f;
+    float newMul = root["attack_mul"].AsFloat(1.0f);
+    if (newMul <= 0.0f) {
+        newMul = 1.0f; // 非正倍率同 SetPlanBonus 收斂到 1.0
     }
+    // 全部驗過才落寫
+    arrows = std::move(parsed);
+    rallyPoint = newRally;
+    hasRally = root["has_rally"].AsBool(false); // 缺欄位歸零，不留舊值
+    attackMul = newMul;
     bonusIntel = root["bonus_intel"].AsInt(0);
+    if (bonusIntel < 0) bonusIntel = 0;
     bonusCP = root["bonus_cp"].AsInt(0);
+    if (bonusCP < 0) bonusCP = 0;
+    bonusCredited = false; // 載入的計畫尚未入帳
     return true;
 }
 

@@ -45,6 +45,9 @@ public:
                   const Vector2& to, int priority = 30);
     size_t ArrowCount() const { return arrows.size(); }
     const PlanArrow& Arrow(size_t i) const { return arrows[i]; }
+    // 移除第一支綁定 squadName 的箭頭（重畫覆蓋用）；沒有回 false
+    bool RemoveArrowFor(const std::string& squadName);
+    void ClearArrows() { arrows.clear(); }
 
     void SetRallyPoint(const Vector2& p);
     bool HasRallyPoint() const { return hasRally; }
@@ -64,6 +67,8 @@ public:
     //  - 無專屬箭頭的小隊 → 第一支未指派箭頭（squadName 空）兜底
     //  - 計畫加成：attackMul 乘 damagePerMember、intel/CP 入帳
     // 回傳實際指派 doctrine 的小隊數。
+    // 冪等：attackMul 依 Squad::planAttackMul 正規化（重複 Apply 不疊乘）；
+    // intel/CP 與集結點只入帳一次（首次指派成功時）。
     int Apply(BattleController& battle, BattleResources* res,
               int team) const;
 
@@ -78,6 +83,7 @@ private:
     float attackMul = 1.0f;
     int bonusIntel = 0;
     int bonusCP = 0;
+    mutable bool bonusCredited = false; // 加成只入帳一次（Apply 是 const）
 };
 
 } // namespace Gameplay

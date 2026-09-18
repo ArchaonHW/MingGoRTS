@@ -74,6 +74,11 @@ public:
     void SetDamagePerMember(float d) { damagePerMember = d; }
     float GetDamagePerMember() const { return damagePerMember; }
 
+    // G-5 計畫加成記錄：已乘進 damagePerMember 的作戰計畫倍率。
+    // 重複 Apply 時先除回舊倍率再乘新倍率 → 同一份計畫不會疊乘。
+    void SetPlanAttackMul(float m) { planAttackMul = (m > 0.0f) ? m : 1.0f; }
+    float GetPlanAttackMul() const { return planAttackMul; }
+
     // 兵種（G-2）：預設步兵；克制矩陣見 UnitClass 註解
     UnitClass GetUnitClass() const { return unitClass; }
     void SetUnitClass(UnitClass c) { unitClass = c; }
@@ -129,6 +134,7 @@ private:
     float speed;          // 世界單位/秒
     float engageRange;    // 接戰距離（世界單位）
     float damagePerMember;// 每名成員每秒傷害
+    float planAttackMul = 1.0f; // G-5：已套用的計畫加成倍率
     UnitClass unitClass = UnitClass::Infantry; // G-2 兵種
 
     // 將軍衛隊（G-8）與帶隊突擊計時

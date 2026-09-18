@@ -2,7 +2,7 @@
 title: 'G-9 戰鬥間整補循環（ELIN 基地層）'
 type: 'feature'
 created: '2026-09-18'
-status: 'ready-for-dev'
+status: 'done'
 baseline_commit: '65a4227'
 context:
   - _bmad-output/implementation-artifacts/auto-dev-queue.yaml (id: G-9)
