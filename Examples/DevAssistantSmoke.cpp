@@ -358,10 +358,10 @@ int main() {
 
         OpenAIClient openai("test-key");
         auto oa = openai.ChatCompletion(msgs, cfg);
-        Check(!oa.success, "OpenAI client fails honestly without transport");
-        Check(oa.error.find("transport") != std::string::npos ||
-              oa.error.find("parse") != std::string::npos,
-              "OpenAI failure carries error message");
+        Check(!oa.success, "OpenAI client fails honestly");
+        // WinHTTP transport 存在時可能真的連上並收到 401——
+        // 斷言只要「非空錯誤訊息」，不綁特定失敗點
+        Check(!oa.error.empty(), "OpenAI failure carries error message");
         Check(openai.GenerateEmbedding("x", "m").empty(),
               "OpenAI embedding returns empty (no fake data)");
 
@@ -370,9 +370,10 @@ int main() {
         Check(!an.success && !an.error.empty(),
               "Anthropic client fails honestly without transport");
 
+        // Ollama 模式：LoadModel 收的是伺服器端模型名，不做檔案檢查；
+        // 誠實失敗體現在「空名拒絕 + 推論時連不上伺服器回 false」
         LocalModelClient local("nonexistent-model.gguf");
-        Check(!local.LoadModel("nonexistent-model.gguf"),
-              "LocalModel LoadModel fails honestly (no backend)");
+        Check(!local.LoadModel(""), "LocalModel LoadModel rejects empty name");
         auto lr = local.ChatCompletion(msgs, cfg);
         Check(!lr.success, "LocalModel chat fails honestly");
         Check(local.GenerateEmbedding("x", "m").empty(),
@@ -388,6 +389,66 @@ int main() {
         auto mr = mgr.Chat(msgs, cfg);
         Check(!mr.success && !mr.error.empty(),
               "LLMManager propagates honest failure + error");
+    }
+
+    // 20) 建議系統規則修正：長函式偵測、複雜度關鍵字計數、
+    //     banned API word-boundary、學習權重接到過濾
+    {
+        using MingGoRTSIDE::IntelligentSuggestionSystem;
+        using MingGoRTSIDE::Suggestion;
+        using MingGoRTSIDE::SuggestionType;
+
+        IntelligentSuggestionSystem sys;
+        sys.Initialize();
+
+        // 長函式：60 行函式體應觸發 Extract Method（帶函式名）
+        std::string longCode = "int BigFunc() {\n";
+        for (int i = 0; i < 60; ++i) longCode += "    int v = 0;\n";
+        longCode += "    return 0;\n}\n";
+        auto longSug = sys.GenerateSuggestions(longCode, "big.cpp", 1, 1);
+        bool foundExtract = false;
+        for (const auto& s : longSug) {
+            if (s.type == SuggestionType::Refactoring &&
+                s.title.find("BigFunc") != std::string::npos)
+                foundExtract = true;
+        }
+        Check(foundExtract, "long function produces named Extract Method suggestion");
+
+        // 複雜度：識別字含大量 i/f/w 字母但無控制關鍵字 → 不觸發 Reduce Complexity
+        std::string identCode;
+        for (int i = 0; i < 40; ++i)
+            identCode += "int verifyWithFlowWidgets" + std::to_string(i) + " = 0;\n";
+        auto identSug = sys.GenerateSuggestions(identCode, "ids.cpp", 1, 1);
+        bool reduceFound = false;
+        for (const auto& s : identSug)
+            if (s.title.find("Reduce Complexity") != std::string::npos)
+                reduceFound = true;
+        Check(!reduceFound, "identifier-heavy code does not inflate complexity");
+
+        // banned API：strcpy 命中 VeryHigh BugFix；sscanf 不誤報
+        auto bugs = sys.DetectBugs("void f(){ char b[8]; strcpy(b, \"x\"); }\n");
+        bool bannedHit = false;
+        for (const auto& s : bugs)
+            if (s.title == "Unsafe C API") bannedHit = true;
+        Check(bannedHit, "DetectBugs flags strcpy as unsafe C API");
+        auto sscanfBugs = sys.DetectBugs("void f(){ sscanf(s, \"%d\", &n); }\n");
+        bool sscanfFalsePos = false;
+        for (const auto& s : sscanfBugs)
+            if (s.title == "Unsafe C API") sscanfFalsePos = true;
+        Check(!sscanfFalsePos, "sscanf does not false-positive scanf ban");
+
+        // 學習 → 過濾：連續拒絕 bug_fix 建議，權重跌破 0.5 後
+        // GenerateSuggestions 的 FilterByConfidence(Medium) 應濾掉 BugFix
+        for (int i = 0; i < 9; ++i)
+            sys.LearnFromFeedback("bug_fix_reject" + std::to_string(i), false);
+        auto filtered = sys.GenerateSuggestions(
+            "void f(){ char b[8]; strcpy(b, \"x\"); }\n", "f.cpp", 1, 1);
+        bool bugSurvived = false;
+        for (const auto& s : filtered)
+            if (s.type == SuggestionType::BugFix) bugSurvived = true;
+        Check(!bugSurvived, "repeated rejects push BugFix below filter threshold");
+
+        sys.Shutdown();
     }
 
     std::printf("\n%s (%d failures)\n", failures == 0 ? "ALL PASS" : "FAILURES", failures);

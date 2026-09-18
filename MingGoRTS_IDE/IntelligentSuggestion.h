@@ -80,6 +80,7 @@ struct CodeAnalysis {
     std::string filePath;
     std::string codeText;  // 保留原文供後續規則掃描（如 magic number 檢查）
     std::vector<std::string> functions;
+    std::vector<int> functionLines;  // 與 functions 平行的 1-based 行號
     std::vector<std::string> classes;
     std::vector<std::string> variables;
     std::vector<std::string> imports;
@@ -210,7 +211,9 @@ private:
     // Code metrics
     int CalculateCyclomaticComplexity(const std::string& code);
     int CalculateNestingDepth(const std::string& code);
-    std::vector<std::string> FindLongFunctions(const std::string& code, int maxLines = 50);
+    // 回傳（函式名, 起始行號 1-based）——建議要指到區塊開頭不是游標行
+    std::vector<std::pair<std::string, int>> FindLongFunctions(const std::string& code,
+                                                               int maxLines = 50);
 };
 
 /**
