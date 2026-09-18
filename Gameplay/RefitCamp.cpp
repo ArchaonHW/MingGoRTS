@@ -102,8 +102,10 @@ bool RefitCamp::AssignRelic(const std::string& squadName,
     return false;
 }
 
-std::vector<Squad*> RefitCamp::Deploy(BattleController& battle, int team,
-                                      const std::vector<Vector2>& positions) {
+std::vector<Squad*> RefitCamp::Deploy(
+    BattleController& battle, int team,
+    const std::vector<Vector2>& positions,
+    const SquadTemplateLibrary* library) {
     std::vector<Squad*> out;
     for (size_t i = 0; i < units.size(); ++i) {
         Vector2 pos(0.0f, 0.0f);
@@ -117,6 +119,15 @@ std::vector<Squad*> RefitCamp::Deploy(BattleController& battle, int team,
         Squad* s = battle.CreateSquad(units[i].squadName, team, pos,
                                       units[i].members);
         if (s) {
+            // 招募單位回補模板 stats（G-6）：speed/engage_range/
+            // damage/stamina 全由模板 stamped；查無模板就只給預設
+            if (library && !units[i].templateId.empty()) {
+                if (const SquadTemplate* tpl =
+                        library->Find(units[i].templateId)) {
+                    tpl->ApplyStats(s);
+                }
+            }
+            // unitClass 以單位自身記錄為準（壓在模板值之後）
             s->SetUnitClass(units[i].unitClass);
             out.push_back(s);
         }
@@ -170,16 +181,44 @@ bool RefitCamp::SaveToFile(const std::string& path) const {
     return true;
 }
 
-bool RefitCamp::LoadFromFile(const std::string& path) {
-    std::ifstream f(path);
-    if (!f) {
-        return false;
+JsonValue RefitCamp::ToJson() const {
+    JsonValue o;
+    o.type = JsonValue::Type::Object;
+    o.objectValue["schema"] = JsonValue::String("potato.refit_camp/1");
+    o.objectValue["loot"] = JsonValue::Number(loot);
+    JsonValue inv;
+    inv.type = JsonValue::Type::Array;
+    for (const auto& r : inventory) {
+        inv.arrayValue.push_back(JsonValue::String(r));
     }
-    std::ostringstream buf;
-    buf << f.rdbuf();
-    JsonValue root;
-    if (!JsonValue::ParseOk(buf.str(), root) ||
-        root["schema"].AsString() != "potato.refit_camp/1") {
+    o.objectValue["inventory"] = inv;
+    JsonValue us;
+    us.type = JsonValue::Type::Array;
+    for (const auto& u : units) {
+        JsonValue ju;
+        ju.type = JsonValue::Type::Object;
+        ju.objectValue["squad_name"] = JsonValue::String(u.squadName);
+        ju.objectValue["template_id"] = JsonValue::String(u.templateId);
+        ju.objectValue["unit_class"] =
+            JsonValue::String(UnitClassName(u.unitClass));
+        ju.objectValue["members"] = JsonValue::Number(u.members);
+        ju.objectValue["wounded"] = JsonValue::Number(u.wounded);
+        ju.objectValue["max_members"] = JsonValue::Number(u.maxMembers);
+        ju.objectValue["captain"] = JsonValue::String(u.captainName);
+        JsonValue rs;
+        rs.type = JsonValue::Type::Array;
+        for (const auto& r : u.relics) {
+            rs.arrayValue.push_back(JsonValue::String(r));
+        }
+        ju.objectValue["relics"] = rs;
+        us.arrayValue.push_back(ju);
+    }
+    o.objectValue["units"] = us;
+    return o;
+}
+
+bool RefitCamp::FromJson(const JsonValue& root) {
+    if (root["schema"].AsString() != "potato.refit_camp/1") {
         return false;
     }
     loot = root["loot"].AsInt(0);
@@ -203,6 +242,20 @@ bool RefitCamp::LoadFromFile(const std::string& path) {
         units.push_back(vu);
     }
     return true;
+}
+
+bool RefitCamp::LoadFromFile(const std::string& path) {
+    std::ifstream f(path);
+    if (!f) {
+        return false;
+    }
+    std::ostringstream buf;
+    buf << f.rdbuf();
+    JsonValue root;
+    if (!JsonValue::ParseOk(buf.str(), root)) {
+        return false;
+    }
+    return FromJson(root);
 }
 
 } // namespace Gameplay

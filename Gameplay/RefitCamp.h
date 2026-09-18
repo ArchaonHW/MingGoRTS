@@ -2,6 +2,7 @@
 
 #include "Core/CoreTypes.h"
 #include "MathUtils/Vector2.h"
+#include "Serialization/JsonParser.h"
 #include "Squad.h"
 
 #include <string>
@@ -33,7 +34,7 @@ struct PostBattleReport;
  *   camp.Absorb(report, roster, 0);          // 傷亡入池、遺物入庫
  *   camp.HealWounded(camp.GetLoot());        // 醫治
  *   camp.Recruit(library, "infantry_line");  // 招募
- *   camp.Deploy(battle2, 0, positions);      // 下一場重建
+ *   camp.Deploy(battle2, 0, positions, &library); // 下一場重建（套模板 stats）
  */
 struct VeteranUnit {
     std::string squadName;              // 沿用原隊名（敘事連續性）
@@ -78,11 +79,19 @@ public:
 
     // ---- 出戰 ----
     // 依序 CreateSquad 重建各單位（members 保留現兵力）；
-    // positions 不足時多餘單位排在最後一點往 y+ 方向排開
+    // positions 不足時多餘單位排在最後一點往 y+ 方向排開。
+    // library 非空時：招募單位（templateId 非空且查得到）套用模板
+    // stats（speed/engage_range/damage/stamina）；查無或 nullptr
+    // 則維持 Squad 預設。unitClass 一律以單位自身記錄為準。
     std::vector<Squad*> Deploy(BattleController& battle, int team,
-                               const std::vector<Vector2>& positions);
+                               const std::vector<Vector2>& positions,
+                               const SquadTemplateLibrary* library = nullptr);
 
     // ---- 存檔 ----
+    // ToJson/FromJson 產生/消化與檔案同構的 JsonValue——
+    // CampaignState 聚合存檔時以此嵌入子文件
+    JsonValue ToJson() const;
+    bool FromJson(const JsonValue& j);
     bool SaveToFile(const std::string& path) const;
     bool LoadFromFile(const std::string& path);
 

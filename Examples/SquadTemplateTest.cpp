@@ -9,6 +9,7 @@
 
 #include <cmath>
 #include <cstdio>
+#include <fstream>
 
 using namespace Potato;
 using namespace Potato::Gameplay;
@@ -162,6 +163,76 @@ int main() {
         Check(t4.unitClass == UnitClass::Infantry,
               "未知兵種降級 Infantry");
         Check(!t4.warnings.empty(), "降級記入 warnings");
+
+        // 解析失敗 → 物件重置為預設（不殘留上次內容）
+        SquadTemplate t5;
+        Check(t5.LoadFromString(tplJson), "重置測試：先載合法模板");
+        Check(!t5.LoadFromString("{bad"), "重置測試：再載壞 JSON 拒絕");
+        Check(t5.id.empty() && t5.members == 10 && t5.cost == 0 &&
+                  std::fabs(t5.speed - 2.0f) < 1e-6f &&
+                  t5.unitClass == UnitClass::Infantry &&
+                  !t5.hasStamina && t5.warnings.empty(),
+              "失敗後欄位重置為預設");
+
+        // 空 id + 空 name：可載入（記警告）但 Instantiate 拒絕匿名隊
+        SquadTemplate tAnon;
+        Check(tAnon.LoadFromString(
+                  R"({"schema":"potato.squad_template/1"})"),
+              "空 id/name 模板仍解析");
+        Check(!tAnon.warnings.empty(), "空 id/name 記入 warnings");
+        {
+            BattleController ab(5, 5, 1.0f);
+            Check(tAnon.Instantiate(ab, "", 0, Vector2(1, 1)) == nullptr,
+                  "匿名模板 Instantiate 回 nullptr");
+        }
+    }
+
+    // ---- [3b] 數值消毒：越界夾回 + warnings ----
+    printf("\n[3b] 數值消毒\n");
+    {
+        SquadTemplate s1;
+        Check(s1.LoadFromString(R"({
+                  "schema":"potato.squad_template/1","id":"s1",
+                  "members":-5,"cost":-20,
+                  "stats":{"speed":-1.0,"engage_range":-2.0,
+                           "damage_per_member":-0.5}
+              })"),
+              "負值欄位仍解析");
+        Check(s1.members == 1, "members<=0 夾到 1", (float)s1.members, 1.0f);
+        Check(s1.cost == 0, "cost<0 夾到 0", (float)s1.cost, 0.0f);
+        Check(s1.speed == 0.0f && s1.engageRange == 0.0f &&
+                  s1.damagePerMember == 0.0f,
+              "stats 負值夾到 0");
+        Check(s1.warnings.size() >= 5, "每個越界都記警告",
+              (float)s1.warnings.size(), 5.0f);
+
+        SquadTemplate s2;
+        Check(s2.LoadFromString(R"({
+                  "schema":"potato.squad_template/1","id":"s2",
+                  "members":1e999,"cost":1e999,
+                  "stats":{"stamina":{"threshold":5.0,"penalty_mul":-1.0}}
+              })"),
+              "非有限/越界仍解析");
+        Check(s2.members == 10, "members 非有限 → 預設 10",
+              (float)s2.members, 10.0f);
+        Check(s2.cost == 0, "cost 非有限 → 預設 0", (float)s2.cost, 0.0f);
+        Check(s2.hasStamina &&
+                  std::fabs(s2.staminaThreshold - 1.0f) < 1e-6f &&
+                  s2.staminaPenaltyMul == 0.0f,
+              "threshold 夾回 [0,1]、penalty_mul 夾到 0");
+        Check(!s2.warnings.empty(), "非有限/越界記警告");
+
+        SquadTemplate s3;
+        Check(s3.LoadFromString(R"({
+                  "schema":"potato.squad_template/1","id":"s3",
+                  "unit_class":42,"stats":{"stamina":"oops"}
+              })"),
+              "型別錯誤仍解析");
+        Check(s3.unitClass == UnitClass::Infantry &&
+                  !s3.hasStamina,
+              "unit_class 數字→Infantry、stamina 非物件忽略");
+        Check(s3.warnings.size() >= 2, "型別錯誤各記一條警告",
+              (float)s3.warnings.size(), 2.0f);
     }
 
     // ---- [4] 模板庫：真檔 LoadDir / Find / SortedByCost ----
@@ -195,6 +266,56 @@ int main() {
             if (sorted[i]->cost < sorted[i - 1]->cost) ascending = false;
         }
         Check(ascending, "SortedByCost 升冪");
+
+        // LoadDir 守衛與累積+除重語義
+        Check(lib.LoadDir("") == 0, "空目錄路徑回 0");
+        const size_t before = lib.Size();
+        const size_t again = lib.LoadDir("assets/squads");
+        Check(again == n, "重載同目錄仍解析全部檔案",
+              (float)again, (float)n);
+        Check(lib.Size() == before,
+              "同 id 除重 keep latest（Size 不變）",
+              (float)lib.Size(), (float)before);
+
+        // 舊扁平目錄遷移後仍可載入（assets/templates 也是同 schema）
+        SquadTemplateLibrary lib2;
+        Check(lib2.LoadDir("assets/templates") == 2,
+              "assets/templates 遷移後 2 模板可載");
+        const SquadTemplate* cp = lib2.Find("cavalry_platoon");
+        Check(cp && cp->unitClass == UnitClass::Cavalry &&
+                  cp->members == 12 && cp->cost == 160 &&
+                  std::fabs(cp->speed - 3.5f) < 1e-6f &&
+                  std::fabs(cp->damagePerMember - 0.06f) < 1e-6f,
+              "cavalry_platoon 遷移後數值保留");
+
+        // Add / Clear
+        SquadTemplateLibrary lib3;
+        SquadTemplate manual;
+        manual.LoadFromString(R"({"schema":"potato.squad_template/1",
+            "id":"manual","cost":7})");
+        lib3.Add(manual);
+        Check(lib3.Size() == 1 && lib3.Find("manual") != nullptr,
+              "Add 手工模板");
+        lib3.Clear();
+        Check(lib3.Size() == 0 && lib3.Find("manual") == nullptr,
+              "Clear 清空");
+
+        // LoadFromFile：直接路徑（cwd 暫存檔）+ ../ 逐層容錯（assets）
+        {
+            std::ofstream tmp("squad_template_direct_test.json");
+            tmp << R"({"schema":"potato.squad_template/1","id":"tmp_direct",
+                       "members":9})";
+        }
+        SquadTemplate direct;
+        Check(direct.LoadFromFile("squad_template_direct_test.json") &&
+                  direct.id == "tmp_direct" && direct.members == 9,
+              "LoadFromFile 直接路徑");
+        SquadTemplate nested;
+        Check(nested.LoadFromFile("assets/squads/infantry_line.json") &&
+                  nested.id == "infantry_line",
+              "LoadFromFile ../ 逐層容錯");
+        Check(!direct.LoadFromFile("no_such_template_file.json"),
+              "LoadFromFile 壞路徑拒絕");
     }
 
     // ---- [5] 預算配兵：依序檢查、超支跳過不降人數、budget=0 無上限 ----
@@ -244,6 +365,56 @@ int main() {
                                   {"ghost_template", "infantry_line"});
         Check(rBad.built.empty() && rBad.skipped.size() == 2,
               "查無 id + 超支皆記 skipped");
+
+        // budget<0 同樣視為無上限（與 budget=0 一致的哨兵語義）
+        auto rNeg = BudgetedBuild(lib, -100,
+                                  {"infantry_line", "cavalry_shock",
+                                   "archer_skirmish"});
+        Check(rNeg.built.size() == 3 && rNeg.skipped.empty(),
+              "budget<0 全部建成");
+        Check(rNeg.spent == 380, "budget<0 spent=380",
+              (float)rNeg.spent, 380.0f);
+    }
+
+    // ---- [6] CreateSquadFromTemplate：逐隊扣帳 API（哨兵不同）----
+    printf("\n[6] CreateSquadFromTemplate\n");
+    {
+        BattleController battle(10, 10, 1.0f);
+        SquadTemplate cav;
+        Check(cav.LoadFromFile("assets/squads/cavalry_shock.json"),
+              "載入 cavalry_shock 供扣帳測試");
+
+        int budget = 200;
+        Squad* ok = battle.CreateSquadFromTemplate(cav, 0, Vector2(1, 1),
+                                                   budget);
+        Check(ok != nullptr, "足額建隊");
+        Check(budget == 40, "扣帳 200-160=40", (float)budget, 40.0f);
+        Check(ok && std::fabs(ok->GetSpeed() - 3.5f) < 1e-6f,
+              "模板 stats 經 CreateSquadFromTemplate 套用");
+
+        Squad* no = battle.CreateSquadFromTemplate(cav, 0, Vector2(2, 2),
+                                                   budget);
+        Check(no == nullptr, "超支拒絕（40 < 160）");
+        Check(budget == 40, "拒絕不扣帳", (float)budget, 40.0f);
+
+        int infinite = -1;
+        Squad* free1 = battle.CreateSquadFromTemplate(cav, 0,
+                                                      Vector2(3, 3),
+                                                      infinite);
+        Check(free1 != nullptr && infinite == -1,
+              "budget<0 無限不扣帳");
+
+        // budget=0 在扣帳 API 是「真沒錢」：免費模板可建、要錢的不行
+        int zero = 0;
+        SquadTemplate freeTpl;
+        freeTpl.LoadFromString(R"({"schema":"potato.squad_template/1",
+            "id":"free","cost":0})");
+        Check(battle.CreateSquadFromTemplate(freeTpl, 0, Vector2(4, 4),
+                                             zero) != nullptr,
+              "零成本模板 0 預算可建");
+        Check(battle.CreateSquadFromTemplate(cav, 0, Vector2(5, 5),
+                                             zero) == nullptr,
+              "budget=0 對收費模板拒絕（哨兵差異）");
     }
 
     printf("\n=== 結果: %d PASS, %d FAIL ===\n", g_pass, g_fail);

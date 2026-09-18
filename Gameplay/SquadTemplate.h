@@ -41,12 +41,17 @@ class BattleController;
  * }
  *
  * 錯誤處理（寫死）：
- * - schema 字串不符 / JSON 壞 → LoadFromFile/LoadFromString 回 false，
- *   不產生半成品
+ * - schema 字串不符 / JSON 壞 → LoadFromFile/LoadFromString 回 false；
+ *   失敗時物件先被重置為預設值，不產生半成品
  * - 缺 stats 子欄位 → 用 Squad 建構預設值（不 fail）
- * - stamina 整段可選；有寫則五欄逐讀，缺一欄用 Squad 預設
- * - unit_class 無效字串 → Infantry + 記入 warnings
+ * - stamina 整段可選；有寫則五欄逐讀，缺一欄用 Squad 預設；
+ *   stamina 存在但不是物件 → 忽略並記 warnings
+ * - unit_class 無效字串或非字串非空值 → Infantry + 記入 warnings
  *   （比照 EnemyGeneral 的 UnitClassFromString 慣例）
+ * - 越界數值（members/cost/速度/傷害/疲勞參數）→ 夾到合法範圍 +
+ *   記 warnings；warnings 是給呼叫端呈現的機器可讀降級記錄
+ * - morale 刻意不進 schema v1：模板只管編制硬參數，士氣是戰場
+ *   動態狀態，歸 SageCommand/doctrine 層管
  */
 struct SquadTemplate {
     static constexpr const char* kSchema = "potato.squad_template/1";
@@ -81,9 +86,15 @@ struct SquadTemplate {
 
     // 建隊：CreateSquad(name, team, pos, members) 後逐 setter 套屬性。
     // name 空字串 → 模板 name（再空 → id）。同名 squad 不擋（與
-    // CreateSquad 一致）。失敗回 nullptr（CreateSquad 失敗時）。
+    // CreateSquad 一致）。回 nullptr 的情況：CreateSquad 失敗，或
+    // 三者皆空（不建無名隊）。
     Squad* Instantiate(BattleController& battle, const std::string& name,
                        int team, const Vector2& pos) const;
+
+    // 只把 stats 套到既有 squad（兵種/速度/接戰距離/單兵傷害/疲勞參數），
+    // 不動 members/name——RefitCamp::Deploy 重建招募單位時重用，
+    // 與 Instantiate 共用同一套 stamping 邏輯
+    void ApplyStats(Squad* squad) const;
 };
 
 /**
@@ -92,15 +103,21 @@ struct SquadTemplate {
 class SquadTemplateLibrary {
 public:
     // 掃描 dir 下所有 *.json 逐檔載入；壞檔/schema 不符跳過不中止。
-    // 目錄本身也吃逐層 ../ 容錯。回傳成功載入的模板數。
+    // 目錄本身也吃逐層 ../ 容錯；dir 空字串 → 回 0。
+    // 【累積語義】不清空既有內容——呼叫端可連續 LoadDir 多個目錄
+    // （DuanqiaoPlayable 就是載 squads 再載 templates）。同 id 撞車
+    // 時後載入的覆蓋先載入的（keep latest）。回傳本次成功解析的檔案數。
     size_t LoadDir(const std::string& dir);
 
     // 直接加一筆（測試/程式化模板用）；同 id 不除重，Find 取先載入者
     void Add(const SquadTemplate& tpl) { templates.push_back(tpl); }
     void Clear() { templates.clear(); }
     size_t Size() const { return templates.size(); }
-    const std::vector<SquadTemplate>& All() const { return templates; }
 
+    // 【生命週期注意】All/Find/SortedByCost 回傳的參照/指標指向
+    // templates 內部元素——Add/LoadDir/Clear 可能觸發 vector
+    // 重新配置使舊指標懸空，取用後勿跨變動沿用。
+    const std::vector<SquadTemplate>& All() const { return templates; }
     const SquadTemplate* Find(const std::string& id) const;
     // cost 升冪；同 cost 依 id 排序讓結果穩定
     std::vector<const SquadTemplate*> SortedByCost() const;
@@ -123,7 +140,13 @@ struct BudgetedBuildResult {
 // 依序檢查 orderedWishlist 每個 template id：cost ≤ 剩餘預算才入
 // built 並扣帳；單項超支 → 記入 skipped 後繼續評估後續項；
 // 查無的 id 同樣記 skipped（無法定價 = 不能建）。
-// budget=0 視為無上限：全部入 built（保回歸路徑）。
+//
+// 【budget 哨兵】budget <= 0 = 無上限：全部入 built（spec 的
+// budget=0 保回歸路徑，負值同樣放行）。注意與
+// BattleController::CreateSquadFromTemplate 的差異是有意的：
+// 那是逐隊扣帳 API，budget 是活钱包——budget<0 才無限、budget=0
+// 是「真沒錢」只建得起免費模板；此處是願望清單篩選 API，
+// 非正預算一律視為「不追蹤預算」。
 BudgetedBuildResult BudgetedBuild(
     const SquadTemplateLibrary& library, int budget,
     const std::vector<std::string>& orderedWishlist);

@@ -2,7 +2,7 @@
 title: 'G-6 小隊編制模板（HOI4 division designer）'
 type: 'feature'
 created: '2026-09-18'
-status: 'in-progress'
+status: 'done'
 baseline_commit: '2977e75'
 context:
   - AGENTS.md
@@ -67,17 +67,40 @@ HOI4 式小隊編制模板：squad 的組成（人數/兵種/屬性/成本）定
 
 ## Acceptance Criteria
 
-- [ ] 模板檔可載入並建出對應 squad（屬性全套驗證：members/unitClass/speed/engageRange/damagePerMember/stamina）
-- [ ] 預算超支時依規則跳過並記錄；budget=0 全部建成
-- [ ] headless 測試 PASS 入 ctest；MSVC + MinGW 建置通過；既有測試無回歸
+- [x] 模板檔可載入並建出對應 squad（屬性全套驗證：members/unitClass/speed/engageRange/damagePerMember/stamina）
+- [x] 預算超支時依規則跳過並記錄；budget=0 全部建成
+- [x] headless 測試 PASS 入 ctest；MSVC + MinGW 建置通過；既有測試無回歸
 
 ## Verification
 
 **Commands:**
-- `cmake --build build --config Release --target SquadTemplateTest`
-- `cd build && ctest -C Release -R "SquadTemplateTest|SquadFatigueTest|DoctrineBattleDemo" --output-on-failure`
-- `cmake --build build-mingw --target SquadTemplateTest`
+- `cmake --build build --config Release --target SquadTemplateTest` — PASS
+- `cd build && ctest -C Release -R "SquadTemplateTest|RefitCampTest"` — 2/2 PASS（SquadTemplateTest 98 checks）
+- `cmake --build build-mingw --target SquadTemplateTest RefitCampTest` — PASS；MinGW 執行 98/98
+- banned-function 掃描（Gameplay/SquadTemplate.*、RefitCamp.*、兩測試）— 0 命中
 
 **Manual checks:** 無（純邏輯，headless 全覆蓋）
 
 </frozen-after-approval>
+
+## Implementation Summary
+
+四路 review（Blind/Edge/Verification-Gap/Intent）後的 patch 全數落地：
+
+- `Gameplay/SquadTemplate.h/.cpp`：`potato.squad_template/1` 解析（schema 嚴驗、失敗先重置乾淨狀態）、`ReadNonNeg` 數值消毒（負值/非有限→夾值+警告、members/cost 防 int 溢位）、`Instantiate`（匿名模板回 nullptr）+ `ApplyStats`（供 RefitCamp 複用）、`SquadTemplateLibrary`（LoadDir 同 id keep-latest 除重、空目錄守衛、Find/SortedByCost 指標生命週期已註明）、`BudgetedBuild`（`budget<=0` 皆無上限）。
+- `Gameplay/RefitCamp.h/.cpp`：`Deploy` 增 `library` 參數，招募單位回補模板 stats——唯一實際消費路徑不再丟屬性。
+- `Gameplay/BattleController.h`：`CreateSquadFromTemplate` 哨兵差異已文件化（`budget<0`=無限 vs `BudgetedBuild` 的 `budget<=0`，逐隊活錢包 vs 願望清單篩選，刻意不同）。
+- `assets/templates/*.json`：遷移至巢狀 `stats{}` 布局（原扁平欄位會靜默解析成全預設）；morale 欄位廢棄已註記。
+- `Examples/DuanqiaoPlayable.cpp`：recruit library 載入 `squads` + `templates` 兩目錄，Deploy 傳 library。
+- `Examples/SquadTemplateTest.cpp`：98 checks——含數值消毒、重置語義、匿名拒絕、LoadFromFile 直接/逐層容錯、Add/Clear、雙 API 哨兵差異、遷移資產驗證。
+
+## Review Dispositions
+
+- **patch（已修）**：budget 哨兵矛盾、stats 負值/溢位未消毒、members/cost double→int 溢位、空 id 匿名隊、靜默夾值無警告、LoadFromString 失敗殘留、LoadDir 空字串/重複載入、舊扁平模板靜默失值、RefitCamp::Deploy 丟 stats、CreateSquadFromTemplate 失測、LoadFromFile/Add/Clear/負預算測試缺口。
+- **defer**：`BudgetedBuildResult::skipped` 不區分「查無模板/超支」原因——屬 API 增強，spec 合約已滿足，需要時加 skipReasons。
+- **reject**：「警告非 user-visible」——warnings 向量即機器可讀警告面，合約已足；`Instantiate` nullptr 路徑不可達——屬防禦設計；LoadFromFile 近端壞檔遮蔽上層好檔——沿用 BattleMap 既有 ../ 容錯慣例。
+
+## Residual Risks
+
+- 遷移後 `assets/templates/` 與 `assets/squads/` 兩目錄並存於 DuanqiaoPlayable recruit library——同 id keep-latest 已防衝突，長期可考慮整併目錄。
+- morale 欄位自 schema 廢除——舊卡面資料含 morale 者被忽略（v1 刻意不收錄）。

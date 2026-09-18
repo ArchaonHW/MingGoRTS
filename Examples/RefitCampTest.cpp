@@ -84,12 +84,16 @@ int main() {
     Check(camp.FindUnit("前鋒")->members == 26, "兵力 24+2=26");
 
     // [4] 招募：吃模板、扣帳、滿編入伍
+    // 模板帶刻意偏離預設的 stats，供 [7] 驗 Deploy 回補
     printf("\n[4] 招募\n");
     SquadTemplateLibrary lib;
     SquadTemplate tpl;
     tpl.LoadFromString(R"({"schema":"potato.squad_template/1",
         "id":"rifle","name":"步兵連","unit_class":"infantry",
-        "members":20,"cost":3})");
+        "members":20,"cost":3,
+        "stats":{"speed":3.5,"engage_range":2.0,
+                 "damage_per_member":0.06,
+                 "stamina":{"threshold":0.9,"penalty_mul":0.25}}})");
     lib.Add(tpl);
     Check(camp.Recruit(lib, "rifle"), "招募成功（4>=3）");
     Check(camp.GetLoot() == 1, "戰利品 4-3=1");
@@ -142,10 +146,38 @@ int main() {
     printf("\n[7] Deploy 與存檔\n");
     BattleController b2(10, 10, 1.0f);
     std::vector<Vector2> pos = {Vector2(1, 1), Vector2(2, 1)};
-    auto squads = camp.Deploy(b2, 0, pos);
+    auto squads = camp.Deploy(b2, 0, pos, &lib);
     Check(squads.size() == 3, "Deploy 建 3 隊（positions 不足遞補）");
     Check(squads[0]->GetMembers() == 26, "前鋒兵力跨場保存");
     Check(squads[0]->GetPosition().x == 1.0f, "位置依序");
+    // 招募單位（步兵連，templateId=rifle）回補模板 stats；
+    // 初始單位（前鋒，無 templateId）維持 Squad 預設
+    Check(std::fabs(squads[0]->GetSpeed() - 2.0f) < 1e-6f,
+          "無 templateId 單位維持預設速度");
+    Check(squads.size() == 3 &&
+              std::fabs(squads[2]->GetSpeed() - 3.5f) < 1e-6f,
+          "招募單位回補模板 speed=3.5");
+    Check(squads.size() == 3 &&
+              std::fabs(squads[2]->GetEngageRange() - 2.0f) < 1e-6f,
+          "招募單位回補 engage_range=2.0");
+    Check(squads.size() == 3 &&
+              std::fabs(squads[2]->GetAttackDPS() - 0.06f * 20) < 1e-4f,
+          "招募單位回補 damage_per_member=0.06");
+    if (squads.size() == 3) {
+        squads[2]->SetStamina(0.5f);
+        Check(squads[2]->IsExhausted() &&
+                  std::fabs(squads[2]->GetEffectiveSpeed() -
+                            3.5f * 0.25f) < 1e-4f,
+              "招募單位回補 stamina 參數（threshold 0.9/penalty 0.25）");
+    }
+    // 不給 library 的舊呼叫法仍可編譯（預設 nullptr，stats 不補）
+    {
+        BattleController b3(10, 10, 1.0f);
+        auto s3 = camp.Deploy(b3, 0, pos);
+        Check(s3.size() == 3 &&
+                  std::fabs(s3[2]->GetSpeed() - 2.0f) < 1e-6f,
+              "無 library 時招募單位只給預設 stats");
+    }
     // 存檔 roundtrip
     Check(camp.SaveToFile("refit_camp_test.json"), "存檔");
     RefitCamp loaded;
