@@ -2,7 +2,7 @@
 title: 'C-1 戰役存檔接線（章節邊界存讀 + 首章定義）'
 type: 'feature'
 created: '2026-09-19'
-status: 'in-progress'
+status: 'done'
 route: 'queue-pick'
 baseline_revision: '60ac7df'
 ---
