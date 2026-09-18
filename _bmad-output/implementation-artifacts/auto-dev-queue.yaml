@@ -705,9 +705,12 @@ queue:
     acceptance:
       - 規劃文件全數 tracked，工作區只剩程式在途檔
       - 產物類檔案不再出現在 git status
-    status: queued
+    status: done
     size: S
-    note: 非程式工作；VideoEncoder 等平行 session 熱檔不動
+    note: >
+      非程式工作。gitignore 產物規則 290e7ff（dist/output/測試落盤/
+      imgui.ini 全涵蓋）、規劃文件 af7c83b + 本 commit 補
+      epics-engine-split.md。工作區已只剩平行 session 在途程式檔。
 
   - id: V-2
     title: PR #4 功能凍結 + 真機驗證 → merge 決策
