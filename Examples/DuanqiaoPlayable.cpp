@@ -412,6 +412,9 @@ int main() {
     BattleResources::ApplyMoraleRule(battle);
     // G-1 士氣連鎖：潰逃隊對 4 格內友軍造成 15% 士氣衝擊（可連鎖）
     battle.SetRoutShock(/*radius=*/4.0f, /*moraleHit=*/0.15f);
+    // G-2：掠奪隊標騎兵（快攻克制弓），守橋隊預設步兵；戰線寬 2
+    battle.SetCombatWidth(2);
+    if (e2) e2->SetUnitClass(UnitClass::Cavalry);
 
     // ---- Q-1/Q-3 敵情霧:敵軍以疊加態存在,觀測或接觸才塌縮 ----
     // 觀測 2 情報全額買斷;探測 1 情報讓雲向真值收縮(弱觀測)

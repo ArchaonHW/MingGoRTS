@@ -55,6 +55,14 @@ bool EnemyGeneral::LoadFromString(const std::string& json) {
     rarity = root["rarity"].AsString();
     cardId = root["id"].AsString();
 
+    // G-2：卡可標兵種（unit_class）——ApplyTo 時覆寫全軍小隊
+    {
+        bool ok = false;
+        const UnitClass uc =
+            UnitClassFromString(root["unit_class"].AsString(), &ok);
+        if (ok) { unitClass = uc; hasUnitClass = true; }
+    }
+
     const JsonValue& p = root["personality"];
     aggression = std::clamp(p["aggression"].AsFloat(aggression), 0.0f, 100.0f);
     discipline = std::clamp(p["discipline"].AsFloat(discipline), 0.0f, 100.0f);
@@ -153,6 +161,7 @@ void EnemyGeneral::ApplyTo(BattleController& battle, int team) const {
         return a->GetMembers() > b->GetMembers();
     });
     for (size_t i = 0; i < mine.size(); ++i) {
+        if (hasUnitClass) mine[i]->SetUnitClass(unitClass); // G-2
         battle.AssignDoctrine(
             mine[i],
             BuildDoctrineFor(*mine[i], static_cast<int>(i),

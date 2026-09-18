@@ -142,6 +142,22 @@ bool BattleController::Intervene(Squad* squad, SquadOrder order,
     return true;
 }
 
+float BattleController::CounterMultiplier(UnitClass atk, UnitClass def) {
+    // 騎>弓、弓>步、步>騎；克制 ×1.5、被克 ×0.7、同種/無關 ×1.0
+    using UC = UnitClass;
+    if ((atk == UC::Cavalry && def == UC::Archer) ||
+        (atk == UC::Archer && def == UC::Infantry) ||
+        (atk == UC::Infantry && def == UC::Cavalry)) {
+        return 1.5f;
+    }
+    if ((def == UC::Cavalry && atk == UC::Archer) ||
+        (def == UC::Archer && atk == UC::Infantry) ||
+        (def == UC::Infantry && atk == UC::Cavalry)) {
+        return 0.7f;
+    }
+    return 1.0f;
+}
+
 void BattleController::SetRoutShock(float radius, float moraleHit) {
     routShockRadius = (radius > 0.0f) ? radius : 0.0f;
     routShockMorale = moraleHit;
@@ -608,6 +624,21 @@ void BattleController::ResolveCombat(float dt) {
         squad->SetUnderAttack(false);
     }
 
+    // G-2：每防禦方本 tick 已輸出的攻擊者數（combat width 用）
+    std::unordered_map<Squad*, int> attackersOn;
+
+    // G-4 地形修正：高地攻方 ×1.25、森林守方 ×0.7（泥濘走 cost）
+    auto terrainFactor = [this](const Squad* atk, const Squad* def) {
+        float f = 1.0f;
+        if (field.TerrainAt(atk->GetPosition()) == TerrainType::Highland) {
+            f *= 1.25f;
+        }
+        if (field.TerrainAt(def->GetPosition()) == TerrainType::Forest) {
+            f *= 0.7f;
+        }
+        return f;
+    };
+
     for (size_t i = 0; i < squads.size(); ++i) {
         Squad* a = squads[i].get();
         if (a->IsEliminated() || a->IsRouting()) {
@@ -631,8 +662,22 @@ void BattleController::ResolveCombat(float dt) {
                 b->SetEngaged(true);
                 a->SetUnderAttack(true);
                 b->SetUnderAttack(true);
-                damageBuffer[a] += b->GetAttackDPS() * dt; // a 受 b 傷害
-                damageBuffer[b] += a->GetAttackDPS() * dt; // b 受 a 傷害
+                // G-2 克制三角 × 戰線寬度：超過 width 的攻擊者
+                // 維持接戰（圍觀）但不輸出
+                if (combatWidth <= 0 || attackersOn[b] < combatWidth) {
+                    damageBuffer[b] += a->GetAttackDPS() *
+                        CounterMultiplier(a->GetUnitClass(),
+                                          b->GetUnitClass()) *
+                        terrainFactor(a, b) * dt;
+                    ++attackersOn[b];
+                }
+                if (combatWidth <= 0 || attackersOn[a] < combatWidth) {
+                    damageBuffer[a] += b->GetAttackDPS() *
+                        CounterMultiplier(b->GetUnitClass(),
+                                          a->GetUnitClass()) *
+                        terrainFactor(b, a) * dt;
+                    ++attackersOn[a];
+                }
             }
         }
     }

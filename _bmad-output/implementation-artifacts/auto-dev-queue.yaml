@@ -408,7 +408,14 @@ queue:
       - 克制關係產生可測的傷害差（騎>弓>步>騎三角）
       - combat width 超過時多出者只圍觀不輸出
       - EnemyGeneral 卡可標兵種
-    status: queued
+    status: done
+    note: >
+      Squad.UnitClass（infantry/archer/cavalry）+ CounterMultiplier
+      （克×1.5/被克×0.7）+ SetCombatWidth（每守方攻擊者上限，超出
+      維持接戰不輸出）+ 卡欄位 unit_class 解析→ApplyTo 覆寫全軍。
+      預設 width=0 無上限保回歸；DuanqiaoPlayable 掠奪隊=騎+width=2。
+      demo 驗證：騎→弓20/步→弓14/步→騎20、width=1 損失減半、
+      卡解析+套用全過。踩坑：測試首版忘設守方兵種出現假反轉。
     size: M
 
   - id: G-4

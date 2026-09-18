@@ -6,6 +6,7 @@
  */
 
 #include "Gameplay/BattleController.h"
+#include "Gameplay/EnemyGeneral.h"
 
 #include <cstdio>
 #include <string>
@@ -243,6 +244,103 @@ int main() {
             printf("FAIL: rout shock fired while disabled (%.2f)\n",
                    b->GetMorale());
             failures++;
+        }
+    }
+
+    // ---- G-2 兵種克制 + 戰線寬度 ----
+    // 克制三角：同條件下 騎打弓 的擊殺 > 步打弓（兩場對照）
+    {
+        printf("\n-- G-2 counter matrix --\n");
+        auto duel = [](UnitClass atk) {
+            BattleController b(10, 10, 1.0f);
+            Squad* a = b.CreateSquad("攻方", 0, Vector2(4, 5), 10);
+            Squad* d = b.CreateSquad("守方", 1, Vector2(5, 5), 30);
+            a->SetUnitClass(atk);
+            a->SetDamagePerMember(0.5f); // 放大傷害讓整數傷亡可測
+            d->SetUnitClass(UnitClass::Archer); // 固定弓兵守方
+            d->SetDamagePerMember(0.0f); // 守方不還手,隔離攻方輸出
+            b.BeginExecution();
+            for (int i = 0; i < 40; ++i) b.Update(0.1f);
+            return d->GetMembers();
+        };
+        const int cavKills = 30 - duel(UnitClass::Cavalry);
+        const int infKills = 30 - duel(UnitClass::Infantry);
+        printf("  騎→弓 擊殺 %d / 步→弓 擊殺 %d\n", cavKills, infKills);
+        if (cavKills <= infKills) {
+            printf("FAIL: cavalry did not out-damage infantry vs archer\n");
+            failures++;
+        }
+        // 三角第三邊：步克騎（步→騎 應 > 步→弓 被克）
+        auto duelInf = [](UnitClass def) {
+            BattleController b(10, 10, 1.0f);
+            Squad* a = b.CreateSquad("攻方", 0, Vector2(4, 5), 10);
+            Squad* d = b.CreateSquad("守方", 1, Vector2(5, 5), 30);
+            a->SetUnitClass(UnitClass::Infantry);
+            a->SetDamagePerMember(0.5f);
+            d->SetUnitClass(def);
+            d->SetDamagePerMember(0.0f);
+            b.BeginExecution();
+            for (int i = 0; i < 40; ++i) b.Update(0.1f);
+            return d->GetMembers();
+        };
+        const int vsCav = 30 - duelInf(UnitClass::Cavalry);
+        const int vsArch = 30 - duelInf(UnitClass::Archer);
+        printf("  步→騎 擊殺 %d / 步→弓 擊殺 %d\n", vsCav, vsArch);
+        if (vsCav <= vsArch) {
+            printf("FAIL: infantry should counter cavalry (step>horse)\n");
+            failures++;
+        }
+    }
+
+    // 戰線寬度：3 打 1，width=1 時守方只挨一份傷害
+    {
+        printf("\n-- G-2 combat width --\n");
+        auto pile = [](int width) {
+            BattleController b(12, 12, 1.0f);
+            if (width > 0) b.SetCombatWidth(width);
+            b.CreateSquad("攻1", 0, Vector2(4, 5), 10)->SetDamagePerMember(0.5f);
+            b.CreateSquad("攻2", 0, Vector2(4, 4), 10)->SetDamagePerMember(0.5f);
+            b.CreateSquad("攻3", 0, Vector2(4, 6), 10)->SetDamagePerMember(0.5f);
+            Squad* d = b.CreateSquad("守方", 1, Vector2(5, 5), 60);
+            d->SetDamagePerMember(0.0f);
+            b.BeginExecution();
+            for (int i = 0; i < 40; ++i) b.Update(0.1f);
+            return 60 - d->GetMembers();
+        };
+        const int widthLoss = pile(1);
+        const int openLoss = pile(0);
+        printf("  width=1 守方損失 %d / 無上限損失 %d\n", widthLoss, openLoss);
+        if (openLoss <= widthLoss) {
+            printf("FAIL: combat width did not cap incoming damage\n");
+            failures++;
+        }
+        // width=1 應≈單攻擊者輸出（容忍 ±2 整數截斷差）
+        if (widthLoss < 1 || widthLoss > openLoss / 2 + 2) {
+            printf("FAIL: width=1 loss %d not ≈ single-attacker output\n",
+                   widthLoss);
+            failures++;
+        }
+
+        // 卡可標兵種：unit_class 解析 + ApplyTo 覆寫全軍
+        EnemyGeneral gen;
+        const char* cardJson = R"({
+            "schema": "potato.character_card/1",
+            "id": "test_cav", "name": "騎將",
+            "unit_class": "cavalry",
+            "personality": {"aggression": 80, "discipline": 50, "cunning": 30}
+        })";
+        if (!gen.LoadFromString(cardJson) || !gen.HasUnitClass() ||
+            gen.GetUnitClass() != UnitClass::Cavalry) {
+            printf("FAIL: unit_class card field not parsed\n");
+            failures++;
+        } else {
+            BattleController ub(8, 8, 1.0f);
+            Squad* s = ub.CreateSquad("騎兵隊", 1, Vector2(4, 4), 10);
+            gen.ApplyTo(ub, 1);
+            if (s->GetUnitClass() != UnitClass::Cavalry) {
+                printf("FAIL: ApplyTo did not stamp unit class\n");
+                failures++;
+            }
         }
     }
 

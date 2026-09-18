@@ -174,5 +174,23 @@ bool Squad::MoveToward(const Vector2& dest, float dt, const FlowField* field) {
     return true;
 }
 
+const char* UnitClassName(UnitClass cls) {
+    switch (cls) {
+    case UnitClass::Infantry: return "infantry";
+    case UnitClass::Archer:   return "archer";
+    case UnitClass::Cavalry:  return "cavalry";
+    }
+    return "infantry";
+}
+
+UnitClass UnitClassFromString(const std::string& s, bool* ok) {
+    if (ok) *ok = true;
+    if (s == "cavalry" || s == "cav") return UnitClass::Cavalry;
+    if (s == "archer" || s == "arch") return UnitClass::Archer;
+    if (s == "infantry" || s == "inf") return UnitClass::Infantry;
+    if (ok) *ok = false;
+    return UnitClass::Infantry;
+}
+
 } // namespace Gameplay
 } // namespace Potato

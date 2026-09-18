@@ -2,6 +2,7 @@
 
 #include "Core/CoreTypes.h"
 #include "Doctrine.h"
+#include "Squad.h"
 #include "MathUtils/Vector2.h"
 
 #include <string>
@@ -52,6 +53,12 @@ public:
     const std::string& GetRarity() const { return rarity; }
     const std::string& GetCardId() const { return cardId; }
 
+    // G-2 兵種：卡片 "unit_class"（infantry/archer/cavalry）——
+    // 該將全軍的兵種標記；未標記時 HasUnitClass=false 不覆寫。
+    bool HasUnitClass() const { return hasUnitClass; }
+    UnitClass GetUnitClass() const { return unitClass; }
+    void SetUnitClass(UnitClass c) { unitClass = c; hasUnitClass = true; }
+
     // 為某支小隊生成 doctrine（人格 × 簽名卡 × 小隊角色）
     DoctrineSet BuildDoctrineFor(const Squad& squad, int squadRank,
                                  int squadCount) const;
@@ -84,6 +91,8 @@ private:
     float aggression = 50.0f;
     float discipline = 50.0f;
     float cunning = 50.0f;
+    UnitClass unitClass = UnitClass::Infantry; // G-2
+    bool hasUnitClass = false;
 
     // 手寫卡：signature + 附加卡（從 JSON 或 MakeGlock 填入）
     struct Card {

@@ -23,6 +23,20 @@ enum class SquadOrder {
 };
 
 /**
+ * 兵種（G-2 克制三角）：騎>弓、弓>步、步>騎。
+ * 克制方輸出 ×1.5，被克方 ×0.7（ResolveCombat 套用）。
+ */
+enum class UnitClass {
+    Infantry,   // 步
+    Archer,     // 弓
+    Cavalry     // 騎
+};
+
+// 顯示/序列化用
+const char* UnitClassName(UnitClass cls);
+UnitClass UnitClassFromString(const std::string& s, bool* ok = nullptr);
+
+/**
  * 小隊（Squad）——本設計的最小可控單位
  *
  * 成員數即戰力：傷亡扣減 members 與 morale；
@@ -58,6 +72,10 @@ public:
     void SetSpeed(float s) { speed = s; }
     void SetEngageRange(float r) { engageRange = r; }
     void SetDamagePerMember(float d) { damagePerMember = d; }
+
+    // 兵種（G-2）：預設步兵；克制矩陣見 UnitClass 註解
+    UnitClass GetUnitClass() const { return unitClass; }
+    void SetUnitClass(UnitClass c) { unitClass = c; }
 
     // 疲勞參數（每秒速率 / 閾值 / 疲憊移速倍率）
     void SetStaminaParams(float drainMove, float drainCombat,
@@ -101,6 +119,7 @@ private:
     float speed;          // 世界單位/秒
     float engageRange;    // 接戰距離（世界單位）
     float damagePerMember;// 每名成員每秒傷害
+    UnitClass unitClass = UnitClass::Infantry; // G-2 兵種
 
     // 疲勞（G-3）：移動/交戰消耗，駐守回復；低於閾值移速打折
     float stamina;
