@@ -2,7 +2,7 @@
 # 每個 item 走完：pick → spec (gds-quick-dev) → implement → verify → review → commit
 # 規則見 auto-dev-workflow.md
 version: 1
-updated: 2026-09-17 (C-1 done; G 層參考作機制新增)
+updated: 2026-09-18 (Q-9 done; N 層敘事系統新增)
 
 queue:
 
@@ -517,3 +517,90 @@ queue:
     status: queued
     size: L
     note: 依賴 DuanqiaoPlayable 穩定
+
+  # ---- 層級 N：敘事系統（narrative-design.md → E-11）----
+  # 依據：_bmad-output/narrative-design.md §Narrative System Requirements
+  # 範圍守衛：戰役框架（章節/結局）是 E-7 之後的事；N-1~N-3 是戰鬥層可先做。
+
+  - id: N-1
+    title: 模組化史官戰報 + 省略計數
+    source: narrative-design §Structure「The ledger is a lossy map」
+    summary: >
+      BattleRecorder 事件流 → 事件片段 + 判詞模板 組裝戰報（不再全手寫
+      散文）；每份戰報標示「本報告省略 N 項」，回放即審計工具——
+      記錄與書寫是同一個機制。
+    acceptance:
+      - 戰報由片段/模板組裝產出（headless 可測，非手寫字串）
+      - 每份報告輸出省略計數欄位
+      - DuanqiaoPlayable 戰後結算吃新組裝器；既有回放格式不破壞
+    status: queued
+    size: M
+    note: 戰鬥層可先落地；墮落路線「省略數暴漲」屬 E-7 之後
+
+  - id: N-2
+    title: 敵將判詞（聽聞態，非真相態）
+    source: narrative-design §Structure「判詞 is hearsay」
+    summary: >
+      敵將檔案面板加「判詞」行：傳聞值，系統性低估（固定可學習偏差）；
+      偵查/觀測可驗證或推翻；高狡詐敵將能放假判詞進傳聞。
+      接 EnemyGeneral 三軸 + dossier UX（已規格）。
+    acceptance:
+      - 檔案顯示判詞（聽聞）與驗證後真相的分層呈現
+      - 低估偏差為固定規則；觀測後判詞更新
+      - 狡詐高者放假判詞有測試覆蓋
+    status: queued
+    size: M
+
+  - id: N-3
+    title: 對手軍師反制牌組（ledger leaks）
+    source: narrative-design §Opposition + §「ledger leaks」
+    summary: >
+      對手軍師讀玩家上一場最常用 trigger 類型 → 下一場牌組針對反制；
+      戰報留痕「彼之陣法，似針對我軍慣用」。吃 BattleRecorder
+      統計 + EnemyGeneral 牌組生成。
+    acceptance:
+      - 記錄玩家 trigger 使用分佈並跨場讀取
+      - 反制牌組產出合法 DoctrineSet（可驗證）
+      - 戰報輸出對應判詞行
+    status: queued
+    size: L
+    note: 單場也能驗證（模擬連續兩場）；敘事身份掛 E-7
+
+  - id: N-4
+    title: 敵將處置與聲望持久化
+    source: narrative-design §System Requirements
+    summary: >
+      每章記敵將處置（收服/授首/變節/歸隱）與稱號軌跡
+      （「斷橋軍師」）；結局引用這些記錄。
+    acceptance:
+      - 處置狀態跨場持久化（存檔格式）
+      - 稱號隨章節演變且帳本自指可讀
+    status: queued
+    size: M
+    note: 依賴 G-9 meta 層 + E-7 章節框架
+
+  - id: N-5
+    title: 神話事件具名記錄 + 滲透掛鉤
+    source: narrative-design §System Requirements + UX myth seepage
+    summary: >
+      具名神話事件日誌（哪座祠、哪尊靈、何時）——結局時神的證詞
+      引用之；同時作為 UX 神話滲透主題切換的事件來源（玩家可映射）。
+    acceptance:
+      - 事件日誌含祠/靈/時三欄並持久化
+      - 滲透觸發介面已定義（即使 E-6 未做也可 stub）
+    status: queued
+    size: S
+    note: 依賴 E-6 神話層；UX 端規格已備（myth seepage）
+
+  - id: N-6
+    title: 章節慣例文字層（題詞/判詞/欲知後事）
+    source: narrative-design §Structure Type
+    summary: >
+      演義章回慣例入 UI：章開題詞（一句詩問）、敵將入場判詞、
+      章尾「欲知後事」鉤；結局四聲部（霸業/仁政/無字/對手之筆）。
+    acceptance:
+      - 章節 UI 呈現三慣例
+      - 結局文由累積記錄生成（非選項選擇）
+    status: queued
+    size: S
+    note: 依賴 E-7 戰役框架；純文字/UI 層
