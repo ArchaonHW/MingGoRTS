@@ -107,6 +107,14 @@ struct IDEGUIState {
     // AI Agent panel state
     char aiInputBuffer[1024];
     std::vector<std::string> aiConversation;
+    // chat 背景處理：submit 投到 worker，PollAIChatResult 每幀輪詢寫回——
+    // 外部 LLM 連線（OpenAI/Anthropic/Ollama）時不阻塞 UI thread。
+    // pendingIndex 指 conversation 裡 "thinking" placeholder 的位置，
+    // 完成時原地替換以保訊息順序。
+    std::future<std::string> aiChatFuture;
+    bool aiChatPending = false;
+    int aiChatPendingIndex = -1;
+    bool aiScrollToBottom = false;
     
     // Terminal state
     char terminalBuffer[1024];
@@ -325,6 +333,7 @@ public:
     void HandleFileOpen(const std::string& filePath);
     void HandleFileSave(const std::string& filePath);
     void HandleAISubmit();
+    void PollAIChatResult();
     void HandleTerminalCommand();
     void HandleKeyboardShortcuts();
     

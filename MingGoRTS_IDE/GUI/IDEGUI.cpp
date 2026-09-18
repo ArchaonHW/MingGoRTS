@@ -174,6 +174,12 @@ bool IDEGUI::Initialize(IDECore* ideCore) {
             });
     }
 
+    // 啟動即套用 LLM 設定（POTATO_LLM_* env / Settings 預設值）——
+    // 不需先開 Settings 按適用才生效。"local" 會把 llmClient 設
+    // nullptr 走純本地管線（避免對 localhost:11434 發死請求）
+    ConfigureDevSystemLLM();
+    AddOutputLog(std::string("[AI] LLM provider: ") + state.llmProvider);
+
     // Initialize AI conversation
     state.aiConversation.push_back("AI Assistant: Hello! I'm ready to help with your game development.");
     
@@ -190,6 +196,22 @@ void IDEGUI::Shutdown() {
 
     // GL context 仍有效（此函式在 ImGui_ImplOpenGL3_Shutdown 之前呼叫）
     ReleaseCardTextures();
+
+    // chat worker 可能仍在執行（外部 LLM 長連線）——
+    // 同下方 devGenFuture 策略：有界等待，逾時洩漏 future 避免 UAF
+    if (state.aiChatFuture.valid()) {
+        if (state.aiChatFuture.wait_for(std::chrono::seconds(5)) !=
+            std::future_status::ready) {
+            AddOutputLog("[AI] Shutdown: chat still running, "
+                         "leaking future to avoid UAF");
+            auto* abandoned =
+                new std::future<std::string>(std::move(state.aiChatFuture));
+            (void)abandoned;
+            running = false;
+            return;
+        }
+    }
+    state.aiChatPending = false;
 
     // 等待背景生成任務完成，避免 worker 存取已刪除的 g_DevSystem
     if (state.devGenFuture.valid()) {
@@ -778,6 +800,9 @@ void IDEGUI::RenderCodeEditor() {
 }
 
 void IDEGUI::RenderAIAgentPanel() {
+    // 每幀輪詢背景 chat 結果（面板隱藏也消化，避免旗標卡住）
+    PollAIChatResult();
+
     if (!state.showAIAgentPanel) return;
     
     ImGui::SetNextWindowPos(state.aiAgentPos, ImGuiCond_FirstUseEver);
@@ -854,6 +879,12 @@ void IDEGUI::RenderAIAgentPanel() {
         ImGui::Separator();
     }
     
+    // 新訊息（送出/收到回覆）時滾到底
+    if (state.aiScrollToBottom) {
+        ImGui::SetScrollHereY(1.0f);
+        state.aiScrollToBottom = false;
+    }
+    
     ImGui::EndChild();
     ImGui::PopStyleColor();
     
@@ -865,12 +896,14 @@ void IDEGUI::RenderAIAgentPanel() {
     ImGui::InputText("##aiinput", state.aiInputBuffer, sizeof(state.aiInputBuffer));
     ImGui::PopStyleColor();
     
-    // Styled buttons
+    // Styled buttons（pending 時停用 Send，避免重複投遞）
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.5f, 0.3f, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.6f, 0.4f, 1.0f));
+    ImGui::BeginDisabled(state.aiChatPending);
     if (ImGui::Button(T(TranslationKey::AIAgent_Send).c_str())) {
         HandleAISubmit();
     }
+    ImGui::EndDisabled();
     ImGui::PopStyleColor(2);
     
     ImGui::SameLine();
@@ -1076,22 +1109,64 @@ void IDEGUI::HandleFileSave(const std::string& filePath) {
 
 void IDEGUI::HandleAISubmit() {
     std::string input(state.aiInputBuffer);
-    if (input.empty()) return;
-    
-    // Add user message
+    if (input.empty() || state.aiChatPending) return;
+
+    // Add user message + thinking placeholder（完成時原地替換保訊息序）
     state.aiConversation.push_back("You: " + input);
-    
-    // Process with AI
-    std::string aiResponse = "AI: ";
-    if (core && core->GetAIInterface()) {
-        aiResponse += core->GetAIInterface()->ProcessRequest(input);
-    } else {
-        aiResponse += "I understand your request. In a full implementation, I would process this with an LLM.";
-    }
-    
-    state.aiConversation.push_back(aiResponse);
+    state.aiConversation.push_back("AI: thinking...");
+    state.aiChatPendingIndex = static_cast<int>(state.aiConversation.size()) - 1;
+    state.aiChatPending = true;
+    state.aiScrollToBottom = true;
     memset(state.aiInputBuffer, 0, sizeof(state.aiInputBuffer));
-    
+
+    // 背景執行——ProcessRequest 經 assistantHook 可能走外部 LLM HTTP，
+    // 同步呼叫會凍結整個 render loop（比照 devGenFuture 模式）。
+    // 捕獲指標值：Shutdown 的等待保證 core/aiInterface 生命期覆蓋 worker。
+    AIAgentInterface* ai = core ? core->GetAIInterface() : nullptr;
+    state.aiChatFuture = std::async(std::launch::async, [ai, input]() -> std::string {
+        if (!ai) {
+            return "I understand your request. In a full implementation, "
+                   "I would process this with an LLM.";
+        }
+        return ai->ProcessRequest(input);
+    });
+
+    AddOutputLog("AI request submitted");
+}
+
+// 每幀輪詢 chat worker——RenderAIAgentPanel 呼叫（面板隱藏也照跑，
+// 只消化結果不畫面）
+void IDEGUI::PollAIChatResult() {
+    if (!state.aiChatPending) return;
+    if (!state.aiChatFuture.valid()) {
+        state.aiChatPending = false;
+        return;
+    }
+    if (state.aiChatFuture.wait_for(std::chrono::milliseconds(0)) !=
+        std::future_status::ready) {
+        return;
+    }
+
+    std::string response;
+    try {
+        response = state.aiChatFuture.get();
+    } catch (const std::exception& e) {
+        response = std::string("AI request failed: ") + e.what();
+    } catch (...) {
+        response = "AI request failed: unknown error";
+    }
+
+    const std::string msg = "AI: " + response;
+    if (state.aiChatPendingIndex >= 0 &&
+        state.aiChatPendingIndex <
+            static_cast<int>(state.aiConversation.size())) {
+        state.aiConversation[state.aiChatPendingIndex] = msg;
+    } else {
+        state.aiConversation.push_back(msg);
+    }
+    state.aiChatPendingIndex = -1;
+    state.aiChatPending = false;
+    state.aiScrollToBottom = true;
     AddOutputLog("AI interaction completed");
 }
 
@@ -2887,6 +2962,8 @@ void IDEGUI::ConfigureDevSystemLLM() {
                                          std::move(c));
         }
     }
+    // 端點覆寫隨 client 一起生效（Ollama 相容伺服器；空值用各 client 預設）
+    g_DevSystem->SetLLMBaseURL(state.llmBaseUrl);
     g_DevSystem->Initialize(client, nullptr);
 }
 

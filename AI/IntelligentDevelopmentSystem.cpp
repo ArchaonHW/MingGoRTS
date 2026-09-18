@@ -53,6 +53,17 @@ void IntelligentDevelopmentSystem::SetToolExecutor(ToolExecutor* executor) {
     toolExecutor = executor;
 }
 
+// 每次 LLM 呼叫的共用設定——baseURL 由 SetLLMBaseURL 覆寫（Ollama 等
+// 自架端點用；空值時各 client 用內建預設）
+LLMConfig IntelligentDevelopmentSystem::MakeLLMConfig(
+    float temperature, int maxTokens) const {
+    LLMConfig config;
+    config.temperature = temperature;
+    config.maxTokens = maxTokens;
+    config.baseURL = llmBaseURL;
+    return config;
+}
+
 std::string IntelligentDevelopmentSystem::CreateTask(
     DevTaskType type,
     const std::string& description,
@@ -147,9 +158,7 @@ CodeGenerationResult IntelligentDevelopmentSystem::GenerateCode(
     messages.emplace_back(MessageRole::User, prompt);
     
     // Call LLM
-    LLMConfig config;
-    config.temperature = 0.7f;
-    config.maxTokens = 2048;
+    LLMConfig config = MakeLLMConfig(0.7f, 2048);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -583,9 +592,7 @@ CodeGenerationResult IntelligentDevelopmentSystem::GenerateCodeFromPrompt(
         ChatMessage(MessageRole::System,
         "You are an expert software developer. Generate clean, well-documented code in " + language + "."));
     
-    LLMConfig config;
-    config.temperature = 0.7f;
-    config.maxTokens = 2048;
+    LLMConfig config = MakeLLMConfig(0.7f, 2048);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(fullMessages, config);
     
@@ -700,9 +707,7 @@ CodeAnalysisResult IntelligentDevelopmentSystem::AnalyzeCode(
         "You are an expert code reviewer. Analyze code for quality, issues, and suggest improvements.");
     messages.emplace_back(MessageRole::User, prompt);
 
-    LLMConfig config;
-    config.temperature = 0.3f;
-    config.maxTokens = 1024;
+    LLMConfig config = MakeLLMConfig(0.3f, 1024);
 
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
 
@@ -821,9 +826,7 @@ std::vector<RefactoringSuggestion> IntelligentDevelopmentSystem::SuggestRefactor
         "You are an expert in code refactoring. Suggest specific improvements with before/after code.");
     messages.emplace_back(MessageRole::User, prompt);
 
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 1024;
+    LLMConfig config = MakeLLMConfig(0.5f, 1024);
 
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
 
@@ -872,9 +875,7 @@ TestGenerationResult IntelligentDevelopmentSystem::GenerateTests(
         "You are an expert in test-driven development. Generate comprehensive unit tests with high coverage.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 2048;
+    LLMConfig config = MakeLLMConfig(0.5f, 2048);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -911,9 +912,7 @@ std::string IntelligentDevelopmentSystem::GenerateDocumentation(const std::strin
         "You are a technical writer. Generate clear, comprehensive documentation.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 1024;
+    LLMConfig config = MakeLLMConfig(0.5f, 1024);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -945,9 +944,7 @@ std::string IntelligentDevelopmentSystem::FixBug(const std::string& code, const 
         "You are an expert debugger. Fix bugs while preserving code functionality.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.3f;
-    config.maxTokens = 2048;
+    LLMConfig config = MakeLLMConfig(0.3f, 2048);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -973,9 +970,7 @@ std::string IntelligentDevelopmentSystem::AnalyzeBug(const std::string& errorLog
         "You are an expert in debugging. Analyze error logs and explain bugs clearly.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 1024;
+    LLMConfig config = MakeLLMConfig(0.5f, 1024);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -997,9 +992,7 @@ std::string IntelligentDevelopmentSystem::OptimizeCode(const std::string& code) 
         "You are an expert in code optimization. Optimize for performance without changing functionality.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.3f;
-    config.maxTokens = 2048;
+    LLMConfig config = MakeLLMConfig(0.3f, 2048);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -1028,9 +1021,7 @@ std::vector<std::string> IntelligentDevelopmentSystem::SuggestOptimizations(
         "You are an expert in code optimization. Suggest specific performance improvements.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 1024;
+    LLMConfig config = MakeLLMConfig(0.5f, 1024);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -1080,9 +1071,7 @@ std::string IntelligentDevelopmentSystem::ReviewArchitecture(const std::string& 
         "You are an expert software architect. Review architecture for quality and suggest improvements.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 2048;
+    LLMConfig config = MakeLLMConfig(0.5f, 2048);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -1107,9 +1096,7 @@ std::vector<std::string> IntelligentDevelopmentSystem::SuggestArchitectureImprov
         "You are an expert software architect. Suggest concrete architecture improvements.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 1024;
+    LLMConfig config = MakeLLMConfig(0.5f, 1024);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -1137,9 +1124,7 @@ std::string IntelligentDevelopmentSystem::ReviewCode(const std::string& code, co
         "You are an expert code reviewer. Review code for quality, security, and best practices.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 1024;
+    LLMConfig config = MakeLLMConfig(0.5f, 1024);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -1329,6 +1314,7 @@ std::string DevelopmentAssistant::ExplainCode(const std::string& code) {
     LLMConfig config;
     config.temperature = 0.5f;
     config.maxTokens = 1024;
+    config.baseURL = devSystem->GetLLMBaseURL();
     
     LLMResponse response = devSystem->GetLLMClient()->ChatCompletion(messages, config);
     

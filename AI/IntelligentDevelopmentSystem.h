@@ -148,6 +148,9 @@ public:
     // Configuration
     void SetRAGSystem(RAGSystem* ragSystem);
     void SetToolExecutor(ToolExecutor* executor);
+
+    // 外部 LLM 端點覆寫（Ollama 相容伺服器用；空字串=各 client 預設端點）
+    void SetLLMBaseURL(const std::string& url) { llmBaseURL = url; }
     
     // Task Management
     std::string CreateTask(DevTaskType type, const std::string& description, const std::unordered_map<std::string, std::string>& params = {});
@@ -233,10 +236,12 @@ public:
     
     // Subsystem access
     ILLMClient* GetLLMClient() const { return llmClient; }
+    const std::string& GetLLMBaseURL() const { return llmBaseURL; }
     RAGSystem* GetRAGSystem() const { return ragSystem; }
     
 private:
     ILLMClient* llmClient;
+    std::string llmBaseURL;
     AIAgentManager* agentManager;
     RAGSystem* ragSystem;
     ToolExecutor* toolExecutor;
@@ -267,6 +272,7 @@ private:
     std::string GenTestStub(const ParsedIntent& intent);
     
     // Internal methods
+    LLMConfig MakeLLMConfig(float temperature, int maxTokens) const;
     std::string BuildPrompt(const std::string& task, const std::string& context);
     std::string ExtractCodeFromResponse(const std::string& response);
     CodeAnalysisResult ParseAnalysisResult(const std::string& response);
