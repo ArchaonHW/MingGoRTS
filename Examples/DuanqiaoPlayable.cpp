@@ -23,6 +23,9 @@
 #include "Gameplay/BattleResources.h"
 #include "Gameplay/BattleRecorder.h"
 #include "Gameplay/Roster.h"
+#include "Gameplay/PostBattle.h"
+#include "Gameplay/RefitCamp.h"
+#include "Gameplay/SquadTemplate.h"
 #include "Gameplay/QuantumFog.h"
 #include "MathUtils/CurlNoise.h"
 #include "MathUtils/Matrix4.h"
@@ -244,7 +247,8 @@ enum class ShellScreen { Title, Battle, Quit };
 static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
                               UITheme::Id& theme, float& uiScale,
                               ImFont* fontSans, ImFont* fontSerif,
-                              UITheme::Id& appliedTheme, float& appliedScale) {
+                              UITheme::Id& appliedTheme, float& appliedScale,
+                              RefitCamp& camp, const SquadTemplateLibrary& campLibrary) {
     renderer.PollEvents();
 
     int dw = 0, dh = 0, ww = 0, wh = 0;
@@ -253,6 +257,7 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
     if (dw > 0 && dh > 0) renderer.SetViewport(0, 0, dw, dh);
     const ImVec4 cc = UITheme::ClearColor(theme);
     renderer.SetClearColor(Vector3(cc.x, cc.y, cc.z));
+    renderer.Clear(); // 不清屏會顯示未初始化後備緩衝(背景亂碼)
 
     ImGuiIO& io = ImGui::GetIO();
     if (appliedTheme != theme) {
@@ -295,6 +300,43 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
     if (ImGui::Button("開 戰", ImVec2(-1, 34))) {
         next = ShellScreen::Battle;
     }
+
+    // ---- G-9 整補營:跨場常備軍 + 戰利品帳(首戰後出現) ----
+    if (!camp.GetUnits().empty()) {
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::TextDisabled("整補營 · 戰利品 %d", camp.GetLoot());
+        int totalWounded = 0;
+        for (const auto& u : camp.GetUnits()) {
+            totalWounded += u.wounded;
+            if (u.wounded > 0) {
+                ImGui::Text("  %s 兵力 %d/%d 傷 %d", u.squadName.c_str(),
+                            u.members, u.maxMembers, u.wounded);
+            } else {
+                ImGui::Text("  %s 兵力 %d/%d", u.squadName.c_str(),
+                            u.members, u.maxMembers);
+            }
+        }
+        if (totalWounded > 0) {
+            if (ImGui::Button("醫治傷兵(1點=1人)", ImVec2(-1, 0))) {
+                camp.HealWounded(camp.GetLoot());
+            }
+        }
+        const auto sorted = campLibrary.SortedByCost();
+        if (!sorted.empty()) {
+            const SquadTemplate* cheapest = sorted.front();
+            char rlabel[96];
+            std::snprintf(rlabel, sizeof(rlabel), "招募 %s(%d 戰利品)",
+                          cheapest->name.c_str(), cheapest->cost);
+            const bool canAfford = camp.GetLoot() >= cheapest->cost;
+            if (!canAfford) ImGui::BeginDisabled();
+            if (ImGui::Button(rlabel, ImVec2(-1, 0))) {
+                camp.Recruit(campLibrary, cheapest->id);
+            }
+            if (!canAfford) ImGui::EndDisabled();
+        }
+    }
+
     if (ImGui::Button("操作說明", ImVec2(-1, 0))) showHelp = !showHelp;
     if (showHelp) {
         ImGui::PushTextWrapPos();
@@ -382,12 +424,17 @@ int main() {
 
     // U-1 殼層外迴圈:Title ↔ Battle;整場戰鬥在內層 scope,
     // 出 scope 所有 stack 物件析構 = 乾淨重置(回主選單可再戰)
+    // G-9 整補營:常備軍+戰利品帳持有在殼層外,跨場持續
+    RefitCamp camp;
+    SquadTemplateLibrary campLibrary;
+    campLibrary.LoadDir(DemoAssets::Resolve("squads"));
+    campLibrary.LoadDir(DemoAssets::Resolve("templates"));
     ShellScreen screen = ShellScreen::Title;
     while (screen != ShellScreen::Quit && !renderer.ShouldClose()) {
         if (screen == ShellScreen::Title) {
             screen = TitleFrame(window, renderer, theme, uiScale,
                                 fontSans, fontSerif, appliedTheme,
-                                appliedScale);
+                                appliedScale, camp, campLibrary);
             continue;
         }
         bool backToTitle = false;
@@ -481,14 +528,40 @@ int main() {
     // ---- 編成(同 DuanqiaoDemo):我 4 隊北岸 / 敵格洛克 4 隊南岸 ----
     const MapPin* northRally = map.FindPin("北岸集結點");
     const MapPin* southCamp  = map.FindPin("南岸敵營");
-    battle.CreateSquad("前鋒", 0, Vector2(8.0f, 3.0f),  30);
-    battle.CreateSquad("中軍", 0, Vector2(12.0f, 2.5f), 30);
-    battle.CreateSquad("左翼", 0, Vector2(16.0f, 3.0f), 25);
-    Squad* rearGuard = battle.CreateSquad("後衛", 0, Vector2(12.0f, 4.5f), 15);
-    // G-8 將軍親臨：衛隊全滅即敗（潰逃不算），技能走 CP
-    Squad* generalGuard =
-        battle.CreateSquad("將軍衛隊", 0, Vector2(12.0f, 1.0f), 10);
-    generalGuard->SetGeneralGuard(true);
+    Squad* rearGuard = nullptr;
+    Squad* generalGuard = nullptr;
+    if (camp.GetUnits().empty()) {
+        // 首戰：預設編制入伍，進整補營當常備軍
+        battle.CreateSquad("前鋒", 0, Vector2(8.0f, 3.0f),  30);
+        battle.CreateSquad("中軍", 0, Vector2(12.0f, 2.5f), 30);
+        battle.CreateSquad("左翼", 0, Vector2(16.0f, 3.0f), 25);
+        rearGuard = battle.CreateSquad("後衛", 0, Vector2(12.0f, 4.5f), 15);
+        // G-8 將軍親臨：衛隊全滅即敗（潰逃不算），技能走 CP
+        generalGuard = battle.CreateSquad("將軍衛隊", 0, Vector2(12.0f, 1.0f), 10);
+        generalGuard->SetGeneralGuard(true);
+        for (const auto& sq : battle.GetSquads()) {
+            if (sq->GetTeam() != 0) continue;
+            VeteranUnit vu;
+            vu.squadName = sq->GetName();
+            vu.unitClass = sq->GetUnitClass();
+            vu.members = sq->GetMembers();
+            vu.maxMembers = sq->GetMaxMembers();
+            camp.EnrollUnit(vu);
+        }
+    } else {
+        // G-9：整補營跨場重建——兵力/傷兵狀態從上一場延續
+        const std::vector<Vector2> deployPos = {
+            Vector2(8.0f, 3.0f), Vector2(12.0f, 2.5f), Vector2(16.0f, 3.0f),
+            Vector2(12.0f, 4.5f), Vector2(12.0f, 1.0f),
+        };
+        for (Squad* s : camp.Deploy(battle, 0, deployPos)) {
+            if (s->GetName() == "後衛") rearGuard = s;
+            if (s->GetName() == "將軍衛隊") {
+                s->SetGeneralGuard(true);
+                generalGuard = s;
+            }
+        }
+    }
     Squad* e0 = battle.CreateSquad("格洛克親衛", 1, Vector2(12.0f, 12.0f), 35);
     Squad* e1 = battle.CreateSquad("蠻兵隊",     1, Vector2(9.0f, 12.5f),  25);
     Squad* e2 = battle.CreateSquad("掠奪隊",     1, Vector2(15.0f, 12.5f), 25);
