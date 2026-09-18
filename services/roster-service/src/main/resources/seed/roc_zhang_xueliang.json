@@ -1,0 +1,38 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_zhang_xueliang",
+  "name": "張學良",
+  "courtesyName": "漢卿",
+  "epithet": "少帥",
+  "rarity": "legendary",
+  "faction": "東北軍",
+  "role": "commander",
+  "personality": {
+    "aggression": 50,
+    "discipline": 60,
+    "cunning": 70
+  },
+  "stats": {
+    "command": 80,
+    "attack": 72,
+    "defense": 68,
+    "mobility": 85,
+    "moraleAura": 78
+  },
+  "signatureDoctrine": {
+    "name": "西安兵諫",
+    "trigger": "AllyEngaged",
+    "threshold": 0.0,
+    "action": "DefendNearestAlly",
+    "description": "友軍接戰即馳援——兵諺的膽魄化為戰場上的救援直覺"
+  },
+  "portrait": {
+    "build": "slim",
+    "head": "cap",
+    "beard": "none",
+    "glasses": false
+  },
+  "lore": "東北易幟促成統一,西安事變改寫歷史。半生戎馬,半生軟禁,世紀滄桑。",
+  "historicalBattle": "西安事變 1936",
+  "art": "cards/art/roc_zhang_xueliang.png"
+}

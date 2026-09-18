@@ -553,8 +553,9 @@ void MultimodalAgent::ProcessCurrentTask() {
             if (task.category == "Image Analysis") {
                 auto perceptionData = RetrieveMemory("image", MemoryType::ShortTerm);
                 if (!perceptionData.empty()) {
-                    std::string analysis = AnalyzeImage(std::get<std::vector<uint8_t>>(
-                        perceptionData[0].content));
+                    const std::string& imageBytes = perceptionData[0].content;
+                    std::string analysis = AnalyzeImage(std::vector<uint8_t>(
+                        imageBytes.begin(), imageBytes.end()));
                     task.result = analysis;
                 }
             }
@@ -798,7 +799,7 @@ std::string CommunicatorAgent::ProcessNaturalLanguage(const std::string& text) {
     for (const auto& intent : intents) {
         response += intent + " ";
     }
-    response += "\n情感: " + (hasPositiveSentiment ? "正面" : "負面");
+    response += std::string("\n情感: ") + (hasPositiveSentiment ? "正面" : "負面");
     
     return response;
 }
@@ -937,7 +938,7 @@ bool ToolUserAgent::ValidateToolParameters(const ToolDescription& tool,
 std::string ToolUserAgent::FormatToolOutput(const ToolExecutionResult& result) {
     std::string output = "工具執行結果:\n";
     output += "工具: " + result.toolName + "\n";
-    output += "狀態: " + (result.success ? "成功" : "失敗") + "\n";
+    output += std::string("狀態: ") + (result.success ? "成功" : "失敗") + "\n";
     output += "執行時間: " + std::to_string(result.executionTime) + "ms\n";
     
     if (result.success) {
@@ -963,9 +964,8 @@ AIAgentManager::AIAgentManager()
 }
 
 AIAgentManager::~AIAgentManager() {
-    for (auto* agent : agents) {
-        delete agent;
-    }
+    // unique_ptr 負責釋放；補上 agentsMutex 避免與並發的 Update/Destroy 競爭
+    std::lock_guard<std::mutex> lock(agentsMutex);
     agents.clear();
     agentMap.clear();
 }
@@ -982,9 +982,8 @@ void AIAgentManager::Shutdown() {
     std::cout << "關閉 AI 代理管理器" << std::endl;
     
     std::lock_guard<std::mutex> lock(agentsMutex);
-    for (auto* agent : agents) {
+    for (auto& agent : agents) {
         agent->Shutdown();
-        delete agent;
     }
     agents.clear();
     agentMap.clear();
@@ -998,45 +997,47 @@ AIAgent* AIAgentManager::CreateAgent(const AgentDesc& desc) {
         return nullptr;
     }
     
-    AIAgent* agent = nullptr;
-    
+    std::unique_ptr<AIAgent> agent;
+
     // 根據類型創建對應的代理
     switch (desc.type) {
         case AgentType::Developer:
-            agent = new DeveloperAgent(desc);
+            agent = std::make_unique<DeveloperAgent>(desc);
             break;
         case AgentType::Designer:
-            agent = new DesignerAgent(desc);
+            agent = std::make_unique<DesignerAgent>(desc);
             break;
         case AgentType::Analyst:
-            agent = new AnalystAgent(desc);
+            agent = std::make_unique<AnalystAgent>(desc);
             break;
         case AgentType::Multimodal:
-            agent = new MultimodalAgent(desc);
+            agent = std::make_unique<MultimodalAgent>(desc);
             break;
         case AgentType::Planner:
-            agent = new PlannerAgent(desc);
+            agent = std::make_unique<PlannerAgent>(desc);
             break;
         case AgentType::Communicator:
-            agent = new CommunicatorAgent(desc);
+            agent = std::make_unique<CommunicatorAgent>(desc);
             break;
         case AgentType::ToolUser:
-            agent = new ToolUserAgent(desc);
+            agent = std::make_unique<ToolUserAgent>(desc);
             break;
         default:
-            agent = new AIAgent(desc);
+            agent = std::make_unique<AIAgent>(desc);
             break;
     }
-    
+
     if (agent) {
         agent->Initialize();
-        agents.push_back(agent);
-        agentMap[desc.name] = agent;
-        
+        AIAgent* raw = agent.get();
+        agents.push_back(std::move(agent));
+        agentMap[desc.name] = raw;
+
         std::cout << "創建代理成功: " << desc.name << " (總數: " << agents.size() << ")" << std::endl;
+        return raw;
     }
-    
-    return agent;
+
+    return nullptr;
 }
 
 void AIAgentManager::DestroyAgent(const std::string& agentId) {
@@ -1046,11 +1047,14 @@ void AIAgentManager::DestroyAgent(const std::string& agentId) {
     if (it != agentMap.end()) {
         AIAgent* agent = it->second;
         agent->Shutdown();
-        
-        agents.erase(std::remove(agents.begin(), agents.end(), agent), agents.end());
+
+        agents.erase(std::remove_if(agents.begin(), agents.end(),
+                                    [agent](const std::unique_ptr<AIAgent>& p) {
+                                        return p.get() == agent;
+                                    }),
+                     agents.end());
         agentMap.erase(it);
-        
-        delete agent;
+
         std::cout << "銷毀代理: " << agentId << std::endl;
     }
 }
@@ -1064,9 +1068,9 @@ AIAgent* AIAgentManager::GetAgent(const std::string& agentId) {
 void AIAgentManager::AssignTaskToAgent(const std::string& agentId, const AgentTask& task) {
     std::lock_guard<std::mutex> lock(agentsMutex);
     
-    AIAgent* agent = GetAgent(agentId);
-    if (agent) {
-        agent->AssignTask(task);
+    auto it = agentMap.find(agentId);
+    if (it != agentMap.end()) {
+        it->second->AssignTask(task);
         std::cout << "分配任務給代理: " << agentId << " - " << task.description << std::endl;
     }
 }
@@ -1084,7 +1088,7 @@ void AIAgentManager::AssignTaskToBestAgent(const AgentTask& task) {
 void AIAgentManager::AssignTaskToAllAgents(const AgentTask& task) {
     std::lock_guard<std::mutex> lock(agentsMutex);
     
-    for (auto* agent : agents) {
+    for (auto& agent : agents) {
         agent->AssignTask(task);
     }
     
@@ -1092,8 +1096,6 @@ void AIAgentManager::AssignTaskToAllAgents(const AgentTask& task) {
 }
 
 void AIAgentManager::AssignComplexTask(const ExecutionPlan& plan) {
-    std::lock_guard<std::mutex> lock(agentsMutex);
-    
     std::cout << "分配複雜任務計畫: " << plan.description << std::endl;
     
     for (const auto& node : plan.nodes) {
@@ -1135,7 +1137,7 @@ std::vector<Decision> AIAgentManager::GetIndividualDecisions(const std::string& 
     
     std::vector<Decision> decisions;
     
-    for (auto* agent : agents) {
+    for (auto& agent : agents) {
         if (agent->IsActive()) {
             Decision decision = agent->MakeDecision(context, options);
             decisions.push_back(decision);
@@ -1173,13 +1175,14 @@ void AIAgentManager::InitiateCollaboration(const std::string& topic, const std::
 void AIAgentManager::BroadcastKnowledge(const std::string& knowledge, const std::string& sourceAgentId) {
     std::lock_guard<std::mutex> lock(agentsMutex);
     
-    AIAgent* sourceAgent = GetAgent(sourceAgentId);
-    if (!sourceAgent) return;
+    auto sourceIt = agentMap.find(sourceAgentId);
+    if (sourceIt == agentMap.end()) return;
+    AIAgent* sourceAgent = sourceIt->second;
     
-    for (auto* agent : agents) {
+    for (auto& agent : agents) {
         if (agent->GetName() != sourceAgentId && agent->CanLearnFromPeers()) {
-            if (sourceAgent->CanCollaborateWith(agent)) {
-                sourceAgent->ShareKnowledge(knowledge, agent);
+            if (sourceAgent->CanCollaborateWith(agent.get())) {
+                sourceAgent->ShareKnowledge(knowledge, agent.get());
             }
         }
     }
@@ -1190,7 +1193,7 @@ std::vector<std::string> AIAgentManager::GetCollaborativeInsights(const std::str
     
     std::lock_guard<std::mutex> lock(agentsMutex);
     
-    for (auto* agent : agents) {
+    for (auto& agent : agents) {
         std::vector<MemoryItem> memories = agent->RetrieveMemory(topic, MemoryType::Semantic);
         for (const auto& memory : memories) {
             insights.push_back(memory.content);
@@ -1208,7 +1211,7 @@ void AIAgentManager::RegisterSharedTool(const ToolDescription& tool) {
     
     // 讓所有能使用工具的代理註冊此工具
     std::lock_guard<std::mutex> agentLock(agentsMutex);
-    for (auto* agent : agents) {
+    for (auto& agent : agents) {
         if (agent->CanUseTool(tool.name)) {
             agent->RegisterTool(tool);
         }
@@ -1241,7 +1244,7 @@ void AIAgentManager::Update(float deltaTime) {
         
         std::lock_guard<std::mutex> lock(agentsMutex);
         
-        for (auto* agent : agents) {
+        for (auto& agent : agents) {
             if (agent->IsActive()) {
                 agent->Update(updateInterval);
             }
@@ -1273,7 +1276,7 @@ void AIAgentManager::RecordGroupLearning(const std::string& context, const std::
     
     std::lock_guard<std::mutex> lock(agentsMutex);
     
-    for (auto* agent : agents) {
+    for (auto& agent : agents) {
         agent->RecordLearning(context, action, success);
     }
 }
@@ -1287,7 +1290,7 @@ size_t AIAgentManager::GetActiveAgentCount() const {
     std::lock_guard<std::mutex> lock(agentsMutex);
     
     size_t count = 0;
-    for (const auto* agent : agents) {
+    for (const auto& agent : agents) {
         if (agent->IsActive()) {
             count++;
         }
@@ -1300,7 +1303,7 @@ size_t AIAgentManager::GetPendingTaskCount() const {
     std::lock_guard<std::mutex> lock(agentsMutex);
     
     size_t count = 0;
-    for (const auto* agent : agents) {
+    for (const auto& agent : agents) {
         const auto& tasks = agent->GetTasks();
         for (const auto& task : tasks) {
             if (task.status == TaskStatus::Pending) {
@@ -1316,7 +1319,7 @@ size_t AIAgentManager::GetCompletedTaskCount() const {
     std::lock_guard<std::mutex> lock(agentsMutex);
     
     size_t count = 0;
-    for (const auto* agent : agents) {
+    for (const auto& agent : agents) {
         count += agent->GetCompletedTaskCount();
     }
     
@@ -1327,7 +1330,7 @@ size_t AIAgentManager::GetTotalMemoryCount() const {
     std::lock_guard<std::mutex> lock(agentsMutex);
     
     size_t count = 0;
-    for (const auto* agent : agents) {
+    for (const auto& agent : agents) {
         count += agent->GetMemoryCount();
     }
     
@@ -1338,7 +1341,7 @@ size_t AIAgentManager::GetTotalToolCount() const {
     std::lock_guard<std::mutex> lock(agentsMutex);
     
     size_t count = 0;
-    for (const auto* agent : agents) {
+    for (const auto& agent : agents) {
         count += agent->GetToolCount();
     }
     
@@ -1349,7 +1352,7 @@ size_t AIAgentManager::GetKnowledgeShareCount() const {
     std::lock_guard<std::mutex> lock(agentsMutex);
     
     size_t count = 0;
-    for (const auto* agent : agents) {
+    for (const auto& agent : agents) {
         count += agent->GetKnowledgeShareCount();
     }
     
@@ -1362,7 +1365,7 @@ float AIAgentManager::GetAveragePerformanceRating() const {
     if (agents.empty()) return 0.0f;
     
     float total = 0.0f;
-    for (const auto* agent : agents) {
+    for (const auto& agent : agents) {
         total += agent->GetPerformanceRating();
     }
     
@@ -1388,14 +1391,14 @@ AIAgent* AIAgentManager::FindBestAgentForTask(const AgentTask& task) {
     AIAgent* bestAgent = nullptr;
     float bestScore = 0.0f;
     
-    for (auto* agent : agents) {
+    for (auto& agent : agents) {
         if (!agent->IsActive()) continue;
         
         float score = agent->GetPerformanceRating();
         
         // 檢查技能匹配
         for (const auto& skill : task.requiredSkills) {
-            for (const auto& capability : agent->capabilities) {
+            for (const auto& capability : agent->GetCapabilities()) {
                 if (capability == skill) {
                     score += 0.2f;
                     break;
@@ -1405,7 +1408,7 @@ AIAgent* AIAgentManager::FindBestAgentForTask(const AgentTask& task) {
         
         if (score > bestScore) {
             bestScore = score;
-            bestAgent = agent;
+            bestAgent = agent.get();
         }
     }
     
@@ -1414,7 +1417,7 @@ AIAgent* AIAgentManager::FindBestAgentForTask(const AgentTask& task) {
 
 void AIAgentManager::UpdateAgentPerformance() {
     // 基於任務完成率更新性能評分
-    for (auto* agent : agents) {
+    for (auto& agent : agents) {
         float successRate = agent->GetSuccessRate();
         float currentRating = agent->GetPerformanceRating();
         
@@ -1431,11 +1434,11 @@ void AIAgentManager::FacilitateCollaboration() {
     // 促進代理之間的協作
     for (size_t i = 0; i < agents.size(); i++) {
         for (size_t j = i + 1; j < agents.size(); j++) {
-            if (agents[i]->CanCollaborateWith(agents[j])) {
+            if (agents[i]->CanCollaborateWith(agents[j].get())) {
                 // 自動分享相關知識
                 if (agents[i]->GetKnowledgeShareCount() < 10) {
                     std::string knowledge = "協作知識分享";
-                    agents[i]->ShareKnowledge(knowledge, agents[j]);
+                    agents[i]->ShareKnowledge(knowledge, agents[j].get());
                 }
             }
         }
@@ -1586,7 +1589,7 @@ void AIAgentSystem::LogAgentStates() {
     std::cout << "=== 代理狀態日誌 ===" << std::endl;
     
     const auto& agents = agentManager->GetAgents();
-    for (const auto* agent : agents) {
+    for (const auto& agent : agents) {
         std::cout << "代理: " << agent->GetName() << std::endl;
         std::cout << "  活躍: " << (agent->IsActive() ? "是" : "否") << std::endl;
         std::cout << "  任務數: " << agent->GetTasks().size() << std::endl;
@@ -1603,7 +1606,7 @@ void AIAgentSystem::LogTaskProgress() {
     std::cout << "=== 任務進度日誌 ===" << std::endl;
     
     const auto& agents = agentManager->GetAgents();
-    for (const auto* agent : agents) {
+    for (const auto& agent : agents) {
         const auto& tasks = agent->GetTasks();
         for (const auto& task : tasks) {
             std::cout << "任務: " << task.description << std::endl;
@@ -1619,24 +1622,24 @@ void AIAgentSystem::LogTaskProgress() {
 // AIAgentFactory 實現
 // ============================================================================
 
-AIAgent* AIAgentFactory::CreateAgent(AgentType type, const AgentDesc& desc) {
+std::unique_ptr<AIAgent> AIAgentFactory::CreateAgent(AgentType type, const AgentDesc& desc) {
     switch (type) {
         case AgentType::Developer:
-            return new DeveloperAgent(desc);
+            return std::make_unique<DeveloperAgent>(desc);
         case AgentType::Designer:
-            return new DesignerAgent(desc);
+            return std::make_unique<DesignerAgent>(desc);
         case AgentType::Analyst:
-            return new AnalystAgent(desc);
+            return std::make_unique<AnalystAgent>(desc);
         case AgentType::Multimodal:
-            return new MultimodalAgent(desc);
+            return std::make_unique<MultimodalAgent>(desc);
         case AgentType::Planner:
-            return new PlannerAgent(desc);
+            return std::make_unique<PlannerAgent>(desc);
         case AgentType::Communicator:
-            return new CommunicatorAgent(desc);
+            return std::make_unique<CommunicatorAgent>(desc);
         case AgentType::ToolUser:
-            return new ToolUserAgent(desc);
+            return std::make_unique<ToolUserAgent>(desc);
         default:
-            return new AIAgent(desc);
+            return std::make_unique<AIAgent>(desc);
     }
 }
 
@@ -1780,7 +1783,7 @@ std::vector<std::string> AIAgentCoordinator::SuggestAgentTeam(const std::string&
     // 簡單的團隊建議邏輯
     for (const auto& [id, agent] : registeredAgents) {
         // 檢查代理是否適合該任務類型
-        const auto& capabilities = agent->capabilities;
+        const auto& capabilities = agent->GetCapabilities();
         for (const auto& capability : capabilities) {
             if (capability == taskType || capability.find(taskType) != std::string::npos) {
                 teamIds.push_back(id);
@@ -1813,9 +1816,6 @@ void AIAgentCoordinator::OptimizeResourceAllocation() {
         }
     }
 }
-
-} // namespace AI
-} // namespace Potato
 
 // ============================================================================
 // DeveloperAgent 實現
@@ -1970,367 +1970,6 @@ std::vector<std::string> AnalystAgent::GenerateInsights(const std::string& analy
     insights.push_back("Insight 2 from " + analysis);
     
     return insights;
-}
-
-// ============================================================================
-// AIAgentManager 實現
-// ============================================================================
-
-AIAgentManager::AIAgentManager()
-    : learningEnabled(false)
-    , updateInterval(0.1f)
-    , updateTimer(0.0f)
-    , maxAgents(100) {
-}
-
-AIAgentManager::~AIAgentManager() {
-    Shutdown();
-}
-
-bool AIAgentManager::Initialize() {
-    std::cout << "初始化 AI 代理管理器..." << std::endl;
-    std::cout << "最大代理數量: " << maxAgents << std::endl;
-    std::cout << "更新間隔: " << updateInterval << " 秒" << std::endl;
-    std::cout << "學習系統: " << (learningEnabled ? "啟用" : "禁用") << std::endl;
-    return true;
-}
-
-void AIAgentManager::Shutdown() {
-    std::cout << "關閉 AI 代理管理器..." << std::endl;
-    
-    std::lock_guard<std::mutex> lock(agentsMutex);
-    
-    for (auto agent : agents) {
-        agent->Shutdown();
-        delete agent;
-    }
-    agents.clear();
-    agentMap.clear();
-    
-    std::cout << "✓ AI 代理管理器關閉完成" << std::endl;
-}
-
-AIAgent* AIAgentManager::CreateAgent(const AgentDesc& desc) {
-    std::lock_guard<std::mutex> lock(agentsMutex);
-    
-    if (agents.size() >= maxAgents) {
-        std::cerr << "錯誤: 已達到最大代理數量 " << maxAgents << std::endl;
-        return nullptr;
-    }
-    
-    AIAgent* agent = nullptr;
-    
-    // 根�類型創建特定代理
-    switch (desc.type) {
-        case AgentType::Developer:
-            agent = new DeveloperAgent(desc);
-            break;
-        case AgentType::Designer:
-            agent = new DesignerAgent(desc);
-            break;
-        case AgentType::Analyst:
-            agent = new AnalystAgent(desc);
-            break;
-        default:
-            agent = new AIAgent(desc);
-            break;
-    }
-    
-    if (agent && agent->Initialize()) {
-        agents.push_back(agent);
-        agentMap[agent->GetName()] = agent;
-        
-        std::cout << "✓ 創建代理: " << agent->GetName() << std::endl;
-        return agent;
-    }
-    
-    if (agent) {
-        delete agent;
-    }
-    
-    return nullptr;
-}
-
-void AIAgentManager::DestroyAgent(const std::string& agentId) {
-    std::lock_guard<std::mutex> lock(agentsMutex);
-    
-    auto it = agentMap.find(agentId);
-    if (it != agentMap.end()) {
-        AIAgent* agent = it->second;
-        
-        agent->Shutdown();
-        
-        agents.erase(std::remove(agents.begin(), agents.end(), agent), agents.end());
-        agentMap.erase(it);
-        
-        delete agent;
-        
-        std::cout << "✓ 銷毀代理: " << agentId << std::endl;
-    }
-}
-
-AIAgent* AIAgentManager::GetAgent(const std::string& agentId) {
-    std::lock_guard<std::mutex> lock(agentsMutex);
-    
-    auto it = agentMap.find(agentId);
-    if (it != agentMap.end()) {
-        return it->second;
-    }
-    return nullptr;
-}
-
-void AIAgentManager::AssignTaskToAgent(const std::string& agentId, const AgentTask& task) {
-    std::lock_guard<std::mutex> lock(agentsMutex);
-    
-    AIAgent* agent = GetAgent(agentId);
-    if (agent) {
-        agent->AssignTask(task);
-    } else {
-        std::cerr << "錯誤: 找不到代理 " << agentId << std::endl;
-    }
-}
-
-void AIAgentManager::AssignTaskToBestAgent(const AgentTask& task) {
-    AIAgent* bestAgent = FindBestAgentForTask(task);
-    if (bestAgent) {
-        bestAgent->AssignTask(task);
-        std::cout << "分配任務給最佳代理: " << bestAgent->GetName() << std::endl;
-    } else {
-        std::cerr << "錯誤: 無可用代理" << std::endl;
-    }
-}
-
-void AIAgentManager::AssignTaskToAllAgents(const AgentTask& task) {
-    std::lock_guard<std::mutex> lock(agentsMutex);
-    
-    for (auto agent : agents) {
-        AgentTask taskCopy = task;
-        taskCopy.id = task.id + "_" + agent->GetName();
-        agent->AssignTask(taskCopy);
-    }
-    
-    std::cout << "分配任務給所有代理: " << task.description << std::endl;
-}
-
-Decision AIAgentManager::MakeGroupDecision(const std::string& context, const std::vector<std::string>& options) {
-    Decision decision;
-    
-    std::lock_guard<std::mutex> lock(agentsMutex);
-    
-    if (agents.empty()) {
-        return decision;
-    }
-    
-    // 簡化的群體決策邏輯
-    std::vector<Decision> decisions;
-    for (auto agent : agents) {
-        decisions.push_back(agent->MakeDecision(context, options));
-    }
-    
-    // 選擇信心最高的決策
-    auto bestDecision = std::max_element(decisions.begin(), decisions.end(),
-        [](const Decision& a, const Decision& b) {
-            return a.confidence < b.confidence;
-        });
-    
-    if (bestDecision != decisions.end()) {
-        decision = *bestDecision;
-        decision.reasoning.push_back("群體決策，基於 " + std::to_string(decisions.size()) + " 個代理的投票");
-    }
-    
-    std::cout << "群體決策: " << decision.action << " (信心: " << decision.confidence << ")" << std::endl;
-    
-    return decision;
-}
-
-void AIAgentManager::Update(float deltaTime) {
-    updateTimer += deltaTime;
-    
-    if (updateTimer >= updateInterval) {
-        updateTimer = 0.0f;
-        
-        std::lock_guard<std::mutex> lock(agentsMutex);
-        
-        for (auto agent : agents) {
-            agent->Update(updateInterval);
-        }
-        
-        UpdateAgentPerformance();
-    }
-}
-
-void AIAgentManager::EnableLearning(bool enable) {
-    learningEnabled = enable;
-    std::cout << "學習系統: " << (enable ? "啟用" : "禁用") << std::endl;
-}
-
-bool AIAgentManager::IsLearningEnabled() const {
-    return learningEnabled;
-}
-
-void AIAgentManager::RecordGroupLearning(const std::string& context, const std::string& action, bool success) {
-    if (learningEnabled) {
-        std::cout << "記錄群體學習: " << action << " = " << (success ? "成功" : "失敗") << std::endl;
-    }
-}
-
-size_t AIAgentManager::GetActiveAgentCount() const {
-    std::lock_guard<std::mutex> lock(agentsMutex);
-    
-    size_t count = 0;
-    for (const auto& agent : agents) {
-        if (agent->IsActive()) {
-            count++;
-        }
-    }
-    return count;
-}
-
-size_t AIAgentManager::GetPendingTaskCount() const {
-    std::lock_guard<std::mutex> lock(agentsMutex);
-    
-    size_t count = 0;
-    for (const auto& agent : agents) {
-        count += agent->GetTasks().size();
-    }
-    return count;
-}
-
-size_t AIAgentManager::GetCompletedTaskCount() const {
-    std::lock_guard<std::mutex> lock(agentsMutex);
-    
-    size_t count = 0;
-    for (const auto& agent : agents) {
-        count += agent->GetCompletedTaskCount();
-    }
-    return count;
-}
-
-void AIAgentManager::SetMaxAgents(size_t max) {
-    maxAgents = max;
-    std::cout << "設置最大代理數量: " << max << std::endl;
-}
-
-void AIAgentManager::SetUpdateInterval(float interval) {
-    updateInterval = interval;
-    std::cout << "設置更新間隔: " << interval << " 秒" << std::endl;
-}
-
-AIAgent* AIAgentManager::FindBestAgentForTask(const AgentTask& task) {
-    std::lock_guard<std::mutex> lock(agentsMutex);
-    
-    AIAgent* bestAgent = nullptr;
-    float bestScore = 0.0f;
-    
-    for (auto agent : agents) {
-        if (!agent->IsActive()) continue;
-        if (agent->GetCurrentTask()) continue;
-        
-        // 簡化的評分邏輯
-        float score = agent->GetPerformanceRating();
-        
-        if (score > bestScore) {
-            bestScore = score;
-            bestAgent = agent;
-        }
-    }
-    
-    return bestAgent;
-}
-
-void AIAgentManager::UpdateAgentPerformance() {
-    // 根據成功率和學習更新代理性能評分
-    std::lock_guard<std::mutex> lock(agentsMutex);
-    
-    for (auto agent : agents) {
-        float successRate = agent->GetSuccessRate();
-        float newRating = 0.5f + (successRate * 0.5f);
-        
-        // 更新性能評分（需要訪問成員變量，這裡簡化處理）
-        std::cout << "代理 " << agent->GetName() << " 成功率: " << successRate << ", 新評分: " << newRating << std::endl;
-    }
-}
-
-// ============================================================================
-// AIAgentSystem 實現
-// ============================================================================
-
-AIAgentSystem::AIAgentSystem()
-    : agentManager(new AIAgentManager())
-    , eventBus(nullptr)
-    , initialized(false) {
-}
-
-AIAgentSystem::~AIAgentSystem() {
-    Shutdown();
-}
-
-bool AIAgentSystem::Initialize() {
-    std::cout << "初始化 AI 代理系統..." << std::endl;
-    
-    if (!agentManager->Initialize()) {
-        std::cerr << "錯誤: 代理管理器初始化失敗" << std::endl;
-        return false;
-    }
-    
-    initialized = true;
-    std::cout << "✓ AI 代理系統初始化成功" << std::endl;
-    
-    return true;
-}
-
-void AIAgentSystem::Shutdown() {
-    if (!initialized) {
-        return;
-    }
-    
-    std::cout << "關閉 AI 代理系統..." << std::endl;
-    
-    if (agentManager) {
-        agentManager->Shutdown();
-    }
-    
-    initialized = false;
-    std::cout << "✓ AI 代理系統關閉完成" << std::endl;
-}
-
-void AIAgentSystem::Update(float deltaTime) {
-    if (!initialized) {
-        return;
-    }
-    
-    if (agentManager) {
-        agentManager->Update(deltaTime);
-    }
-}
-
-void AIAgentSystem::SetEventBus(EventBus::EventBus* eventBus) {
-    this->eventBus = eventBus;
-}
-
-void AIAgentSystem::SetMaxAgents(size_t maxAgents) {
-    if (agentManager) {
-        agentManager->SetMaxAgents(maxAgents);
-    }
-}
-
-void AIAgentSystem::SetLearningEnabled(bool enabled) {
-    if (agentManager) {
-        agentManager->EnableLearning(enabled);
-    }
-}
-
-void AIAgentSystem::PrintStatistics() {
-    if (!agentManager) {
-        return;
-    }
-    
-    std::cout << "\n📊 AI 代理系統統計:" << std::endl;
-    std::cout << "  代理總數: " << agentManager->GetAgentCount() << std::endl;
-    std::cout << "  活躍代理: " << agentManager->GetActiveAgentCount() << std::endl;
-    std::cout << "  待處理任務: " << agentManager->GetPendingTaskCount() << std::endl;
-    std::cout << "  已完成任務: " << agentManager->GetCompletedTaskCount() << std::endl;
-    std::cout << "  學習系統: " << (agentManager->IsLearningEnabled() ? "啟用" : "禁用") << std::endl;
 }
 
 } // namespace AI

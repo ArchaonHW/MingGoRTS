@@ -8,6 +8,8 @@
 #include <sstream>
 #include <regex>
 #include <cmath>
+#include <random>
+#include <unordered_set>
 
 namespace Potato {
 namespace AI {
@@ -92,7 +94,7 @@ std::vector<std::string> Tokenizer::SplitSentences(const std::string& text) {
     return sentences;
 }
 
-std::string Tokenizer::Normalize(const std::string& word) {
+std::string Tokenizer::Normalize(const std::string& word) const {
     std::string normalized = word;
     
     // Convert to lowercase
@@ -113,7 +115,7 @@ bool Tokenizer::IsStopWord(const std::string& word) const {
 }
 
 void Tokenizer::AddStopWord(const std::string& word) {
-    stopWords[Normalize(word)] = true;
+    stopWords.insert(Normalize(word));
 }
 
 TokenType Tokenizer::ClassifyToken(const std::string& text) {
@@ -323,7 +325,7 @@ SentimentAnalyzer::SentimentAnalyzer() {
         {"sad", -0.8f},
         {"angry", -0.7f},
         {"joy", 0.8f},
-        "fear", -0.7f,
+        {"fear", -0.7f},
         {"disgust", -0.7f},
         {"surprise", 0.3f},
         {"like", 0.6f},

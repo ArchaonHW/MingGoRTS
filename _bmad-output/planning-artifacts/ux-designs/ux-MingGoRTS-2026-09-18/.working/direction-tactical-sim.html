@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>MingGoRTS · 方向三 · 現代軍事 tactical-sim</title>
+<style>
+/* ==========================================================================
+   方向三 · 現代軍事 TACTICAL-SIM
+   Rationale: SC2 式電競紀律——扁平深色半透明面板、髮絲邊框、資訊高密度
+   但分層嚴格。歷史的泥濘被抽象成地形資料,敵蹤雲用青色機率渲染;
+   一切裝飾讓位給掃視速度,這是給「讀盤」而不是「看戲」用的 HUD。
+   ==========================================================================
+   PALETTE
+   bg         #0b1014  戰場底色(近黑藍)
+   terrain    #10181e  地形平色
+   panel      rgba(13,20,26,.90)  面板半透明
+   hairline   #24333d  髮絲邊框
+   hairline2  #2e4450  次級邊框
+   text       #d9e6ea  主文字
+   dim        #7d939e  次要文字
+   faint      #4a5f6a  隱性文字
+   teal       #2fd4c4  主強調(選取/士氣/雲)
+   teal-dim   rgba(47,212,196,.55)
+   red        #e0483f  警告/敵軍高亮
+   enemy      #b0402f  已確認敵軍實色
+   cloud      #35d0c5  機率雲青
+   river      #12222b  河道
+   river-edge #1e3642  河道邊線
+   amber      #d8a83c  情報條
+   ========================================================================== */
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:#05080b;}
+body{font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",sans-serif;
+  color:#d9e6ea;font-size:13px;}
+.stage{position:relative;width:1920px;height:1080px;margin:0 auto;overflow:hidden;
+  background:
+    radial-gradient(ellipse 1200px 700px at 52% 52%, #10181e 0%, #0b1014 78%),
+    #0b1014;}
+/* 細格網:40px 細線 + 200px 主線 */
+.stage::before{content:"";position:absolute;inset:0;
+  background:
+    repeating-linear-gradient(0deg, rgba(53,208,197,.045) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, rgba(53,208,197,.045) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(0deg, rgba(53,208,197,.09) 0 1px, transparent 1px 200px),
+    repeating-linear-gradient(90deg, rgba(53,208,197,.09) 0 1px, transparent 1px 200px);}
+.mono{font-family:"Consolas","Microsoft JhengHei",monospace;}
+
+/* ---------- 地形 ---------- */
+.river{position:absolute;left:-60px;top:462px;width:2060px;height:142px;
+  transform:rotate(-4deg);background:#12222b;                                       /* river */
+  border-top:1px solid #1e3642;border-bottom:1px solid #1e3642;}                    /* river-edge */
+.river::after{content:"";position:absolute;left:0;right:0;top:64px;height:1px;
+  background:rgba(53,208,197,.10);}
+.river-lbl{position:absolute;left:330px;top:574px;transform:rotate(-4deg);
+  font-size:11px;letter-spacing:.4em;color:#3a5a66;}
+.bridge{position:absolute;transform:rotate(-4deg);background:#2a3a44;
+  border:1px solid #3a525e;}
+.bb1{left:984px;top:436px;width:58px;height:64px;}
+.bb2{left:984px;top:540px;width:58px;height:70px;}
+.bridge-gap{position:absolute;left:980px;top:502px;width:66px;height:36px;
+  transform:rotate(-4deg);background:#12222b;border-top:1px dashed #3a525e;
+  border-bottom:1px dashed #3a525e;}
+.bridge-tag{position:absolute;left:1052px;top:548px;font-size:10px;color:#7d939e;
+  letter-spacing:.2em;transform:rotate(-4deg);}
+
+/* ---------- 頂欄 ---------- */
+.topbar{position:absolute;left:0;right:0;top:0;height:52px;
+  background:rgba(13,20,26,.92);border-bottom:1px solid #24333d;
+  display:flex;align-items:center;padding:0 20px;gap:0;}
+.tb-chip{height:32px;display:flex;align-items:center;padding:0 14px;
+  border:1px solid #2e4450;font-size:12px;letter-spacing:.15em;color:#d9e6ea;
+  background:rgba(20,30,38,.6);}
+.tb-chip.phase{border-color:#2fd4c4;color:#2fd4c4;}
+.tb-sep{width:1px;height:24px;background:#24333d;margin:0 16px;}
+.tb-lbl{font-size:10px;letter-spacing:.25em;color:#7d939e;margin-right:8px;}
+.tb-time{font-size:24px;font-weight:300;letter-spacing:.14em;color:#eaf6f4;
+  font-family:"Consolas","Microsoft JhengHei",monospace;}
+.tb-pause{margin-left:auto;display:flex;align-items:center;gap:18px;}
+.keycap{border:1px solid #2e4450;background:rgba(20,30,38,.8);padding:3px 9px;
+  font-size:11px;color:#7d939e;letter-spacing:.1em;border-radius:2px;}
+.res{display:flex;align-items:center;gap:10px;}
+.res .v{font-size:15px;color:#d9e6ea;}
+.res .v b{color:#d8a83c;}                                                          /* amber */
+.mini-bar{width:70px;height:4px;background:#1c2a33;border:1px solid #24333d;}
+.mini-bar>i{display:block;height:100%;background:#d8a83c;}
+.cp-pips{display:flex;gap:5px;align-items:center;}
+.pip{width:11px;height:11px;background:#2fd4c4;border:1px solid #2fd4c4;}
+.pip.off{background:transparent;}
+.estop{height:32px;padding:0 16px;border:1px solid #e0483f;color:#e0483f;
+  font-size:12px;letter-spacing:.2em;display:flex;align-items:center;
+  background:rgba(224,72,63,.08);}
+
+/* ---------- 左側部隊面板 ---------- */
+.roster{position:absolute;left:16px;top:68px;width:272px;
+  background:rgba(13,20,26,.90);border:1px solid #24333d;}
+.phead{padding:8px 14px;border-bottom:1px solid #24333d;font-size:10px;
+  letter-spacing:.3em;color:#7d939e;display:flex;justify-content:space-between;}
+.phead .en{color:#4a5f6a;}
+.srow{padding:9px 14px 10px;border-bottom:1px solid rgba(36,51,61,.6);
+  border-left:2px solid transparent;}
+.srow .top{display:flex;justify-content:space-between;align-items:baseline;}
+.srow .nm{font-size:14px;font-weight:bold;letter-spacing:.1em;}
+.srow .tag{font-size:9px;letter-spacing:.15em;color:#7d939e;border:1px solid #2e4450;
+  padding:1px 6px;}
+.srow .tag.warn{border-color:#e0483f;color:#e0483f;}
+.mbar{display:flex;align-items:center;gap:8px;margin-top:5px;}
+.mbar .k{font-size:9px;color:#4a5f6a;width:22px;letter-spacing:.1em;}
+.mbar .tr{flex:1;height:3px;background:#1c2a33;}
+.mbar .tr>i{display:block;height:100%;background:#9fb4bd;}                          /* 兵力 */
+.mbar.mor .tr>i{background:#2fd4c4;}                                                /* 士氣 teal */
+.mbar .pc{font-size:10px;color:#7d939e;width:30px;text-align:right;
+  font-family:"Consolas",monospace;}
+/* 後衛營:士氣崩潰脈衝(本方向狀態變體) */
+@keyframes collapsePulse{0%,100%{border-left-color:#e0483f;background:rgba(224,72,63,.04);}
+  50%{border-left-color:#ff7a70;background:rgba(224,72,63,.14);}}
+.srow.collapse{border-left:2px solid #e0483f;animation:collapsePulse 1.1s infinite;}
+.srow.collapse .nm{color:#ff9a92;}
+.srow.collapse .mor .tr>i{background:#e0483f;}
+.srow.collapse .mor .pc{color:#e0483f;}
+
+/* ---------- 右側教條事件 log ---------- */
+.feed{position:absolute;right:16px;top:68px;width:276px;
+  background:rgba(13,20,26,.90);border:1px solid #24333d;}
+.frow{padding:9px 14px;border-bottom:1px solid rgba(36,51,61,.6);font-size:12px;
+  line-height:1.55;display:flex;gap:10px;}
+.frow .t{font-family:"Consolas",monospace;font-size:10px;color:#4a5f6a;padding-top:2px;}
+.frow .b{flex:1;color:#c4d4da;}
+.frow .b .who{color:#2fd4c4;}
+.frow.alert .b{color:#ffb0a8;}
+.frow.alert .who{color:#ff8a80;}
+.fdot{width:6px;height:6px;margin-top:6px;background:#2fd4c4;flex:none;}
+.frow.alert .fdot{background:#e0483f;}
+
+/* ---------- 戰場單位 ---------- */
+.unit{position:absolute;height:30px;border-radius:15px;padding:0 16px;
+  display:flex;align-items:center;justify-content:center;font-size:12px;
+  letter-spacing:.1em;background:rgba(47,212,196,.10);border:1.5px solid #2fd4c4;
+  color:#aef0e8;}
+.unit.enemy{background:#b0402f;border-color:#d06050;color:#f4dcd4;border-radius:15px;}
+.sel-ring{position:absolute;border:1.5px solid #2fd4c4;border-radius:50%;
+  box-shadow:0 0 0 1px rgba(47,212,196,.2), 0 0 14px rgba(47,212,196,.25);}
+.sel-corner{position:absolute;width:14px;height:14px;border:2px solid #2fd4c4;}
+.morale-v{position:absolute;width:4px;background:#1c2a33;border:1px solid #2e4450;}
+.morale-v>i{position:absolute;bottom:0;left:0;right:0;background:#2fd4c4;}
+.morale-v .cap{position:absolute;top:-18px;left:-10px;font-size:9px;color:#7d939e;
+  font-family:"Consolas",monospace;white-space:nowrap;}
+@keyframes unitWarn{0%,100%{box-shadow:0 0 0 0 rgba(224,72,63,.5);}
+  50%{box-shadow:0 0 0 8px rgba(224,72,63,0);}}
+.unit.collapse{border-color:#e0483f;background:rgba(224,72,63,.12);color:#ffb0a8;
+  animation:unitWarn 1.1s infinite;}
+.unit-wtag{position:absolute;font-size:9px;color:#ff8a80;letter-spacing:.2em;
+  font-family:"Consolas","Microsoft JhengHei",monospace;}
+
+/* ---------- 機率雲 ---------- */
+.cloud{position:absolute;width:230px;height:160px;}
+.cloud .d{position:absolute;border-radius:50%;filter:blur(9px);
+  background:radial-gradient(circle,rgba(53,208,197,.65) 0%,rgba(53,208,197,.28) 45%,transparent 72%);}
+.cloud .a{width:120px;height:110px;left:14px;top:24px;}
+.cloud .b{width:96px;height:88px;left:100px;top:4px;}
+.cloud .c{width:104px;height:92px;left:78px;top:64px;}
+.cloud .bound{position:absolute;left:0;top:6px;width:212px;height:140px;
+  border:1px dashed rgba(53,208,197,.55);border-radius:50%;}
+.cloud .lbl{position:absolute;left:34px;top:150px;background:rgba(13,20,26,.92);
+  border:1px solid #2e4450;border-left:2px solid #35d0c5;padding:3px 10px;
+  font-size:10px;letter-spacing:.15em;color:#aef0e8;white-space:nowrap;}
+.cloud .conf{position:absolute;right:6px;top:0;font-family:"Consolas",monospace;
+  font-size:10px;color:#35d0c5;}
+
+/* ---------- 右下:CP 干預 + 小地圖 ---------- */
+.cmd{position:absolute;right:16px;top:660px;width:276px;
+  background:rgba(13,20,26,.90);border:1px solid #24333d;}
+.cmd-row{display:flex;gap:1px;background:#24333d;border-bottom:1px solid #24333d;}
+.cbtn{flex:1;background:rgba(20,30,38,.85);padding:10px 0 8px;text-align:center;}
+.cbtn .n{font-size:15px;letter-spacing:.15em;color:#d9e6ea;}
+.cbtn .k{font-size:9px;color:#4a5f6a;font-family:"Consolas",monospace;margin-top:2px;}
+.cbtn.hot{background:rgba(47,212,196,.10);}
+.cbtn.hot .n{color:#2fd4c4;}
+.minimap{position:relative;height:160px;
+  background:
+    repeating-linear-gradient(0deg, rgba(53,208,197,.07) 0 1px, transparent 1px 20px),
+    repeating-linear-gradient(90deg, rgba(53,208,197,.07) 0 1px, transparent 1px 20px),
+    #0d151b;}
+.mm-river{position:absolute;left:-8px;top:62px;width:290px;height:22px;
+  background:#12222b;border-top:1px solid #1e3642;border-bottom:1px solid #1e3642;
+  transform:rotate(-5deg);}
+.md{position:absolute;width:7px;height:7px;}
+.md.f{background:#2fd4c4;} .md.e{background:#e0483f;}
+.md.c{background:rgba(53,208,197,.5);filter:blur(2px);width:13px;height:13px;border-radius:50%;}
+.mm-frame{position:absolute;border:1px solid rgba(233,246,244,.5);left:52px;top:34px;
+  width:150px;height:92px;}
+.minimap .cap{position:absolute;left:10px;top:8px;font-size:9px;letter-spacing:.3em;
+  color:#4a5f6a;z-index:2;}
+
+/* ---------- 左下:規劃層卡槽 ---------- */
+.planstrip{position:absolute;left:16px;top:952px;width:344px;
+  background:rgba(13,20,26,.90);border:1px solid #24333d;}
+.planstrip .ph{padding:6px 12px;border-bottom:1px solid #24333d;font-size:9px;
+  letter-spacing:.3em;color:#7d939e;display:flex;justify-content:space-between;}
+.planstrip .ph .en{color:#4a5f6a;}
+.prow{display:flex;gap:1px;background:#24333d;}
+.pchip{flex:1;background:rgba(20,30,38,.85);padding:8px 10px;border-top:2px solid #2e4450;}
+.pchip .n{font-size:11px;color:#c4d4da;letter-spacing:.05em;}
+.pchip .c{font-size:9px;color:#4a5f6a;margin-top:2px;font-family:"Consolas","Microsoft JhengHei",monospace;}
+.pchip.p1{border-top-color:#2fd4c4;} .pchip.p2{border-top-color:#e0483f;}
+.pchip.p3{border-top-color:#d8a83c;}
+
+/* ---------- 角落人格註記 ---------- */
+.dirnote{position:absolute;left:18px;bottom:14px;font-size:10px;color:#4a5f6a;
+  letter-spacing:.25em;font-family:"Consolas","Microsoft JhengHei",monospace;}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <!-- 地形 -->
+  <div class="river"></div>
+  <div class="river-lbl">濁水溪 // RIVER</div>
+  <div class="bridge bb1"></div>
+  <div class="bridge bb2"></div>
+  <div class="bridge-gap"></div>
+  <div class="bridge-tag">橋斷 // IMPASSABLE</div>
+
+  <!-- 頂欄 -->
+  <div class="topbar">
+    <div class="tb-chip phase">階段「交戰」</div>
+    <div class="tb-sep"></div>
+    <span class="tb-lbl">T+</span><span class="tb-time">01:42</span>
+    <div class="tb-sep"></div>
+    <span class="tb-lbl">倍速</span><span style="font-size:16px;">×1</span>
+    <div class="tb-pause">
+      <span class="keycap">SPACE · 暫停</span>
+      <div class="res"><span class="tb-lbl">情報</span><span class="v"><b>8</b>/10</span>
+        <span class="mini-bar"><i style="width:80%;"></i></span></div>
+      <div class="res"><span class="tb-lbl">CP 3/3</span>
+        <span class="cp-pips"><span class="pip"></span><span class="pip"></span><span class="pip"></span></span></div>
+      <div class="estop">急停 ⏻</div>
+    </div>
+  </div>
+
+  <!-- 左側部隊面板 -->
+  <div class="roster">
+    <div class="phead"><span>部隊序列</span><span class="en">SQUADS 4</span></div>
+    <div class="srow">
+      <div class="top"><span class="nm">前鋒營</span><span class="tag">接敵中</span></div>
+      <div class="mbar"><span class="k">兵力</span><span class="tr"><i style="width:78%;"></i></span><span class="pc">78%</span></div>
+      <div class="mbar mor"><span class="k">士氣</span><span class="tr"><i style="width:64%;"></i></span><span class="pc">64%</span></div>
+    </div>
+    <div class="srow">
+      <div class="top"><span class="nm">偵查隊</span><span class="tag">搜索中</span></div>
+      <div class="mbar"><span class="k">兵力</span><span class="tr"><i style="width:100%;"></i></span><span class="pc">100%</span></div>
+      <div class="mbar mor"><span class="k">士氣</span><span class="tr"><i style="width:82%;"></i></span><span class="pc">82%</span></div>
+    </div>
+    <div class="srow collapse">
+      <div class="top"><span class="nm">後衛營</span><span class="tag warn">士氣崩潰 ⚠</span></div>
+      <div class="mbar"><span class="k">兵力</span><span class="tr"><i style="width:45%;"></i></span><span class="pc">45%</span></div>
+      <div class="mbar mor"><span class="k">士氣</span><span class="tr"><i style="width:31%;"></i></span><span class="pc">31%</span></div>
+    </div>
+    <div class="srow" style="border-bottom:none;">
+      <div class="top"><span class="nm">砲　隊</span><span class="tag">待命</span></div>
+      <div class="mbar"><span class="k">兵力</span><span class="tr"><i style="width:92%;"></i></span><span class="pc">92%</span></div>
+      <div class="mbar mor"><span class="k">士氣</span><span class="tr"><i style="width:70%;"></i></span><span class="pc">70%</span></div>
+    </div>
+  </div>
+
+  <!-- 右側教條事件 log -->
+  <div class="feed">
+    <div class="phead"><span>教條事件</span><span class="en">DOCTRINE LOG</span></div>
+    <div class="frow"><span class="t">01:38</span><span class="fdot"></span>
+      <span class="b"><span class="who">前鋒營</span> 觸發『接敵→交火』</span></div>
+    <div class="frow"><span class="t">01:39</span><span class="fdot"></span>
+      <span class="b"><span class="who">偵查隊</span> 接觸揭露:敵·第3縱隊</span></div>
+    <div class="frow alert"><span class="t">01:41</span><span class="fdot"></span>
+      <span class="b"><span class="who">後衛營</span> 士氣&lt;30→撤退 執行率70%</span></div>
+  </div>
+
+  <!-- 戰場單位 -->
+  <div class="unit" style="left:620px;top:560px;">偵查隊</div>
+  <div class="sel-ring" style="left:808px;top:600px;width:180px;height:108px;"></div>
+  <div class="unit" style="left:844px;top:638px;">前鋒營</div>
+  <div class="morale-v" style="left:1000px;top:608px;height:72px;"><span class="cap">MRL 64</span><i style="height:64%;"></i></div>
+  <div class="unit collapse" style="left:748px;top:782px;">後衛營</div>
+  <div class="unit-wtag" style="left:744px;top:764px;">▼ MORALE COLLAPSE</div>
+  <div class="unit" style="left:470px;top:756px;">砲　隊</div>
+
+  <div class="unit enemy" style="left:1078px;top:286px;">格洛克部</div>
+  <div class="unit enemy" style="left:1160px;top:330px;">格洛克部</div>
+  <div class="unit-wtag" style="left:1076px;top:266px;color:#ff8a80;">CONFIRMED // 敵主力</div>
+
+  <!-- 機率雲 -->
+  <div class="cloud" style="left:1300px;top:330px;">
+    <div class="bound"></div>
+    <div class="d a"></div><div class="d b"></div><div class="d c"></div>
+    <div class="conf">P=0.62</div>
+    <div class="lbl">未確認敵蹤·雲 // UNCONFIRMED</div>
+  </div>
+
+  <!-- 右下:CP 干預 + 小地圖 -->
+  <div class="cmd">
+    <div class="phead"><span>CP 干預</span><span class="en">INTERVENE</span></div>
+    <div class="cmd-row">
+      <div class="cbtn hot"><div class="n">攻進</div><div class="k">[1] CP-1</div></div>
+      <div class="cbtn"><div class="n">撤回</div><div class="k">[2] CP-1</div></div>
+      <div class="cbtn"><div class="n">駐守</div><div class="k">[3] CP-1</div></div>
+    </div>
+    <div class="minimap">
+      <span class="cap">全圖 // TACMAP</span>
+      <div class="mm-river"></div>
+      <div class="mm-frame"></div>
+      <div class="md f" style="left:112px;top:106px;"></div>
+      <div class="md f" style="left:76px;top:96px;"></div>
+      <div class="md f" style="left:92px;top:120px;"></div>
+      <div class="md f" style="left:52px;top:118px;"></div>
+      <div class="md e" style="left:146px;top:44px;"></div>
+      <div class="md c" style="left:182px;top:52px;"></div>
+    </div>
+  </div>
+
+  <!-- 左下:規劃層卡槽 -->
+  <div class="planstrip">
+    <div class="ph"><span>規劃層 · 手令</span><span class="en">PLAN // DOCTRINE</span></div>
+    <div class="prow">
+      <div class="pchip p1"><div class="n">接敵→交火</div><div class="c">on-contact</div></div>
+      <div class="pchip p2"><div class="n">士氣&lt;30→撤退</div><div class="c">exec 70%</div></div>
+      <div class="pchip p3"><div class="n">砲擊·徐進</div><div class="c">intel≥6</div></div>
+    </div>
+  </div>
+
+  <div class="dirnote">方向三 — 讀盤者的儀表:資訊零浪費,猶豫零掩護。</div>
+</div>
+</body>
+</html>

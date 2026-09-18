@@ -8,6 +8,7 @@
 #include "AI/AIAgentSystem.h"
 #include <iostream>
 #include <memory>
+#include <chrono>
 
 using namespace Potato::AI;
 

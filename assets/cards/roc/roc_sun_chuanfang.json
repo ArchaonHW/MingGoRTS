@@ -1,0 +1,25 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_sun_chuanfang",
+  "name": "孫傳芳",
+  "courtesyName": "馨遠",
+  "epithet": "五省聯帥",
+  "rarity": "rare",
+  "faction": "直系",
+  "role": "commander",
+  "personality": { "aggression": 60, "discipline": 70, "cunning": 80 },
+  "stats": { "command": 74, "attack": 68, "defense": 72, "mobility": 66, "moraleAura": 62 },
+  "signatureDoctrine": {
+    "name": "五省聯防",
+    "trigger": "AllyEngaged", "threshold": 0.0, "action": "DefendNearestAlly",
+    "description": "五省聯軍互為犄角——一省有警,四省馳援的聯防本色"
+  },
+  "cards": [
+    { "name": "受襲回擊", "trigger": "UnderAttack", "action": "AttackNearest", "threshold": 0.0, "priority": 45, "cooldown": 12.0 },
+    { "name": "固守", "trigger": "Always", "action": "HoldPosition", "threshold": 0.0, "priority": 95, "cooldown": 0.0 }
+  ],
+  "portrait": { "build": "normal", "head": "cap", "beard": "mustache", "glasses": false },
+  "lore": "五省聯軍總司令,起兵反奉坐擁東南,北伐兵敗下野,後為施劍翹所刺。",
+  "historicalBattle": "浙奉戰爭 1925",
+  "art": "cards/art/roc_sun_chuanfang.png"
+}

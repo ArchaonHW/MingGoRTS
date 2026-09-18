@@ -656,8 +656,8 @@ bool SecurityManager::IsTrustedModuleWin(const std::wstring& fullPath, std::stri
                 return false;
             }
         }
-        // MSVC: ifstream 接受寬字串路徑，可處理非 ASCII 檔名
-        std::ifstream file(fullPath, std::ios::binary);
+        // 寬字串路徑經 filesystem::path 轉換,可處理非 ASCII 檔名（MinGW 相容）
+        std::ifstream file(std::filesystem::path(fullPath), std::ios::binary);
         std::string actual = file.is_open() ? HashStreamToHex(file) : "";
         bool ok = !actual.empty() && actual == pinnedHash;
         {
@@ -855,7 +855,7 @@ bool SecurityManager::GuardOwnCode() {
     if (!::GetModuleHandleExW(
             GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
             GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-            reinterpret_cast<LPCWSTR>(&SecurityManager::GuardOwnCode),
+            reinterpret_cast<LPCWSTR>(&Potato::Security::ComputeSHA256),
             &self) || !self) {
         return false;
     }
@@ -1004,16 +1004,12 @@ bool SecurityManager::CheckHardwareBreakpoints() {
 #endif
 }
 
-bool SecurityManager::CheckInjectedThreads() {
 #ifdef _WIN32
-    using PFN_NtQIT = NTSTATUS(NTAPI*)(HANDLE, ULONG, PVOID, ULONG, PULONG);
-    auto NtQIT = reinterpret_cast<PFN_NtQIT>(
-        ::GetProcAddress(::GetModuleHandleW(L"ntdll.dll"), "NtQueryInformationThread"));
-    if (!NtQIT) return false;
-
-    // 收集所有模組的位址範圍
-    struct Range { uintptr_t base, end; };
-    std::vector<Range> ranges;
+namespace {
+// 收集所有已載入模組的位址範圍
+struct ModuleRange { uintptr_t base, end; HMODULE mod; };
+std::vector<ModuleRange> CollectModuleRanges() {
+    std::vector<ModuleRange> ranges;
     HMODULE modules[1024];
     DWORD needed = 0;
     if (::EnumProcessModules(::GetCurrentProcess(), modules, sizeof(modules), &needed)) {
@@ -1022,10 +1018,31 @@ bool SecurityManager::CheckInjectedThreads() {
             MODULEINFO mi{};
             if (::GetModuleInformation(::GetCurrentProcess(), modules[i], &mi, sizeof(mi))) {
                 ranges.push_back({ reinterpret_cast<uintptr_t>(mi.lpBaseOfDll),
-                                   reinterpret_cast<uintptr_t>(mi.lpBaseOfDll) + mi.SizeOfImage });
+                                   reinterpret_cast<uintptr_t>(mi.lpBaseOfDll) + mi.SizeOfImage,
+                                   modules[i] });
             }
         }
     }
+    return ranges;
+}
+
+bool AddrInAnyModule(uintptr_t addr, const std::vector<ModuleRange>& ranges) {
+    for (const auto& r : ranges) {
+        if (addr >= r.base && addr < r.end) return true;
+    }
+    return false;
+}
+} // namespace
+#endif
+
+bool SecurityManager::CheckInjectedThreads() {
+#ifdef _WIN32
+    using PFN_NtQIT = NTSTATUS(NTAPI*)(HANDLE, ULONG, PVOID, ULONG, PULONG);
+    auto NtQIT = reinterpret_cast<PFN_NtQIT>(
+        ::GetProcAddress(::GetModuleHandleW(L"ntdll.dll"), "NtQueryInformationThread"));
+    if (!NtQIT) return false;
+
+    auto ranges = CollectModuleRanges();
 
     DWORD pid = ::GetCurrentProcessId();
     DWORD selfTid = ::GetCurrentThreadId();
@@ -1042,11 +1059,7 @@ bool SecurityManager::CheckInjectedThreads() {
         uintptr_t startAddr = 0;
         // ThreadQuerySetWin32StartAddress = 9
         if (NtQIT(h, 9, &startAddr, sizeof(startAddr), nullptr) >= 0 && startAddr) {
-            bool inModule = false;
-            for (const auto& r : ranges) {
-                if (startAddr >= r.base && startAddr < r.end) { inModule = true; break; }
-            }
-            if (!inModule) {
+            if (!AddrInAnyModule(startAddr, ranges)) {
                 ReportViolation(ViolationType::InjectedThread,
                     "tid " + std::to_string(te.th32ThreadID) +
                     " start address outside all modules (shellcode?)");
@@ -1060,6 +1073,388 @@ bool SecurityManager::CheckInjectedThreads() {
 #else
     return false;
 #endif
+}
+
+// ---- 隱藏模組 / 可疑記憶體 / IAT hook / 外部 handle / heap ----
+
+bool SecurityManager::CheckHiddenModules() {
+#ifdef _WIN32
+    // EnumProcessModules 讀 PEB 載入器鏈表 —— 被 unlinked 或手動映射的
+    // DLL 不會出現。改掃位址空間的 MEM_IMAGE 區域交叉比對。
+    auto ranges = CollectModuleRanges();
+    std::vector<uintptr_t> imageBases; // 已知模組 base（= AllocationBase）
+    for (const auto& r : ranges) imageBases.push_back(r.base);
+
+    bool found = false;
+    uintptr_t addr = 0;
+    MEMORY_BASIC_INFORMATION mbi{};
+    while (::VirtualQuery(reinterpret_cast<LPCVOID>(addr), &mbi, sizeof(mbi))) {
+        if (mbi.State == MEM_COMMIT && mbi.Type == MEM_IMAGE) {
+            uintptr_t abase = reinterpret_cast<uintptr_t>(mbi.AllocationBase);
+            if (std::find(imageBases.begin(), imageBases.end(), abase) == imageBases.end()) {
+                imageBases.push_back(abase); // 每個映像只回報一次
+                ReportViolation(ViolationType::HiddenModule,
+                    "MEM_IMAGE region at 0x" +
+                    std::to_string(abase) +
+                    " not in module list (manual mapped?)");
+                found = true;
+            }
+        }
+        uintptr_t next = reinterpret_cast<uintptr_t>(mbi.BaseAddress) + mbi.RegionSize;
+        if (next <= addr) break;
+        addr = next;
+    }
+    return found;
+#else
+    return false;
+#endif
+}
+
+bool SecurityManager::CheckExecutablePrivateMemory() {
+#ifdef _WIN32
+    bool found = false;
+    uintptr_t addr = 0;
+    MEMORY_BASIC_INFORMATION mbi{};
+    uintptr_t lastReportedBase = 0;
+    while (::VirtualQuery(reinterpret_cast<LPCVOID>(addr), &mbi, sizeof(mbi))) {
+        bool exec = (mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ |
+                                    PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY)) != 0;
+        if (mbi.State == MEM_COMMIT && mbi.Type == MEM_PRIVATE && exec) {
+            uintptr_t abase = reinterpret_cast<uintptr_t>(mbi.AllocationBase);
+            if (abase != lastReportedBase) {
+                lastReportedBase = abase;
+                ReportViolation(ViolationType::SuspiciousMemory,
+                    "executable MEM_PRIVATE region at 0x" +
+                    std::to_string(abase) + " (shellcode staging?)");
+                found = true;
+            }
+        }
+        uintptr_t next = reinterpret_cast<uintptr_t>(mbi.BaseAddress) + mbi.RegionSize;
+        if (next <= addr) break;
+        addr = next;
+    }
+    return found;
+#else
+    return false;
+#endif
+}
+
+bool SecurityManager::CheckIATHooks() {
+#ifdef _WIN32
+    HMODULE self = ::GetModuleHandleW(nullptr); // 主 exe
+    auto* dos = reinterpret_cast<const IMAGE_DOS_HEADER*>(self);
+    if (dos->e_magic != IMAGE_DOS_SIGNATURE) return false;
+    auto* nt = reinterpret_cast<const IMAGE_NT_HEADERS*>(
+        reinterpret_cast<const uint8_t*>(self) + dos->e_lfanew);
+
+    auto& impDir = nt->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];
+    if (!impDir.VirtualAddress) return false;
+
+    auto ranges = CollectModuleRanges();
+    auto* desc = reinterpret_cast<const IMAGE_IMPORT_DESCRIPTOR*>(
+        reinterpret_cast<const uint8_t*>(self) + impDir.VirtualAddress);
+
+    bool found = false;
+    for (; desc->Name; desc++) {
+        const char* dllName = reinterpret_cast<const char*>(
+            reinterpret_cast<const uint8_t*>(self) + desc->Name);
+        auto* thunk = reinterpret_cast<const IMAGE_THUNK_DATA*>(
+            reinterpret_cast<const uint8_t*>(self) + desc->FirstThunk);
+        for (; thunk->u1.Function; thunk++) {
+            uintptr_t addr = static_cast<uintptr_t>(thunk->u1.Function);
+            // forwarded import 會指向其他系統 DLL —— 仍屬模組內，不算 hook
+            if (!AddrInAnyModule(addr, ranges)) {
+                ReportViolation(ViolationType::HookDetected,
+                    std::string("IAT entry in ") + dllName +
+                    " points outside all modules: 0x" + std::to_string(addr));
+                found = true;
+            }
+        }
+    }
+    return found;
+#else
+    return false;
+#endif
+}
+
+bool SecurityManager::CheckExternalHandles(std::string* diag) {
+#ifdef _WIN32
+    auto fail = [&](const char* why) { if (diag) *diag = why; return false; };
+    using PFN_NtQSI = NTSTATUS(NTAPI*)(ULONG, PVOID, ULONG, PULONG);
+    auto NtQSI = reinterpret_cast<PFN_NtQSI>(
+        ::GetProcAddress(::GetModuleHandleW(L"ntdll.dll"), "NtQuerySystemInformation"));
+    if (!NtQSI) return fail("NtQuerySystemInformation unavailable");
+
+    // SystemExtendedHandleInformation = 64（PID 為完整 ULONG_PTR；
+    // 舊版 class 16 的 UniqueProcessId 只有 USHORT，PID > 65535 會截斷）
+    struct HandleEntryEx {
+        PVOID object; ULONG_PTR pid; ULONG_PTR handle; ULONG access;
+        USHORT creatorBackTrace; USHORT objType; ULONG attrs; ULONG reserved;
+    };
+    struct HandleInfoEx { ULONG_PTR count; ULONG_PTR reserved; HandleEntryEx entries[1]; };
+
+    ULONG_PTR ownPid = ::GetCurrentProcessId();
+
+    // 先開一個自己的 handle（必須在快照「之前」建立，快照才看得到）
+    HANDLE selfHandle = ::OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION,
+                                      FALSE, static_cast<DWORD>(ownPid));
+    if (!selfHandle) return fail("cannot open self handle");
+
+    std::vector<uint8_t> buf(1 << 20);
+    ULONG retLen = 0;
+    NTSTATUS st;
+    while ((st = NtQSI(64, buf.data(), static_cast<ULONG>(buf.size()), &retLen))
+           == static_cast<NTSTATUS>(0xC0000004)) { // STATUS_INFO_LENGTH_MISMATCH
+        buf.resize(buf.size() * 2);
+        if (buf.size() > (64u << 20)) {
+            ::CloseHandle(selfHandle);
+            return fail("handle table too large");
+        }
+    }
+    if (st < 0) {
+        ::CloseHandle(selfHandle);
+        return fail("NtQuerySystemInformation failed");
+    }
+
+    // 用 selfHandle 反查 Process 物件的 type index
+    auto* info = reinterpret_cast<HandleInfoEx*>(buf.data());
+    int procType = -1;
+    for (ULONG_PTR i = 0; i < info->count; i++) {
+        if (info->entries[i].pid == ownPid &&
+            info->entries[i].handle == reinterpret_cast<ULONG_PTR>(selfHandle)) {
+            procType = info->entries[i].objType;
+            break;
+        }
+    }
+    ::CloseHandle(selfHandle);
+    if (procType < 0) return fail("process type index not found");
+
+    // 找「別的行程持有 process 型別 handle」→ 嘗試確認目標是不是我們
+    bool found = false;
+    int candidates = 0, ownerOpenFail = 0, dupFail = 0;
+    for (ULONG_PTR i = 0; i < info->count; i++) {
+        const auto& e = info->entries[i];
+        if (e.objType != procType || e.pid == ownPid ||
+            e.pid == 0 || e.pid == 4) continue;
+        candidates++;
+
+        HANDLE owner = ::OpenProcess(
+            PROCESS_DUP_HANDLE | PROCESS_QUERY_LIMITED_INFORMATION, FALSE,
+            static_cast<DWORD>(e.pid));
+        if (!owner) { ownerOpenFail++; continue; } // 無權開對方 → 無法確認目標，略過
+        HANDLE dup = nullptr;
+        if (::DuplicateHandle(owner,
+                reinterpret_cast<HANDLE>(e.handle),
+                ::GetCurrentProcess(), &dup, 0, FALSE,
+                DUPLICATE_SAME_ACCESS) && dup) {
+            DWORD targetPid = ::GetProcessId(dup);
+            if (targetPid == ownPid) {
+                // 同一持有者只回報一次，避免監控週期洗版
+                {
+                    std::lock_guard<std::mutex> lock(trustedMutex);
+                    if (extHandleSeen.count(e.pid)) { ::CloseHandle(dup); ::CloseHandle(owner); continue; }
+                    extHandleSeen.insert(e.pid);
+                }
+                wchar_t name[MAX_PATH] = {};
+                DWORD sz = MAX_PATH;
+                ::QueryFullProcessImageNameW(owner, 0, name, &sz);
+                std::string holderPath = ToLower(WideToUtf8(name));
+                std::string holderName = holderPath;
+                auto slash = holderPath.find_last_of("\\/");
+                if (slash != std::string::npos)
+                    holderName = holderPath.substr(slash + 1);
+
+                // 持有者白名單：手動加入的檔名，或位於系統目錄的二進位。
+                // 注意不用簽章判定：conhost 等系統檔是 catalog 簽章，
+                // WinVerifyTrust 對其回 TRUST_E_NOSIGNATURE 會誤判；
+                // 而能把檔案放進 System32 的攻擊者本來就有 admin 權限，
+                // 已超出此防禦層的威脅模型。
+                bool holderTrusted;
+                {
+                    std::lock_guard<std::mutex> lock(trustedMutex);
+                    holderTrusted = trustedHandleHolders.count(holderName) != 0;
+                }
+                if (!holderTrusted && slash != std::string::npos &&
+                    IsSystemDir(holderPath.substr(0, slash))) {
+                    holderTrusted = true;
+                }
+                if (holderTrusted) { ::CloseHandle(dup); ::CloseHandle(owner); continue; }
+
+                ReportViolation(ViolationType::ExternalHandle,
+                    "pid " + std::to_string(e.pid) + " (" + WideToUtf8(name) +
+                    ") holds a handle to this process");
+                found = true;
+            }
+            ::CloseHandle(dup);
+        } else {
+            dupFail++;
+        }
+        ::CloseHandle(owner);
+    }
+    if (diag) {
+        *diag = "candidates=" + std::to_string(candidates) +
+                " ownerOpenFail=" + std::to_string(ownerOpenFail) +
+                " dupFail=" + std::to_string(dupFail) +
+                " found=" + std::to_string(found);
+    }
+    return found;
+#else
+    (void)diag;
+    return false;
+#endif
+}
+
+bool SecurityManager::CheckHeapIntegrity() {
+#ifdef _WIN32
+    if (!::HeapValidate(::GetProcessHeap(), 0, nullptr)) {
+        ReportViolation(ViolationType::HeapCorruption, "process heap corrupt");
+        return true;
+    }
+#endif
+    return false;
+}
+
+bool SecurityManager::CheckCriticalApiHooks() {
+#if defined(_WIN32) && (defined(_M_X64) || defined(__x86_64__))
+    HMODULE ntdll = ::GetModuleHandleW(L"ntdll.dll");
+    if (!ntdll) return false;
+    // x64 syscall stub 開頭恆為: 4C 8B D1 B8 <syscall#>
+    // (mov r10,rcx; mov eax,imm) —— 前導碼不符即被 inline hook。
+    static const char* kSyscallApis[] = {
+        "NtProtectVirtualMemory", "NtWriteVirtualMemory", "NtReadVirtualMemory",
+        "NtAllocateVirtualMemory", "NtCreateThreadEx", "NtOpenProcess",
+        "NtQueryInformationProcess", "NtSetInformationThread",
+        "NtSuspendProcess", "NtResumeProcess", "NtQuerySystemInformation",
+        "NtDuplicateObject", "NtSetContextThread", "NtGetContextThread",
+        "NtQueueApcThread", "NtMapViewOfSection"
+    };
+    bool found = false;
+    for (const char* api : kSyscallApis) {
+        auto* p = reinterpret_cast<const uint8_t*>(::GetProcAddress(ntdll, api));
+        if (!p) continue;
+        if (!(p[0] == 0x4C && p[1] == 0x8B && p[2] == 0xD1 && p[3] == 0xB8)) {
+            ReportViolation(ViolationType::ApiHook,
+                std::string(api) + " prologue patched (inline hook?)");
+            found = true;
+        }
+    }
+    return found;
+#else
+    return false;
+#endif
+}
+
+bool SecurityManager::CheckKnownToolProcesses() {
+#ifdef _WIN32
+    // 子字串比對，可抓到 cheatengine-x86_64.exe 這類帶後綴的檔名
+    // 病毒碼（已知工具特徵）分類維護，新增條目請歸類並保持小寫
+    static const char* kToolNames[] = {
+        // 記憶體編輯 / 修改器
+        "cheatengine", "artmoney", "tsearch", "crysearch", "squalr",
+        "cosmos", "gameconqueror",
+        // 修改器平台
+        "wemod", "plitch", "megadev", "cheathappens",
+        // 注入器 / 手動映射載入器
+        "xenos", "kdmapper", "extreme injector", "gh injector",
+        // 除錯器
+        "x64dbg", "x32dbg", "x96dbg", "ollydbg", "windbg", "cdb.exe",
+        "ntsd.exe", "immunitydebug", "dnspy", "msvsmon",
+        // 逆向工程
+        "ida64", "idaq", "ida.exe", "binaryninja", "ghidra", "cutter",
+        "iaito", "radare2", "rizin", "reclass", "scyllahide",
+        // 行程/系統監控與分析
+        "processhacker", "systeminformer", "procexp", "procmon", "vmmap",
+        "procdump", "winobj", "apimonitor", "spyxx", "pchunter",
+        // 變速齒輪
+        "speedgear", "speederxp"
+    };
+    HANDLE snap = ::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (snap == INVALID_HANDLE_VALUE) return false;
+    DWORD ownPid = ::GetCurrentProcessId();
+    bool found = false;
+    PROCESSENTRY32W pe{};
+    pe.dwSize = sizeof(pe);
+    for (BOOL ok = ::Process32FirstW(snap, &pe); ok; ok = ::Process32NextW(snap, &pe)) {
+        if (pe.th32ProcessID == ownPid) continue;
+        std::string exe = ToLower(WideToUtf8(pe.szExeFile));
+        for (const char* tool : kToolNames) {
+            if (exe.find(tool) != std::string::npos) {
+                {
+                    std::lock_guard<std::mutex> lock(trustedMutex);
+                    if (!extToolSeen.insert(pe.th32ProcessID).second) break;
+                }
+                ReportViolation(ViolationType::ExternalTool,
+                    "known tool process: " + exe +
+                    " (pid " + std::to_string(pe.th32ProcessID) + ")");
+                found = true;
+                break;
+            }
+        }
+    }
+    ::CloseHandle(snap);
+    return found;
+#else
+    return false;
+#endif
+}
+
+bool SecurityManager::CheckThreadContexts() {
+#if defined(_WIN32) && (defined(_M_X64) || defined(__x86_64__))
+    auto ranges = CollectModuleRanges();
+    DWORD pid = ::GetCurrentProcessId();
+    DWORD selfTid = ::GetCurrentThreadId();
+    HANDLE snap = ::CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
+    if (snap == INVALID_HANDLE_VALUE) return false;
+
+    // 先收集再回報：暫停窗口內不做任何 heap 配置，
+    // 避免暫停到持有 heap lock 的執行緒時自己卡死。
+    std::vector<DWORD> flagged;
+    flagged.reserve(16);
+
+    THREADENTRY32 te{};
+    te.dwSize = sizeof(te);
+    for (BOOL ok = ::Thread32First(snap, &te); ok; ok = ::Thread32Next(snap, &te)) {
+        if (te.th32OwnerProcessID != pid || te.th32ThreadID == selfTid) continue;
+        HANDLE h = ::OpenThread(
+            THREAD_SUSPEND_RESUME | THREAD_GET_CONTEXT | THREAD_QUERY_INFORMATION,
+            FALSE, te.th32ThreadID);
+        if (!h) continue;
+        if (::SuspendThread(h) != static_cast<DWORD>(-1)) {
+            CONTEXT ctx{};
+            ctx.ContextFlags = CONTEXT_CONTROL; // Rip / Rsp / flags
+            if (::GetThreadContext(h, &ctx) &&
+                !AddrInAnyModule(static_cast<uintptr_t>(ctx.Rip), ranges)) {
+                flagged.push_back(te.th32ThreadID);
+            }
+            ::ResumeThread(h);
+        }
+        ::CloseHandle(h);
+    }
+    ::CloseHandle(snap);
+
+    for (DWORD tid : flagged) {
+        ReportViolation(ViolationType::InjectedThread,
+            "tid " + std::to_string(tid) +
+            " currently executing outside all modules (jumped into shellcode?)");
+    }
+    return !flagged.empty();
+#else
+    return false;
+#endif
+}
+
+void SecurityManager::AddTrustedHandleHolder(const std::string& imageName) {
+    std::lock_guard<std::mutex> lock(trustedMutex);
+    trustedHandleHolders.insert(ToLower(imageName));
+}
+
+bool SecurityManager::IsMonitorAlive(uint32_t maxAgeMs) const {
+    if (!monitoring.load()) return false;
+    int64_t hb = monitorHeartbeatMs.load();
+    if (hb == 0) return false;
+    int64_t now = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::steady_clock::now().time_since_epoch()).count();
+    return (now - hb) <= static_cast<int64_t>(maxAgeMs);
 }
 
 // ---- 即時載入通知（LdrRegisterDllNotification）----
@@ -1143,7 +1538,9 @@ bool SecurityManager::EnableImageLoadNotify() {
     notifyRun.store(true, std::memory_order_release);
     notifyWorker = std::thread(&SecurityManager::NotifyWorkerLoop, this);
 
-    NTSTATUS st = reg(0, &SecurityManager::LdrNotifyThunk, this, &ldrCookie);
+    NTSTATUS st = reg(0,
+        reinterpret_cast<LdrNotifyFn>(&SecurityManager::LdrNotifyThunk),
+        this, &ldrCookie);
     if (st < 0) {
         notifyRun.store(false);
         if (notifyWorker.joinable()) notifyWorker.join();
@@ -1194,12 +1591,23 @@ void SecurityManager::StopMonitoring() {
 
 void SecurityManager::MonitorLoop(uint32_t intervalMs) {
     while (monitoring.load()) {
+        monitorHeartbeatMs.store(
+            std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::steady_clock::now().time_since_epoch()).count());
         CheckDebugger();
         CheckDebuggerExtended();
         CheckTimingAnomaly();
         CheckLoadedModules();
+        CheckHiddenModules();
+        CheckExecutablePrivateMemory();
+        CheckIATHooks();
+        CheckExternalHandles();
         CheckInjectedThreads();
+        CheckThreadContexts();
         CheckHardwareBreakpoints();
+        CheckCriticalApiHooks();
+        CheckKnownToolProcesses();
+        CheckHeapIntegrity();
         VerifyAllGuards();
         if (ownCodeArmed) VerifyOwnCode();
 
@@ -1218,8 +1626,16 @@ bool SecurityManager::RunAllChecks() {
     violated |= CheckDebuggerExtended();
     violated |= CheckTimingAnomaly();
     violated |= CheckLoadedModules();
+    violated |= CheckHiddenModules();
+    violated |= CheckExecutablePrivateMemory();
+    violated |= CheckIATHooks();
+    violated |= CheckExternalHandles();
     violated |= CheckInjectedThreads();
+    violated |= CheckThreadContexts();
     violated |= CheckHardwareBreakpoints();
+    violated |= CheckCriticalApiHooks();
+    violated |= CheckKnownToolProcesses();
+    violated |= CheckHeapIntegrity();
     violated |= !VerifyAllGuards();
     if (ownCodeArmed) violated |= !VerifyOwnCode();
     return violated;
@@ -1238,6 +1654,13 @@ const char* ViolationTypeToString(ViolationType type) {
         case ViolationType::HardwareBreakpoint:    return "HardwareBreakpoint";
         case ViolationType::InjectedThread:        return "InjectedThread";
         case ViolationType::CodeTampered:          return "CodeTampered";
+        case ViolationType::HiddenModule:          return "HiddenModule";
+        case ViolationType::SuspiciousMemory:      return "SuspiciousMemory";
+        case ViolationType::HookDetected:          return "HookDetected";
+        case ViolationType::ExternalHandle:        return "ExternalHandle";
+        case ViolationType::HeapCorruption:        return "HeapCorruption";
+        case ViolationType::ApiHook:               return "ApiHook";
+        case ViolationType::ExternalTool:          return "ExternalTool";
     }
     return "Unknown";
 }

@@ -61,15 +61,35 @@ struct CollisionData {
     Vector3 position;
     Vector3 normal;
     float penetrationDepth;
-    int otherBodyID;
+    int otherBodyID;  // 舊版相容欄位：等同 bodyBID
+    int bodyAID;      // 碰撞對的第一個物體
+    int bodyBID;      // 碰撞對的第二個物體
     
     CollisionData()
         : position(Vector3::Zero())
         , normal(Vector3::Zero())
         , penetrationDepth(0.0f)
         , otherBodyID(-1)
+        , bodyAID(-1)
+        , bodyBID(-1)
     {
     }
+};
+
+/**
+ * 數值積分器類型
+ *
+ * SemiImplicitEuler：v += a·dt 後 x += v·dt。一階辛積分器，
+ *   每步漏掉 ½a·dt² 項，自由落體/拋物線有系統性偏低誤差。
+ * VelocityVerlet：半踢-漂移-半踢（v+=a·dt/2 → x+=v·dt → v+=a·dt/2）。
+ *   二階辛積分器；常數加速度下解析精確，一般力場能量誤差有界
+ *   不隨時間發散。n 體無閉式解——積分器品質即模擬品質。
+ *   注意：阻尼/摩擦等速度相依力會使其退為近似（引擎阻尼於
+ *   UpdateBodies 先施加，屬可接受的遊戲級近似）。
+ */
+enum class IntegratorType {
+    SemiImplicitEuler,
+    VelocityVerlet
 };
 
 /**
@@ -144,7 +164,9 @@ public:
     
     // 約束
     void SetKinematic(bool kinematic);
-    bool IsKinematic() const { return kinematic; }
+    // kinematic 布林旗標與 SetBodyType(Kinematic) 是同義的：
+    // 兩者皆表示「由速度驅動、不受力/衝量/碰撞反應影響」
+    bool IsKinematic() const { return kinematic || bodyType == PhysicsBodyType::Kinematic; }
     
     void SetGravityEnabled(bool enabled);
     bool IsGravityEnabled() const { return gravityEnabled; }
@@ -156,6 +178,7 @@ public:
     Matrix4 GetTransformMatrix() const;
     
 private:
+    friend class PhysicsWorld;
     int bodyID;
     
     PhysicsBodyType bodyType;
@@ -166,6 +189,7 @@ private:
     float mass;
     Vector3 linearVelocity;
     Vector3 angularVelocity;
+    Vector3 accumulatedForce;   // 本步累積的力，IntegrateVelocity 時以 dt 積分後清零
     float linearDamping;
     float angularDamping;
     
@@ -180,6 +204,11 @@ private:
     
     bool kinematic;
     bool gravityEnabled;
+
+    // Velocity Verlet（leapfrog KDK 形式）：body 的 linearVelocity
+    // 以半步相位儲存（v_{n-½}）；verletBooted=false 表示尚未做過
+    // 首次半踢初始化。讀取 GetLinearVelocity 的相位偏移為 ½a·dt。
+    bool verletBooted = false;
     
     static int nextBodyID;
 };
@@ -222,6 +251,16 @@ public:
     
     void SetFixedTimeStep(float timeStep);
     float GetFixedTimeStep() const { return fixedTimeStep; }
+
+    // 積分器選擇：預設 SemiImplicitEuler（既有行為）；
+    // 需要長時間能量穩定（拋射物/回放）時切 VelocityVerlet
+    void SetIntegrator(IntegratorType type) { integrator = type; }
+    IntegratorType GetIntegrator() const { return integrator; }
+    
+    // Broadphase 網格大小(spatial hash cell size)
+    // 較大 → 每格物體多(假陽性多);較小 → 物體跨格多(插入成本高)
+    void SetBroadphaseCellSize(float size) { broadphaseCellSize = (size > 0.0f) ? size : 4.0f; }
+    float GetBroadphaseCellSize() const { return broadphaseCellSize; }
     
     // 碰撞回調
     void SetGlobalCollisionCallback(CollisionCallback callback);
@@ -239,6 +278,7 @@ private:
     void ResolveCollisions();
     void IntegrateVelocity(float deltaTime);
     void IntegratePosition(float deltaTime);
+    void IntegrateVerlet(float deltaTime);
     
 private:
     Vector3 gravity;
@@ -254,8 +294,10 @@ private:
     
     int collisionCount;
     bool initialized;
+    IntegratorType integrator = IntegratorType::SemiImplicitEuler;
     
     float accumulatedTime;
+    float broadphaseCellSize;
 };
 
 /**

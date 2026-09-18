@@ -1,5 +1,7 @@
 #include "SceneNode.h"
+#include "Rendering/RenderableComponent.h"
 #include <algorithm>
+#include <cmath>
 
 namespace Potato {
 
@@ -23,6 +25,14 @@ SceneNode::SceneNode()
     , worldMatrix(Matrix4::Identity())
     , parent(nullptr)
 {
+}
+
+void SceneNode::SetRenderable(SharedPtr<RenderableComponent> r) {
+    renderable = std::move(r);
+    // 組件攜帶包圍半徑時同步到節點,讓 Frustum Culling 生效
+    if (renderable && renderable->boundingRadius >= 0.0f) {
+        boundingRadius = renderable->boundingRadius;
+    }
 }
 
 SceneNode::SceneNode(const std::string& name)
@@ -112,32 +122,51 @@ Matrix4 SceneNode::GetLocalMatrix() const {
 
 void SceneNode::SetParent(SceneNode* newParent) {
     if (parent == newParent) return;
+    if (newParent == this) return; // 防止自我循環
+    
+    // 防止循環：newParent 不能是 this 的子孫（沿 parent 鏈往上找）
+    for (SceneNode* p = newParent; p; p = p->parent) {
+        if (p == this) return;
+    }
+    
+    // 先取得自身的共享引用：從舊父節點移除時若其為唯一擁有者，
+    // 沒有 self 的話 this 會在成員函式中途被刪除
+    SharedPtr<SceneNode> self;
+    try {
+        self = shared_from_this();
+    } catch (const std::bad_weak_ptr&) {
+        // 節點不由 shared_ptr 管理：只能更新 parent 指標，無法進入 children
+    }
     
     // 從舊父節點移除
     if (parent) {
-        auto it = std::find_if(parent->children.begin(), parent->children.end(),
-            [this](const SharedPtr<SceneNode>& child) {
-                return child.get() == this;
-            });
-        
-        if (it != parent->children.end()) {
-            parent->children.erase(it);
-        }
+        auto& siblings = parent->children;
+        siblings.erase(
+            std::remove_if(siblings.begin(), siblings.end(),
+                [this](const SharedPtr<SceneNode>& child) {
+                    return child.get() == this;
+                }),
+            siblings.end());
     }
     
     // 設置新父節點
     parent = newParent;
     
-    // 添加到新父節點
-    if (parent) {
-        parent->children.push_back(SharedPtr<SceneNode>(this));
+    // 添加到新父節點（僅當能取得共享所有權時）
+    if (parent && self) {
+        parent->children.push_back(std::move(self));
     }
     
     MarkDirty();
 }
 
 void SceneNode::AddChild(SharedPtr<SceneNode> child) {
-    if (!child) return;
+    if (!child || child.get() == this) return;
+    
+    // 防止循環：this 不能是 child 的子孫（沿 this 的 parent 鏈往上找）
+    for (SceneNode* p = this; p; p = p->parent) {
+        if (p == child.get()) return;
+    }
     
     // 如果子節點已有父節點，先移除
     if (child->parent) {
@@ -189,8 +218,9 @@ void SceneNode::UpdateWorldTransform() {
         Matrix4 parentMatrix = parent->GetWorldMatrix();
         worldMatrix = parentMatrix * localMatrix;
         
-        // 繼承世界變換（簡化版本）
-        worldPosition = parent->GetWorldPosition() + localPosition;
+        // 繼承世界變換：位置須經父矩陣完整變換(含旋轉/縮放),
+        // 直接相加會忽略父節點的旋轉與縮放
+        worldPosition = parentMatrix.TransformPoint(localPosition);
         worldRotation = parent->GetWorldRotation() * localRotation;
         worldScale = parent->GetWorldScale() * localScale;
     } else {
@@ -220,6 +250,37 @@ void SceneNode::MarkDirty() {
     }
 }
 
+void SceneNode::GetWorldBoundingSphere(Vector3& center, float& radius) const {
+    center = GetWorldPosition();
+    // 非均勻縮放下取最大軸,保證包圍球仍包住物件
+    const Vector3& ws = GetWorldScale();
+    float maxScale = std::max({std::fabs(ws.x), std::fabs(ws.y), std::fabs(ws.z)});
+    radius = boundingRadius * maxScale;
+}
+
+bool SceneNode::IsVisibleInFrustum(const Frustum& frustum) const {
+    if (boundingRadius < 0.0f) return true; // 不參與剔除
+    Vector3 center;
+    float radius;
+    GetWorldBoundingSphere(center, radius);
+    return frustum.ContainsSphere(center, radius);
+}
+
+void SceneNode::CollectVisibleNodes(const Frustum& frustum, std::vector<SceneNode*>& out) {
+    if (!active) return;
+    
+    // 參與剔除的節點:整顆包圍球在視錐外 → 連同子樹一起剔除
+    if (boundingRadius >= 0.0f && !IsVisibleInFrustum(frustum)) {
+        return;
+    }
+    if (boundingRadius >= 0.0f) {
+        out.push_back(this);
+    }
+    for (auto& child : children) {
+        child->CollectVisibleNodes(frustum, out);
+    }
+}
+
 // ============================================================================
 // SceneGraph 實現
 // ============================================================================
@@ -245,6 +306,9 @@ SceneNode* SceneGraph::FindNode(const std::string& name) {
 SceneNode* SceneGraph::FindNodeByName(const std::string& name, SceneNode* startNode) {
     if (!startNode) {
         startNode = rootNode.get();
+    }
+    if (!startNode) {
+        return nullptr; // rootNode 也為空時直接返回，避免空指標解引用
     }
     
     if (startNode->GetName() == name) {
@@ -287,6 +351,14 @@ void SceneGraph::CountNodes(SceneNode* node, size_t& count) const {
     for (auto& child : node->GetChildren()) {
         CountNodes(child.get(), count);
     }
+}
+
+std::vector<SceneNode*> SceneGraph::CollectVisibleNodes(const Frustum& frustum) {
+    std::vector<SceneNode*> visible;
+    if (rootNode) {
+        rootNode->CollectVisibleNodes(frustum, visible);
+    }
+    return visible;
 }
 
 // ============================================================================

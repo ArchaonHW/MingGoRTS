@@ -1,0 +1,25 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_du_yuming",
+  "name": "杜聿明",
+  "courtesyName": "光亭",
+  "epithet": "鐵甲儒將",
+  "rarity": "epic",
+  "faction": "中央軍",
+  "role": "commander",
+  "personality": { "aggression": 70, "discipline": 85, "cunning": 75 },
+  "stats": { "command": 85, "attack": 80, "defense": 78, "mobility": 82, "moraleAura": 78 },
+  "signatureDoctrine": {
+    "name": "鉗形攻勢",
+    "trigger": "EnemyInRange", "threshold": 8.0, "action": "AttackWeakest",
+    "description": "接敵即鉗攻最弱翼——崑崙關機械化第五軍的鉗形突擊"
+  },
+  "cards": [
+    { "name": "穩步推進", "trigger": "Always", "action": "AdvanceToObjective", "threshold": 0.0, "priority": 90, "cooldown": 0.0 },
+    { "name": "受創收束", "trigger": "HealthBelow", "threshold": 0.4, "action": "RetreatToRally", "priority": 30, "cooldown": 20.0 }
+  ],
+  "portrait": { "build": "normal", "head": "cap", "beard": "none", "glasses": false },
+  "lore": "第五軍軍長,中國第一支機械化部隊統帥,崑崙關擊斃中村正雄,遠征緬甸兵敗野人山。",
+  "historicalBattle": "崑崙關戰役 1939",
+  "art": "cards/art/roc_du_yuming.png"
+}

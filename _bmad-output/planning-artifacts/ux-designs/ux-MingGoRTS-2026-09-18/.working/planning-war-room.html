@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>MingGoRTS · 規劃層 · 作戰室地圖桌 planning-war-room</title>
+<style>
+/* ==========================================================================
+   規劃層 · 作戰室地圖桌 PLANNING WAR-ROOM (war-map personality)
+   Rationale: 寫教條 = 在沙盤上釘手令卡——觸發/動作是印章塊、槽位是釘在
+   地圖桌邊的紙條、開戰是按下朱砂大印。玩家「排卡片」而非「寫程式」,
+   所有邏輯都被翻譯成參謀桌上的實體文具。
+   ==========================================================================
+   PALETTE (沿用 direction-war-map.html,新增項已標註 NEW)
+   paper      #d3c096  沙盤牛皮紙底色
+   paper-hi   #e6d9b0  紙卡/紙條亮面
+   paper-dk   #b3a172  紙緣與摺痕深色
+   mapsheet   #c9b384  NEW 作戰地圖紙(略深於桌面,以示圖幅)
+   mud        #8a7a58  泥濘暈漬
+   ink        #37301f  手寫墨(橄欖黑)
+   pencil     #4a4234  鉛筆灰(註記、格線)
+   grease     #b03a2a  紅蠟筆(圈註、選取、警告)
+   river      #7d8f92  藍灰河道
+   river-dk   #5e7478  河道深水線
+   friendly   #55603c  友軍橄欖戳記/佈署區
+   friendly-fill rgba(85,96,60,.10)
+   enemy      #7a3a2a  敵軍紅褐
+   pin        #222222  圖釘
+   wax        #9c2f22  朱砂大印/目標釘
+   pinblue    #3a5a78  NEW 集結釘藍(對比目標紅)
+   wood       #6a5236  斷橋木色
+   ochre      #8a7434  士氣赭
+   ghost      rgba(74,66,52,.55) NEW 空槽幽影字
+   衍生色階(同族,僅供漸層高光/暗影):
+     #8fa2a4 河道高光 / #5a4630 橋板暗線 / #c04838 #7c2418 朱印漸層 /
+     #f0e6cc 印面字色 / #5a7a9c 藍釘高光 / #555 #222 圖釘金屬漸層 /
+     #241f13 桌面底色(body)
+   ========================================================================== */
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:#241f13;}
+body{font-family:"PMingLiU","Noto Serif TC","Songti TC",serif;color:#37301f;}
+.stage{position:relative;width:1920px;height:1080px;margin:0 auto;overflow:hidden;
+  background:
+    radial-gradient(ellipse 950px 520px at 55% 55%, rgba(138,122,88,.34), transparent 72%),   /* mud 中央泥漬 */
+    radial-gradient(ellipse 700px 420px at 15% 22%, rgba(138,122,88,.20), transparent 70%),
+    radial-gradient(ellipse 500px 300px at 92% 90%, rgba(138,122,88,.16), transparent 70%),
+    repeating-linear-gradient(0deg,  rgba(74,66,52,.10) 0 1px, transparent 1px 96px),        /* pencil 桌格線 */
+    repeating-linear-gradient(90deg, rgba(74,66,52,.10) 0 1px, transparent 1px 96px),
+    #d3c096;                                                                                 /* paper */
+}
+.stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 140px rgba(60,45,20,.5);}                                             /* 桌緣 vignette */
+
+/* ---------- 頂部紙條:階段 / 手令數 / 鍵提示 ---------- */
+.topstrip{position:absolute;top:16px;left:50%;transform:translateX(-50%) rotate(-.5deg);
+  background:#e6d9b0;padding:10px 34px 12px;
+  box-shadow:0 4px 10px rgba(40,30,10,.4), inset 0 -8px 14px rgba(179,161,114,.4);
+  clip-path:polygon(0 8%,3% 0,97% 0,100% 10%,99.4% 55%,100% 90%,96% 100%,4% 100%,0 88%);
+  display:flex;gap:34px;align-items:baseline;}
+.stencil{font-weight:bold;letter-spacing:.3em;font-size:20px;}
+.topstrip .lbl{font-size:12px;letter-spacing:.2em;color:#4a4234;}
+.topstrip .cnt{font-size:22px;font-weight:bold;border-bottom:2px solid #37301f;padding:0 4px;}
+.keyhint{font-size:12px;border:1.5px solid #4a4234;padding:2px 8px;border-radius:3px;
+  letter-spacing:.12em;color:#4a4234;}
+
+/* ---------- 左上標題戳 ---------- */
+.maptitle{position:absolute;left:38px;top:22px;transform:rotate(-2deg);
+  border:2px solid #37301f;padding:8px 14px;background:rgba(230,217,176,.75);}
+.maptitle .big{font-size:22px;font-weight:bold;letter-spacing:.4em;}
+.maptitle .sub{font-size:11px;letter-spacing:.22em;color:#4a4234;margin-top:3px;}
+
+/* ---------- 右上:情報籌碼 ---------- */
+.res-zone{position:absolute;right:38px;top:20px;display:flex;gap:18px;align-items:center;}
+.res-chip{background:#e6d9b0;padding:8px 14px;transform:rotate(1.2deg);
+  box-shadow:0 3px 7px rgba(40,30,10,.35);border:1px solid rgba(55,48,31,.35);}
+.res-chip .lbl{font-size:11px;letter-spacing:.25em;color:#4a4234;}
+.res-chip .val{font-size:20px;font-weight:bold;letter-spacing:.1em;}
+
+/* ---------- 左列:部隊名冊(圖釘紙卡,可點選) ---------- */
+.roster{position:absolute;left:40px;top:150px;width:272px;}
+.roster .rh{font-size:12px;letter-spacing:.35em;color:#4a4234;margin-bottom:14px;
+  border-bottom:1.5px solid #4a4234;padding-bottom:5px;}
+.rcard{position:relative;background:#e6d9b0;padding:12px 16px 13px;margin-bottom:20px;
+  box-shadow:0 4px 9px rgba(40,30,10,.35);border:1px solid rgba(55,48,31,.3);cursor:default;}
+.rcard::before{content:"";position:absolute;top:-7px;left:50%;width:14px;height:14px;
+  border-radius:50%;background:radial-gradient(circle at 35% 30%,#555,#222 70%);
+  box-shadow:0 2px 3px rgba(0,0,0,.45);}
+.rcard .nm{font-size:19px;font-weight:bold;letter-spacing:.25em;}
+.rcard .st{float:right;font-size:11px;color:#4a4234;letter-spacing:.1em;margin-top:6px;}
+.rcard .doc{font-size:11px;color:#4a4234;margin-top:6px;letter-spacing:.12em;}
+.rcard .doc b{font-size:13px;}
+.rcard .doc .lack{color:#b03a2a;font-weight:bold;}
+.bar{height:8px;margin-top:7px;background:rgba(55,48,31,.14);border:1px solid rgba(55,48,31,.45);}
+.bar>i{display:block;height:100%;background:#37301f;}
+.bar.mor>i{background:#8a7434;}
+.bar-lbl{font-size:10px;letter-spacing:.2em;color:#4a4234;margin-top:3px;
+  display:flex;justify-content:space-between;}
+.r1{transform:rotate(-1.1deg);} .r2{transform:rotate(.8deg);}
+.r3{transform:rotate(-.6deg);} .r4{transform:rotate(1.3deg);}
+/* 選中卡:紅蠟筆圈 + 紅圖釘 + 「制定中」註 */
+.rcard.sel{border-color:#b03a2a;}
+.rcard.sel::before{background:radial-gradient(circle at 35% 30%,#c04838,#9c2f22 70%);}  /* wax 紅釘 */
+.rcard.sel::after{content:"";position:absolute;inset:-9px -13px;border:2.5px solid #b03a2a;
+  border-radius:50%;transform:rotate(-2deg);opacity:.85;pointer-events:none;}
+.sel-tag{position:absolute;right:-26px;top:-22px;color:#b03a2a;font-size:13px;font-weight:bold;
+  transform:rotate(8deg);letter-spacing:.1em;}
+.pencilnote{position:absolute;left:52px;top:700px;width:250px;font-size:13px;color:#4a4234;
+  line-height:1.7;transform:rotate(-1.5deg);}
+.pencilnote .u{border-bottom:1.5px dashed #4a4234;padding-bottom:1px;}
+.pencilnote::before{content:"✎ ";color:#4a4234;}
+
+/* ---------- 中央:作戰地圖桌(圖幅) ---------- */
+.mapsheet{position:absolute;left:350px;top:150px;width:880px;height:870px;
+  background:
+    repeating-linear-gradient(0deg,  rgba(74,66,52,.16) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(90deg, rgba(74,66,52,.16) 0 1px, transparent 1px 72px),
+    radial-gradient(ellipse 600px 380px at 60% 45%, rgba(138,122,88,.25), transparent 70%),
+    #c9b384;                                                                               /* mapsheet */
+  border:2px solid #37301f;
+  box-shadow:0 8px 18px rgba(40,30,10,.45), inset 0 0 60px rgba(138,122,88,.25);}
+.mapsheet::before{content:"";position:absolute;top:-8px;left:50%;width:16px;height:16px;
+  border-radius:50%;background:radial-gradient(circle at 35% 30%,#555,#222 70%);
+  box-shadow:0 2px 4px rgba(0,0,0,.5);}
+.obj-stencil{position:absolute;left:30px;top:20px;font-size:15px;font-weight:bold;
+  letter-spacing:.3em;color:#37301f;border:1.5px solid #37301f;padding:5px 12px;
+  background:rgba(230,217,176,.6);transform:rotate(-.8deg);}
+.compass{position:absolute;right:22px;top:22px;font-size:15px;color:#4a4234;
+  border:1.5px solid #4a4234;border-radius:50%;width:50px;height:50px;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  transform:rotate(8deg);opacity:.75;}
+.contour{position:absolute;border:1px dashed rgba(74,66,52,.28);border-radius:50%;}
+.gridnum{position:absolute;font-size:11px;letter-spacing:.15em;color:rgba(74,66,52,.55);}
+.shore-lbl{position:absolute;font-size:13px;letter-spacing:.4em;color:#4a4234;opacity:.85;}
+
+/* 河道 + 斷橋(圖幅內) */
+.river{position:absolute;left:-40px;top:330px;width:960px;height:150px;
+  transform:rotate(-6deg);
+  background:linear-gradient(180deg,transparent 0%,rgba(125,143,146,.55) 14%,
+    #7d8f92 30%,#8fa2a4 50%,#7d8f92 70%,rgba(125,143,146,.5) 86%,transparent 100%);}
+.river::before{content:"";position:absolute;left:0;right:0;top:66px;height:24px;
+  background:linear-gradient(90deg,transparent,#5e7478 15%,#5e7478 85%,transparent);opacity:.55;}
+.river-name{position:absolute;left:120px;top:472px;transform:rotate(-6deg);
+  font-size:13px;letter-spacing:.5em;color:#5e7478;opacity:.8;}
+.bridge-seg{position:absolute;left:560px;width:62px;transform:rotate(-6deg);
+  background:repeating-linear-gradient(0deg,#6a5236 0 9px,#5a4630 9px 11px);
+  box-shadow:0 2px 4px rgba(40,30,10,.4);}
+.b1{top:318px;height:72px;clip-path:polygon(0 0,100% 0,100% 80%,78% 100%,55% 82%,30% 100%,0 84%);}
+.b2{top:506px;height:76px;clip-path:polygon(0 12%,22% 0,48% 16%,74% 2%,100% 18%,100% 100%,0 100%);}
+.bridge-note{position:absolute;left:642px;top:472px;font-size:13px;color:#b03a2a;
+  transform:rotate(-9deg);border-bottom:1.5px solid #b03a2a;padding-bottom:1px;}
+
+/* 佈署區:虛線橄欖框 */
+.dz{position:absolute;border:2px dashed #55603c;background:rgba(85,96,60,.10);}
+.dz .zn{position:absolute;left:6px;top:4px;font-size:12px;font-weight:bold;color:#55603c;
+  letter-spacing:.1em;}
+.dz .unit{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  height:34px;border-radius:17px;border:2.5px solid #55603c;background:rgba(230,217,176,.85);
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;
+  letter-spacing:.15em;color:#37301f;padding:0 16px;white-space:nowrap;}
+.dz .unit.sel{border-color:#b03a2a;background:rgba(176,58,42,.08);}
+.selring{position:absolute;width:150px;height:96px;border:2.5px dashed #b03a2a;
+  border-radius:50%;transform:rotate(-4deg);}
+
+/* 目標釘(朱)/集結釘(藍) */
+.pinobj{position:absolute;width:20px;height:20px;border-radius:50%;
+  box-shadow:0 3px 5px rgba(40,20,10,.5);}
+.pinobj::after{content:"";position:absolute;left:8px;top:16px;width:4px;height:16px;
+  transform:rotate(8deg);}
+.pinobj.red{background:radial-gradient(circle at 35% 30%,#c04838,#9c2f22 70%);}
+.pinobj.red::after{background:#9c2f22;}
+.pinobj.blue{background:radial-gradient(circle at 35% 30%,#5a7a9c,#3a5a78 70%);}
+.pinobj.blue::after{background:#3a5a78;}
+.pin-lbl{position:absolute;font-size:13px;font-weight:bold;letter-spacing:.15em;
+  padding:1px 8px;background:rgba(230,217,176,.85);white-space:nowrap;}
+.pin-lbl.red{color:#9c2f22;border:1.5px solid #9c2f22;transform:rotate(-3deg);}
+.pin-lbl.blue{color:#3a5a78;border:1.5px solid #3a5a78;transform:rotate(2deg);}
+
+/* 蠟筆計畫路線(虛線+箭頭) */
+.route{position:absolute;height:0;border-top:3px dashed #b03a2a;opacity:.85;}
+.route::after{content:"";position:absolute;right:-12px;top:-11px;
+  border:9px solid transparent;border-left:17px solid #b03a2a;}
+
+/* ---------- 右列A:教條卡槽(釘住的優先序列) ---------- */
+.slots{position:absolute;left:1250px;top:150px;width:302px;}
+.slots .sh{font-size:13px;font-weight:bold;letter-spacing:.3em;color:#37301f;
+  border-bottom:2px solid #37301f;padding-bottom:6px;margin-bottom:4px;}
+.slots .ss{font-size:11px;color:#4a4234;letter-spacing:.2em;margin-bottom:16px;}
+.slot{position:relative;background:#e6d9b0;padding:11px 14px 11px 48px;margin-bottom:15px;
+  border:1px solid rgba(55,48,31,.4);box-shadow:0 3px 7px rgba(40,30,10,.3);}
+.slot::before{content:"";position:absolute;top:-7px;right:16px;width:12px;height:12px;
+  border-radius:50%;background:radial-gradient(circle at 35% 30%,#555,#222 70%);
+  box-shadow:0 2px 3px rgba(0,0,0,.45);}
+.slot .num{position:absolute;left:11px;top:12px;width:26px;height:26px;
+  border:2px solid #37301f;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:14px;font-weight:bold;}
+.slot .rule{font-size:16px;font-weight:bold;letter-spacing:.06em;}
+.slot .rule .trg{color:#4a4234;}
+.slot .meta{font-size:10px;color:#4a4234;margin-top:5px;letter-spacing:.1em;display:flex;gap:12px;}
+.s1{transform:rotate(-.8deg);} .s2{transform:rotate(.7deg);} .s3{transform:rotate(-.5deg);}
+/* 空槽:虛線幽影(狀態變體) */
+.slot.empty{border:2px dashed rgba(74,66,52,.6);background:rgba(230,217,176,.35);
+  box-shadow:none;color:rgba(74,66,52,.55);padding:14px 14px 14px 48px;}
+.slot.empty::before{display:none;}
+.slot.empty .num{border-style:dashed;border-color:rgba(74,66,52,.5);color:rgba(74,66,52,.5);}
+.slot.empty .hole{font-size:16px;font-weight:bold;letter-spacing:.2em;}
+.slot.empty .ghost{font-size:11px;color:rgba(74,66,52,.55);margin-top:4px;letter-spacing:.1em;}
+
+/* ---------- 右列B:參謀電報 / 警告 / 開戰大印 ---------- */
+.telegram{position:absolute;left:1572px;top:150px;width:310px;
+  background:#e6d9b0;padding:16px 18px 14px;
+  clip-path:polygon(0 14px,8% 4px,16% 12px,24% 2px,33% 10px,42% 3px,51% 12px,60% 4px,
+    70% 11px,79% 2px,88% 10px,96% 3px,100% 8px,100% 100%,0 100%);                        /* 撕邊電報紙 */
+  box-shadow:0 5px 11px rgba(40,30,10,.4);transform:rotate(.8deg);}
+.telegram .th{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.3em;
+  color:#4a4234;border-bottom:1.5px dashed #4a4234;padding-bottom:5px;margin-bottom:8px;}
+.telegram .tb{font-size:14px;line-height:1.7;color:#37301f;}
+.posture{display:inline-block;border:1.5px solid #55603c;color:#55603c;font-size:11px;
+  font-weight:bold;letter-spacing:.15em;padding:1px 8px;margin-bottom:6px;}
+.telegram .why{font-size:12px;color:#4a4234;line-height:1.6;margin-top:8px;
+  border-top:1px dashed rgba(74,66,52,.5);padding-top:7px;}
+.loadbtn{display:inline-block;margin-top:10px;border:2.5px solid #b03a2a;color:#b03a2a;
+  font-size:15px;font-weight:bold;letter-spacing:.3em;padding:5px 18px 5px 21px;
+  background:rgba(176,58,42,.06);transform:rotate(-1deg);
+  box-shadow:2px 3px 0 rgba(55,48,31,.3);}
+.loadbtn small{display:block;font-size:9px;letter-spacing:.15em;color:#4a4234;
+  font-weight:normal;margin-top:2px;}
+
+.warn{position:absolute;left:1572px;top:398px;width:310px;display:flex;align-items:center;
+  gap:10px;color:#b03a2a;font-weight:bold;font-size:15px;transform:rotate(-.6deg);}
+.warn .bang{flex:none;width:25px;height:25px;border:2.5px solid #b03a2a;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:16px;}
+.warn .wt{border-bottom:2px dashed #b03a2a;padding-bottom:2px;line-height:1.45;}
+
+.seal-war{position:absolute;left:1632px;top:470px;width:132px;height:132px;
+  background:radial-gradient(circle at 38% 32%,#c04838,#9c2f22 55%,#7c2418);
+  color:#f0e6cc;display:flex;align-items:center;justify-content:center;
+  font-size:36px;font-weight:bold;letter-spacing:.25em;writing-mode:vertical-rl;
+  transform:rotate(-4deg);border-radius:9px;
+  box-shadow:0 7px 14px rgba(40,20,10,.55),
+    inset 0 0 0 4px rgba(240,230,204,.32), inset 0 0 0 11px rgba(0,0,0,.07);}
+.seal-cap{position:absolute;left:1622px;top:616px;width:160px;text-align:center;
+  font-size:12px;color:#4a4234;letter-spacing:.25em;transform:rotate(-1deg);}
+
+/* ---------- 右下:制卡作坊(印章塊編輯器) ---------- */
+.editor{position:absolute;left:1250px;top:720px;width:632px;height:308px;
+  background:#e6d9b0;border:2px solid rgba(55,48,31,.5);
+  box-shadow:0 6px 13px rgba(40,30,10,.4);padding:16px 22px;transform:rotate(-.3deg);}
+.editor::before,.editor::after{content:"";position:absolute;top:-8px;width:14px;height:14px;
+  border-radius:50%;background:radial-gradient(circle at 35% 30%,#555,#222 70%);
+  box-shadow:0 2px 3px rgba(0,0,0,.5);}
+.editor::before{left:26px;} .editor::after{right:26px;}
+.ed-head{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid #37301f;
+  padding-bottom:7px;margin-bottom:14px;}
+.ed-head .t{font-size:16px;font-weight:bold;letter-spacing:.3em;}
+.ed-head .s{font-size:11px;color:#4a4234;letter-spacing:.15em;}
+.pickrow{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.plab{font-size:13px;letter-spacing:.2em;color:#4a4234;}
+.tile{display:inline-flex;align-items:baseline;background:#d3c096;
+  border:2.5px solid #37301f;padding:9px 15px 8px;font-size:19px;font-weight:bold;
+  letter-spacing:.12em;box-shadow:2px 3px 0 rgba(55,48,31,.35);}
+.tile .dn{font-size:11px;margin-left:9px;color:#4a4234;}
+.tile.trg{border-color:#7a3a2a;color:#7a3a2a;}
+.tile.act{border-color:#55603c;color:#37301f;}
+.arrw{font-size:24px;color:#b03a2a;font-weight:bold;transform:translateY(1px);}
+.steprow{display:flex;gap:30px;align-items:center;margin-bottom:16px;}
+.step{display:flex;align-items:center;gap:7px;}
+.step .lab{font-size:12px;color:#4a4234;letter-spacing:.15em;}
+.step .sbtn{width:26px;height:26px;border:2px solid #37301f;background:#e6d9b0;
+  display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px;
+  box-shadow:1px 2px 0 rgba(55,48,31,.3);}
+.step .val{min-width:46px;text-align:center;font-size:17px;font-weight:bold;
+  border-bottom:2px solid #37301f;padding:0 4px;
+  font-family:"Microsoft JhengHei",sans-serif;}
+.ed-foot{display:flex;align-items:center;gap:18px;}
+.stampbtn{border:3px solid #b03a2a;color:#b03a2a;font-size:18px;font-weight:bold;
+  letter-spacing:.35em;padding:8px 22px 8px 26px;background:rgba(176,58,42,.07);
+  transform:rotate(-1deg);box-shadow:3px 4px 0 rgba(55,48,31,.3);}
+.ed-hint{font-size:11px;color:#4a4234;letter-spacing:.12em;line-height:1.6;}
+
+/* ---------- 角落人格註記 ---------- */
+.dirnote{position:absolute;left:42px;bottom:20px;font-size:12px;color:#4a4234;
+  letter-spacing:.15em;transform:rotate(-.6deg);}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <!-- 頂部紙條 -->
+  <div class="topstrip">
+    <span class="stencil">階段「佈署 · 作戰室」</span>
+    <span><span class="lbl">手令卡</span> <span class="cnt">12</span></span>
+    <span><span class="lbl">部隊</span> <b style="font-size:19px;">4/4</b></span>
+    <span class="keyhint">拖卡入槽 · ENTER 蓋印開戰</span>
+  </div>
+
+  <!-- 左上標題戳 -->
+  <div class="maptitle">
+    <div class="big">斷橋河線</div>
+    <div class="sub">作戰室地圖桌 · 規劃層 · 北伐夜戰前夕</div>
+  </div>
+
+  <!-- 右上情報 -->
+  <div class="res-zone">
+    <div class="res-chip"><span class="lbl">情報</span><br><span class="val">8/10</span></div>
+    <div class="res-chip" style="transform:rotate(-1deg);"><span class="lbl">時辰</span><br><span class="val">亥時</span></div>
+  </div>
+
+  <!-- 左列:部隊名冊 -->
+  <div class="roster">
+    <div class="rh">部 隊 序 列 · 點 名</div>
+    <div class="rcard r1">
+      <span class="nm">前鋒營</span><span class="st">佈署·乙區</span>
+      <div class="bar"><i style="width:78%;"></i></div>
+      <div class="bar-lbl"><span>兵力</span><span>78%</span></div>
+      <div class="doc">教條 <b>4/4</b> 槽</div>
+    </div>
+    <div class="rcard r2">
+      <span class="nm">偵查隊</span><span class="st">佈署·甲區</span>
+      <div class="bar"><i style="width:100%;"></i></div>
+      <div class="bar-lbl"><span>兵力</span><span>100%</span></div>
+      <div class="doc">教條 <b>4/4</b> 槽</div>
+    </div>
+    <div class="rcard r3 sel">
+      <span class="sel-tag">← 制定中</span>
+      <span class="nm">後衛營</span><span class="st">佈署·丁區</span>
+      <div class="bar"><i style="width:45%;"></i></div>
+      <div class="bar-lbl"><span>兵力</span><span>45%</span></div>
+      <div class="bar mor"><i style="width:31%;background:#b03a2a;"></i></div>
+      <div class="bar-lbl"><span>士氣</span><span style="color:#b03a2a;">31%</span></div>
+      <div class="doc">教條 <b class="lack">3/4</b> 槽 · <span class="lack">缺墊底卡</span></div>
+    </div>
+    <div class="rcard r4">
+      <span class="nm">砲　隊</span><span class="st">佈署·丙區</span>
+      <div class="bar"><i style="width:92%;"></i></div>
+      <div class="bar-lbl"><span>兵力</span><span>92%</span></div>
+      <div class="doc">教條 <b>4/4</b> 槽</div>
+    </div>
+  </div>
+
+  <div class="pencilnote">
+    參謀鉛筆批:<span class="u">集結點宜近橋南</span>,<br>俟敵半渡,前鋒乃出。
+  </div>
+
+  <!-- 中央:作戰地圖桌 -->
+  <div class="mapsheet">
+    <div class="obj-stencil">目標 · 奪回北岸橋頭</div>
+    <div class="compass"><span style="font-size:15px;">北</span><span style="font-size:9px;">▲</span></div>
+    <div class="contour" style="left:80px;top:120px;width:320px;height:150px;"></div>
+    <div class="contour" style="left:130px;top:150px;width:220px;height:100px;"></div>
+    <div class="contour" style="left:560px;top:620px;width:280px;height:140px;"></div>
+    <div class="gridnum" style="left:14px;top:110px;">A-7</div>
+    <div class="gridnum" style="left:14px;top:470px;">A-4</div>
+    <div class="gridnum" style="left:820px;top:830px;">L-1</div>
+    <div class="gridnum" style="left:440px;top:830px;">G-1</div>
+    <div class="shore-lbl" style="left:690px;top:70px;transform:rotate(-3deg);">北岸 · 敵佔區</div>
+    <div class="shore-lbl" style="left:60px;top:810px;">南岸 · 我軍佈署區</div>
+
+    <div class="river"></div>
+    <div class="river-name">濁 水 溪</div>
+    <div class="bridge-seg b1"></div>
+    <div class="bridge-seg b2"></div>
+    <div class="bridge-note">橋 斷</div>
+
+    <!-- 計畫路線(蠟筆虛線) -->
+    <div class="route" style="left:315px;top:655px;width:300px;transform:rotate(-26deg);"></div>
+    <div class="route" style="left:125px;top:640px;width:305px;transform:rotate(-14deg);"></div>
+
+    <!-- 圖釘:目標(朱)/集結(藍) -->
+    <div class="pinobj red" style="left:596px;top:180px;"></div>
+    <div class="pin-lbl red" style="left:622px;top:172px;">目標</div>
+    <div class="pinobj blue" style="left:428px;top:552px;"></div>
+    <div class="pin-lbl blue" style="left:454px;top:546px;">集結</div>
+
+    <!-- 佈署區甲乙丙丁 -->
+    <div class="dz" style="left:50px;top:640px;width:150px;height:100px;">
+      <span class="zn">甲</span><span class="unit">偵查隊</span></div>
+    <div class="dz" style="left:235px;top:665px;width:160px;height:110px;">
+      <span class="zn">乙</span><span class="unit">前鋒營</span></div>
+    <div class="dz" style="left:430px;top:690px;width:150px;height:100px;">
+      <span class="zn">丙</span><span class="unit">砲　隊</span></div>
+    <div class="dz" style="left:620px;top:650px;width:170px;height:110px;">
+      <span class="zn">丁</span><span class="unit sel">後衛營</span>
+      <div class="selring" style="left:8px;top:6px;"></div></div>
+  </div>
+
+  <!-- 右列A:教條卡槽(後衛營) -->
+  <div class="slots">
+    <div class="sh">教條序列 · 後衛營</div>
+    <div class="ss">優先自上而下 · 高者先斷</div>
+
+    <div class="slot s1">
+      <span class="num">1</span>
+      <div class="rule"><span class="trg">接敵</span> → 交火</div>
+      <div class="meta"><span>優先 1</span><span>冷卻 8s</span></div>
+    </div>
+    <div class="slot s2">
+      <span class="num">2</span>
+      <div class="rule"><span class="trg">敵近</span> → 偵查</div>
+      <div class="meta"><span>距離 &lt;200</span><span>優先 2</span></div>
+    </div>
+    <div class="slot s3">
+      <span class="num">3</span>
+      <div class="rule"><span class="trg">士氣&lt;30</span> → 撤退</div>
+      <div class="meta"><span>門檻 30</span><span>優先 3</span><span>冷卻 20s</span></div>
+    </div>
+    <!-- 狀態變體:空槽(墊底卡未置) -->
+    <div class="slot empty">
+      <span class="num">4</span>
+      <div>
+        <div class="hole">空　槽</div>
+        <div class="ghost">缺:Always → 駐守(拖卡至此)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右列B:參謀電報 -->
+  <div class="telegram">
+    <div class="th"><span>參謀部 · 急電</span><span>NO.047</span></div>
+    <span class="posture">姿態〔穩健〕</span>
+    <div class="tb">據偵,敵情未明。判敵主力屯於北岸,意在誘我渡河。</div>
+    <div class="why">參謀評:宜守橋南、緩接敵,俟其半渡而擊之。</div>
+    <span class="loadbtn">載入<small>一鍵套入四營教條</small></span>
+  </div>
+
+  <!-- 校驗警告 -->
+  <div class="warn">
+    <span class="bang">!</span>
+    <span class="wt">警告:後衛營缺 Always 墊底卡</span>
+  </div>
+
+  <!-- 開戰大印 -->
+  <div class="seal-war">開戰</div>
+  <div class="seal-cap">蓋印即開戰 · ENTER</div>
+
+  <!-- 右下:制卡作坊 -->
+  <div class="editor">
+    <div class="ed-head">
+      <span class="t">制卡 · 條件手令</span>
+      <span class="s">觸發 → 動作,如排印章,非寫程式</span>
+    </div>
+    <div class="pickrow">
+      <span class="plab">觸發</span>
+      <span class="tile trg">接敵<span class="dn">▼</span></span>
+      <span class="arrw">→</span>
+      <span class="plab">動作</span>
+      <span class="tile act">交火<span class="dn">▼</span></span>
+      <span class="ed-hint" style="margin-left:10px;">點印面換章<br>(▼ 可換觸發/動作)</span>
+    </div>
+    <div class="steprow">
+      <div class="step"><span class="lab">門檻</span>
+        <span class="sbtn">◀</span><span class="val">30</span><span class="sbtn">▶</span></div>
+      <div class="step"><span class="lab">優先</span>
+        <span class="sbtn">◀</span><span class="val">2</span><span class="sbtn">▶</span></div>
+      <div class="step"><span class="lab">冷卻</span>
+        <span class="sbtn">◀</span><span class="val">8秒</span><span class="sbtn">▶</span></div>
+    </div>
+    <div class="ed-foot">
+      <span class="stampbtn">蓋印入槽</span>
+      <span class="ed-hint">蓋印後拖至左列槽位;<br>④號空槽候『Always → 駐守』墊底。</span>
+    </div>
+  </div>
+
+  <div class="dirnote">規劃層 — 作戰室地圖桌:鉛筆落處,即成軍令。</div>
+</div>
+</body>
+</html>
