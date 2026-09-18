@@ -1,0 +1,554 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4c05a82..5390082 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -395,6 +395,7 @@ target_link_libraries(Gameplay PUBLIC PotatoEngine Quantum)
+ # 分層：PotatoEngine ← Gameplay ← Campaign，Campaign 不回流 Gameplay
+ add_library(Campaign STATIC
+     Campaign/CampaignState.cpp
++    Campaign/ChapterLibrary.cpp
+ )
+ target_include_directories(Campaign PUBLIC ${CMAKE_SOURCE_DIR})
+ target_link_libraries(Campaign PUBLIC Gameplay)
+@@ -729,10 +730,20 @@ add_executable(CampaignStateTest Examples/CampaignStateTest.cpp)
+ target_include_directories(CampaignStateTest PRIVATE ${CMAKE_SOURCE_DIR})
+ target_link_libraries(CampaignStateTest Campaign)
+ 
++# C-1 章節定義庫無頭測試（schema/消毒/LoadDir/Find）
++add_executable(ChapterLibraryTest Examples/ChapterLibraryTest.cpp)
++target_include_directories(ChapterLibraryTest PRIVATE ${CMAKE_SOURCE_DIR})
++target_link_libraries(ChapterLibraryTest Campaign)
++
++# C-1 章節定義庫（assets/campaign/*.json 內容側定義）無頭測試
++add_executable(ChapterLibraryTest Examples/ChapterLibraryTest.cpp)
++target_include_directories(ChapterLibraryTest PRIVATE ${CMAKE_SOURCE_DIR})
++target_link_libraries(ChapterLibraryTest Campaign)
++
+ # 斷橋攻防戰即時渲染 → MP4
+ add_executable(BattleRenderDemo Examples/BattleRenderDemo.cpp)
+ target_include_directories(BattleRenderDemo PRIVATE ${CMAKE_SOURCE_DIR})
+-target_link_libraries(BattleRenderDemo Gameplay)
++target_link_libraries(BattleRenderDemo Gameplay Media)
+ 
+ # 戰鬥指揮官 RL 訓練：DQN 學 CP 介入時機（無頭,進 POTATO_TESTS）
+ add_executable(BattleTrainerDemo Examples/BattleTrainerDemo.cpp)
+@@ -747,7 +758,7 @@ target_link_libraries(VideoDataDemo Gameplay Media glad glfw)
+ # 天使軍團程序化影片（工具性質：需 GL + ffmpeg,不進 POTATO_TESTS）
+ add_executable(AngelLegionVideo Examples/AngelLegionVideo.cpp)
+ target_include_directories(AngelLegionVideo PRIVATE ${CMAKE_SOURCE_DIR})
+-target_link_libraries(AngelLegionVideo PotatoEngine glad glfw)
++target_link_libraries(AngelLegionVideo PotatoEngine glad glfw Media)
+ 
+ add_executable(ModelLoaderTest Examples/ModelLoaderTest.cpp)
+ target_include_directories(ModelLoaderTest PRIVATE ${CMAKE_SOURCE_DIR})
+@@ -911,6 +922,7 @@ set(POTATO_TESTS
+     CampaignLedgerTest
+     GeneralDossierTest
+     CampaignStateTest
++    ChapterLibraryTest
+     SynthDataDemo
+     MythLogTest
+     ChapterConventionsTest
+diff --git a/Examples/AngelLegionVideo.cpp b/Examples/AngelLegionVideo.cpp
+index 6029a94..70054ad 100644
+--- a/Examples/AngelLegionVideo.cpp
++++ b/Examples/AngelLegionVideo.cpp
+@@ -13,6 +13,7 @@
+ #include "MathUtils/MathUtils.h"
+ #include "MathUtils/Vector3.h"
+ #include "MathUtils/Matrix4.h"
++#include "Media/VideoEncoder.h"
+ 
+ #include <glad/glad.h>
+ #include <GLFW/glfw3.h>
+@@ -434,14 +435,10 @@ int main(int argc, char** argv) {
+     // ---- 投影矩陣 ----
+     Matrix4 proj = Matrix4::Perspective(50.0f * DEG_TO_RAD, (float)W / H, 0.1f, 400.0f);
+ 
+-    // ---- FFmpeg 管道 ----
+-    std::string cmd = "ffmpeg -y -f rawvideo -pix_fmt rgb24 -s " +
+-        std::to_string(W) + "x" + std::to_string(H) +
+-        " -r " + std::to_string(fps) +
+-        " -i - -vf vflip -an -c:v libx264 -pix_fmt yuv420p -crf 18 -movflags +faststart \"" +
+-        outPath + "\" 2> ffmpeg_encode.log";
+-    FILE* pipe = _popen(cmd.c_str(), "wb");
+-    if (!pipe) {
++    // ---- FFmpeg 管道(Media/VideoEncoder,高品質檔 crf16/slow)----
++    Media::VideoEncoder enc;
++    if (!enc.Open(outPath, W, H, fps, Media::PixelFormat::RGB,
++                  "ffmpeg_encode.log", Media::EncodeQuality::High())) {
+         std::cerr << "Failed to open ffmpeg pipe" << std::endl;
+         return 1;
+     }
+@@ -600,7 +597,7 @@ int main(int argc, char** argv) {
+ 
+         // ---- 擷取畫面 ----
+         glReadPixels(0, 0, W, H, GL_RGB, GL_UNSIGNED_BYTE, frameBuf.data());
+-        fwrite(frameBuf.data(), 1, frameBuf.size(), pipe);
++        enc.WriteFrame(frameBuf.data(), frameBuf.size());
+ 
+         renderer.Present();
+ 
+@@ -609,7 +606,7 @@ int main(int argc, char** argv) {
+     }
+ 
+     std::cout << "Finalizing encode..." << std::endl;
+-    _pclose(pipe);
++    enc.Close();
+     renderer.Shutdown();
+ 
+     std::cout << "Done: " << outPath << std::endl;
+diff --git a/Examples/BattleRenderDemo.cpp b/Examples/BattleRenderDemo.cpp
+index 7ca7bf4..5556cc9 100644
+--- a/Examples/BattleRenderDemo.cpp
++++ b/Examples/BattleRenderDemo.cpp
+@@ -12,6 +12,7 @@
+ #include "Gameplay/BattleSceneSync.h"
+ #include "Gameplay/Doctrine.h"
+ #include "MathUtils/Matrix4.h"
++#include "Media/VideoEncoder.h"
+ 
+ #include <glad/glad.h>
+ #include <iostream>
+@@ -195,14 +196,13 @@ int main(int argc, char** argv) {
+     SceneRenderer sceneRenderer;
+     sceneRenderer.SetDefaultShader(unitShader);
+ 
+-    // ---- ffmpeg ----
+-    std::string cmd = "ffmpeg -y -f rawvideo -pix_fmt rgb24 -s " +
+-        std::to_string(W) + "x" + std::to_string(H) +
+-        " -r " + std::to_string(fps) +
+-        " -i - -vf vflip -an -c:v libx264 -pix_fmt yuv420p -crf 18 -movflags +faststart \"" +
+-        outPath + "\" 2> ffmpeg_battle.log";
+-    FILE* pipe = _popen(cmd.c_str(), "wb");
+-    if (!pipe) { std::cerr << "ffmpeg pipe failed\n"; return 1; }
++    // ---- ffmpeg(Media/VideoEncoder,高品質檔 crf16/slow)----
++    Media::VideoEncoder enc;
++    if (!enc.Open(outPath, W, H, fps, Media::PixelFormat::RGB,
++                  "ffmpeg_battle.log", Media::EncodeQuality::High())) {
++        std::cerr << "ffmpeg pipe failed\n";
++        return 1;
++    }
+ 
+     std::vector<unsigned char> frameBuf(W * H * 3);
+     std::cout << "Rendering " << totalFrames << " frames..." << std::endl;
+@@ -226,7 +226,7 @@ int main(int argc, char** argv) {
+ 
+         // 擷取必須在 SwapBuffers 前:交換後 back buffer 內容未定義
+         glReadPixels(0, 0, W, H, GL_RGB, GL_UNSIGNED_BYTE, frameBuf.data());
+-        fwrite(frameBuf.data(), 1, frameBuf.size(), pipe);
++        enc.WriteFrame(frameBuf.data(), frameBuf.size());
+         renderer.SwapBuffers();
+ 
+         if (battle.GetOutcome() != BattleOutcome::Ongoing) {
+@@ -237,7 +237,7 @@ int main(int argc, char** argv) {
+                 renderer.Clear();
+                 sceneRenderer.Render(scene, cam);
+                 glReadPixels(0, 0, W, H, GL_RGB, GL_UNSIGNED_BYTE, frameBuf.data());
+-                fwrite(frameBuf.data(), 1, frameBuf.size(), pipe);
++                enc.WriteFrame(frameBuf.data(), frameBuf.size());
+                 renderer.SwapBuffers();
+             }
+             break;
+@@ -245,7 +245,7 @@ int main(int argc, char** argv) {
+         if (f % 60 == 0) std::cout << "  frame " << f << "/" << totalFrames << std::endl;
+     }
+ 
+-    _pclose(pipe);
++    enc.Close();
+     renderer.Shutdown();
+     std::cout << "Done: " << outPath << std::endl;
+     return 0;
+diff --git a/Campaign/ChapterLibrary.h b/Campaign/ChapterLibrary.h
+new file mode 100644
+index 0000000..db238f3
+--- /dev/null
++++ b/Campaign/ChapterLibrary.h
+@@ -0,0 +1,76 @@
++#pragma once
++
++// 章節定義庫（C-1）：assets/campaign/*.json 的內容側定義，
++// 與執行期 ChapterState 分工——定義檔描述「這章是什麼」，
++// ChapterState 記「玩家打到哪」。
++//
++// JSON schema: potato.campaign_chapter/1
++// {
++//   "schema": "potato.campaign_chapter/1",
++//   "id": "duanqiao",
++//   "name": "斷橋",
++//   "arc": 0,                 // 0=軍閥 1=北伐 2=抗戰 3=內戰
++//   "chapter": 1,             // 弧內章節序
++//   "map": "maps/duanqiao.json",   // 相對 assets/ 的地圖路徑
++//   "enemy_deck": "",         // 敵將牌組 id（可空，內容後補）
++//   "next": ""                // 預設下一章 id（可空=弧內順序或終章）
++// }
++//
++// 錯誤處理（比照 SquadTemplateLibrary 慣例）：
++// - schema 不符 / JSON 壞 → LoadFromFile/LoadFromString 回 false，
++//   失敗時物件先重置為預設值，不產生半成品
++// - 缺 id/name → 仍解析但記 warnings
++// - arc 越界（<0 或 >3）→ 夾回 [0,3] + 警告；chapter<1 → 夾到 1+警告
++// - LoadDir 壞檔跳過不中止；同 id keep-latest 除重
++// - 指標生命週期：Find/SortedByChapter 回傳值指向庫內部，
++//   Add/LoadDir 可能使舊指標懸空
++
++#include "Serialization/JsonParser.h"
++
++#include <string>
++#include <vector>
++
++namespace Potato {
++namespace Campaign {
++
++struct ChapterDef {
++    static constexpr const char* kSchema = "potato.campaign_chapter/1";
++
++    std::string id;
++    std::string name;
++    int arc = 0;
++    int chapter = 1;
++    std::string map;        // 相對 assets/ 的地圖路徑
++    std::string enemyDeck;  // 敵將牌組 id（可空）
++    std::string next;       // 預設下一章 id（可空）
++
++    std::vector<std::string> warnings; // 降級記錄（機器可讀）
++
++    bool LoadFromFile(const std::string& path);
++    bool LoadFromString(const std::string& json);
++};
++
++class ChapterLibrary {
++public:
++    // 掃描目錄載入全部合法章節定義；回傳成功筆數。
++    // 重複呼叫不累積複本——同 id 以新載入者覆蓋。
++    size_t LoadDir(const std::string& dir);
++
++    // 直接加一筆（測試/程式化定義用）；同 id 不除重，Find 取先載入者
++    void Add(const ChapterDef& def) { defs.push_back(def); }
++    void Clear() { defs.clear(); }
++    size_t Size() const { return defs.size(); }
++
++    // 【生命週期注意】回傳指標指向 vector 內部，Add/LoadDir
++    // 重新配置後舊指標懸空，取用後勿跨變動沿用。
++    const ChapterDef* Find(const std::string& id) const;
++
++    // 依 (arc, chapter) 排序回傳——章節序瀏覽用
++    std::vector<const ChapterDef*> Sorted() const;
++
++private:
++    std::vector<ChapterDef> defs;
++};
++
++} // namespace Campaign
++} // namespace Potato
+diff --git a/Campaign/ChapterLibrary.cpp b/Campaign/ChapterLibrary.cpp
+new file mode 100644
+index 0000000..3d80171
+--- /dev/null
++++ b/Campaign/ChapterLibrary.cpp
+@@ -0,0 +1,175 @@
++#include "Campaign/ChapterLibrary.h"
++
++#include <algorithm>
++#include <cctype>
++#include <cmath>
++#include <filesystem>
++#include <fstream>
++#include <sstream>
++#include <system_error>
++
++namespace Potato {
++namespace Campaign {
++
++bool ChapterDef::LoadFromFile(const std::string& path) {
++    // 容錯：逐層往上找（CTest 工作目錄可能深至 build/bin/Release）
++    for (const char* prefix : {"", "../", "../../", "../../../"}) {
++        std::ifstream f(std::string(prefix) + path);
++        if (f) {
++            std::ostringstream ss;
++            ss << f.rdbuf();
++            return LoadFromString(ss.str());
++        }
++    }
++    return false;
++}
++
++bool ChapterDef::LoadFromString(const std::string& json) {
++    // 先重置：失敗路徑留下的是乾淨預設物件，不殘留上次載入的值
++    *this = ChapterDef();
++
++    JsonValue root;
++    if (!JsonValue::ParseOk(json, root) || !root.IsObject()) {
++        return false;
++    }
++    // schema 驗證：不符/缺欄一律拒絕，不產生半成品
++    if (root["schema"].AsString() != kSchema) {
++        return false;
++    }
++
++    id = root["id"].AsString();
++    name = root["name"].AsString(id); // 缺名用 id 頂替
++    if (id.empty()) {
++        warnings.push_back("章節定義缺 id");
++    }
++    if (name.empty()) {
++        warnings.push_back("章節定義缺 name");
++    }
++
++    // arc：越界夾回 [0,3]+警告；chapter：夾到 ≥1+警告
++    {
++        const double raw = root["arc"].AsNumber(0.0);
++        if (!std::isfinite(raw)) {
++            warnings.push_back("arc 非有限值，用預設 0");
++        } else if (raw < 0.0 || raw > 3.0) {
++            warnings.push_back("arc 越界 [0,3]，夾回");
++        }
++        arc = std::isfinite(raw)
++                  ? static_cast<int>(std::clamp(raw, 0.0, 3.0))
++                  : 0;
++    }
++    {
++        const double raw = root["chapter"].AsNumber(1.0);
++        if (!std::isfinite(raw)) {
++            warnings.push_back("chapter 非有限值，用預設 1");
++        } else if (raw < 1.0) {
++            warnings.push_back("chapter<1，夾到 1");
++        }
++        chapter = std::isfinite(raw)
++                      ? static_cast<int>(std::max(1.0, raw))
++                      : 1;
++    }
++
++    map = root["map"].AsString();
++    enemyDeck = root["enemy_deck"].AsString();
++    next = root["next"].AsString();
++    return true;
++}
++
++size_t ChapterLibrary::LoadDir(const std::string& dir) {
++    if (dir.empty()) {
++        return 0;
++    }
++    namespace fs = std::filesystem;
++
++    // 目錄本身也吃逐層 ../ 容錯（與 LoadFromFile 同一工作目錄假設）
++    fs::path root;
++    for (const char* prefix : {"", "../", "../../", "../../../"}) {
++        std::error_code ec;
++        fs::path cand(std::string(prefix) + dir);
++        if (fs::is_directory(cand, ec)) {
++            root = cand;
++            break;
++        }
++    }
++    if (root.empty()) {
++        return 0;
++    }
++
++    std::vector<fs::path> files;
++    {
++        std::error_code ec;
++        for (const auto& e : fs::directory_iterator(root, ec)) {
++            if (!e.is_regular_file(ec)) {
++                continue;
++            }
++            std::string ext = e.path().extension().string();
++            for (auto& c : ext) {
++                c = static_cast<char>(
++                    std::tolower(static_cast<unsigned char>(c)));
++            }
++            if (ext == ".json") {
++                files.push_back(e.path());
++            }
++        }
++    }
++    std::sort(files.begin(), files.end()); // 載入順序穩定
++
++    size_t loaded = 0;
++    for (const auto& p : files) {
++        std::ifstream f(p);
++        if (!f) {
++            continue;
++        }
++        std::ostringstream ss;
++        ss << f.rdbuf();
++        ChapterDef def;
++        // 壞檔/schema 不符：跳過不中止（單檔錯誤不拖垮整庫）
++        if (!def.LoadFromString(ss.str())) {
++            continue;
++        }
++        // 同 id 撞車：後載覆蓋先載（keep latest）
++        auto it = std::find_if(defs.begin(), defs.end(),
++                               [&](const ChapterDef& d) {
++                                   return d.id == def.id;
++                               });
++        if (it != defs.end()) {
++            *it = def;
++        } else {
++            defs.push_back(def);
++        }
++        ++loaded;
++    }
++    return loaded;
++}
++
++const ChapterDef* ChapterLibrary::Find(const std::string& id) const {
++    for (const auto& d : defs) {
++        if (d.id == id) {
++            return &d;
++        }
++    }
++    return nullptr;
++}
++
++std::vector<const ChapterDef*> ChapterLibrary::Sorted() const {
++    std::vector<const ChapterDef*> out;
++    out.reserve(defs.size());
++    for (const auto& d : defs) {
++        out.push_back(&d);
++    }
++    std::sort(out.begin(), out.end(),
++              [](const ChapterDef* a, const ChapterDef* b) {
++                  if (a->arc != b->arc) {
++                      return a->arc < b->arc;
++                  }
++                  if (a->chapter != b->chapter) {
++                      return a->chapter < b->chapter;
++                  }
++                  return a->id < b->id;
++              });
++    return out;
++}
++
++} // namespace Campaign
++} // namespace Potato
+diff --git a/Examples/ChapterLibraryTest.cpp b/Examples/ChapterLibraryTest.cpp
+new file mode 100644
+index 0000000..ec105d4
+--- /dev/null
++++ b/Examples/ChapterLibraryTest.cpp
+@@ -0,0 +1,124 @@
++// ChapterLibraryTest — C-1 章節定義庫驗證（headless）
++// 覆蓋：schema 驗證、欄位解析、越界消毒+警告、LoadDir 除重、
++// Find/Sorted、assets/campaign 真實資產載入。
++
++#include "Campaign/ChapterLibrary.h"
++
++#include <cstdio>
++#include <string>
++
++using namespace Potato::Campaign;
++
++static int failures = 0;
++static void Check(bool cond, const char* name) {
++    if (cond) {
++        printf("  [PASS] %s\n", name);
++    } else {
++        printf("  [FAIL] %s\n", name);
++        ++failures;
++    }
++}
++
++int main() {
++    printf("=== Chapter Library Tests (C-1) ===\n");
++
++    // ---- [1] 完整定義解析 ----
++    printf("\n[1] 完整章節定義\n");
++    {
++        ChapterDef def;
++        Check(def.LoadFromString(R"({"schema":"potato.campaign_chapter/1",
++            "id":"duanqiao","name":"斷橋","arc":0,"chapter":1,
++            "map":"maps/duanqiao.json","enemy_deck":"",
++            "next":""})"), "完整定義解析");
++        Check(def.id == "duanqiao" && def.name == "斷橋", "id/name");
++        Check(def.arc == 0 && def.chapter == 1, "arc/chapter");
++        Check(def.map == "maps/duanqiao.json", "map 路徑");
++        Check(def.warnings.empty(), "合法定義無警告");
++    }
++
++    // ---- [2] 缺省值與拒絕路徑 ----
++    printf("\n[2] 缺省值與拒絕\n");
++    {
++        ChapterDef def;
++        Check(def.LoadFromString(R"({"schema":"potato.campaign_chapter/1",
++            "id":"x"})"), "極簡定義解析");
++        Check(def.name == "x", "缺 name 退回 id");
++        Check(def.arc == 0 && def.chapter == 1, "arc/chapter 預設");
++        Check(def.map.empty(), "缺 map 空字串");
++
++        Check(!def.LoadFromString("not json"), "壞 JSON 拒絕");
++        Check(!def.LoadFromString(R"({"id":"x"})"), "缺 schema 拒絕");
++        Check(!def.LoadFromString(
++                  R"({"schema":"potato.other/1","id":"x"})"),
++              "錯 schema 拒絕");
++        // 失敗後欄位重置為預設（不殘留上次載入）
++        Check(def.id.empty() && def.arc == 0, "失敗後重置乾淨");
++
++        ChapterDef anon;
++        Check(anon.LoadFromString(
++                  R"({"schema":"potato.campaign_chapter/1"})"),
++              "空 id 仍解析");
++        Check(!anon.warnings.empty(), "空 id 記警告");
++    }
++
++    // ---- [3] 越界消毒 ----
++    printf("\n[3] 越界消毒\n");
++    {
++        ChapterDef def;
++        Check(def.LoadFromString(R"({"schema":"potato.campaign_chapter/1",
++            "id":"y","arc":9,"chapter":0})"), "越界值仍解析");
++        Check(def.arc == 3, "arc 9 夾到 3");
++        Check(def.chapter == 1, "chapter 0 夾到 1");
++        Check(def.warnings.size() >= 2, "越界各記一條警告");
++    }
++
++    // ---- [4] Library ----
++    printf("\n[4] ChapterLibrary\n");
++    {
++        ChapterLibrary lib;
++        // 真實資產：assets/campaign/ 至少一個定義
++        Check(lib.LoadDir("assets/campaign") >= 1,
++              "assets/campaign 載入 ≥1 定義");
++        const ChapterDef* dq = lib.Find("duanqiao");
++        Check(dq != nullptr, "Find duanqiao");
++        if (dq) {
++            Check(dq->map == "maps/duanqiao.json",
++                  "duanqiao 指向真實地圖");
++        }
++        Check(lib.Find("no_such") == nullptr, "Find 查無回 nullptr");
++
++        // 除重：重載同目錄 keep-latest 不增長
++        const size_t n1 = lib.Size();
++        lib.LoadDir("assets/campaign");
++        Check(lib.Size() == n1, "重載同目錄 keep-latest");
++
++        // Add / Clear / Sorted
++        ChapterDef b;
++        b.LoadFromString(R"({"schema":"potato.campaign_chapter/1",
++            "id":"z_last","arc":3,"chapter":9})");
++        lib.Add(b);
++        auto sorted = lib.Sorted();
++        Check(sorted.size() == lib.Size(), "Sorted 數量一致");
++        Check(sorted.back()->id == "z_last",
++              "Sorted 依 (arc,chapter) 升冪");
++        lib.Clear();
++        Check(lib.Size() == 0 && lib.Find("duanqiao") == nullptr,
++              "Clear 清空");
++
++        Check(lib.LoadDir("") == 0, "空目錄路徑回 0");
++        Check(lib.LoadDir("no_such_dir_xyz") == 0, "壞目錄回 0");
++    }
++
++    // ---- [5] LoadFromFile 路徑容錯 ----
++    printf("\n[5] LoadFromFile\n");
++    {
++        ChapterDef def;
++        Check(def.LoadFromFile("assets/campaign/duanqiao.json"),
++              "LoadFromFile ../ 逐層容錯");
++        Check(!def.LoadFromFile("no_such_chapter.json"),
++              "LoadFromFile 壞路徑拒絕");
++    }
++
++    printf("\n=== 結果: %s ===\n", failures == 0 ? "全部 PASS" : "有 FAIL");
++    return failures == 0 ? 0 : 1;
++}
