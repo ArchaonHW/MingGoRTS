@@ -286,7 +286,8 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-    ImGui::PushFont(theme == UITheme::Id::WarMap ? fontSerif : fontSans,
+    // 紙本三主題走 serif、戰術面板走 sans（DESIGN §Typography）
+    ImGui::PushFont(theme != UITheme::Id::TacticalSim ? fontSerif : fontSans,
                     18.0f);
 
     ShellScreen next = ShellScreen::Title;
@@ -364,7 +365,8 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
     if (ImGui::Button("設 定", ImVec2(-1, 0))) showSettings = !showSettings;
     if (showSettings) {
         int t = (int)theme;
-        if (ImGui::Combo("主題", &t, "現代軍事\0泥濘沙盤\0")) {
+        if (ImGui::Combo("主題", &t,
+                         "現代軍事\0泥濘沙盤\0軍電作戰室\0水墨史卷\0")) {
             theme = (UITheme::Id)t;
         }
         ImGui::SliderFloat("介面縮放", &uiScale, 1.0f, 1.5f, "%.2fx");
@@ -372,6 +374,14 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
     if (ImGui::Button("離 開", ImVec2(-1, 0))) next = ShellScreen::Quit;
 
     ImGui::End();
+    ImGui::PopFont();
+
+    // CJK 直書標題（印章式，標題窗右側;DESIGN:直書僅限標題/印章）
+    ImGui::PushFont(fontSerif ? fontSerif : ImGui::GetFont(), 30.0f);
+    UITheme::VTextAt(ImGui::GetForegroundDrawList(),
+                     ImVec2(ww * 0.5f + 245.0f, wh * 0.28f),
+                     "斷橋攻防戰",
+                     ImGui::GetColorU32(ImGuiCol_Text));
     ImGui::PopFont();
 
     ImGui::Render();
@@ -568,7 +578,8 @@ int main() {
             Vector2(8.0f, 3.0f), Vector2(12.0f, 2.5f), Vector2(16.0f, 3.0f),
             Vector2(12.0f, 4.5f), Vector2(12.0f, 1.0f),
         };
-        for (Squad* s : camp.Deploy(battle, 0, deployPos)) {
+        // 傳 campLibrary 讓招募單位回補模板 stats（速度/火力/疲勞）
+        for (Squad* s : camp.Deploy(battle, 0, deployPos, &campLibrary)) {
             if (s->GetName() == "後衛") rearGuard = s;
             if (s->GetName() == "將軍衛隊") {
                 s->SetGeneralGuard(true);
@@ -945,8 +956,8 @@ int main() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        ImGui::PushFont(theme == UITheme::Id::WarMap ? fontSerif
-                                                   : fontSans,
+        ImGui::PushFont(theme != UITheme::Id::TacticalSim ? fontSerif
+                                                        : fontSans,
                         18.0f);
 
         // ---- G-5 計畫箭頭疊加線:規劃中亮金,開戰後淡化作軸線錨點 ----
@@ -1312,6 +1323,80 @@ int main() {
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
         for (const auto& e : eventLog) ImGui::TextUnformatted(e.c_str());
         ImGui::End();
+
+        // ---- 小地圖（右下錨點;形狀編碼:■我 ◆敵 ●雲,DESIGN 強制——
+        //      陣營不靠色相區分,色弱/主題切換下語義不變）----
+        {
+            const float ms = 170.0f * uiScale;
+            ImGui::SetNextWindowPos(
+                ImVec2((float)ww - ms - 18.0f,
+                       std::max(0.0f, (float)wh - ms - 60.0f)),
+                ImGuiCond_Always);
+            ImGui::SetNextWindowSize(ImVec2(ms + 16.0f, ms + 62.0f),
+                                     ImGuiCond_Always);
+            ImGui::Begin("小地圖", nullptr,
+                         ImGuiWindowFlags_NoCollapse |
+                             ImGuiWindowFlags_NoResize |
+                             ImGuiWindowFlags_NoMove);
+            ImDrawList* mdl = ImGui::GetWindowDrawList();
+            const ImVec2 mp = ImGui::GetCursorScreenPos();
+            const ImVec2 me(mp.x + ms, mp.y + ms);
+            ImGui::Dummy(ImVec2(ms, ms));
+            mdl->AddRectFilled(mp, me,
+                               ImGui::GetColorU32(ImGuiCol_ChildBg));
+            mdl->AddRect(mp, me, ImGui::GetColorU32(ImGuiCol_Border));
+            auto toMap = [&](const Vector2& cell) {
+                return ImVec2(mp.x + (cell.x / (float)GW) * ms,
+                              mp.y + (cell.y / (float)GH) * ms);
+            };
+            const float mr = 3.4f * uiScale;
+            // 集結點(情報金小圈)+ 計畫箭頭(細線)
+            if (battle.HasRallyPoint(0)) {
+                mdl->AddCircle(toMap(battle.GetRallyPoint(0)),
+                               mr * 1.4f, IM_COL32(216, 168, 60, 220),
+                               0, 1.5f);
+            }
+            for (size_t i = 0; i < plan.ArrowCount(); ++i) {
+                mdl->AddLine(toMap(plan.Arrow(i).from),
+                             toMap(plan.Arrow(i).to),
+                             IM_COL32(216, 168, 60,
+                                      planningPhase ? 200 : 90),
+                             1.2f);
+            }
+            // 我方=方框(選取中描金邊)
+            for (const auto& sq : battle.GetSquads()) {
+                if (sq->GetTeam() != 0 || sq->IsEliminated()) continue;
+                UITheme::DrawMarker(
+                    mdl, toMap(sq->GetPosition()), mr,
+                    UITheme::MarkerShape::FriendlySquare,
+                    sq.get() == selected
+                        ? IM_COL32(212, 162, 60, 255)   // myth gold
+                        : IM_COL32(156, 176, 108, 255), // friendly
+                    2.0f);
+            }
+            // 敵軍:揭露=菱形,未揭露=候選格雲圓(逐候選,機率雲本體)
+            for (size_t id = 0; id < fog.EntityCount(); ++id) {
+                const Squad* owner = battle.GetFogSquad((int)id);
+                if (!owner || owner->IsEliminated()) continue;
+                if (fog.IsRevealed((int)id)) {
+                    UITheme::DrawMarker(
+                        mdl, toMap(owner->GetPosition()), mr,
+                        UITheme::MarkerShape::EnemyDiamond,
+                        IM_COL32(176, 74, 50, 255), 2.0f);
+                } else {
+                    const ImU32 ccol =
+                        ImGui::GetColorU32(UITheme::CloudColor(theme));
+                    for (const auto& cand : fog.GetCloud((int)id)) {
+                        UITheme::DrawMarker(
+                            mdl, toMap(cand.first), mr * 0.7f,
+                            UITheme::MarkerShape::CloudCircle, ccol);
+                    }
+                }
+            }
+            // 圖例(形狀+文字雙編碼)
+            ImGui::TextDisabled("■我軍  ◆敵軍  ●敵情雲");
+            ImGui::End();
+        }
 
         // 戰果 banner
         if (battle.GetOutcome() != BattleOutcome::Ongoing) {

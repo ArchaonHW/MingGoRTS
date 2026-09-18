@@ -324,13 +324,11 @@ inline int NextUtf8Len(const char* p) {
 }
 
 // CJK 直書：逐字垂直排列（標題/印章用；DESIGN 禁用於 Latin/數字段）
-inline void VText(const char* utf8) {
-    if (!utf8 || !*utf8) return;
-    ImDrawList* dl = ImGui::GetWindowDrawList();
+// 自由定位版：可畫在視窗外（foreground/background draw list）
+inline void VTextAt(ImDrawList* dl, ImVec2 pos, const char* utf8, ImU32 col) {
+    if (!dl || !utf8 || !*utf8) return;
     ImFont* font = ImGui::GetFont();
     const float fs = ImGui::GetFontSize();
-    const ImU32 col = ImGui::GetColorU32(ImGuiCol_Text);
-    const ImVec2 pos = ImGui::GetCursorScreenPos();
     const float adv = ImGui::GetTextLineHeightWithSpacing();
     float cy = pos.y;
     for (const char* p = utf8; *p; ) {
@@ -339,7 +337,17 @@ inline void VText(const char* utf8) {
         cy += adv;
         p += len;
     }
-    ImGui::Dummy(ImVec2(fs, cy - pos.y)); // 佔位讓版面流正確
+}
+// 版面流版：在游標處直排並佔位
+inline void VText(const char* utf8) {
+    if (!utf8 || !*utf8) return;
+    const ImVec2 pos = ImGui::GetCursorScreenPos();
+    VTextAt(ImGui::GetWindowDrawList(), pos, utf8,
+            ImGui::GetColorU32(ImGuiCol_Text));
+    int chars = 0;
+    for (const char* p = utf8; *p; p += NextUtf8Len(p)) ++chars;
+    ImGui::Dummy(ImVec2(ImGui::GetFontSize(),
+                        chars * ImGui::GetTextLineHeightWithSpacing()));
 }
 
 // 形狀編碼標記（minimap/概圖）：陣營絕不單獨用色相區分——
