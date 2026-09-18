@@ -1,0 +1,12 @@
+{
+    "schema": "potato.squad_template/1",
+    "id": "infantry_company",
+    "name": "步兵連",
+    "members": 20,
+    "unit_class": "infantry",
+    "damage_per_member": 0.05,
+    "speed": 2.0,
+    "engage_range": 1.5,
+    "morale": 1.0,
+    "cost": 100
+}

@@ -1,0 +1,12 @@
+{
+    "schema": "potato.squad_template/1",
+    "id": "cavalry_platoon",
+    "name": "騎兵排",
+    "members": 12,
+    "unit_class": "cavalry",
+    "damage_per_member": 0.06,
+    "speed": 3.5,
+    "engage_range": 1.5,
+    "morale": 0.9,
+    "cost": 160
+}

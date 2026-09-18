@@ -460,8 +460,15 @@ queue:
     acceptance:
       - 模板檔可載入並建出對應 squad
       - 預算超支時拒絕或降規（寫死規則）
-    status: queued
+    status: done
     size: L
+    note: >
+      Gameplay/SquadTemplate：Parse/ParseFile/LoadAll/LoadAllFromFile
+      載入模板（members/unit_class/damage_per_member/speed/
+      engage_range/morale/cost），Instantiate 建 Squad，
+      TryInstantiate 吃 budget（<0 無限，超支拒絕不扣帳）。
+      Squad::SetDamagePerMember 支援模板火力。
+      SquadTemplateTest 40/40 PASS。
 
   - id: G-5
     title: 作戰計畫箭頭（HOI4 battle plan → doctrine）
