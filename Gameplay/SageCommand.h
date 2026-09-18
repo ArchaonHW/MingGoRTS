@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/CoreTypes.h"
+#include "Gameplay/GovernanceEvent.h"
 
 #include <functional>
 #include <string>
@@ -115,6 +116,10 @@ public:
 
     // 劇本/測試用：直接累加墮落（與逆策走同一套徵象與失格判定）
     void AddCorruption(float amount);
+
+    // C-2 治理源：戰場事件（村莊佔領/受降/護輜/暴行）作用民心/秩序，
+    // delta 取 GovernanceEvent.h 統一定義；並 Emit 進事件流。
+    void RecordGovernanceEvent(GovernanceEvent ev);
 
     // ---- 道權：唯讀監察 ----
     float GetCorruption() const { return corruption; }       // 0 ~ 100

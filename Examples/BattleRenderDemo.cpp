@@ -226,7 +226,10 @@ int main(int argc, char** argv) {
 
         // 擷取必須在 SwapBuffers 前:交換後 back buffer 內容未定義
         glReadPixels(0, 0, W, H, GL_RGB, GL_UNSIGNED_BYTE, frameBuf.data());
-        enc.WriteFrame(frameBuf.data(), frameBuf.size());
+        if (!enc.WriteFrame(frameBuf.data(), frameBuf.size())) {
+            std::cerr << "encoder pipe died at frame " << f << "\n";
+            break;
+        }
         renderer.SwapBuffers();
 
         if (battle.GetOutcome() != BattleOutcome::Ongoing) {
@@ -237,7 +240,9 @@ int main(int argc, char** argv) {
                 renderer.Clear();
                 sceneRenderer.Render(scene, cam);
                 glReadPixels(0, 0, W, H, GL_RGB, GL_UNSIGNED_BYTE, frameBuf.data());
-                enc.WriteFrame(frameBuf.data(), frameBuf.size());
+                if (!enc.WriteFrame(frameBuf.data(), frameBuf.size())) {
+                    break;
+                }
                 renderer.SwapBuffers();
             }
             break;
@@ -245,7 +250,11 @@ int main(int argc, char** argv) {
         if (f % 60 == 0) std::cout << "  frame " << f << "/" << totalFrames << std::endl;
     }
 
-    enc.Close();
+    if (enc.Close() != 0) {
+        std::cerr << "ffmpeg exited non-zero — output may be truncated\n";
+        renderer.Shutdown();
+        return 1;
+    }
     renderer.Shutdown();
     std::cout << "Done: " << outPath << std::endl;
     return 0;

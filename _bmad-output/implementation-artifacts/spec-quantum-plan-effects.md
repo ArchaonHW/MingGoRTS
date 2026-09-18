@@ -2,8 +2,9 @@
 title: 'Quantum-aware battle plan bonus (QuantumFog x BattlePlan)'
 type: 'feature'
 created: '2026-09-19'
-status: 'draft'
+status: 'in-progress'
 route: 'dispatch'
+baseline_revision: '9996a86'
 review_loop_iteration: 0
 context: []
 ---

@@ -258,13 +258,18 @@ static bool WorldToScreen(const Camera& cam, const Vector3& w,
 // ---- U-1 遊戲殼：Title → Battle → (回 Title | 離開) ----
 enum class ShellScreen { Title, Battle, Quit };
 
-// 標題頁單幀：置中視窗 + 開戰/說明/設定/離開。
+// 標題頁單幀：置中視窗 + 開戰/說明/設定/離開 + B.5 章節地圖殼。
 // theme/uiScale 由設定頁就地修改；applied* 追蹤已套用的值。
+// pendingChapter：UI 唯讀消費 CampaignState——玩家選的章節只
+// 寫到 out 參數，由主迴圈（部署層）套用，UI 不直接改戰役狀態。
 static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
                               UITheme::Id& theme, float& uiScale,
                               ImFont* fontSans, ImFont* fontSerif,
                               UITheme::Id& appliedTheme, float& appliedScale,
-                              RefitCamp& camp, const SquadTemplateLibrary& campLibrary) {
+                              RefitCamp& camp, const SquadTemplateLibrary& campLibrary,
+                              const Campaign::CampaignState& campaign,
+                              const Campaign::ChapterLibrary& chapters,
+                              const Campaign::ChapterDef*& pendingChapter) {
     renderer.PollEvents();
 
     int dw = 0, dh = 0, ww = 0, wh = 0;
@@ -353,6 +358,38 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
                 camp.Recruit(campLibrary, cheapest->id);
             }
             if (!canAfford) ImGui::EndDisabled();
+        }
+    }
+
+    // ---- B.5 章節地圖殼：唯讀顯示戰役進度 + 弧內自由選章 ----
+    if (chapters.Size() > 0) {
+        static const char* kArcNames[] = {"軍閥", "北伐", "抗戰", "內戰"};
+        const int arc = campaign.chapter.arc;
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::TextDisabled("戰役 · 第%d弧 %s", arc + 1,
+                            (arc >= 0 && arc < 4) ? kArcNames[arc] : "?");
+        for (const Campaign::ChapterDef* def : chapters.Sorted()) {
+            if (def->arc != arc) {
+                continue;
+            }
+            const bool taken =
+                std::find(campaign.chapter.frontsTaken.begin(),
+                          campaign.chapter.frontsTaken.end(),
+                          def->id) != campaign.chapter.frontsTaken.end();
+            const bool current = campaign.chapter.chapterId == def->id;
+            const bool sel = pendingChapter == def;
+            char label[160];
+            std::snprintf(label, sizeof(label), "%s %d-%d %s",
+                          taken ? "◆" : (current ? "▶" : "·"),
+                          def->arc + 1, def->chapter,
+                          def->name.c_str());
+            if (ImGui::Selectable(label, sel)) {
+                pendingChapter = def; // 寫 out 參數，不動 campaign
+            }
+            if (ImGui::IsItemHovered() && !def->map.empty()) {
+                ImGui::SetTooltip("地圖 %s", def->map.c_str());
+            }
         }
     }
 
@@ -491,12 +528,23 @@ int main() {
         }
     }
     ShellScreen screen = ShellScreen::Title;
+    // B.5 章節選擇暫存：TitleFrame 唯讀 campaign，選章寫到這裡，
+    // 進部署時由主迴圈（非 UI 層）套用到 campaign.chapter。
+    const Campaign::ChapterDef* pendingChapter = nullptr;
     while (screen != ShellScreen::Quit && !renderer.ShouldClose()) {
         if (screen == ShellScreen::Title) {
             screen = TitleFrame(window, renderer, theme, uiScale,
                                 fontSans, fontSerif, appliedTheme,
-                                appliedScale, camp, campLibrary);
+                                appliedScale, camp, campLibrary,
+                                campaign, chapters, pendingChapter);
             continue;
+        }
+        if (pendingChapter != nullptr) {
+            // B.5 選章 → 讀定義 → 部署流程讀到的是選中的章節
+            campaign.chapter.arc = pendingChapter->arc;
+            campaign.chapter.chapter = pendingChapter->chapter;
+            campaign.chapter.chapterId = pendingChapter->id;
+            pendingChapter = nullptr;
         }
         bool backToTitle = false;
         { // ---- 戰鬥場次 scope 開始(內部維持原縮排以保 diff 最小) ----
@@ -713,6 +761,9 @@ int main() {
     // ---- G-5 作戰計畫箭頭:Ctrl+左鍵自小隊拖出主攻軸線,開戰套用 ----
     BattlePlan plan;
     plan.SetPlanBonus(/*attackMul=*/1.10f, /*intel=*/2, /*cp=*/1);
+    // quantum-plan:加成依箭頭尖端的情報確定度即時縮放——
+    // 雲未解析時加成打折,偵查/觀測坐實後回到滿額
+    battle.BindPlan(&plan);
     // 後衛改當偵查兵:低血撤退 > 遇敵應戰 > 無事就往最近的雲走
     {
         const int di = deck.FindDeck(rearGuard);
@@ -1349,6 +1400,12 @@ int main() {
                 ImGui::ProgressBar(mo, ImVec2(-1, 0), moLbl);
                 ImGui::PopStyleColor();
                 ImGui::TextDisabled("命令: %s", OrderName(sq->GetOrder()));
+                // quantum-plan:計畫加成依情報確定度即時浮動——
+                // 雲未解析時低於滿額,坐實後升回 attackMul
+                if (sq->GetPlanAttackMul() > 1.001f) {
+                    ImGui::TextDisabled("計畫加成 ×%.2f",
+                                        sq->GetPlanAttackMul());
+                }
                 ImGui::Separator();
             }
 
@@ -1617,6 +1674,14 @@ int main() {
         if (iWon) {
             if (const Campaign::ChapterDef* cur =
                     chapters.Find(campaign.chapter.chapterId)) {
+                // B.5 已收戰線：勝場記入 frontsTaken（去重），
+                // 供章節地圖殼顯示 ◆ 標記
+                if (std::find(campaign.chapter.frontsTaken.begin(),
+                              campaign.chapter.frontsTaken.end(),
+                              cur->id) ==
+                    campaign.chapter.frontsTaken.end()) {
+                    campaign.chapter.frontsTaken.push_back(cur->id);
+                }
                 if (!cur->next.empty()) {
                     if (const Campaign::ChapterDef* nxt =
                             chapters.Find(cur->next)) {
@@ -1642,6 +1707,7 @@ int main() {
     }
 
     battle.BindFog(nullptr); // fog 是 local,先於 battle 解構——解綁防懸空
+    battle.BindPlan(nullptr); // plan 同為 local——一併解綁
 
         } // ---- 戰鬥場次 scope 結束:battle/fog/scene 全數析構 ----
         screen = renderer.ShouldClose() ? ShellScreen::Quit

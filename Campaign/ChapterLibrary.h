@@ -19,10 +19,12 @@
 // 錯誤處理（比照 SquadTemplateLibrary 慣例）：
 // - schema 不符 / JSON 壞 → LoadFromFile/LoadFromString 回 false，
 //   失敗時物件先重置為預設值，不產生半成品
-// - 缺 id/name → 仍解析但記 warnings
-// - arc 越界（<0 或 >3）→ 夾回 [0,3] + 警告；chapter<1 → 夾到 1+警告
-// - LoadDir 壞檔跳過不中止；同 id keep-latest 除重
-// - 指標生命週期：Find/SortedByChapter 回傳值指向庫內部，
+// - 缺 id/name → 仍解析但記 warnings；欄位型別錯（數字/布林當字串）
+//   也強轉並記警告
+// - arc 越界（<0 或 >3）→ 夾回 [0,3] + 警告；chapter 夾 [1,INT_MAX]+警告
+// - LoadDir 壞檔跳過不中止（筆數見 LastSkipped）；同 id keep-latest 除重，
+//   空 id 不參與除重
+// - 指標生命週期：Find/Sorted 回傳值指向庫內部，
 //   Add/LoadDir 可能使舊指標懸空
 
 #include "Serialization/JsonParser.h"
@@ -52,9 +54,12 @@ struct ChapterDef {
 
 class ChapterLibrary {
 public:
-    // 掃描目錄載入全部合法章節定義；回傳成功筆數。
-    // 重複呼叫不累積複本——同 id 以新載入者覆蓋。
+    // 掃描目錄載入全部合法章節定義；回傳成功解析的檔案筆數
+    // （keep-latest 覆蓋也計入）。重複呼叫不累積複本——同 id 以新載入者覆蓋。
     size_t LoadDir(const std::string& dir);
+
+    // 上次 LoadDir 跳過的檔案數（打不開/壞 JSON/schema 不符）
+    size_t LastSkipped() const { return lastSkipped; }
 
     // 直接加一筆（測試/程式化定義用）；同 id 不除重，Find 取先載入者
     void Add(const ChapterDef& def) { defs.push_back(def); }
@@ -70,6 +75,7 @@ public:
 
 private:
     std::vector<ChapterDef> defs;
+    size_t lastSkipped = 0;
 };
 
 } // namespace Campaign

@@ -5,6 +5,7 @@
 #include "Doctrine.h"
 
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace Potato {
@@ -12,6 +13,7 @@ namespace Gameplay {
 
 class BattleController;
 class BattleResources;
+class Squad;
 
 /**
  * 作戰計畫箭頭（G-5，HOI4 battle plan → doctrine）
@@ -72,6 +74,18 @@ public:
     int Apply(BattleController& battle, BattleResources* res,
               int team) const;
 
+    // ---- 量子感知加成（quantum-plan-effects）----
+    // 箭頭尖端落進未解析機率雲時，計畫加成依尖端確定度縮放：
+    //   certainty = 各 fog entity 在 tip 半徑內機率質量的最大值
+    //   effectiveMul = 1 + (attackMul - 1) * certainty ∈ [1, attackMul]
+    // 無 fog 或尖端周圍無雲 → certainty 1（行為同加成功能前）。
+    void SetUncertaintyRadius(float r);
+    float UncertaintyRadius() const { return uncertaintyRadius; }
+    // 由 BattleController 在執行階段 fog 更新後每 tick 呼叫——
+    // 情報解析（揭露/探測/消去/過期）即時拉動加成上下。
+    // 重評估走 planAttackMul 正規化槽（除舊乘新），冪等不疊乘。
+    void UpdateUncertainty(BattleController& battle) const;
+
     // potato.battle_plan/1 序列化（戰前計畫可存檔/回放）
     std::string ToJson() const;
     bool FromJson(const std::string& json);
@@ -84,6 +98,12 @@ private:
     int bonusIntel = 0;
     int bonusCP = 0;
     mutable bool bonusCredited = false; // 加成只入帳一次（Apply 是 const）
+
+    // 量子感知加成：Apply 期間記下每支小隊綁到的箭頭 index 與作用 team，
+    // UpdateUncertainty 重評時不必重新配對。mutable 因 Apply/Update 皆 const。
+    float uncertaintyRadius = 2.0f;
+    mutable std::unordered_map<Squad*, int> squadArrowIdx; // squad → 箭頭 index
+    mutable int appliedTeam = -1; // -1 = 尚未 Apply
 };
 
 } // namespace Gameplay

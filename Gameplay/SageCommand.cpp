@@ -358,6 +358,18 @@ bool SageCommand::SealHeresy() {
     return true;
 }
 
+void SageCommand::RecordGovernanceEvent(GovernanceEvent ev) {
+    const GovernanceDelta d = DeltaOf(ev);
+    popularSupport =
+        std::clamp(popularSupport + d.support, 0.0f, 100.0f);
+    civilOrder = std::clamp(civilOrder + d.order, 0.0f, 100.0f);
+    Emit(std::string("[治理] ") + GovernanceEventName(ev) +
+         "：民心" + (d.support >= 0 ? "+" : "") +
+         std::to_string(static_cast<int>(d.support)) +
+         " 秩序" + (d.order >= 0 ? "+" : "") +
+         std::to_string(static_cast<int>(d.order)));
+}
+
 void SageCommand::AdvancePhase() {
     WuXingPhase prev = wuxing;
     switch (wuxing) {

@@ -12,6 +12,8 @@ namespace Potato {
 namespace Campaign {
 
 bool ChapterDef::LoadFromFile(const std::string& path) {
+    // 先重置：找不到檔也留下乾淨預設物件（與 LoadFromString 同契約）
+    *this = ChapterDef();
     // 容錯：逐層往上找（CTest 工作目錄可能深至 build/bin/Release）
     for (const char* prefix : {"", "../", "../../", "../../../"}) {
         std::ifstream f(std::string(prefix) + path);
@@ -28,6 +30,14 @@ bool ChapterDef::LoadFromString(const std::string& json) {
     // 先重置：失敗路徑留下的是乾淨預設物件，不殘留上次載入的值
     *this = ChapterDef();
 
+    // UTF-8 BOM：Windows 編輯器常產生，剝掉再解析
+    if (json.size() >= 3 &&
+        static_cast<unsigned char>(json[0]) == 0xEF &&
+        static_cast<unsigned char>(json[1]) == 0xBB &&
+        static_cast<unsigned char>(json[2]) == 0xBF) {
+        return LoadFromString(json.substr(3));
+    }
+
     JsonValue root;
     if (!JsonValue::ParseOk(json, root) || !root.IsObject()) {
         return false;
@@ -37,8 +47,20 @@ bool ChapterDef::LoadFromString(const std::string& json) {
         return false;
     }
 
-    id = root["id"].AsString();
-    name = root["name"].AsString(id); // 缺名用 id 頂替
+    // 型別不符：容錯強轉但記警告（缺欄不警告——有預設語義）
+    const JsonValue& idv = root["id"];
+    if (!idv.IsNull() && !idv.IsString()) {
+        warnings.push_back("id 型別非字串，已強轉");
+    }
+    id = idv.AsString();
+
+    const JsonValue& namev = root["name"];
+    if (namev.IsNull()) {
+        warnings.push_back("章節定義缺 name");
+    } else if (!namev.IsString()) {
+        warnings.push_back("name 型別非字串，已強轉");
+    }
+    name = namev.AsString(id); // 缺名用 id 頂替
     if (id.empty()) {
         warnings.push_back("章節定義缺 id");
     }
@@ -46,9 +68,17 @@ bool ChapterDef::LoadFromString(const std::string& json) {
         warnings.push_back("章節定義缺 name");
     }
 
-    // arc：越界夾回 [0,3]+警告；chapter：夾到 ≥1+警告
+    // arc：越界夾回 [0,3]+警告；chapter：夾到 [1,INT_MAX]+警告
     {
-        const double raw = root["arc"].AsNumber(0.0);
+        const JsonValue& arcv = root["arc"];
+        double raw = 0.0;
+        if (arcv.IsNull()) {
+            // 缺欄走預設 0
+        } else if (!arcv.IsNumber()) {
+            warnings.push_back("arc 型別非數字，用預設 0");
+        } else {
+            raw = arcv.AsNumber(0.0);
+        }
         if (!std::isfinite(raw)) {
             warnings.push_back("arc 非有限值，用預設 0");
         } else if (raw < 0.0 || raw > 3.0) {
@@ -59,20 +89,48 @@ bool ChapterDef::LoadFromString(const std::string& json) {
                   : 0;
     }
     {
-        const double raw = root["chapter"].AsNumber(1.0);
+        const JsonValue& chv = root["chapter"];
+        double raw = 1.0;
+        if (chv.IsNull()) {
+            // 缺欄走預設 1
+        } else if (!chv.IsNumber()) {
+            warnings.push_back("chapter 型別非數字，用預設 1");
+        } else {
+            raw = chv.AsNumber(1.0);
+        }
         if (!std::isfinite(raw)) {
             warnings.push_back("chapter 非有限值，用預設 1");
-        } else if (raw < 1.0) {
-            warnings.push_back("chapter<1，夾到 1");
+        } else if (raw < 1.0 || raw > 2147483647.0) {
+            warnings.push_back("chapter 越界，夾回");
         }
+        // 上限先夾再轉 int——float→int 溢位是 UB（比照 SquadTemplate 寫法）
         chapter = std::isfinite(raw)
-                      ? static_cast<int>(std::max(1.0, raw))
+                      ? static_cast<int>(std::clamp(raw, 1.0, 2147483647.0))
                       : 1;
     }
 
-    map = root["map"].AsString();
-    enemyDeck = root["enemy_deck"].AsString();
-    next = root["next"].AsString();
+    const JsonValue& mapv = root["map"];
+    if (!mapv.IsNull() && !mapv.IsString()) {
+        warnings.push_back("map 型別非字串，已強轉");
+    }
+    map = mapv.AsString();
+    // 相對 assets/ 的路徑——擋越界（../、絕對路徑、磁碟機代號）
+    if (map.find("..") != std::string::npos || map.find(':') != std::string::npos ||
+        (!map.empty() && (map[0] == '/' || map[0] == '\\'))) {
+        warnings.push_back("map 含越界路徑");
+    }
+
+    const JsonValue& deckv = root["enemy_deck"];
+    if (!deckv.IsNull() && !deckv.IsString()) {
+        warnings.push_back("enemy_deck 型別非字串，已強轉");
+    }
+    enemyDeck = deckv.AsString();
+
+    const JsonValue& nextv = root["next"];
+    if (!nextv.IsNull() && !nextv.IsString()) {
+        warnings.push_back("next 型別非字串，已強轉");
+    }
+    next = nextv.AsString();
     return true;
 }
 
@@ -116,9 +174,11 @@ size_t ChapterLibrary::LoadDir(const std::string& dir) {
     std::sort(files.begin(), files.end()); // 載入順序穩定
 
     size_t loaded = 0;
+    lastSkipped = 0;
     for (const auto& p : files) {
         std::ifstream f(p);
         if (!f) {
+            ++lastSkipped;
             continue;
         }
         std::ostringstream ss;
@@ -126,13 +186,17 @@ size_t ChapterLibrary::LoadDir(const std::string& dir) {
         ChapterDef def;
         // 壞檔/schema 不符：跳過不中止（單檔錯誤不拖垮整庫）
         if (!def.LoadFromString(ss.str())) {
+            ++lastSkipped;
             continue;
         }
-        // 同 id 撞車：後載覆蓋先載（keep latest）
-        auto it = std::find_if(defs.begin(), defs.end(),
-                               [&](const ChapterDef& d) {
-                                   return d.id == def.id;
-                               });
+        // 同 id 撞車：後載覆蓋先載（keep latest）。
+        // 空 id 不參與除重——否則多個缺 id 的檔案會靜默互相覆蓋。
+        auto it = def.id.empty()
+                      ? defs.end()
+                      : std::find_if(defs.begin(), defs.end(),
+                                     [&](const ChapterDef& d) {
+                                         return d.id == def.id;
+                                     });
         if (it != defs.end()) {
             *it = def;
         } else {

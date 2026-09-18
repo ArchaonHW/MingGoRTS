@@ -43,14 +43,28 @@ inputDocuments:
 - 現有 `C:\HWC\PotatoEngine` 為 sync 鏡像非 git repo → 備份後以 filter-repo 產物取代
 - `tools/sync-potatoengine-upstream.sh` 退役或改寫
 
+### FR Coverage Map
+
+| FR | Epic | 說明 |
+|---|---|---|
+| FR1 | ES-0, ES-2 | 引擎獨立編譯（先解耦、後收斂 CMake） |
+| FR2 | ES-2 | 遊戲消費引擎 |
+| FR3 | ES-1 | filter-repo 保留 history |
+| FR4, FR5 | ES-1 | 歸屬表 → 路徑清單 |
+| FR6 | ES-0, ES-1 | Examples 分側（決策在 0，執行在 1） |
+| FR7 | ES-0.3, ES-1.2 | 未提交變更快照與回灌 |
+| FR8, FR9 | ES-2.1 | imgui / IDE_GUI 直編改寫 |
+| FR10 | ES-2, ES-3 | POTATO_TESTS 分流 + 驗證 |
+| NFR1~NFR5 | ES-3 | 全部在驗證 epic 收口 |
+
 ## Epic List
 
-| Epic | 標題 | 目標 |
-|---|---|---|
-| ES-0 | 前置決策與邊界固化 | monorepo 內先解耦、CMake 可消費化 |
-| ES-1 | 歷史拆分 | filter-repo 產出兩個帶完整 history 的 repo |
-| ES-2 | 消費架構落地 | 遊戲 repo 以 add_subdirectory 消費引擎、雙邊 CMake 收斂 |
-| ES-3 | 驗證與交接 | 雙 toolchain 建置測試、CI 拆分、文件更新、PR 流程 |
+| Epic | 標題 | 目標 | FRs |
+|---|---|---|---|
+| ES-0 | 前置決策與邊界固化 | monorepo 內先解耦、CMake 可消費化 | FR1, FR6, FR7 |
+| ES-1 | 歷史拆分 | filter-repo 產出兩個帶完整 history 的 repo | FR3, FR4, FR5, FR6, FR7 |
+| ES-2 | 消費架構落地 | 遊戲 repo 以 add_subdirectory 消費引擎、雙邊 CMake 收斂 | FR1, FR2, FR8, FR9, FR10 |
+| ES-3 | 驗證與交接 | 雙 toolchain 建置測試、CI 拆分、文件更新、PR 流程 | FR10, NFR1~5 |
 
 ## Epic ES-0: 前置決策與邊界固化
 

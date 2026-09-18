@@ -5,6 +5,8 @@
 #include "Campaign/ChapterLibrary.h"
 
 #include <cstdio>
+#include <filesystem>
+#include <fstream>
 #include <string>
 
 using namespace Potato::Campaign;
@@ -117,6 +119,123 @@ int main() {
               "LoadFromFile ../ 逐層容錯");
         Check(!def.LoadFromFile("no_such_chapter.json"),
               "LoadFromFile 壞路徑拒絕");
+        // 找不到檔也重置乾淨（與 LoadFromString 同契約）
+        Check(def.id.empty(), "LoadFromFile 失敗後重置乾淨");
+    }
+
+    // ---- [6] 型別警告與消毒邊界 ----
+    printf("\n[6] 型別警告與消毒邊界\n");
+    {
+        ChapterDef def;
+        // UB 邊界：巨大有限值夾到 INT_MAX 而不是溢位轉負
+        Check(def.LoadFromString(R"({"schema":"potato.campaign_chapter/1",
+            "id":"huge","chapter":1e300})"), "巨大 chapter 仍解析");
+        Check(def.chapter == 2147483647, "chapter 1e300 夾到 INT_MAX");
+        Check(!def.warnings.empty(), "巨大 chapter 記警告");
+
+        // 型別不符：強轉但記警告
+        Check(def.LoadFromString(R"({"schema":"potato.campaign_chapter/1",
+            "id":123,"arc":"abc","chapter":"x"})"), "錯型別仍解析");
+        Check(def.arc == 0 && def.chapter == 1, "錯型別退回預設不強轉");
+        Check(def.warnings.size() >= 3, "錯型別逐欄記警告");
+
+        // 缺 name（id 存在）也要記警告
+        Check(def.LoadFromString(R"({"schema":"potato.campaign_chapter/1",
+            "id":"noname"})"), "缺 name 解析");
+        Check(!def.warnings.empty(), "缺 name 記警告");
+
+        // UTF-8 BOM
+        Check(def.LoadFromString(
+                  "\xEF\xBB\xBF{\"schema\":\"potato.campaign_chapter/1\","
+                  "\"id\":\"bom\"}"),
+              "BOM 前綴仍解析");
+        Check(def.id == "bom", "BOM 檔 id 正確");
+
+        // map 越界路徑記警告
+        Check(def.LoadFromString(R"({"schema":"potato.campaign_chapter/1",
+            "id":"evil","map":"../secret.json"})"), "越界 map 仍解析");
+        Check(!def.warnings.empty(), "越界 map 記警告");
+
+        // enemy_deck / next 欄位
+        Check(def.LoadFromString(R"({"schema":"potato.campaign_chapter/1",
+            "id":"linked","enemy_deck":"deck_a","next":"ch2"})"),
+              "enemy_deck/next 解析");
+        Check(def.enemyDeck == "deck_a" && def.next == "ch2",
+              "enemy_deck/next 欄位值");
+    }
+
+    // ---- [7] LoadDir 注入與除重語義 ----
+    printf("\n[7] LoadDir 注入\n");
+    {
+        namespace fs = std::filesystem;
+        const fs::path tmp = "chapter_lib_test_tmp";
+        std::error_code ec;
+        fs::remove_all(tmp, ec);
+        fs::create_directories(tmp, ec);
+
+        auto write = [&](const char* name, const std::string& body) {
+            std::ofstream f(tmp / name);
+            f << body;
+        };
+        // 同 id 兩檔：後載（檔名序）覆蓋先載
+        write("a_first.json", R"({"schema":"potato.campaign_chapter/1",
+            "id":"dup","name":"先載","chapter":1})");
+        write("b_second.json", R"({"schema":"potato.campaign_chapter/1",
+            "id":"dup","name":"後載","chapter":2})");
+        // 兩個空 id 檔：不參與除重，雙雙存活
+        write("c_anon1.json",
+              R"({"schema":"potato.campaign_chapter/1","name":"匿名一"})");
+        write("d_anon2.json",
+              R"({"schema":"potato.campaign_chapter/1","name":"匿名二"})");
+        // 壞檔 + 非 json：跳過並計數
+        write("e_bad.json", "{broken");
+        write("f_note.txt", "not json at all");
+
+        ChapterLibrary lib;
+        const size_t n = lib.LoadDir(tmp.string());
+        Check(n == 4, "LoadDir 回傳成功檔案數（壞檔/txt 不計）");
+        Check(lib.LastSkipped() == 1, "LastSkipped 計壞檔");
+        Check(lib.Size() == 3, "dup 除重 + 雙匿名存活");
+        const ChapterDef* dup = lib.Find("dup");
+        Check(dup && dup->name == "後載" && dup->chapter == 2,
+              "keep-latest 內容被覆寫");
+
+        // Add 同 id 不除重，Find 取先載入者
+        ChapterDef x;
+        x.LoadFromString(R"({"schema":"potato.campaign_chapter/1",
+            "id":"same","name":"first"})");
+        ChapterDef y;
+        y.LoadFromString(R"({"schema":"potato.campaign_chapter/1",
+            "id":"same","name":"second"})");
+        const size_t before = lib.Size();
+        lib.Add(x);
+        lib.Add(y);
+        Check(lib.Size() == before + 2, "Add 同 id 不除重");
+        Check(lib.Find("same")->name == "first", "Find 取先載入者");
+
+        fs::remove_all(tmp, ec);
+    }
+
+    // ---- [8] Sorted 完整排序（同弧/同章 tie-break）----
+    printf("\n[8] Sorted tie-break\n");
+    {
+        ChapterLibrary lib;
+        auto mk = [](const char* id, int arc, int ch) {
+            ChapterDef d;
+            d.id = id;
+            d.arc = arc;
+            d.chapter = ch;
+            return d;
+        };
+        lib.Add(mk("c", 1, 2));
+        lib.Add(mk("a", 1, 1));
+        lib.Add(mk("b", 1, 1)); // 同 arc 同 chapter → id 決勝
+        lib.Add(mk("z", 0, 9)); // 弧 0 排最前
+        auto s = lib.Sorted();
+        Check(s.size() == 4, "Sorted 全數回傳");
+        Check(s[0]->id == "z" && s[1]->id == "a" && s[2]->id == "b" &&
+                  s[3]->id == "c",
+              "arc→chapter→id 三級排序");
     }
 
     printf("\n=== 結果: %s ===\n", failures == 0 ? "全部 PASS" : "有 FAIL");

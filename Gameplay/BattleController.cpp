@@ -1,5 +1,6 @@
 #include "BattleController.h"
 
+#include "BattlePlan.h"
 #include "QuantumFog.h"
 #include "SquadTemplate.h"
 
@@ -262,6 +263,37 @@ void BattleController::ApplyRoutShock() {
     }
 }
 
+// ---------------------------------------------------------------------------
+// C-2 治理事件
+// ---------------------------------------------------------------------------
+
+void BattleController::RecordGovernanceEvent(GovernanceEvent ev) {
+    ++govEvents[ev];
+    Emit(std::string("治理：") + GovernanceEventName(ev));
+}
+
+void BattleController::DetectGovernanceEvents() {
+    for (const auto& s : squads) {
+        // 只評敵軍（team!=0 慣例：team 0 = 玩家）
+        if (s->GetTeam() == 0) continue;
+        if (!s->IsRouting()) continue;
+        auto it = govRoutMembers.find(s.get());
+        if (it == govRoutMembers.end()) {
+            // 新潰逃敵隊：受降（任其生還不追殺）+ 記錄潰逃時員額
+            govRoutMembers[s.get()] = s->GetMembers();
+            RecordGovernanceEvent(GovernanceEvent::SurrenderAccepted);
+        } else if (s->GetMembers() < it->second &&
+                   !govAtrocityDone.count(s.get())) {
+            // 潰逃中續損員 = 屠殺已降之敵，每隊只記一次
+            govAtrocityDone.insert(s.get());
+            it->second = s->GetMembers();
+            RecordGovernanceEvent(GovernanceEvent::Atrocity);
+        } else {
+            it->second = s->GetMembers();
+        }
+    }
+}
+
 void BattleController::SetMoraleExecution(float threshold, float rate) {
     moraleExecThreshold = threshold;
     moraleExecRate = rate;
@@ -311,6 +343,7 @@ void BattleController::Update(float realDt) {
 
     ResolveCombat(dt);
     ApplyRoutShock(); // G-1：傷亡結算後擴散潰逃衝擊
+    DetectGovernanceEvents(); // C-2：潰逃/暴行治理事件偵測
 
     // Q-1 敵情霧：情報時效/退相干推進 + 接觸偵查（正負面觀測）
     if (fog) {
@@ -388,6 +421,12 @@ void BattleController::Update(float realDt) {
         for (const Squad* s : spotted) {
             Emit(s->GetName() + " 被我軍目擊（接觸偵查）");
         }
+    }
+    // 計畫加成依最新情報重評（揭露/消去/過期都會拉動 certainty）；
+    // 放在 if(fog) 外——fog 中途解綁也要讓加成回滿（certainty 1）。
+    // 冪等——情報沒變時 damagePerMember 逐位元不動
+    if (plan) {
+        plan->UpdateUncertainty(*this);
     }
 
     CheckOutcome();

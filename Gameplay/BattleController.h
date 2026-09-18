@@ -5,6 +5,7 @@
 #include "FlowField.h"
 #include "Squad.h"
 #include "Doctrine.h"
+#include "GovernanceEvent.h"
 
 #include <functional>
 #include <memory>
@@ -18,6 +19,7 @@ namespace Potato {
 namespace Gameplay {
 
 class QuantumFog;
+class BattlePlan;
 struct SquadTemplate;
 
 /**
@@ -158,6 +160,12 @@ public:
         if (cells > 0.0f) fogRevealRange = cells; // NaN/非正數忽略
     }
 
+    // ---- 作戰計畫加成（quantum-plan-effects，可選）----
+    // 綁定後：執行階段 fog 更新完每 tick 呼叫 plan->UpdateUncertainty，
+    // 箭頭尖端的情報確定度即時拉動 planAttackMul 上下（除舊乘新冪等）。
+    void BindPlan(BattlePlan* p) { plan = p; }
+    BattlePlan* GetPlan() const { return plan; }
+
     // 每幀呼叫：realDt 為真實秒數，內部乘 timeScale
     void Update(float realDt);
 
@@ -166,6 +174,15 @@ public:
     BattleOutcome GetOutcome() const { return outcome; }
     int GetCommandPoints(int team) const;
     const std::vector<UniquePtr<Squad>>& GetSquads() const { return squads; }
+
+    // ---- C-2 治理事件：民心/秩序戰場來源 ----
+    // 自動偵測（team!=0 視為敵方）：敵隊新潰逃 → SurrenderAccepted；
+    // 潰逃中續損員 → Atrocity。各事件每隊只發一次。
+    // 村莊/護輜由有地圖知識的呼叫端餵 RecordGovernanceEvent。
+    // 事件一律進 recorder 事件流（Emit），並累計供章節邊界結算。
+    void RecordGovernanceEvent(GovernanceEvent ev);
+    const std::unordered_map<GovernanceEvent, int>&
+    GetGovernanceEvents() const { return govEvents; }
 
     void SetEventCallback(EventCallback cb) { onEvent = std::move(cb); }
 
@@ -176,6 +193,7 @@ private:
     void CheckOutcome();
     void Emit(const std::string& msg);
     void ApplyRoutShock(); // G-1：偵測新潰逃 → 範圍士氣衝擊（每隊一次）
+    void DetectGovernanceEvents(); // C-2：潰逃/暴行自動偵測
 
     SquadContext BuildContext(const Squad& squad) const;
     FlowField* GetTeamField(int team);
@@ -201,6 +219,7 @@ private:
     std::unordered_map<Squad*, float> damageBuffer;      // 小數傷害累積
     std::unordered_map<Squad*, SquadContext> contexts;
     QuantumFog* fog = nullptr;                     // Q-1 敵情霧（外層持有）
+    BattlePlan* plan = nullptr;                    // 計畫加成即時重評（外層持有）
     std::unordered_map<Squad*, int> fogEntities;   // squad → fog entityId
     float fogRevealRange = 3.0f;                   // 接觸偵查距離（格）
 
@@ -214,6 +233,9 @@ private:
     float routShockRadius = 0.0f;     // G-1：<=0 關閉
     float routShockMorale = 0.0f;
     std::unordered_set<Squad*> routEmitted; // 已擴散過的潰逃隊
+    std::unordered_map<GovernanceEvent, int> govEvents;      // C-2 事件計數
+    std::unordered_map<Squad*, int> govRoutMembers;          // 潰逃時員額（暴行偵測）
+    std::unordered_set<Squad*> govAtrocityDone;              // 已記暴行的潰逃隊
     int combatWidth = 0;              // G-2：<=0 無上限
     mutable std::mt19937 execRng{std::random_device{}()};
 
