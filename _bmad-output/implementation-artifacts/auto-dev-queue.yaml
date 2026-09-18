@@ -501,8 +501,17 @@ queue:
       - seed 可重現同一張圖；異 seed 產出可辨差異
       - 產出的 JSON 通過 BattleMap loader + 可打一場
       - headless 測試（不需視窗）
-    status: queued
+    status: done
     size: M
+    note: >
+      純程序生成（無 NeuralTerrainGen）：Gameplay/MapGenerator
+      以 seeded 正弦疊加標量場（CurlNoise 思路標量版）產高度/
+      植被場 + 蜿蜒河道中心線，規則化為 potato.battle_map/1
+      JSON（河道 blocked / 渡口通行 / 河岸泥濘 cost2 / 高地
+      highland / 森林 forest、南北部署區與圖釘）。同 seed
+      逐位一致可回放。MapGenTest 11/11 PASS：決定性、異
+      seed 差異、loader 接受、渡口可通行河道擋路、開戰
+      推進且小隊有行動。
 
   - id: G-8
     title: 玩家將軍親臨（M&B commander）
