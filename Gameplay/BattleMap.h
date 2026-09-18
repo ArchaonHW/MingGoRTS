@@ -2,14 +2,13 @@
 
 #include "Core/CoreTypes.h"
 #include "MathUtils/Vector2.h"
+#include "FlowField.h"
 
 #include <string>
 #include <vector>
 
 namespace Potato {
 namespace Gameplay {
-
-class FlowField;
 
 /**
  * 戰鬥地圖（BattleMap）——T-4 斷橋地圖 JSON
@@ -20,7 +19,8 @@ class FlowField;
  *
  * JSON schema: potato.battle_map/1
  *   grid:        {width, height, cellSize}
- *   terrain:     [{rect:[x,y,w,h], blocked, cost, note}]
+ *   terrain:     [{rect:[x,y,w,h], blocked, cost, note, type?}]
+ *                // type: "highland" | "forest" | "mud"，缺省 = plain
  *   zones:       [{name, rect:[x,y,w,h]}]
  *   fords:       [{name, rect:[x,y,w,h]}]          // 可通行的水域缺口
  *   deployZones: {"0": {rect:[...]}, "1": {...}}    // 各隊部署範圍
@@ -86,6 +86,7 @@ private:
         MapRect rect;
         bool blocked = false;
         float cost = 1.0f;
+        TerrainType type = TerrainType::Plain;
         std::string note;
     };
     std::vector<TerrainPatch> terrain;

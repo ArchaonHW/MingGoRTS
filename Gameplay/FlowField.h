@@ -8,6 +8,15 @@
 namespace Potato {
 namespace Gameplay {
 
+// 地形類型（G-4）：影響戰鬥修正與通行成本
+// Plain=平地 Highland=高地(攻擊方加成) Forest=森林(守方減傷) Mud=泥濘(減速)
+enum class TerrainType : uint8 {
+    Plain = 0,
+    Highland,
+    Forest,
+    Mud
+};
+
 /**
  * Flow Field（流向場）尋路
  *
@@ -27,6 +36,11 @@ public:
     void SetObstacle(int x, int y, bool blocked);
     void SetCost(int x, int y, float cost);
     bool IsBlocked(int x, int y) const;
+
+    // G-4 地形類型層（缺省 Plain；越界查詢回傳 Plain）
+    void SetTerrain(int x, int y, TerrainType type);
+    TerrainType GetTerrain(int x, int y) const;
+    TerrainType TerrainAt(const Vector2& worldPos) const;
 
     // 從目標世界座標重算整張場；回傳 false 表示目標不可達/不合法
     bool Compute(const Vector2& goalWorld);
@@ -54,6 +68,7 @@ private:
 
     std::vector<uint8> blocked;
     std::vector<float> terrainCost;
+    std::vector<uint8> terrainType;
     std::vector<float> integration;
     std::vector<Vector2> direction;
 

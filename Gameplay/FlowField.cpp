@@ -13,6 +13,8 @@ FlowField::FlowField(int w, int h, float cell)
     , cellSize(cell)
     , blocked(static_cast<size_t>(w) * h, 0)
     , terrainCost(static_cast<size_t>(w) * h, 1.0f)
+    , terrainType(static_cast<size_t>(w) * h,
+                  static_cast<uint8>(TerrainType::Plain))
     , integration(static_cast<size_t>(w) * h,
                   std::numeric_limits<float>::infinity())
     , direction(static_cast<size_t>(w) * h, Vector2(0.0f, 0.0f)) {
@@ -32,6 +34,27 @@ void FlowField::SetCost(int x, int y, float cost) {
 
 bool FlowField::IsBlocked(int x, int y) const {
     return InBounds(x, y) && blocked[Index(x, y)] != 0;
+}
+
+void FlowField::SetTerrain(int x, int y, TerrainType type) {
+    if (InBounds(x, y)) {
+        terrainType[Index(x, y)] = static_cast<uint8>(type);
+    }
+}
+
+TerrainType FlowField::GetTerrain(int x, int y) const {
+    if (!InBounds(x, y)) {
+        return TerrainType::Plain;
+    }
+    return static_cast<TerrainType>(terrainType[Index(x, y)]);
+}
+
+TerrainType FlowField::TerrainAt(const Vector2& worldPos) const {
+    int x = 0, y = 0;
+    if (!WorldToCell(worldPos, x, y)) {
+        return TerrainType::Plain;
+    }
+    return GetTerrain(x, y);
 }
 
 bool FlowField::WorldToCell(const Vector2& worldPos, int& outX, int& outY) const {

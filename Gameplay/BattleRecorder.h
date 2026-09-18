@@ -45,6 +45,11 @@ public:
     void Replay(const std::function<void(float, const std::string&)>& cb,
                 float timeScale = 0.0f) const;
 
+    // 手動補記事件（G-7 戰後結算等不經 battle 事件流的事項）
+    void AddRecord(float t, const std::string& event) {
+        records.push_back({t, event});
+    }
+
 private:
     std::vector<Record> records;
 };

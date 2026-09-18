@@ -40,6 +40,22 @@ bool BattleResources::RevealEnemyPersonality(int team) {
     return true;
 }
 
+void BattleResources::AddLoot(int team, int points) {
+    if (points > 0) teams[team].loot += points;
+}
+
+bool BattleResources::SpendLoot(int team, int points) {
+    auto it = teams.find(team);
+    if (it == teams.end() || it->second.loot < points) return false;
+    it->second.loot -= points;
+    return true;
+}
+
+int BattleResources::GetLoot(int team) const {
+    auto it = teams.find(team);
+    return it != teams.end() ? it->second.loot : 0;
+}
+
 void BattleResources::ApplyMoraleRule(BattleController& battle,
                                       float threshold, float rate) {
     battle.SetMoraleExecution(threshold, rate);

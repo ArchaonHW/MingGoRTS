@@ -26,6 +26,7 @@ public:
         int intel = 0;
         int cp = 0;
         int maxCP = 0;
+        int loot = 0;   // G-7 戰利品點數（跨場累積的 meta 貨幣）
     };
 
     // 設定某隊資源並把 CP 同步進 controller
@@ -38,6 +39,11 @@ public:
 
     // 情報消費：解鎖敵方人格三軸的可視化（回傳是否成功解鎖）
     bool RevealEnemyPersonality(int team);
+
+    // G-7 戰利品帳戶：戰後結算入帳，meta 層（招募/整補）消費
+    void AddLoot(int team, int points);
+    bool SpendLoot(int team, int points); // 不足回 false
+    int GetLoot(int team) const;
 
     // 把士氣執行率規則灌進 controller：
     // 小隊士氣 < threshold 時 doctrine 動作只有 rate 機率執行

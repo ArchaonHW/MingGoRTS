@@ -441,8 +441,15 @@ queue:
     acceptance:
       - 戰後報告含傷亡分類與戰利品清單
       - 傷兵恢復率可配置；回放記錄戰後事件
-    status: queued
+    status: done
     size: M
+    note: >
+      新模組 Gameplay/PostBattle：Settle 產 PostBattleReport
+      （lost 拆 wounded/dead、殲滅敵隊計 lootPoints、敵將遺物清單）、
+      ApplyLoot 入帳 BattleResources.loot（新增 AddLoot/SpendLoot/
+      GetLoot meta 貨幣）、RecordTo 以 BattleRecorder::AddRecord
+      補記戰後事件。woundedRatio/lootPerEliminated 可配置；
+      TotalWounded 供下一場整補。PostBattleTest 18/18 PASS。
 
   - id: G-6
     title: 小隊編制模板（HOI4 division designer）

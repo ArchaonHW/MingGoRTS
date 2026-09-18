@@ -34,6 +34,20 @@ static Vector2 ParsePos(const JsonValue& v) {
     return Vector2(0.0f, 0.0f);
 }
 
+// 地形字串 → TerrainType；不認得的值（含空字串）一律 Plain
+static TerrainType TerrainTypeFromString(const std::string& s) {
+    if (s == "highland") {
+        return TerrainType::Highland;
+    }
+    if (s == "forest") {
+        return TerrainType::Forest;
+    }
+    if (s == "mud") {
+        return TerrainType::Mud;
+    }
+    return TerrainType::Plain;
+}
+
 bool BattleMap::LoadFromFile(const std::string& path) {
     // 容錯：逐層往上找（CTest 工作目錄可能深至 build/bin/Release）
     for (const char* prefix : {"", "../", "../../", "../../../"}) {
@@ -67,6 +81,7 @@ bool BattleMap::LoadFromString(const std::string& json) {
         p.rect = ParseRect(t["rect"]);
         p.blocked = t["blocked"].AsBool(false);
         p.cost = t["cost"].AsFloat(1.0f);
+        p.type = TerrainTypeFromString(t["type"].AsString());
         p.note = t["note"].AsString();
         terrain.push_back(p);
     }
@@ -108,6 +123,7 @@ void BattleMap::ApplyToField(FlowField& field) const {
                 } else {
                     field.SetCost(x, y, p.cost);
                 }
+                field.SetTerrain(x, y, p.type);
             }
         }
     }
