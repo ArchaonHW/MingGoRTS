@@ -571,9 +571,15 @@ queue:
       - 戰報由片段/模板組裝產出（headless 可測，非手寫字串）
       - 每份報告輸出省略計數欄位
       - DuanqiaoPlayable 戰後結算吃新組裝器；既有回放格式不破壞
-    status: queued
+    status: done
     size: M
-    note: 戰鬥層可先落地；墮落路線「省略數暴漲」屬 E-7 之後
+    note: >
+      Gameplay/HistorianReport（並行 session）：BattleRecorder 事件流
+      → 片段+判詞模板組裝戰報，每份輸出省略計數
+      （「本報告省略 N 項」），結局句（勝/敗/平/未決）與名冊
+      殉國/得全句皆模板化。HistorianReportTest 27/27 PASS。
+      DuanqiaoPlayable 接線見 ee1fc5b。
+      戰鬥層已先落地；墮落路線「省略數暴漲」屬 E-7 之後
 
   - id: N-2
     title: 敵將判詞（聽聞態，非真相態）
