@@ -3,6 +3,7 @@
 #include "Core/CoreTypes.h"
 #include "MathUtils/Vector2.h"
 
+#include <algorithm>
 #include <string>
 
 namespace Potato {
@@ -39,6 +40,10 @@ public:
     float GetMorale() const { return morale; }          // 0.0 ~ 1.0
     float GetHealthPct() const { return static_cast<float>(members) / maxMembers; }
     float GetSpeed() const { return speed; }
+    // 疲勞修正後的實際移速（疲憊時打折）
+    float GetEffectiveSpeed() const;
+    float GetStamina() const { return stamina; }        // 0.0 ~ 1.0
+    bool IsExhausted() const { return stamina < exhaustedThreshold; }
     float GetEngageRange() const { return engageRange; }
     float GetAttackDPS() const;
 
@@ -53,6 +58,11 @@ public:
     void SetSpeed(float s) { speed = s; }
     void SetEngageRange(float r) { engageRange = r; }
     void SetDamagePerMember(float d) { damagePerMember = d; }
+
+    // 疲勞參數（每秒速率 / 閾值 / 疲憊移速倍率）
+    void SetStaminaParams(float drainMove, float drainCombat,
+                          float regen, float threshold, float penaltyMul);
+    void SetStamina(float s) { stamina = std::clamp(s, 0.0f, 1.0f); }
 
     void IssueOrder(SquadOrder newOrder, const Vector2& target);
     void IssueOrder(SquadOrder newOrder, const Squad* target);
@@ -74,7 +84,8 @@ public:
     bool IsUnderAttack() const { return underAttack; }
 
 private:
-    void MoveToward(const Vector2& dest, float dt, const FlowField* field);
+    // 回傳本 tick 是否實際位移
+    bool MoveToward(const Vector2& dest, float dt, const FlowField* field);
 
     std::string name;
     int team;
@@ -90,6 +101,14 @@ private:
     float speed;          // 世界單位/秒
     float engageRange;    // 接戰距離（世界單位）
     float damagePerMember;// 每名成員每秒傷害
+
+    // 疲勞（G-3）：移動/交戰消耗，駐守回復；低於閾值移速打折
+    float stamina;
+    float staminaDrainMove;
+    float staminaDrainCombat;
+    float staminaRegen;
+    float exhaustedThreshold;
+    float exhaustedSpeedMul;
 
     SquadOrder order;
     Vector2 orderTarget;

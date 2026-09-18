@@ -289,7 +289,7 @@ queue:
     acceptance:
       - 三段引導可完成、可重看
       - 全離線資源
-    status: queued
+    status: done
     size: M
 
   # ---- 層級 P：物理批次後續（UNSOLVED_PHYSICS_TO_ENGINE 消費端）----
@@ -384,8 +384,13 @@ queue:
     acceptance:
       - stamina 0~1，跑動耗損、駐守回復，數值可測
       - 疲憊懲罰生效（速度或攻擊修正任一）
-    status: queued
+    status: done
     size: S
+    note: >
+      Squad.stamina：MoveToward 實際位移耗 drainMove(0.03/s)、
+      engaged 耗 drainCombat(0.05/s)、駐守未接戰回 regen(0.06/s)；
+      stamina<0.3 → GetEffectiveSpeed ×0.6；SetStaminaParams 可調。
+      SquadFatigueTest 15/15 PASS；doctrine StaminaBelow 觸發留後續。
 
   - id: G-2
     title: 兵種克制 + 戰線寬度（TW/HOI4）

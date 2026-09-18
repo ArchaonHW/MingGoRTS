@@ -21,9 +21,28 @@ Squad::Squad(const std::string& squadName, int teamId,
     , speed(2.0f)
     , engageRange(1.5f)
     , damagePerMember(0.05f)
+    , stamina(1.0f)
+    , staminaDrainMove(0.03f)
+    , staminaDrainCombat(0.05f)
+    , staminaRegen(0.06f)
+    , exhaustedThreshold(0.3f)
+    , exhaustedSpeedMul(0.6f)
     , order(SquadOrder::Hold)
     , orderTarget(pos)
     , engageTarget(nullptr) {
+}
+
+float Squad::GetEffectiveSpeed() const {
+    return speed * (stamina < exhaustedThreshold ? exhaustedSpeedMul : 1.0f);
+}
+
+void Squad::SetStaminaParams(float drainMove, float drainCombat,
+                             float regen, float threshold, float penaltyMul) {
+    staminaDrainMove = drainMove;
+    staminaDrainCombat = drainCombat;
+    staminaRegen = regen;
+    exhaustedThreshold = threshold;
+    exhaustedSpeedMul = penaltyMul;
 }
 
 float Squad::GetAttackDPS() const {
@@ -91,34 +110,48 @@ void Squad::Update(float dt, const FlowField* field) {
     if (routing) {
         // 潰逃：不聽指揮，往己方邊緣移動（orderTarget 由 controller 設為集結點）
         MoveToward(orderTarget, dt * 1.2f, field);
+        stamina = std::max(0.0f, stamina - staminaDrainMove * dt);
         return;
     }
 
+    bool moved = false;
     switch (order) {
     case SquadOrder::Hold:
         break;
     case SquadOrder::MoveTo:
     case SquadOrder::AttackMove:
     case SquadOrder::Retreat:
-        MoveToward(orderTarget, dt, field);
+        moved = MoveToward(orderTarget, dt, field);
         break;
     case SquadOrder::Engage:
         if (engageTarget && !engageTarget->IsEliminated()) {
-            MoveToward(engageTarget->GetPosition(), dt, field);
+            moved = MoveToward(engageTarget->GetPosition(), dt, field);
         } else {
             order = SquadOrder::Hold;
         }
         break;
     }
+
+    // 疲勞：移動與交戰消耗，駐守且未接戰時回復
+    if (moved) {
+        stamina -= staminaDrainMove * dt;
+    }
+    if (engaged) {
+        stamina -= staminaDrainCombat * dt;
+    }
+    if (!moved && !engaged) {
+        stamina += staminaRegen * dt;
+    }
+    stamina = std::clamp(stamina, 0.0f, 1.0f);
 }
 
-void Squad::MoveToward(const Vector2& dest, float dt, const FlowField* field) {
+bool Squad::MoveToward(const Vector2& dest, float dt, const FlowField* field) {
     Vector2 toDest = dest - position;
     float dist = toDest.Length();
 
     // 已到達目標附近就停下
     if (dist < 0.5f) {
-        return;
+        return false;
     }
 
     Vector2 dir(0.0f, 0.0f);
@@ -132,12 +165,13 @@ void Squad::MoveToward(const Vector2& dest, float dt, const FlowField* field) {
         dir = toDest.Normalize();
     }
 
-    Vector2 step = dir * (speed * dt);
+    Vector2 step = dir * (GetEffectiveSpeed() * dt);
     if (step.Length() > dist) {
         position = dest;
     } else {
         position = position + step;
     }
+    return true;
 }
 
 } // namespace Gameplay
