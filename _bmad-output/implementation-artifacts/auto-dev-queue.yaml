@@ -669,9 +669,15 @@ queue:
     acceptance:
       - 章節 UI 呈現三慣例
       - 結局文由累積記錄生成（非選項選擇）
-    status: queued
+    status: done
     size: S
-    note: 依賴 E-7 戰役框架；純文字/UI 層
+    note: >
+      Gameplay/ChapterConventions：OpeningVerse 韻庫題詞（主題嵌句）、
+      EntranceJudgment 接 N-2 dossier（據報/驗證/虛實未聞三態）、
+      ClosingHook 欲知後事（勝敗/神話/N-3 反制入鉤）、
+      ResolveEnding+ComposeEnding 四聲部（墮落→對手之筆、
+      武功民心俱高→無字留白、武功顯→霸業、治績顯→仁政），
+      結局引帳本處置/稱號+神話證詞。ChapterConventionsTest 29/29。
 
   # ---- 層級 U：demo 化 ----
   - id: U-1

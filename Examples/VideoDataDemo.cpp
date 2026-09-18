@@ -1,8 +1,8 @@
 // VideoDataDemo - 時序訓練資料產線：戰鬥 episode → 影格序列 + 逐幀標註
 //
 // 管線: BattleController(doctrine 執行) → BattleSceneSync → SceneRenderer →
-//       GL 渲染 → glReadPixels → PNG 影格 + frames.jsonl 逐幀標註
-//       (+ ffmpeg 可用時附帶 ep.mp4)
+//       Media/HeadlessCapture(隱藏窗口+FBO,top-down RGBA) → PNG 影格 +
+//       frames.jsonl 逐幀標註 + Media/VideoEncoder(ffmpeg 可用時 ep.mp4)
 //
 // 與 BattleRenderDemo(單一展示影片) 的差異：本工具產的是資料集——
 //   - 多 episode、seeded 編成抖動(人數/站位/編制)提供樣本多樣性
@@ -25,9 +25,11 @@
 #include "Gameplay/BattleSceneSync.h"
 #include "Gameplay/Doctrine.h"
 #include "MathUtils/Matrix4.h"
+#include "Media/HeadlessCapture.h"
+#include "Media/VideoEncoder.h"
+#include "Media/DatasetManifest.h"
 
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 #include <algorithm>
 #include <cstdio>
@@ -36,7 +38,6 @@
 #include <filesystem>
 #include <fstream>
 #include <random>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -194,6 +195,18 @@ static const char* OrderName(SquadOrder o) {
     default:                     return "none";
     }
 }
+// top-down 影格原地翻成 bottom-up——VideoEncoder 以 glReadPixels 語意
+// (bottom-up + ffmpeg vflip) 為輸入;HeadlessCapture 出檔是 top-down。
+static void FlipRows(std::vector<uint8_t>& img, int w, int h) {
+    const size_t rb = (size_t)w * 4;
+    std::vector<uint8_t> tmp(img.size());
+    for (int y = 0; y < h; ++y) {
+        std::memcpy(tmp.data() + (size_t)y * rb,
+                    img.data() + (size_t)(h - 1 - y) * rb, rb);
+    }
+    img.swap(tmp);
+}
+
 static const char* OutcomeName(BattleOutcome o) {
     switch (o) {
     case BattleOutcome::Victory: return "victory";
@@ -216,29 +229,12 @@ int main(int argc, char** argv) {
     const float FIELD_W = GW * CELL, FIELD_H = GH * CELL;
     const int totalFrames = (int)(args.seconds * args.fps);
 
-    // ---- GL context(隱藏窗口,實際尺寸直接開)----
-    if (!glfwInit()) {
-        printf("glfwInit 失敗——無顯示環境無法渲染\n");
+    // ---- 離屏擷取(Media/HeadlessCapture:隱藏窗口+FBO+top-down 語意)----
+    Media::HeadlessCapture cap;
+    if (!cap.Begin(W, H)) {
+        printf("無 GL 環境——隱藏窗口建立失敗,skip\n");
         return 0; // 工具性質:skip 不當失敗
     }
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    GLFWwindow* win = glfwCreateWindow(W, H, "video_ds", nullptr, nullptr);
-    if (!win) {
-        printf("glfwCreateWindow 失敗\n");
-        glfwTerminate();
-        return 0;
-    }
-    glfwMakeContextCurrent(win);
-    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
-        printf("gladLoadGLLoader 失敗\n");
-        glfwDestroyWindow(win);
-        glfwTerminate();
-        return 1;
-    }
-    glViewport(0, 0, W, H);
     glEnable(GL_DEPTH_TEST);
 
     auto unitShader = MakeShared<Shader>();
@@ -262,9 +258,8 @@ int main(int argc, char** argv) {
 
     std::error_code ec;
     fs::create_directories(args.out, ec);
-    std::ostringstream dsEntries;
-    int dsCount = 0;
-    std::vector<unsigned char> frameBuf((size_t)W * H * 4);
+    std::vector<std::string> epNames;
+    std::vector<uint8_t> encBuf; // encoder 用 bottom-up 暫存(見 FlipRows)
 
     for (int ep = 0; ep < args.episodes; ++ep) {
         const unsigned epSeed = args.seed + (unsigned)ep * 7919u;
@@ -350,26 +345,15 @@ int main(int argc, char** argv) {
         SceneRenderer sceneRenderer;
         sceneRenderer.SetDefaultShader(unitShader);
 
-        // ---- ffmpeg pipe(失敗 → 純 PNG 影格)----
-        FILE* pipe = nullptr;
-        fs::path mp4Path = epDir / (std::string(epName) + ".mp4");
-        if (args.mp4) {
-            std::string cmd =
-                "ffmpeg -y -f rawvideo -pix_fmt rgba -s " +
-                std::to_string(W) + "x" + std::to_string(H) +
-                " -r " + std::to_string(args.fps) +
-                " -i - -vf vflip -an -c:v libx264 -pix_fmt yuv420p "
-                "-crf 20 -movflags +faststart \"" +
-                mp4Path.string() + "\" 2> \"" +
-                (epDir / "ffmpeg.log").string() + "\"";
-#ifdef _WIN32
-            pipe = _popen(cmd.c_str(), "wb");
-#else
-            pipe = popen(cmd.c_str(), "w");
-#endif
-            if (!pipe) {
-                printf("  [ep%d] ffmpeg 不可用,僅產 PNG 影格\n", ep);
-            }
+        // ---- 編碼器(Media/VideoEncoder;ffmpeg 缺席 → 純 PNG 影格)----
+        Media::VideoEncoder enc;
+        const fs::path mp4Path = epDir / (std::string(epName) + ".mp4");
+        const bool encoding =
+            args.mp4 && enc.Open(mp4Path.string(), W, H, args.fps,
+                                 Media::PixelFormat::RGBA,
+                                 (epDir / "ffmpeg.log").string());
+        if (args.mp4 && !encoding) {
+            printf("  [ep%d] ffmpeg 不可用,僅產 PNG 影格\n", ep);
         }
 
         std::ofstream jsonl(epDir / "frames.jsonl");
@@ -379,19 +363,23 @@ int main(int argc, char** argv) {
             battle.Update(1.0f / args.fps);
             sync.Sync(battle);
 
-            glClearColor(0.07f, 0.09f, 0.13f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            sceneRenderer.Render(scene, cam);
-
-            glReadPixels(0, 0, W, H, GL_RGBA, GL_UNSIGNED_BYTE,
-                         frameBuf.data());
-            if (pipe) {
-                fwrite(frameBuf.data(), 1, frameBuf.size(), pipe);
+            // Grab:綁 FBO+設 viewport+讀回+翻成 top-down(與 bbox 座標同向)
+            const std::vector<uint8_t> rgba = cap.Grab([&] {
+                glClearColor(0.07f, 0.09f, 0.13f, 1.0f);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                sceneRenderer.Render(scene, cam);
+                return true;
+            });
+            if (rgba.empty()) continue; // 該幀放棄:不寫影格也不寫標註
+            if (encoding) {
+                encBuf = rgba; // VideoEncoder 走 bottom-up(vflip 修正),翻回
+                FlipRows(encBuf, W, H);
+                enc.WriteFrame(encBuf.data(), encBuf.size());
             }
             char imgName[32];
             std::snprintf(imgName, sizeof(imgName), "img_%05d.png", f);
             ImageCodec::WritePNGFile((epDir / imgName).string(), W, H,
-                                     frameBuf.data());
+                                     rgba.data());
 
             // ---- 逐幀標註 ----
             jsonl << "{\"f\":" << f
@@ -469,17 +457,21 @@ int main(int argc, char** argv) {
                 // 結束後補 12 幀定格(事件收尾供時序模型學習)
                 const int tail = std::min(12, totalFrames - f - 1);
                 for (int g = 1; g <= tail; ++g) {
-                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-                    sceneRenderer.Render(scene, cam);
-                    glReadPixels(0, 0, W, H, GL_RGBA, GL_UNSIGNED_BYTE,
-                                 frameBuf.data());
-                    if (pipe) {
-                        fwrite(frameBuf.data(), 1, frameBuf.size(), pipe);
+                    const std::vector<uint8_t> tailPx = cap.Grab([&] {
+                        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                        sceneRenderer.Render(scene, cam);
+                        return true;
+                    });
+                    if (tailPx.empty()) continue;
+                    if (encoding) {
+                        encBuf = tailPx;
+                        FlipRows(encBuf, W, H);
+                        enc.WriteFrame(encBuf.data(), encBuf.size());
                     }
                     std::snprintf(imgName, sizeof(imgName),
                                   "img_%05d.png", f + g);
                     ImageCodec::WritePNGFile((epDir / imgName).string(),
-                                             W, H, frameBuf.data());
+                                             W, H, tailPx.data());
                     jsonl << "{\"f\":" << (f + g)
                           << ",\"t\":"
                           << (float)(f + g) / args.fps
@@ -489,13 +481,7 @@ int main(int argc, char** argv) {
                 done = true;
             }
         }
-        if (pipe) {
-#ifdef _WIN32
-            _pclose(pipe);
-#else
-            pclose(pipe);
-#endif
-        }
+        if (enc.IsOpen()) enc.Close();
         jsonl.close();
 
         // episode meta
@@ -505,23 +491,24 @@ int main(int argc, char** argv) {
              << "\",\"frames\":" << framesWritten
              << ",\"fps\":" << args.fps << ",\"w\":" << W
              << ",\"h\":" << H
-             << ",\"mp4\":" << (args.mp4 ? "true" : "false") << "}\n";
+             << ",\"mp4\":" << (encoding ? "true" : "false") << "}\n";
 
-        if (dsCount++ > 0) dsEntries << ",";
-        dsEntries << "\n  \"" << epName << "\"";
+        epNames.push_back(epName);
         printf("[ep%d] seed=%u outcome=%s frames=%d\n", ep, epSeed,
                OutcomeName(battle.GetOutcome()), framesWritten);
     }
 
-    // ---- dataset manifest + label schema ----
-    std::ofstream ds(fs::path(args.out) / "dataset.json");
-    ds << "{\n  \"kind\": \"potato.video_dataset/1\",\n"
-          "  \"note\": \"逐幀標註:bbox=[x0,y0,x1,y1]像素,已 clamp 至畫面;"
-          "clipped=部份出框;world=格座標;visible=在視錐內\",\n"
-          "  \"episodes\": [" << dsEntries.str() << "\n  ]\n}\n";
+    // ---- dataset manifest(Media/DatasetManifest 統一 schema)----
+    Media::DatasetManifest manifest;
+    manifest.kind = "video"; // schema: potato.video_dataset/1
+    manifest.seed = (int)args.seed;
+    manifest.episodes = epNames;
+    manifest.extrasJson =
+        "{\"note\":\"逐幀標註:bbox=[x0,y0,x1,y1]像素,已 clamp 至畫面;"
+        "clipped=部份出框;world=格座標;visible=在視錐內\"}";
+    manifest.SaveToFile((fs::path(args.out) / "dataset.json").string());
 
-    glfwDestroyWindow(win);
-    glfwTerminate();
-    printf("Done: %d episodes → %s\n", dsCount, args.out.c_str());
+    printf("Done: %d episodes → %s\n", (int)epNames.size(),
+           args.out.c_str());
     return 0;
 }
