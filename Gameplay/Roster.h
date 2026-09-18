@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/CoreTypes.h"
+#include "Serialization/JsonParser.h"
 
 #include <string>
 #include <vector>
@@ -50,7 +51,10 @@ public:
     size_t DeadCount() const;
     size_t AliveCount() const { return entries.size() - DeadCount(); }
 
-    // 存/讀 JSON（potato.roster/1）
+    // 存/讀 JSON（potato.roster/1）；ToJson/FromJson 供
+    // CampaignState 聚合存檔嵌入同構子文件
+    JsonValue ToJson() const;
+    bool FromJson(const JsonValue& j);
     bool SaveToFile(const std::string& path) const;
     bool LoadFromFile(const std::string& path);
 

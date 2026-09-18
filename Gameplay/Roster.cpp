@@ -77,17 +77,30 @@ bool Roster::SaveToFile(const std::string& path) const {
     return f.good();
 }
 
-bool Roster::LoadFromFile(const std::string& path) {
-    std::ifstream f(path);
-    if (!f) {
-        return false;
+JsonValue Roster::ToJson() const {
+    JsonValue o;
+    o.type = JsonValue::Type::Object;
+    o.objectValue["schema"] = JsonValue::String("potato.roster/1");
+    JsonValue arr;
+    arr.type = JsonValue::Type::Array;
+    for (const auto& e : entries) {
+        JsonValue je;
+        je.type = JsonValue::Type::Object;
+        je.objectValue["name"] = JsonValue::String(e.name);
+        je.objectValue["rank"] = JsonValue::String(e.rank);
+        je.objectValue["squad"] = JsonValue::String(e.squadName);
+        je.objectValue["team"] = JsonValue::Number(e.team);
+        je.objectValue["alive"] = JsonValue::Bool(e.alive);
+        je.objectValue["deathTime"] = JsonValue::Number(e.deathTime);
+        je.objectValue["relic"] = JsonValue::String(e.relic);
+        je.objectValue["art"] = JsonValue::String(e.art);
+        arr.arrayValue.push_back(je);
     }
-    std::ostringstream ss;
-    ss << f.rdbuf();
-    JsonValue root;
-    if (!JsonValue::ParseOk(ss.str(), root)) {
-        return false;
-    }
+    o.objectValue["entries"] = arr;
+    return o;
+}
+
+bool Roster::FromJson(const JsonValue& root) {
     entries.clear();
     watched.clear();
     for (const auto& j : root["entries"].AsArray()) {
@@ -104,6 +117,20 @@ bool Roster::LoadFromFile(const std::string& path) {
         watched.push_back(nullptr); // 讀回的名冊不再追蹤即時物件
     }
     return true;
+}
+
+bool Roster::LoadFromFile(const std::string& path) {
+    std::ifstream f(path);
+    if (!f) {
+        return false;
+    }
+    std::ostringstream ss;
+    ss << f.rdbuf();
+    JsonValue root;
+    if (!JsonValue::ParseOk(ss.str(), root)) {
+        return false;
+    }
+    return FromJson(root);
 }
 
 } // namespace Gameplay

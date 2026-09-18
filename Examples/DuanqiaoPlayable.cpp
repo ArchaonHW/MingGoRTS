@@ -25,6 +25,7 @@
 #include "Gameplay/BattleRecorder.h"
 #include "Gameplay/Roster.h"
 #include "Gameplay/PostBattle.h"
+#include "Campaign/CampaignState.h"
 #include "Gameplay/HistorianReport.h"
 #include "Gameplay/GeneralDossier.h"
 #include "Gameplay/RefitCamp.h"
@@ -463,8 +464,10 @@ int main() {
     // U-1 殼層外迴圈:Title ↔ Battle;整場戰鬥在內層 scope,
     // 出 scope 所有 stack 物件析構 = 乾淨重置(回主選單可再戰)
     // G-9 整補營:常備軍+戰利品帳持有在殼層外,跨場持續
+    // E-7 戰役框架:整補營改由 CampaignState 持有（章節邊界聚合存檔）
     // N-2 敵將檔案:聽聞/驗證狀態也跨場——驗過的將不重聽傳聞
-    RefitCamp camp;
+    Campaign::CampaignState campaign;
+    RefitCamp& camp = campaign.Camp();
     GeneralDossier dossier;
     SquadTemplateLibrary campLibrary;
     campLibrary.LoadDir(DemoAssets::Resolve("squads"));
