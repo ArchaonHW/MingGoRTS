@@ -9,11 +9,13 @@
 //   - UTF-8 步進器與主題列舉覆蓋
 
 #include "UITheme.h"
+#include "DemoAssets.h"
 #include "imgui.h"
 
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <filesystem>
 
 static int g_pass = 0, g_fail = 0;
 static void Check(bool ok, const char* name) {
@@ -121,6 +123,46 @@ int main() {
     Check(UITheme::NextUtf8Len("中") == 3, "CJK=3");
     Check(UITheme::NextUtf8Len("\xF0\x9F\x8E\xAE") == 4, "4-byte=4");
     Check(UITheme::NextUtf8Len("\x80") == 1, "非法前導=1（防死迴圈）");
+
+    // FixedField：右對齊產生前置留白,數字位數變動不推移右緣
+    // （NewFrame 需先建字體 atlas,無頭環境用內建預設字）
+    if (io.Fonts->Fonts.empty()) {
+        io.Fonts->AddFontDefault();
+    }
+    // ImGui 1.92+：Fonts->Build() 不建 texture——無 renderer 後端時
+    // 必須 GetTexDataAsRGBA32 讓 atlas->TexIsBuilt 為真才能 NewFrame
+    unsigned char* px = nullptr;
+    int tw = 0, th = 0;
+    io.Fonts->GetTexDataAsRGBA32(&px, &tw, &th);
+    ImGui::NewFrame();
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::Begin("##fixed");
+    const float fx = ImGui::GetCursorScreenPos().x;
+    UITheme::FixedField("42", 80.0f);
+    Check(ImGui::GetItemRectMin().x > fx + 40.0f,
+          "FixedField 欄寬內右對齊");
+    ImGui::End();
+    ImGui::Render();
+
+    // 字型資產自包含（U-1：OFL Noto 隨 dist 打包,脫離本機字型依賴）
+    namespace fs = std::filesystem;
+    const char* fontFiles[4] = {
+        "fonts/NotoSansTC-Regular.otf", "fonts/NotoSansTC-Bold.otf",
+        "fonts/NotoSerifTC-Regular.otf", "fonts/NotoSerifTC-Bold.otf"};
+    bool fontsOk = true;
+    for (const char* f : fontFiles) {
+        std::error_code ec;
+        if (fs::file_size(DemoAssets::Resolve(f), ec) < 1000000) {
+            fontsOk = false;
+        }
+    }
+    Check(fontsOk, "OFL Noto 四檔存在且非空");
+    {
+        std::error_code ec;
+        Check(fs::file_size(DemoAssets::Resolve("fonts/LICENSE"), ec) >
+                  100,
+              "OFL LICENSE 隨字體打包");
+    }
 
     ImGui::DestroyContext();
     printf("\n=== %d PASS, %d FAIL ===\n", g_pass, g_fail);

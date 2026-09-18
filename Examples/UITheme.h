@@ -375,4 +375,16 @@ inline void DrawMarker(ImDrawList* dl, ImVec2 center, float r,
     }
 }
 
+// 固定欄寬右對齊：倒計時/計量數字在保留欄位內向左伸展,
+// 位數變動不推移右緣（DESIGN 計時器數字規範——比例字體下
+// 不改逐字 advance,改以欄位錨定達成同效果）
+inline void FixedField(const char* text, float width) {
+    const float tw = ImGui::CalcTextSize(text).x;
+    const float pad = width - tw;
+    if (pad > 0.0f) {
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + pad);
+    }
+    ImGui::TextUnformatted(text);
+}
+
 } // namespace UITheme

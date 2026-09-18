@@ -26,6 +26,7 @@
 #include "Gameplay/Roster.h"
 #include "Gameplay/PostBattle.h"
 #include "Gameplay/HistorianReport.h"
+#include "Gameplay/GeneralDossier.h"
 #include "Gameplay/RefitCamp.h"
 #include "Gameplay/SquadTemplate.h"
 #include "Gameplay/QuantumFog.h"
@@ -273,9 +274,11 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
     renderer.Clear(); // 不清屏會顯示未初始化後備緩衝(背景亂碼)
 
     ImGuiIO& io = ImGui::GetIO();
+    static float themeFade = 0.0f;
     if (appliedTheme != theme) {
         UITheme::Apply(ImGui::GetStyle(), theme);
         appliedTheme = theme;
+        themeFade = 1.0f; // 換主題 → 全屏 scrim 淡出過場(DESIGN 主題切換規範)
     }
     if (uiScale != appliedScale) {
         ImGui::GetStyle().ScaleAllSizes(uiScale / appliedScale);
@@ -384,6 +387,17 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
                      ImGui::GetColorU32(ImGuiCol_Text));
     ImGui::PopFont();
 
+    // 主題切換過場：新主題 clear color 全屏 scrim 淡出(~0.45s)。
+    // 無 RTT/FBO 下的合法 crossfade——遮的是 3D 背景,UI 本身已
+    // 即時換色(視覺上等同淡入)
+    if (themeFade > 0.0f) {
+        themeFade = std::max(0.0f, themeFade - io.DeltaTime / 0.45f);
+        const ImVec4 fc = UITheme::ClearColor(theme);
+        ImGui::GetForegroundDrawList()->AddRectFilled(
+            ImVec2(0, 0), ImVec2((float)ww, (float)wh),
+            ImGui::GetColorU32(ImVec4(fc.x, fc.y, fc.z, themeFade)));
+    }
+
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     renderer.SwapBuffers();
@@ -449,7 +463,9 @@ int main() {
     // U-1 殼層外迴圈:Title ↔ Battle;整場戰鬥在內層 scope,
     // 出 scope 所有 stack 物件析構 = 乾淨重置(回主選單可再戰)
     // G-9 整補營:常備軍+戰利品帳持有在殼層外,跨場持續
+    // N-2 敵將檔案:聽聞/驗證狀態也跨場——驗過的將不重聽傳聞
     RefitCamp camp;
+    GeneralDossier dossier;
     SquadTemplateLibrary campLibrary;
     campLibrary.LoadDir(DemoAssets::Resolve("squads"));
     campLibrary.LoadDir(DemoAssets::Resolve("templates"));
@@ -616,6 +632,10 @@ int main() {
 
     EnemyGeneral glock = EnemyGeneral::MakeGlock();
     glock.ApplyTo(battle, 1);
+    // N-2:開局只聽聞不真相——已驗證的檔案跨場保留
+    if (!dossier.Find(glock.GetName())) {
+        dossier.Hear(glock);
+    }
     BattlePlanner planner;
     // 情報/CP 走 BattleResources(fog 觀測扣點要它)
     BattleResources res;
@@ -1013,9 +1033,16 @@ int main() {
             if (owner && owner->IsEliminated()) continue; // 全滅不算「未揭露」
             if (!fog.IsRevealed((int)id)) ++hiddenFoes;
         }
-        ImGui::Text("CP: %d   情報: %d   倍速: %.1fx   時間: %.0fs",
+        ImGui::Text("CP: %d   情報: %d   倍速: %.1fx",
                     battle.GetCommandPoints(0), res.GetIntel(0),
-                    paused ? 0.0f : speedScale, battle.GetElapsed());
+                    paused ? 0.0f : speedScale);
+        { // 戰鬥時鐘:固定欄寬右對齊,數字變動不推移版面(DESIGN 計時器規範)
+            char tbuf[32];
+            std::snprintf(tbuf, sizeof(tbuf), "時間 %.0fs",
+                          battle.GetElapsed());
+            ImGui::SameLine(0.0f, 16.0f);
+            UITheme::FixedField(tbuf, 88.0f * uiScale);
+        }
         ImGui::Text("未揭露敵軍: %d / %d", hiddenFoes, (int)fog.EntityCount());
         ImGui::Separator();
         if (selected) {
@@ -1036,6 +1063,39 @@ int main() {
             ImGui::TextDisabled("Ctrl+左鍵自小隊拖出=畫進攻箭頭");
         }
         ImGui::End();
+
+        // ---- N-2 敵將檔案:判詞是聽聞態,親衛雲揭露才回真值 ----
+        {
+            const int guardEid = battle.GetFogEntityId(e0);
+            if (guardEid >= 0 && fog.IsRevealed(guardEid)) {
+                dossier.Verify(glock); // 冪等：寫真值+標 verified
+            }
+            if (const HearsayEntry* he = dossier.Find(glock.GetName())) {
+                ImGui::SetNextWindowPos(ImVec2(ww - 308.0f, 8),
+                                        ImGuiCond_Always);
+                ImGui::SetNextWindowSize(ImVec2(300, 0), ImGuiCond_Always);
+                ImGui::Begin("敵將檔案", nullptr,
+                             ImGuiWindowFlags_NoCollapse |
+                                 ImGuiWindowFlags_AlwaysAutoResize);
+                ImGui::Text("%s %s", glock.GetName().c_str(),
+                            glock.GetEpithet().c_str());
+                ImGui::TextWrapped("判詞:%s", he->verdict.c_str());
+                ImGui::Separator();
+                if (he->verified) {
+                    ImGui::TextDisabled("實情(已觀測驗證)");
+                    ImGui::Text("侵略 %.0f  紀律 %.0f  狡詐 %.0f",
+                                he->estAggression, he->estDiscipline,
+                                he->estCunning);
+                } else {
+                    ImGui::TextDisabled("傳聞(未驗證,或有所低估)");
+                    ImGui::Text("侵略 ~%.0f  紀律 ~%.0f  狡詐 ~%.0f",
+                                he->estAggression, he->estDiscipline,
+                                he->estCunning);
+                    ImGui::TextDisabled("觀測親衛之雲以驗其實");
+                }
+                ImGui::End();
+            }
+        }
 
         // ---- T-9 回合層:作戰計畫視窗(三欄:小隊/卡槽/編輯器)----
         if (planningPhase) {
