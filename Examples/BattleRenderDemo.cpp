@@ -12,6 +12,7 @@
 #include "Gameplay/BattleSceneSync.h"
 #include "Gameplay/Doctrine.h"
 #include "MathUtils/Matrix4.h"
+#include "Media/VideoEncoder.h"
 
 #include <glad/glad.h>
 #include <iostream>
@@ -195,14 +196,13 @@ int main(int argc, char** argv) {
     SceneRenderer sceneRenderer;
     sceneRenderer.SetDefaultShader(unitShader);
 
-    // ---- ffmpeg ----
-    std::string cmd = "ffmpeg -y -f rawvideo -pix_fmt rgb24 -s " +
-        std::to_string(W) + "x" + std::to_string(H) +
-        " -r " + std::to_string(fps) +
-        " -i - -vf vflip -an -c:v libx264 -pix_fmt yuv420p -crf 18 -movflags +faststart \"" +
-        outPath + "\" 2> ffmpeg_battle.log";
-    FILE* pipe = _popen(cmd.c_str(), "wb");
-    if (!pipe) { std::cerr << "ffmpeg pipe failed\n"; return 1; }
+    // ---- ffmpeg(Media/VideoEncoder,高品質檔 crf16/slow)----
+    Media::VideoEncoder enc;
+    if (!enc.Open(outPath, W, H, fps, Media::PixelFormat::RGB,
+                  "ffmpeg_battle.log", Media::EncodeQuality::High())) {
+        std::cerr << "ffmpeg pipe failed\n";
+        return 1;
+    }
 
     std::vector<unsigned char> frameBuf(W * H * 3);
     std::cout << "Rendering " << totalFrames << " frames..." << std::endl;
@@ -226,7 +226,7 @@ int main(int argc, char** argv) {
 
         // 擷取必須在 SwapBuffers 前:交換後 back buffer 內容未定義
         glReadPixels(0, 0, W, H, GL_RGB, GL_UNSIGNED_BYTE, frameBuf.data());
-        fwrite(frameBuf.data(), 1, frameBuf.size(), pipe);
+        enc.WriteFrame(frameBuf.data(), frameBuf.size());
         renderer.SwapBuffers();
 
         if (battle.GetOutcome() != BattleOutcome::Ongoing) {
@@ -237,7 +237,7 @@ int main(int argc, char** argv) {
                 renderer.Clear();
                 sceneRenderer.Render(scene, cam);
                 glReadPixels(0, 0, W, H, GL_RGB, GL_UNSIGNED_BYTE, frameBuf.data());
-                fwrite(frameBuf.data(), 1, frameBuf.size(), pipe);
+                enc.WriteFrame(frameBuf.data(), frameBuf.size());
                 renderer.SwapBuffers();
             }
             break;
@@ -245,7 +245,7 @@ int main(int argc, char** argv) {
         if (f % 60 == 0) std::cout << "  frame " << f << "/" << totalFrames << std::endl;
     }
 
-    _pclose(pipe);
+    enc.Close();
     renderer.Shutdown();
     std::cout << "Done: " << outPath << std::endl;
     return 0;
