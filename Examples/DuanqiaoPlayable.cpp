@@ -26,6 +26,7 @@
 #include "Gameplay/Roster.h"
 #include "Gameplay/PostBattle.h"
 #include "Campaign/CampaignState.h"
+#include "Campaign/ChapterLibrary.h"
 #include "Gameplay/HistorianReport.h"
 #include "Gameplay/GeneralDossier.h"
 #include "Gameplay/RefitCamp.h"
@@ -472,6 +473,23 @@ int main() {
     SquadTemplateLibrary campLibrary;
     campLibrary.LoadDir(DemoAssets::Resolve("squads"));
     campLibrary.LoadDir(DemoAssets::Resolve("templates"));
+
+    // ---- C-1 戰役存檔接線：啟動讀檔 + 章節定義庫 ----
+    // 存檔放 exe 旁 saves/（與啟動 cwd 無關）；無檔=新戰役不報錯
+    const std::string kCampaignSave =
+        (DemoAssets::ExeDir() / "saves" / "campaign.json")
+            .generic_string();
+    Campaign::ChapterLibrary chapters;
+    chapters.LoadDir(DemoAssets::Resolve("campaign"));
+    if (!campaign.LoadFromFile(kCampaignSave)) {
+        // 新戰役：依 (arc,chapter) 序 seed 首章
+        const auto sorted = chapters.Sorted();
+        if (!sorted.empty()) {
+            campaign.AdvanceChapter(sorted.front()->arc,
+                                    sorted.front()->chapter,
+                                    sorted.front()->id);
+        }
+    }
     ShellScreen screen = ShellScreen::Title;
     while (screen != ShellScreen::Quit && !renderer.ShouldClose()) {
         if (screen == ShellScreen::Title) {
@@ -1593,6 +1611,34 @@ int main() {
         }
         camp.DepositLoot(report.lootPoints);
         camp.Absorb(report, roster, 0);
+
+        // C-1 章節邊界存檔：勝利且章節定義有 next 才跳章，
+        // 任一結果都寫出 campaign 檔（戰果/傷亡跨場持續）
+        if (iWon) {
+            if (const Campaign::ChapterDef* cur =
+                    chapters.Find(campaign.chapter.chapterId)) {
+                if (!cur->next.empty()) {
+                    if (const Campaign::ChapterDef* nxt =
+                            chapters.Find(cur->next)) {
+                        campaign.AdvanceChapter(nxt->arc, nxt->chapter,
+                                                nxt->id);
+                    }
+                } else {
+                    // 無 next：同弧章節序 +1（chapterId 維持，
+                    // 內容側未定義次章時不換章）
+                    campaign.AdvanceChapter(
+                        campaign.chapter.arc,
+                        campaign.chapter.chapter + 1,
+                        campaign.chapter.chapterId);
+                }
+            }
+        }
+        {
+            std::error_code ec;
+            std::filesystem::create_directories(
+                std::filesystem::path(kCampaignSave).parent_path(), ec);
+        }
+        campaign.SaveToFile(kCampaignSave);
     }
 
     battle.BindFog(nullptr); // fog 是 local,先於 battle 解構——解綁防懸空
