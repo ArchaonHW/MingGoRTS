@@ -632,9 +632,14 @@ queue:
     acceptance:
       - 處置狀態跨場持久化（存檔格式）
       - 稱號隨章節演變且帳本自指可讀
-    status: queued
+    status: done
     size: M
-    note: 依賴 G-9 meta 層 + E-7 章節框架
+    note: >
+      Gameplay/CampaignLedger：RecordDisposition（同 id 覆寫）、
+      EarnTitle 稱號軌跡、AdvanceChapter 單調前進、
+      EndingCitations 結局證詞行；potato.campaign_ledger/1
+      序列化跨場持久化。CampaignLedgerTest 22/22 PASS。
+      E-7 章節框架掛鉤留 meta 層消費。
 
   - id: N-5
     title: 神話事件具名記錄 + 滲透掛鉤
