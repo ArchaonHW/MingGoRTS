@@ -37,10 +37,13 @@ static BattleRecorder MakeRecorder() {
     rec.AddRecord(1.0f, "=== Execution phase begins ===");  // 省略：階段
     rec.AddRecord(5.0f, "CP intervention on 前鋒");          // 介入
     rec.AddRecord(8.0f, "掠奪隊 被我軍目擊（接觸偵查）");     // 揭露
+    rec.AddRecord(9.0f, "fog:observe #3 掠奪隊");            // 揭露（情報觀測）
     rec.AddRecord(12.0f, "左翼 潰逃！恐慌向友軍擴散");        // 潰逃
-    rec.AddRecord(12.5f, "中軍 目睹友軍潰逃，士氣動搖");      // 潰逃（擴散句含「潰逃」）
+    rec.AddRecord(12.5f, "中軍 目睹友軍潰逃，士氣動搖");      // 省略：擴散句非新潰逃
     rec.AddRecord(20.0f, "蠻兵隊 ELIMINATED");               // 殲滅（敵）
     rec.AddRecord(25.0f, "後衛 ELIMINATED");                 // 殲滅（我）
+    rec.AddRecord(26.0f, "前鋒二隊 ELIMINATED");             // 殲滅（中性：名稱不得誤配「前鋒」）
+    rec.AddRecord(28.0f, "general slain!");                  // 省略：結局標記（衛隊殲滅已計）
     rec.AddRecord(30.0f, "某隊 took 12 casualties");         // 省略：傷害
     rec.AddRecord(31.0f, "幽靈隊 ELIMINATED");               // 殲滅（roster 查無→中性）
     return rec;
@@ -89,19 +92,24 @@ int main() {
         in.roster = &roster;
         HistorianReport r = ComposeHistorianReport(in);
         Check(r.interventionCount == 1, "介入計數", r.interventionCount, 1);
-        Check(r.revealCount == 1, "揭露計數", r.revealCount, 1);
-        Check(r.routCount == 2, "潰逃計數（含擴散句）", r.routCount, 2);
+        Check(r.revealCount == 2, "揭露計數（目擊+fog）", r.revealCount, 2);
+        Check(r.routCount == 1, "潰逃計數（擴散句不算）", r.routCount, 1);
         Check(r.enemyLosses == 1, "斬敵計數", r.enemyLosses, 1);
         Check(r.playerLosses == 1, "我軍覆計數", r.playerLosses, 1);
-        Check(r.neutralLosses == 1, "中性殲滅", r.neutralLosses, 1);
-        // narrated = 1+1+2+3 = 7；total = 11 → omitted = 4
-        Check(r.narratedCount == 7, "書寫總數", r.narratedCount, 7);
-        Check(r.omittedCount == 4, "省略 = 總數 - 書寫", r.omittedCount, 4);
-        Check(Contains(r.text, "本報告省略 4 項"), "省略數入文");
+        Check(r.neutralLosses == 2, "中性殲滅（幽靈+前鋒二隊）",
+              r.neutralLosses, 2);
+        // narrated = 1+2+1+4 = 8；total = 14 → omitted = 6
+        Check(r.narratedCount == 8, "書寫總數", r.narratedCount, 8);
+        Check(r.omittedCount == 6, "省略 = 總數 - 書寫", r.omittedCount, 6);
+        Check(Contains(r.text, "本報告省略 6 項"), "省略數入文");
         Check(Contains(r.text, "強令介入 1 次"), "介入句");
-        Check(Contains(r.text, "潰逃 2 起"), "潰逃句");
+        Check(Contains(r.text, "斥候揭敵 2 處"), "揭露句");
+        Check(Contains(r.text, "潰逃 1 起"), "潰逃句");
         Check(Contains(r.text, "斬敵 1 隊"), "斬敵句");
         Check(Contains(r.text, "我軍覆 1 隊"), "我軍覆句");
+        Check(Contains(r.text, "殲滅 2 隊"), "中性殲滅句");
+        // UTF-8 收尾：摘錄段尾必須是「。」（防 t.back() 截斷回歸）
+        Check(Contains(r.text, "殲滅 2 隊。"), "摘錄句號收尾");
     }
 
     // [3] 結局句分支

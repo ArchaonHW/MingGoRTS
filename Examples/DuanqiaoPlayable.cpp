@@ -479,6 +479,10 @@ int main() {
         }
         bool backToTitle = false;
         { // ---- 戰鬥場次 scope 開始(內部維持原縮排以保 diff 最小) ----
+        // 戰後結算狀態:每場重建——宣告成 static 會跨場殘留上一場的報告
+        std::string chronicler;
+        float endedAt = -1.0f;
+        float replayCursor = 0.0f;
 
     // ---- 地圖 ----
     BattleMap map;
@@ -1479,9 +1483,6 @@ int main() {
             ImGui::End();
 
             // ---- T-11 戰後層:史官筆戰報 + 名冊 + 回放時間軸 ----
-            static std::string chronicler;
-            static float endedAt = -1.0f;
-            static float replayCursor = 0.0f;
             if (endedAt < 0.0f) {
                 endedAt = (float)now;
                 // N-1:史官體戰報改由片段組裝器產出(含省略計數)

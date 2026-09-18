@@ -36,6 +36,9 @@ struct HistorianInput {
     const Roster* roster = nullptr;           // 無名冊 → 略過名冊句
     int playerTeam = 0;
     int enemyTeam = 1;
+    // N-3 帳本外洩：敵軍針對的我軍慣用 trigger 名（如 "EnemyInRange"）；
+    // 非空 → 名冊句後、省略計數前插入判詞行「彼之陣法…」
+    std::string counteredHabit;
 };
 
 struct HistorianReport {

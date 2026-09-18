@@ -1,4 +1,5 @@
 #include "HistorianReport.h"
+#include "RivalStrategist.h"
 
 #include <algorithm>
 #include <cstdio>
@@ -20,34 +21,50 @@ enum class LedgerClass {
 };
 
 LedgerClass ClassifyEvent(const std::string& event) {
-    if (event.find("CP intervention") != std::string::npos) {
+    const auto has = [&](const char* s) {
+        return event.find(s) != std::string::npos;
+    };
+    // 結局標記先擋——衛隊 ELIMINATED 已入 Elimination，
+    // "general slain!" 是同一事件的結果宣告，重計會虛增中性殲滅
+    if (has("general slain")) {
+        return LedgerClass::Omitted;
+    }
+    if (has("CP intervention")) {
         return LedgerClass::Intervention;
     }
-    if (event.find("ELIMINATED") != std::string::npos ||
-        event.find("slain") != std::string::npos) {
+    if (has(" ELIMINATED")) {
         return LedgerClass::Elimination;
     }
-    if (event.find("潰逃") != std::string::npos ||
-        event.find("is routing") != std::string::npos) {
+    // Rout 只吃「潰逃！」本身與 is routing；
+    // 「目睹友軍潰逃」「潰逃歸附」是擴散/歸附流水帳，不算新潰逃
+    if (has("潰逃！") || has("is routing")) {
         return LedgerClass::Rout;
     }
-    if (event.find("目擊") != std::string::npos ||
-        event.find("揭露") != std::string::npos ||
-        event.find("探測") != std::string::npos) {
+    // Reveal：接觸目擊「被我軍目擊」＋ fog 情報動作
+    // （「目睹友軍潰逃」不含「被我軍」，不會誤入此類）
+    if (has("被我軍目擊") || has("揭露") || has("探測") ||
+        has("fog:observe") || has("fog:reveal") ||
+        has("fog:probe") || has("fog:eliminate")) {
         return LedgerClass::Reveal;
     }
     return LedgerClass::Omitted;
 }
 
-// ELIMINATED 事件的隊別歸屬：事件字串含 squadName → 查 roster 隊號；
-// 查無（roster 為空或未收編）→ 回 -1（中性）
+// ELIMINATED 事件的隊別歸屬：事件格式固定為 "<squadName> ELIMINATED"，
+// 截尾後精確比對 squadName——子字串比對會讓「前鋒」誤吞「前鋒二隊」
 int TeamOfEliminated(const std::string& event, const Roster* roster) {
     if (!roster) {
         return -1;
     }
+    static const std::string kSuffix = " ELIMINATED";
+    std::string name = event;
+    if (name.size() >= kSuffix.size() &&
+        name.compare(name.size() - kSuffix.size(), kSuffix.size(),
+                     kSuffix) == 0) {
+        name.resize(name.size() - kSuffix.size());
+    }
     for (const RosterEntry& e : roster->GetEntries()) {
-        if (!e.squadName.empty() &&
-            event.find(e.squadName) != std::string::npos) {
+        if (!e.squadName.empty() && e.squadName == name) {
             return e.team;
         }
     }
@@ -135,7 +152,9 @@ HistorianReport ComposeHistorianReport(const HistorianInput& in) {
         AppendCount(t, r.enemyLosses, "斬敵 %d 隊，");
         AppendCount(t, r.playerLosses, "我軍覆 %d 隊，");
         AppendCount(t, r.neutralLosses, "殲滅 %d 隊，");
-        t.back() = '。'; // 收尾逗號改句號
+        // 收尾全形逗號是 3-byte UTF-8（EF BC 8C）——不能只改最後一 byte
+        t.resize(t.size() - 3);
+        t += "。";
     }
 
     // 名冊句：殉國（含遺物）→ 得全 → 斬敵
@@ -159,6 +178,12 @@ HistorianReport ComposeHistorianReport(const HistorianInput& in) {
                 t += "斬敵「" + e.name + "」。";
             }
         }
+    }
+
+    // N-3 帳本外洩判詞：敵方針對我軍慣用 trigger 時留痕，
+    // 置於名冊句之後、省略計數之前（審計欄位恆為全文最後一段）
+    if (!in.counteredHabit.empty()) {
+        t += RivalStrategist::CounterLine(in.counteredHabit);
     }
 
     // 審計欄位：省略計數永遠在場——帳目不全是規則不是疏漏
