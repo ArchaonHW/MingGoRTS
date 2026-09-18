@@ -2,7 +2,7 @@
 title: 'N-3 Rival Strategist Counter-Deck (ledger leaks)'
 type: 'feature'
 created: '2026-09-18'
-status: 'in-progress'
+status: 'done'
 route: 'dispatch'
 baseline_revision: '63edf81'
 review_loop_iteration: 0
@@ -162,3 +162,18 @@ trailer stays last.
 - `cd build && ctest -C Debug` -- expected: no regressions
 - `cmake --build build-mingw --target RivalStrategistTest` +
   `build-mingw/bin/RivalStrategistTest.exe` -- expected: PASS
+
+## Outcome（收斂紀錄）
+
+併行 session 以 `Gameplay/RivalDeck`（typed trigger 統計、`potato.rival_deck/1`）先行落地
+同一需求（commit `75db930`）。經比較，`RivalDeck` 走 `BattleController` typed
+統計而非本 spec 的 recorder 字串刮取，且已配接 meta 層——**保留 `RivalDeck`，
+移除重複的 `RivalStrategist`/`HabitLedger`/`potato.habit_ledger/1` 實作**。
+
+- 刪除：`Gameplay/RivalStrategist.{h,cpp}`、`Examples/RivalStrategistTest.cpp`、
+  `rival_habit_ledger_test.json`（廢測試輸出）；CMakeLists 註冊全清
+- `HistorianReport.cpp` 判詞脫鉤：`#include "RivalStrategist.h"` 移除，
+  `counteredHabit` 直接字面輸出 `彼之陣法，似針對我軍慣用「<trigger>」`，
+  省略計數句維持最末段
+- 驗證：`HistorianReportTest` 30 PASS、`RivalDeckTest` 17 PASS，
+  MSVC Debug + MinGW 雙綠；`ctest -R "Historian|Rival"` 註冊一致無殘留

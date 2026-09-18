@@ -1,5 +1,4 @@
 #include "HistorianReport.h"
-#include "RivalStrategist.h"
 
 #include <algorithm>
 #include <cstdio>
@@ -181,9 +180,10 @@ HistorianReport ComposeHistorianReport(const HistorianInput& in) {
     }
 
     // N-3 帳本外洩判詞：敵方針對我軍慣用 trigger 時留痕，
-    // 置於名冊句之後、省略計數之前（審計欄位恆為全文最後一段）
+    // 置於名冊句之後、省略計數之前（審計欄位恆為全文最後一段）。
+    // 措辭與 RivalDeck::WarningLine 一致——同一判詞兩處書寫
     if (!in.counteredHabit.empty()) {
-        t += RivalStrategist::CounterLine(in.counteredHabit);
+        t += "彼之陣法，似針對我軍慣用「" + in.counteredHabit + "」";
     }
 
     // 審計欄位：省略計數永遠在場——帳目不全是規則不是疏漏
