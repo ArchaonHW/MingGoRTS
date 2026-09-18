@@ -244,13 +244,17 @@ int main() {
     // ---- 教學狀態機 + fog ----
     // fog 用固定位址的 stack 物件 + move-assign 重建,BindFog/SetFog 的
     // 指標在 R 重置後仍然有效,不用重新綁指標
+    constexpr int kFogEntities = 3;
+    constexpr int kObserveCost = 2, kProbeCost = 1; // 對齊下方 fog 建構參數
     QuantumFog fog;
     TutorialScript script;
-    int fogIds[3] = {-1, -1, -1};
+    BattleSceneSync sync; // 提前宣告,讓 setupFog 能 SetFog 清舊標記節點
+    Squad* enemySquads[kFogEntities] = {eA, eB, eC};
+    int fogIds[kFogEntities] = {-1, -1, -1};
 
     auto setupFog = [&]() {
         // 時效縮短到 8s:教學不需要等 25s
-        fog = QuantumFog(/*duration=*/8.0f, /*observe=*/2, /*probe=*/1);
+        fog = QuantumFog(/*duration=*/8.0f, kObserveCost, kProbeCost);
         fog.BindResources(&res);
         fogIds[0] = fog.AddEntity(eA->GetName(), 0,
             {Vector2(7, 2), Vector2(8, 2), Vector2(9, 2), Vector2(8, 3)},
@@ -261,10 +265,17 @@ int main() {
         fogIds[2] = fog.AddEntity(eC->GetName(), 0,
             {Vector2(6, 6), Vector2(7, 6), Vector2(8, 6)},
             {0.4, 0.4, 0.2});
-        battle.BindFogSquad(eA, fogIds[0]);
-        battle.BindFogSquad(eB, fogIds[1]);
-        battle.BindFogSquad(eC, fogIds[2]);
+        for (int i = 0; i < kFogEntities; ++i) {
+            if (fogIds[i] < 0) {
+                // 少一朵雲教學就走不完——至少要留診斷
+                logEvent("敵情雲建立失敗(entity " + std::to_string(i) +
+                         ")");
+                continue;
+            }
+            battle.BindFogSquad(enemySquads[i], fogIds[i]);
+        }
         battle.BindFog(&fog); // 接線 fog 事件 → 戰報流
+        sync.SetFog(&fog);    // 重置時拆掉舊雲標記節點再重建
         // 重置時補滿情報,否則重看會卡在沒情報可用。
         // 12 點:正解路線最多花 5(觀測2+探測1+過期補觀測2),其餘留給自由探索
         res.Setup(battle, 0, /*intel=*/12, /*cp=*/0);
@@ -294,11 +305,11 @@ int main() {
         ->SetLocalScale(Vector3(FW, 1, FH));
 
     // 目標高亮環(跟著當前步驟的雲 modal 候選走)
+    // 包圍半徑須 ≥ 環外緣 1.05*CELL,否則在視錐邊緣會被誤剔除
     auto hlNode = AddStaticBox(root, hlMesh, Vector3(0, 0.3f, 0),
                                Vector3(1.0f, 0.85f, 0.2f), "highlight",
-                               1.0f);
+                               1.1f * CELL);
 
-    BattleSceneSync sync;
     sync.Attach(battle, scene, CELL);
     sync.SetUnitMesh(capMesh);
     sync.SetOverlayMeshes(ringMesh, barBgMesh, barFillMesh,
@@ -319,7 +330,7 @@ int main() {
     sceneRenderer.SetDefaultShader(unitShader);
 
     // 時效偵測:記錄上一幀各 entity 揭露態,曾揭露→未揭露 = 過期事件
-    bool prevRevealed[3] = {false, false, false};
+    bool prevRevealed[kFogEntities] = {};
     std::string nudge;
     float nudgeTimer = 0.0f;
 
@@ -352,7 +363,7 @@ int main() {
         if (rKey && !prevRkey) {
             setupFog();
             script = TutorialScript(fogIds[0], fogIds[1]);
-            prevRevealed[0] = prevRevealed[1] = prevRevealed[2] = false;
+            for (int i = 0; i < kFogEntities; ++i) prevRevealed[i] = false;
             nudge.clear();
             nudgeTimer = 0.0f;
             logEvent("教學重置——從觀測重來");
@@ -379,7 +390,7 @@ int main() {
         battle.Update(dt);
 
         // 時效偵測(完成條件由 fog 狀態輪詢判定)
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < kFogEntities; ++i) {
             const bool rv = fog.IsRevealed(fogIds[i]);
             if (prevRevealed[i] && !rv) {
                 if (script.Advance(TutorialEvent::Expired, fogIds[i])) {
@@ -408,6 +419,7 @@ int main() {
             const PickRay ray =
                 BattlePicker::ScreenToWorldRay(cam, fmx, fmy);
             const int eid = PickFogCloud(fog, battle, ray, CELL);
+            bool showNudge = false;
             if (eid >= 0) {
                 Squad* ts = battle.GetFogSquad(eid);
                 // LMB=觀測;RMB 或按住 P 的 LMB=探測(spec:Probe 鍵+點雲)
@@ -426,19 +438,25 @@ int main() {
                         logEvent("探測收縮:" + ts->GetName() + "(最高" +
                                  std::to_string(int(mp * 100)) + "%)");
                     } else {
-                        logEvent("探測失敗(情報不足)");
+                        // 情報不足/目標無效都有可能,不硬編原因
+                        logEvent("探測失敗");
                     }
                 } else {
                     ok = ts && fog.Observe(eid, ts->GetPosition());
                     ev = TutorialEvent::Observed;
                     logEvent(ok ? "觀測塌縮:" + ts->GetName()
-                                : "觀測失敗(情報不足)");
+                                : "觀測失敗");
                 }
-                if (ok && !script.Advance(ev, eid)) {
-                    // 操作成功但非當前步驟 → 提示先看提示(自由探索不禁用)
-                    nudge = script.Nudge();
-                    nudgeTimer = 3.0f;
-                }
+                // 失敗的操作沒有事件可餵;成功但非當前步驟也提示
+                // (自由探索不禁用,但要讓玩家知道教學期待什麼)
+                showNudge = !ok || !script.Advance(ev, eid);
+            } else {
+                // 沒點到任何雲也給提示,別讓玩家對空地乾點
+                showNudge = true;
+            }
+            if (showNudge) {
+                nudge = script.Nudge();
+                nudgeTimer = 3.0f;
             }
         }
         if (nudgeTimer > 0.0f) nudgeTimer -= dt;
@@ -493,33 +511,60 @@ int main() {
                             TutorialScript::StepCount()) /
                 (float)TutorialScript::StepCount(),
             ImVec2(-1, 0), progLbl);
-        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 18.0f);
-        ImGui::TextUnformatted(script.Hint());
-        ImGui::PopTextWrapPos();
+
+        // 步驟所需情報:觀測 2 / 探測 1;時效步若已有揭露中的雲,
+        // 等它自然過期不需再花情報
+        bool anyRevealed = false;
+        for (int i = 0; i < kFogEntities; ++i)
+            anyRevealed = anyRevealed || fog.IsRevealed(fogIds[i]);
+        int neededIntel = 0;
+        switch (script.Step()) {
+        case TutorialStep::Observe: neededIntel = kObserveCost; break;
+        case TutorialStep::Probe:   neededIntel = kProbeCost; break;
+        case TutorialStep::Expire:
+            neededIntel = anyRevealed ? 0 : kObserveCost;
+            break;
+        default: break;
+        }
+        const bool intelLocked = res.GetIntel(0) < neededIntel;
+
+        if (intelLocked) {
+            // 情報不夠付當前步驟 → 軟鎖警告取代一般提示
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 18.0f);
+            ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.3f, 1.0f),
+                               "情報不足——按 R 重置");
+            ImGui::PopTextWrapPos();
+        } else {
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 18.0f);
+            ImGui::TextUnformatted(script.Hint());
+            ImGui::PopTextWrapPos();
+        }
         if (nudgeTimer > 0.0f && !nudge.empty()) {
             ImGui::PushTextWrapPos(ImGui::GetFontSize() * 18.0f);
             ImGui::TextColored(ImVec4(1, 0.8f, 0.3f, 1), "%s",
                                nudge.c_str());
             ImGui::PopTextWrapPos();
         }
-        // 時效步驟的保險提示:進步驟 3 時若目標早已過期回雲,
-        // 玩家等不到 expire 事件——提示再觀測一次
-        if (script.Step() == TutorialStep::Expire) {
-            bool anyRevealed = false;
-            for (int i = 0; i < 3; ++i)
-                anyRevealed = anyRevealed || fog.IsRevealed(fogIds[i]);
-            if (!anyRevealed) {
+        // 步驟目標已被觀測成真身(如步驟 2 誤用觀測):真身不可再點、
+        // 高亮也會消失——提示等它回雲或直接重置
+        {
+            const int tgt = script.TargetEntity();
+            if (tgt >= 0 && fog.IsRevealed(tgt)) {
                 ImGui::PushTextWrapPos(ImGui::GetFontSize() * 18.0f);
-                if (res.GetIntel(0) >= 2) { // 2 = fog 觀測成本
-                    ImGui::TextColored(ImVec4(1, 0.8f, 0.3f, 1),
-                                       "目前沒有揭露中的敵軍——再左鍵觀測一朵雲,"
-                                       "等它情報過期");
-                } else {
-                    ImGui::TextColored(ImVec4(1, 0.8f, 0.3f, 1),
-                                       "情報不足以觀測——按 R 重置重新演練");
-                }
+                ImGui::TextColored(ImVec4(1, 0.8f, 0.3f, 1),
+                                   "目標已被觀測——等待回雲或按 R");
                 ImGui::PopTextWrapPos();
             }
+        }
+        // 時效步驟的保險提示:進步驟 3 時若目標早已過期回雲,
+        // 玩家等不到 expire 事件——提示再觀測一次
+        if (script.Step() == TutorialStep::Expire && !anyRevealed &&
+            !intelLocked) {
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 18.0f);
+            ImGui::TextColored(ImVec4(1, 0.8f, 0.3f, 1),
+                               "目前沒有揭露中的敵軍——再左鍵觀測一朵雲,"
+                               "等它情報過期");
+            ImGui::PopTextWrapPos();
         }
         ImGui::Separator();
         ImGui::Text("情報點: %d   時間: %.0fs", res.GetIntel(0),

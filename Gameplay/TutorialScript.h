@@ -24,9 +24,12 @@ enum class TutorialStep {
 
 class TutorialScript {
 public:
-    // targetA/targetB：兩個教學用敵情 entity 的 fog id
+    // targetA/targetB：兩個教學用敵情 entity 的 fog id。
+    // -1 是「無特定目標」哨兵（Expire/Done 的 TargetEntity 回 -1），
+    // 拿來當目標會讓步驟永遠走不完——負值一律鉗到 0。
     TutorialScript(int targetA = 0, int targetB = 1)
-        : targetA(targetA), targetB(targetB) {}
+        : targetA(targetA < 0 ? 0 : targetA),
+          targetB(targetB < 0 ? 0 : targetB) {}
 
     TutorialStep Step() const { return step; }
     bool IsDone() const { return step == TutorialStep::Done; }

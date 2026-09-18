@@ -23,20 +23,37 @@ int main() {
     {
         TutorialScript t(/*A=*/0, /*B=*/1);
         Check(t.Step() == TutorialStep::Observe, "初始步驟 Observe");
+        Check(t.StepIndex() == 0, "初始 StepIndex 0");
+        Check(TutorialScript::StepCount() == 3, "StepCount 為 3");
         Check(t.TargetEntity() == 0, "步驟1 目標 entity 0");
         Check(std::strlen(t.Hint()) > 0, "步驟1 提示非空");
+        Check(std::strlen(t.Nudge()) > 0, "步驟1 nudge 非空");
 
         Check(t.Advance(TutorialEvent::Observed, 0), "觀測目標推進");
         Check(t.Step() == TutorialStep::Probe, "進入 Probe 步驟");
+        Check(t.StepIndex() == 1, "步驟2 StepIndex 1");
         Check(t.TargetEntity() == 1, "步驟2 目標 entity 1");
+        Check(std::strlen(t.Hint()) > 0, "步驟2 提示非空");
+        Check(std::strlen(t.Nudge()) > 0, "步驟2 nudge 非空");
 
         Check(t.Advance(TutorialEvent::Probed, 1), "探測目標推進");
         Check(t.Step() == TutorialStep::Expire, "進入 Expire 步驟");
+        Check(t.StepIndex() == 2, "步驟3 StepIndex 2");
         Check(t.TargetEntity() == -1, "步驟3 無特定目標");
+        Check(std::strlen(t.Hint()) > 0, "步驟3 提示非空");
+        Check(std::strlen(t.Nudge()) > 0, "步驟3 nudge 非空");
 
         Check(t.Advance(TutorialEvent::Expired), "時效到期推進");
         Check(t.IsDone(), "教學完成");
+        Check(t.StepIndex() == 3, "Done StepIndex 3");
+        Check(t.TargetEntity() == -1, "Done 無特定目標");
         Check(std::strlen(t.Hint()) > 0, "完成提示非空");
+        Check(std::strlen(t.Nudge()) == 0, "Done 無 nudge");
+
+        // None 事件永遠是 no-op
+        Check(!t.Advance(TutorialEvent::None, 0),
+              "None 事件不推進(Done)");
+        Check(t.IsDone(), "None 後仍 Done");
     }
 
     // ---- 亂序/錯誤操作不推進 ----
@@ -48,6 +65,8 @@ int main() {
               "觀測錯的 entity 不推進");
         Check(!t.Advance(TutorialEvent::Expired),
               "步驟1 收到過期不推進");
+        Check(!t.Advance(TutorialEvent::None, 0),
+              "步驟1 None 事件不推進");
         Check(t.Step() == TutorialStep::Observe, "仍在步驟1");
         Check(std::strlen(t.Nudge()) > 0, "nudge 提示非空");
 

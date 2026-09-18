@@ -429,7 +429,7 @@ queue:
       - 地圖可標 terrain 且 loader 讀取
       - 高地 vs 平地的傷害差可測
       - BattleMap 無 terrain 欄位時退回全平地
-    status: queued
+    status: done
     size: M
 
   - id: G-7
