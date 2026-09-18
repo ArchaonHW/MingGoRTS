@@ -617,6 +617,10 @@ void BattleController::EvaluateDoctrines() {
         const SquadContext& ctx = contexts[squad.get()];
         DoctrineAction action = docIt->second.Evaluate(ctx);
         const DoctrineRule* rule = docIt->second.GetMatchedRule();
+        if (rule) {
+            // N-3：記錄各隊 trigger 命中分佈（對手軍師讀檔用）
+            ++triggerUsage[squad->GetTeam()][rule->trigger];
+        }
 
         // T-6 士氣執行率：士氣崩到門檻以下，命令有機率被抗命（原地不動）
         if (moraleExecThreshold > 0.0f &&

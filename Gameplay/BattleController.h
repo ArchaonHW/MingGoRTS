@@ -55,6 +55,9 @@ public:
                        const Vector2& pos, int members);
     // G-6 編制模板建隊：預算足→成隊+扣帳、不足→nullptr+預算不動
     // （budget < 0 = 無限預算）。規則寫死：超支一律拒絕不降規。
+    // 哨兵與 BudgetedBuild 刻意不同：此處 budget 是逐隊扣帳的活錢包，
+    // budget=0 是「真沒錢」（只建得起免費模板）；BudgetedBuild 是
+    // 願望清單篩選 API，非正預算一律視為「不追蹤預算」。
     Squad* CreateSquadFromTemplate(const SquadTemplate& tpl, int team,
                                    const Vector2& pos, int& budget);
     void AssignDoctrine(Squad* squad, const DoctrineSet& doctrine);
@@ -68,6 +71,14 @@ public:
     // G-5 計畫箭頭：每小隊各自的進攻目標（優先於 team objective pin）
     void SetSquadObjective(Squad* squad, const Vector2& pos);
     void ClearSquadObjective(Squad* squad);
+
+    // N-3 對手軍師情資：本場各 trigger 命中次數（跨場餵 RivalDeck）
+    const std::unordered_map<DoctrineTrigger, int>&
+    TriggerUsage(int team) const {
+        static const std::unordered_map<DoctrineTrigger, int> empty;
+        auto it = triggerUsage.find(team);
+        return it != triggerUsage.end() ? it->second : empty;
+    }
     void SetCommandPoints(int team, int points);
 
     FlowField& GetField() { return field; }
@@ -183,6 +194,8 @@ private:
     std::unordered_map<int, Vector2> objectives;
     std::unordered_map<int, Vector2> rallyPoints;
     std::unordered_map<Squad*, Vector2> squadObjectives; // G-5 每隊箭頭目標
+    std::unordered_map<int, std::unordered_map<DoctrineTrigger, int>>
+        triggerUsage; // N-3 每隊 trigger 命中統計
     std::unordered_map<int, int> commandPoints;
     std::unordered_map<Squad*, float> interventionUntil; // 剩餘覆寫秒數
     std::unordered_map<Squad*, float> damageBuffer;      // 小數傷害累積

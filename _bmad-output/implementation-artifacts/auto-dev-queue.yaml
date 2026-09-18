@@ -611,9 +611,17 @@ queue:
       - 記錄玩家 trigger 使用分佈並跨場讀取
       - 反制牌組產出合法 DoctrineSet（可驗證）
       - 戰報輸出對應判詞行
-    status: queued
+    status: done
     size: L
-    note: 單場也能驗證（模擬連續兩場）；敘事身份掛 E-7
+    note: >
+      Gameplay/RivalDeck：BattleController 記各隊 trigger 命中統計
+      （EvaluateDoctrines 命中即計），RecordBattle 跨場累積；
+      MostUsedTrigger → BuildCounterDeck 產針對性 DoctrineSet
+      （推進→據守誘敵、撤退→追擊、接戰→拒戰拉扯等 8 種映射）；
+      WarningLine 產「彼之陣法，似針對我軍慣用『X』」；
+      potato.rival_deck/1 序列化跨場持久化。
+      RivalDeckTest 17/17 PASS（含模擬連續兩場）。
+      敘事身份掛 E-7。
 
   - id: N-4
     title: 敵將處置與聲望持久化
