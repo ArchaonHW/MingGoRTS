@@ -49,7 +49,7 @@ development_status:
 
   # Epic B — 戰役持久骨架
   epic-b: in-progress
-  b-1-potato-log: backlog
+  b-1-potato-log: done
   b-2-chapter-definition-pack: done
   b-3-save-load-integrity: done
   b-4-chapter-boundary-save: done
