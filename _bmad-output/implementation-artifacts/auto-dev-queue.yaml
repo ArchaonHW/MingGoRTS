@@ -463,12 +463,15 @@ queue:
     status: done
     size: L
     note: >
-      Gameplay/SquadTemplate：Parse/ParseFile/LoadAll/LoadAllFromFile
-      載入模板（members/unit_class/damage_per_member/speed/
-      engage_range/morale/cost），Instantiate 建 Squad，
-      TryInstantiate 吃 budget（<0 無限，超支拒絕不扣帳）。
-      Squad::SetDamagePerMember 支援模板火力。
-      SquadTemplateTest 40/40 PASS。
+      potato.squad_template/1 巢狀 schema（stats{speed,engage_range,
+      damage_per_member,stamina{五欄}}）；SquadTemplate::LoadFromFile/
+      LoadFromString（schema 嚴驗、失敗重置、數值消毒+警告）、
+      Instantiate/ApplyStats、SquadTemplateLibrary（LoadDir keep-latest
+      除重/Find/SortedByCost）、BudgetedBuild（budget<=0 無上限、
+      超支跳過記 skipped）。RefitCamp::Deploy 增 library 參數回補
+      招募單位 stats；舊扁平 assets/templates/*.json 已遷移。
+      SquadTemplateTest 98/98、MSVC+MinGW 過、四路 review 加固
+      （commit 81925f1）。
 
   - id: G-5
     title: 作戰計畫箭頭（HOI4 battle plan → doctrine）
@@ -650,9 +653,12 @@ queue:
     acceptance:
       - 事件日誌含祠/靈/時三欄並持久化
       - 滲透觸發介面已定義（即使 E-6 未做也可 stub）
-    status: queued
+    status: done
     size: S
-    note: 依賴 E-6 神話層；UX 端規格已備（myth seepage）
+    note: >
+      Gameplay/MythLog：祠/靈/時/記事四欄事件、SetSeepageCallback
+      滲透觸發介面（UX 可映射）、TestimonyLines 結局證詞、
+      potato.myth_log/1 持久化。MythLogTest 14/14。
 
   - id: N-6
     title: 章節慣例文字層（題詞/判詞/欲知後事）

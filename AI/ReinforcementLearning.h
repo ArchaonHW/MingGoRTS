@@ -123,8 +123,20 @@ public:
     // Target network update
     void UpdateTargetNetwork();
     
-    // Getters
+    // Getters / tuning
     size_t GetReplayBufferSize() const { return replayBuffer.size(); }
+    float GetExplorationRate() const { return explorationRate; }
+    void SetExplorationRate(float rate);
+    // 重建 rng（訓練可重現）；不影響已建權重
+    void SetSeed(unsigned int seed);
+    // 以固定 seed 重建兩個網路權重（整條訓練管線可重現）；
+    // 會清空 replay buffer
+    void SeedWeights(unsigned int seed);
+    
+    // 持久化：序列化線上 Q 網路（NeuralNetwork::Serialize 格式）；
+    // 載入後 target network 同步為同一組權重
+    std::string Serialize() const;
+    bool Deserialize(const std::string& data);
     
 private:
     std::unique_ptr<NeuralNetwork> qNetwork;
@@ -144,6 +156,7 @@ private:
     
     float PredictQValue(const State& state, int action);
     std::vector<float> PredictQValues(const State& state);
+    std::vector<float> PredictTargetQValues(const State& state);
 };
 
 /**
