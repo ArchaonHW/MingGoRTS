@@ -97,6 +97,14 @@ public:
     // 高士氣部隊挨過減益即擋下連鎖。radius<=0（預設）= 關閉。
     void SetRoutShock(float radius, float moraleHit);
 
+    // G-2 戰線寬度（HOI4 combat width）：同一防禦方同時承受的
+    // 攻擊者上限；超過的在接戰狀態（圍觀）但不輸出傷害。
+    // width<=0（預設）= 無上限。
+    void SetCombatWidth(int width) { combatWidth = width; }
+    int GetCombatWidth() const { return combatWidth; }
+    // G-2 克制矩陣：攻方→守方傷害倍率（騎>弓、弓>步、步>騎）
+    static float CounterMultiplier(UnitClass attacker, UnitClass defender);
+
     // 部署完畢 → 進入即時執行（不再能改 doctrine）
     bool BeginExecution();
 
@@ -178,6 +186,7 @@ private:
     float routShockRadius = 0.0f;     // G-1：<=0 關閉
     float routShockMorale = 0.0f;
     std::unordered_set<Squad*> routEmitted; // 已擴散過的潰逃隊
+    int combatWidth = 0;              // G-2：<=0 無上限
     mutable std::mt19937 execRng{std::random_device{}()};
 
     static constexpr float DOCTRINE_INTERVAL = 0.25f; // 每 0.25s 遊戲時間評估一次
