@@ -2,7 +2,7 @@
 # 每個 item 走完：pick → spec (gds-quick-dev) → implement → verify → review → commit
 # 規則見 auto-dev-workflow.md
 version: 1
-updated: 2026-09-19 (U-1 全層 done；V/F/E/D 層工作項拆分)
+updated: 2026-09-19 (L 層帳本機械化 5 項新增；V-1 done)
 
 queue:
 
@@ -903,3 +903,68 @@ queue:
     status: queued
     size: L
     note: 依賴 D-1 + F-1 + F-4；神話層的視覺簽名
+
+  # ---- 層級 L：帳本機械化（區塊鏈與會計概念，2026-09-19）----
+  - id: L-1
+    title: 複式記帳分錄層（五帳戶借貸平衡）
+    source: spec-l-layer-ledger-accounting.md
+    summary: >
+      Gameplay/LedgerEntry：武功/民心/天命/軍威/物資五帳戶，
+      戰役事件自動產生借貸平衡分錄——戰功必有代價入帳。
+    acceptance:
+      - 任意事件序列後試算平衡恆成立
+      - 戰鬥/招募/無戰談判各有分錄模板
+    status: queued
+    size: M
+    note: 無引擎依賴、全 headless；拆倉後歸遊戲側
+
+  - id: L-2
+    title: 雜湊鏈 append-only 帳簿
+    source: spec-l-layer-ledger-accounting.md
+    summary: >
+      LedgerChain：{prevHash, payload, hash} 鏈式追加 + Verify()
+      全鏈重算；篡改歷史 entry 回報斷鏈位置。自實作 hash 不引第三方。
+    acceptance:
+      - append/verify/篡改偵測/存檔 roundtrip 全綠
+      - CampaignLedger 記錄改走鏈式追加
+    status: queued
+    size: M
+    note: 「史官不可篡改」的機械實現
+
+  - id: L-3
+    title: 試算表與查帳戰報
+    source: spec-l-layer-ledger-accounting.md
+    summary: >
+      章節邊界 trial balance 入戰報；不平衡時 HistorianReport
+      產「墨跡未乾」式存疑句——借貸不符即史官存疑。
+    acceptance:
+      - 平衡產正常句、不平衡產存疑句
+      - 查帳段入省略計數體系
+    status: queued
+    size: M
+    note: 依賴 L-1 + N-1（已落地）
+
+  - id: L-4
+    title: 偽帳機制——對手軍師攻擊記憶系統
+    source: spec-l-layer-ledger-accounting.md
+    summary: >
+      N-3 反制升級：注入合法 hash 但試算不平衡的偽造分錄；
+      滲透 ≥2 級偽帳機率上升；玩家標記疑帳解除反制。
+    acceptance:
+      - 偽帳注入→試算存疑→標記解除全鏈入 MythLog
+      - 不破壞正常章節的平衡恆等式
+    status: queued
+    size: L
+    note: 依賴 L-1/L-2/L-3 + D-1 + N-3
+
+  - id: L-5
+    title: 回放 Merkle 根——回放驗證即審計
+    source: spec-l-layer-ledger-accounting.md
+    summary: >
+      potato.battle_replay 加 rootHash；載入驗證通過才准
+      進史官摘錄；舊版無 hash 降級警告。
+    acceptance:
+      - 合法回放通過、篡改被拒、舊版降級
+    status: queued
+    size: S
+    note: 依賴 L-2 hash 實作；「回放即審計」閉環
