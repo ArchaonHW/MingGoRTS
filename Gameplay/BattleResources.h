@@ -37,6 +37,11 @@ public:
     int GetIntel(int team) const;
     int GetCP(int team) const;
 
+    // G-5 計畫加成：作戰計畫核准後的補給入帳
+    void AddIntel(int team, int amount);
+    // CP 加給會同步進 controller（含 maxCP 上限放寬）
+    void AddCP(BattleController& battle, int team, int amount);
+
     // 情報消費：解鎖敵方人格三軸的可視化（回傳是否成功解鎖）
     bool RevealEnemyPersonality(int team);
 

@@ -72,6 +72,7 @@ public:
     void SetSpeed(float s) { speed = s; }
     void SetEngageRange(float r) { engageRange = r; }
     void SetDamagePerMember(float d) { damagePerMember = d; }
+    float GetDamagePerMember() const { return damagePerMember; }
 
     // 兵種（G-2）：預設步兵；克制矩陣見 UnitClass 註解
     UnitClass GetUnitClass() const { return unitClass; }

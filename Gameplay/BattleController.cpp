@@ -63,6 +63,16 @@ void BattleController::SetRallyPoint(int team, const Vector2& pos) {
     rallyPoints[team] = pos;
 }
 
+void BattleController::SetSquadObjective(Squad* squad, const Vector2& pos) {
+    if (squad) {
+        squadObjectives[squad] = pos;
+    }
+}
+
+void BattleController::ClearSquadObjective(Squad* squad) {
+    squadObjectives.erase(squad);
+}
+
 int BattleController::TotalMembers(int team) const {
     int total = 0;
     for (const auto& squad : squads) {
@@ -574,10 +584,16 @@ void BattleController::UpdateContexts() {
             }
         }
 
+        // G-5：每小隊箭頭目標優先於 team objective pin
+        auto soIt = squadObjectives.find(squad.get());
         auto objIt = objectives.find(squad->GetTeam());
+        const Vector2* objPos = soIt != squadObjectives.end()
+                                    ? &soIt->second
+                                    : (objIt != objectives.end() ? &objIt->second
+                                                                 : nullptr);
         ctx.objectiveReached =
-            objIt != objectives.end() &&
-            (objIt->second - squad->GetPosition()).Length() <= OBJECTIVE_RADIUS;
+            objPos &&
+            (*objPos - squad->GetPosition()).Length() <= OBJECTIVE_RADIUS;
 
         contexts[squad.get()] = ctx;
     }
@@ -633,10 +649,16 @@ void BattleController::EvaluateDoctrines() {
             break;
         }
         case DoctrineAction::AdvanceToObjective: {
+            auto soIt = squadObjectives.find(squad.get());
             auto objIt = objectives.find(squad->GetTeam());
-            if (objIt != objectives.end()) {
+            const Vector2* objPos = soIt != squadObjectives.end()
+                                        ? &soIt->second
+                                        : (objIt != objectives.end()
+                                               ? &objIt->second
+                                               : nullptr);
+            if (objPos) {
                 GetTeamField(squad->GetTeam()); // 確保場已算好
-                squad->IssueOrder(SquadOrder::AttackMove, objIt->second);
+                squad->IssueOrder(SquadOrder::AttackMove, *objPos);
             }
             break;
         }

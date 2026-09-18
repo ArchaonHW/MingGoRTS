@@ -480,9 +480,19 @@ queue:
     acceptance:
       - 畫箭頭能產出合法 DoctrineSet（序列化可驗證）
       - 計畫加成數值在執行層生效
-    status: queued
+    status: done
     size: XL
-    note: 依賴 A-1；先不動工
+    note: >
+      Gameplay/BattlePlan：PlanArrow（squadName/from/to/priority）→
+      ArrowToDoctrine（HealthBelow→RetreatToRally prio10、
+      ObjectiveReached→AttackNearest prio20、Always→AdvanceToObjective
+      用箭頭 priority）。Apply 指派專屬箭頭或通用兜底 +
+      SetSquadObjective（BattleController 新 squad pin，優先於
+      team objective）+ rally + 計畫加成（attackMul×damagePerMember、
+      BattleResources::AddIntel/AddCP 同步 controller）。
+      potato.battle_plan/1 與 potato.doctrine_set/1 序列化雙向
+      （DoctrineSet::ToJson/FromJson + TriggerFromName/ActionFromName）。
+      BattlePlanTest 36/36 PASS。UI 畫箭頭留給 A-1 層消費。
 
   - id: G-9
     title: 戰鬥間整補循環（ELIN 基地層）
@@ -493,9 +503,14 @@ queue:
     acceptance:
       - 兩場戰鬥之間有整補介面且狀態跨場持續
       - 招募/恢復消費戰利品資源
-    status: queued
+    status: done
     size: XL
-    note: 依賴 G-7；meta 層是本專案最大缺口
+    note: >
+      Gameplay/RefitCamp（並行 session）：meta 層跨場持續——
+      Deploy 從名冊建隊保存兵力、招募/傷兵恢復消費 loot
+      （接 G-7 BattleResources）、存檔/讀檔 JSON。
+      RefitCampTest 40/40 PASS（部署、跨場兵力、存讀檔、
+      loot 保存、殲滅移除）。
 
   - id: G-10
     title: 程序戰場生成（ELIN × NeuralTerrainGen）

@@ -1,0 +1,21 @@
+{
+  "schema": "potato.squad_template/1",
+  "id": "cavalry_shock",
+  "name": "騎兵衝鋒隊",
+  "unit_class": "cavalry",
+  "members": 25,
+  "cost": 160,
+  "stats": {
+    "speed": 3.5,
+    "engage_range": 1.5,
+    "damage_per_member": 0.06,
+    "stamina": {
+      "drain_move": 0.045,
+      "drain_combat": 0.06,
+      "regen": 0.05,
+      "threshold": 0.35,
+      "penalty_mul": 0.5
+    }
+  },
+  "note": "高價衝擊騎兵——跑最快、單兵輸出最高但易疲憊，克制弓兵"
+}

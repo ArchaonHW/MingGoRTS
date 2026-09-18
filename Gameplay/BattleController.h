@@ -65,6 +65,9 @@ public:
     }
     void SetObjective(int team, const Vector2& pos);
     void SetRallyPoint(int team, const Vector2& pos);
+    // G-5 計畫箭頭：每小隊各自的進攻目標（優先於 team objective pin）
+    void SetSquadObjective(Squad* squad, const Vector2& pos);
+    void ClearSquadObjective(Squad* squad);
     void SetCommandPoints(int team, int points);
 
     FlowField& GetField() { return field; }
@@ -179,6 +182,7 @@ private:
     std::unordered_map<Squad*, DoctrineSet> doctrines;
     std::unordered_map<int, Vector2> objectives;
     std::unordered_map<int, Vector2> rallyPoints;
+    std::unordered_map<Squad*, Vector2> squadObjectives; // G-5 每隊箭頭目標
     std::unordered_map<int, int> commandPoints;
     std::unordered_map<Squad*, float> interventionUntil; // 剩餘覆寫秒數
     std::unordered_map<Squad*, float> damageBuffer;      // 小數傷害累積

@@ -108,6 +108,10 @@ public:
     DoctrineAction Evaluate(const SquadContext& ctx) const;
     const DoctrineRule* GetMatchedRule() const { return lastMatched; }
 
+    // G-5 序列化（potato.doctrine_set/1）：驗證「計畫→doctrine」轉譯結果
+    std::string ToJson() const;
+    bool FromJson(const std::string& json);
+
     static bool TriggerMatches(const DoctrineRule& rule, const SquadContext& ctx);
 
 private:
@@ -118,6 +122,9 @@ private:
 // 顯示用名稱
 const char* TriggerName(DoctrineTrigger trigger);
 const char* ActionName(DoctrineAction action);
+// 反向解析（序列化回讀）；不認識的字串回傳 false
+bool TriggerFromName(const std::string& name, DoctrineTrigger& out);
+bool ActionFromName(const std::string& name, DoctrineAction& out);
 
 } // namespace Gameplay
 } // namespace Potato

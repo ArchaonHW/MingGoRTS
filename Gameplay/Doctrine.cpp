@@ -1,7 +1,9 @@
 #include "Doctrine.h"
 #include "Squad.h"
+#include "Serialization/JsonParser.h"
 
 #include <algorithm>
+#include <cstdio>
 
 namespace Potato {
 namespace Gameplay {
@@ -85,6 +87,80 @@ const char* ActionName(DoctrineAction action) {
     case DoctrineAction::Scout: return "Scout";
     }
     return "Unknown";
+}
+
+bool TriggerFromName(const std::string& name, DoctrineTrigger& out) {
+    static const DoctrineTrigger all[] = {
+        DoctrineTrigger::Always,          DoctrineTrigger::HealthBelow,
+        DoctrineTrigger::MoraleBelow,     DoctrineTrigger::EnemyInRange,
+        DoctrineTrigger::UnderAttack,     DoctrineTrigger::Outnumbered,
+        DoctrineTrigger::AllyEngaged,     DoctrineTrigger::ObjectiveReached,
+    };
+    for (DoctrineTrigger t : all) {
+        if (name == TriggerName(t)) {
+            out = t;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool ActionFromName(const std::string& name, DoctrineAction& out) {
+    static const DoctrineAction all[] = {
+        DoctrineAction::AttackNearest,   DoctrineAction::AttackWeakest,
+        DoctrineAction::AdvanceToObjective, DoctrineAction::HoldPosition,
+        DoctrineAction::RetreatToRally,  DoctrineAction::DefendNearestAlly,
+        DoctrineAction::Scout,
+    };
+    for (DoctrineAction a : all) {
+        if (name == ActionName(a)) {
+            out = a;
+            return true;
+        }
+    }
+    return false;
+}
+
+std::string DoctrineSet::ToJson() const {
+    std::string out = "{\"schema\":\"potato.doctrine_set/1\",\"rules\":[";
+    for (size_t i = 0; i < rules.size(); ++i) {
+        const DoctrineRule& r = rules[i];
+        char buf[256];
+        std::snprintf(buf, sizeof(buf),
+                      "{\"trigger\":\"%s\",\"action\":\"%s\","
+                      "\"threshold\":%.4f,\"priority\":%d,\"cooldown\":%.2f}%s",
+                      TriggerName(r.trigger), ActionName(r.action),
+                      r.threshold, r.priority, r.cooldown,
+                      i + 1 < rules.size() ? "," : "");
+        out += buf;
+    }
+    out += "]}";
+    return out;
+}
+
+bool DoctrineSet::FromJson(const std::string& json) {
+    JsonValue root;
+    if (!JsonValue::ParseOk(json, root) ||
+        root["schema"].AsString() != "potato.doctrine_set/1") {
+        return false;
+    }
+    std::vector<DoctrineRule> parsed;
+    for (const JsonValue& r : root["rules"].AsArray()) {
+        DoctrineRule rule;
+        if (!TriggerFromName(r["trigger"].AsString(), rule.trigger) ||
+            !ActionFromName(r["action"].AsString(), rule.action)) {
+            return false; // 不認識的觸發/動作 → 整組作廢
+        }
+        rule.threshold = r["threshold"].AsFloat(0.0f);
+        rule.priority = r["priority"].AsInt(100);
+        rule.cooldown = r["cooldown"].AsFloat(0.0f);
+        parsed.push_back(rule);
+    }
+    rules.clear();
+    for (const DoctrineRule& r : parsed) {
+        AddRule(r); // 走 AddRule 保 priority 排序
+    }
+    return true;
 }
 
 } // namespace Gameplay

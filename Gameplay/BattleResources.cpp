@@ -32,6 +32,22 @@ int BattleResources::GetCP(int team) const {
     return it != teams.end() ? it->second.cp : 0;
 }
 
+void BattleResources::AddIntel(int team, int amount) {
+    if (amount > 0) {
+        teams[team].intel += amount;
+    }
+}
+
+void BattleResources::AddCP(BattleController& battle, int team, int amount) {
+    if (amount <= 0) {
+        return;
+    }
+    TeamResources& r = teams[team];
+    r.cp += amount;
+    r.maxCP += amount;
+    battle.SetCommandPoints(team, battle.GetCommandPoints(team) + amount);
+}
+
 bool BattleResources::RevealEnemyPersonality(int team) {
     if (!SpendIntel(team, 3)) { // 解鎖敵將人格花 3 情報
         return false;
