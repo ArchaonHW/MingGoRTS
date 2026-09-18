@@ -19,11 +19,13 @@
 #include "Gameplay/BattleMap.h"
 #include "Gameplay/BattlePlanner.h"
 #include "Gameplay/PlanningDeck.h"
+#include "Gameplay/BattlePlan.h"
 #include "Gameplay/EnemyGeneral.h"
 #include "Gameplay/BattleResources.h"
 #include "Gameplay/BattleRecorder.h"
 #include "Gameplay/Roster.h"
 #include "Gameplay/PostBattle.h"
+#include "Gameplay/HistorianReport.h"
 #include "Gameplay/RefitCamp.h"
 #include "Gameplay/SquadTemplate.h"
 #include "Gameplay/QuantumFog.h"
@@ -239,6 +241,17 @@ static const char* OrderName(SquadOrder o) {
     return "?";
 }
 
+// G-5：世界座標 → window 像素（計畫箭頭線條疊加用；背後點回 false）
+static bool WorldToScreen(const Camera& cam, const Vector3& w,
+                          float ww, float wh, ImVec2& out) {
+    const Vector4 clip = cam.GetViewProjectionMatrix() *
+                         Vector4(w.x, w.y, w.z, 1.0f);
+    if (clip.w < 1e-5f) return false;
+    out.x = (clip.x / clip.w * 0.5f + 0.5f) * ww;
+    out.y = (0.5f - clip.y / clip.w * 0.5f) * wh;
+    return true;
+}
+
 // ---- U-1 遊戲殼：Title → Battle → (回 Title | 離開) ----
 enum class ShellScreen { Title, Battle, Quit };
 
@@ -341,7 +354,8 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
     if (showHelp) {
         ImGui::PushTextWrapPos();
         ImGui::TextUnformatted(
-            "規劃:編排教條卡(觸發→動作),Alt+拖移圖釘,開戰。\n"
+            "規劃:編排教條卡(觸發→動作),Alt+拖移圖釘,"
+            "Ctrl+自小隊拖出進攻箭頭,開戰。\n"
             "執行:左鍵選隊,右鍵下令耗 CP;點雲探測(1情報),"
             "Shift+點雲觀測(2情報);接觸 3 格內免費揭露。\n"
             "Space 暫停,WASD 平移,滾輪升降,Esc 取消選取。");
@@ -639,6 +653,10 @@ int main() {
     PlanningDeck deck;
     deck.Init(battle, 0);
     deck.LoadPlannerTemplate(planner, battle, 0);
+
+    // ---- G-5 作戰計畫箭頭:Ctrl+左鍵自小隊拖出主攻軸線,開戰套用 ----
+    BattlePlan plan;
+    plan.SetPlanBonus(/*attackMul=*/1.10f, /*intel=*/2, /*cp=*/1);
     // 後衛改當偵查兵:低血撤退 > 遇敵應戰 > 無事就往最近的雲走
     {
         const int di = deck.FindDeck(rearGuard);
@@ -691,6 +709,8 @@ int main() {
     Squad* selected = nullptr;
     bool planningPhase = true;  // T-9:開戰前停在回合層編牌
     int curDeck = 0, curRule = -1; // 牌組 UI 選中態
+    Squad* arrowDragSquad = nullptr; // G-5:拖曳中的箭頭起點小隊
+    Vector2 arrowDragPos;            // G-5:拖曳目前落點(cell)
     bool paused = false;
     float speedScale = 1.0f;
     bool prevL = false, prevR = false, prevSpace = false, prevEsc = false;
@@ -788,6 +808,37 @@ int main() {
                     eventLog.push_back(lClick ? "目標點已移動"
                                               : "集結點已移動");
                     if (eventLog.size() > 8) eventLog.pop_front();
+                }
+            }
+        }
+
+        // ---- G-5 Planning:Ctrl+左鍵自小隊拖出進攻箭頭 ----
+        if (planningPhase && cursorIn && !io.WantCaptureMouse) {
+            PickRay ray = BattlePicker::ScreenToWorldRay(cam, fmx, fmy);
+            if (lClick && (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) ==
+                               GLFW_PRESS ||
+                           glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) ==
+                               GLFW_PRESS)) {
+                arrowDragSquad = BattlePicker::PickSquad(battle, 0, ray, CELL);
+            }
+            if (arrowDragSquad) {
+                Vector3 g;
+                if (BattlePicker::IntersectGround(ray, 0.0f, g)) {
+                    arrowDragPos = BattlePicker::WorldToCell(g, CELL);
+                }
+                if (!lmb) { // 放開 → 落點入計畫(同隊重畫覆蓋舊箭頭)
+                    Vector2 to(
+                        std::max(0.0f,
+                                 std::min(arrowDragPos.x, (float)GW - 0.5f)),
+                        std::max(0.0f,
+                                 std::min(arrowDragPos.y, (float)GH - 0.5f)));
+                    plan.RemoveArrowFor(arrowDragSquad->GetName());
+                    plan.AddArrow(arrowDragSquad->GetName(),
+                                  arrowDragSquad->GetPosition(), to);
+                    eventLog.push_back("計畫箭頭:" +
+                                       arrowDragSquad->GetName());
+                    if (eventLog.size() > 8) eventLog.pop_front();
+                    arrowDragSquad = nullptr;
                 }
             }
         }
@@ -898,6 +949,45 @@ int main() {
                                                    : fontSans,
                         18.0f);
 
+        // ---- G-5 計畫箭頭疊加線:規劃中亮金,開戰後淡化作軸線錨點 ----
+        if (plan.ArrowCount() > 0 || arrowDragSquad) {
+            ImDrawList* dl = ImGui::GetBackgroundDrawList();
+            const ImU32 col = planningPhase ? IM_COL32(255, 180, 60, 230)
+                                            : IM_COL32(255, 180, 60, 90);
+            auto drawArrow = [&](const Vector2& a, const Vector2& b) {
+                ImVec2 pa, pb;
+                if (!WorldToScreen(
+                        cam, Vector3(a.x * CELL, 0.6f, a.y * CELL),
+                        (float)ww, (float)wh, pa) ||
+                    !WorldToScreen(
+                        cam, Vector3(b.x * CELL, 0.6f, b.y * CELL),
+                        (float)ww, (float)wh, pb)) {
+                    return;
+                }
+                dl->AddLine(pa, pb, col, 3.0f);
+                ImVec2 d(pb.x - pa.x, pb.y - pa.y);
+                const float len = std::sqrt(d.x * d.x + d.y * d.y);
+                if (len > 12.0f) { // 箭頭頭
+                    d.x /= len;
+                    d.y /= len;
+                    const ImVec2 n(-d.y, d.x);
+                    dl->AddTriangleFilled(
+                        pb,
+                        ImVec2(pb.x - d.x * 14.0f + n.x * 6.0f,
+                               pb.y - d.y * 14.0f + n.y * 6.0f),
+                        ImVec2(pb.x - d.x * 14.0f - n.x * 6.0f,
+                               pb.y - d.y * 14.0f - n.y * 6.0f),
+                        col);
+                }
+            };
+            for (size_t i = 0; i < plan.ArrowCount(); ++i) {
+                drawArrow(plan.Arrow(i).from, plan.Arrow(i).to);
+            }
+            if (arrowDragSquad) {
+                drawArrow(arrowDragSquad->GetPosition(), arrowDragPos);
+            }
+        }
+
         ImGui::SetNextWindowPos(ImVec2(8, 8), ImGuiCond_Always);
         ImGui::SetNextWindowSize(ImVec2(300, 0), ImGuiCond_Always);
         ImGui::Begin("斷橋指揮", nullptr,
@@ -930,8 +1020,10 @@ int main() {
         ImGui::TextDisabled("左鍵選取 | 點雲探測(1情報) | Shift+點雲觀測(2情報)");
         ImGui::TextDisabled("右鍵下令 | Space 暫停 | 1/2/3 倍速");
         ImGui::TextDisabled("WASD 平移 | 滾輪縮放 | Esc 取消選取");
-        if (planningPhase)
+        if (planningPhase) {
             ImGui::TextDisabled("Alt+左鍵=移目標點 | Alt+右鍵=移集結點");
+            ImGui::TextDisabled("Ctrl+左鍵自小隊拖出=畫進攻箭頭");
+        }
         ImGui::End();
 
         // ---- T-9 回合層:作戰計畫視窗(三欄:小隊/卡槽/編輯器)----
@@ -1088,11 +1180,35 @@ int main() {
                 ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.2f, 1.0f), "%s",
                                    w.c_str());
             }
+            // G-5 計畫箭頭清單(有箭頭的小隊開戰後改走箭頭軸線)
+            if (plan.ArrowCount() > 0) {
+                ImGui::Separator();
+                ImGui::TextDisabled(
+                    "計畫箭頭 %d(加成 ×%.2f/情報+%d/CP+%d)",
+                    (int)plan.ArrowCount(), plan.AttackMultiplier(),
+                    plan.BonusIntel(), plan.BonusCP());
+                for (size_t i = 0; i < plan.ArrowCount(); ++i) {
+                    const PlanArrow& a = plan.Arrow(i);
+                    ImGui::BulletText(
+                        "%s → (%.0f,%.0f)",
+                        a.squadName.empty() ? "全軍" : a.squadName.c_str(),
+                        a.to.x, a.to.y);
+                }
+                if (ImGui::Button("清除箭頭")) plan.ClearArrows();
+            }
             if (ImGui::Button("開 戰", ImVec2(120, 32))) {
                 deck.Commit(battle);
+                // G-5:箭頭計畫在卡組之後套用——有箭頭的小隊
+                // doctrine/目標點以箭頭軸線為準,加成經 res 入帳
+                plan.SetRallyPoint(battle.GetRallyPoint(0));
+                const int arrows = plan.Apply(battle, &res, 0);
                 battle.BeginExecution();
                 planningPhase = false;
-                eventLog.push_back("作戰計畫已下達——開戰");
+                eventLog.push_back(
+                    arrows > 0
+                        ? "作戰計畫已下達——開戰(" +
+                              std::to_string(arrows) + " 支箭頭生效)"
+                        : "作戰計畫已下達——開戰");
             }
             ImGui::SameLine();
             ImGui::TextDisabled("寫好劇本再開戰;CP 留給救火");
@@ -1223,34 +1339,14 @@ int main() {
             static float replayCursor = 0.0f;
             if (endedAt < 0.0f) {
                 endedAt = (float)now;
-                // 史官體戰報:逐字敲出
-                std::string r = "史官曰：斷橋之役，";
-                r += battle.GetOutcome() == BattleOutcome::Victory
-                         ? "我軍克敵，奪南岸而還。"
-                     : battle.GetOutcome() == BattleOutcome::Defeat
-                         ? "我軍失利，退守北岸。"
-                         : "兩軍相持，鳴金收兵。";
-                char buf[128];
-                std::snprintf(buf, sizeof(buf),
-                              "戰歷 %.0f 秒，大小戰報 %zu 則。",
-                              battle.GetElapsed(), recorder.Count());
-                r += buf;
-                for (const auto& e : roster.GetEntries()) {
-                    if (e.team == 0 && !e.alive) {
-                        r += "「" + e.name + "」隊長殉國";
-                        if (!e.relic.empty()) r += "，遺「" + e.relic + "」";
-                        r += "。";
-                    }
-                }
-                for (const auto& e : roster.GetEntries()) {
-                    if (e.team == 0 && e.alive)
-                        r += "「" + e.name + "」得全。";
-                }
-                for (const auto& e : roster.GetEntries()) {
-                    if (e.team == 1 && !e.alive)
-                        r += "斬敵「" + e.name + "」。";
-                }
-                chronicler = r;
+                // N-1:史官體戰報改由片段組裝器產出(含省略計數)
+                HistorianInput hin;
+                hin.battleName = "斷橋之役";
+                hin.outcome = battle.GetOutcome();
+                hin.elapsedSec = battle.GetElapsed();
+                hin.recorder = &recorder;
+                hin.roster = &roster;
+                chronicler = ComposeHistorianReport(hin).text;
             }
             // 逐字敲出(30 字/秒);退回 UTF-8 字元邊界,避免切出亂碼
             size_t shown =
@@ -1332,6 +1428,22 @@ int main() {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         renderer.SwapBuffers();
+    }
+
+    // G-9 戰後收口:戰鬥有結果才結算——傷亡/戰利品/遺物轉存整補營
+    if (battle.GetOutcome() != BattleOutcome::Ongoing) {
+        const bool iWon = battle.GetOutcome() == BattleOutcome::Victory;
+        const int winnerTeam = iWon ? 0
+            : battle.GetOutcome() == BattleOutcome::Defeat ? 1 : -1;
+        PostBattle postBattle;
+        PostBattleReport report = postBattle.Settle(battle, roster, winnerTeam);
+        // 戰利品與遺物是勝者的拾獲;敗北/平手我軍不入帳
+        if (!iWon) {
+            report.lootPoints = 0;
+            report.relics.clear();
+        }
+        camp.DepositLoot(report.lootPoints);
+        camp.Absorb(report, roster, 0);
     }
 
     battle.BindFog(nullptr); // fog 是 local,先於 battle 解構——解綁防懸空

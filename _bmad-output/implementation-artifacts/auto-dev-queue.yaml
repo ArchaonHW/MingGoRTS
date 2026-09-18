@@ -511,9 +511,8 @@ queue:
       （接 G-7 BattleResources）、存檔/讀檔 JSON。
       DuanqiaoPlayable Title 整補營區塊 + 戰後自動結算轉存；
       殘編再損以部署兵力起算（Squad.maxMembers=部署值）。
-      RefitCampTest 42/42，MSVC Debug + MinGW 雙綠。
-      RefitCampTest 40/40 PASS（部署、跨場兵力、存讀檔、
-      loot 保存、殲滅移除）。
+      RefitCampTest 42/42，MSVC Debug + MinGW 雙綠
+      （部署、跨場兵力、存讀檔、loot 保存、殲滅移除）。
 
   - id: G-10
     title: 程序戰場生成（ELIN × NeuralTerrainGen）
