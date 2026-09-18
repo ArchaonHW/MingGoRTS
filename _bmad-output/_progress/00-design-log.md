@@ -171,3 +171,27 @@ MSVC+MinGW 建置過;QuantumTest Entangle 段落 ~20 checks;ctest 6/6。平行 s
 ## 驗證
 
 MSVC+MinGW 建置過;QuantumTest Personality 段落 ~12 checks;其餘 ctest 無回歸。
+
+---
+
+# 2026-09-18 — Q-7 相位干涉觀測(c3b026d + ae83a4e 修復)
+
+## 做法
+
+實驗開關 `SetInterferenceEnabled`(預設關):同 tick(fogTime 未推進)對已揭露實體二次觀測 → Δφ = phases[nearest]−phases[modal];cos<0 觀測被拒不刷新,cos≥0 刷新+時效 1.5x。`SetEntityPhases` 注入候選相位(同步寫進 Qudit 振幅);`Qudit::SetPhases` 為乘法旋轉,機率語義不變。Reveal/Probe 不干涉(接觸是物理目視、弱測量不成 joint 觀測)。
+
+## Review 修復(1 路)
+
+- 過期退相干沒清 entity.phases → 過期後干涉仍生效,與 spec「decoherence 殺相位」矛盾 → expiry 清 phases+lastObserveAt
+- SetPhases 重複注入相位累積 → 注入前先 SetProbabilities 歸零相位
+- NaN 相位 → cos(NaN)<0 為 false → 白拿建設性加成 → isfinite 拒絕 + `!(c>=0)` 擋 NaN
+- 空相位注入變全零相位 → 恆建設性漏洞 → 空輸入=清除
+- ObserveRandom 沒蓋干涉時鐘;Update 負/NaN dt 會倒轉時鐘
+
+## 驗證
+
+MSVC+MinGW 全過;干涉段落 22 checks(雙向/跨 tick/flag 關閉零回歸/相位清零/機率語義不變)。平行 session 將實作掃入 c3b026d,本 session 的 review 修復另立 ae83a4e。
+
+## 佇列態
+
+平行 session 極活躍:Q-5/Q-6/Q-8、A-1~A-3、C-1~C-3、T-9~T-11 皆已落地,Q-9 教學進行中(TutorialScript 檔案在途)。剩 G-1~G-10(TW/HOI4 戰鬥機制)與 P-1。
