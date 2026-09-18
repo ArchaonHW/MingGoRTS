@@ -914,9 +914,12 @@ queue:
     acceptance:
       - 任意事件序列後試算平衡恆成立
       - 戰鬥/招募/無戰談判各有分錄模板
-    status: queued
+    status: done
     size: M
-    note: 無引擎依賴、全 headless；拆倉後歸遊戲側
+    note: >
+      Gameplay/Ledger：五帳戶 LedgerEntry + BattleVictory/
+      Recruitment/Negotiation 模板 + TrialBalance 全域恆等。
+      LedgerChainTest 38/38，雙工具鏈綠（隨 a3e2e76 入帳）。
 
   - id: L-2
     title: 雜湊鏈 append-only 帳簿
@@ -927,9 +930,13 @@ queue:
     acceptance:
       - append/verify/篡改偵測/存檔 roundtrip 全綠
       - CampaignLedger 記錄改走鏈式追加
-    status: queued
+    status: done
     size: M
-    note: 「史官不可篡改」的機械實現
+    note: >
+      LedgerChain：FNV-1a 64 {prevHash,entry,hash} 鏈、Verify()
+      回報斷鏈索引、SoundnessViolation() 偽帳偵測面、
+      potato.ledger_chain/1 存檔。篡改測試：改摘要斷於首筆、
+      改金額斷於次筆。CampaignLedger 接線留待章節存檔整合。
 
   - id: L-3
     title: 試算表與查帳戰報
