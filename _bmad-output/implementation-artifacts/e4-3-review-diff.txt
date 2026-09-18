@@ -1,0 +1,873 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f920b29..134d408 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -207,6 +207,7 @@ target_link_libraries(PotatoEngine
+     glfw
+     glad
+     ${CMAKE_DL_LIBS}
++    NeuralNetwork # NeuralGraphics 深度學習繪圖依賴
+ )
+ 
+ # Windows: psapi.lib（Security 模組的模組枚舉用；MSVC 由 #pragma comment 處理，MinGW 需顯式連結）
+@@ -327,6 +328,7 @@ add_executable(DevAssistantSmoke Examples/DevAssistantSmoke.cpp)
+ target_include_directories(DevAssistantSmoke PRIVATE ${CMAKE_SOURCE_DIR})
+ target_link_libraries(DevAssistantSmoke
+     IntelligentDevelopmentSystem
++    IntelligentSuggestion
+     KnowledgeGraph
+     SelfReflection
+     LLMIntegration
+@@ -416,6 +418,24 @@ add_executable(BattlePickerTest Examples/BattlePickerTest.cpp)
+ target_include_directories(BattlePickerTest PRIVATE ${CMAKE_SOURCE_DIR})
+ target_link_libraries(BattlePickerTest Gameplay)
+ 
++# 斷橋可玩 demo（E4-3：LMB 選取/RMB 下令走 CP 介入；A-4 膠囊體+選取環+血條）
++# 互動視窗程式——無顯示環境自行 [SKIP]，不進 POTATO_TESTS
++add_executable(DuanqiaoPlayable
++    Examples/DuanqiaoPlayable.cpp
++    external/imgui/imgui.cpp
++    external/imgui/imgui_draw.cpp
++    external/imgui/imgui_tables.cpp
++    external/imgui/imgui_widgets.cpp
++    external/imgui/backends/imgui_impl_glfw.cpp
++    external/imgui/backends/imgui_impl_opengl3.cpp
++)
++target_include_directories(DuanqiaoPlayable PRIVATE
++    ${CMAKE_SOURCE_DIR}
++    ${CMAKE_SOURCE_DIR}/external/imgui
++    ${CMAKE_SOURCE_DIR}/external/imgui/backends
++)
++target_link_libraries(DuanqiaoPlayable glfw glad ${OPENGL_LIBRARIES} Gameplay)
++
+ # 量子敵情霧可視化（ImGui：機率雲/觀測塌縮/情報時效）
+ add_executable(QuantumFogDemo
+     Examples/QuantumFogDemo.cpp
+@@ -433,6 +453,10 @@ target_include_directories(QuantumFogDemo PRIVATE
+ )
+ target_link_libraries(QuantumFogDemo glfw glad ${OPENGL_LIBRARIES} Gameplay)
+ 
++# AI Agent 介面無頭煙霧測試（IDECore+AIIntegration 自包含，無 GUI 依賴）
++add_executable(AIAgentSmoke Examples/AIAgentSmoke.cpp MingGoRTS_IDE/IDECore.cpp MingGoRTS_IDE/AIIntegration.cpp)
++target_include_directories(AIAgentSmoke PRIVATE ${CMAKE_SOURCE_DIR})
++
+ # MingGoRTS IDE（AI Agent 整合 IDE - 命令行版本）
+ add_executable(MingGoRTS_IDE_CLI MingGoRTS_IDE/MingGoRTS_IDE_Main.cpp MingGoRTS_IDE/IDECore.cpp MingGoRTS_IDE/AIIntegration.cpp)
+ target_include_directories(MingGoRTS_IDE_CLI PRIVATE ${CMAKE_SOURCE_DIR})
+@@ -555,6 +579,16 @@ add_executable(ImageCodecTest Examples/ImageCodecTest.cpp)
+ target_include_directories(ImageCodecTest PRIVATE ${CMAKE_SOURCE_DIR})
+ target_link_libraries(ImageCodecTest PotatoEngine)
+ 
++# 深度學習繪圖：headless 測試（SR/降噪/上色/INR/地形/法線/LOD）
++add_executable(NeuralGraphicsTest Examples/NeuralGraphicsTest.cpp)
++target_include_directories(NeuralGraphicsTest PRIVATE ${CMAKE_SOURCE_DIR})
++target_link_libraries(NeuralGraphicsTest PotatoEngine NeuralNetwork)
++
++# 深度學習繪圖離線 CLI：訓練產出 .pnn，推論讀寫 PNG
++add_executable(NeuralArtTool Examples/NeuralArtTool.cpp)
++target_include_directories(NeuralArtTool PRIVATE ${CMAKE_SOURCE_DIR})
++target_link_libraries(NeuralArtTool PotatoEngine NeuralNetwork)
++
+ # GL 煙霧測試：需要顯示環境,無顯示時自行 SKIP
+ add_executable(GLSmokeTest Examples/GLSmokeTest.cpp)
+ target_include_directories(GLSmokeTest PRIVATE ${CMAKE_SOURCE_DIR})
+@@ -640,10 +674,12 @@ set(POTATO_TESTS
+     AudioTest
+     TimeTest
+     ImageCodecTest
++    NeuralGraphicsTest
+     GLSmokeTest
+     SecurityRedTeamTest
+     AITestSuite
+     DevAssistantSmoke
++    AIAgentSmoke
+     DoctrineBattleDemo
+     AutoPlannerDemo
+     DuanqiaoDemo
+diff --git a/Examples/BattleSceneTest.cpp b/Examples/BattleSceneTest.cpp
+index e71fe52..1f286fb 100644
+--- a/Examples/BattleSceneTest.cpp
++++ b/Examples/BattleSceneTest.cpp
+@@ -100,6 +100,41 @@ int main() {
+     Check(items.size() == 2, "render list = 存活可見小隊數",
+           static_cast<float>(items.size()), 2.0f);
+ 
++    // [8] overlay(A-4):設定環/血條 mesh → 每 binding 長出三個子節點
++    sync.SetOverlayMeshes(MakeShared<Mesh>(), MakeShared<Mesh>(),
++                          MakeShared<Mesh>());
++    sync.Sync(battle);
++    auto findChild = [](SceneNode* n, const char* name) -> SceneNode* {
++        if (!n) return nullptr;
++        for (auto& c : n->GetChildren()) {
++            if (c->GetName() == name) return c.get();
++        }
++        return nullptr;
++    };
++    SceneNode* blueRing  = findChild(blueNode, "__sel_ring");
++    SceneNode* blueBarBg = findChild(blueNode, "__hp_bg");
++    SceneNode* blueFill  = findChild(blueNode, "__hp_fill");
++    Check(blueRing && blueBarBg && blueFill,
++          "小隊節點長出 __sel_ring/__hp_bg/__hp_fill");
++
++    // [9] 選取環只在選中時顯示;全滅小隊血條隱藏
++    sync.SetSelectedSquad(blue);
++    sync.Sync(battle);
++    Check(blueRing && blueRing->IsActive(), "選取後 ring 顯示");
++    SceneNode* redBarBg = findChild(redNode, "__hp_bg");
++    Check(redBarBg && !redBarBg->IsActive(), "全滅小隊血條隱藏");
++
++    // [10] 血條隨兵力縮短 + 向紅漸變(藍隊 10→5,fill scale.x=barWidth*0.5)
++    blue->ApplyCasualties(5);
++    sync.Sync(battle);
++    if (blueFill) {
++        Check(std::fabs(blueFill->GetLocalScale().x - 0.6f) < 0.05f,
++              "血量 50% → 血條縮半", blueFill->GetLocalScale().x, 0.6f);
++        RenderableComponent* frc = blueFill->GetRenderable();
++        Check(frc && frc->color.x > 0.4f, "血條向紅漸變",
++              frc ? frc->color.x : 0.0f, 0.5f);
++    }
++
+     sync.Detach();
+     Check(sync.BindingCount() == 0, "Detach 清空綁定");
+ 
+diff --git a/Gameplay/BattleController.cpp b/Gameplay/BattleController.cpp
+index 15c1901..089c2d5 100644
+--- a/Gameplay/BattleController.cpp
++++ b/Gameplay/BattleController.cpp
+@@ -112,6 +112,26 @@ bool BattleController::Intervene(Squad* squad, SquadOrder order,
+     return true;
+ }
+ 
++bool BattleController::Intervene(Squad* squad, SquadOrder order,
++                                 const Squad* target, float holdSeconds) {
++    if (!target || target->IsEliminated()) {
++        return false;
++    }
++    if (phase != BattlePhase::Execution || !squad || squad->IsEliminated()) {
++        return false;
++    }
++    int team = squad->GetTeam();
++    if (GetCommandPoints(team) <= 0) {
++        Emit("Intervene denied: no command points");
++        return false;
++    }
++    commandPoints[team]--;
++    squad->IssueOrder(order, target);
++    interventionUntil[squad] = holdSeconds;
++    Emit("CP intervention on " + squad->GetName());
++    return true;
++}
++
+ void BattleController::SetMoraleExecution(float threshold, float rate) {
+     moraleExecThreshold = threshold;
+     moraleExecRate = rate;
+diff --git a/Gameplay/BattleController.h b/Gameplay/BattleController.h
+index b51d93e..6618e5a 100644
+--- a/Gameplay/BattleController.h
++++ b/Gameplay/BattleController.h
+@@ -94,6 +94,9 @@ public:
+     // CP 介入：覆寫該隊命令 holdSeconds 秒（遊戲時間）。回傳 false = CP 不足/階段不對
+     bool Intervene(Squad* squad, SquadOrder order, const Vector2& target,
+                    float holdSeconds = 5.0f);
++    // 指定敵隊版本：Engage 等需要 squad 目標的命令用；target 全滅回 false
++    bool Intervene(Squad* squad, SquadOrder order, const Squad* target,
++                   float holdSeconds = 5.0f);
+ 
+     // 每幀呼叫：realDt 為真實秒數，內部乘 timeScale
+     void Update(float realDt);
+diff --git a/Gameplay/BattleSceneSync.cpp b/Gameplay/BattleSceneSync.cpp
+index 8ca198d..40cf77b 100644
+--- a/Gameplay/BattleSceneSync.cpp
++++ b/Gameplay/BattleSceneSync.cpp
+@@ -46,6 +46,43 @@ void BattleSceneSync::CreateBinding(Squad* squad) {
+     node->SetRenderable(rc);
+     parentNode->AddChild(node);
+     bindings.push_back({squad, node, rc});
++    EnsureOverlay(bindings.back());
++}
++
++void BattleSceneSync::EnsureOverlay(Binding& b) {
++    if (ringMesh && !b.ringNode) {
++        b.ringNode = MakeShared<SceneNode>("__sel_ring");
++        b.ringNode->SetLocalPosition(Vector3(0.0f, 0.05f, 0.0f));
++        auto rc = MakeShared<RenderableComponent>();
++        rc->mesh = ringMesh;
++        rc->color = Vector3(1.0f, 0.9f, 0.25f); // 選取環:亮黃
++        rc->boundingRadius = 0.9f * cellSize;
++        b.ringNode->SetRenderable(rc);
++        b.ringNode->SetActive(false);
++        b.node->AddChild(b.ringNode);
++    }
++    if (barBgMesh && barFillMesh && !b.barBgNode) {
++        b.barBgNode = MakeShared<SceneNode>("__hp_bg");
++        b.barBgNode->SetLocalPosition(Vector3(0.0f, barY, 0.0f));
++        b.barBgNode->SetLocalScale(Vector3(barWidth, 1.0f, 1.0f));
++        auto bgRc = MakeShared<RenderableComponent>();
++        bgRc->mesh = barBgMesh;
++        bgRc->color = Vector3(0.10f, 0.10f, 0.12f);
++        bgRc->boundingRadius = barWidth * 0.7f;
++        b.barBgNode->SetRenderable(bgRc);
++        b.node->AddChild(b.barBgNode);
++
++        // fill 為 bg 的兄弟節點:scale.x=pct 並左移半寬,達成向左縮短
++        b.barFillNode = MakeShared<SceneNode>("__hp_fill");
++        b.barFillNode->SetLocalPosition(Vector3(0.0f, barY + 0.02f, 0.0f));
++        b.barFillNode->SetLocalScale(Vector3(barWidth, 1.0f, 1.0f));
++        b.barFillRc = MakeShared<RenderableComponent>();
++        b.barFillRc->mesh = barFillMesh;
++        b.barFillRc->color = Vector3(0.2f, 0.9f, 0.2f);
++        b.barFillRc->boundingRadius = barWidth * 0.7f;
++        b.barFillNode->SetRenderable(b.barFillRc);
++        b.node->AddChild(b.barFillNode);
++    }
+ }
+ 
+ void BattleSceneSync::Sync(BattleController& battle) {
+@@ -67,6 +104,9 @@ void BattleSceneSync::Sync(BattleController& battle) {
+ 
+         if (squad->IsEliminated()) {
+             b.node->SetActive(false);
++            if (b.ringNode) b.ringNode->SetActive(false);
++            if (b.barBgNode) b.barBgNode->SetActive(false);
++            if (b.barFillNode) b.barFillNode->SetActive(false);
+             continue;
+         }
+ 
+@@ -78,6 +118,23 @@ void BattleSceneSync::Sync(BattleController& battle) {
+                                        : 0.55f + 0.45f * squad->GetMorale();
+         Vector3 base = TeamColor(squad->GetTeam());
+         b.renderable->color = base * lum;
++
++        // overlay:選取環只在選中時顯示;血條在潰逃時隱藏
++        if (b.ringNode) {
++            b.ringNode->SetActive(squad == selected && !squad->IsRouting());
++        }
++        if (b.barBgNode && b.barFillNode) {
++            bool showBar = !squad->IsRouting();
++            b.barBgNode->SetActive(showBar);
++            b.barFillNode->SetActive(showBar);
++            if (showBar) {
++                float pct = squad->GetHealthPct();
++                b.barFillNode->SetLocalScale(Vector3(barWidth * pct, 1.0f, 1.0f));
++                b.barFillNode->SetLocalPosition(
++                    Vector3(-barWidth * (1.0f - pct) * 0.5f, barY + 0.02f, 0.0f));
++                b.barFillRc->color = Vector3(1.0f - pct, pct, 0.15f);
++            }
++        }
+     }
+ }
+ 
+@@ -88,6 +145,24 @@ void BattleSceneSync::SetUnitMesh(SharedPtr<Mesh> mesh) {
+     }
+ }
+ 
++void BattleSceneSync::SetOverlayMeshes(SharedPtr<Mesh> ring,
++                                       SharedPtr<Mesh> barBg,
++                                       SharedPtr<Mesh> barFill,
++                                       float barHeight, float width) {
++    ringMesh = std::move(ring);
++    barBgMesh = std::move(barBg);
++    barFillMesh = std::move(barFill);
++    barY = barHeight;
++    barWidth = width;
++    for (auto& b : bindings) {
++        EnsureOverlay(b);
++    }
++}
++
++void BattleSceneSync::SetSelectedSquad(const Squad* squad) {
++    selected = squad;
++}
++
+ SceneNode* BattleSceneSync::GetNodeFor(const Squad* squad) const {
+     for (auto& b : bindings) {
+         if (b.squad == squad) return b.node.get();
+diff --git a/Gameplay/BattleSceneSync.h b/Gameplay/BattleSceneSync.h
+index 4bd0d09..836e6c8 100644
+--- a/Gameplay/BattleSceneSync.h
++++ b/Gameplay/BattleSceneSync.h
+@@ -41,6 +41,21 @@ public:
+     // 設定共用單位 mesh(可為 nullptr 清除)
+     void SetUnitMesh(SharedPtr<Mesh> mesh);
+ 
++    // ---- overlay(A-4):選取環 + 血條 ----
++    // 三個 mesh 皆以「寬 1 單位、原點居中」製作,由 sync 負責版面:
++    //   ring    — 平放環,選取時顯示於小隊腳下(y≈0.05)
++    //   barBg   — 血條底(常駐深色),掛小隊節點上方 barY 處,寬 barWidth
++    //   barFill — 血條量條,sync 依 healthPct 縮放 scale.x 並向左對齊,
++    //             顏色綠→紅漸變;小隊潰逃或全滅時整條隱藏
++    // 傳 nullptr 清除對應 overlay。
++    void SetOverlayMeshes(SharedPtr<Mesh> ring, SharedPtr<Mesh> barBg,
++                          SharedPtr<Mesh> barFill, float barY = 2.0f,
++                          float barWidth = 1.2f);
++
++    // 選取的小隊(顯示選取環);nullptr 取消選取
++    void SetSelectedSquad(const Squad* squad);
++    const Squad* GetSelectedSquad() const { return selected; }
++
+     void Detach();
+ 
+     size_t BindingCount() const { return bindings.size(); }
+@@ -51,15 +66,25 @@ private:
+         Squad* squad;
+         SharedPtr<SceneNode> node;
+         SharedPtr<RenderableComponent> renderable;
++        // overlay 子節點(SetOverlayMeshes 後建立,命名 "__sel_ring" 等)
++        SharedPtr<SceneNode> ringNode;
++        SharedPtr<SceneNode> barBgNode;
++        SharedPtr<SceneNode> barFillNode;
++        SharedPtr<RenderableComponent> barFillRc;
+     };
+ 
+     void CreateBinding(Squad* squad);
++    void EnsureOverlay(Binding& b);
+     static Vector3 TeamColor(int team);
+ 
+     std::vector<Binding> bindings;
+     SharedPtr<SceneNode> parentNode;
+     SceneGraph* scene = nullptr;
+     SharedPtr<Mesh> unitMesh;
++    SharedPtr<Mesh> ringMesh, barBgMesh, barFillMesh;
++    const Squad* selected = nullptr;
++    float barY = 2.0f;
++    float barWidth = 1.2f;
+     float cellSize = 1.0f;
+ };
+ 
+
+=== NEW FILE: Examples/DuanqiaoPlayable.cpp ===
+// DuanqiaoPlayable - 斷橋可玩 demo(E4-3 + A-4)
+//
+// 管線: BattleMap(duanqiao.json) → BattleController(doctrine 執行)
+//       → BattleSceneSync(小隊節點+選取環+血條) → SceneRenderer → OpenGL
+// 操作: 左鍵選取我軍小隊 / 右鍵地面=AttackMove、右鍵敵軍=Engage(皆走 CP 介入)
+//       Space 暫停 / 1,2,3 倍速 0.5,1,2 / WASD 平移視角 / 滾輪縮放 / Esc 取消選取
+// 無顯示環境: 印 [SKIP] 並以 0 結束(不進 POTATO_TESTS)
+
+#include "Rendering/OpenGLRenderer.h"
+#include "Rendering/SceneRenderer.h"
+#include "Rendering/RenderableComponent.h"
+#include "Rendering/Camera.h"
+#include "Scene/SceneNode.h"
+#include "Gameplay/BattleController.h"
+#include "Gameplay/BattleSceneSync.h"
+#include "Gameplay/BattlePicker.h"
+#include "Gameplay/BattleMap.h"
+#include "Gameplay/BattlePlanner.h"
+#include "Gameplay/EnemyGeneral.h"
+#include "Gameplay/BattleResources.h"
+#include "MathUtils/Matrix4.h"
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
+#include <cmath>
+#include <cstdio>
+#include <deque>
+#include <filesystem>
+#include <string>
+#include <vector>
+
+using namespace Potato;
+using namespace Potato::Gameplay;
+
+// ---- 簡易 lambert shader(uniform 名對齊 SceneRenderer::SubmitRenderList)----
+static const char* UNIT_VERT = R"(
+#version 330 core
+layout(location=0) in vec3 aPos;
+layout(location=1) in vec3 aNormal;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+out vec3 vNormal;
+void main() {
+    vNormal = mat3(transpose(inverse(model))) * aNormal;
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
+}
+)";
+
+static const char* UNIT_FRAG = R"(
+#version 330 core
+in vec3 vNormal;
+uniform vec3 uColor;
+uniform vec3 uLightDir;
+out vec4 FragColor;
+void main() {
+    vec3 n = normalize(vNormal);
+    float diff = max(dot(n, normalize(uLightDir)), 0.0);
+    vec3 col = uColor * (0.30 + 0.75 * diff);
+    FragColor = vec4(col, 1.0);
+}
+)";
+
+// ---- 程序化 mesh ----
+
+static Mesh MakeBox(float w, float h, float d) {
+    Mesh m;
+    float x = w * 0.5f, y = h * 0.5f, z = d * 0.5f;
+    Vector3 n[6] = {{0,0,1},{0,0,-1},{1,0,0},{-1,0,0},{0,1,0},{0,-1,0}};
+    Vector3 quad[6][4] = {
+        {{-x,-y,z},{x,-y,z},{x,y,z},{-x,y,z}},
+        {{x,-y,-z},{-x,-y,-z},{-x,y,-z},{x,y,-z}},
+        {{-x,-y,z},{x,-y,-z},{x,y,-z},{x,y,z}},
+        {{-x,-y,-z},{x,-y,z},{-x,y,z},{-x,y,-z}},
+        {{-x,y,z},{x,y,z},{x,y,-z},{-x,y,-z}},
+        {{-x,-y,-z},{x,-y,-z},{x,y,z},{-x,y,z}},
+    };
+    std::vector<Vertex> verts;
+    std::vector<uint32> idx;
+    for (int f = 0; f < 6; f++) {
+        uint32 base = (uint32)verts.size();
+        for (int v = 0; v < 4; v++) {
+            Vertex vx;
+            vx.position = quad[f][v];
+            vx.normal = n[f];
+            vx.texCoord = Vector2(0, 0);
+            verts.push_back(vx);
+        }
+        idx.insert(idx.end(), {base, base+1, base+2, base, base+2, base+3});
+    }
+    m.SetVertices(verts);
+    m.SetIndices(idx);
+    return m;
+}
+
+// 膠囊體:車削(profile = 下半球 + 圓柱 + 上半球)
+static Mesh MakeCapsule(float radius, float height, int seg = 12, int rings = 6) {
+    Mesh m;
+    float cylHalf = height * 0.5f - radius; // 圓柱半高
+    if (cylHalf < 0.0f) cylHalf = 0.0f;
+    // profile: (r, y, ny, nr) 從底部頂點到頂部頂點
+    std::vector<Vector3> profile;   // x=r, y=y
+    std::vector<Vector3> pNormal;   // profile 法線(y 分量與徑向分量)
+    for (int i = 0; i <= rings; ++i) { // 下半球 -90°..0°
+        float t = -1.5707963f + 1.5707963f * i / rings;
+        profile.push_back(Vector3(radius * std::cos(t), -cylHalf + radius * std::sin(t), 0));
+        pNormal.push_back(Vector3(std::cos(t), std::sin(t), 0));
+    }
+    for (int i = 0; i <= rings; ++i) { // 上半球 0°..90°
+        float t = 1.5707963f * i / rings;
+        profile.push_back(Vector3(radius * std::cos(t), cylHalf + radius * std::sin(t), 0));
+        pNormal.push_back(Vector3(std::cos(t), std::sin(t), 0));
+    }
+    int rows = (int)profile.size();
+    std::vector<Vertex> verts;
+    std::vector<uint32> idx;
+    for (int r = 0; r < rows; ++r) {
+        for (int s = 0; s <= seg; ++s) {
+            float a = 6.2831853f * s / seg;
+            float ca = std::cos(a), sa = std::sin(a);
+            Vertex v;
+            // 膠囊底部落在 y=0,直立在地面(squad 節點在 y=0)
+            v.position = Vector3(profile[r].x * ca,
+                                 profile[r].y + height * 0.5f,
+                                 profile[r].x * sa);
+            v.normal = Vector3(pNormal[r].x * ca, pNormal[r].y, pNormal[r].x * sa);
+            v.texCoord = Vector2((float)s / seg, (float)r / (rows - 1));
+            verts.push_back(v);
+        }
+    }
+    for (int r = 0; r + 1 < rows; ++r) {
+        for (int s = 0; s < seg; ++s) {
+            uint32 a = r * (seg + 1) + s, b = a + 1;
+            uint32 c = a + seg + 1, d = c + 1;
+            idx.insert(idx.end(), {a, c, b, b, c, d});
+        }
+    }
+    m.SetVertices(verts);
+    m.SetIndices(idx);
+    return m;
+}
+
+// 平放選取環:XZ 平面同心圓環
+static Mesh MakeRing(float innerR, float outerR, int seg = 24) {
+    Mesh m;
+    std::vector<Vertex> verts;
+    std::vector<uint32> idx;
+    for (int s = 0; s <= seg; ++s) {
+        float a = 6.2831853f * s / seg;
+        float ca = std::cos(a), sa = std::sin(a);
+        Vertex vi, vo;
+        vi.position = Vector3(innerR * ca, 0, innerR * sa);
+        vo.position = Vector3(outerR * ca, 0, outerR * sa);
+        vi.normal = vo.normal = Vector3(0, 1, 0);
+        vi.texCoord = vo.texCoord = Vector2(0, 0);
+        verts.push_back(vi);
+        verts.push_back(vo);
+    }
+    for (int s = 0; s < seg; ++s) {
+        uint32 a = s * 2, b = a + 1, c = a + 2, d = a + 3;
+        idx.insert(idx.end(), {a, c, b, b, c, d});
+    }
+    m.SetVertices(verts);
+    m.SetIndices(idx);
+    return m;
+}
+
+static SharedPtr<SceneNode> AddStaticBox(SharedPtr<SceneNode> parent,
+                                       SharedPtr<Mesh> mesh,
+                                       const Vector3& pos,
+                                       const Vector3& color,
+                                       const char* name, float boundR) {
+    auto node = MakeShared<SceneNode>(name);
+    node->SetLocalPosition(pos);
+    auto rc = MakeShared<RenderableComponent>();
+    rc->mesh = mesh;
+    rc->color = color;
+    rc->boundingRadius = boundR;
+    node->SetRenderable(rc);
+    parent->AddChild(node);
+    return node;
+}
+
+// ---- HUD ----
+
+static double g_scroll = 0.0;
+static void ScrollCallback(GLFWwindow*, double, double yoff) { g_scroll += yoff; }
+
+static const char* OrderName(SquadOrder o) {
+    switch (o) {
+    case SquadOrder::Hold:       return "駐守";
+    case SquadOrder::MoveTo:     return "移動";
+    case SquadOrder::AttackMove: return "攻進";
+    case SquadOrder::Retreat:    return "撤退";
+    case SquadOrder::Engage:     return "追擊";
+    }
+    return "?";
+}
+
+int main() {
+    const int W = 1440, H = 810;
+
+    OpenGLRenderer renderer;
+    RendererConfig rcfg;
+    rcfg.window.width = W;
+    rcfg.window.height = H;
+    rcfg.window.title = "MingGoRTS - 斷橋攻防戰";
+    rcfg.window.vsync = true;
+    renderer.SetConfig(rcfg);
+    if (!renderer.Initialize()) {
+        std::fprintf(stderr, "[SKIP] no display / renderer init failed\n");
+        return 0;
+    }
+    GLFWwindow* window = static_cast<GLFWwindow*>(renderer.GetWindowHandle());
+    glfwSetScrollCallback(window, ScrollCallback);
+
+    // ImGui(中文字型:微軟正黑體;缺檔退回內建字,中文會顯示 ?)
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+    ImGuiIO& io = ImGui::GetIO();
+    const char* kFont = "C:/Windows/Fonts/msjh.ttc";
+    if (std::filesystem::exists(kFont)) {
+        io.Fonts->AddFontFromFileTTF(kFont, 18.0f, nullptr,
+                                     io.Fonts->GetGlyphRangesChineseFull());
+    }
+
+    auto unitShader = MakeShared<Shader>();
+    if (!unitShader->LoadFromSource(UNIT_VERT, UNIT_FRAG)) {
+        std::fprintf(stderr, "Shader compile failed\n");
+        return 1;
+    }
+    unitShader->Bind();
+    unitShader->SetUniformVec3("uLightDir", Vector3(-0.4f, 1.0f, -0.35f));
+
+    // ---- 地圖 ----
+    BattleMap map;
+    if (!map.LoadFromFile("assets/maps/duanqiao.json")) {
+        std::fprintf(stderr, "cannot load assets/maps/duanqiao.json\n");
+        return 1;
+    }
+    const float CELL = map.GetCellSize();
+    const int GW = map.GetGridWidth(), GH = map.GetGridHeight();
+    const float FW = GW * CELL, FH = GH * CELL;
+
+    BattleController battle(GW, GH, CELL);
+    map.ApplyToField(battle.GetField());
+
+    // ---- 場景:地形 ----
+    SceneGraph scene;
+    auto root = MakeShared<SceneNode>("root");
+    scene.SetRootNode(root);
+
+    auto groundMesh = MakeShared<Mesh>(MakeBox(1.0f, 0.3f, 1.0f));
+    auto waterMesh  = MakeShared<Mesh>(MakeBox(CELL, 0.25f, CELL));
+    auto plankMesh  = MakeShared<Mesh>(MakeBox(CELL, 0.3f, CELL));
+    auto pinMesh    = MakeShared<Mesh>(MakeBox(0.25f, 1.4f, 0.25f));
+    auto propMesh   = MakeShared<Mesh>(MakeBox(0.7f, 0.7f, 0.7f));
+    auto capMesh    = MakeShared<Mesh>(MakeCapsule(0.35f * CELL, 1.6f * CELL));
+    auto ringMesh   = MakeShared<Mesh>(MakeRing(0.55f * CELL, 0.75f * CELL));
+    auto barBgMesh  = MakeShared<Mesh>(MakeBox(1.0f, 0.03f, 0.16f));
+    auto barFillMesh = MakeShared<Mesh>(MakeBox(0.96f, 0.05f, 0.10f));
+
+    auto groundNode = AddStaticBox(root, groundMesh,
+                                   Vector3(FW / 2, -0.15f, FH / 2),
+                                   Vector3(0.16f, 0.22f, 0.15f), "ground", FW);
+    groundNode->SetLocalScale(Vector3(FW, 1, FH));
+
+    // 河面:IsBlocked 的格子鋪水磚(渡口自動留空)
+    for (int y = 0; y < GH; ++y) {
+        for (int x = 0; x < GW; ++x) {
+            if (battle.GetField().IsBlocked(x, y)) {
+                AddStaticBox(root, waterMesh,
+                             Vector3((x + 0.5f) * CELL, -0.05f, (y + 0.5f) * CELL),
+                             Vector3(0.15f, 0.30f, 0.45f), "water", CELL);
+            }
+        }
+    }
+    // 渡口鋪橋板
+    for (const auto& ford : map.GetFords()) {
+        for (int y = 0; y < ford.rect.h; ++y) {
+            for (int x = 0; x < ford.rect.w; ++x) {
+                AddStaticBox(root, plankMesh,
+                             Vector3((ford.rect.x + x + 0.5f) * CELL, 0.02f,
+                                     (ford.rect.y + y + 0.5f) * CELL),
+                             Vector3(0.42f, 0.32f, 0.20f), "ford", CELL);
+            }
+        }
+    }
+    // 圖釘標記
+    for (const auto& pin : map.GetPins()) {
+        AddStaticBox(root, pinMesh,
+                     Vector3(pin.pos.x * CELL, 0.7f, pin.pos.y * CELL),
+                     Vector3(0.85f, 0.75f, 0.30f), "pin", CELL);
+    }
+    // 互動物
+    for (const auto& it : map.GetInteractables()) {
+        Vector3 c = (it.type == "oil_slick") ? Vector3(0.10f, 0.10f, 0.10f)
+                                             : Vector3(0.45f, 0.42f, 0.40f);
+        AddStaticBox(root, propMesh,
+                     Vector3(it.pos.x * CELL, 0.35f, it.pos.y * CELL),
+                     c, "prop", CELL);
+    }
+
+    // ---- 編成(同 DuanqiaoDemo):我 4 隊北岸 / 敵格洛克 4 隊南岸 ----
+    const MapPin* northRally = map.FindPin("北岸集結點");
+    const MapPin* southCamp  = map.FindPin("南岸敵營");
+    battle.CreateSquad("前鋒", 0, Vector2(8.0f, 3.0f),  30);
+    battle.CreateSquad("中軍", 0, Vector2(12.0f, 2.5f), 30);
+    battle.CreateSquad("左翼", 0, Vector2(16.0f, 3.0f), 25);
+    battle.CreateSquad("後衛", 0, Vector2(12.0f, 4.5f), 15);
+    battle.CreateSquad("格洛克親衛", 1, Vector2(12.0f, 12.0f), 35);
+    battle.CreateSquad("蠻兵隊",     1, Vector2(9.0f, 12.5f),  25);
+    battle.CreateSquad("掠奪隊",     1, Vector2(15.0f, 12.5f), 25);
+    battle.CreateSquad("守橋隊",     1, Vector2(12.0f, 10.5f), 20);
+    if (southCamp)  battle.SetObjective(0, southCamp->pos);
+    if (northRally) battle.SetObjective(1, northRally->pos);
+    if (northRally) battle.SetRallyPoint(0, northRally->pos);
+    if (southCamp)  battle.SetRallyPoint(1, southCamp->pos);
+    battle.SetCommandPoints(0, 5);
+    battle.SetCommandPoints(1, 3);
+
+    EnemyGeneral glock = EnemyGeneral::MakeGlock();
+    glock.ApplyTo(battle, 1);
+    BattlePlanner planner;
+    planner.ApplyPlan(battle, planner.GeneratePlan(battle, 0));
+    BattleResources::ApplyMoraleRule(battle);
+
+    // ---- Gameplay → 場景 ----
+    BattleSceneSync sync;
+    sync.Attach(battle, scene, CELL);
+    sync.SetUnitMesh(capMesh);
+    sync.SetOverlayMeshes(ringMesh, barBgMesh, barFillMesh, 2.0f * CELL, 1.2f);
+    sync.Sync(battle);
+
+    // 事件流(HUD + console)
+    std::deque<std::string> eventLog;
+    battle.SetEventCallback([&](const std::string& e) {
+        eventLog.push_back(e);
+        if (eventLog.size() > 8) eventLog.pop_front();
+        std::printf("  [戰報] %s\n", e.c_str());
+    });
+
+    battle.BeginExecution();
+
+    // ---- 相機:RTS 高位俯視,WASD 平移、滾輪升降 ----
+    Camera cam;
+    cam.SetViewport(0, 0, W, H);
+    cam.SetPerspective(50.0f * 3.14159265f / 180.0f, (float)W / H, 0.1f, 300.0f);
+    Vector3 camTarget(FW / 2, 0.0f, FH / 2 - 2.0f);
+    float camHeight = 26.0f, camBack = 13.0f;
+
+    SceneRenderer sceneRenderer;
+    sceneRenderer.SetDefaultShader(unitShader);
+
+    Squad* selected = nullptr;
+    bool paused = false;
+    float speedScale = 1.0f;
+    bool prevL = false, prevR = false, prevSpace = false, prevEsc = false;
+    double prevTime = glfwGetTime();
+
+    std::printf("斷橋可玩 demo — 左鍵選取,右鍵下令(CP),Space 暫停\n");
+
+    while (!renderer.ShouldClose()) {
+        renderer.PollEvents();
+        double now = glfwGetTime();
+        float dt = (float)std::min(now - prevTime, 0.1);
+        prevTime = now;
+
+        int dw, dh;
+        glfwGetFramebufferSize(window, &dw, &dh);
+        if (dw > 0 && dh > 0) {
+            renderer.SetViewport(0, 0, dw, dh);
+            cam.SetViewport(0, 0, dw, dh);
+            cam.SetPerspective(50.0f * 3.14159265f / 180.0f,
+                               (float)dw / dh, 0.1f, 300.0f);
+        }
+
+        // ---- 鍵盤 ----
+        bool space = glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
+        if (space && !prevSpace) paused = !paused;
+        prevSpace = space;
+        bool esc = glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS;
+        if (esc && !prevEsc) { selected = nullptr; sync.SetSelectedSquad(nullptr); }
+        prevEsc = esc;
+        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) speedScale = 0.5f;
+        if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) speedScale = 1.0f;
+        if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) speedScale = 2.0f;
+
+        float pan = 12.0f * dt;
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camTarget.z -= pan;
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camTarget.z += pan;
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camTarget.x -= pan;
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camTarget.x += pan;
+        camTarget.x = std::max(0.0f, std::min(camTarget.x, FW));
+        camTarget.z = std::max(0.0f, std::min(camTarget.z, FH));
+        camHeight = std::max(10.0f,
+                     std::min(camHeight - (float)g_scroll * 2.0f, 45.0f));
+        g_scroll = 0.0;
+        cam.SetPosition(Vector3(camTarget.x, camHeight, camTarget.z + camBack));
+        cam.SetTarget(camTarget);
+
+        battle.SetTimeScale(paused ? 0.0f : speedScale);
+
+        // ---- 滑鼠點選/下令(只在執行中且未分勝負)----
+        bool live = battle.GetPhase() == BattlePhase::Execution &&
+                    battle.GetOutcome() == BattleOutcome::Ongoing;
+        double mx, my;
+        glfwGetCursorPos(window, &mx, &my);
+        bool lmb = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+        bool rmb = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+        bool lClick = lmb && !prevL, rClick = rmb && !prevR;
+        prevL = lmb; prevR = rmb;
+
+        if (live && !io.WantCaptureMouse && (lClick || rClick)) {
+            PickRay ray = BattlePicker::ScreenToWorldRay(cam, (float)mx, (float)my);
+            if (lClick) {
+                Squad* hit = BattlePicker::PickSquad(battle, 0, ray, CELL);
+                selected = hit;
+                sync.SetSelectedSquad(hit);
+            } else if (selected) {
+                Squad* enemy = BattlePicker::PickSquad(battle, 1, ray, CELL);
+                bool ok = false;
+                if (enemy) {
+                    ok = battle.Intervene(selected, SquadOrder::Engage, enemy);
+                } else {
+                    Vector3 g;
+                    if (BattlePicker::IntersectGround(ray, 0.0f, g)) {
+                        Vector2 cell = BattlePicker::WorldToCell(g, CELL);
+                        cell.x = std::max(0.0f, std::min(cell.x, (float)GW - 0.5f));
+                        cell.y = std::max(0.0f, std::min(cell.y, (float)GH - 0.5f));
+                        ok = battle.Intervene(selected, SquadOrder::AttackMove, cell);
+                    }
+                }
+                if (!ok) {
+                    eventLog.push_back("下令失敗(CP 不足或目標無效)");
+                    if (eventLog.size() > 8) eventLog.pop_front();
+                }
+            }
+        }
+
+        // 選中的小隊不在了(潰逃/全滅)就解除選取
+        if (selected && (selected->IsEliminated() || selected->IsRouting())) {
+            selected = nullptr;
+            sync.SetSelectedSquad(nullptr);
+        }
+
+        battle.Update(dt);
+        sync.Sync(battle);
+
+        // ---- 渲染 ----
+        renderer.SetClearColor(Vector3(0.07f, 0.09f, 0.13f));
+        renderer.Clear();
+        renderer.EnableDepthTest(true);
+        renderer.EnableCulling(false); // 手排頂點繞序不保證 CCW
+        sceneRenderer.Render(scene, cam);
+
+        // ---- HUD ----
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::SetNextWindowPos(ImVec2(8, 8), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(300, 0), ImGuiCond_Always);
+        ImGui::Begin("斷橋指揮", nullptr,
+                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::Text("階段: %s%s",
+                    battle.GetPhase() == BattlePhase::Execution ? "執行" :
+                    battle.GetPhase() == BattlePhase::Deployment ? "部署" : "結算",
+                    paused ? "(暫停)" : "");
+        ImGui::Text("CP: %d   倍速: %.1fx   時間: %.0fs",
+                    battle.GetCommandPoints(0), paused ? 0.0f : speedScale,
+                    battle.GetElapsed());
+        ImGui::Separator();
+        if (selected) {
+            ImGui::Text("選取: %s", selected->GetName().c_str());
+            ImGui::Text("兵力 %d/%d  士氣 %.0f%%  命令 %s",
+                        selected->GetMembers(), selected->GetMaxMembers(),
+                        selected->GetMorale() * 100.0f,
+                        OrderName(selected->GetOrder()));
+        } else {
+            ImGui::TextDisabled("未選取小隊(左鍵點選)");
+        }
+        ImGui::Separator();
+        ImGui::TextDisabled("左鍵選取 | 右鍵下令 | Space 暫停 | 1/2/3 倍速");
+        ImGui::TextDisabled("WASD 平移 | 滾輪縮放 | Esc 取消選取");
+        ImGui::End();
+
+        // 事件流
+        ImGui::SetNextWindowPos(ImVec2(8, (float)dh - 190), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(430, 182), ImGuiCond_Always);
+        ImGui::Begin("戰況", nullptr,
+                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
+        for (const auto& e : eventLog) ImGui::TextUnformatted(e.c_str());
+        ImGui::End();
+
+        // 戰果 banner
+        if (battle.GetOutcome() != BattleOutcome::Ongoing) {
+            const char* txt = battle.GetOutcome() == BattleOutcome::Victory ? "勝 利"
+                            : battle.GetOutcome() == BattleOutcome::Defeat  ? "敗 北"
+                                                                          : "平 手";
+            ImVec4 col = battle.GetOutcome() == BattleOutcome::Victory
+                             ? ImVec4(0.4f, 1.0f, 0.4f, 1.0f)
+                         : battle.GetOutcome() == BattleOutcome::Defeat
+                             ? ImVec4(1.0f, 0.4f, 0.4f, 1.0f)
+                             : ImVec4(1.0f, 1.0f, 0.4f, 1.0f);
+            ImGui::SetNextWindowPos(ImVec2(dw * 0.5f - 120, dh * 0.35f),
+                                    ImGuiCond_Always);
+            ImGui::SetNextWindowSize(ImVec2(240, 0), ImGuiCond_Always);
+            ImGui::Begin("##outcome", nullptr,
+                         ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs |
+                         ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::SetWindowFontScale(2.2f);
+            ImGui::TextColored(col, "%s", txt);
+            ImGui::End();
+        }
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        renderer.SwapBuffers();
+    }
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    renderer.Shutdown();
+    return 0;
+}

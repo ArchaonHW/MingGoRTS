@@ -2,6 +2,10 @@
 
 ## Current
 
+- E-Assets（2026-09-18）：WEB3 天使軍團 16:9 預告片分鏡 + AI 生成 prompts → `_bmad-output/E-Assets/videos/web3-angel-legion-trailer-16x9.md`（8 鏡 ~50s + 30s 精簡版，本機無 AI 影片服務，prompt 供外部工具）
+- 同日：改寫為 MiniMax-H3 原生三段式 prompts → `web3-angel-legion-h3-prompts.md`（5 次 T2VA 生成，自帶音訊；本機無 GPU/權重，走 API 或 hailuoai.video）
+- AI 訓練（2026-09-18）：補完 `AI/ReinforcementLearning` 三個空實作——DQN 真 TD 訓練（target net bootstrap + TrainStep）、PG REINFORCE（baseline 標準化）、AC critic/actor 更新；輸出層全改 `linear`（Q 值可負）；新增 `DQNAgent::Serialize/Deserialize/SeedWeights/SetExplorationRate`（策略持久化 + 可重現訓練）。新測試 `BattleTrainerDemo`：BattleCommandEnv 包 BattleController（15 維 state、5 動作、CP 介入語義），160→200 ep DQN 訓練後同 seed 評估 30/30 勝、+1.285 vs 基線 0——確定性（SeedWeights+SetSeed+seeded env）。已入 POTATO_TESTS（7.3s）。
+
 - Spec: `_bmad-output/implementation-artifacts/spec-ide-dev-assistant.md` (status: approved 2026-09-17, baseline d5eff75)
 - Branch: `feat/gameplay-doctrine-battle`（dev-assistant 工作來自 `feat/engine-security-hardening` 系列 commit）
 - Activity: [T] Acceptance Testing — 2026-09-17 重跑驗證 PASS（smoke 18/18、ctest 12/12、banned 0），已簽核 SO-001

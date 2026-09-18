@@ -2,7 +2,7 @@
 # 每個 item 走完：pick → spec (gds-quick-dev) → implement → verify → review → commit
 # 規則見 auto-dev-workflow.md
 version: 1
-updated: 2026-09-18 (U-1 done; N 層敘事系統新增)
+updated: 2026-09-19 (U-1 全層 done；V/F/E/D 層工作項拆分)
 
 queue:
 
@@ -693,3 +693,210 @@ queue:
       的掃入）；本 commit 補 DemoAssets.h/UITheme.h/fonts/tools/spec。
       dist 包 32MB:exe+maps+fonts+README。
     size: L
+
+  # ---- 層級 V：收斂與衛生（2026-09-19 專案建議拆分）----
+  - id: V-1
+    title: 工作區衛生——規劃文件入帳 + 產物 gitignore
+    source: 2026-09-19 專案開發建議 #2
+    summary: >
+      未追蹤規劃資產入帳（game-architecture.md、spec-e7、sprint-status、
+      REFERENCE_GAMES_MECHANICS、E-Assets、README 重寫、epics Epic D/E/F）；
+      dist/ output/ imgui.ini *_test.json 等產物補進 .gitignore。
+    acceptance:
+      - 規劃文件全數 tracked，工作區只剩程式在途檔
+      - 產物類檔案不再出現在 git status
+    status: queued
+    size: S
+    note: 非程式工作；VideoEncoder 等平行 session 熱檔不動
+
+  - id: V-2
+    title: PR #4 功能凍結 + 真機驗證 → merge 決策
+    source: 2026-09-19 專案開發建議 #1/#3
+    summary: >
+      136+ commits 的整合 PR 進入凍結：人工玩完 dist demo 全程
+      （四主題/整補營/戰報/再戰）、記 UX 斷點，作為 merge 前品質閘門。
+    acceptance:
+      - dist/MingGoRTS-Demo 完整玩過一輪並記錄問題
+      - merge / 續養決策有憑據
+    status: queued
+    size: S
+    note: 人工項；E-7 收尾後即截止點，勿再無限期長大
+
+  # ---- 層級 F：呈現層補完（epics Epic F stories）----
+  - id: F-1
+    title: Sprite atlas 管線（最大共享依賴）
+    source: epics.md Story F.1 + UX feasibility review
+    summary: >
+      sprite 圖集 + JsonValue 索引（frame name→uv rect）載入，
+      單位圖示/村莊/神社共用單一 texture bind；缺 frame 降級預設圖塊。
+      解鎖全部視覺工作（D.2 神社、D.5 滲透視效、單位外觀）。
+    acceptance:
+      - atlas 載入 + uv 查表 headless 可驗（無 GL 依賴）
+      - 至少一個消費端（小地圖圖示或雲標記）改用 sprite
+    status: queued
+    size: L
+    note: UX review 認定最大共享依賴；rect 降級規則保留
+
+  - id: F-2
+    title: UI scale 真管線（75–150%）
+    source: epics.md Story F.2
+    summary: >
+      uiScale 不再只縮字——spacing/字級/panel 全經 scale 因子，
+      錨點不動（UX-DR4）；potato.settings/1 持久化、即時生效。
+    acceptance:
+      - 0.75/1.5 邊界值排版不破框
+      - 設定存檔持久、免重啟
+    status: queued
+    size: M
+    note: U-1 已做 ScaleAllSizes 粗版；本項為全 token 真管線
+
+  - id: F-3
+    title: HUD 密度三檔（minimal/standard/verbose）
+    source: epics.md Story F.3 + EXPERIENCE.md
+    summary: >
+      資訊密度玩家可調：minimal 僅士氣/CP/目標、standard 加
+      doctrine 牌+小地圖、verbose 加霧機率/執行率/帳本計數；
+      關鍵情報（崩潰/倒數）三檔恆在。
+    acceptance:
+      - 三檔切換免重啟、存檔持久
+      - 必要雙編碼資訊不被裁撤
+    status: queued
+    size: M
+    note: 執行層 12+ 項常駐資訊的分層答案
+
+  - id: F-4
+    title: Audio milestone（miniaudio vendor）
+    source: epics.md Story F.4 + UX「滲透聲先於形」
+    summary: >
+      external/miniaudio/ vendored（README 記來源/版本/license）；
+      doctrine 觸發/士氣崩潰/滲透升級/UI 點擊事件音；
+      音檔缺失靜音降級、audio 初始化失敗遊戲照跑。
+    acceptance:
+      - 事件音效對應播放、滲透 2 級音景循環
+      - 無音檔/無裝置不崩潰
+    status: queued
+    size: L
+    note: additive milestone——不阻塞 F-1/D 層
+
+  - id: F-5
+    title: 字體打包完整性收尾
+    source: epics.md Story F.5
+    summary: >
+      assets/fonts/ libre CJK 已於 U-1 落地；本項收尾——
+      載入失敗邊界框降級 + chronicler 字級規範（UX-DR3）驗證。
+    acceptance:
+      - 無系統字體依賴驗證（乾淨環境測試）
+      - 字體載入失敗有降級路徑
+    status: queued
+    size: S
+    note: U-1 已覆蓋大半；補降級與字級驗收即可
+
+  # ---- 層級 E：戰役與無戰章節（epics Epic E stories；依賴 E-7）----
+  - id: E-7a
+    title: CampaignState facade + 章節邊界存檔（E-7 骨架）
+    source: spec-e7-campaign-frame + game-architecture.md
+    summary: >
+      Facade 聚合戰役狀態（Camp/Ledger/Dossier/MythLog），
+      potato.campaign/1 章節邊界聚合存檔；AdvanceChapter 推進。
+    acceptance:
+      - CampaignStateTest roundtrip/壞檔拒絕/原子寫全綠
+      - DuanqiaoPlayable 整補營改由 facade 持有（已接線）
+    status: in-progress
+    size: L
+    note: 平行 session 動工中；完成後解鎖 E/D/N-6 全鏈
+
+  - id: E-1
+    title: 無戰章節定義與門檻（談判/嚇阻/顛覆）
+    source: epics.md Story E.1/E.2/E.3
+    summary: >
+      章節定義 noBattle flag + 無戰選項集：談判（民心消費）、
+      嚇阻（軍威判定）、顛覆（IntelLedger verified 條目兌換內應）；
+      門檻不滿足灰顯可見；失敗進戰鬥且敵獲首波優勢。
+    acceptance:
+      - 三條無戰路徑各有門檻與代價結構
+      - 判定結果入帳本（Record-is-Truth）
+    status: queued
+    size: L
+    note: 依賴 E-7a + N-4 disposition；「不戰之力」主題支柱
+
+  - id: E-4
+    title: 無戰章節敘事與結算
+    source: epics.md Story E.4
+    summary: >
+      無戰戰報（HistorianReport 和平語域 register）+ 欲知後事收尾 +
+      敵將去向入帳（收服者不列陣亡）+ GovernedPeace 結局軌跡。
+    acceptance:
+      - 無戰章節同樣被書寫不留白
+      - 結局階梯計入無戰軌跡
+    status: queued
+    size: M
+    note: 依賴 E-1 + ChapterConventions（已落地）
+
+  # ---- 層級 D：神話雙層（epics Epic D stories；依賴 E-7a + N-5）----
+  - id: D-1
+    title: MythLayer 滲透狀態機（quiet→anomalies→seep→manifest）
+    source: epics.md Story D.1 + game-architecture Seepage SM
+    summary: >
+      區域滲透等級隨治理/屠殺密度/神明態度推進四階，
+      章內只升不降、跨章從 CampaignState 重推導；全 headless。
+    acceptance:
+      - 閾值轉換錄事件、等級單調
+      - 渲染層唯讀消費（架構邊界）
+    status: queued
+    size: L
+    note: 神話層機械骨幹；D-2~D-5 全掛在它上面
+
+  - id: D-2
+    title: 神社與精靈實體（可互動第二張地圖）
+    source: epics.md Story D.2
+    summary: >
+      BattleMap shrine 節點（位置/神祇/供品態）；小隊進駐觸發
+      安撫/挑釁/獻祭選項入 Recorder；GodStance favor 寫入；
+      供品桌追蹤民心（環境敘事）。
+    acceptance:
+      - 進駐觸發互動、選擇入帳
+      - 視覺狀態供渲染層讀取
+    status: queued
+    size: L
+    note: 依賴 D-1 + F-1（神社 sprite）；BattleMap schema 擴充
+
+  - id: D-3
+    title: 天命貨幣與轉換
+    source: epics.md Story D.3
+    summary: >
+      安撫神明累積天命，可兌換民心/秩序（章節邊界或戰中有限次）；
+      favor 不足選項灰顯可見不隱藏。
+    acceptance:
+      - 兌換扣 favor 加治理軸、事件入帳
+      - 門檻可見性（灰顯）規則成立
+    status: queued
+    size: M
+    note: 依賴 D-2；神話行為機械放大治理
+
+  - id: D-4
+    title: 神話入侵事件（鬼軍夜行/狐仙假訊）
+    source: epics.md Story D.4
+    summary: >
+      章節定義或滲透等級觸發 mid-battle 入侵：鬼軍單位出現或
+      假情報注入，戰鬥短暫暫停提示；安撫成功治理加分、
+      忽視滲透推進；事件入 MythLog 具名三欄。
+    acceptance:
+      - 入侵觸發/效果/記錄鏈完整
+      - 稀有性守衛（意義改變者才用）
+    status: queued
+    size: L
+    note: 依賴 D-1 + D-2 + N-5（已落地）
+
+  - id: D-5
+    title: 滲透視效消費端（UX-DR5）
+    source: epics.md Story D.5 + UX seepage spec
+    summary: >
+      等級 1 局部異常（霧色偏移/陰影錯位）→ 等級 2 音景先於視覺
+      + 物件微移 → 等級 3 全主題切換（token swap + scrim）；
+      轉換期間關鍵資訊雙編碼恆在；motion-reduction 降 crossfade。
+    acceptance:
+      - 三階視效規則實裝、渲染層唯讀
+      - DESIGN 禁令（關鍵資訊可讀）不違規
+    status: queued
+    size: L
+    note: 依賴 D-1 + F-1 + F-4；神話層的視覺簽名

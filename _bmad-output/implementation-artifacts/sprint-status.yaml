@@ -1,0 +1,101 @@
+# generated: 2026-09-18
+# last_updated: 2026-09-18
+# project: MingGoRTS
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: {implementation_artifacts}
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epics A..G map to epics.md "Epic X Stories" sections (lettered, not numbered)
+# - Parallel-landed code (CampaignState/CampaignLedger/MythLog/HistorianReport)
+#   noted in epics.md; story status stays backlog until its AC is verified
+# - Legacy spec-*.md files belong to the auto-dev-queue system, not BMAD stories
+
+generated: 2026-09-18
+last_updated: 2026-09-18
+project: MingGoRTS
+project_key: NOKEY
+tracking_system: file-system
+story_location: "{implementation_artifacts}"
+
+development_status:
+  # Epic A — 治理之軸實裝
+  epic-a: backlog
+  a-1-village-occupation-morale: backlog
+  a-2-surrender-defection-ledger: backlog
+  a-3-convoy-entity-path: backlog
+  a-4-convoy-settlement-raiding: backlog
+  a-5-governance-accumulator: backlog
+  epic-a-retrospective: optional
+
+  # Epic B — 戰役持久骨架
+  epic-b: backlog
+  b-1-potato-log: backlog
+  b-2-chapter-definition-pack: backlog
+  b-3-save-load-integrity: backlog
+  b-4-chapter-boundary-save: backlog
+  b-5-chapter-map-shell: backlog
+  epic-b-retrospective: optional
+
+  # Epic C — 敘事戰役系統
+  epic-c: backlog
+  c-1-intel-ledger: backlog
+  c-2-narrative-pack: backlog
+  c-3-chapter-conventions: backlog
+  c-4-god-stance: backlog
+  c-5-ending-page: backlog
+  epic-c-retrospective: optional
+
+  # Epic D — 神話雙層
+  epic-d: backlog
+  d-1-myth-layer-seepage: backlog
+  d-2-shrine-spirit-entities: backlog
+  d-3-fate-conversion: backlog
+  d-4-myth-incursion-events: backlog
+  d-5-seepage-visual-consumer: backlog
+  epic-d-retrospective: optional
+
+  # Epic E — 無戰章節
+  epic-e: backlog
+  e-1-no-battle-chapter-thresholds: backlog
+  e-2-negotiation-deterrence: backlog
+  e-3-subversion-insider: backlog
+  e-4-no-battle-narrative-settlement: backlog
+  epic-e-retrospective: optional
+
+  # Epic F — 呈現層補完
+  epic-f: backlog
+  f-1-sprite-atlas-pipeline: backlog
+  f-2-ui-scale-pipeline: backlog
+  f-3-hud-density-tiers: backlog
+  f-4-audio-miniaudio: backlog
+  f-5-bundled-cjk-fonts: backlog
+  epic-f-retrospective: optional
+
+  # Epic G — 內容與工具
+  epic-g: backlog
+  g-1-doctrine-card-pool: backlog
+  g-2-deck-looting: backlog
+  g-3-general-editor: backlog
+  g-4-sandbox-simulator: backlog
+  g-5-tutorial-chapter: backlog
+  epic-g-retrospective: optional

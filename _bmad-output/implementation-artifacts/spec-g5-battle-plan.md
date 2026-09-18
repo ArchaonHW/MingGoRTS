@@ -2,7 +2,7 @@
 title: 'G-5 作戰計畫箭頭（HOI4 battle plan → doctrine）'
 type: 'feature'
 created: '2026-09-18'
-status: 'in-progress'
+status: 'done'
 route: 'dispatch'
 review_loop_iteration: 0
 baseline_commit: '65a4227'
@@ -56,10 +56,10 @@ context:
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] `CMakeLists.txt` — register `Gameplay/BattlePlan.cpp` in the Gameplay library; add `BattlePlanTest` target and `POTATO_TESTS` entry.
-- [ ] `Examples/BattlePlanTest.cpp` — verify existing draft compiles and passes; extend only if a matrix row lacks coverage.
-- [ ] `Examples/DuanqiaoPlayable.cpp` — planning-phase arrow drawing (modifier+drag), arrow visualization (scene-node lines or ImGui overlay), `plan.Apply` on 開戰, arrow list shown in the planning panel.
-- [ ] `Gameplay/BattlePlan.cpp` — fix any defects found while wiring/verifying (e.g. `Apply` re-run double-multiplying attackMul, FromJson leaving stale `hasRally` when JSON lacks the field).
+- [x] `CMakeLists.txt` — register `Gameplay/BattlePlan.cpp` in the Gameplay library; add `BattlePlanTest` target and `POTATO_TESTS` entry.
+- [x] `Examples/BattlePlanTest.cpp` — verify existing draft compiles and passes; extend only if a matrix row lacks coverage.
+- [x] `Examples/DuanqiaoPlayable.cpp` — planning-phase arrow drawing (modifier+drag), arrow visualization (scene-node lines or ImGui overlay), `plan.Apply` on 開戰, arrow list shown in the planning panel.
+- [x] `Gameplay/BattlePlan.cpp` — fix any defects found while wiring/verifying (e.g. `Apply` re-run double-multiplying attackMul, FromJson leaving stale `hasRally` when JSON lacks the field).
 
 **Acceptance Criteria:**
 - Given a plan with a named arrow, when `Apply` runs, then that squad receives the translated DoctrineSet (serializable via `potato.doctrine_set/1`) and advances toward the arrow target during execution.

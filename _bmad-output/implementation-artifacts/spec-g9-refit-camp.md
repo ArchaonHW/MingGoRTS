@@ -70,10 +70,10 @@ struct VeteranUnit {
 
 ## Acceptance
 
-- [ ] 兩場戰鬥之間狀態跨場持續（RefitCamp 跨場存活 + 存檔）
-- [ ] 招募/恢復消費戰利品（不足拒絕）
-- [ ] 傷兵入池可恢復、陣亡單位移除
-- [ ] RefitCampTest 全綠；MSVC + MinGW 建置；無回歸
+- [x] 兩場戰鬥之間狀態跨場持續（RefitCamp 跨場存活 + 存檔）
+- [x] 招募/恢復消費戰利品（不足拒絕）
+- [x] 傷兵入池可恢復、陣亡單位移除
+- [x] RefitCampTest 全綠；MSVC + MinGW 建置；無回歸
 
 ## Files
 
