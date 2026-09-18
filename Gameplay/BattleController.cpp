@@ -142,6 +142,34 @@ bool BattleController::Intervene(Squad* squad, SquadOrder order,
     return true;
 }
 
+void BattleController::SetRoutShock(float radius, float moraleHit) {
+    routShockRadius = (radius > 0.0f) ? radius : 0.0f;
+    routShockMorale = moraleHit;
+}
+
+void BattleController::ApplyRoutShock() {
+    if (routShockRadius <= 0.0f || routShockMorale <= 0.0f) return;
+    for (const auto& r : squads) {
+        // 每支潰逃隊只擴散一次（IsRouting 終態，不會重複進入）
+        if (!r->IsRouting() || routEmitted.count(r.get())) continue;
+        routEmitted.insert(r.get());
+        Emit(r->GetName() + " 潰逃！恐慌向友軍擴散");
+        for (const auto& o : squads) {
+            if (o.get() == r.get() || o->GetTeam() != r->GetTeam() ||
+                o->IsEliminated() || o->IsRouting()) {
+                continue;
+            }
+            const float dist =
+                (o->GetPosition() - r->GetPosition()).Length();
+            if (dist <= routShockRadius) {
+                o->AdjustMorale(-routShockMorale);
+                // 被擊潰者下個 tick 成為新的震源 → 連鎖
+                Emit(o->GetName() + " 目睹友軍潰逃，士氣動搖");
+            }
+        }
+    }
+}
+
 void BattleController::SetMoraleExecution(float threshold, float rate) {
     moraleExecThreshold = threshold;
     moraleExecRate = rate;
@@ -190,6 +218,7 @@ void BattleController::Update(float realDt) {
     }
 
     ResolveCombat(dt);
+    ApplyRoutShock(); // G-1：傷亡結算後擴散潰逃衝擊
 
     // Q-1 敵情霧：情報時效/退相干推進 + 接觸偵查（正負面觀測）
     if (fog) {

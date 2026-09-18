@@ -181,6 +181,71 @@ int main() {
         failures++;
     }
 
+    // ---- G-1 士氣連鎖潰逃（TW chain rout）----
+    // a 潰逃 → 半徑內友軍吃衝擊 → 低士氣的 near 跟著崩 → 同 tick 繼續
+    // 向外傳給 far；敵軍與半徑外的錨點不受影響
+    {
+        printf("\n-- G-1 chain rout --\n");
+        BattleController cb(12, 12, 1.0f);
+        cb.SetRoutShock(/*radius=*/5.0f, /*moraleHit=*/0.4f);
+        Squad* a    = cb.CreateSquad("潰隊", 0, Vector2(2, 5), 10);
+        Squad* near = cb.CreateSquad("近鄰", 0, Vector2(4, 5), 10);
+        Squad* far  = cb.CreateSquad("遠哨", 0, Vector2(9, 5), 10);
+        Squad* anch = cb.CreateSquad("錨點", 0, Vector2(9, 9), 10);
+        Squad* foe  = cb.CreateSquad("敵軍", 1, Vector2(4, 7), 10);
+        if (!cb.BeginExecution()) {
+            printf("FAIL: chain-rout battle did not start\n");
+            failures++;
+        }
+        near->AdjustMorale(-0.75f);   // 0.25——吃一發衝擊就會崩
+        a->AdjustMorale(-1.0f);       // 士氣歸零 → routing
+        if (!a->IsRouting()) {
+            printf("FAIL: zero morale did not rout\n");
+            failures++;
+        }
+        cb.Update(0.05f);             // 衝擊擴散 + 同 tick 連鎖
+
+        if (!near->IsRouting()) {
+            printf("FAIL: chain rout did not break neighbor (morale %.2f)\n",
+                   near->GetMorale());
+            failures++;
+        }
+        if (std::fabs(far->GetMorale() - 0.6f) > 0.01f) {
+            printf("FAIL: chained shock did not reach far (morale %.2f)\n",
+                   far->GetMorale());
+            failures++;
+        }
+        if (far->IsRouting()) {
+            printf("FAIL: high-morale squad should hold the chain\n");
+            failures++;
+        }
+        if (std::fabs(anch->GetMorale() - 1.0f) > 0.001f) {
+            printf("FAIL: out-of-radius squad affected (%.2f)\n",
+                   anch->GetMorale());
+            failures++;
+        }
+        if (std::fabs(foe->GetMorale() - 1.0f) > 0.001f) {
+            printf("FAIL: enemy squad affected by friendly rout (%.2f)\n",
+                   foe->GetMorale());
+            failures++;
+        }
+    }
+
+    // 關閉（預設）：潰逃不產生衝擊——回歸語義不變
+    {
+        BattleController nb(10, 10, 1.0f);
+        Squad* a = nb.CreateSquad("潰隊", 0, Vector2(2, 5), 10);
+        Squad* b = nb.CreateSquad("鄰隊", 0, Vector2(3, 5), 10);
+        nb.BeginExecution();
+        a->AdjustMorale(-1.0f);
+        nb.Update(0.05f);
+        if (std::fabs(b->GetMorale() - 1.0f) > 0.001f) {
+            printf("FAIL: rout shock fired while disabled (%.2f)\n",
+                   b->GetMorale());
+            failures++;
+        }
+    }
+
     printf(failures == 0 ? "\nALL CHECKS PASSED\n" : "\n%d CHECK(S) FAILED\n",
            failures);
     return failures;

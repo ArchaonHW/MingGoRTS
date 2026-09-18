@@ -371,9 +371,15 @@ queue:
       - A 潰逃時範圍內友軍 morale 下降（可配置衰減）
       - 範圍外/敵軍不受影響；連鎖可被高士氣部隊擋住
       - DoctrineBattleDemo 無回歸；新增斷言進 BattleSceneTest 或獨立測試
-    status: queued
+    status: done
+    note: >
+      BattleController::SetRoutShock(radius, moraleHit)——潰逃轉換偵測
+      （routEmitted 每隊一次），半徑內同隊友軍 AdjustMorale 減益，
+      被擊潰者同 tick 續傳 → 連鎖；預設關閉保回歸。DoctrineBattleDemo
+      新增情境：a潰→near跟崩→far -0.4、敵軍與半徑外錨點不動、
+      高士氣擋住連鎖、關閉時零效果；DuanqiaoPlayable 接
+      SetRoutShock(4格, 0.15)。ALL CHECKS PASSED。
     size: S
-    note: BattleController 目前平行 session 熱區——實作前先確認檔案穩定
 
   - id: G-3
     title: 疲勞系統（TW fatigue）

@@ -410,6 +410,8 @@ int main() {
     res.Setup(battle, 0, /*intel=*/8, /*cp=*/5);
     res.Setup(battle, 1, /*intel=*/0, /*cp=*/3);
     BattleResources::ApplyMoraleRule(battle);
+    // G-1 士氣連鎖：潰逃隊對 4 格內友軍造成 15% 士氣衝擊（可連鎖）
+    battle.SetRoutShock(/*radius=*/4.0f, /*moraleHit=*/0.15f);
 
     // ---- Q-1/Q-3 敵情霧:敵軍以疊加態存在,觀測或接觸才塌縮 ----
     // 觀測 2 情報全額買斷;探測 1 情報讓雲向真值收縮(弱觀測)

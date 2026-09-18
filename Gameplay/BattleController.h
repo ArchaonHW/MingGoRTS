@@ -11,6 +11,8 @@
 #include <random>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
+#include <unordered_set>
 #include <vector>
 
 namespace Potato {
@@ -90,6 +92,11 @@ public:
     // （rate 1.0 = 關閉此規則）
     void SetMoraleExecution(float threshold, float rate);
 
+    // G-1 士氣連鎖潰逃（TW chain rout）：小隊潰逃時，radius（格）內
+    // 同隊友軍吃 moraleHit 士氣減益；被擊潰者再向外傳染 → 連鎖。
+    // 高士氣部隊挨過減益即擋下連鎖。radius<=0（預設）= 關閉。
+    void SetRoutShock(float radius, float moraleHit);
+
     // 部署完畢 → 進入即時執行（不再能改 doctrine）
     bool BeginExecution();
 
@@ -135,6 +142,7 @@ private:
     void UpdateContexts();
     void CheckOutcome();
     void Emit(const std::string& msg);
+    void ApplyRoutShock(); // G-1：偵測新潰逃 → 範圍士氣衝擊（每隊一次）
 
     SquadContext BuildContext(const Squad& squad) const;
     FlowField* GetTeamField(int team);
@@ -167,6 +175,9 @@ private:
     float elapsed;
     float moraleExecThreshold = 0.0f; // 0 = 關閉
     float moraleExecRate = 1.0f;
+    float routShockRadius = 0.0f;     // G-1：<=0 關閉
+    float routShockMorale = 0.0f;
+    std::unordered_set<Squad*> routEmitted; // 已擴散過的潰逃隊
     mutable std::mt19937 execRng{std::random_device{}()};
 
     static constexpr float DOCTRINE_INTERVAL = 0.25f; // 每 0.25s 遊戲時間評估一次
