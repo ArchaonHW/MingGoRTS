@@ -48,11 +48,11 @@ development_status:
   epic-a-retrospective: optional
 
   # Epic B — 戰役持久骨架
-  epic-b: backlog
+  epic-b: in-progress
   b-1-potato-log: backlog
-  b-2-chapter-definition-pack: backlog
-  b-3-save-load-integrity: backlog
-  b-4-chapter-boundary-save: backlog
+  b-2-chapter-definition-pack: done
+  b-3-save-load-integrity: done
+  b-4-chapter-boundary-save: done
   b-5-chapter-map-shell: backlog
   epic-b-retrospective: optional
 
