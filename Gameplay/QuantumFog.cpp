@@ -95,8 +95,7 @@ bool QuantumFog::Observe(int entityId, const Vector2& truePos) {
             const int modal = ModalCandidate(e);
             const double c =
                 std::cos(e.phases[tgt] - e.phases[modal]);
-            e.lastObserveAt = fogTime;
-            if (c < 0.0) {
+            if (!(c >= 0.0)) { // !(>=0) 同時擋掉負值與 NaN
                 Emit("fog:interference #" + std::to_string(entityId) +
                      " " + e.name + " 破壞性干涉,觀測被拒");
                 return false;
@@ -235,11 +234,20 @@ bool QuantumFog::SetEntityPhases(int entityId,
         return false;
     }
     UncertainEntity& e = entities[entityId];
+    if (phases.empty()) { // 空輸入 = 清除相位資訊
+        e.phases.clear();
+        return true;
+    }
+    for (double p : phases) {
+        if (!std::isfinite(p)) return false; // NaN/Inf 相位拒絕
+    }
     e.phases.assign(e.candidates.size(), 0.0);
     for (size_t i = 0; i < phases.size() && i < e.phases.size(); ++i) {
         e.phases[i] = phases[i];
     }
-    e.state.SetPhases(e.phases); // 振幅帶相位——decoherence 會沖掉
+    // 先把振幅歸零相位再乘——SetPhases 是乘法旋轉,重複注入不累積
+    e.state.SetProbabilities(e.state.Probabilities());
+    e.state.SetPhases(e.phases);
     return true;
 }
 
@@ -347,6 +355,7 @@ int QuantumFog::ObserveRandom(int entityId) {
     e.revealed = true;
     e.revealedPos = e.candidates[outcome];
     e.revealTimer = intelDuration;
+    e.lastObserveAt = fogTime; // 情報測量也上干涉時鐘
     if (!was) {
         Emit("fog:observe #" + std::to_string(entityId) + " " + e.name +
              " → 候選" + std::to_string(outcome));
@@ -356,14 +365,18 @@ int QuantumFog::ObserveRandom(int entityId) {
 }
 
 void QuantumFog::Update(float dt) {
+    if (!(dt >= 0.0f)) return; // 負/NaN dt 不倒轉時鐘不加時
     fogTime += dt; // 時鐘推進 → 跨 tick 的觀測不再構成「同刻雙測」
     for (auto& e : entities) {
         if (e.revealed) {
             if (intelDuration > 0.0f) {
                 e.revealTimer -= dt;
                 if (e.revealTimer <= 0.0f) {
-                    // 情報過期：回到疊加態（以先驗分佈重建）
+                    // 情報過期：回到疊加態（以先驗分佈重建）；
+                    // 相位與干涉時鐘隨退相干一併歸零
                     e.revealed = false;
+                    e.phases.clear();
+                    e.lastObserveAt = -1.0;
                     e.state.SetProbabilities(e.priors);
                     Emit("fog:expire " + e.name + " 情報過期回雲");
                 }

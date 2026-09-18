@@ -429,6 +429,8 @@ static void TestQuantumFogInterference() {
     // flag 開啟:同 tick 二次觀測,目標相位差 π → 破壞性拒絕
     fog.SetInterferenceEnabled(true);
     CHECK(fog.InterferenceEnabled(), "干涉開關生效");
+    CHECK(fog.SetEntityPhases(id, {0.0, 3.141592653589793}),
+          "過期後重新注入相位");
     CHECK(fog.Observe(id, Vector2(0.1f, 0.1f)), "重觀測(主峰=候選0)");
     CHECK(!fog.Observe(id, Vector2(3.9f, 0.1f)),
           "破壞性干涉觀測被拒");
@@ -451,6 +453,15 @@ static void TestQuantumFogInterference() {
     CHECK(fog.IsRevealed(id), "建設性干涉時效加成");
     fog.Update(2.0f); // 累計 8s > 7.5s
     CHECK(!fog.IsRevealed(id), "加成時效終究過期");
+
+    // 相位隨過期退相干歸零:過期後同 tick 二次觀測退回普通刷新
+    CHECK(fog.SetEntityPhases(id, {0.0, 3.141592653589793}),
+          "再注入相位");
+    CHECK(fog.Observe(id, Vector2(0.1f, 0.1f)), "干涉開啟重觀測");
+    fog.Update(6.0f); // 過期 → phases 清零
+    CHECK(fog.Observe(id, Vector2(0.1f, 0.1f)), "過期後重觀測");
+    CHECK(fog.Observe(id, Vector2(3.9f, 0.1f)),
+          "相位已清零,同 tick 二次觀測不干涉");
 
     // Qudit 相位 API:機率分佈不受相位影響
     Quantum::Qudit q(2, 7);
