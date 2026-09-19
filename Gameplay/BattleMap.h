@@ -50,6 +50,18 @@ struct MapInteractable {
     std::string note;
 };
 
+// 運輸隊定義（A.3）：起點=path[0]，沿 waypoint 直線段前進——
+// 路徑由內容側給定，不走尋路碼。team 慣例同 Squad（0=玩家）。
+struct MapConvoy {
+    std::string id;
+    int team = 0;
+    std::vector<Vector2> path;  // ≥2 點才會載入
+    float speed = 1.0f;         // 格/秒
+    int hp = 60;
+    float raidRadius = 1.5f;    // 敵隊入圈即劫掠
+    std::string note;
+};
+
 class BattleMap {
 public:
     bool LoadFromFile(const std::string& path);
@@ -72,6 +84,7 @@ public:
     const std::vector<MapInteractable>& GetInteractables() const {
         return interactables;
     }
+    const std::vector<MapConvoy>& GetConvoys() const { return convoys; }
     const MapPin* FindPin(const std::string& pinName) const;
 
     // pos 落在哪個命名區域（zone 或 ford），沒有回 nullptr
@@ -96,6 +109,7 @@ private:
     bool hasDeploy[2] = {false, false};
     std::vector<MapPin> pins;
     std::vector<MapInteractable> interactables;
+    std::vector<MapConvoy> convoys;
 };
 
 } // namespace Gameplay

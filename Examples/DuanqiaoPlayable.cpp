@@ -553,7 +553,7 @@ int main() {
         std::string chronicler;
         float endedAt = -1.0f;
         float replayCursor = 0.0f;
-        std::unordered_set<size_t> govFired; // C-2:已觸發治理互動點(每點每場一次)
+        GovernanceField govField; // A-1/A-3/A-4：治理互動追蹤（每場重建）
 
     // ---- 地圖 ----
     BattleMap map;
@@ -1040,34 +1040,9 @@ int main() {
         roster.Update(battle); // T-8:殲滅偵測→記陣亡
         sync.Sync(battle);
 
-        // C-2 治理源:village/convoy 互動點佔領偵測(我軍隊入圈即發,每點一次)
-        {
-            const auto& inter = map.GetInteractables();
-            for (size_t gi = 0; gi < inter.size(); ++gi) {
-                if (govFired.count(gi)) continue;
-                GovernanceEvent gev;
-                if (inter[gi].type == "village") {
-                    gev = GovernanceEvent::VillageOccupied;
-                } else if (inter[gi].type == "convoy" ||
-                           inter[gi].type == "supply_cache") {
-                    gev = GovernanceEvent::ConvoyProtected;
-                } else {
-                    continue; // 油漬/落石等其他互動物不計治理
-                }
-                for (const auto& sq : battle.GetSquads()) {
-                    if (sq->GetTeam() != 0 || sq->IsEliminated() ||
-                        sq->IsRouting()) {
-                        continue;
-                    }
-                    if ((sq->GetPosition() - inter[gi].pos).Length() <=
-                        inter[gi].radius) {
-                        battle.RecordGovernanceEvent(gev);
-                        govFired.insert(gi);
-                        break;
-                    }
-                }
-            }
-        }
+        // A-1/A-3/A-4 治理源：佔領/焚村/護輜由 GovernanceField
+        // 追蹤（地圖知識在此層），事件經 battle 入帳
+        govField.Update(dt, battle);
 
         // ---- 渲染 ----
         { // U-1:clear color 跟主題走

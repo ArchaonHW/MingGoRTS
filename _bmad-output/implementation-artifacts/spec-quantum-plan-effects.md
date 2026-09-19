@@ -78,6 +78,9 @@ context: []
 
 ## Implementation Notes
 
+- **Review pass 修補（三層審查後）**：`TipCertainty` 改為「雲曾覆蓋尖端才表態」——已解析 entity 以原 candidates（prior>0）判斷是否曾聲稱尖端，不再讓無關揭露拖垮所有箭頭加成；revealedPos 加 isfinite 守衛。新增 `InvalidateBindings()`：箭頭 mutator（Add/Remove/Clear）、Apply、FromJson 皆先回滾舊綁定倍率再重建——修 stale index/UAF/殘留倍率/換隊凍結。`Apply` 跳過 `IsEliminated` 小隊（死隊不佔指派名額不觸發入帳）。`UpdateUncertainty` 加 `battle.GetSquads()` 成員驗證（plan 比 controller 長壽時不 dereference 懸空 Squad*）；早退 `<=` 改 `==` 使 attackMul<1 減益計畫對稱縮放。
+
+
 - **Certainty 語義裁決（偏離字面公式）**：I/O 矩陣的 EMPTY_TERRAIN（未解析雲全離尖 → certainty 1.0 滿額）與 RESOLVE_ELSEWHERE（已解析雲離尖 → 掉到 1.0）在「certainty = 純質量和最大值」下互斥——兩者 tip 質量同為 0。實作改以「是否對尖端表態」區分：未解析雲 tip 質量 0 視為未表態（跳過，不拉低）；已解析雲永遠表態（R 內 1.0 / R 外 0.0——情報證明落空即賭輸）。全部 entity 皆未表態（無 fog / 全離尖）→ certainty 1.0 向後相容。此語義使雲只會「尚未定罪的無辜」，解析才產生懲罰，符合 GAMBLE_PENALTY=SCALED_ONLY。
 - `squadArrowIdx`（squad → 箭頭 index）於 `Apply` 開頭 `clear()` 重建——重跑 Apply 刷新綁定不殘留；`FromJson` 亦清綁定 + `appliedTeam=-1`，避免載入後拿新箭頭陣列套舊小隊映射。
 - `UpdateUncertainty` 早退條件：未 Apply / 無綁定 / `attackMul<=1`；迭代時剔除 `IsEliminated`/跨隊/索引失效的 squad。
@@ -90,6 +93,22 @@ context: []
 - 2026-09-19: status draft → in-progress（baseline 9996a86）→ done。certainty 語義裁決見 Implementation Notes。
 
 ## Review Triage Log
+
+- `BattlePlan.cpp` TipCertainty revealed entity unconditionally claims — **high** — verified: any reveal anywhere dropped every arrow's certainty to 0 even when the cloud never covered the tip, contradicting EMPTY_TERRAIN semantics. Patched: revealed entity votes 1.0 only when revealedPos within R, 0.0 only when its original cloud (prior>0 candidate) overlapped the tip; NaN guard added. Regression covered by new test §11.
+- `squadArrowIdx` not invalidated on arrow mutation — **medium** — verified: `RemoveArrowFor`/`ClearArrows`/`AddArrow` left stale indices (wrong tip source) and stale multipliers (permanent bonus). Patched via `InvalidateBindings()` (rollback muls + clear binding) called from all mutators, Apply, FromJson. Covered by test §12.
+- `squadArrowIdx` raw `Squad*` UAF — **medium** — verified: plan outliving its BattleController dereferences freed squads each tick. Patched: `UpdateUncertainty` validates membership against `battle.GetSquads()` before dereference; single-controller contract documented.
+- `Apply` binds eliminated squads / team-switch freeze — **medium** — verified: eliminated squads counted in `assigned` (could trigger intel/CP credit for an empty plan); re-Apply for another team froze previous squads' multipliers. Patched: `IsEliminated()` skip + `InvalidateBindings()` rollback before rebuild.
+- `UpdateUncertainty` early-return `attackMul <= 1` — **low** — verified: `attackMul < 1` (reachable via `SetPlanBonus(0.5)`/FromJson) never re-scaled. Patched to `==` so debuff plans scale symmetrically. Covered by test §13.
+- `QuantumPlanTest` NO_BONUS row used single-candidate `AddEntity` — **medium** — verified: `AddEntity` rejects `<2` candidates → entity unregistered, row vacuously tested empty fog. Patched: two candidates + `eid >= 0` check.
+- Plan bonus indicator hides at ×1.00 — **low** — rejected: `GetPlanAttackMul()` label is suppressed precisely when the gamble fails; showing a "落空" state is real UX polish but the live value remains visible per-squad; deferred rather than patched (file under parallel-session churn).
+- "Multiplier shown in per-squad detail not plan panel" — **false** — rejected: the task intent (live effective multiplier visible) is met; panel-vs-detail naming quibble only.
+- `DetectGovernanceEvents` Atrocity branch unreachable + hardcoded `team != 0` — **deferred** — verified real but belongs to the parallel C-2 governance feature, not this spec's diff.
+- Unrest events appended after chronicler display window — **deferred** — parallel governance UI work.
+- Chapter shell: replay regresses progress / `pendingChapter` bypasses `AdvanceChapter` / `def->map` never loaded — **deferred** — parallel B-5/C-1 chapter shell work.
+- Village/convoy occupation scan ungated by battle phase; interactable `radius <= 0` never fires — **deferred** — parallel governance feed.
+- Orphaned `install(DIRECTORY GUI/)` rule + stale `check_all.sh` reference — **deferred** — parallel engine/game split cleanup.
+- `GovernanceTest` leftover `[dbg]` printf + weak `emits>0` assertion + `evs.at` throw-on-miss — **deferred** — parallel test file.
+- Governance interactable feed lacks headless coverage — **deferred** — verification-gap layer itself routed this as defer: extracting a Gameplay seam exceeds this spec.
 
 ## Design Notes
 

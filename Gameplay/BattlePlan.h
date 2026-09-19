@@ -49,7 +49,9 @@ public:
     const PlanArrow& Arrow(size_t i) const { return arrows[i]; }
     // 移除第一支綁定 squadName 的箭頭（重畫覆蓋用）；沒有回 false
     bool RemoveArrowFor(const std::string& squadName);
-    void ClearArrows() { arrows.clear(); }
+    // 箭頭變動會讓 Apply 期間記下的 squad→箭頭綁定失效——
+    // 這些 mutator 會先回滾已發放的 planAttackMul 再清綁定。
+    void ClearArrows();
 
     void SetRallyPoint(const Vector2& p);
     bool HasRallyPoint() const { return hasRally; }
@@ -91,6 +93,10 @@ public:
     bool FromJson(const std::string& json);
 
 private:
+    // 回滾所有已綁定小隊的 planAttackMul 並清空綁定表——
+    // 箭頭/計畫被改動或計畫換綁時呼叫，防止陳舊 index 與殘留倍率。
+    void InvalidateBindings() const;
+
     std::vector<PlanArrow> arrows;
     Vector2 rallyPoint{0.0f, 0.0f};
     bool hasRally = false;

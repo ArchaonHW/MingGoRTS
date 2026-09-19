@@ -78,7 +78,10 @@ struct Suggestion {
  */
 struct CodeAnalysis {
     std::string filePath;
-    std::string codeText;  // 保留原文供後續規則掃描（如 magic number 檢查）
+    std::string codeText;    // 保留原文供後續規則掃描（如 magic number 檢查）
+    std::string maskedText;  // 註解/字串/字元/raw string 內容已空白化（換行保留，
+                             // 行號不變）——模式掃描一律吃這份，避免註解裡的
+                             // `strcpy(` 或字串裡的 `{` 造成誤報/深度錯亂
     std::vector<std::string> functions;
     std::vector<int> functionLines;  // 與 functions 平行的 1-based 行號
     std::vector<std::string> classes;
@@ -150,9 +153,18 @@ public:
     
     // Architectural suggestions
     std::vector<Suggestion> GetArchitecturalSuggestions(const CodeAnalysis& analysis);
-    
+
+    // 專案規範規則：本 repo 自己的護欄（依 filePath 判邊界）——
+    // 禁第三方 JSON（用 Serialization/JsonParser.h）、
+    // 依賴方向 PotatoEngine ← Gameplay ← Campaign
+    std::vector<Suggestion> GetProjectRuleSuggestions(const CodeAnalysis& analysis);
+
     // Learning from user feedback
     void LearnFromFeedback(const std::string& suggestionId, bool accepted);
+
+    // 學習權重持久化：設路徑後 Initialize 載入、Shutdown 存回；
+    // 空字串停用（預設）——測試與短期 session 不落檔
+    void SetLearningPersistencePath(const std::string& path);
     
     // Statistics
     size_t GetTotalSuggestions() const { return totalSuggestions; }
@@ -195,7 +207,12 @@ private:
     // suggestionWeights / acceptedSuggestionHistory 由 worker 讀、UI 寫
     std::mutex sharedMutex_;
 
+    // 學習權重持久化路徑（空 = 停用；SetLearningPersistencePath 設定）
+    std::string learningPath_;
+
     void WorkerMain();
+    void LoadLearningWeights();   // Initialize 內呼叫，sharedMutex_ 內合併
+    void SaveLearningWeights();   // Shutdown 內呼叫
     
     // Helper methods
     float CalculateConfidence(const Suggestion& suggestion);

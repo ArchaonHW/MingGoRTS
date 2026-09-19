@@ -111,6 +111,22 @@ bool BattleMap::LoadFromString(const std::string& json) {
         it.note = o["note"].AsString();
         interactables.push_back(it);
     }
+    // A.3 運輸隊：path 不足 2 點的條目跳過（內容側寫壞不中止載入）
+    for (const auto& c : root["convoys"].AsArray()) {
+        MapConvoy cv;
+        cv.id = c["id"].AsString();
+        cv.team = c["team"].AsInt(0);
+        cv.speed = c["speed"].AsFloat(1.0f);
+        cv.hp = c["hp"].AsInt(60);
+        cv.raidRadius = c["raid_radius"].AsFloat(1.5f);
+        cv.note = c["note"].AsString();
+        for (const auto& wp : c["path"].AsArray()) {
+            cv.path.push_back(ParsePos(wp));
+        }
+        if (cv.path.size() >= 2 && cv.speed > 0.0f) {
+            convoys.push_back(cv);
+        }
+    }
     return true;
 }
 

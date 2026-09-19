@@ -2,7 +2,7 @@
 title: 'C-2 治理源實裝（民心/秩序戰場來源 + 戰役累加器）'
 type: 'feature'
 created: '2026-09-19'
-status: 'in-progress'
+status: 'done'
 route: 'queue-pick'
 baseline_revision: '290e7ff'
 ---

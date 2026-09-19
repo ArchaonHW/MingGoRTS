@@ -3,7 +3,10 @@
  */
 
 #include "IntelligentSuggestion.h"
+#include "Serialization/JsonParser.h"
 #include <algorithm>
+#include <cstdlib>
+#include <fstream>
 #include <iterator>
 #include <regex>
 #include <sstream>
@@ -44,6 +47,101 @@ int FirstMatchLine(const std::string& code, const std::regex& re) {
     std::smatch m;
     if (std::regex_search(code, m, re)) {
         return LineOfPosition(code, static_cast<size_t>(m.position(0)));
+    }
+    return 0;
+}
+
+// 註解與字面量空白化：//、/* */、"..."、'x'、R"delim(...)delim" 的
+// 內容換成空格（換行保留 → 行號不變）。模式掃描一律吃遮罩後文字：
+// 註解裡的 `strcpy(`、字串裡的 `{` 不再造成誤報或深度計數錯亂；
+// 本檔自己的 raw-string regex 字面量也不會自我誤報。
+// 注意 #include "x.h" 的引號會被遮——include 規則改用 analysis.imports 原文。
+std::string MaskCommentsAndStrings(const std::string& code) {
+    std::string out = code;
+    const size_t n = code.size();
+    auto blank = [&](size_t a, size_t b) {
+        for (size_t j = a; j < b && j < n; ++j)
+            if (out[j] != '\n') out[j] = ' ';
+    };
+    size_t i = 0;
+    while (i < n) {
+        const char c = code[i];
+        if (c == '/' && i + 1 < n && code[i + 1] == '/') {           // 行註解
+            size_t e = code.find('\n', i);
+            if (e == std::string::npos) e = n;
+            blank(i, e);
+            i = e;
+        } else if (c == '/' && i + 1 < n && code[i + 1] == '*') {    // 區塊註解
+            size_t e = code.find("*/", i + 2);
+            e = (e == std::string::npos) ? n : e + 2;
+            blank(i, e);
+            i = e;
+        } else if (c == 'R' && i + 1 < n && code[i + 1] == '"') {    // raw string
+            size_t paren = code.find('(', i + 2);
+            if (paren != std::string::npos && paren - (i + 2) <= 16) {
+                const std::string close =
+                    ")" + code.substr(i + 2, paren - (i + 2)) + "\"";
+                size_t e = code.find(close, paren + 1);
+                e = (e == std::string::npos) ? n : e + close.size();
+                blank(i, e);
+                i = e;
+            } else {
+                ++i; // 非合法 raw string——當普通識別字
+            }
+        } else if (c == '"' || c == '\'') {                          // 字串/字元
+            const char q = c;
+            size_t j = i + 1;
+            while (j < n && code[j] != q) {
+                if (code[j] == '\\') ++j;                        // 跳過跳脫字元
+                ++j;
+            }
+            j = (j < n) ? j + 1 : n;
+            blank(i, j);
+            i = j;
+        } else {
+            ++i;
+        }
+    }
+    return out;
+}
+
+// if/while 條件內頂層出現單個 =（指派誤植）→ 1-based 行號，無命中回 0。
+// 跳過：==/!=/<=/>=、C++17 init-statement（; 之前的 = 合法）、
+// 內層括號裡的 =（while ((c = f()) != EOF) 慣用寫法同 GCC -Wparentheses）。
+// 呼叫端傳遮罩後文字——字串/註解內的 "if (x =" 不誤報。
+int AssignmentInConditionLine(const std::string& code) {
+    static const std::regex kw(R"(\b(?:if|while)\s*\()");
+    for (std::sregex_iterator it(code.begin(), code.end(), kw), end;
+         it != end; ++it) {
+        const size_t open =
+            static_cast<size_t>(it->position() + it->length() - 1);
+        // 第一遍：找括號結束與頂層 ;（init-statement 分隔）
+        size_t close = std::string::npos, semi = std::string::npos;
+        int depth = 0;
+        for (size_t j = open; j < code.size(); ++j) {
+            if (code[j] == '(') ++depth;
+            else if (code[j] == ')') {
+                if (--depth <= 0) { close = j; break; }
+            } else if (code[j] == ';' && depth == 1) {
+                semi = j;
+            }
+        }
+        if (close == std::string::npos) continue;
+        // 第二遍：頂層 =（排除複合比較），init 段（; 之前）跳過——
+        // 從 open 重數 depth，否則 ; 之後仍在頂層卻誤判 depth 0
+        depth = 0;
+        for (size_t j = open; j < close; ++j) {
+            const char c = code[j];
+            if (c == '(') ++depth;
+            else if (c == ')') --depth;
+            else if (c == '=' && depth == 1 &&
+                     (semi == std::string::npos || j > semi) &&
+                     (j + 1 >= code.size() || code[j + 1] != '=') &&
+                     (j == 0 || (code[j - 1] != '=' && code[j - 1] != '!' &&
+                                 code[j - 1] != '<' && code[j - 1] != '>'))) {
+                return LineOfPosition(code, j);
+            }
+        }
     }
     return 0;
 }
@@ -93,6 +191,10 @@ bool IntelligentSuggestionSystem::Initialize() {
         };
     }
 
+    // 學習權重持久化：設了路徑就把上次的接受/拒絕結果合進預設權重——
+    // 要在 worker 啟動前完成，job 吃到的就是已學習的權重
+    LoadLearningWeights();
+
     // 背景分析 worker（B-1）：分析移出 render thread
     {
         std::lock_guard<std::mutex> lk(queueMutex_);
@@ -115,6 +217,8 @@ void IntelligentSuggestionSystem::Shutdown() {
     }
     queueCv_.notify_all();
     if (worker_.joinable()) worker_.join();
+    // worker 停妥再寫檔——避免寫到一半 worker 還在讀權重
+    SaveLearningWeights();
 }
 
 uint64_t IntelligentSuggestionSystem::SubmitAnalysis(
@@ -179,15 +283,17 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GenerateSuggestions(
     // Analyze code
     CodeAnalysis analysis = AnalyzeCode(code, filePath);
     
-    // Generate different types of suggestions
+    // Generate different types of suggestions——偵測器一律吃 maskedText：
+    // 註解/字串內容不產生建議（`// strcpy(` 不再誤報）
     std::vector<Suggestion> refactoring = GetRefactoringSuggestions(analysis);
     std::vector<Suggestion> optimization = GetOptimizationSuggestions(analysis);
-    std::vector<Suggestion> bugs = DetectBugs(code);
+    std::vector<Suggestion> bugs = DetectBugs(analysis.maskedText);
     std::vector<Suggestion> bestPractices = GetBestPracticeRecommendations(analysis);
     std::vector<Suggestion> documentation = GetDocumentationSuggestions(analysis);
     std::vector<Suggestion> tests = GenerateTestSuggestions(analysis);
     std::vector<Suggestion> architectural = GetArchitecturalSuggestions(analysis);
-    
+    std::vector<Suggestion> projectRules = GetProjectRuleSuggestions(analysis);
+
     // Combine all suggestions
     suggestions.insert(suggestions.end(), refactoring.begin(), refactoring.end());
     suggestions.insert(suggestions.end(), optimization.begin(), optimization.end());
@@ -196,6 +302,7 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GenerateSuggestions(
     suggestions.insert(suggestions.end(), documentation.begin(), documentation.end());
     suggestions.insert(suggestions.end(), tests.begin(), tests.end());
     suggestions.insert(suggestions.end(), architectural.begin(), architectural.end());
+    suggestions.insert(suggestions.end(), projectRules.begin(), projectRules.end());
 
     // analysis.potentialIssues → BugFix 建議（之前只存進 analysis 不用，
     // 等於掃了卻從不顯示）；命中行用各 pattern 第一次出現的行
@@ -212,7 +319,8 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GenerateSuggestions(
         suggestion.code = "// " + entry.first + " removed";
         suggestion.reason = "Legacy C-style construct detected";
         suggestion.confidence = ConfidenceLevel::High;
-        suggestion.lineNumber = FirstMatchLine(code, entry.second.first);
+        suggestion.lineNumber =
+            FirstMatchLine(analysis.maskedText, entry.second.first);
         suggestions.push_back(suggestion);
     }
 
@@ -234,7 +342,19 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GenerateSuggestions(
             s > 0.75f ? ConfidenceLevel::High :
             s >= 0.50f ? ConfidenceLevel::Medium : ConfidenceLevel::Low;
     }
-    
+
+    // 游標鄰近加成：只動 confidenceScore（RankByRelevance 的排序鍵），
+    // enum 保留偵測器自評——FilterByConfidence 吃 enum 不受影響；
+    // 同信心的建議裡，離游標近的排前面（上下文感）
+    for (auto& s : suggestions) {
+        const int dist = std::abs(s.lineNumber - lineNumber);
+        if (dist <= 10) {
+            s.confidenceScore = std::min(1.0f, s.confidenceScore + 0.10f);
+        } else if (dist <= 40) {
+            s.confidenceScore = std::min(1.0f, s.confidenceScore + 0.05f);
+        }
+    }
+
     // Rank and filter
     suggestions = SuggestionRanker::RankByRelevance(suggestions, code);
     suggestions = SuggestionRanker::FilterByConfidence(suggestions, ConfidenceLevel::Medium);
@@ -251,6 +371,7 @@ CodeAnalysis IntelligentSuggestionSystem::AnalyzeCode(const std::string& code,
     CodeAnalysis analysis;
     analysis.filePath = filePath;
     analysis.codeText = code;
+    analysis.maskedText = MaskCommentsAndStrings(code);
     
     // 函式宣告/定義偵測：<型別...> <名>( ——型別不限內建四種，
     // auto/double/std::/自訂型別皆可，名稱允許 :: 限定。
@@ -297,11 +418,11 @@ CodeAnalysis IntelligentSuggestionSystem::AnalyzeCode(const std::string& code,
         }
     }
     
-    // Calculate complexity
-    analysis.complexityScore = CalculateCyclomaticComplexity(code);
-    
+    // Calculate complexity——註解裡的 if/for 關鍵字不該灌水複雜度
+    analysis.complexityScore = CalculateCyclomaticComplexity(analysis.maskedText);
+
     // Find potential issues
-    analysis.potentialIssues = FindAntiPatterns(code);
+    analysis.potentialIssues = FindAntiPatterns(analysis.maskedText);
     
     return analysis;
 }
@@ -334,8 +455,9 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GetRefactoringSuggestions(
     
     std::vector<Suggestion> suggestions;
     
-    // Check for long functions（掃 codeText——之前誤傳 filePath，函式過長永遠偵測不到）
-    auto longFunctions = FindLongFunctions(analysis.codeText, 50);
+    // Check for long functions（掃 maskedText——字串/註解裡的 {} 不再
+    // 錯亂區塊深度；之前誤傳 filePath 的 bug 已修）
+    auto longFunctions = FindLongFunctions(analysis.maskedText, 50);
     for (const auto& func : longFunctions) {
         Suggestion suggestion;
         suggestion.type = SuggestionType::Refactoring;
@@ -367,7 +489,7 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GetOptimizationSuggestions(
     const CodeAnalysis& analysis) {
 
     std::vector<Suggestion> suggestions;
-    const std::string& code = analysis.codeText;
+    const std::string& code = analysis.maskedText; // 註解/字串內的模式不算
 
     // by-value 傳遞 std:: 容器/字串參數 → const&（參數列表內出現 & 或 * 不算）
     static const std::regex byValueRegex(
@@ -478,6 +600,21 @@ std::vector<Suggestion> IntelligentSuggestionSystem::DetectBugs(const std::strin
         suggestions.push_back(suggestion);
     }
 
+    // 指派誤植條件：if (x = 0)——能編過但語義全變的經典 typo；
+    // init-statement、複合比較、內層括號慣用法已在 helper 排除
+    const int assignLine = AssignmentInConditionLine(code);
+    if (assignLine > 0) {
+        Suggestion suggestion;
+        suggestion.type = SuggestionType::BugFix;
+        suggestion.title = "Assignment in condition";
+        suggestion.description = "'=' inside if/while condition — did you mean '=='?";
+        suggestion.code = "if (x == value)";
+        suggestion.reason = "Assignment in condition compiles but changes semantics";
+        suggestion.confidence = ConfidenceLevel::High;
+        suggestion.lineNumber = assignLine;
+        suggestions.push_back(suggestion);
+    }
+
     return suggestions;
 }
 
@@ -498,10 +635,10 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GetBestPracticeRecommendati
         suggestions.push_back(suggestion);
     }
     
-    // Check for magic numbers（掃描程式碼本文，不是檔案路徑）
+    // Check for magic numbers（掃遮罩後本文——註解/字串裡的數字不算）
     // static 快取編譯結果——std::regex 建構昂貴，每次分析重建會拖慢 render thread
     static const std::regex magicNumberRegex("\\b\\d{2,}\\b");
-    if (std::regex_search(analysis.codeText, magicNumberRegex)) {
+    if (std::regex_search(analysis.maskedText, magicNumberRegex)) {
         Suggestion suggestion;
         suggestion.type = SuggestionType::BestPractice;
         suggestion.title = "Use Named Constants";
@@ -509,7 +646,7 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GetBestPracticeRecommendati
         suggestion.code = "const int MAX_SIZE = 100;";
         suggestion.reason = "Named constants improve code readability";
         suggestion.confidence = ConfidenceLevel::Medium;
-        suggestion.lineNumber = FirstMatchLine(analysis.codeText, magicNumberRegex);
+        suggestion.lineNumber = FirstMatchLine(analysis.maskedText, magicNumberRegex);
         suggestions.push_back(suggestion);
     }
     

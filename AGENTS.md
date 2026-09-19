@@ -22,7 +22,7 @@ C++20 遊戲引擎 + MingGoRTS IDE，CMake 建置，無 UE5 依賴。BMAD v6 已
 ## Running and verifying
 
 - 本地建置必須 MSVC 與 MinGW 都過——MinGW 專用連結用 `if(WIN32 AND NOT MSVC)` 守衛（參考 psapi 寫法）
-- 沒有測試框架/ctest——驗證 = `cmake --build build` 後跑 `Examples/` 執行檔（如 `AITestSuite`）
+- CTest 已啟用（`POTATO_TESTS` 清單）：`cd build && ctest -C Release`；驗證 = 建置 + ctest 全綠
 - CI 在 Linux g++ 建置；另掃 banned C 函式 `gets|strcpy|strcat|sprintf|vsprintf|scanf`——用 `strncpy`/`snprintf` 等安全替代
 - 需求：CMake ≥3.15、C++20 編譯器、OpenGL；GLFW 由 FetchContent 拉取
 
@@ -32,12 +32,21 @@ C++20 遊戲引擎 + MingGoRTS IDE，CMake 建置，無 UE5 依賴。BMAD v6 已
 
 <!-- /bmad:context -->
 
-## Gameplay 層（doctrine 戰鬥原型，2026-09-17 新增）
+## Gameplay 層（doctrine 戰鬥原型）
 
-- `Gameplay/`：斷橋原型的玩法層——`FlowField`（群體尋路）/`Squad`/`Doctrine`（含規則冷卻）/`BattleController`（三拍狀態機）/`BattlePlanner`（AI 參謀）/`BattleMap`（T-4 地圖 JSON）/`EnemyGeneral`（T-5 敵將人格腳本）/`BattleResources`（T-6 情報/CP/士氣執行率）/`BattleRecorder`（T-7 事件錄製回放）/`Roster`（T-8 名冊）
+- `Gameplay/`：斷橋原型的玩法層——`FlowField`（群體尋路）/`Squad`/`Doctrine`（含規則冷卻）/`BattleController`（三拍狀態機）/`BattlePlanner`（AI 參謀）/`BattleMap`（地圖 JSON+互動點）/`EnemyGeneral`（敵將人格腳本）/`BattleResources`（情報/CP/士氣執行率）/`BattleRecorder`（事件錄製回放，存檔帶 rootHash 完整性驗證）/`Roster`（名冊）
+- 情報戰：`QuantumFog`（機率雲疊加/觀測/探測/糾纏/人格先驗/相位）+ `BattlePlan`（計畫箭頭，加成依情報確定度即時縮放）
+- 敘事/帳本：`HistorianReport`（史官戰報+查帳段）/`CampaignLedger`/`GeneralDossier`/`RivalDeck`/`MythLog`/`ChapterConventions`/`Ledger`+`LedgerChain`（複式記帳五帳戶+雜湊鏈帳簿）
+- 後勤：`RefitCamp`（跨場整補）/`SquadTemplate`（模板配兵）/`PostBattle`/`MapGenerator`
 - `Gameplay` lib 連結 `PotatoEngine`（BattleSceneSync 需要場景類型）；`PotatoEngine` 不反向依賴 Gameplay
-- 資產 schema：`assets/cards/` 角色卡（`potato.character_card/1`，人格三軸 + signatureDoctrine）、`assets/maps/` 戰場圖（`potato.battle_map/1`）、回放 `potato.battle_replay/1`、名冊 `potato.roster/1`
+- 資產 schema：`assets/cards/` 角色卡（`potato.character_card/1`）、`assets/maps/` 戰場圖（`potato.battle_map/1`）、回放 `potato.battle_replay/1`（含 rootHash，舊檔降級載入）、名冊 `potato.roster/1`、帳簿 `potato.ledger_chain/1`
 - JSON 解析用 `Serialization/JsonParser.h`（`Potato::JsonValue`），不要引第三方 JSON 庫
+
+## Campaign 層（戰役持久，Epic B 已完成）
+
+- `Campaign/`：`CampaignState`（potato.campaign/1 facade，聚合 Camp/Ledger/Dossier/MythLog，章節邊界 tmp+rename 原子存檔）/`ChapterLibrary`（章節定義庫，arc→chapter→id 排序）/`Governance`（治理累加器：佔村/護輜/暴行→民心秩序軸）
+- `Gameplay` 不依賴 `Campaign`——依賴方向 PotatoEngine ← Gameplay ← Campaign
+- 垂直切片：`Examples/DuanqiaoPlayable`（標題殼→章節選擇→戰鬥→史官戰報+整補→再戰）；`tools/package_demo.bat` 產出 `dist/` 自包含包
 
 ## 驗證方式更新
 

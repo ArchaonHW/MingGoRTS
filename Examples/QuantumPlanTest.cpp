@@ -152,7 +152,9 @@ int main() {
         QuantumFog fog(30.0f, 1);
         battle.BindFog(&fog);
         Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
-        fog.AddEntity("敵軍", 0, {Vector2(15, 7)}, {1.0});
+        const int eid = fog.AddEntity("敵軍", 0,
+            {Vector2(15, 7), Vector2(17, 9)}, {1.0, 0.0});
+        Check(eid >= 0, "NO_BONUS 雲確實註冊（單候選會回 -1）");
 
         BattlePlan plan;
         plan.AddArrow("前鋒", Vector2(2, 7), Vector2(15, 7)); // 無 SetPlanBonus
@@ -216,6 +218,93 @@ int main() {
         battle.Update(0.1f);
         Check(std::fabs(vg->GetPlanAttackMul() - 1.0f) < 1e-4f,
               "tick 自動重評 → 落空歸 1");
+    }
+
+    // [11] UNCLAIMED_REVEAL：雲從未覆蓋尖端的揭露不拖垮加成
+    printf("[11] UNCLAIMED_REVEAL：無關揭露不懲罰\n");
+    {
+        BattleController battle(20, 15, 1.0f);
+        QuantumFog fog(30.0f, 1);
+        battle.BindFog(&fog);
+        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
+        // 雲 A 覆蓋尖端（質量 0.6，另一候選在 R 外）；雲 B 與尖端無關
+        const int eidA = fog.AddEntity("敵軍A", 0,
+            {Vector2(5, 5), Vector2(10, 10)}, {0.6, 0.4});
+        const int eidB = fog.AddEntity("敵軍B", 0,
+            {Vector2(15, 7), Vector2(17, 9)}, {0.8, 0.2});
+
+        BattlePlan plan;
+        plan.SetPlanBonus(1.3f, 0, 0);
+        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(5, 5));
+        const float baseDpm = vg->GetDamagePerMember();
+        plan.Apply(battle, nullptr, 0);
+        Check(std::fabs(vg->GetPlanAttackMul() - 1.18f) < 1e-4f,
+              "雲 A 質量 0.6 → ×1.18");
+
+        // 揭露無關的雲 B——尖端加成不動（舊碼會誤掉到 1.0）
+        fog.Reveal(eidB, Vector2(15, 7));
+        plan.UpdateUncertainty(battle);
+        Check(std::fabs(vg->GetPlanAttackMul() - 1.18f) < 1e-4f,
+              "無關揭露後仍 ×1.18");
+        Check(std::fabs(vg->GetDamagePerMember() - baseDpm * 1.18f) < 1e-4f,
+              "無關揭露後 damagePerMember 不變");
+
+        // 雲 A 的雲確實覆蓋過尖端——揭露他處才算賭輸歸 1
+        fog.Reveal(eidA, Vector2(1, 1));
+        plan.UpdateUncertainty(battle);
+        Check(std::fabs(vg->GetPlanAttackMul() - 1.0f) < 1e-4f,
+              "覆蓋過尖端的雲落空 → 歸 1");
+    }
+
+    // [12] ARROW_MUTATION：Apply 後改動箭頭 → 綁定失效且倍率回滾
+    printf("[12] ARROW_MUTATION：改箭頭回滾加成\n");
+    {
+        BattleController battle(20, 15, 1.0f);
+        QuantumFog fog(30.0f, 1);
+        battle.BindFog(&fog);
+        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
+        fog.AddEntity("敵軍", 0, {Vector2(15, 7), Vector2(17, 9)},
+                      {0.8, 0.2});
+
+        BattlePlan plan;
+        plan.SetPlanBonus(1.3f, 0, 0);
+        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(15, 7));
+        const float baseDpm = vg->GetDamagePerMember();
+        plan.Apply(battle, nullptr, 0);
+        Check(std::fabs(vg->GetPlanAttackMul() - 1.24f) < 1e-4f,
+              "Apply 後 ×1.24");
+
+        Check(plan.RemoveArrowFor("前鋒"), "移除箭頭");
+        Check(std::fabs(vg->GetPlanAttackMul() - 1.0f) < 1e-4f,
+              "移除後 planAttackMul 回滾 1.0");
+        Check(std::fabs(vg->GetDamagePerMember() - baseDpm) < 1e-4f,
+              "移除後 damagePerMember 回基準");
+        plan.UpdateUncertainty(battle); // 綁定已清——安全無效
+        Check(std::fabs(vg->GetDamagePerMember() - baseDpm) < 1e-4f,
+              "UpdateUncertainty 不再改值");
+    }
+
+    // [13] DEBUFF_PLAN：attackMul<1 減益計畫也吃確定度縮放
+    printf("[13] DEBUFF_PLAN：減益計畫對稱縮放\n");
+    {
+        BattleController battle(20, 15, 1.0f);
+        QuantumFog fog(30.0f, 1);
+        battle.BindFog(&fog);
+        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
+        const int eid = fog.AddEntity("敵軍", 0,
+            {Vector2(15, 7), Vector2(17, 9)}, {0.8, 0.2});
+
+        BattlePlan plan;
+        plan.SetPlanBonus(0.8f, 0, 0); // 減益計畫
+        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(15, 7));
+        plan.Apply(battle, nullptr, 0);
+        // effMul = 1 + (0.8-1)*0.8 = 0.84
+        Check(std::fabs(vg->GetPlanAttackMul() - 0.84f) < 1e-4f,
+              "減益依 0.8 質量縮放 → ×0.84");
+        fog.Reveal(eid, Vector2(15, 7));
+        plan.UpdateUncertainty(battle);
+        Check(std::fabs(vg->GetPlanAttackMul() - 0.8f) < 1e-4f,
+              "坐實後減益到位 ×0.80");
     }
 
     printf("\n=== %d PASS, %d FAIL ===\n", g_pass, g_fail);

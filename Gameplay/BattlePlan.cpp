@@ -7,7 +7,9 @@
 #include "Serialization/JsonParser.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdio>
+#include <unordered_set>
 
 namespace Potato {
 namespace Gameplay {
@@ -28,12 +30,32 @@ float TipCertainty(const QuantumFog* fog, const Vector2& tip, float radius) {
     for (size_t e = 0; e < fog->EntityCount(); ++e) {
         const int eid = static_cast<int>(e);
         if (fog->IsRevealed(eid)) {
-            anyClaim = true;
             const Vector2 rp = fog->GetRevealedPos(eid);
-            const float dx = rp.x - tip.x;
-            const float dy = rp.y - tip.y;
-            certainty = (std::max)(certainty,
-                                   (dx * dx + dy * dy <= r2) ? 1.0f : 0.0f);
+            if (std::isfinite(rp.x) && std::isfinite(rp.y)) {
+                const float dx = rp.x - tip.x;
+                const float dy = rp.y - tip.y;
+                if (dx * dx + dy * dy <= r2) {
+                    anyClaim = true;
+                    certainty = 1.0f; // 坐實尖端
+                    continue;
+                }
+            }
+            // 真身在 R 外：只有「雲原本就覆蓋尖端」才算情報證明
+            // 落空（計畫賭輸）；雲從未碰過尖端的揭露不表態，
+            // 否則任何一處揭露會拖垮所有無關箭頭的加成。
+            const UncertainEntity* ent = fog->GetEntity(eid);
+            if (ent) {
+                for (size_t i = 0; i < ent->candidates.size(); ++i) {
+                    const bool hadMass =
+                        i < ent->priors.size() ? ent->priors[i] > 0.0 : true;
+                    const float dx = ent->candidates[i].x - tip.x;
+                    const float dy = ent->candidates[i].y - tip.y;
+                    if (hadMass && dx * dx + dy * dy <= r2) {
+                        anyClaim = true; // 表態為 0
+                        break;
+                    }
+                }
+            }
             continue;
         }
         float mass = 0.0f;
@@ -53,8 +75,28 @@ float TipCertainty(const QuantumFog* fog, const Vector2& tip, float radius) {
 }
 } // namespace
 
+void BattlePlan::InvalidateBindings() const {
+    // 綁定的小隊先把 planAttackMul 除回 1——殘留倍率會變成
+    // 永久加成。注意：本類與 Apply 的目標 BattleController
+    // 同生命週期；controller 先亡後呼叫屬契約外誤用。
+    for (const auto& kv : squadArrowIdx) {
+        Squad* s = kv.first;
+        if (s && !s->IsEliminated()) {
+            const float prev = s->GetPlanAttackMul();
+            if (prev != 1.0f) {
+                s->SetDamagePerMember(s->GetDamagePerMember() / prev);
+                s->SetPlanAttackMul(1.0f);
+            }
+        }
+    }
+    squadArrowIdx.clear();
+    appliedTeam = -1;
+}
+
 void BattlePlan::AddArrow(const std::string& squadName, const Vector2& from,
                           const Vector2& to, int priority) {
+    // 箭頭陣列變動會讓 squadArrowIdx 的 index 失效——先回滾綁定
+    InvalidateBindings();
     PlanArrow a;
     a.squadName = squadName;
     a.from = from;
@@ -67,10 +109,18 @@ bool BattlePlan::RemoveArrowFor(const std::string& squadName) {
     for (auto it = arrows.begin(); it != arrows.end(); ++it) {
         if (it->squadName == squadName) {
             arrows.erase(it);
+            InvalidateBindings();
             return true;
         }
     }
     return false;
+}
+
+void BattlePlan::ClearArrows() {
+    if (!arrows.empty()) {
+        arrows.clear();
+        InvalidateBindings();
+    }
 }
 
 void BattlePlan::SetRallyPoint(const Vector2& p) {
@@ -112,11 +162,13 @@ int BattlePlan::Apply(BattleController& battle, BattleResources* res,
     }
 
     int assigned = 0;
-    squadArrowIdx.clear(); // 重建綁定——未再指派的小隊不留陳舊映射
+    // 重建綁定前先回滾舊綁定——不再被指派的小隊（消滅/換隊/
+    // 換計畫）planAttackMul 歸 1，不殘留凍結倍率
+    InvalidateBindings();
     for (const auto& sp : battle.GetSquads()) {
         Squad* squad = sp.get();
-        if (squad->GetTeam() != team) {
-            continue;
+        if (squad->GetTeam() != team || squad->IsEliminated()) {
+            continue; // 死隊不佔指派名額，也不該觸發加成入帳
         }
         const PlanArrow* arrow = nullptr;
         for (const PlanArrow& a : arrows) {
@@ -171,14 +223,22 @@ void BattlePlan::SetUncertaintyRadius(float r) {
 }
 
 void BattlePlan::UpdateUncertainty(BattleController& battle) const {
-    if (appliedTeam < 0 || squadArrowIdx.empty() || attackMul <= 1.0f) {
-        return; // 未 Apply / 無綁定 / 無加成——沒有可縮放的東西
+    if (appliedTeam < 0 || squadArrowIdx.empty() || attackMul == 1.0f) {
+        return; // 未 Apply / 無綁定 / 恆等倍率——沒有可縮放的東西
+    }
+    // 防 UAF：plan 可能比建立綁定時的 BattleController 活得久，
+    // 或被 BindPlan 換接到別的 controller——只重評仍屬於這個
+    // battle 的小隊。
+    std::unordered_set<const Squad*> members;
+    for (const auto& sp : battle.GetSquads()) {
+        members.insert(sp.get());
     }
     QuantumFog* fog = battle.GetFog();
     for (const auto& kv : squadArrowIdx) {
         Squad* squad = kv.first;
         const int idx = kv.second;
-        if (!squad || squad->IsEliminated() || squad->GetTeam() != appliedTeam ||
+        if (!squad || !members.count(squad) || squad->IsEliminated() ||
+            squad->GetTeam() != appliedTeam ||
             idx < 0 || static_cast<size_t>(idx) >= arrows.size()) {
             continue;
         }
@@ -261,10 +321,9 @@ bool BattlePlan::FromJson(const std::string& json) {
     bonusCP = root["bonus_cp"].AsInt(0);
     if (bonusCP < 0) bonusCP = 0;
     bonusCredited = false; // 載入的計畫尚未入帳
-    // 載入的計畫尚未 Apply——清掉舊綁定，否則 UpdateUncertainty
-    // 會拿新箭頭 index 去重評舊小隊映射
-    squadArrowIdx.clear();
-    appliedTeam = -1;
+    // 載入的計畫尚未 Apply——回滾並清掉舊綁定，否則
+    // UpdateUncertainty 會拿新箭頭 index 去重評舊小隊映射
+    InvalidateBindings();
     return true;
 }
 
