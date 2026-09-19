@@ -947,9 +947,14 @@ queue:
     acceptance:
       - 平衡產正常句、不平衡產存疑句
       - 查帳段入省略計數體系
-    status: queued
+    status: done
     size: M
-    note: 依賴 L-1 + N-1（已落地）
+    note: >
+      HistorianInput.ledger：試算段插於判詞後省略計數前——
+      平衡產「借貸相符」+非零帳戶淨額、斷鏈產「帳目遭篡」、
+      偽帳產「借貸不符」皆冠「墨跡未乾，史官存疑」。
+      LedgerAuditTest 23/23（f012f59）。章節邊界接線待
+      CampaignState 落定後整合。
 
   - id: L-4
     title: 偽帳機制——對手軍師攻擊記憶系統
