@@ -977,6 +977,14 @@ queue:
       進史官摘錄；舊版無 hash 降級警告。
     acceptance:
       - 合法回放通過、篡改被拒、舊版降級
-    status: queued
+    status: done
     size: S
-    note: 依賴 L-2 hash 實作；「回放即審計」閉環
+    note: >
+      BattleRecorder::RootHash——共用 L-2 LedgerHash 對
+      %.6g(t)|event canon 逐筆 fold；SaveToFile 寫
+      "rootHash" hex 欄（schema 仍 /1，附加可選欄位）；
+      LoadFromFile 雜湊不符拒載且清空髒資料（史官閘天然
+      成立——篡改檔進不了 records），無 hash 舊檔降級
+      載入 + WasLegacyLoad 旗標供呼叫端警告。
+      ReplayIntegrityTest 21/21 MSVC+MinGW：合法通過、
+      篡改事件/根值/時戳皆拒載、舊版降級、壞 JSON 拒絕。

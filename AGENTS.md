@@ -63,6 +63,13 @@ C++20 遊戲引擎 + MingGoRTS IDE，CMake 建置，無 UE5 依賴。BMAD v6 已
 - 引入前優先評估是否已有自研方案可複用（如 `Rendering/ImageCodec` 的零依賴 PNG）
 - 目前 vendored：`external/tinygltf/`（tinygltf v2.9.7 + nlohmann/json + stb_image/stb_image_write，glTF/VRM 載入用）
 
+## 平行開發衛生（多 session 協作）
+
+- 本 repo 常有多 session 並行——提交前 `git status` 認清自己的檔，只 stage 自己改的（`git add <path>` 不用 `-A`）
+- 提交引用**未追蹤檔案**的 CMakeLists 會讓乾淨 checkout 斷 build——註冊新 target 時源檔必須同 commit 入帳
+- `CMakeLists.txt`/`DuanqiaoPlayable.cpp`/佇列檔是高碰撞熱區；要拆 hunk 可「checkout HEAD → 重放自己的編輯 → stage → 還原工作檔」
+- 測試同時寫同名 JSON 會互撞——ctest 批量失敗先單獨重跑確認是不是平行測試競爭，再當真 bug 追
+
 ## 已知環境坑：MinGW libstdc++ DLL 錯配
 
 - 在 git-bash 手工 `g++` 編出的 binary 會依 PATH 載入 `libstdc++-6.dll`——`C:\Program Files\Git\mingw64\bin` 若排在 scoop MinGW 前面，會載到**版本不符的 DLL**，`-O1/-O2` 下 segfault（`-O0` 僥倖通過）。
