@@ -70,6 +70,7 @@ JsonValue Governance::ToJson() const {
     o.type = JsonValue::Type::Object;
     o.objectValue["popular_support"] = JsonValue::Number(popularSupport);
     o.objectValue["civil_order"] = JsonValue::Number(civilOrder);
+    o.objectValue["depravity"] = JsonValue::Number(depravity);
     o.objectValue["last_unrest_level"] = JsonValue::Number(lastUnrestLevel);
     return o;
 }
@@ -84,6 +85,9 @@ bool Governance::FromJson(const JsonValue& j) {
     civilOrder = std::clamp(
         static_cast<float>(j["civil_order"].AsNumber(50.0)),
         0.0f, 100.0f);
+    // 舊檔無 depravity 欄位 → 0（相容，不降級警告）
+    depravity = std::clamp(
+        static_cast<float>(j["depravity"].AsNumber(0.0)), 0.0f, 100.0f);
     lastUnrestLevel = std::clamp(j["last_unrest_level"].AsInt(0), 0, 3);
     return true;
 }
