@@ -16,6 +16,7 @@
 #include <cstdio>
 #include <cstring>
 #include <filesystem>
+#include <fstream>
 
 static int g_pass = 0, g_fail = 0;
 static void Check(bool ok, const char* name) {
@@ -162,6 +163,36 @@ int main() {
         Check(fs::file_size(DemoAssets::Resolve("fonts/LICENSE"), ec) >
                   100,
               "OFL LICENSE 隨字體打包");
+    }
+
+    // DrawAtlasMarker 消費端（F-1）：命中→sprite,缺名/無 tex→形狀降級
+    {
+        const char* idx = "uitheme_atlas_test.json";
+        std::ofstream of(idx);
+        of << "{\"schema\":\"potato.sprite_atlas/1\",\"image\":\"x.png\","
+              "\"size\":[8,4],\"frames\":{\"ally\":[0,0,4,4]}}";
+        of.close();
+        Potato::SpriteAtlas atlas;
+        Check(atlas.LoadIndex(idx), "atlas 索引載入");
+        ImGui::NewFrame();
+        ImGui::Begin("##atlas");
+        ImDrawList* dl = ImGui::GetWindowDrawList();
+        const ImTextureID fakeTex = (ImTextureID)(intptr_t)1;
+        Check(UITheme::DrawAtlasMarker(
+                  dl, ImVec2(10, 10), 4, atlas, fakeTex, "ally",
+                  UITheme::MarkerShape::FriendlySquare, 0xFFFFFFFF),
+              "命中 → sprite 路徑");
+        Check(!UITheme::DrawAtlasMarker(
+                  dl, ImVec2(10, 10), 4, atlas, fakeTex, "zzz",
+                  UITheme::MarkerShape::FriendlySquare, 0xFFFFFFFF),
+              "缺名 → 形狀降級");
+        Check(!UITheme::DrawAtlasMarker(
+                  dl, ImVec2(10, 10), 4, atlas, (ImTextureID)0, "ally",
+                  UITheme::MarkerShape::FriendlySquare, 0xFFFFFFFF),
+              "無 tex → 形狀降級");
+        ImGui::End();
+        ImGui::Render();
+        std::remove(idx);
     }
 
     ImGui::DestroyContext();

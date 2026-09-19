@@ -10,6 +10,7 @@
 // 共享語義色（intel/cp/morale/fog）跨主題不變，主題只換皮不換義。
 
 #include "imgui.h"
+#include "Rendering/SpriteAtlas.h"
 
 #include <cstdint>
 #include <string>
@@ -373,6 +374,28 @@ inline void DrawMarker(ImDrawList* dl, ImVec2 center, float r,
         dl->AddCircleFilled(center, r * 0.45f, col);
         break;
     }
+}
+
+// 圖集標記(F-1 消費端)：atlas 命中且有 tex → AddImage(uv rect)；
+// 缺名/tex 缺席 → 退回 DrawMarker 形狀編碼（降級保留語義）。
+// 回傳 true = 走了 sprite 路徑。
+inline bool DrawAtlasMarker(ImDrawList* dl, ImVec2 center, float r,
+                            const Potato::SpriteAtlas& atlas,
+                            ImTextureID tex, const char* frameName,
+                            MarkerShape fallback, ImU32 col,
+                            float thickness = 1.5f) {
+    if (!dl || r <= 0.0f) return false;
+    const Potato::SpriteFrame* f =
+        frameName ? atlas.Find(frameName) : nullptr;
+    if (f && tex) {
+        const ImVec2 p0(center.x - r, center.y - r);
+        const ImVec2 p1(center.x + r, center.y + r);
+        dl->AddImage(tex, p0, p1, ImVec2(f->u0, f->v0),
+                     ImVec2(f->u1, f->v1), col);
+        return true;
+    }
+    DrawMarker(dl, center, r, fallback, col, thickness);
+    return false;
 }
 
 // 固定欄寬右對齊：倒計時/計量數字在保留欄位內向左伸展,
