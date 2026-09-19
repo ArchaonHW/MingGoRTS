@@ -39,20 +39,28 @@ for m in $MODULES; do
     done < <(find "$REPO_ROOT/$m" -name '*.cpp' -o -name '*.c')
 done
 
-# 2) vendored 依賴（引擎標頭/實作引用 external/tinygltf 等）
-if [ -d "$REPO_ROOT/external" ]; then
-    mkdir -p "$TARGET/external"
-    cp -r "$REPO_ROOT/external/." "$TARGET/external/"
-fi
+# 2) vendored 依賴：引擎建置只需要 glad_gen + tinygltf
+#（imgui 為遊戲層工具用，不進上游鏡像，上游 .gitignore 亦排除）
+for dep in glad_gen tinygltf; do
+    if [ -d "$REPO_ROOT/external/$dep" ]; then
+        mkdir -p "$TARGET/external"
+        rm -rf "$TARGET/external/$dep"
+        cp -r "$REPO_ROOT/external/$dep" "$TARGET/external/$dep"
+    fi
+done
 
 # 3) 殘留檔：上游有、repo 無對應 → 移入 legacy/（保留但不污染鏡像）
+# 注意:比對需用模組內相對路徑（如 Core/Interfaces/IAudio.h）,不能只用 basename,
+# 否則子目錄檔案會被誤判 stale;legacy 目錄要建 dirname,直接建 $rel 會產生
+# 「同名目錄包同名檔案」的嵌套。
 moved=0
 while IFS= read -r f; do
-    rel="${f#$TARGET/}"          # include/<Mod>/x.h 或 src/<Mod>/x.cpp
-    mod="$(echo "$rel" | cut -d/ -f2)"
-    base="$(basename "$f")"
-    [ -f "$REPO_ROOT/$mod/$base" ] && continue
-    mkdir -p "$TARGET/legacy/$rel"
+    rel="${f#$TARGET/}"          # include/<Mod>/<sub>/x.h 或 src/<Mod>/<sub>/x.cpp
+    rest="${rel#*/}"             # <Mod>/<sub>/x.h
+    mod="${rest%%/*}"            # <Mod>
+    sub="${rest#*/}"             # <sub>/x.h
+    [ -f "$REPO_ROOT/$mod/$sub" ] && continue
+    mkdir -p "$TARGET/legacy/$(dirname "$rel")"
     mv "$f" "$TARGET/legacy/$rel"
     moved=$((moved+1))
     echo "  [legacy] $rel"
