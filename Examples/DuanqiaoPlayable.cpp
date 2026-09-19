@@ -52,6 +52,7 @@
 #include <deque>
 #include <filesystem>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 using namespace Potato;
@@ -552,6 +553,7 @@ int main() {
         std::string chronicler;
         float endedAt = -1.0f;
         float replayCursor = 0.0f;
+        std::unordered_set<size_t> govFired; // C-2:已觸發治理互動點(每點每場一次)
 
     // ---- 地圖 ----
     BattleMap map;
@@ -1037,6 +1039,35 @@ int main() {
         battle.Update(dt);
         roster.Update(battle); // T-8:殲滅偵測→記陣亡
         sync.Sync(battle);
+
+        // C-2 治理源:village/convoy 互動點佔領偵測(我軍隊入圈即發,每點一次)
+        {
+            const auto& inter = map.GetInteractables();
+            for (size_t gi = 0; gi < inter.size(); ++gi) {
+                if (govFired.count(gi)) continue;
+                GovernanceEvent gev;
+                if (inter[gi].type == "village") {
+                    gev = GovernanceEvent::VillageOccupied;
+                } else if (inter[gi].type == "convoy" ||
+                           inter[gi].type == "supply_cache") {
+                    gev = GovernanceEvent::ConvoyProtected;
+                } else {
+                    continue; // 油漬/落石等其他互動物不計治理
+                }
+                for (const auto& sq : battle.GetSquads()) {
+                    if (sq->GetTeam() != 0 || sq->IsEliminated() ||
+                        sq->IsRouting()) {
+                        continue;
+                    }
+                    if ((sq->GetPosition() - inter[gi].pos).Length() <=
+                        inter[gi].radius) {
+                        battle.RecordGovernanceEvent(gev);
+                        govFired.insert(gi);
+                        break;
+                    }
+                }
+            }
+        }
 
         // ---- 渲染 ----
         { // U-1:clear color 跟主題走
@@ -1697,6 +1728,11 @@ int main() {
                         campaign.chapter.chapterId);
                 }
             }
+        }
+        // C-2 治理折帳:本場治理事件計數折進戰役帳,動亂事件入史官筆
+        campaign.Gov().Accumulate(battle.GetGovernanceEvents());
+        for (const auto& msg : campaign.Gov().PollUnrestEvents()) {
+            chronicler += msg + "\n";
         }
         {
             std::error_code ec;
