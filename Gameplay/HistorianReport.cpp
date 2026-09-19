@@ -1,5 +1,7 @@
 #include "HistorianReport.h"
 
+#include "Gameplay/Ledger.h"
+
 #include <algorithm>
 #include <cstdio>
 
@@ -184,6 +186,44 @@ HistorianReport ComposeHistorianReport(const HistorianInput& in) {
     // 措辭與 RivalDeck::WarningLine 一致——同一判詞兩處書寫
     if (!in.counteredHabit.empty()) {
         t += "彼之陣法，似針對我軍慣用「" + in.counteredHabit + "」";
+    }
+
+    // L-3 查帳段：帳簿在場才書。斷鏈 → 帳目遭篡；借貸不成立 →
+    // 墨跡未乾；平衡 → 借貸相符並附非零帳戶淨額。審計欄位仍恆居末。
+    if (in.ledger && in.ledger->Size() > 0) {
+        const int broken = in.ledger->Verify();
+        const int unsound = in.ledger->SoundnessViolation();
+        char buf[160];
+        if (broken >= 0) {
+            std::snprintf(buf, sizeof(buf),
+                          "本章記帳 %d 筆，第 %d 筆墨跡未乾——帳目遭篡，史官存疑。",
+                          static_cast<int>(in.ledger->Size()), broken + 1);
+            t += buf;
+        } else if (unsound >= 0) {
+            std::snprintf(buf, sizeof(buf),
+                          "本章記帳 %d 筆，第 %d 筆借貸不符——墨跡未乾，史官存疑。",
+                          static_cast<int>(in.ledger->Size()), unsound + 1);
+            t += buf;
+        } else {
+            std::snprintf(buf, sizeof(buf), "本章記帳 %d 筆，借貸相符",
+                          static_cast<int>(in.ledger->Size()));
+            t += buf;
+            const auto net = in.ledger->TrialBalance();
+            std::string details;
+            char dbuf[64];
+            for (int i = 0; i < static_cast<int>(LedgerAccount::Count); ++i) {
+                const int n = net[static_cast<size_t>(i)];
+                if (n == 0) {
+                    continue;
+                }
+                std::snprintf(dbuf, sizeof(dbuf), "，%s%s %d",
+                              AccountNameZh(static_cast<LedgerAccount>(i)),
+                              n > 0 ? "增" : "損", n > 0 ? n : -n);
+                details += dbuf;
+            }
+            t += details;
+            t += "。";
+        }
     }
 
     // 審計欄位：省略計數永遠在場——帳目不全是規則不是疏漏

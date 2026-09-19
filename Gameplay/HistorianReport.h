@@ -9,6 +9,8 @@
 namespace Potato {
 namespace Gameplay {
 
+class LedgerChain;
+
 /**
  * 史官戰報組裝器（HistorianReport）——N-1 帳本文法核心。
  *
@@ -39,6 +41,9 @@ struct HistorianInput {
     // N-3 帳本外洩：敵軍針對的我軍慣用 trigger 名（如 "EnemyInRange"）；
     // 非空 → 名冊句後、省略計數前插入判詞行「彼之陣法…」
     std::string counteredHabit;
+    // L-3 查帳：非空且有帳 → 判詞行後插入試算段——
+    // 平衡產「借貸相符」、斷鏈/不健全產「墨跡未乾」存疑句
+    const LedgerChain* ledger = nullptr;
 };
 
 struct HistorianReport {
