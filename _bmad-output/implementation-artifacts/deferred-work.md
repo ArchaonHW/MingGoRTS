@@ -60,3 +60,24 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-game-backend-services.md`
   summary: Manage H2 schema with Flyway instead of ddl-auto=update, and wire Maven into CI when Java services are expected to build in CI.
   evidence: Blind-hunter + verification-gap reviews — schema drift is unmanaged and Java tests never run in CI; both were explicitly out of this spec's boundaries.
+- source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
+  summary: DetectGovernanceEvents Atrocity branch unreachable — rout skips damage so members never drop after routing, and the killing blow clears IsRouting before detection runs; hardcodes `team != 0` as enemy.
+  evidence: Blind-hunter + edge-case layers verified in BattleController.cpp ~L275-295/780; belongs to parallel C-2 governance work.
+- source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
+  summary: Unrest events appended to chronicler after its display window closes — strings silently swallowed.
+  evidence: DuanqiaoPlayable.cpp ~L1733-1736; parallel governance UI work.
+- source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
+  summary: Chapter shell regressions — replaying a taken chapter rewinds campaign progress, pendingChapter bypasses AdvanceChapter (ledger diverges), ChapterDef::map never loaded (hardcoded duanqiao.json).
+  evidence: DuanqiaoPlayable.cpp ~L543-560/L1705-1729; parallel B-5/C-1 chapter shell work.
+- source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
+  summary: Village/convoy occupation scan ungated by battle phase (fires during Deployment/post-battle); interactable radius<=0 can never fire; interactable feed has no headless test coverage.
+  evidence: DuanqiaoPlayable.cpp ~L1043-1070; verification-gap layer disposition=defer — extracting a Gameplay seam exceeds this spec.
+- source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
+  summary: Orphaned install(DIRECTORY GUI/) rule ships AgentGUI.h with no compiled symbols; build-video/check_all.sh still lists GUI/AgentGUI.cpp.
+  evidence: CMakeLists.txt ~L889; parallel engine/game split cleanup.
+- source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
+  summary: GovernanceTest hygiene — leftover [dbg] printf, weak `emits>0` assertion counts deploy emits not governance, `evs.at` throws instead of FAIL.
+  evidence: Examples/GovernanceTest.cpp §1; parallel test file.
+- source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
+  summary: Plan-bonus HUD hides at exactly ×1.00 — the moment intel resolves against the tip, the label vanishes instead of showing a "落空" state.
+  evidence: DuanqiaoPlayable.cpp ~L1436-1439; UX polish under parallel-session churn.

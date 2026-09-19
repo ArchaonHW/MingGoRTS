@@ -1,0 +1,1084 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a16f936..cffb569 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -135,7 +135,6 @@ include_directories(
+     ${CMAKE_SOURCE_DIR}/Serialization
+     ${CMAKE_SOURCE_DIR}/Time
+     ${CMAKE_SOURCE_DIR}/AI
+-    ${CMAKE_SOURCE_DIR}/GUI
+     ${CMAKE_SOURCE_DIR}/Security
+     ${OPENGL_INCLUDE_DIRS}
+ )
+@@ -159,7 +158,7 @@ file(GLOB_RECURSE ENGINE_SOURCES
+     "Resources/*.cpp"
+     "ECS/*.cpp"
+     "GameObject/*.cpp"
+-    "GUI/*.cpp"
++    # "GUI/*.cpp"      # AgentGUI 依賴遊戲側 AIAgentSystem,不進引擎
+     # "MathUtils/*.cpp"      # 全 header-only
+     # "AI/*.cpp"      # AI 模組另有獨立靜態庫目標,避免重複編譯
+ )
+@@ -182,7 +181,6 @@ file(GLOB_RECURSE ENGINE_HEADERS
+     "Serialization/*.h"
+     "Time/*.h"
+     "AI/*.h"
+-    "GUI/*.h"
+     "MathUtils/*.h"
+ )
+ 
+@@ -385,6 +383,7 @@ add_library(Gameplay STATIC
+     Gameplay/GeneralDossier.cpp
+     Gameplay/MythLog.cpp
+     Gameplay/ChapterConventions.cpp
++    Gameplay/Ledger.cpp
+ )
+ target_include_directories(Gameplay PUBLIC ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/Gameplay)
+ # BattleSceneSync 需要場景圖/渲染類型;PotatoEngine 不依賴 Gameplay,無循環
+@@ -396,6 +395,7 @@ target_link_libraries(Gameplay PUBLIC PotatoEngine Quantum)
+ add_library(Campaign STATIC
+     Campaign/CampaignState.cpp
+     Campaign/ChapterLibrary.cpp
++    Campaign/Governance.cpp
+ )
+ target_include_directories(Campaign PUBLIC ${CMAKE_SOURCE_DIR})
+ target_link_libraries(Campaign PUBLIC Gameplay)
+@@ -669,6 +669,11 @@ add_executable(BattlePlanTest Examples/BattlePlanTest.cpp)
+ target_include_directories(BattlePlanTest PRIVATE ${CMAKE_SOURCE_DIR})
+ target_link_libraries(BattlePlanTest Gameplay)
+ 
++# quantum-plan-effects：計畫加成依情報確定度縮放（無頭,進 POTATO_TESTS）
++add_executable(QuantumPlanTest Examples/QuantumPlanTest.cpp)
++target_include_directories(QuantumPlanTest PRIVATE ${CMAKE_SOURCE_DIR})
++target_link_libraries(QuantumPlanTest Gameplay)
++
+ # G-9 戰鬥間整補循環測試（headless：傷兵池/招募/遺物/部署/存檔）
+ add_executable(RefitCampTest Examples/RefitCampTest.cpp)
+ target_include_directories(RefitCampTest PRIVATE ${CMAKE_SOURCE_DIR})
+@@ -691,6 +696,7 @@ target_include_directories(UIThemeTest PRIVATE
+     ${CMAKE_SOURCE_DIR}
+     ${CMAKE_SOURCE_DIR}/external/imgui
+ )
++target_link_libraries(UIThemeTest PotatoEngine) # SpriteAtlas(F-1)
+ 
+ # RenderTarget 離屏 FBO 測試（GL-gated：無顯示環境 SKIP）
+ add_executable(RenderTargetTest Examples/RenderTargetTest.cpp)
+@@ -725,6 +731,21 @@ add_executable(ChapterConventionsTest Examples/ChapterConventionsTest.cpp)
+ target_include_directories(ChapterConventionsTest PRIVATE ${CMAKE_SOURCE_DIR})
+ target_link_libraries(ChapterConventionsTest Gameplay)
+ 
++# L-1/L-2 帳本機械化：複式記帳 + 雜湊鏈無頭測試
++add_executable(LedgerChainTest Examples/LedgerChainTest.cpp)
++target_include_directories(LedgerChainTest PRIVATE ${CMAKE_SOURCE_DIR})
++target_link_libraries(LedgerChainTest Gameplay)
++
++# L-3 查帳戰報：HistorianReport 消費 LedgerChain 無頭測試
++add_executable(LedgerAuditTest Examples/LedgerAuditTest.cpp)
++target_include_directories(LedgerAuditTest PRIVATE ${CMAKE_SOURCE_DIR})
++target_link_libraries(LedgerAuditTest Gameplay)
++
++# L-5 回放完整性：battle_replay rootHash 驗證無頭測試
++add_executable(ReplayIntegrityTest Examples/ReplayIntegrityTest.cpp)
++target_include_directories(ReplayIntegrityTest PRIVATE ${CMAKE_SOURCE_DIR})
++target_link_libraries(ReplayIntegrityTest Gameplay)
++
+ # E-7 戰役框架 facade 無頭測試（roundtrip/壞檔拒絕/原子寫）
+ add_executable(CampaignStateTest Examples/CampaignStateTest.cpp)
+ target_include_directories(CampaignStateTest PRIVATE ${CMAKE_SOURCE_DIR})
+@@ -735,6 +756,21 @@ add_executable(ChapterLibraryTest Examples/ChapterLibraryTest.cpp)
+ target_include_directories(ChapterLibraryTest PRIVATE ${CMAKE_SOURCE_DIR})
+ target_link_libraries(ChapterLibraryTest Campaign)
+ 
++# C-2 戰役治理累加器無頭測試（折半率/動亂級/持久化）
++add_executable(GovernanceTest Examples/GovernanceTest.cpp)
++target_include_directories(GovernanceTest PRIVATE ${CMAKE_SOURCE_DIR})
++target_link_libraries(GovernanceTest Campaign)
++
++# B-1 Potato::Log 輕量日誌無頭測試（stderr 捕獲/級別/檔案 sink）
++add_executable(LogTest Examples/LogTest.cpp)
++target_include_directories(LogTest PRIVATE ${CMAKE_SOURCE_DIR})
++target_link_libraries(LogTest PotatoEngine)
++
++# F-1 sprite atlas 索引/uv/降級無頭測試
++add_executable(SpriteAtlasTest Examples/SpriteAtlasTest.cpp)
++target_include_directories(SpriteAtlasTest PRIVATE ${CMAKE_SOURCE_DIR})
++target_link_libraries(SpriteAtlasTest PotatoEngine)
++
+ # 斷橋攻防戰即時渲染 → MP4
+ add_executable(BattleRenderDemo Examples/BattleRenderDemo.cpp)
+ target_include_directories(BattleRenderDemo PRIVATE ${CMAKE_SOURCE_DIR})
+@@ -909,6 +945,7 @@ set(POTATO_TESTS
+     GeneralGuardTest
+     RefitCampTest
+     BattlePlanTest
++    QuantumPlanTest
+     MediaPipeTest
+     UIThemeTest
+     RenderTargetTest
+@@ -918,9 +955,15 @@ set(POTATO_TESTS
+     GeneralDossierTest
+     CampaignStateTest
+     ChapterLibraryTest
++    LogTest
++    SpriteAtlasTest
+     SynthDataDemo
+     MythLogTest
+     ChapterConventionsTest
++    LedgerChainTest
++    LedgerAuditTest
++    ReplayIntegrityTest
++    GovernanceTest
+ )
+ foreach(test_name IN LISTS POTATO_TESTS)
+     if(TARGET ${test_name})
+diff --git a/Examples/DuanqiaoPlayable.cpp b/Examples/DuanqiaoPlayable.cpp
+index 3a684c2..f88b4dc 100644
+--- a/Examples/DuanqiaoPlayable.cpp
++++ b/Examples/DuanqiaoPlayable.cpp
+@@ -17,6 +17,7 @@
+ #include "Gameplay/BattleSceneSync.h"
+ #include "Gameplay/BattlePicker.h"
+ #include "Gameplay/BattleMap.h"
++#include "Gameplay/GovernanceField.h"
+ #include "Gameplay/BattlePlanner.h"
+ #include "Gameplay/PlanningDeck.h"
+ #include "Gameplay/BattlePlan.h"
+@@ -52,6 +53,7 @@
+ #include <deque>
+ #include <filesystem>
+ #include <string>
++#include <unordered_set>
+ #include <vector>
+ 
+ using namespace Potato;
+@@ -258,13 +260,18 @@ static bool WorldToScreen(const Camera& cam, const Vector3& w,
+ // ---- U-1 遊戲殼：Title → Battle → (回 Title | 離開) ----
+ enum class ShellScreen { Title, Battle, Quit };
+ 
+-// 標題頁單幀：置中視窗 + 開戰/說明/設定/離開。
++// 標題頁單幀：置中視窗 + 開戰/說明/設定/離開 + B.5 章節地圖殼。
+ // theme/uiScale 由設定頁就地修改；applied* 追蹤已套用的值。
++// pendingChapter：UI 唯讀消費 CampaignState——玩家選的章節只
++// 寫到 out 參數，由主迴圈（部署層）套用，UI 不直接改戰役狀態。
+ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
+                               UITheme::Id& theme, float& uiScale,
+                               ImFont* fontSans, ImFont* fontSerif,
+                               UITheme::Id& appliedTheme, float& appliedScale,
+-                              RefitCamp& camp, const SquadTemplateLibrary& campLibrary) {
++                              RefitCamp& camp, const SquadTemplateLibrary& campLibrary,
++                              const Campaign::CampaignState& campaign,
++                              const Campaign::ChapterLibrary& chapters,
++                              const Campaign::ChapterDef*& pendingChapter) {
+     renderer.PollEvents();
+ 
+     int dw = 0, dh = 0, ww = 0, wh = 0;
+@@ -356,6 +363,38 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
+         }
+     }
+ 
++    // ---- B.5 章節地圖殼：唯讀顯示戰役進度 + 弧內自由選章 ----
++    if (chapters.Size() > 0) {
++        static const char* kArcNames[] = {"軍閥", "北伐", "抗戰", "內戰"};
++        const int arc = campaign.chapter.arc;
++        ImGui::Spacing();
++        ImGui::Separator();
++        ImGui::TextDisabled("戰役 · 第%d弧 %s", arc + 1,
++                            (arc >= 0 && arc < 4) ? kArcNames[arc] : "?");
++        for (const Campaign::ChapterDef* def : chapters.Sorted()) {
++            if (def->arc != arc) {
++                continue;
++            }
++            const bool taken =
++                std::find(campaign.chapter.frontsTaken.begin(),
++                          campaign.chapter.frontsTaken.end(),
++                          def->id) != campaign.chapter.frontsTaken.end();
++            const bool current = campaign.chapter.chapterId == def->id;
++            const bool sel = pendingChapter == def;
++            char label[160];
++            std::snprintf(label, sizeof(label), "%s %d-%d %s",
++                          taken ? "◆" : (current ? "▶" : "·"),
++                          def->arc + 1, def->chapter,
++                          def->name.c_str());
++            if (ImGui::Selectable(label, sel)) {
++                pendingChapter = def; // 寫 out 參數，不動 campaign
++            }
++            if (ImGui::IsItemHovered() && !def->map.empty()) {
++                ImGui::SetTooltip("地圖 %s", def->map.c_str());
++            }
++        }
++    }
++
+     if (ImGui::Button("操作說明", ImVec2(-1, 0))) showHelp = !showHelp;
+     if (showHelp) {
+         ImGui::PushTextWrapPos();
+@@ -491,19 +530,31 @@ int main() {
+         }
+     }
+     ShellScreen screen = ShellScreen::Title;
++    // B.5 章節選擇暫存：TitleFrame 唯讀 campaign，選章寫到這裡，
++    // 進部署時由主迴圈（非 UI 層）套用到 campaign.chapter。
++    const Campaign::ChapterDef* pendingChapter = nullptr;
+     while (screen != ShellScreen::Quit && !renderer.ShouldClose()) {
+         if (screen == ShellScreen::Title) {
+             screen = TitleFrame(window, renderer, theme, uiScale,
+                                 fontSans, fontSerif, appliedTheme,
+-                                appliedScale, camp, campLibrary);
++                                appliedScale, camp, campLibrary,
++                                campaign, chapters, pendingChapter);
+             continue;
+         }
++        if (pendingChapter != nullptr) {
++            // B.5 選章 → 讀定義 → 部署流程讀到的是選中的章節
++            campaign.chapter.arc = pendingChapter->arc;
++            campaign.chapter.chapter = pendingChapter->chapter;
++            campaign.chapter.chapterId = pendingChapter->id;
++            pendingChapter = nullptr;
++        }
+         bool backToTitle = false;
+         { // ---- 戰鬥場次 scope 開始(內部維持原縮排以保 diff 最小) ----
+         // 戰後結算狀態:每場重建——宣告成 static 會跨場殘留上一場的報告
+         std::string chronicler;
+         float endedAt = -1.0f;
+         float replayCursor = 0.0f;
++        GovernanceField govField; // A-1/A-3/A-4：治理互動追蹤（每場重建）
+ 
+     // ---- 地圖 ----
+     BattleMap map;
+@@ -521,6 +572,7 @@ int main() {
+ 
+     BattleController battle(GW, GH, CELL);
+     map.ApplyToField(battle.GetField());
++    govField.Bind(map.GetInteractables(), map.GetConvoys()); // A-1/A-3/A-4
+     battle.SetEventCallback([&](const std::string& e) {
+         eventLog.push_back(e);
+         if (eventLog.size() > 8) eventLog.pop_front();
+@@ -713,6 +765,9 @@ int main() {
+     // ---- G-5 作戰計畫箭頭:Ctrl+左鍵自小隊拖出主攻軸線,開戰套用 ----
+     BattlePlan plan;
+     plan.SetPlanBonus(/*attackMul=*/1.10f, /*intel=*/2, /*cp=*/1);
++    // quantum-plan:加成依箭頭尖端的情報確定度即時縮放——
++    // 雲未解析時加成打折,偵查/觀測坐實後回到滿額
++    battle.BindPlan(&plan);
+     // 後衛改當偵查兵:低血撤退 > 遇敵應戰 > 無事就往最近的雲走
+     {
+         const int di = deck.FindDeck(rearGuard);
+@@ -987,6 +1042,10 @@ int main() {
+         roster.Update(battle); // T-8:殲滅偵測→記陣亡
+         sync.Sync(battle);
+ 
++        // A-1/A-3/A-4 治理源：佔領/焚村/護輜由 GovernanceField
++        // 追蹤（地圖知識在此層），事件經 battle 入帳
++        govField.Update(dt, battle);
++
+         // ---- 渲染 ----
+         { // U-1:clear color 跟主題走
+             const ImVec4 cc = UITheme::ClearColor(theme);
+@@ -1349,6 +1408,12 @@ int main() {
+                 ImGui::ProgressBar(mo, ImVec2(-1, 0), moLbl);
+                 ImGui::PopStyleColor();
+                 ImGui::TextDisabled("命令: %s", OrderName(sq->GetOrder()));
++                // quantum-plan:計畫加成依情報確定度即時浮動——
++                // 雲未解析時低於滿額,坐實後升回 attackMul
++                if (sq->GetPlanAttackMul() > 1.001f) {
++                    ImGui::TextDisabled("計畫加成 ×%.2f",
++                                        sq->GetPlanAttackMul());
++                }
+                 ImGui::Separator();
+             }
+ 
+@@ -1617,6 +1682,14 @@ int main() {
+         if (iWon) {
+             if (const Campaign::ChapterDef* cur =
+                     chapters.Find(campaign.chapter.chapterId)) {
++                // B.5 已收戰線：勝場記入 frontsTaken（去重），
++                // 供章節地圖殼顯示 ◆ 標記
++                if (std::find(campaign.chapter.frontsTaken.begin(),
++                              campaign.chapter.frontsTaken.end(),
++                              cur->id) ==
++                    campaign.chapter.frontsTaken.end()) {
++                    campaign.chapter.frontsTaken.push_back(cur->id);
++                }
+                 if (!cur->next.empty()) {
+                     if (const Campaign::ChapterDef* nxt =
+                             chapters.Find(cur->next)) {
+@@ -1633,6 +1706,11 @@ int main() {
+                 }
+             }
+         }
++        // C-2 治理折帳:本場治理事件計數折進戰役帳,動亂事件入史官筆
++        campaign.Gov().Accumulate(battle.GetGovernanceEvents());
++        for (const auto& msg : campaign.Gov().PollUnrestEvents()) {
++            chronicler += msg + "\n";
++        }
+         {
+             std::error_code ec;
+             std::filesystem::create_directories(
+@@ -1642,6 +1720,7 @@ int main() {
+     }
+ 
+     battle.BindFog(nullptr); // fog 是 local,先於 battle 解構——解綁防懸空
++    battle.BindPlan(nullptr); // plan 同為 local——一併解綁
+ 
+         } // ---- 戰鬥場次 scope 結束:battle/fog/scene 全數析構 ----
+         screen = renderer.ShouldClose() ? ShellScreen::Quit
+diff --git a/Examples/QuantumPlanTest.cpp b/Examples/QuantumPlanTest.cpp
+new file mode 100644
+index 0000000..6732e59
+--- /dev/null
++++ b/Examples/QuantumPlanTest.cpp
+@@ -0,0 +1,312 @@
++// QuantumPlanTest - quantum-plan-effects：計畫加成依情報確定度縮放
++// I/O 矩陣：CONCENTRATED_TIP / REVEALED_AT_TIP / EMPTY_TERRAIN / NO_FOG /
++//           RESOLVE_ELSEWHERE / PROBE_CONCENTRATES / IDEMPOTENT / NO_BONUS / REAPPLY
++#include "Gameplay/BattlePlan.h"
++#include "Gameplay/BattleController.h"
++#include "Gameplay/BattleResources.h"
++#include "Gameplay/QuantumFog.h"
++#include "Gameplay/Squad.h"
++
++#include <cmath>
++#include <cstdio>
++
++using namespace Potato;
++using namespace Potato::Gameplay;
++
++static int g_pass = 0, g_fail = 0;
++static void Check(bool ok, const char* name) {
++    if (ok) { ++g_pass; printf("  [PASS] %s\n", name); }
++    else    { ++g_fail; printf("  [FAIL] %s\n", name); }
++}
++
++int main() {
++    printf("=== Quantum Plan Effects Tests ===\n\n");
++
++    // 共用 fixture：20x15 戰場，我軍前鋒在 (2,7)，敵軍真身在 (15,7)；
++    // 雲候選 (15,7)=0.8、(17,9)=0.2；箭頭尖端 (15,7) 半徑 2 內質量 0.8
++    // → effectiveMul = 1 + (1.3-1)*0.8 = 1.24
++    printf("[1] CONCENTRATED_TIP：尖端壓雲 0.8 → ×1.24\n");
++    {
++        BattleController battle(20, 15, 1.0f);
++        BattleResources res;
++        res.Setup(battle, 0, /*intel=*/5, /*cp=*/0);
++        QuantumFog fog(30.0f, 1);
++        fog.BindResources(&res);
++        battle.BindFog(&fog);
++
++        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
++        Squad* enemy = battle.CreateSquad("敵軍", 1, Vector2(15, 7), 20);
++        const int eid = fog.AddEntity("敵軍", /*觀測方=*/0,
++            {Vector2(15, 7), Vector2(17, 9)}, {0.8, 0.2});
++        battle.BindFogSquad(enemy, eid);
++
++        BattlePlan plan;
++        plan.SetPlanBonus(1.3f, 0, 0);
++        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(15, 7));
++        battle.BindPlan(&plan);
++
++        const float baseDpm = vg->GetDamagePerMember();
++        Check(plan.Apply(battle, &res, 0) == 1, "Apply 指派 1 隊");
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.24f) < 1e-4f,
++              "planAttackMul ≈ 1.24");
++        Check(std::fabs(vg->GetDamagePerMember() - baseDpm * 1.24f) < 1e-4f,
++              "damagePerMember 乘上 1.24");
++
++        // [2] REVEALED_AT_TIP：真身在尖端 → certainty 1 → 滿額 1.3
++        printf("[2] REVEALED_AT_TIP：坐實尖端 → ×1.30\n");
++        Check(fog.Reveal(eid, Vector2(15, 7)), "揭露於尖端");
++        plan.UpdateUncertainty(battle);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.30f) < 1e-4f,
++              "揭露後回升滿額");
++        Check(std::fabs(vg->GetDamagePerMember() - baseDpm * 1.30f) < 1e-4f,
++              "damagePerMember 跟進 1.30");
++
++        // [3] RESOLVE_ELSEWHERE：真身在遠方 → 賭輸掉到 1.0
++        printf("[3] RESOLVE_ELSEWHERE：真身離尖 → ×1.00\n");
++        Check(fog.Reveal(eid, Vector2(1, 1)), "改揭露於遠方");
++        plan.UpdateUncertainty(battle);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.0f) < 1e-4f,
++              "落空後加成歸 1");
++        Check(std::fabs(vg->GetDamagePerMember() - baseDpm) < 1e-4f,
++              "damagePerMember 回到基準");
++
++        // [4] IDEMPOTENT：fog 不變連續重評 → 逐位元不動
++        printf("[4] IDEMPOTENT：重評冪等\n");
++        const float dpm1 = vg->GetDamagePerMember();
++        plan.UpdateUncertainty(battle);
++        plan.UpdateUncertainty(battle);
++        Check(vg->GetDamagePerMember() == dpm1,
++              "連續 UpdateUncertainty damagePerMember 逐位元不變");
++    }
++
++    // [5] EMPTY_TERRAIN：尖端遠離所有雲 → 滿額（不構成懷疑）
++    printf("[5] EMPTY_TERRAIN：尖端無雲 → 滿額\n");
++    {
++        BattleController battle(20, 15, 1.0f);
++        QuantumFog fog(30.0f, 1);
++        battle.BindFog(&fog);
++        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
++        fog.AddEntity("敵軍", 0, {Vector2(15, 7), Vector2(17, 9)},
++                      {0.8, 0.2});
++
++        BattlePlan plan;
++        plan.SetPlanBonus(1.3f, 0, 0);
++        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(5, 5)); // 尖端無雲
++        plan.Apply(battle, nullptr, 0);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.3f) < 1e-4f,
++              "無雲尖端仍滿額 1.3");
++    }
++
++    // [6] NO_FOG：完全不綁 fog → 與舊行為一致
++    printf("[6] NO_FOG：無霧 → 滿額\n");
++    {
++        BattleController battle(20, 15, 1.0f);
++        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
++        BattlePlan plan;
++        plan.SetPlanBonus(1.3f, 0, 0);
++        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(15, 7));
++        plan.Apply(battle, nullptr, 0);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.3f) < 1e-4f,
++              "無 fog 滿額 1.3");
++        plan.UpdateUncertainty(battle); // 不崩潰、不改值
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.3f) < 1e-4f,
++              "無 fog UpdateUncertainty 安全無效");
++    }
++
++    // [7] PROBE_CONCENTRATES：探測收縮雲 → 加成回升
++    printf("[7] PROBE_CONCENTRATES：探測集中 → 加成升\n");
++    {
++        BattleController battle(20, 15, 1.0f);
++        BattleResources res;
++        res.Setup(battle, 0, /*intel=*/5, /*cp=*/0);
++        QuantumFog fog(30.0f, 1, /*probe=*/1);
++        fog.BindResources(&res);
++        battle.BindFog(&fog);
++
++        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
++        Squad* enemy = battle.CreateSquad("敵軍", 1, Vector2(15, 7), 20);
++        // 尖端候選先驗只有 0.3 → eff = 1 + 0.3*0.3 = 1.09
++        const int eid = fog.AddEntity("敵軍", 0,
++            {Vector2(15, 7), Vector2(17, 9)}, {0.3, 0.7});
++        battle.BindFogSquad(enemy, eid);
++
++        BattlePlan plan;
++        plan.SetPlanBonus(1.3f, 0, 0);
++        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(15, 7));
++        battle.BindPlan(&plan);
++        plan.Apply(battle, &res, 0);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.09f) < 1e-4f,
++              "低質量尖端 → ×1.09");
++
++        Check(fog.Probe(eid, Vector2(15, 7), /*strength=*/1.0f),
++              "探測向尖端收縮");
++        plan.UpdateUncertainty(battle);
++        Check(vg->GetPlanAttackMul() > 1.09f + 1e-4f,
++              "雲集中後加成上升");
++    }
++
++    // [8] NO_BONUS：attackMul 1.0 → 不論 certainty 恆 1.0
++    printf("[8] NO_BONUS：無加成 → 恆 1.0\n");
++    {
++        BattleController battle(20, 15, 1.0f);
++        QuantumFog fog(30.0f, 1);
++        battle.BindFog(&fog);
++        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
++        const int eid = fog.AddEntity("敵軍", 0,
++            {Vector2(15, 7), Vector2(17, 9)}, {1.0, 0.0});
++        Check(eid >= 0, "NO_BONUS 雲確實註冊（單候選會回 -1）");
++
++        BattlePlan plan;
++        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(15, 7)); // 無 SetPlanBonus
++        battle.BindPlan(&plan);
++        plan.Apply(battle, nullptr, 0);
++        plan.UpdateUncertainty(battle);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.0f) < 1e-6f,
++              "attackMul 1 → planAttackMul 1");
++    }
++
++    // [9] REAPPLY：中途重跑 Apply → 重綁定不疊乘
++    printf("[9] REAPPLY：重跑 Apply 不疊乘\n");
++    {
++        BattleController battle(20, 15, 1.0f);
++        QuantumFog fog(30.0f, 1);
++        battle.BindFog(&fog);
++        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
++        fog.AddEntity("敵軍", 0, {Vector2(15, 7), Vector2(17, 9)},
++                      {0.8, 0.2});
++
++        BattlePlan plan;
++        plan.SetPlanBonus(1.3f, 0, 0);
++        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(15, 7));
++        const float baseDpm = vg->GetDamagePerMember();
++        plan.Apply(battle, nullptr, 0);
++        Check(std::fabs(vg->GetDamagePerMember() - baseDpm * 1.24f) < 1e-4f,
++              "首次 Apply ×1.24");
++        plan.Apply(battle, nullptr, 0);
++        plan.Apply(battle, nullptr, 0);
++        Check(std::fabs(vg->GetDamagePerMember() - baseDpm * 1.24f) < 1e-4f,
++              "重複 Apply 不疊乘");
++    }
++
++    // [10] 控制器自動路徑：BindPlan 後 execution tick 自動重評
++    printf("[10] BindPlan：tick 自動重評\n");
++    {
++        BattleController battle(20, 15, 1.0f);
++        BattleResources res;
++        res.Setup(battle, 0, /*intel=*/5, /*cp=*/0);
++        QuantumFog fog(30.0f, 1);
++        fog.BindResources(&res);
++        battle.BindFog(&fog);
++
++        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
++        Squad* enemy = battle.CreateSquad("敵軍", 1, Vector2(15, 7), 20);
++        const int eid = fog.AddEntity("敵軍", 0,
++            {Vector2(15, 7), Vector2(17, 9)}, {0.8, 0.2});
++        battle.BindFogSquad(enemy, eid);
++
++        BattlePlan plan;
++        plan.SetPlanBonus(1.3f, 0, 0);
++        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(15, 7));
++        battle.BindPlan(&plan);
++        plan.Apply(battle, &res, 0);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.24f) < 1e-4f,
++              "Apply 後 ×1.24");
++
++        // 直接揭露於遠方再跑 tick——不經手動 UpdateUncertainty
++        fog.Reveal(eid, Vector2(1, 1));
++        battle.BeginExecution();
++        battle.Update(0.1f);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.0f) < 1e-4f,
++              "tick 自動重評 → 落空歸 1");
++    }
++
++    // [11] UNCLAIMED_REVEAL：雲從未覆蓋尖端的揭露不拖垮加成
++    printf("[11] UNCLAIMED_REVEAL：無關揭露不懲罰\n");
++    {
++        BattleController battle(20, 15, 1.0f);
++        QuantumFog fog(30.0f, 1);
++        battle.BindFog(&fog);
++        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
++        // 雲 A 覆蓋尖端（質量 0.6，另一候選在 R 外）；雲 B 與尖端無關
++        const int eidA = fog.AddEntity("敵軍A", 0,
++            {Vector2(5, 5), Vector2(10, 10)}, {0.6, 0.4});
++        const int eidB = fog.AddEntity("敵軍B", 0,
++            {Vector2(15, 7), Vector2(17, 9)}, {0.8, 0.2});
++
++        BattlePlan plan;
++        plan.SetPlanBonus(1.3f, 0, 0);
++        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(5, 5));
++        const float baseDpm = vg->GetDamagePerMember();
++        plan.Apply(battle, nullptr, 0);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.18f) < 1e-4f,
++              "雲 A 質量 0.6 → ×1.18");
++
++        // 揭露無關的雲 B——尖端加成不動（舊碼會誤掉到 1.0）
++        fog.Reveal(eidB, Vector2(15, 7));
++        plan.UpdateUncertainty(battle);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.18f) < 1e-4f,
++              "無關揭露後仍 ×1.18");
++        Check(std::fabs(vg->GetDamagePerMember() - baseDpm * 1.18f) < 1e-4f,
++              "無關揭露後 damagePerMember 不變");
++
++        // 雲 A 的雲確實覆蓋過尖端——揭露他處才算賭輸歸 1
++        fog.Reveal(eidA, Vector2(1, 1));
++        plan.UpdateUncertainty(battle);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.0f) < 1e-4f,
++              "覆蓋過尖端的雲落空 → 歸 1");
++    }
++
++    // [12] ARROW_MUTATION：Apply 後改動箭頭 → 綁定失效且倍率回滾
++    printf("[12] ARROW_MUTATION：改箭頭回滾加成\n");
++    {
++        BattleController battle(20, 15, 1.0f);
++        QuantumFog fog(30.0f, 1);
++        battle.BindFog(&fog);
++        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
++        fog.AddEntity("敵軍", 0, {Vector2(15, 7), Vector2(17, 9)},
++                      {0.8, 0.2});
++
++        BattlePlan plan;
++        plan.SetPlanBonus(1.3f, 0, 0);
++        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(15, 7));
++        const float baseDpm = vg->GetDamagePerMember();
++        plan.Apply(battle, nullptr, 0);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.24f) < 1e-4f,
++              "Apply 後 ×1.24");
++
++        Check(plan.RemoveArrowFor("前鋒"), "移除箭頭");
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.0f) < 1e-4f,
++              "移除後 planAttackMul 回滾 1.0");
++        Check(std::fabs(vg->GetDamagePerMember() - baseDpm) < 1e-4f,
++              "移除後 damagePerMember 回基準");
++        plan.UpdateUncertainty(battle); // 綁定已清——安全無效
++        Check(std::fabs(vg->GetDamagePerMember() - baseDpm) < 1e-4f,
++              "UpdateUncertainty 不再改值");
++    }
++
++    // [13] DEBUFF_PLAN：attackMul<1 減益計畫也吃確定度縮放
++    printf("[13] DEBUFF_PLAN：減益計畫對稱縮放\n");
++    {
++        BattleController battle(20, 15, 1.0f);
++        QuantumFog fog(30.0f, 1);
++        battle.BindFog(&fog);
++        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
++        const int eid = fog.AddEntity("敵軍", 0,
++            {Vector2(15, 7), Vector2(17, 9)}, {0.8, 0.2});
++
++        BattlePlan plan;
++        plan.SetPlanBonus(0.8f, 0, 0); // 減益計畫
++        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(15, 7));
++        plan.Apply(battle, nullptr, 0);
++        // effMul = 1 + (0.8-1)*0.8 = 0.84
++        Check(std::fabs(vg->GetPlanAttackMul() - 0.84f) < 1e-4f,
++              "減益依 0.8 質量縮放 → ×0.84");
++        fog.Reveal(eid, Vector2(15, 7));
++        plan.UpdateUncertainty(battle);
++        Check(std::fabs(vg->GetPlanAttackMul() - 0.8f) < 1e-4f,
++              "坐實後減益到位 ×0.80");
++    }
++
++    printf("\n=== %d PASS, %d FAIL ===\n", g_pass, g_fail);
++    return g_fail == 0 ? 0 : 1;
++}
+diff --git a/Gameplay/BattleController.cpp b/Gameplay/BattleController.cpp
+index 1b9eec6..f9e704f 100644
+--- a/Gameplay/BattleController.cpp
++++ b/Gameplay/BattleController.cpp
+@@ -1,5 +1,6 @@
+ #include "BattleController.h"
+ 
++#include "BattlePlan.h"
+ #include "QuantumFog.h"
+ #include "SquadTemplate.h"
+ 
+@@ -262,6 +263,37 @@ void BattleController::ApplyRoutShock() {
+     }
+ }
+ 
++// ---------------------------------------------------------------------------
++// C-2 治理事件
++// ---------------------------------------------------------------------------
++
++void BattleController::RecordGovernanceEvent(GovernanceEvent ev) {
++    ++govEvents[ev];
++    Emit(std::string("治理：") + GovernanceEventName(ev));
++}
++
++void BattleController::DetectGovernanceEvents() {
++    for (const auto& s : squads) {
++        // 只評敵軍（team!=0 慣例：team 0 = 玩家）
++        if (s->GetTeam() == 0) continue;
++        if (!s->IsRouting()) continue;
++        auto it = govRoutMembers.find(s.get());
++        if (it == govRoutMembers.end()) {
++            // 新潰逃敵隊：受降（任其生還不追殺）+ 記錄潰逃時員額
++            govRoutMembers[s.get()] = s->GetMembers();
++            RecordGovernanceEvent(GovernanceEvent::SurrenderAccepted);
++        } else if (s->GetMembers() < it->second &&
++                   !govAtrocityDone.count(s.get())) {
++            // 潰逃中續損員 = 屠殺已降之敵，每隊只記一次
++            govAtrocityDone.insert(s.get());
++            it->second = s->GetMembers();
++            RecordGovernanceEvent(GovernanceEvent::Atrocity);
++        } else {
++            it->second = s->GetMembers();
++        }
++    }
++}
++
+ void BattleController::SetMoraleExecution(float threshold, float rate) {
+     moraleExecThreshold = threshold;
+     moraleExecRate = rate;
+@@ -311,6 +343,7 @@ void BattleController::Update(float realDt) {
+ 
+     ResolveCombat(dt);
+     ApplyRoutShock(); // G-1：傷亡結算後擴散潰逃衝擊
++    DetectGovernanceEvents(); // C-2：潰逃/暴行治理事件偵測
+ 
+     // Q-1 敵情霧：情報時效/退相干推進 + 接觸偵查（正負面觀測）
+     if (fog) {
+@@ -389,6 +422,12 @@ void BattleController::Update(float realDt) {
+             Emit(s->GetName() + " 被我軍目擊（接觸偵查）");
+         }
+     }
++    // 計畫加成依最新情報重評（揭露/消去/過期都會拉動 certainty）；
++    // 放在 if(fog) 外——fog 中途解綁也要讓加成回滿（certainty 1）。
++    // 冪等——情報沒變時 damagePerMember 逐位元不動
++    if (plan) {
++        plan->UpdateUncertainty(*this);
++    }
+ 
+     CheckOutcome();
+ }
+diff --git a/Gameplay/BattleController.h b/Gameplay/BattleController.h
+index 23b9884..f17f053 100644
+--- a/Gameplay/BattleController.h
++++ b/Gameplay/BattleController.h
+@@ -5,6 +5,7 @@
+ #include "FlowField.h"
+ #include "Squad.h"
+ #include "Doctrine.h"
++#include "GovernanceEvent.h"
+ 
+ #include <functional>
+ #include <memory>
+@@ -18,6 +19,7 @@ namespace Potato {
+ namespace Gameplay {
+ 
+ class QuantumFog;
++class BattlePlan;
+ struct SquadTemplate;
+ 
+ /**
+@@ -158,6 +160,12 @@ public:
+         if (cells > 0.0f) fogRevealRange = cells; // NaN/非正數忽略
+     }
+ 
++    // ---- 作戰計畫加成（quantum-plan-effects，可選）----
++    // 綁定後：執行階段 fog 更新完每 tick 呼叫 plan->UpdateUncertainty，
++    // 箭頭尖端的情報確定度即時拉動 planAttackMul 上下（除舊乘新冪等）。
++    void BindPlan(BattlePlan* p) { plan = p; }
++    BattlePlan* GetPlan() const { return plan; }
++
+     // 每幀呼叫：realDt 為真實秒數，內部乘 timeScale
+     void Update(float realDt);
+ 
+@@ -167,6 +175,15 @@ public:
+     int GetCommandPoints(int team) const;
+     const std::vector<UniquePtr<Squad>>& GetSquads() const { return squads; }
+ 
++    // ---- C-2 治理事件：民心/秩序戰場來源 ----
++    // 自動偵測（team!=0 視為敵方）：敵隊新潰逃 → SurrenderAccepted；
++    // 潰逃中續損員 → Atrocity。各事件每隊只發一次。
++    // 村莊/護輜由有地圖知識的呼叫端餵 RecordGovernanceEvent。
++    // 事件一律進 recorder 事件流（Emit），並累計供章節邊界結算。
++    void RecordGovernanceEvent(GovernanceEvent ev);
++    const std::unordered_map<GovernanceEvent, int>&
++    GetGovernanceEvents() const { return govEvents; }
++
+     void SetEventCallback(EventCallback cb) { onEvent = std::move(cb); }
+ 
+ private:
+@@ -176,6 +193,7 @@ private:
+     void CheckOutcome();
+     void Emit(const std::string& msg);
+     void ApplyRoutShock(); // G-1：偵測新潰逃 → 範圍士氣衝擊（每隊一次）
++    void DetectGovernanceEvents(); // C-2：潰逃/暴行自動偵測
+ 
+     SquadContext BuildContext(const Squad& squad) const;
+     FlowField* GetTeamField(int team);
+@@ -201,6 +219,7 @@ private:
+     std::unordered_map<Squad*, float> damageBuffer;      // 小數傷害累積
+     std::unordered_map<Squad*, SquadContext> contexts;
+     QuantumFog* fog = nullptr;                     // Q-1 敵情霧（外層持有）
++    BattlePlan* plan = nullptr;                    // 計畫加成即時重評（外層持有）
+     std::unordered_map<Squad*, int> fogEntities;   // squad → fog entityId
+     float fogRevealRange = 3.0f;                   // 接觸偵查距離（格）
+ 
+@@ -214,6 +233,9 @@ private:
+     float routShockRadius = 0.0f;     // G-1：<=0 關閉
+     float routShockMorale = 0.0f;
+     std::unordered_set<Squad*> routEmitted; // 已擴散過的潰逃隊
++    std::unordered_map<GovernanceEvent, int> govEvents;      // C-2 事件計數
++    std::unordered_map<Squad*, int> govRoutMembers;          // 潰逃時員額（暴行偵測）
++    std::unordered_set<Squad*> govAtrocityDone;              // 已記暴行的潰逃隊
+     int combatWidth = 0;              // G-2：<=0 無上限
+     mutable std::mt19937 execRng{std::random_device{}()};
+ 
+diff --git a/Gameplay/BattlePlan.cpp b/Gameplay/BattlePlan.cpp
+index 3e727d7..7e66329 100644
+--- a/Gameplay/BattlePlan.cpp
++++ b/Gameplay/BattlePlan.cpp
+@@ -2,16 +2,101 @@
+ 
+ #include "BattleController.h"
+ #include "BattleResources.h"
++#include "QuantumFog.h"
+ #include "Squad.h"
+ #include "Serialization/JsonParser.h"
+ 
++#include <algorithm>
++#include <cmath>
+ #include <cstdio>
++#include <unordered_set>
+ 
+ namespace Potato {
+ namespace Gameplay {
+ 
++namespace {
++// 箭頭尖端確定度：各 fog entity 在 tip 半徑 R 內的「佔有確定度」取最大值。
++//   未解析雲：候選質量和——0 質量 = 雲根本沒聲稱尖端，不構成懷疑（跳過）
++//   已解析雲：真身在 R 內 → 1.0（坐實）；在 R 外 → 0.0（情報證明落空，
++//            這朵雲曾讓尖端有嫌疑——計畫賭輸）
++// 沒有任何 entity 對尖端表態（無 fog / 全為未解析且無質量）→ 1.0，
++// 空地無疑，行為與加成功能前一致（向後相容）。
++// fog 實體皆敵方所見——不按 team 過濾（UncertainEntity::team 是觀測方）。
++float TipCertainty(const QuantumFog* fog, const Vector2& tip, float radius) {
++    if (!fog) return 1.0f;
++    const float r2 = radius * radius;
++    float certainty = 0.0f;
++    bool anyClaim = false;
++    for (size_t e = 0; e < fog->EntityCount(); ++e) {
++        const int eid = static_cast<int>(e);
++        if (fog->IsRevealed(eid)) {
++            const Vector2 rp = fog->GetRevealedPos(eid);
++            if (std::isfinite(rp.x) && std::isfinite(rp.y)) {
++                const float dx = rp.x - tip.x;
++                const float dy = rp.y - tip.y;
++                if (dx * dx + dy * dy <= r2) {
++                    anyClaim = true;
++                    certainty = 1.0f; // 坐實尖端
++                    continue;
++                }
++            }
++            // 真身在 R 外：只有「雲原本就覆蓋尖端」才算情報證明
++            // 落空（計畫賭輸）；雲從未碰過尖端的揭露不表態，
++            // 否則任何一處揭露會拖垮所有無關箭頭的加成。
++            const UncertainEntity* ent = fog->GetEntity(eid);
++            if (ent) {
++                for (size_t i = 0; i < ent->candidates.size(); ++i) {
++                    const bool hadMass =
++                        i < ent->priors.size() ? ent->priors[i] > 0.0 : true;
++                    const float dx = ent->candidates[i].x - tip.x;
++                    const float dy = ent->candidates[i].y - tip.y;
++                    if (hadMass && dx * dx + dy * dy <= r2) {
++                        anyClaim = true; // 表態為 0
++                        break;
++                    }
++                }
++            }
++            continue;
++        }
++        float mass = 0.0f;
++        for (const auto& cand : fog->GetCloud(eid)) {
++            const float dx = cand.first.x - tip.x;
++            const float dy = cand.first.y - tip.y;
++            if (dx * dx + dy * dy <= r2) {
++                mass += static_cast<float>(cand.second);
++            }
++        }
++        if (mass > 0.0f) {
++            anyClaim = true;
++            certainty = (std::max)(certainty, mass);
++        }
++    }
++    return anyClaim ? certainty : 1.0f;
++}
++} // namespace
++
++void BattlePlan::InvalidateBindings() const {
++    // 綁定的小隊先把 planAttackMul 除回 1——殘留倍率會變成
++    // 永久加成。注意：本類與 Apply 的目標 BattleController
++    // 同生命週期；controller 先亡後呼叫屬契約外誤用。
++    for (const auto& kv : squadArrowIdx) {
++        Squad* s = kv.first;
++        if (s && !s->IsEliminated()) {
++            const float prev = s->GetPlanAttackMul();
++            if (prev != 1.0f) {
++                s->SetDamagePerMember(s->GetDamagePerMember() / prev);
++                s->SetPlanAttackMul(1.0f);
++            }
++        }
++    }
++    squadArrowIdx.clear();
++    appliedTeam = -1;
++}
++
+ void BattlePlan::AddArrow(const std::string& squadName, const Vector2& from,
+                           const Vector2& to, int priority) {
++    // 箭頭陣列變動會讓 squadArrowIdx 的 index 失效——先回滾綁定
++    InvalidateBindings();
+     PlanArrow a;
+     a.squadName = squadName;
+     a.from = from;
+@@ -24,12 +109,20 @@ bool BattlePlan::RemoveArrowFor(const std::string& squadName) {
+     for (auto it = arrows.begin(); it != arrows.end(); ++it) {
+         if (it->squadName == squadName) {
+             arrows.erase(it);
++            InvalidateBindings();
+             return true;
+         }
+     }
+     return false;
+ }
+ 
++void BattlePlan::ClearArrows() {
++    if (!arrows.empty()) {
++        arrows.clear();
++        InvalidateBindings();
++    }
++}
++
+ void BattlePlan::SetRallyPoint(const Vector2& p) {
+     rallyPoint = p;
+     hasRally = true;
+@@ -69,10 +162,13 @@ int BattlePlan::Apply(BattleController& battle, BattleResources* res,
+     }
+ 
+     int assigned = 0;
++    // 重建綁定前先回滾舊綁定——不再被指派的小隊（消滅/換隊/
++    // 換計畫）planAttackMul 歸 1，不殘留凍結倍率
++    InvalidateBindings();
+     for (const auto& sp : battle.GetSquads()) {
+         Squad* squad = sp.get();
+-        if (squad->GetTeam() != team) {
+-            continue;
++        if (squad->GetTeam() != team || squad->IsEliminated()) {
++            continue; // 死隊不佔指派名額，也不該觸發加成入帳
+         }
+         const PlanArrow* arrow = nullptr;
+         for (const PlanArrow& a : arrows) {
+@@ -90,15 +186,22 @@ int BattlePlan::Apply(BattleController& battle, BattleResources* res,
+         battle.AssignDoctrine(squad, ArrowToDoctrine(*arrow));
+         battle.SetSquadObjective(squad, arrow->to);
+         // 計畫加成依 Squad::planAttackMul 正規化：重複 Apply 同倍率
+-        // 不疊乘；換一份倍率不同的計畫會先除回舊倍率再乘新倍率
++        // 不疊乘；換一份倍率不同的計畫會先除回舊倍率再乘新倍率。
++        // 量子感知：箭頭尖端壓在未解析機率雲上時，加成按確定度縮放
++        const float effMul =
++            1.0f + (attackMul - 1.0f) *
++                       TipCertainty(battle.GetFog(), arrow->to,
++                                    uncertaintyRadius);
+         const float prevMul = squad->GetPlanAttackMul();
+-        if (attackMul != prevMul) {
++        if (effMul != prevMul) {
+             squad->SetDamagePerMember(
+-                squad->GetDamagePerMember() / prevMul * attackMul);
+-            squad->SetPlanAttackMul(attackMul);
++                squad->GetDamagePerMember() / prevMul * effMul);
++            squad->SetPlanAttackMul(effMul);
+         }
++        squadArrowIdx[squad] = static_cast<int>(arrow - arrows.data());
+         ++assigned;
+     }
++    appliedTeam = assigned > 0 ? team : appliedTeam;
+ 
+     // 集結點寫入本身是冪等的；intel/CP 只入帳一次——重複 Apply
+     // 不重複補給；且至少要有一支小隊獲指派才發放（空計畫不白拿加成）
+@@ -115,6 +218,45 @@ int BattlePlan::Apply(BattleController& battle, BattleResources* res,
+     return assigned;
+ }
+ 
++void BattlePlan::SetUncertaintyRadius(float r) {
++    if (r > 0.0f) uncertaintyRadius = r; // 非正數忽略（同 SetFogRevealRange 語意）
++}
++
++void BattlePlan::UpdateUncertainty(BattleController& battle) const {
++    if (appliedTeam < 0 || squadArrowIdx.empty() || attackMul == 1.0f) {
++        return; // 未 Apply / 無綁定 / 恆等倍率——沒有可縮放的東西
++    }
++    // 防 UAF：plan 可能比建立綁定時的 BattleController 活得久，
++    // 或被 BindPlan 換接到別的 controller——只重評仍屬於這個
++    // battle 的小隊。
++    std::unordered_set<const Squad*> members;
++    for (const auto& sp : battle.GetSquads()) {
++        members.insert(sp.get());
++    }
++    QuantumFog* fog = battle.GetFog();
++    for (const auto& kv : squadArrowIdx) {
++        Squad* squad = kv.first;
++        const int idx = kv.second;
++        if (!squad || !members.count(squad) || squad->IsEliminated() ||
++            squad->GetTeam() != appliedTeam ||
++            idx < 0 || static_cast<size_t>(idx) >= arrows.size()) {
++            continue;
++        }
++        const PlanArrow& arrow = arrows[static_cast<size_t>(idx)];
++        const float effMul =
++            1.0f + (attackMul - 1.0f) *
++                       TipCertainty(fog, arrow.to, uncertaintyRadius);
++        // 冪等正規化：除舊乘新——情報沒變時 effMul == prevMul，
++        // damagePerMember 完全不動（逐位元一致）
++        const float prevMul = squad->GetPlanAttackMul();
++        if (effMul != prevMul) {
++            squad->SetDamagePerMember(
++                squad->GetDamagePerMember() / prevMul * effMul);
++            squad->SetPlanAttackMul(effMul);
++        }
++    }
++}
++
+ std::string BattlePlan::ToJson() const {
+     std::string out = "{\"schema\":\"potato.battle_plan/1\",\"arrows\":[";
+     for (size_t i = 0; i < arrows.size(); ++i) {
+@@ -179,6 +321,9 @@ bool BattlePlan::FromJson(const std::string& json) {
+     bonusCP = root["bonus_cp"].AsInt(0);
+     if (bonusCP < 0) bonusCP = 0;
+     bonusCredited = false; // 載入的計畫尚未入帳
++    // 載入的計畫尚未 Apply——回滾並清掉舊綁定，否則
++    // UpdateUncertainty 會拿新箭頭 index 去重評舊小隊映射
++    InvalidateBindings();
+     return true;
+ }
+ 
+diff --git a/Gameplay/BattlePlan.h b/Gameplay/BattlePlan.h
+index 7e9bed3..671f686 100644
+--- a/Gameplay/BattlePlan.h
++++ b/Gameplay/BattlePlan.h
+@@ -5,6 +5,7 @@
+ #include "Doctrine.h"
+ 
+ #include <string>
++#include <unordered_map>
+ #include <vector>
+ 
+ namespace Potato {
+@@ -12,6 +13,7 @@ namespace Gameplay {
+ 
+ class BattleController;
+ class BattleResources;
++class Squad;
+ 
+ /**
+  * 作戰計畫箭頭（G-5，HOI4 battle plan → doctrine）
+@@ -47,7 +49,9 @@ public:
+     const PlanArrow& Arrow(size_t i) const { return arrows[i]; }
+     // 移除第一支綁定 squadName 的箭頭（重畫覆蓋用）；沒有回 false
+     bool RemoveArrowFor(const std::string& squadName);
+-    void ClearArrows() { arrows.clear(); }
++    // 箭頭變動會讓 Apply 期間記下的 squad→箭頭綁定失效——
++    // 這些 mutator 會先回滾已發放的 planAttackMul 再清綁定。
++    void ClearArrows();
+ 
+     void SetRallyPoint(const Vector2& p);
+     bool HasRallyPoint() const { return hasRally; }
+@@ -72,11 +76,27 @@ public:
+     int Apply(BattleController& battle, BattleResources* res,
+               int team) const;
+ 
++    // ---- 量子感知加成（quantum-plan-effects）----
++    // 箭頭尖端落進未解析機率雲時，計畫加成依尖端確定度縮放：
++    //   certainty = 各 fog entity 在 tip 半徑內機率質量的最大值
++    //   effectiveMul = 1 + (attackMul - 1) * certainty ∈ [1, attackMul]
++    // 無 fog 或尖端周圍無雲 → certainty 1（行為同加成功能前）。
++    void SetUncertaintyRadius(float r);
++    float UncertaintyRadius() const { return uncertaintyRadius; }
++    // 由 BattleController 在執行階段 fog 更新後每 tick 呼叫——
++    // 情報解析（揭露/探測/消去/過期）即時拉動加成上下。
++    // 重評估走 planAttackMul 正規化槽（除舊乘新），冪等不疊乘。
++    void UpdateUncertainty(BattleController& battle) const;
++
+     // potato.battle_plan/1 序列化（戰前計畫可存檔/回放）
+     std::string ToJson() const;
+     bool FromJson(const std::string& json);
+ 
+ private:
++    // 回滾所有已綁定小隊的 planAttackMul 並清空綁定表——
++    // 箭頭/計畫被改動或計畫換綁時呼叫，防止陳舊 index 與殘留倍率。
++    void InvalidateBindings() const;
++
+     std::vector<PlanArrow> arrows;
+     Vector2 rallyPoint{0.0f, 0.0f};
+     bool hasRally = false;
+@@ -84,6 +104,12 @@ private:
+     int bonusIntel = 0;
+     int bonusCP = 0;
+     mutable bool bonusCredited = false; // 加成只入帳一次（Apply 是 const）
++
++    // 量子感知加成：Apply 期間記下每支小隊綁到的箭頭 index 與作用 team，
++    // UpdateUncertainty 重評時不必重新配對。mutable 因 Apply/Update 皆 const。
++    float uncertaintyRadius = 2.0f;
++    mutable std::unordered_map<Squad*, int> squadArrowIdx; // squad → 箭頭 index
++    mutable int appliedTeam = -1; // -1 = 尚未 Apply
+ };
+ 
+ } // namespace Gameplay
