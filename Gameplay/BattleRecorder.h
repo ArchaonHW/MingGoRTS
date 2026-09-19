@@ -2,6 +2,7 @@
 
 #include "Core/CoreTypes.h"
 
+#include <cstdint>
 #include <functional>
 #include <string>
 #include <vector>
@@ -37,9 +38,17 @@ public:
     const std::vector<Record>& GetRecords() const { return records; }
     size_t Count() const { return records.size(); }
 
-    // 存/讀 JSON（potato.battle_replay/1）
+    // 存/讀 JSON（potato.battle_replay/1）。
+    // 存檔帶 rootHash（事件流雜湊鏈根，L-5）；
+    // 載入遇 rootHash 不符 → 拒絕（篡改檔）；無 rootHash →
+    // 舊版降級載入並立 WasLegacyLoad 旗標供呼叫端警告
     bool SaveToFile(const std::string& path) const;
     bool LoadFromFile(const std::string& path);
+
+    // 事件流完整性根：逐筆 {t|event} 鏈式雜湊的末端值——
+    // 驗證通過的回放才准進史官摘錄（「回放即審計」）
+    uint64_t RootHash() const;
+    bool WasLegacyLoad() const { return loadedLegacy; }
 
     // 回放：cb(t, event) 依序播出；timeScale 可加速（0 = 瞬間播完）
     void Replay(const std::function<void(float, const std::string&)>& cb,
@@ -52,6 +61,7 @@ public:
 
 private:
     std::vector<Record> records;
+    bool loadedLegacy = false; // LoadFromFile 遇到無 rootHash 舊檔時立旗
 };
 
 } // namespace Gameplay

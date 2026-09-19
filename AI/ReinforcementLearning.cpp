@@ -3,7 +3,7 @@
  */
 
 #include "ReinforcementLearning.h"
-#include "NeuralNetwork.h"
+#include "AI/NeuralNetwork.h"
 #include <algorithm>
 #include <random>
 #include <sstream>

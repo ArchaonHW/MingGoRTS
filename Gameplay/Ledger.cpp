@@ -99,12 +99,15 @@ static std::string Canon(const LedgerEntry& e) {
     return s;
 }
 
-uint64_t LedgerChain::HashEntry(uint64_t prevHash, const LedgerEntry& e) {
+uint64_t LedgerHash(uint64_t prevHash, const std::string& text) {
     uint64_t h = 0xcbf29ce484222325ULL;
     h = Fnv1a(reinterpret_cast<const char*>(&prevHash),
               sizeof(prevHash), h);
-    const std::string s = Canon(e);
-    return Fnv1a(s.data(), s.size(), h);
+    return Fnv1a(text.data(), text.size(), h);
+}
+
+uint64_t LedgerChain::HashEntry(uint64_t prevHash, const LedgerEntry& e) {
+    return LedgerHash(prevHash, Canon(e));
 }
 
 bool LedgerChain::Append(const LedgerEntry& e) {

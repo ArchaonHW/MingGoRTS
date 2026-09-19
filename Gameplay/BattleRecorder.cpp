@@ -1,5 +1,6 @@
 #include "BattleRecorder.h"
 #include "BattleController.h"
+#include "Gameplay/Ledger.h"
 #include "Serialization/JsonParser.h"
 
 #include <chrono>
@@ -42,12 +43,27 @@ static std::string EscapeJson(const std::string& s) {
     return out;
 }
 
+uint64_t BattleRecorder::RootHash() const {
+    uint64_t h = LedgerChain::kGenesisHash;
+    char tbuf[32];
+    for (const Record& r : records) {
+        std::snprintf(tbuf, sizeof(tbuf), "%.6g",
+                      static_cast<double>(r.t));
+        h = LedgerHash(h, std::string(tbuf) + "|" + r.event);
+    }
+    return h;
+}
+
 bool BattleRecorder::SaveToFile(const std::string& path) const {
     std::ofstream f(path);
     if (!f) {
         return false;
     }
+    char hbuf[24];
+    std::snprintf(hbuf, sizeof(hbuf), "%016llx",
+                  static_cast<unsigned long long>(RootHash()));
     f << "{\n  \"schema\": \"potato.battle_replay/1\",\n"
+      << "  \"rootHash\": \"" << hbuf << "\",\n"
       << "  \"events\": [\n";
     for (size_t i = 0; i < records.size(); ++i) {
         f << "    {\"t\": " << records[i].t
@@ -69,10 +85,25 @@ bool BattleRecorder::LoadFromFile(const std::string& path) {
     if (!JsonValue::ParseOk(ss.str(), root)) {
         return false;
     }
+    const std::string storedHash = root["rootHash"].AsString();
     records.clear();
     for (const auto& e : root["events"].AsArray()) {
         records.push_back({e["t"].AsFloat(), e["event"].AsString()});
     }
+    if (storedHash.empty()) {
+        // 舊版無雜湊檔：降級載入，由呼叫端決定是否警告
+        loadedLegacy = true;
+        return true;
+    }
+    char hbuf[24];
+    std::snprintf(hbuf, sizeof(hbuf), "%016llx",
+                  static_cast<unsigned long long>(RootHash()));
+    if (storedHash != hbuf) {
+        // 雜湊不符 = 檔案遭篡改——拒絕且不留已載入的髒資料
+        records.clear();
+        return false;
+    }
+    loadedLegacy = false;
     return true;
 }
 

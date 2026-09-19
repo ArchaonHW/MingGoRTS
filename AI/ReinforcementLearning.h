@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "NeuralNetwork.h"
+#include "AI/NeuralNetwork.h"
 
 #include <vector>
 #include <unordered_map>

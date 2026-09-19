@@ -27,6 +27,10 @@ const char* AccountName(LedgerAccount a);
 const char* AccountNameZh(LedgerAccount a);
 bool AccountFromName(const std::string& name, LedgerAccount& out);
 
+// 通用鏈式雜湊（FNV-1a 64）：prevHash 與任意文本 fold——
+// LedgerChain 與回放完整性根（L-5）共用；篡改任一環節即改變末端值
+uint64_t LedgerHash(uint64_t prevHash, const std::string& text);
+
 // 分錄：借貸異戶、金額恆正才合法
 struct LedgerEntry {
     LedgerAccount debit = LedgerAccount::Martial; // 借方（所得入此帳）

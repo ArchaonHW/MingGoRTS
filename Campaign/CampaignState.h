@@ -16,6 +16,7 @@
 // 存檔只發生在章節邊界——戰中不存檔（架構§Save/Load）。
 
 #include "Campaign/ChapterState.h"
+#include "Campaign/Governance.h"
 #include "Gameplay/CampaignLedger.h"
 #include "Gameplay/RefitCamp.h"
 #include "Gameplay/Roster.h"
@@ -35,6 +36,9 @@ public:
     // N-4 帳本：敵將處置記錄 + 稱號軌跡 + 章節序
     Gameplay::CampaignLedger& Ledger() { return ledger; }
     const Gameplay::CampaignLedger& Ledger() const { return ledger; }
+    // C-2 治理帳：跨章節民心/秩序累加 + 動亂級
+    Governance& Gov() { return governance; }
+    const Governance& Gov() const { return governance; }
 
     // 弧/章節id/已收服戰線（章節序由帳本管，AdvanceChapter 同步）
     ChapterState chapter;
@@ -51,6 +55,7 @@ private:
     Gameplay::RefitCamp camp;
     Gameplay::Roster roster;
     Gameplay::CampaignLedger ledger;
+    Governance governance;      // C-2 戰役治理帳（governance 段）
 };
 
 } // namespace Campaign

@@ -30,10 +30,10 @@ bool CampaignState::SaveToFile(const std::string& path) const {
     if (JsonValue::ParseOk(ledger.ToJson(), ledgerDoc)) {
         root.objectValue["campaign_ledger"] = ledgerDoc;
     }
-    // E-5/E-6/E-11 預留段：空物件佔位，後續填充
+    // C-2 治理帳已填充；E-6/E-11 預留段仍空物件佔位
+    root.objectValue["governance"] = governance.ToJson();
     JsonValue empty;
     empty.type = JsonValue::Type::Object;
-    root.objectValue["governance"] = empty;
     root.objectValue["god_stance"] = empty;
     root.objectValue["intel_ledger"] = empty;
 
@@ -96,11 +96,19 @@ bool CampaignState::LoadFromFile(const std::string& path) {
         return false;
     }
     newChapter.FromJson(root["chapter"]);
-    // governance/god_stance/intel_ledger：缺段容忍，內容暫不解析
+    // C-2 治理段：缺段容忍（舊檔無此段），有段則驗證後採用
+    Governance newGov;
+    if (!root["governance"].IsNull() &&
+        !newGov.FromJson(root["governance"])) {
+        POTATO_LOG_ERROR("CampaignState: 治理段損毀，拒絕載入 " + path);
+        return false;
+    }
+    // god_stance/intel_ledger：缺段容忍，內容暫不解析
     camp = newCamp;
     roster = newRoster;
     ledger = newLedger;
     chapter = newChapter;
+    governance = newGov;
     return true;
 }
 

@@ -82,6 +82,7 @@ So that 引擎 repo 可獨立編譯。
 **When** AgentGUI.{h,cpp} 移至遊戲側範圍並從引擎 target 移除
 **Then** `PotatoEngine` lib 編譯通過且 source 掃描無 `AI/`（NeuralNetwork 除外）引用
 **And** `NeuralGraphics`/`NeuralArtTool` 等依賴 NeuralNetwork 的功能仍可用
+**And** 跨邊界 unqualified include 先行改寫：`AI/ReinforcementLearning.{h,cpp}` 的 `#include "NeuralNetwork.h"` 改為 `"AI/NeuralNetwork.h"`（限定路徑，經引擎 root -I 解析；拆倉後同目錄解析會失效）
 
 ### Story ES-0.2: CMake 可消費化改造
 
@@ -92,7 +93,7 @@ So that 遊戲 repo 能直接消費引擎原始碼。
 **Acceptance Criteria:**
 
 **Given** 引擎 CMakeLists.txt
-**When** 全部 `CMAKE_SOURCE_DIR` 改為 `CMAKE_CURRENT_SOURCE_DIR`，且 examples/tests/install 以 `PROJECT_IS_TOP_LEVEL`（或等價守衛）包住
+**When** 全部 `CMAKE_SOURCE_DIR` 改為 `CMAKE_CURRENT_SOURCE_DIR`，且 examples/tests/install 以 `CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR` 守衛包住（不用 `PROJECT_IS_TOP_LEVEL`——專案下限 CMake 3.15，該變數需 ≥3.21）
 **Then** monorepo standalone 建置行為不變
 **And** 以 add_subdirectory 引用時只產出 lib target（glad/glfw/PotatoEngine/NeuralNetwork/Quantum/Media）
 
@@ -107,6 +108,7 @@ So that filter-repo clone 後能精準回灌到正確的 repo。
 **Given** `git status` 中 10 個 modified + 全部 untracked 檔
 **When** 產出 `git diff HEAD` patch + untracked 檔案依歸屬表分側的清單
 **Then** 每個檔案明確標記 engine/game/skip，無遺漏
+**And** 快照範圍含：LogTest.cpp/Log.cpp（引擎側）、ChapterConventions.*/ChapterConventionsTest（遊戲側）、CMakeLists.txt/README.md（兩側）、DuanqiaoPlayable B.5 章節地圖殼（遊戲側）
 
 ## Epic ES-1: 歷史拆分
 
@@ -124,6 +126,7 @@ So that 引擎可獨立演進與發布。
 **When** `git filter-repo --paths-from-file` 執行
 **Then** repo 含全部引擎 commit history
 **And** `git rm` 跨界檔（GUI/AgentGUI.*）後 `git ls-files` 無遊戲路徑殘留
+**And** `.gitmodules`（external/imgui submodule gitlink）歸引擎 repo；UE5 legacy 路徑（Plugins/Source/Math/Temp/Content）刻意不列入任何一側——死代碼隨過濾丟棄、倉庫瘦身
 
 ### Story ES-1.2: Game repo 過濾
 
@@ -155,6 +158,7 @@ So that `cmake -DPOTATO_ENGINE_ROOT=../PotatoEngine` 可完整建置遊戲。
 **Then** Gameplay/Campaign/遊戲 AI libs/IDE target 全部可建
 **And** imgui 直編 target 引用 `${POTATO_ENGINE_ROOT}/external/imgui`（FR8）
 **And** IDE_GUI 的 ImageCodec/Logger 直編改為連結 PotatoEngine（FR9）
+**And** `POTATO_ENGINE_ROOT` 無效/缺目錄時 configure 階段 `FATAL_ERROR` 明確提示設定方式
 
 ### Story ES-2.2: 引擎 CMakeLists 精簡
 
