@@ -45,10 +45,12 @@ MingGoRTS/
 │                        #   QuantumFog / BattleRecorder / Roster /
 │                        #   RefitCamp / CampaignLedger /
 │                        #   HistorianReport / GeneralDossier /
-│                        #   RivalDeck / MythLog / SquadTemplate …
+│                        #   RivalDeck / MythLog / Ledger /
+│                        #   ChapterConventions / SquadTemplate …
 ├── Campaign/            # 戰役層：CampaignState（potato.campaign/1
-│                        #   facade，聚合各子存儲）/ ChapterState
-├── Examples/            # 76+ 可執行檔：demo + POTATO_TESTS 無頭測試
+│                        #   facade，聚合各子存儲）/ ChapterState /
+│                        #   ChapterLibrary / Governance
+├── Examples/            # 80+ 可執行檔：demo + POTATO_TESTS 無頭測試
 ├── assets/              # 唯讀內容：cards/ maps/ squads/ templates/
 │                        #   fonts/ avatars/（敘事與戰役包規劃中）
 ├── services/            # Java 後端服務（replay/roster，Maven）
@@ -108,23 +110,33 @@ cd build-mingw && ctest
 | `QuantumFog` | 機率雲霧：疊加/觀測/探測/衰減/糾纏/人格先驗 |
 | `BattleRecorder` | 事件錄製回放（record-is-truth：顯示只是視圖） |
 | `Roster` / `RefitCamp` | 具名名冊、傷亡持久、整補（部署/醫治/招募/掠奪） |
-| `HistorianReport` | 史官戰報組裝器；省略計數恆在場（「本報告省略 N 項」） |
+| `HistorianReport` | 史官戰報組裝器；省略計數恆在場（「本報告省略 N 項」）；查帳段消費 LedgerChain |
 | `GeneralDossier` | 敵將判詞（聽聞態）戰鬥視圖 |
 | `RivalDeck` | 對手讀卡：統計我方慣用 trigger → 預寫反制牌組 |
 | `CampaignLedger` | 敵將處置＋稱號持久帳（potato.campaign_ledger/1） |
+| `Ledger` / `LedgerChain` | 複式記帳五帳戶（武功/民心/天命/軍威/物資借貸必相等）＋ FNV-1a 雜湊鏈 append-only 帳簿：Verify() 斷鏈偵測、SoundnessViolation() 偽帳偵測（potato.ledger_chain/1） |
 | `MythLog` | 神話事件具名記錄＋滲透掛鉤（potato.myth_log/1） |
+| `ChapterConventions` | 章回慣例：題詞/敵將判詞/欲知後事/結局四聲部 |
+| `BattlePlan` | 計畫箭頭＋量子感知加成（依情報確定度即時縮放） |
 | `SquadTemplate` | 巢狀 JSON 模板→小隊實例化＋BudgetedBuild |
 
-## 規劃中的戰役層（Epic A–G，已拆 story）
+## 戰役層進度（Epic A–G，已拆 story）
 
-- **A 治理之軸**：村莊/受降/護輜事件源＋民心秩序墮落累計器
-- **B 戰役持久骨架**：Potato::Log、章節定義包、存檔完整性、章節地圖殼
-- **C 敘事系統**：IntelLedger 失真帳本、NarrativePack 內容包、
-  章回體例、GodStance、EndingPage 四手結局
+- **A 治理之軸**：村莊/受降/護輜事件源＋民心秩序墮落累計器（C-2
+  `Governance` 已落地——佔村/護輜入帳、動亂事件入史官筆）
+- **B 戰役持久骨架 ✅ 完成**：Potato::Log、章節定義包
+  （`ChapterLibrary`）、存檔完整性（tmp+rename 原子寫）、章節地圖殼
+- **C 敘事系統**（進行中）：IntelLedger 失真帳本、NarrativePack
+  內容包、章回體例、GodStance、EndingPage 四手結局
 - **D 神話雙層**：滲透狀態機 0–3、神社實體、天命貨幣、入侵事件
 - **E 無戰章節**：談判/嚇阻/顛覆路徑
-- **F 呈現層**：sprite atlas、UI scale、HUD 密度、audio、CJK 字體
+- **F 呈現層**：sprite atlas（`Rendering/SpriteAtlas` 已起）、
+  UI scale、HUD 密度、audio、CJK 字體
 - **G 內容工具**：卡池擴充、牌庫掠奪、敵將編輯器、沙盤、教學章
+
+另有 **L 層帳本機械化**（複式記帳＋雜湊鏈＋查帳戰報，L-1~L-3
+已落地）與**拆倉計畫**（引擎/遊戲分 repo，見
+`_bmad-output/planning-artifacts/epics-engine-split.md`）。
 
 詳見 `_bmad-output/planning-artifacts/gdds/gdd-MingGoRTS-2026-09-17/epics.md`
 與 `_bmad-output/implementation-artifacts/sprint-status.yaml`。
@@ -161,4 +173,4 @@ JSON schema 與 C++ CLI 驗證器互動——不連結 C++、不進 CMake/CI。
 
 **MingGoRTS — 以筆代兵，以治為勝**
 
-*狀態：活躍開發中 · 引擎與戰鬥原型已可玩 · 戰役層進入實作階段*
+*狀態：活躍開發中 · 戰鬥原型與垂直切片 demo 可玩（dist/MingGoRTS-Demo）· Epic B 戰役骨架完成 · L 層帳本機械化落地 · 引擎/遊戲拆倉規劃中*
