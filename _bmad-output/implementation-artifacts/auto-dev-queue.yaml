@@ -2,7 +2,7 @@
 # 每個 item 走完：pick → spec (gds-quick-dev) → implement → verify → review → commit
 # 規則見 auto-dev-workflow.md
 version: 1
-updated: 2026-09-19 (L 層帳本機械化 5 項新增；V-1 done)
+updated: 2026-09-21 (GBAA BAAF 研究 → L-6/L-7/L-8 需求入列)
 
 queue:
 
@@ -736,9 +736,12 @@ queue:
     acceptance:
       - atlas 載入 + uv 查表 headless 可驗（無 GL 依賴）
       - 至少一個消費端（小地圖圖示或雲標記）改用 sprite
-    status: queued
+    status: done
     size: L
-    note: UX review 認定最大共享依賴；rect 降級規則保留
+    note: >
+      43b6f92 落地：SpriteAtlas 索引/uv 查表 + 缺 frame 降級 +
+      ImGui 消費端；SpriteAtlasTest 已入 POTATO_TESTS，
+      UIThemeTest 為 headless 消費端。UX review 認定最大共享依賴。
 
   - id: F-2
     title: UI scale 真管線（75–150%）
@@ -804,9 +807,12 @@ queue:
     acceptance:
       - CampaignStateTest roundtrip/壞檔拒絕/原子寫全綠
       - DuanqiaoPlayable 整補營改由 facade 持有（已接線）
-    status: in-progress
+    status: done
     size: L
-    note: 平行 session 動工中；完成後解鎖 E/D/N-6 全鏈
+    note: >
+      Epic B 收口完成：CampaignState facade（potato.campaign/1
+      tmp+rename 原子存檔）+ CampaignStateTest 入 POTATO_TESTS；
+      aaa2394 垂直切片接線（標題殼→章節選擇→戰鬥→戰報+整補→再戰）。
 
   - id: E-1
     title: 無戰章節定義與門檻（談判/嚇阻/顛覆）
@@ -965,9 +971,13 @@ queue:
     acceptance:
       - 偽帳注入→試算存疑→標記解除全鏈入 MythLog
       - 不破壞正常章節的平衡恆等式
-    status: queued
+    status: done
     size: L
-    note: 依賴 L-1/L-2/L-3 + D-1 + N-3
+    note: >
+      25717e8 落地：Ledger::InjectForgery 對手偽帳注入通道 +
+      MarkSuspect 疑帳標記（"suspect" 欄位隨 potato.ledger_chain/1
+      持久化）；LedgerForgeTest 入 POTATO_TESTS。
+      滲透等級連動（D-1）與 N-3 反制整合仍待對應 epic。
 
   - id: L-5
     title: 回放 Merkle 根——回放驗證即審計
@@ -988,3 +998,57 @@ queue:
       載入 + WasLegacyLoad 旗標供呼叫端警告。
       ReplayIntegrityTest 21/21 MSVC+MinGW：合法通過、
       篡改事件/根值/時戳皆拒載、舊版降級、壞 JSON 拒絕。
+
+  # ---- 層級 L 續：BAAF 啟發（GBAA 白皮書研究 2026-09-21）----
+  - id: L-6
+    title: 帳簿登錄編號（rootHash 派生短碼）
+    source: docs/research/GBAA_BAAF_RESEARCH.md 可採項目 #1
+    summary: >
+      對齊 BAAF L3 登錄簿概念：已結算帳簿由 LedgerChain 末端 hash
+      派生短碼登錄 ID（如 base32/hex 前 8 碼），寫入
+      potato.ledger_chain 存檔並於史官戰報查帳段顯示——
+      玩家可貼出可驗證的戰績證明，對應「登錄編號供揭露引用」。
+    acceptance:
+      - 同一帳簿內容恆產同一登錄編號（確定性、可重算驗證）
+      - 篡改任一分錄 → 登錄編號改變
+      - 存檔帶 registryId 欄位、舊檔降級（無欄位照載）
+    status: queued
+    size: S
+    note: 建議在 L-7 之後落地——provenance 入 hash 後編號才穩定
+
+  - id: L-7
+    title: LedgerChain provenance 欄位（產生軌跡）
+    source: docs/research/GBAA_BAAF_RESEARCH.md 可採項目 #2
+    summary: >
+      對齊 BAAF L1「產生軌跡」：分錄增加 provenance 區塊
+      （來源系統、章節/tick、觸發事件 id），審計時可回答
+      「這筆帳從哪來」；schema 附加可選欄位維持 /1 降級。
+    acceptance:
+      - 新分錄皆帶 provenance；無欄位舊檔降級載入
+      - provenance 納入 entry hash（事後補登會斷鏈）
+      - 查帳段可輸出來源系統統計
+    status: done
+    size: M
+    note: >
+      落地：EntrySource enum（失考/戰陣/營務/談判/治理/神異/紀要）
+      + Provenance{source,tick,eventId} 掛入 LedgerEntry；
+      Canon() 有條件附加 prov 段（預設值維持舊格式 → 舊檔 hash 不變、
+      事後補登/剝除 prov 斷鏈揭露）；三模板各填來源；
+      "prov" 可選欄位隨 /1 schema 降級；查帳段附各來源筆數。
+      LedgerProvenanceTest 31/31 MSVC+MinGW 全綠。
+
+  - id: L-8
+    title: 查證式史官——確信報告（抽驗複算 + 鏈連續性）
+    source: docs/research/GBAA_BAAF_RESEARCH.md 可採項目 #3
+    summary: >
+      HistorianReport 查帳段升級為確信報告：seeded 抽驗 N 筆
+      分錄重算餘額、驗證雜湊鏈連續性、輸出三態查證結論
+      （相符/存疑/拒絕）——對齊 ISSA 5000 式確信流程，
+      史官從記錄者升格為查證者。
+    acceptance:
+      - 抽驗樣本可重現（seed 固定 → 同樣本）
+      - 三態結論各有觸發條件與對應文句
+      - 與 L-3 試算段/L-4 疑帳標記整合不衝突
+    status: queued
+    size: M
+    note: 依賴 L-3（已落地）；疑帳標記來自 L-4（已落地）

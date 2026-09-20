@@ -23,13 +23,13 @@
 | CMakeLists.txt、LICENSE、SECURITY.md、.gitignore、BuildEngine.bat | CMakeLists.txt、AGENTS.md、README.md、_bmad/、_bmad-output/、docs/、.agents/、.windsurf/、design-artifacts/ |
 | .github/（引擎 CI 子集） | .github/（遊戲 CI 子集） |
 
-## Phase 0 — 前置決策（gate，需確認）
+## Phase 0 — 前置決策（gate，已裁決 2026-09-21）
 
-- [ ] W0.1 `NeuralNetwork` 歸屬：建議**留引擎**（Rendering/NeuralGraphics、NeuralArtTool、SynthDataDemo 都依賴；遊戲側 ReinforcementLearning 連結引擎 target 即可）
-- [ ] W0.2 `GUI/AgentGUI` 歸屬：建議**移遊戲**（依賴 AIAgentSystem；GUI/ 目錄僅此二檔）
-- [ ] W0.3 消費方式：建議 **sibling checkout + `add_subdirectory(${POTATO_ENGINE_ROOT})`**（預設 `../PotatoEngine`，可用 cache var 覆寫）；submodule/FetchContent 次之
-- [ ] W0.4 上游 repo 落地：`C:\HWC\PotatoEngine` 現為 sync 鏡像非 git repo → 建議另存 `PotatoEngine-stale-backup/` 後以 filter-repo 產物取代
-- [ ] W0.5 遊戲 Examples 跟遊戲走（修正先前「Examples 全留引擎」——連結 Gameplay 的 test 留在引擎會破壞引擎獨立性）
+- [x] W0.1 `NeuralNetwork` 歸屬：**留引擎**（Rendering/NeuralGraphics、NeuralArtTool、SynthDataDemo 都依賴；遊戲側 ReinforcementLearning 連結引擎 target）
+- [x] W0.2 `GUI/AgentGUI` 歸屬：**移遊戲**——已於 Phase 1 遷至 `MingGoRTS_IDE/`（依賴 AIAgentSystem；GUI/ 目錄僅此二檔）
+- [x] W0.3 消費方式：**sibling checkout + `add_subdirectory(${POTATO_ENGINE_ROOT})`**（預設 `../PotatoEngine`，可用 cache var 覆寫）
+- [x] W0.4 上游 repo 落地：**filter-repo 產物直接取代 PotatoEngine repo**——前提已更新：`C:\HWC\PotatoEngine` 現為真 git repo（include/src 佈局 + github.com/ArchaonHW/PotatoEngine remote + 測試已從 Examples 移植）；取代前先備份現 repo。其既有測試已反向同步回 MingGoRTS Examples（commit 5b28ab0），不隨 filter-repo 丟失
+- [x] W0.5 遊戲 Examples 跟遊戲走（連結 Gameplay 的 test 留在引擎會破壞引擎獨立性）
 
 ## Phase 1 — 邊界固化（monorepo 內先做）
 
