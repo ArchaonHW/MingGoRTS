@@ -39,20 +39,26 @@ MingGoRTS/
 ├── Platform/ Scene/ Serialization/ Time/ Security/ Quantum/
 ├── AI/                  # AI Agent / 強化學習（DQN）/ 神經網路
 ├── GUI/                 # ImGui 介面系統
-├── MingGoRTS_IDE/       # 整合開發環境（內建智能開發助手）
+├── MingGoRTS_IDE/       # 整合開發環境（智能建議含專案規範護欄：
+│                        #   禁第三方 JSON／依賴方向檢查／註解與
+│                        #   字串遮罩防誤報／學習權重持久化）
 ├── Gameplay/            # 戰鬥層：FlowField / Squad / Doctrine /
 │                        #   BattleController / BattlePlanner /
 │                        #   QuantumFog / BattleRecorder / Roster /
 │                        #   RefitCamp / CampaignLedger /
 │                        #   HistorianReport / GeneralDossier /
 │                        #   RivalDeck / MythLog / Ledger /
-│                        #   ChapterConventions / SquadTemplate …
+│                        #   ChapterConventions / SquadTemplate /
+│                        #   GovernanceField / GovernanceEvent /
+│                        #   MapGenerator / PostBattle / PlanningDeck …
 ├── Campaign/            # 戰役層：CampaignState（potato.campaign/1
 │                        #   facade，聚合各子存儲）/ ChapterState /
-│                        #   ChapterLibrary / Governance
-├── Examples/            # 80+ 可執行檔：demo + POTATO_TESTS 無頭測試
-├── assets/              # 唯讀內容：cards/ maps/ squads/ templates/
-│                        #   fonts/ avatars/（敘事與戰役包規劃中）
+│                        #   ChapterLibrary / Governance（民心·秩序·
+│                        #   墮落 ratchet 戰役累加器）
+├── Examples/            # 85+ 可執行檔：demo + POTATO_TESTS 無頭測試
+├── assets/              # 唯讀內容：cards/ maps/ squads/ fonts/
+│                        #   avatars/ campaign/（C-3 起 templates/
+│                        #   已併入 squads/ 單一目錄）
 ├── services/            # Java 後端服務（replay/roster，Maven）
 ├── external/            # vendored 第三方（tinygltf 等；勿改既有內容）
 ├── _bmad-output/        # BMAD 規劃產物（GDD/架構/epics/UX）
@@ -108,22 +114,26 @@ cd build-mingw && ctest
 | `Doctrine` | trigger→condition→action→modifier 卡解譯器＋冷卻 |
 | `BattleController` | 三拍狀態機（Planning → Execution → Aftermath） |
 | `QuantumFog` | 機率雲霧：疊加/觀測/探測/衰減/糾纏/人格先驗 |
-| `BattleRecorder` | 事件錄製回放（record-is-truth：顯示只是視圖） |
+| `BattleRecorder` | 事件錄製回放（record-is-truth：顯示只是視圖）；`rootHash` 完整性根——篡改檔拒載、舊版降級警告（回放即審計） |
 | `Roster` / `RefitCamp` | 具名名冊、傷亡持久、整補（部署/醫治/招募/掠奪） |
 | `HistorianReport` | 史官戰報組裝器；省略計數恆在場（「本報告省略 N 項」）；查帳段消費 LedgerChain |
 | `GeneralDossier` | 敵將判詞（聽聞態）戰鬥視圖 |
 | `RivalDeck` | 對手讀卡：統計我方慣用 trigger → 預寫反制牌組 |
 | `CampaignLedger` | 敵將處置＋稱號持久帳（potato.campaign_ledger/1） |
-| `Ledger` / `LedgerChain` | 複式記帳五帳戶（武功/民心/天命/軍威/物資借貸必相等）＋ FNV-1a 雜湊鏈 append-only 帳簿：Verify() 斷鏈偵測、SoundnessViolation() 偽帳偵測（potato.ledger_chain/1） |
+| `Ledger` / `LedgerChain` | 複式記帳五帳戶（武功/民心/天命/軍威/物資借貸必相等）＋ FNV-1a 雜湊鏈 append-only 帳簿：Verify() 斷鏈偵測、SoundnessViolation() 偽帳偵測、`InjectForgery` 對手偽帳注入通道、`MarkSuspect` 疑帳標記隨 `"suspect"` 欄位持久（potato.ledger_chain/1） |
+| `GovernanceField` | 戰場治理追蹤（Epic A 地圖知識層）：村莊佔領/焚村標記/護輜抵達/劫輜，由有地圖知識的呼叫端每拍驅動，事件經 `RecordGovernanceEvent` 入帳 |
 | `MythLog` | 神話事件具名記錄＋滲透掛鉤（potato.myth_log/1） |
 | `ChapterConventions` | 章回慣例：題詞/敵將判詞/欲知後事/結局四聲部 |
 | `BattlePlan` | 計畫箭頭＋量子感知加成（依情報確定度即時縮放） |
-| `SquadTemplate` | 巢狀 JSON 模板→小隊實例化＋BudgetedBuild |
+| `SquadTemplate` | 巢狀 JSON 模板→小隊實例化＋BudgetedBuild（skipReasons 逐項對齊跳過原因：unknown_id/over_budget） |
 
 ## 戰役層進度（Epic A–G，已拆 story）
 
-- **A 治理之軸**：村莊/受降/護輜事件源＋民心秩序墮落累計器（C-2
-  `Governance` 已落地——佔村/護輜入帳、動亂事件入史官筆）
+- **A 治理之軸**（接線中）：`GovernanceField` 追蹤佔領/焚村/護輜/
+  劫輜/運輸隊互動（地圖知識層）＋ `BattleController` 潰逃受降/
+  暴行自動偵測；`Campaign::Governance` 累計民心/秩序/
+  **墮落 ratchet**（只增不減），動亂事件入史官筆；
+  垂直切片 `DuanqiaoPlayable` 已 Bind 地圖互動物與運輸隊
 - **B 戰役持久骨架 ✅ 完成**：Potato::Log、章節定義包
   （`ChapterLibrary`）、存檔完整性（tmp+rename 原子寫）、章節地圖殼
 - **C 敘事系統**（進行中）：IntelLedger 失真帳本、NarrativePack
@@ -134,8 +144,11 @@ cd build-mingw && ctest
   UI scale、HUD 密度、audio、CJK 字體
 - **G 內容工具**：卡池擴充、牌庫掠奪、敵將編輯器、沙盤、教學章
 
-另有 **L 層帳本機械化**（複式記帳＋雜湊鏈＋查帳戰報，L-1~L-3
-已落地）與**拆倉計畫**（引擎/遊戲分 repo，見
+另有 **L 層帳本機械化**（複式記帳＋雜湊鏈＋查帳戰報＋回放
+Merkle 根，L-1/2/3/5 已落地；L-4 帳面機制落地——`InjectForgery`
+偽帳通道＋`MarkSuspect` 疑帳標記持久化＋戰報借貸不符揭露，
+對手注入觸發與反制解除仍待 D-1 滲透/N-3）與**拆倉計畫**
+（引擎/遊戲分 repo，見
 `_bmad-output/planning-artifacts/epics-engine-split.md`）。
 
 詳見 `_bmad-output/planning-artifacts/gdds/gdd-MingGoRTS-2026-09-17/epics.md`
@@ -173,4 +186,4 @@ JSON schema 與 C++ CLI 驗證器互動——不連結 C++、不進 CMake/CI。
 
 **MingGoRTS — 以筆代兵，以治為勝**
 
-*狀態：活躍開發中 · 戰鬥原型與垂直切片 demo 可玩（dist/MingGoRTS-Demo）· Epic B 戰役骨架完成 · L 層帳本機械化落地 · 引擎/遊戲拆倉規劃中*
+*狀態：活躍開發中 · 戰鬥原型與垂直切片 demo 可玩（dist/MingGoRTS-Demo）· Epic B 戰役骨架完成 · Epic A 治理追蹤接線中 · L 層帳本機械化落地（L-4 帳面機制完成、對手觸發待 D-1/N-3）· 引擎/遊戲拆倉規劃中*
