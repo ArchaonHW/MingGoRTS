@@ -242,6 +242,18 @@ uint64_t LedgerChain::RootHash() const {
     return entries.empty() ? kGenesisHash : entries.back().hash;
 }
 
+std::string LedgerChain::RegistryId() const {
+    // L-6：RootHash 高低 32 位 XOR 折叠 → 8 位大寫 hex "XXXX-XXXX"。
+    // 純函數於帳簿內容——篡改任一分錄（含 prov）末端 hash 變、編號即變
+    const uint64_t root = RootHash();
+    const uint32_t folded = static_cast<uint32_t>(root >> 32) ^
+                            static_cast<uint32_t>(root);
+    char buf[12];
+    std::snprintf(buf, sizeof(buf), "%04X-%04X",
+                  (folded >> 16) & 0xFFFFu, folded & 0xFFFFu);
+    return buf;
+}
+
 std::string LedgerChain::ToJson() const {
     std::string out =
         "{\"schema\":\"potato.ledger_chain/1\",\"entries\":[";
@@ -271,6 +283,9 @@ std::string LedgerChain::ToJson() const {
         out += buf;
     }
     out += ']';
+    // L-6 登錄編號：可選附加欄位——讀者可忽略（編號恆可重算），
+    // 寫出供玩家直接引用；FromJson 不強制驗（Verify() 才是防線）
+    out += ",\"registryId\":\"" + RegistryId() + "\"";
     if (!suspects.empty()) {
         out += ",\"suspect\":[";
         for (size_t i = 0; i < suspects.size(); ++i) {

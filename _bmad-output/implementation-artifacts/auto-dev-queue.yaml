@@ -1012,9 +1012,15 @@ queue:
       - 同一帳簿內容恆產同一登錄編號（確定性、可重算驗證）
       - 篡改任一分錄 → 登錄編號改變
       - 存檔帶 registryId 欄位、舊檔降級（無欄位照載）
-    status: queued
+    status: done
     size: S
-    note: 建議在 L-7 之後落地——provenance 入 hash 後編號才穩定
+    note: >
+      落地：LedgerChain::RegistryId() 由 RootHash 高低 32 位 XOR
+      折叠派生 "XXXX-XXXX" 大寫 hex 短碼（純函數、空鏈由創世根
+      派生）；ToJson 寫 "registryId" 可選欄位、FromJson 不強制驗
+      （Verify() 是防線，編號恆重算不吃檔案值）；查帳段三分支
+      皆附「登錄字號 XXXX-XXXX」。
+      LedgerRegistryTest 22/22 MSVC+MinGW 全綠。
 
   - id: L-7
     title: LedgerChain provenance 欄位（產生軌跡）

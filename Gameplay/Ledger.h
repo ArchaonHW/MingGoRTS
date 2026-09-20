@@ -128,6 +128,11 @@ public:
     // 雜湊鏈根（最末筆 hash；空鏈回創世值）——供存檔/回放錨定
     uint64_t RootHash() const;
 
+    // L-6 帳簿登錄編號：RootHash 高低 32 位折叠派生 "XXXX-XXXX" 短碼——
+    // 純函數於帳簿內容（同一帳簿恆產同一編號），玩家可貼出供揭露引用；
+    // 衍生唯讀視圖，不改鏈語義。空鏈由創世雜湊派生，仍有確定編號。
+    std::string RegistryId() const;
+
     std::string ToJson() const;
     // 載入不驗證——篡改的檔案照常讀入，由 Verify() 揭露；
     // schema 不符/欄位缺損才回 false

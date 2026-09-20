@@ -251,6 +251,9 @@ HistorianReport ComposeHistorianReport(const HistorianInput& in) {
             t += details;
             t += "。";
         }
+        // L-6 登錄字號：帳簿的 rootHash 派生短碼——平衡/存疑皆帶，
+        // 玩家可貼出此字號供揭露引用（帳變則字號變）
+        t += "登錄字號 " + in.ledger->RegistryId() + "。";
     }
 
     // 審計欄位：省略計數永遠在場——帳目不全是規則不是疏漏
