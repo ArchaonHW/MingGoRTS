@@ -1,5 +1,5 @@
 #include "AI/AIAgentSystem.h"
-#include "GUI/AgentGUI.h"
+#include "MingGoRTS_IDE/AgentGUI.h"
 #include "Logging/Logger.h"
 #include "Time/TimeManager.h"
 #include <iostream>
