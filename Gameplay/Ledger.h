@@ -148,5 +148,31 @@ private:
     std::vector<size_t> suspects; // 已標記疑帳索引（升序不重複）
 };
 
+// ---- L-8 查證式史官：確信結論 ----
+
+// 三態確信結論（對應 ISSA 5000 光譜：無保留/保留/否定）
+enum class AssuranceVerdict {
+    Assured,   // 相符：鏈完整、抽驗全過、無偽帳無疑帳
+    Qualified, // 存疑：鏈完整但 malformed 分錄或已標記疑帳在場
+    Adverse    // 拒絕：雜湊鏈斷裂或抽驗樣本重算不符，不予採信
+};
+
+// 確信執行結果：verdict 之外保留全部查證證據供報告/測試核對
+struct LedgerAssurance {
+    AssuranceVerdict verdict = AssuranceVerdict::Assured;
+    int sampled = 0;      // 實際抽驗並通過的筆數
+    int sampleSize = 0;   // 應抽驗筆數（min(sampleN, size)）
+    int sampleBad = -1;   // 抽驗中第一筆重算/鏈環不符的索引（無則 -1）
+    int brokenAt = -1;    // Verify() 斷點（無則 -1）
+    int unsoundAt = -1;   // SoundnessViolation() 首筆（無則 -1）
+    int suspectCount = 0; // 已標記疑帳數（L-4 整合）
+};
+
+// 執行確信：驗鏈 + 健全掃描 + seeded 抽驗複算（hash 重算 + prevHash 鏈環）。
+// seed==0 → 以 RootHash() 自引種（同帳簿恆同樣本）；sampleN<=0 → 不抽驗。
+// 抽驗用 Fisher-Yates 部分洗牌 + mt19937_64，跨編譯器可重現。
+LedgerAssurance AssureLedger(const LedgerChain& ledger, uint64_t seed,
+                             int sampleN);
+
 } // namespace Gameplay
 } // namespace Potato

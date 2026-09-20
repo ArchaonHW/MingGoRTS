@@ -254,6 +254,46 @@ HistorianReport ComposeHistorianReport(const HistorianInput& in) {
         // L-6 登錄字號：帳簿的 rootHash 派生短碼——平衡/存疑皆帶，
         // 玩家可貼出此字號供揭露引用（帳變則字號變）
         t += "登錄字號 " + in.ledger->RegistryId() + "。";
+        // L-8 確信結論：seeded 抽驗複算後史官方具結（或不具結）——
+        // 相符 / 存疑 / 拒絕三態，對應 ISSA 5000 確信光譜
+        if (in.assuranceSample > 0) {
+            const LedgerAssurance as =
+                AssureLedger(*in.ledger, in.assuranceSeed,
+                             in.assuranceSample);
+            char abuf[192];
+            if (as.verdict == AssuranceVerdict::Adverse) {
+                const int at = as.brokenAt >= 0 ? as.brokenAt
+                                                : as.sampleBad;
+                std::snprintf(
+                    abuf, sizeof(abuf),
+                    "鏈斷於第 %d 筆——史官拒絕具結，本章帳目不予採信。",
+                    at + 1);
+            } else if (as.verdict == AssuranceVerdict::Qualified) {
+                std::string why;
+                if (as.unsoundAt >= 0) {
+                    char w[48];
+                    std::snprintf(w, sizeof(w), "第 %d 筆借貸不成立",
+                                  as.unsoundAt + 1);
+                    why = w;
+                }
+                if (as.suspectCount > 0) {
+                    char w[48];
+                    std::snprintf(w, sizeof(w), "%s疑帳 %d 筆",
+                                  why.empty() ? "有" : "、另有",
+                                  as.suspectCount);
+                    why += w;
+                }
+                std::snprintf(abuf, sizeof(abuf),
+                              "抽驗 %d 筆皆符，然%s——史官存疑，不予具結。",
+                              as.sampled, why.c_str());
+            } else {
+                std::snprintf(
+                    abuf, sizeof(abuf),
+                    "抽驗 %d 筆皆符，鏈環相續——史官具結：帳目相符。",
+                    as.sampled);
+            }
+            t += abuf;
+        }
     }
 
     // 審計欄位：省略計數永遠在場——帳目不全是規則不是疏漏

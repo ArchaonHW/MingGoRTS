@@ -4,6 +4,7 @@
 #include "Gameplay/BattleRecorder.h"
 #include "Gameplay/Roster.h"
 
+#include <cstdint>
 #include <string>
 
 namespace Potato {
@@ -44,6 +45,10 @@ struct HistorianInput {
     // L-3 查帳：非空且有帳 → 判詞行後插入試算段——
     // 平衡產「借貸相符」、斷鏈/不健全產「墨跡未乾」存疑句
     const LedgerChain* ledger = nullptr;
+    // L-8 確信：>0 時查帳段末附 seeded 抽驗結論（相符/存疑/拒絕）。
+    // seed==0 → 以帳簿 RootHash 自引種；<=0 → 維持 L-6 前句式
+    uint64_t assuranceSeed = 0;
+    int assuranceSample = 3;
 };
 
 struct HistorianReport {

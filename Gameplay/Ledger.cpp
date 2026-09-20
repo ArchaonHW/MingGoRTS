@@ -4,6 +4,8 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <numeric>
+#include <random>
 
 namespace Potato {
 namespace Gameplay {
@@ -255,8 +257,12 @@ std::string LedgerChain::RegistryId() const {
 }
 
 std::string LedgerChain::ToJson() const {
+    // L-6 登錄編號：可選附加欄位——讀者可忽略（編號恆可重算），
+    // 寫出供玩家直接引用；FromJson 不強制驗（Verify() 才是防線）。
+    // 置於 entries 前，保持「entries 為末尾陣列」的既有書寫慣例
     std::string out =
-        "{\"schema\":\"potato.ledger_chain/1\",\"entries\":[";
+        "{\"schema\":\"potato.ledger_chain/1\",\"registryId\":\"" +
+        RegistryId() + "\",\"entries\":[";
     char buf[640];
     for (size_t i = 0; i < entries.size(); ++i) {
         const Chained& c = entries[i];
@@ -283,9 +289,6 @@ std::string LedgerChain::ToJson() const {
         out += buf;
     }
     out += ']';
-    // L-6 登錄編號：可選附加欄位——讀者可忽略（編號恆可重算），
-    // 寫出供玩家直接引用；FromJson 不強制驗（Verify() 才是防線）
-    out += ",\"registryId\":\"" + RegistryId() + "\"";
     if (!suspects.empty()) {
         out += ",\"suspect\":[";
         for (size_t i = 0; i < suspects.size(); ++i) {
@@ -352,6 +355,55 @@ bool LedgerChain::FromJson(const std::string& json) {
         }
     }
     return true;
+}
+
+LedgerAssurance AssureLedger(const LedgerChain& ledger, uint64_t seed,
+                             int sampleN) {
+    LedgerAssurance r;
+    r.brokenAt = ledger.Verify();
+    r.unsoundAt = ledger.SoundnessViolation();
+    r.suspectCount = static_cast<int>(ledger.SuspectCount());
+
+    const size_t n = ledger.Size();
+    if (seed == 0) {
+        seed = ledger.RootHash(); // 自引種：同帳簿恆同樣本
+    }
+    if (sampleN > 0 && n > 0) {
+        const auto& es = ledger.Entries();
+        const int k = std::min<int>(sampleN, static_cast<int>(n));
+        r.sampleSize = k;
+        // Fisher-Yates 部分洗牌取前 k 個互異索引——
+        // mt19937_64 為標準化引擎、modulo 取樣不依賴
+        // uniform_int_distribution（其結果隨標準庫實作而異），
+        // 同 seed 跨 MSVC/MinGW/g++ 產同一樣本
+        std::vector<size_t> idx(n);
+        std::iota(idx.begin(), idx.end(), size_t{0});
+        std::mt19937_64 rng(seed);
+        for (int i = 0; i < k; ++i) {
+            const size_t j = i + static_cast<size_t>(rng() % (n - i));
+            std::swap(idx[static_cast<size_t>(i)], idx[j]);
+        }
+        for (int i = 0; i < k; ++i) {
+            const size_t at = idx[static_cast<size_t>(i)];
+            const LedgerChain::Chained& c = es[at];
+            const uint64_t expectPrev =
+                at == 0 ? LedgerChain::kGenesisHash
+                        : es[at - 1].hash;
+            if (c.prevHash != expectPrev ||
+                LedgerChain::HashEntry(c.prevHash, c.entry) != c.hash) {
+                r.sampleBad = static_cast<int>(at);
+                break;
+            }
+            ++r.sampled;
+        }
+    }
+
+    if (r.brokenAt >= 0 || r.sampleBad >= 0) {
+        r.verdict = AssuranceVerdict::Adverse;
+    } else if (r.unsoundAt >= 0 || r.suspectCount > 0) {
+        r.verdict = AssuranceVerdict::Qualified;
+    }
+    return r;
 }
 
 } // namespace Gameplay
