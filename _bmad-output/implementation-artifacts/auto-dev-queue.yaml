@@ -1015,7 +1015,7 @@ queue:
     status: done
     size: S
     note: >
-      落地：LedgerChain::RegistryId() 由 RootHash 高低 32 位 XOR
+      f43c351 落地：LedgerChain::RegistryId() 由 RootHash 高低 32 位 XOR
       折叠派生 "XXXX-XXXX" 大寫 hex 短碼（純函數、空鏈由創世根
       派生）；ToJson 寫 "registryId" 可選欄位、FromJson 不強制驗
       （Verify() 是防線，編號恆重算不吃檔案值）；查帳段三分支
