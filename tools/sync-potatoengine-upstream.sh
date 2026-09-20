@@ -49,7 +49,28 @@ for dep in glad_gen tinygltf; do
     fi
 done
 
-# 3) 殘留檔：上游有、repo 無對應 → 移入 legacy/（保留但不污染鏡像）
+# 3) 引擎層測試：Examples/<Test>.cpp → 上游 tests/<Test>.cpp
+# 白名單與上游 tests/CMakeLists.txt 的 POTATO_TESTS 保持同步;
+# 遊戲層測試(Gameplay/Campaign 依賴)與 imgui 測試不在此列。
+TESTS="MathTest MinimalTest PhysicsTest PhysicsMathTest SecurityRedTeamTest \
+FileSystemTest LoggerTest LogTest MemoryTest PlatformTest SceneTest \
+SerializationTest TimeTest CoreSystemsTest RenderPipelineTest \
+RenderTargetTest GLSmokeTest SpriteAtlasTest ModelLoaderTest VrmLoadTest \
+InputTest AudioTest ImageCodecTest NeuralGraphicsTest AITestSuite \
+FakeCheatModule"
+
+mkdir -p "$TARGET/tests"
+for t in $TESTS; do
+    if [ -f "$REPO_ROOT/Examples/$t.cpp" ]; then
+        cp "$REPO_ROOT/Examples/$t.cpp" "$TARGET/tests/$t.cpp"
+    elif [ -f "$TARGET/tests/$t.cpp" ]; then
+        mkdir -p "$TARGET/legacy/tests"
+        mv "$TARGET/tests/$t.cpp" "$TARGET/legacy/tests/$t.cpp"
+        echo "  [legacy] tests/$t.cpp"
+    fi
+done
+
+# 4) 殘留檔：上游有、repo 無對應 → 移入 legacy/（保留但不污染鏡像）
 # 注意:比對需用模組內相對路徑（如 Core/Interfaces/IAudio.h）,不能只用 basename,
 # 否則子目錄檔案會被誤判 stale;legacy 目錄要建 dirname,直接建 $rel 會產生
 # 「同名目錄包同名檔案」的嵌套。
