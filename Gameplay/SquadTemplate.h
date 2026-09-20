@@ -133,8 +133,11 @@ struct BudgetedBuildResult {
     // 通過預算檢查的模板（順序同 wishlist）；指標指向 library 內部，
     // 生命週期隨 library，勿在 library 變動後沿用
     std::vector<const SquadTemplate*> built;
-    std::vector<std::string> skipped;  // 被跳過的 template id
-    int spent = 0;                     // built 的總成本
+    std::vector<std::string> skipped;      // 被跳過的 template id
+    // C-3：skipped[i] 的原因，與 skipped 逐項對齊——
+    // "unknown_id"（查無模板）/ "over_budget"（超支）
+    std::vector<std::string> skipReasons;
+    int spent = 0;                         // built 的總成本
 };
 
 // 依序檢查 orderedWishlist 每個 template id：cost ≤ 剩餘預算才入

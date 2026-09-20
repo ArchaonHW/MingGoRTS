@@ -509,8 +509,8 @@ int main() {
     RefitCamp& camp = campaign.Camp();
     GeneralDossier dossier;
     SquadTemplateLibrary campLibrary;
+    // C-3 目錄整併：舊 templates/ 已併入 squads/，單一目錄載入
     campLibrary.LoadDir(DemoAssets::Resolve("squads"));
-    campLibrary.LoadDir(DemoAssets::Resolve("templates"));
 
     // ---- C-1 戰役存檔接線：啟動讀檔 + 章節定義庫 ----
     // 存檔放 exe 旁 saves/（與啟動 cwd 無關）；無檔=新戰役不報錯

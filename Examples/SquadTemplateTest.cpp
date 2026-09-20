@@ -277,16 +277,19 @@ int main() {
               "同 id 除重 keep latest（Size 不變）",
               (float)lib.Size(), (float)before);
 
-        // 舊扁平目錄遷移後仍可載入（assets/templates 也是同 schema）
+        // C-3 目錄整併：舊 assets/templates 已併入 assets/squads，
+        // 遷移檔（infantry_company/cavalry_platoon）仍在且數值保留
         SquadTemplateLibrary lib2;
-        Check(lib2.LoadDir("assets/templates") == 2,
-              "assets/templates 遷移後 2 模板可載");
+        Check(lib2.LoadDir("assets/squads") >= 5,
+              "squads 整併後 ≥5 模板");
         const SquadTemplate* cp = lib2.Find("cavalry_platoon");
         Check(cp && cp->unitClass == UnitClass::Cavalry &&
                   cp->members == 12 && cp->cost == 160 &&
                   std::fabs(cp->speed - 3.5f) < 1e-6f &&
                   std::fabs(cp->damagePerMember - 0.06f) < 1e-6f,
-              "cavalry_platoon 遷移後數值保留");
+              "cavalry_platoon 整併後數值保留");
+        Check(lib2.Find("infantry_company") != nullptr,
+              "infantry_company 整併後仍在");
 
         // Add / Clear
         SquadTemplateLibrary lib3;

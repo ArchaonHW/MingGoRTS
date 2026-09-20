@@ -301,6 +301,7 @@ BudgetedBuildResult BudgetedBuild(
         const SquadTemplate* tpl = library.Find(wishId);
         if (!tpl) {
             r.skipped.push_back(wishId); // 查無模板：無法定價 → 跳過
+            r.skipReasons.push_back("unknown_id");
             continue;
         }
         if (unlimited || tpl->cost <= remaining) {
@@ -312,6 +313,7 @@ BudgetedBuildResult BudgetedBuild(
         } else {
             // 超支跳過（非降人數）：人數是模板的一部分，模板是原子單位
             r.skipped.push_back(wishId);
+            r.skipReasons.push_back("over_budget");
         }
     }
     return r;
