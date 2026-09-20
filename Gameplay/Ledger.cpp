@@ -43,6 +43,45 @@ bool AccountFromName(const std::string& name, LedgerAccount& out) {
     return false;
 }
 
+const char* SourceName(EntrySource s) {
+    switch (s) {
+    case EntrySource::Unknown:     return "Unknown";
+    case EntrySource::Battle:      return "Battle";
+    case EntrySource::Refit:       return "Refit";
+    case EntrySource::Negotiation: return "Negotiation";
+    case EntrySource::Governance:  return "Governance";
+    case EntrySource::Myth:        return "Myth";
+    case EntrySource::System:      return "System";
+    case EntrySource::Count:       break;
+    }
+    return "Unknown";
+}
+
+const char* SourceNameZh(EntrySource s) {
+    switch (s) {
+    case EntrySource::Unknown:     return "失考";
+    case EntrySource::Battle:      return "戰陣";
+    case EntrySource::Refit:       return "營務";
+    case EntrySource::Negotiation: return "談判";
+    case EntrySource::Governance:  return "治理";
+    case EntrySource::Myth:        return "神異";
+    case EntrySource::System:      return "紀要";
+    case EntrySource::Count:       break;
+    }
+    return "失考";
+}
+
+bool SourceFromName(const std::string& name, EntrySource& out) {
+    for (int i = 0; i < static_cast<int>(EntrySource::Count); ++i) {
+        EntrySource s = static_cast<EntrySource>(i);
+        if (name == SourceName(s)) {
+            out = s;
+            return true;
+        }
+    }
+    return false;
+}
+
 LedgerEntry LedgerEntry::BattleVictory(int cost, int chapter,
                                        const std::string& memo) {
     LedgerEntry e;
@@ -51,6 +90,7 @@ LedgerEntry LedgerEntry::BattleVictory(int cost, int chapter,
     e.amount = cost;
     e.chapter = chapter;
     e.memo = memo;
+    e.prov.source = EntrySource::Battle;
     return e;
 }
 
@@ -62,6 +102,7 @@ LedgerEntry LedgerEntry::Recruitment(int cost, int chapter,
     e.amount = cost;
     e.chapter = chapter;
     e.memo = memo;
+    e.prov.source = EntrySource::Refit;
     return e;
 }
 
@@ -73,6 +114,7 @@ LedgerEntry LedgerEntry::Negotiation(int gain, int chapter,
     e.amount = gain;
     e.chapter = chapter;
     e.memo = memo;
+    e.prov.source = EntrySource::Negotiation;
     return e;
 }
 
@@ -97,6 +139,16 @@ static std::string Canon(const LedgerEntry& e) {
     s += std::to_string(e.chapter);
     s += '|';
     s += e.memo;
+    // L-7：provenance 非預設才入 canon——舊檔 hash 不變（降級相容），
+    // 新分錄的產生軌跡受鏈保護；對舊分錄補 prov 反而斷鏈（篡改揭露）
+    if (!e.prov.IsDefault()) {
+        s += '|';
+        s += SourceName(e.prov.source);
+        s += '|';
+        s += std::to_string(e.prov.tick);
+        s += '|';
+        s += e.prov.eventId;
+    }
     return s;
 }
 
@@ -198,10 +250,21 @@ std::string LedgerChain::ToJson() const {
         const Chained& c = entries[i];
         std::snprintf(buf, sizeof(buf),
                       "{\"d\":\"%s\",\"c\":\"%s\",\"amt\":%d,\"ch\":%d,"
-                      "\"memo\":\"%s\",\"prev\":\"%016llx\",\"hash\":\"%016llx\"}%s",
+                      "\"memo\":\"%s\",",
                       AccountName(c.entry.debit), AccountName(c.entry.credit),
                       c.entry.amount, c.entry.chapter,
-                      c.entry.memo.c_str(),
+                      c.entry.memo.c_str());
+        out += buf;
+        // L-7：prov 為可選附加欄位——預設值不寫出，舊讀者可忽略
+        if (!c.entry.prov.IsDefault()) {
+            std::snprintf(buf, sizeof(buf),
+                          "\"prov\":{\"src\":\"%s\",\"t\":%d,\"ev\":\"%s\"},",
+                          SourceName(c.entry.prov.source), c.entry.prov.tick,
+                          c.entry.prov.eventId.c_str());
+            out += buf;
+        }
+        std::snprintf(buf, sizeof(buf),
+                      "\"prev\":\"%016llx\",\"hash\":\"%016llx\"}%s",
                       (unsigned long long)c.prevHash,
                       (unsigned long long)c.hash,
                       i + 1 < entries.size() ? "," : "");
@@ -253,6 +316,15 @@ bool LedgerChain::FromJson(const std::string& json) {
         c.entry.amount = j["amt"].AsInt(0);
         c.entry.chapter = j["ch"].AsInt(0);
         c.entry.memo = j["memo"].AsString();
+        // L-7：prov 可選——舊檔無欄位 → 預設軌跡（失考），hash 照舊驗
+        const JsonValue& pv = j["prov"];
+        if (pv.IsObject()) {
+            EntrySource src = EntrySource::Unknown;
+            SourceFromName(pv["src"].AsString(), src);
+            c.entry.prov.source = src;
+            c.entry.prov.tick = pv["t"].AsInt(0);
+            c.entry.prov.eventId = pv["ev"].AsString();
+        }
         c.prevHash = ParseHex(j["prev"].AsString());
         c.hash = ParseHex(j["hash"].AsString());
         entries.push_back(c);

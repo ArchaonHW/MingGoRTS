@@ -1030,7 +1030,7 @@ queue:
     status: done
     size: M
     note: >
-      落地：EntrySource enum（失考/戰陣/營務/談判/治理/神異/紀要）
+      4112cce 落地：EntrySource enum（失考/戰陣/營務/談判/治理/神異/紀要）
       + Provenance{source,tick,eventId} 掛入 LedgerEntry；
       Canon() 有條件附加 prov 段（預設值維持舊格式 → 舊檔 hash 不變、
       事後補登/剝除 prov 斷鏈揭露）；三模板各填來源；

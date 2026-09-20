@@ -27,6 +27,37 @@ const char* AccountName(LedgerAccount a);
 const char* AccountNameZh(LedgerAccount a);
 bool AccountFromName(const std::string& name, LedgerAccount& out);
 
+// 分錄來源系統（L-7 產生軌跡）：這筆帳由哪個系統記下。
+// Unknown 是合法值——舊檔與手動分錄沒有來源可查
+enum class EntrySource {
+    Unknown = 0, // 失考
+    Battle,      // 戰陣——戰鬥結算
+    Refit,       // 營務——整補營
+    Negotiation, // 談判——無戰屈兵
+    Governance,  // 治理——民心秩序事件
+    Myth,        // 神異——神話層事件
+    System,      // 紀要——系統/初始
+    Count
+};
+
+const char* SourceName(EntrySource s);
+// 來源中文名（史官體查帳用）
+const char* SourceNameZh(EntrySource s);
+bool SourceFromName(const std::string& name, EntrySource& out);
+
+// 產生軌跡：分錄由哪個系統、何時、因何事件記下。
+// 全預設值視為「無軌跡」——canon 維持舊格式，舊存檔 hash 不變
+struct Provenance {
+    EntrySource source = EntrySource::Unknown;
+    int tick = 0;          // 產生時點（戰鬥 tick 或章節序）
+    std::string eventId;   // 觸發事件識別（回放事件 id / 系統自訂）
+
+    bool IsDefault() const {
+        return source == EntrySource::Unknown && tick == 0 &&
+               eventId.empty();
+    }
+};
+
 // 通用鏈式雜湊（FNV-1a 64）：prevHash 與任意文本 fold——
 // LedgerChain 與回放完整性根（L-5）共用；篡改任一環節即改變末端值
 uint64_t LedgerHash(uint64_t prevHash, const std::string& text);
@@ -38,6 +69,7 @@ struct LedgerEntry {
     int amount = 0;
     std::string memo;
     int chapter = 0;
+    Provenance prov; // L-7 產生軌跡；預設值不入 hash（舊檔相容）
 
     bool WellFormed() const {
         return amount > 0 && debit != credit &&

@@ -208,6 +208,33 @@ HistorianReport ComposeHistorianReport(const HistorianInput& in) {
             std::snprintf(buf, sizeof(buf), "本章記帳 %d 筆，借貸相符",
                           static_cast<int>(in.ledger->Size()));
             t += buf;
+            // L-7 產生軌跡統計：各來源系統記了幾筆（失考照列——
+            // 無軌跡本身就是可查證的事實）
+            {
+                std::array<int, static_cast<size_t>(EntrySource::Count)>
+                    srcCount{};
+                for (const auto& ch : in.ledger->Entries()) {
+                    const EntrySource s = ch.entry.prov.source;
+                    if (s < EntrySource::Count) {
+                        srcCount[static_cast<size_t>(s)]++;
+                    }
+                }
+                std::string srcText;
+                char sbuf[32];
+                for (int i = 0;
+                     i < static_cast<int>(EntrySource::Count); ++i) {
+                    const int n = srcCount[static_cast<size_t>(i)];
+                    if (n == 0) {
+                        continue;
+                    }
+                    std::snprintf(sbuf, sizeof(sbuf), "%s%s %d",
+                                  srcText.empty() ? "——" : "、",
+                                  SourceNameZh(static_cast<EntrySource>(i)),
+                                  n);
+                    srcText += sbuf;
+                }
+                t += srcText;
+            }
             const auto net = in.ledger->TrialBalance();
             std::string details;
             char dbuf[64];

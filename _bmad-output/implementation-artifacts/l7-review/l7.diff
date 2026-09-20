@@ -1,0 +1,437 @@
+diff --git a/Gameplay/HistorianReport.cpp b/Gameplay/HistorianReport.cpp
+index 66ccf46..8cf1c0e 100644
+--- a/Gameplay/HistorianReport.cpp
++++ b/Gameplay/HistorianReport.cpp
+@@ -208,6 +208,33 @@ HistorianReport ComposeHistorianReport(const HistorianInput& in) {
+             std::snprintf(buf, sizeof(buf), "本章記帳 %d 筆，借貸相符",
+                           static_cast<int>(in.ledger->Size()));
+             t += buf;
++            // L-7 產生軌跡統計：各來源系統記了幾筆（失考照列——
++            // 無軌跡本身就是可查證的事實）
++            {
++                std::array<int, static_cast<size_t>(EntrySource::Count)>
++                    srcCount{};
++                for (const auto& ch : in.ledger->Entries()) {
++                    const EntrySource s = ch.entry.prov.source;
++                    if (s < EntrySource::Count) {
++                        srcCount[static_cast<size_t>(s)]++;
++                    }
++                }
++                std::string srcText;
++                char sbuf[32];
++                for (int i = 0;
++                     i < static_cast<int>(EntrySource::Count); ++i) {
++                    const int n = srcCount[static_cast<size_t>(i)];
++                    if (n == 0) {
++                        continue;
++                    }
++                    std::snprintf(sbuf, sizeof(sbuf), "%s%s %d",
++                                  srcText.empty() ? "——" : "、",
++                                  SourceNameZh(static_cast<EntrySource>(i)),
++                                  n);
++                    srcText += sbuf;
++                }
++                t += srcText;
++            }
+             const auto net = in.ledger->TrialBalance();
+             std::string details;
+             char dbuf[64];
+diff --git a/Gameplay/Ledger.cpp b/Gameplay/Ledger.cpp
+index d2036c3..ddfdb47 100644
+--- a/Gameplay/Ledger.cpp
++++ b/Gameplay/Ledger.cpp
+@@ -43,6 +43,45 @@ bool AccountFromName(const std::string& name, LedgerAccount& out) {
+     return false;
+ }
+ 
++const char* SourceName(EntrySource s) {
++    switch (s) {
++    case EntrySource::Unknown:     return "Unknown";
++    case EntrySource::Battle:      return "Battle";
++    case EntrySource::Refit:       return "Refit";
++    case EntrySource::Negotiation: return "Negotiation";
++    case EntrySource::Governance:  return "Governance";
++    case EntrySource::Myth:        return "Myth";
++    case EntrySource::System:      return "System";
++    case EntrySource::Count:       break;
++    }
++    return "Unknown";
++}
++
++const char* SourceNameZh(EntrySource s) {
++    switch (s) {
++    case EntrySource::Unknown:     return "失考";
++    case EntrySource::Battle:      return "戰陣";
++    case EntrySource::Refit:       return "營務";
++    case EntrySource::Negotiation: return "談判";
++    case EntrySource::Governance:  return "治理";
++    case EntrySource::Myth:        return "神異";
++    case EntrySource::System:      return "紀要";
++    case EntrySource::Count:       break;
++    }
++    return "失考";
++}
++
++bool SourceFromName(const std::string& name, EntrySource& out) {
++    for (int i = 0; i < static_cast<int>(EntrySource::Count); ++i) {
++        EntrySource s = static_cast<EntrySource>(i);
++        if (name == SourceName(s)) {
++            out = s;
++            return true;
++        }
++    }
++    return false;
++}
++
+ LedgerEntry LedgerEntry::BattleVictory(int cost, int chapter,
+                                        const std::string& memo) {
+     LedgerEntry e;
+@@ -51,6 +90,7 @@ LedgerEntry LedgerEntry::BattleVictory(int cost, int chapter,
+     e.amount = cost;
+     e.chapter = chapter;
+     e.memo = memo;
++    e.prov.source = EntrySource::Battle;
+     return e;
+ }
+ 
+@@ -62,6 +102,7 @@ LedgerEntry LedgerEntry::Recruitment(int cost, int chapter,
+     e.amount = cost;
+     e.chapter = chapter;
+     e.memo = memo;
++    e.prov.source = EntrySource::Refit;
+     return e;
+ }
+ 
+@@ -73,6 +114,7 @@ LedgerEntry LedgerEntry::Negotiation(int gain, int chapter,
+     e.amount = gain;
+     e.chapter = chapter;
+     e.memo = memo;
++    e.prov.source = EntrySource::Negotiation;
+     return e;
+ }
+ 
+@@ -97,6 +139,16 @@ static std::string Canon(const LedgerEntry& e) {
+     s += std::to_string(e.chapter);
+     s += '|';
+     s += e.memo;
++    // L-7：provenance 非預設才入 canon——舊檔 hash 不變（降級相容），
++    // 新分錄的產生軌跡受鏈保護；對舊分錄補 prov 反而斷鏈（篡改揭露）
++    if (!e.prov.IsDefault()) {
++        s += '|';
++        s += SourceName(e.prov.source);
++        s += '|';
++        s += std::to_string(e.prov.tick);
++        s += '|';
++        s += e.prov.eventId;
++    }
+     return s;
+ }
+ 
+@@ -198,10 +250,21 @@ std::string LedgerChain::ToJson() const {
+         const Chained& c = entries[i];
+         std::snprintf(buf, sizeof(buf),
+                       "{\"d\":\"%s\",\"c\":\"%s\",\"amt\":%d,\"ch\":%d,"
+-                      "\"memo\":\"%s\",\"prev\":\"%016llx\",\"hash\":\"%016llx\"}%s",
++                      "\"memo\":\"%s\",",
+                       AccountName(c.entry.debit), AccountName(c.entry.credit),
+                       c.entry.amount, c.entry.chapter,
+-                      c.entry.memo.c_str(),
++                      c.entry.memo.c_str());
++        out += buf;
++        // L-7：prov 為可選附加欄位——預設值不寫出，舊讀者可忽略
++        if (!c.entry.prov.IsDefault()) {
++            std::snprintf(buf, sizeof(buf),
++                          "\"prov\":{\"src\":\"%s\",\"t\":%d,\"ev\":\"%s\"},",
++                          SourceName(c.entry.prov.source), c.entry.prov.tick,
++                          c.entry.prov.eventId.c_str());
++            out += buf;
++        }
++        std::snprintf(buf, sizeof(buf),
++                      "\"prev\":\"%016llx\",\"hash\":\"%016llx\"}%s",
+                       (unsigned long long)c.prevHash,
+                       (unsigned long long)c.hash,
+                       i + 1 < entries.size() ? "," : "");
+@@ -253,6 +316,15 @@ bool LedgerChain::FromJson(const std::string& json) {
+         c.entry.amount = j["amt"].AsInt(0);
+         c.entry.chapter = j["ch"].AsInt(0);
+         c.entry.memo = j["memo"].AsString();
++        // L-7：prov 可選——舊檔無欄位 → 預設軌跡（失考），hash 照舊驗
++        const JsonValue& pv = j["prov"];
++        if (pv.IsObject()) {
++            EntrySource src = EntrySource::Unknown;
++            SourceFromName(pv["src"].AsString(), src);
++            c.entry.prov.source = src;
++            c.entry.prov.tick = pv["t"].AsInt(0);
++            c.entry.prov.eventId = pv["ev"].AsString();
++        }
+         c.prevHash = ParseHex(j["prev"].AsString());
+         c.hash = ParseHex(j["hash"].AsString());
+         entries.push_back(c);
+diff --git a/Gameplay/Ledger.h b/Gameplay/Ledger.h
+index be75d17..911b1cb 100644
+--- a/Gameplay/Ledger.h
++++ b/Gameplay/Ledger.h
+@@ -27,6 +27,37 @@ const char* AccountName(LedgerAccount a);
+ const char* AccountNameZh(LedgerAccount a);
+ bool AccountFromName(const std::string& name, LedgerAccount& out);
+ 
++// 分錄來源系統（L-7 產生軌跡）：這筆帳由哪個系統記下。
++// Unknown 是合法值——舊檔與手動分錄沒有來源可查
++enum class EntrySource {
++    Unknown = 0, // 失考
++    Battle,      // 戰陣——戰鬥結算
++    Refit,       // 營務——整補營
++    Negotiation, // 談判——無戰屈兵
++    Governance,  // 治理——民心秩序事件
++    Myth,        // 神異——神話層事件
++    System,      // 紀要——系統/初始
++    Count
++};
++
++const char* SourceName(EntrySource s);
++// 來源中文名（史官體查帳用）
++const char* SourceNameZh(EntrySource s);
++bool SourceFromName(const std::string& name, EntrySource& out);
++
++// 產生軌跡：分錄由哪個系統、何時、因何事件記下。
++// 全預設值視為「無軌跡」——canon 維持舊格式，舊存檔 hash 不變
++struct Provenance {
++    EntrySource source = EntrySource::Unknown;
++    int tick = 0;          // 產生時點（戰鬥 tick 或章節序）
++    std::string eventId;   // 觸發事件識別（回放事件 id / 系統自訂）
++
++    bool IsDefault() const {
++        return source == EntrySource::Unknown && tick == 0 &&
++               eventId.empty();
++    }
++};
++
+ // 通用鏈式雜湊（FNV-1a 64）：prevHash 與任意文本 fold——
+ // LedgerChain 與回放完整性根（L-5）共用；篡改任一環節即改變末端值
+ uint64_t LedgerHash(uint64_t prevHash, const std::string& text);
+@@ -38,6 +69,7 @@ struct LedgerEntry {
+     int amount = 0;
+     std::string memo;
+     int chapter = 0;
++    Provenance prov; // L-7 產生軌跡；預設值不入 hash（舊檔相容）
+ 
+     bool WellFormed() const {
+         return amount > 0 && debit != credit &&
+diff --git a/Examples/LedgerProvenanceTest.cpp b/Examples/LedgerProvenanceTest.cpp
+new file mode 100644
+index 0000000..bdfc450
+--- /dev/null
++++ b/Examples/LedgerProvenanceTest.cpp
+@@ -0,0 +1,212 @@
++// LedgerProvenanceTest - L-7 產生軌跡無頭測試
++// 覆蓋 spec-l7 I/O 矩陣：模板帶源、prov 入 hash、剝除/補登斷鏈、
++// 舊檔降級、roundtrip、查帳來源統計、InjectForgery 相容
++#include "Gameplay/HistorianReport.h"
++#include "Gameplay/Ledger.h"
++
++#include <cstdio>
++#include <string>
++
++using namespace Potato::Gameplay;
++
++static int g_pass = 0;
++static int g_fail = 0;
++
++static void Check(bool ok, const char* name) {
++    if (ok) {
++        g_pass++;
++        printf("  [PASS] %s\n", name);
++    } else {
++        g_fail++;
++        printf("  [FAIL] %s\n", name);
++    }
++}
++
++static bool Has(const std::string& hay, const char* needle) {
++    return hay.find(needle) != std::string::npos;
++}
++
++// 第 idx 筆 entry 物件在 JSON 中的內容起點（'{' 之後）
++static size_t EntryPos(const std::string& json, int idx) {
++    size_t pos = json.find("\"entries\":[");
++    if (pos == std::string::npos) return pos;
++    for (int i = 0; i <= idx; ++i) {
++        pos = json.find('{', pos);
++        if (pos == std::string::npos) return pos;
++        ++pos;
++    }
++    return pos;
++}
++
++// 剝除第 idx 筆的 "prov":{...}, 段（篡改手法：刪除產生軌跡）
++static std::string StripProv(std::string json, int idx) {
++    const size_t e = EntryPos(json, idx);
++    if (e == std::string::npos) return json;
++    const size_t bound = json.find("\"prev\":", e);
++    const size_t pv = json.find("\"prov\":{", e);
++    if (pv == std::string::npos || pv > bound) return json;
++    const size_t pvEnd = json.find("},", pv);
++    if (pvEnd == std::string::npos) return json;
++    return json.erase(pv, pvEnd - pv + 2); // 含尾逗號
++}
++
++// 對第 idx 筆補登 prov（篡改手法：事後捏造來源），插於 "prev" 前
++static std::string InjectProv(std::string json, int idx,
++                              const char* provJson) {
++    const size_t e = EntryPos(json, idx);
++    if (e == std::string::npos) return json;
++    const size_t p = json.find("\"prev\":", e);
++    if (p == std::string::npos) return json;
++    return json.insert(p, provJson);
++}
++
++// 舊格式分錄：prov 全預設，canon/hash 與 L-7 之前逐位相同
++static LedgerEntry ManualEntry(int amount, int chapter,
++                               const std::string& memo) {
++    LedgerEntry e;
++    e.debit = LedgerAccount::Martial;
++    e.credit = LedgerAccount::Supply;
++    e.amount = amount;
++    e.chapter = chapter;
++    e.memo = memo;
++    return e;
++}
++
++int main() {
++    printf("=== Ledger Provenance Tests (L-7) ===\n\n");
++
++    // ---- [1] 模板帶源 ----
++    printf("[1] 模板預設來源\n");
++    {
++        Check(LedgerEntry::BattleVictory(120, 1).prov.source ==
++                  EntrySource::Battle,
++              "BattleVictory → Battle");
++        Check(LedgerEntry::Recruitment(30, 1).prov.source ==
++                  EntrySource::Refit,
++              "Recruitment → Refit");
++        Check(LedgerEntry::Negotiation(80, 1).prov.source ==
++                  EntrySource::Negotiation,
++              "Negotiation → Negotiation");
++        const LedgerEntry& b = LedgerEntry::BattleVictory(1, 1);
++        Check(b.prov.tick == 0 && b.prov.eventId.empty(),
++              "tick/eventId 預設");
++    }
++
++    // ---- [2] prov 入 hash ----
++    printf("\n[2] prov 納入雜湊\n");
++    {
++        LedgerEntry a = LedgerEntry::BattleVictory(120, 1, "斷橋");
++        LedgerEntry b = a;
++        b.prov.tick = 42;
++        b.prov.eventId = "ev-xyz";
++        Check(LedgerChain::HashEntry(LedgerChain::kGenesisHash, a) !=
++                  LedgerChain::HashEntry(LedgerChain::kGenesisHash, b),
++              "同 entry 不同 prov → 雜湊不同");
++        LedgerEntry c = a;
++        c.prov.source = EntrySource::Myth;
++        Check(LedgerChain::HashEntry(LedgerChain::kGenesisHash, a) !=
++                  LedgerChain::HashEntry(LedgerChain::kGenesisHash, c),
++              "不同 source → 雜湊不同");
++        // 相容性核心：失考分錄與帶源分錄同額同註，雜湊必須不同
++        LedgerEntry d = ManualEntry(120, 1, "斷橋");
++        Check(LedgerChain::HashEntry(LedgerChain::kGenesisHash, a) !=
++                  LedgerChain::HashEntry(LedgerChain::kGenesisHash, d),
++              "帶源模板 vs 失考同額分錄 → 雜湊不同");
++    }
++
++    // ---- [3] 帶 prov 上鏈 + 預設 prov 不寫欄位 ----
++    printf("\n[3] 帶 prov 上鏈\n");
++    LedgerChain chain;
++    {
++        LedgerEntry e1 = LedgerEntry::BattleVictory(120, 1, "斷橋之捷");
++        e1.prov.tick = 42;
++        e1.prov.eventId = "duanqiao-win";
++        Check(chain.Append(e1), "帶 prov 分錄可 Append");
++        Check(chain.Append(LedgerEntry::Recruitment(30, 1)),
++              "模板分錄 Append");
++        Check(chain.Verify() == -1, "Verify 通過");
++        Check(Has(chain.ToJson(), "\"prov\":{"), "非預設 prov 寫入檔案");
++        LedgerChain plain;
++        plain.Append(ManualEntry(10, 1, "舊帳"));
++        Check(!Has(plain.ToJson(), "\"prov\""), "預設 prov 不寫欄位");
++    }
++
++    // ---- [4] roundtrip ----
++    printf("\n[4] 持久化 roundtrip\n");
++    {
++        LedgerChain back;
++        Check(back.FromJson(chain.ToJson()), "回讀");
++        Check(back.Verify() == -1, "回讀後鏈完整");
++        const LedgerEntry& e0 = back.Entries()[0].entry;
++        Check(e0.prov.source == EntrySource::Battle &&
++                  e0.prov.tick == 42 &&
++                  e0.prov.eventId == "duanqiao-win",
++              "prov 三欄位保留");
++    }
++
++    // ---- [5] 剝除 prov → 斷鏈 ----
++    printf("\n[5] 剝除 prov 篡改\n");
++    {
++        const std::string tampered = StripProv(chain.ToJson(), 0);
++        Check(tampered != chain.ToJson(), "prov 段被移除");
++        LedgerChain t;
++        Check(t.FromJson(tampered), "篡改檔可讀入");
++        Check(t.Verify() == 0, "Verify 斷於第 1 筆");
++    }
++
++    // ---- [6] 補登 prov → 斷鏈 ----
++    printf("\n[6] 補登 prov 篡改\n");
++    {
++        LedgerChain plain;
++        plain.Append(ManualEntry(10, 1, "舊帳")); // 預設 prov → 舊格式
++        const std::string tampered =
++            InjectProv(plain.ToJson(), 0, "\"prov\":{\"src\":\"Myth\",\"t\":7},");
++        Check(tampered != plain.ToJson(), "prov 段被注入");
++        LedgerChain t;
++        Check(t.FromJson(tampered), "補登檔可讀入");
++        Check(t.Verify() == 0, "補登後斷於第 1 筆");
++    }
++
++    // ---- [7] 舊檔降級 ----
++    printf("\n[7] 舊檔降級\n");
++    {
++        LedgerChain ref;
++        ref.Append(ManualEntry(120, 1, "斷橋")); // 預設 prov = 舊格式檔
++        Check(!Has(ref.ToJson(), "\"prov\""), "舊格式無 prov 欄位");
++        LedgerChain t;
++        Check(t.FromJson(ref.ToJson()), "舊檔載入");
++        Check(t.Verify() == -1, "舊檔鏈完整（hash 相容）");
++        Check(t.Entries()[0].entry.prov.IsDefault(), "prov 降級為失考");
++    }
++
++    // ---- [8] 查帳段來源統計 ----
++    printf("\n[8] 史官查帳來源統計\n");
++    {
++        HistorianInput in;
++        in.ledger = &chain;
++        HistorianReport r = ComposeHistorianReport(in);
++        Check(Has(r.text, "戰陣"), "統計含戰陣");
++        Check(Has(r.text, "營務"), "統計含營務");
++        Check(Has(r.text, "戰陣 1") && Has(r.text, "營務 1"),
++              "各來源筆數在場");
++    }
++
++    // ---- [9] InjectForgery 相容 ----
++    printf("\n[9] 偽帳通道相容\n");
++    {
++        LedgerChain f;
++        f.Append(ManualEntry(10, 1, "舊帳"));
++        LedgerEntry fake;
++        fake.debit = LedgerAccount::Martial;
++        fake.credit = LedgerAccount::Martial;
++        fake.amount = 50;
++        fake.prov.source = EntrySource::Myth;
++        fake.prov.eventId = "forged-tidings";
++        Check(f.InjectForgery(fake) == 1, "帶 prov 偽帳可注入");
++        Check(f.Verify() == -1, "偽帳鏈仍合法");
++        Check(f.SoundnessViolation() == 1, "會計不健全揭露");
++    }
++
++    printf("\n=== %d PASS, %d FAIL ===\n", g_pass, g_fail);
++    return g_fail == 0 ? 0 : 1;
++}
