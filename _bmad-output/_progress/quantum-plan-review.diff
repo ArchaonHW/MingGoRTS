@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a16f936..651891b 100644
+index a16f936..cffb569 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -135,7 +135,6 @@ include_directories(
@@ -63,7 +63,7 @@ index a16f936..651891b 100644
  
  # RenderTarget 離屏 FBO 測試（GL-gated：無顯示環境 SKIP）
  add_executable(RenderTargetTest Examples/RenderTargetTest.cpp)
-@@ -725,6 +731,16 @@ add_executable(ChapterConventionsTest Examples/ChapterConventionsTest.cpp)
+@@ -725,6 +731,21 @@ add_executable(ChapterConventionsTest Examples/ChapterConventionsTest.cpp)
  target_include_directories(ChapterConventionsTest PRIVATE ${CMAKE_SOURCE_DIR})
  target_link_libraries(ChapterConventionsTest Gameplay)
  
@@ -77,10 +77,15 @@ index a16f936..651891b 100644
 +target_include_directories(LedgerAuditTest PRIVATE ${CMAKE_SOURCE_DIR})
 +target_link_libraries(LedgerAuditTest Gameplay)
 +
++# L-5 回放完整性：battle_replay rootHash 驗證無頭測試
++add_executable(ReplayIntegrityTest Examples/ReplayIntegrityTest.cpp)
++target_include_directories(ReplayIntegrityTest PRIVATE ${CMAKE_SOURCE_DIR})
++target_link_libraries(ReplayIntegrityTest Gameplay)
++
  # E-7 戰役框架 facade 無頭測試（roundtrip/壞檔拒絕/原子寫）
  add_executable(CampaignStateTest Examples/CampaignStateTest.cpp)
  target_include_directories(CampaignStateTest PRIVATE ${CMAKE_SOURCE_DIR})
-@@ -735,6 +751,21 @@ add_executable(ChapterLibraryTest Examples/ChapterLibraryTest.cpp)
+@@ -735,6 +756,21 @@ add_executable(ChapterLibraryTest Examples/ChapterLibraryTest.cpp)
  target_include_directories(ChapterLibraryTest PRIVATE ${CMAKE_SOURCE_DIR})
  target_link_libraries(ChapterLibraryTest Campaign)
  
@@ -102,7 +107,7 @@ index a16f936..651891b 100644
  # 斷橋攻防戰即時渲染 → MP4
  add_executable(BattleRenderDemo Examples/BattleRenderDemo.cpp)
  target_include_directories(BattleRenderDemo PRIVATE ${CMAKE_SOURCE_DIR})
-@@ -909,6 +940,7 @@ set(POTATO_TESTS
+@@ -909,6 +945,7 @@ set(POTATO_TESTS
      GeneralGuardTest
      RefitCampTest
      BattlePlanTest
@@ -110,7 +115,7 @@ index a16f936..651891b 100644
      MediaPipeTest
      UIThemeTest
      RenderTargetTest
-@@ -918,9 +950,14 @@ set(POTATO_TESTS
+@@ -918,9 +955,15 @@ set(POTATO_TESTS
      GeneralDossierTest
      CampaignStateTest
      ChapterLibraryTest
@@ -121,15 +126,24 @@ index a16f936..651891b 100644
      ChapterConventionsTest
 +    LedgerChainTest
 +    LedgerAuditTest
++    ReplayIntegrityTest
 +    GovernanceTest
  )
  foreach(test_name IN LISTS POTATO_TESTS)
      if(TARGET ${test_name})
 diff --git a/Examples/DuanqiaoPlayable.cpp b/Examples/DuanqiaoPlayable.cpp
-index 3a684c2..c7e2092 100644
+index 3a684c2..f88b4dc 100644
 --- a/Examples/DuanqiaoPlayable.cpp
 +++ b/Examples/DuanqiaoPlayable.cpp
-@@ -52,6 +52,7 @@
+@@ -17,6 +17,7 @@
+ #include "Gameplay/BattleSceneSync.h"
+ #include "Gameplay/BattlePicker.h"
+ #include "Gameplay/BattleMap.h"
++#include "Gameplay/GovernanceField.h"
+ #include "Gameplay/BattlePlanner.h"
+ #include "Gameplay/PlanningDeck.h"
+ #include "Gameplay/BattlePlan.h"
+@@ -52,6 +53,7 @@
  #include <deque>
  #include <filesystem>
  #include <string>
@@ -137,7 +151,7 @@ index 3a684c2..c7e2092 100644
  #include <vector>
  
  using namespace Potato;
-@@ -258,13 +259,18 @@ static bool WorldToScreen(const Camera& cam, const Vector3& w,
+@@ -258,13 +260,18 @@ static bool WorldToScreen(const Camera& cam, const Vector3& w,
  // ---- U-1 遊戲殼：Title → Battle → (回 Title | 離開) ----
  enum class ShellScreen { Title, Battle, Quit };
  
@@ -158,7 +172,7 @@ index 3a684c2..c7e2092 100644
      renderer.PollEvents();
  
      int dw = 0, dh = 0, ww = 0, wh = 0;
-@@ -356,6 +362,38 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
+@@ -356,6 +363,38 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
          }
      }
  
@@ -197,7 +211,7 @@ index 3a684c2..c7e2092 100644
      if (ImGui::Button("操作說明", ImVec2(-1, 0))) showHelp = !showHelp;
      if (showHelp) {
          ImGui::PushTextWrapPos();
-@@ -491,19 +529,31 @@ int main() {
+@@ -491,19 +530,31 @@ int main() {
          }
      }
      ShellScreen screen = ShellScreen::Title;
@@ -226,11 +240,19 @@ index 3a684c2..c7e2092 100644
          std::string chronicler;
          float endedAt = -1.0f;
          float replayCursor = 0.0f;
-+        std::unordered_set<size_t> govFired; // C-2:已觸發治理互動點(每點每場一次)
++        GovernanceField govField; // A-1/A-3/A-4：治理互動追蹤（每場重建）
  
      // ---- 地圖 ----
      BattleMap map;
-@@ -713,6 +763,9 @@ int main() {
+@@ -521,6 +572,7 @@ int main() {
+ 
+     BattleController battle(GW, GH, CELL);
+     map.ApplyToField(battle.GetField());
++    govField.Bind(map.GetInteractables(), map.GetConvoys()); // A-1/A-3/A-4
+     battle.SetEventCallback([&](const std::string& e) {
+         eventLog.push_back(e);
+         if (eventLog.size() > 8) eventLog.pop_front();
+@@ -713,6 +765,9 @@ int main() {
      // ---- G-5 作戰計畫箭頭:Ctrl+左鍵自小隊拖出主攻軸線,開戰套用 ----
      BattlePlan plan;
      plan.SetPlanBonus(/*attackMul=*/1.10f, /*intel=*/2, /*cp=*/1);
@@ -240,43 +262,18 @@ index 3a684c2..c7e2092 100644
      // 後衛改當偵查兵:低血撤退 > 遇敵應戰 > 無事就往最近的雲走
      {
          const int di = deck.FindDeck(rearGuard);
-@@ -987,6 +1040,35 @@ int main() {
+@@ -987,6 +1042,10 @@ int main() {
          roster.Update(battle); // T-8:殲滅偵測→記陣亡
          sync.Sync(battle);
  
-+        // C-2 治理源:village/convoy 互動點佔領偵測(我軍隊入圈即發,每點一次)
-+        {
-+            const auto& inter = map.GetInteractables();
-+            for (size_t gi = 0; gi < inter.size(); ++gi) {
-+                if (govFired.count(gi)) continue;
-+                GovernanceEvent gev;
-+                if (inter[gi].type == "village") {
-+                    gev = GovernanceEvent::VillageOccupied;
-+                } else if (inter[gi].type == "convoy" ||
-+                           inter[gi].type == "supply_cache") {
-+                    gev = GovernanceEvent::ConvoyProtected;
-+                } else {
-+                    continue; // 油漬/落石等其他互動物不計治理
-+                }
-+                for (const auto& sq : battle.GetSquads()) {
-+                    if (sq->GetTeam() != 0 || sq->IsEliminated() ||
-+                        sq->IsRouting()) {
-+                        continue;
-+                    }
-+                    if ((sq->GetPosition() - inter[gi].pos).Length() <=
-+                        inter[gi].radius) {
-+                        battle.RecordGovernanceEvent(gev);
-+                        govFired.insert(gi);
-+                        break;
-+                    }
-+                }
-+            }
-+        }
++        // A-1/A-3/A-4 治理源：佔領/焚村/護輜由 GovernanceField
++        // 追蹤（地圖知識在此層），事件經 battle 入帳
++        govField.Update(dt, battle);
 +
          // ---- 渲染 ----
          { // U-1:clear color 跟主題走
              const ImVec4 cc = UITheme::ClearColor(theme);
-@@ -1349,6 +1431,12 @@ int main() {
+@@ -1349,6 +1408,12 @@ int main() {
                  ImGui::ProgressBar(mo, ImVec2(-1, 0), moLbl);
                  ImGui::PopStyleColor();
                  ImGui::TextDisabled("命令: %s", OrderName(sq->GetOrder()));
@@ -289,7 +286,7 @@ index 3a684c2..c7e2092 100644
                  ImGui::Separator();
              }
  
-@@ -1617,6 +1705,14 @@ int main() {
+@@ -1617,6 +1682,14 @@ int main() {
          if (iWon) {
              if (const Campaign::ChapterDef* cur =
                      chapters.Find(campaign.chapter.chapterId)) {
@@ -304,7 +301,7 @@ index 3a684c2..c7e2092 100644
                  if (!cur->next.empty()) {
                      if (const Campaign::ChapterDef* nxt =
                              chapters.Find(cur->next)) {
-@@ -1633,6 +1729,11 @@ int main() {
+@@ -1633,6 +1706,11 @@ int main() {
                  }
              }
          }
@@ -316,7 +313,7 @@ index 3a684c2..c7e2092 100644
          {
              std::error_code ec;
              std::filesystem::create_directories(
-@@ -1642,6 +1743,7 @@ int main() {
+@@ -1642,6 +1720,7 @@ int main() {
      }
  
      battle.BindFog(nullptr); // fog 是 local,先於 battle 解構——解綁防懸空
@@ -326,10 +323,10 @@ index 3a684c2..c7e2092 100644
          screen = renderer.ShouldClose() ? ShellScreen::Quit
 diff --git a/Examples/QuantumPlanTest.cpp b/Examples/QuantumPlanTest.cpp
 new file mode 100644
-index 0000000..907109c
+index 0000000..6732e59
 --- /dev/null
 +++ b/Examples/QuantumPlanTest.cpp
-@@ -0,0 +1,223 @@
+@@ -0,0 +1,312 @@
 +// QuantumPlanTest - quantum-plan-effects：計畫加成依情報確定度縮放
 +// I/O 矩陣：CONCENTRATED_TIP / REVEALED_AT_TIP / EMPTY_TERRAIN / NO_FOG /
 +//           RESOLVE_ELSEWHERE / PROBE_CONCENTRATES / IDEMPOTENT / NO_BONUS / REAPPLY
@@ -484,7 +481,9 @@ index 0000000..907109c
 +        QuantumFog fog(30.0f, 1);
 +        battle.BindFog(&fog);
 +        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
-+        fog.AddEntity("敵軍", 0, {Vector2(15, 7)}, {1.0});
++        const int eid = fog.AddEntity("敵軍", 0,
++            {Vector2(15, 7), Vector2(17, 9)}, {1.0, 0.0});
++        Check(eid >= 0, "NO_BONUS 雲確實註冊（單候選會回 -1）");
 +
 +        BattlePlan plan;
 +        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(15, 7)); // 無 SetPlanBonus
@@ -548,6 +547,93 @@ index 0000000..907109c
 +        battle.Update(0.1f);
 +        Check(std::fabs(vg->GetPlanAttackMul() - 1.0f) < 1e-4f,
 +              "tick 自動重評 → 落空歸 1");
++    }
++
++    // [11] UNCLAIMED_REVEAL：雲從未覆蓋尖端的揭露不拖垮加成
++    printf("[11] UNCLAIMED_REVEAL：無關揭露不懲罰\n");
++    {
++        BattleController battle(20, 15, 1.0f);
++        QuantumFog fog(30.0f, 1);
++        battle.BindFog(&fog);
++        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
++        // 雲 A 覆蓋尖端（質量 0.6，另一候選在 R 外）；雲 B 與尖端無關
++        const int eidA = fog.AddEntity("敵軍A", 0,
++            {Vector2(5, 5), Vector2(10, 10)}, {0.6, 0.4});
++        const int eidB = fog.AddEntity("敵軍B", 0,
++            {Vector2(15, 7), Vector2(17, 9)}, {0.8, 0.2});
++
++        BattlePlan plan;
++        plan.SetPlanBonus(1.3f, 0, 0);
++        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(5, 5));
++        const float baseDpm = vg->GetDamagePerMember();
++        plan.Apply(battle, nullptr, 0);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.18f) < 1e-4f,
++              "雲 A 質量 0.6 → ×1.18");
++
++        // 揭露無關的雲 B——尖端加成不動（舊碼會誤掉到 1.0）
++        fog.Reveal(eidB, Vector2(15, 7));
++        plan.UpdateUncertainty(battle);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.18f) < 1e-4f,
++              "無關揭露後仍 ×1.18");
++        Check(std::fabs(vg->GetDamagePerMember() - baseDpm * 1.18f) < 1e-4f,
++              "無關揭露後 damagePerMember 不變");
++
++        // 雲 A 的雲確實覆蓋過尖端——揭露他處才算賭輸歸 1
++        fog.Reveal(eidA, Vector2(1, 1));
++        plan.UpdateUncertainty(battle);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.0f) < 1e-4f,
++              "覆蓋過尖端的雲落空 → 歸 1");
++    }
++
++    // [12] ARROW_MUTATION：Apply 後改動箭頭 → 綁定失效且倍率回滾
++    printf("[12] ARROW_MUTATION：改箭頭回滾加成\n");
++    {
++        BattleController battle(20, 15, 1.0f);
++        QuantumFog fog(30.0f, 1);
++        battle.BindFog(&fog);
++        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
++        fog.AddEntity("敵軍", 0, {Vector2(15, 7), Vector2(17, 9)},
++                      {0.8, 0.2});
++
++        BattlePlan plan;
++        plan.SetPlanBonus(1.3f, 0, 0);
++        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(15, 7));
++        const float baseDpm = vg->GetDamagePerMember();
++        plan.Apply(battle, nullptr, 0);
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.24f) < 1e-4f,
++              "Apply 後 ×1.24");
++
++        Check(plan.RemoveArrowFor("前鋒"), "移除箭頭");
++        Check(std::fabs(vg->GetPlanAttackMul() - 1.0f) < 1e-4f,
++              "移除後 planAttackMul 回滾 1.0");
++        Check(std::fabs(vg->GetDamagePerMember() - baseDpm) < 1e-4f,
++              "移除後 damagePerMember 回基準");
++        plan.UpdateUncertainty(battle); // 綁定已清——安全無效
++        Check(std::fabs(vg->GetDamagePerMember() - baseDpm) < 1e-4f,
++              "UpdateUncertainty 不再改值");
++    }
++
++    // [13] DEBUFF_PLAN：attackMul<1 減益計畫也吃確定度縮放
++    printf("[13] DEBUFF_PLAN：減益計畫對稱縮放\n");
++    {
++        BattleController battle(20, 15, 1.0f);
++        QuantumFog fog(30.0f, 1);
++        battle.BindFog(&fog);
++        Squad* vg = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 20);
++        const int eid = fog.AddEntity("敵軍", 0,
++            {Vector2(15, 7), Vector2(17, 9)}, {0.8, 0.2});
++
++        BattlePlan plan;
++        plan.SetPlanBonus(0.8f, 0, 0); // 減益計畫
++        plan.AddArrow("前鋒", Vector2(2, 7), Vector2(15, 7));
++        plan.Apply(battle, nullptr, 0);
++        // effMul = 1 + (0.8-1)*0.8 = 0.84
++        Check(std::fabs(vg->GetPlanAttackMul() - 0.84f) < 1e-4f,
++              "減益依 0.8 質量縮放 → ×0.84");
++        fog.Reveal(eid, Vector2(15, 7));
++        plan.UpdateUncertainty(battle);
++        Check(std::fabs(vg->GetPlanAttackMul() - 0.8f) < 1e-4f,
++              "坐實後減益到位 ×0.80");
 +    }
 +
 +    printf("\n=== %d PASS, %d FAIL ===\n", g_pass, g_fail);
@@ -699,10 +785,10 @@ index 23b9884..f17f053 100644
      mutable std::mt19937 execRng{std::random_device{}()};
  
 diff --git a/Gameplay/BattlePlan.cpp b/Gameplay/BattlePlan.cpp
-index 3e727d7..b21a453 100644
+index 3e727d7..7e66329 100644
 --- a/Gameplay/BattlePlan.cpp
 +++ b/Gameplay/BattlePlan.cpp
-@@ -2,14 +2,57 @@
+@@ -2,16 +2,101 @@
  
  #include "BattleController.h"
  #include "BattleResources.h"
@@ -711,7 +797,9 @@ index 3e727d7..b21a453 100644
  #include "Serialization/JsonParser.h"
  
 +#include <algorithm>
++#include <cmath>
  #include <cstdio>
++#include <unordered_set>
  
  namespace Potato {
  namespace Gameplay {
@@ -732,12 +820,32 @@ index 3e727d7..b21a453 100644
 +    for (size_t e = 0; e < fog->EntityCount(); ++e) {
 +        const int eid = static_cast<int>(e);
 +        if (fog->IsRevealed(eid)) {
-+            anyClaim = true;
 +            const Vector2 rp = fog->GetRevealedPos(eid);
-+            const float dx = rp.x - tip.x;
-+            const float dy = rp.y - tip.y;
-+            certainty = (std::max)(certainty,
-+                                   (dx * dx + dy * dy <= r2) ? 1.0f : 0.0f);
++            if (std::isfinite(rp.x) && std::isfinite(rp.y)) {
++                const float dx = rp.x - tip.x;
++                const float dy = rp.y - tip.y;
++                if (dx * dx + dy * dy <= r2) {
++                    anyClaim = true;
++                    certainty = 1.0f; // 坐實尖端
++                    continue;
++                }
++            }
++            // 真身在 R 外：只有「雲原本就覆蓋尖端」才算情報證明
++            // 落空（計畫賭輸）；雲從未碰過尖端的揭露不表態，
++            // 否則任何一處揭露會拖垮所有無關箭頭的加成。
++            const UncertainEntity* ent = fog->GetEntity(eid);
++            if (ent) {
++                for (size_t i = 0; i < ent->candidates.size(); ++i) {
++                    const bool hadMass =
++                        i < ent->priors.size() ? ent->priors[i] > 0.0 : true;
++                    const float dx = ent->candidates[i].x - tip.x;
++                    const float dy = ent->candidates[i].y - tip.y;
++                    if (hadMass && dx * dx + dy * dy <= r2) {
++                        anyClaim = true; // 表態為 0
++                        break;
++                    }
++                }
++            }
 +            continue;
 +        }
 +        float mass = 0.0f;
@@ -757,18 +865,69 @@ index 3e727d7..b21a453 100644
 +}
 +} // namespace
 +
++void BattlePlan::InvalidateBindings() const {
++    // 綁定的小隊先把 planAttackMul 除回 1——殘留倍率會變成
++    // 永久加成。注意：本類與 Apply 的目標 BattleController
++    // 同生命週期；controller 先亡後呼叫屬契約外誤用。
++    for (const auto& kv : squadArrowIdx) {
++        Squad* s = kv.first;
++        if (s && !s->IsEliminated()) {
++            const float prev = s->GetPlanAttackMul();
++            if (prev != 1.0f) {
++                s->SetDamagePerMember(s->GetDamagePerMember() / prev);
++                s->SetPlanAttackMul(1.0f);
++            }
++        }
++    }
++    squadArrowIdx.clear();
++    appliedTeam = -1;
++}
++
  void BattlePlan::AddArrow(const std::string& squadName, const Vector2& from,
                            const Vector2& to, int priority) {
++    // 箭頭陣列變動會讓 squadArrowIdx 的 index 失效——先回滾綁定
++    InvalidateBindings();
      PlanArrow a;
-@@ -69,6 +112,7 @@ int BattlePlan::Apply(BattleController& battle, BattleResources* res,
+     a.squadName = squadName;
+     a.from = from;
+@@ -24,12 +109,20 @@ bool BattlePlan::RemoveArrowFor(const std::string& squadName) {
+     for (auto it = arrows.begin(); it != arrows.end(); ++it) {
+         if (it->squadName == squadName) {
+             arrows.erase(it);
++            InvalidateBindings();
+             return true;
+         }
+     }
+     return false;
+ }
+ 
++void BattlePlan::ClearArrows() {
++    if (!arrows.empty()) {
++        arrows.clear();
++        InvalidateBindings();
++    }
++}
++
+ void BattlePlan::SetRallyPoint(const Vector2& p) {
+     rallyPoint = p;
+     hasRally = true;
+@@ -69,10 +162,13 @@ int BattlePlan::Apply(BattleController& battle, BattleResources* res,
      }
  
      int assigned = 0;
-+    squadArrowIdx.clear(); // 重建綁定——未再指派的小隊不留陳舊映射
++    // 重建綁定前先回滾舊綁定——不再被指派的小隊（消滅/換隊/
++    // 換計畫）planAttackMul 歸 1，不殘留凍結倍率
++    InvalidateBindings();
      for (const auto& sp : battle.GetSquads()) {
          Squad* squad = sp.get();
-         if (squad->GetTeam() != team) {
-@@ -90,15 +134,22 @@ int BattlePlan::Apply(BattleController& battle, BattleResources* res,
+-        if (squad->GetTeam() != team) {
+-            continue;
++        if (squad->GetTeam() != team || squad->IsEliminated()) {
++            continue; // 死隊不佔指派名額，也不該觸發加成入帳
+         }
+         const PlanArrow* arrow = nullptr;
+         for (const PlanArrow& a : arrows) {
+@@ -90,15 +186,22 @@ int BattlePlan::Apply(BattleController& battle, BattleResources* res,
          battle.AssignDoctrine(squad, ArrowToDoctrine(*arrow));
          battle.SetSquadObjective(squad, arrow->to);
          // 計畫加成依 Squad::planAttackMul 正規化：重複 Apply 同倍率
@@ -795,7 +954,7 @@ index 3e727d7..b21a453 100644
  
      // 集結點寫入本身是冪等的；intel/CP 只入帳一次——重複 Apply
      // 不重複補給；且至少要有一支小隊獲指派才發放（空計畫不白拿加成）
-@@ -115,6 +166,37 @@ int BattlePlan::Apply(BattleController& battle, BattleResources* res,
+@@ -115,6 +218,45 @@ int BattlePlan::Apply(BattleController& battle, BattleResources* res,
      return assigned;
  }
  
@@ -804,14 +963,22 @@ index 3e727d7..b21a453 100644
 +}
 +
 +void BattlePlan::UpdateUncertainty(BattleController& battle) const {
-+    if (appliedTeam < 0 || squadArrowIdx.empty() || attackMul <= 1.0f) {
-+        return; // 未 Apply / 無綁定 / 無加成——沒有可縮放的東西
++    if (appliedTeam < 0 || squadArrowIdx.empty() || attackMul == 1.0f) {
++        return; // 未 Apply / 無綁定 / 恆等倍率——沒有可縮放的東西
++    }
++    // 防 UAF：plan 可能比建立綁定時的 BattleController 活得久，
++    // 或被 BindPlan 換接到別的 controller——只重評仍屬於這個
++    // battle 的小隊。
++    std::unordered_set<const Squad*> members;
++    for (const auto& sp : battle.GetSquads()) {
++        members.insert(sp.get());
 +    }
 +    QuantumFog* fog = battle.GetFog();
 +    for (const auto& kv : squadArrowIdx) {
 +        Squad* squad = kv.first;
 +        const int idx = kv.second;
-+        if (!squad || squad->IsEliminated() || squad->GetTeam() != appliedTeam ||
++        if (!squad || !members.count(squad) || squad->IsEliminated() ||
++            squad->GetTeam() != appliedTeam ||
 +            idx < 0 || static_cast<size_t>(idx) >= arrows.size()) {
 +            continue;
 +        }
@@ -833,19 +1000,18 @@ index 3e727d7..b21a453 100644
  std::string BattlePlan::ToJson() const {
      std::string out = "{\"schema\":\"potato.battle_plan/1\",\"arrows\":[";
      for (size_t i = 0; i < arrows.size(); ++i) {
-@@ -179,6 +261,10 @@ bool BattlePlan::FromJson(const std::string& json) {
+@@ -179,6 +321,9 @@ bool BattlePlan::FromJson(const std::string& json) {
      bonusCP = root["bonus_cp"].AsInt(0);
      if (bonusCP < 0) bonusCP = 0;
      bonusCredited = false; // 載入的計畫尚未入帳
-+    // 載入的計畫尚未 Apply——清掉舊綁定，否則 UpdateUncertainty
-+    // 會拿新箭頭 index 去重評舊小隊映射
-+    squadArrowIdx.clear();
-+    appliedTeam = -1;
++    // 載入的計畫尚未 Apply——回滾並清掉舊綁定，否則
++    // UpdateUncertainty 會拿新箭頭 index 去重評舊小隊映射
++    InvalidateBindings();
      return true;
  }
  
 diff --git a/Gameplay/BattlePlan.h b/Gameplay/BattlePlan.h
-index 7e9bed3..cbde53a 100644
+index 7e9bed3..671f686 100644
 --- a/Gameplay/BattlePlan.h
 +++ b/Gameplay/BattlePlan.h
 @@ -5,6 +5,7 @@
@@ -864,7 +1030,18 @@ index 7e9bed3..cbde53a 100644
  
  /**
   * 作戰計畫箭頭（G-5，HOI4 battle plan → doctrine）
-@@ -72,6 +74,18 @@ public:
+@@ -47,7 +49,9 @@ public:
+     const PlanArrow& Arrow(size_t i) const { return arrows[i]; }
+     // 移除第一支綁定 squadName 的箭頭（重畫覆蓋用）；沒有回 false
+     bool RemoveArrowFor(const std::string& squadName);
+-    void ClearArrows() { arrows.clear(); }
++    // 箭頭變動會讓 Apply 期間記下的 squad→箭頭綁定失效——
++    // 這些 mutator 會先回滾已發放的 planAttackMul 再清綁定。
++    void ClearArrows();
+ 
+     void SetRallyPoint(const Vector2& p);
+     bool HasRallyPoint() const { return hasRally; }
+@@ -72,11 +76,27 @@ public:
      int Apply(BattleController& battle, BattleResources* res,
                int team) const;
  
@@ -883,7 +1060,16 @@ index 7e9bed3..cbde53a 100644
      // potato.battle_plan/1 序列化（戰前計畫可存檔/回放）
      std::string ToJson() const;
      bool FromJson(const std::string& json);
-@@ -84,6 +98,12 @@ private:
+ 
+ private:
++    // 回滾所有已綁定小隊的 planAttackMul 並清空綁定表——
++    // 箭頭/計畫被改動或計畫換綁時呼叫，防止陳舊 index 與殘留倍率。
++    void InvalidateBindings() const;
++
+     std::vector<PlanArrow> arrows;
+     Vector2 rallyPoint{0.0f, 0.0f};
+     bool hasRally = false;
+@@ -84,6 +104,12 @@ private:
      int bonusIntel = 0;
      int bonusCP = 0;
      mutable bool bonusCredited = false; // 加成只入帳一次（Apply 是 const）
