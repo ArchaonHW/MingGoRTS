@@ -1058,7 +1058,7 @@ queue:
     status: done
     size: M
     note: >
-      落地：AssureLedger() 確信函數——驗鏈 + 健全掃描 +
+      04cf493 落地：AssureLedger() 確信函數——驗鏈 + 健全掃描 +
       seeded Fisher-Yates 部分洗牌抽驗（hash 重算 + 鏈環連續性，
       mt19937_64 + modulo 跨編譯器可重現，seed==0 自引種）；
       三態 verdict（相符/存疑/拒絕）對應 ISSA 5000 光譜，
