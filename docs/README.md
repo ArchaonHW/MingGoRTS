@@ -21,6 +21,10 @@
 - [整合完成報告](./reports/CONSOLIDATED_COMPLETION_REPORT.md) — 全部開發歷程彙總
 - [安全稽核報告](./reports/SECURITY_AUDIT.md)
 - [量子開發研究](./research/QUANTUM_DEVELOPMENT_RESEARCH.md)
+- [參考作機制萃取](./research/REFERENCE_GAMES_MECHANICS.md) — Total War/M&B/HOI4/ELIN 對照
+- [未解決數學問題 → 引擎](./research/UNSOLVED_MATH_TO_ENGINE.md)
+- [未解決物理問題 → 引擎](./research/UNSOLVED_PHYSICS_TO_ENGINE.md)
+- [GBAA BAAF 研究](./research/GBAA_BAAF_RESEARCH.md) — 區塊鏈會計查證框架與帳本系統啟發
 
 ### 其他
 - [Potato Engine 總覽](./guides/POTATO_ENGINE_OVERVIEW.md)

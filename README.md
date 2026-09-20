@@ -176,11 +176,16 @@ JSON schema 與 C++ CLI 驗證器互動——不連結 C++、不進 CMake/CI。
 ## 文件索引
 
 - [GDD](_bmad-output/planning-artifacts/gdds/gdd-MingGoRTS-2026-09-17/gdd.md)——完整遊戲設計
+- [產品簡報](_bmad-output/planning-artifacts/briefs/brief-MingGoRTS-2026-09-17/brief.md)——專案定位與決策
 - [技術架構](_bmad-output/game-architecture.md)——分層、橫切面、8 實作模式
+- [架構脊柱](_bmad-output/planning-artifacts/architecture/architecture-MingGoRTS-2026-09-18/ARCHITECTURE-SPINE.md)——架構決策紀錄
 - [敘事設計](_bmad-output/narrative-design.md)——章回結構、四手結局、雙層世界
 - [Epics & Stories](_bmad-output/planning-artifacts/gdds/gdd-MingGoRTS-2026-09-17/epics.md)——34 個實作 story
-- [UX 規範](_bmad-output/planning-artifacts/ux-designs/ux-MingGoRTS-2026-09-18/DESIGN.md)——12 條 UX-DR
-- [docs/](docs/index.md)——引擎指南、架構、研究報告
+- [Sprint 狀態](_bmad-output/implementation-artifacts/sprint-status.yaml)——Epic A–G 進度追蹤
+- [UX 規範](_bmad-output/planning-artifacts/ux-designs/ux-MingGoRTS-2026-09-18/DESIGN.md)——12 條 UX-DR（行為面見 [EXPERIENCE](_bmad-output/planning-artifacts/ux-designs/ux-MingGoRTS-2026-09-18/EXPERIENCE.md)）
+- [拆倉計畫](_bmad-output/planning-artifacts/epics-engine-split.md)——引擎/遊戲分 repo 規劃
+- [引擎路線圖](_bmad-output/planning-artifacts/potato-engine-roadmap.md)——Potato Engine roadmap
+- [docs/](docs/index.md)——引擎指南、架構、研究報告（完整索引見 [docs/index.md](docs/index.md)）
 
 ---
 
