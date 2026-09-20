@@ -1,8 +1,11 @@
 // 智能建議規則強化測試：命中行號、anti-pattern 接線、
-// 真優化偵測、信心 enum 保留、函式偵測擴充
+// 真優化偵測、信心 enum 保留、函式偵測擴充、
+// 註解/字串遮罩、文件回看、指派條件、專案規範、
+// 游標鄰近排序、學習權重持久化
 #include "MingGoRTS_IDE/IntelligentSuggestion.h"
 
 #include <cstdio>
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -161,6 +164,116 @@ int main() {
         auto sug = sys.GenerateSuggestions(code, "t.cpp", 1, 1);
         const Suggestion* s = FindTitle(sug, "Generate Unit Test: Beta");
         Check(s && s->lineNumber == 3, "Beta 測試建議 → 第 3 行");
+    }
+
+    // [10] 註解/字串遮罩：註解裡的 strcpy( 與字串裡的 sprintf( 不誤報；
+    // 字串裡的 { 不錯亂區塊深度
+    std::printf("[10] 註解/字串遮罩\n");
+    {
+        const std::string code =
+            "void f() {\n"
+            "    // strcpy(b, \"x\"); 已改 strncpy\n"
+            "    const char* s = \"sprintf(fmt)\";\n"
+            "    std::string t = \"{ not a brace\";\n"
+            "}\n";
+        auto sug = sys.GenerateSuggestions(code, "t.cpp", 1, 1);
+        Check(!HasTitle(sug, "Unsafe C API"),
+              "註解/字串內 banned API 不誤報");
+        Check(!HasTitle(sug, "Anti-pattern:"),
+              "字串內 anti-pattern 不誤報");
+    }
+
+    // [11] 文件回看：上一行有註解的函式不再被標 undocumented
+    std::printf("[11] 文件註解回看\n");
+    {
+        const std::string code =
+            "// documented function\n"
+            "int Documented() { return 1; }\n"
+            "int Bare() { return 2; }\n";
+        auto analysis = sys.AnalyzeCode(code, "t.cpp");
+        auto sug = sys.GetDocumentationSuggestions(analysis);
+        Check(!HasTitle(sug, "Add Function Documentation: Documented"),
+              "有註解的函式不建議文件");
+        Check(HasTitle(sug, "Add Function Documentation: Bare"),
+              "無註解的函式仍建議文件");
+    }
+
+    // [12] 指派誤植條件
+    std::printf("[12] 指派條件偵測\n");
+    {
+        auto bad = sys.GenerateSuggestions(
+            "void f(int x) {\n    if (x = 0) {}\n}\n", "t.cpp", 1, 1);
+        const Suggestion* s = FindTitle(bad, "Assignment in condition");
+        Check(s != nullptr && s->lineNumber == 2,
+              "if (x = 0) → 建議指到第 2 行");
+        auto ok = sys.GenerateSuggestions(
+            "void f(int x) {\n"
+            "    if (x == 0) {}\n"
+            "    while ((x = next()) != 0) {}\n"  // 雙層括號慣用法
+            "    if (int y = 1; y > 0) {}\n"      // C++17 init-statement
+            "}\n", "t.cpp", 1, 1);
+        Check(!HasTitle(ok, "Assignment in condition"),
+              "==/括號慣用法/init-statement 不誤報");
+    }
+
+    // [13] 專案規範：第三方 JSON、依賴方向
+    std::printf("[13] 專案規範規則\n");
+    {
+        const std::string json = "#include <nlohmann/json.hpp>\nvoid f() {}\n";
+        auto sug = sys.GenerateSuggestions(json, "Gameplay/Foo.cpp", 1, 1);
+        Check(HasTitle(sug, "Use Serialization/JsonParser.h"),
+              "nlohmann → JsonParser 建議");
+        auto ext = sys.GenerateSuggestions(json, "external/x/y.cpp", 1, 1);
+        Check(!HasTitle(ext, "Use Serialization/JsonParser.h"),
+              "external/ 路徑不報");
+
+        const std::string dep = "#include \"Gameplay/Squad.h\"\nvoid f() {}\n";
+        auto eng = sys.GenerateSuggestions(dep, "Rendering/Mesh.cpp", 1, 1);
+        Check(HasTitle(eng, "Engine must not depend on game layer"),
+              "引擎→Gameplay 依賴違規");
+        auto demo = sys.GenerateSuggestions(dep, "Examples/demo.cpp", 1, 1);
+        Check(!HasTitle(demo, "Engine must not depend"),
+              "Examples 路徑不報");
+
+        const std::string dep2 = "#include \"Campaign/CampaignState.h\"\nvoid f() {}\n";
+        auto gp = sys.GenerateSuggestions(dep2, "Gameplay/Battle.cpp", 1, 1);
+        Check(HasTitle(gp, "Gameplay must not depend on Campaign"),
+              "Gameplay→Campaign 依賴違規");
+    }
+
+    // [14] 游標鄰近排序：同信心建議，離游標近的排前面
+    std::printf("[14] 游標鄰近排序\n");
+    {
+        std::string code = "void a() {\n    malloc(4);\n}\n";
+        for (int i = 0; i < 40; ++i) code += "int filler = 0;\n";
+        code += "void b() {\n    printf(\"x\");\n}\n";
+        const int cursorLine = static_cast<int>(code.size() > 0 ? 46 : 1);
+        auto sug = sys.GenerateSuggestions(code, "t.cpp", cursorLine, 1);
+        Check(!sug.empty() &&
+                  sug.front().title.find("printf") != std::string::npos,
+              "游標旁的 printf 建議排到第一");
+    }
+
+    // [15] 學習權重持久化：外部權重檔載入後影響過濾
+    std::printf("[15] 學習權重持久化\n");
+    {
+        const char* path = "suggestion_weights_test.json";
+        {
+            std::ofstream w(path);
+            w << "{\"weights\":{\"bug_fix\":0.15}}";
+        }
+        IntelligentSuggestionSystem sys2;
+        sys2.SetLearningPersistencePath(path);
+        sys2.Initialize();
+        auto sug = sys2.GenerateSuggestions(
+            "void f(){ char b[4]; strcpy(b,\"x\"); }\n", "t.cpp", 1, 1);
+        Check(!HasTitle(sug, "Unsafe C API"),
+              "bug_fix 權重 0.15 → banned API 被 Medium 門檻過濾");
+        sys2.Shutdown(); // 應寫回權重檔
+        std::ifstream check(path);
+        Check(check.good(), "Shutdown 寫回權重檔");
+        check.close();
+        std::remove(path);
     }
 
     sys.Shutdown();

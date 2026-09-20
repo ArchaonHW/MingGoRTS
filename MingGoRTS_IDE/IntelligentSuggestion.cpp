@@ -657,15 +657,39 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GetDocumentationSuggestions
     const CodeAnalysis& analysis) {
     
     std::vector<Suggestion> suggestions;
-    
+
+    // 函式「上一行有註解」才算已記錄——之前只查簽名行本身，
+    // 上方有文件的函式照樣被標 undocumented，幾乎每個函式都誤報
+    std::vector<std::string> srcLines;
+    {
+        std::istringstream ls(analysis.codeText);
+        std::string l;
+        while (std::getline(ls, l)) srcLines.push_back(l);
+    }
+    auto documentedAbove = [&](int funcLine1) {
+        for (int l = funcLine1 - 2; l >= 0 && l >= funcLine1 - 4; --l) {
+            const std::string& t = srcLines[static_cast<size_t>(l)];
+            const size_t fs = t.find_first_not_of(" \t");
+            if (fs == std::string::npos) continue; // 空行往上找
+            return t.compare(fs, 2, "//") == 0 ||
+                   t.compare(fs, 2, "/*") == 0 ||
+                   t[fs] == '*' ||                       // doxygen 接續行
+                   t.find("*/") != std::string::npos;
+        }
+        return false;
+    };
+
     // Suggest adding documentation for functions（同 test 建議：
     // 帶函式名避免全被 dedup 成一筆）
     for (size_t i = 0; i < analysis.functions.size(); ++i) {
         const auto& func = analysis.functions[i];
         const std::string name = ExtractFunctionName(func);
         if (name.empty()) continue;
+        const int funcLine = (i < analysis.functionLines.size())
+            ? analysis.functionLines[i] : 0;
         if (func.find("//") == std::string::npos &&
-            func.find("/*") == std::string::npos) {
+            func.find("/*") == std::string::npos &&
+            (funcLine <= 0 || !documentedAbove(funcLine))) {
             Suggestion suggestion;
             suggestion.type = SuggestionType::Documentation;
             suggestion.title = "Add Function Documentation: " + name;
@@ -727,7 +751,112 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GetArchitecturalSuggestions
         suggestion.confidence = ConfidenceLevel::Medium;
         suggestions.push_back(suggestion);
     }
-    
+
+    return suggestions;
+}
+
+// 專案規範規則：本 repo 自己的護欄，依 filePath 判邊界。
+// include 判斷走 analysis.imports（原始行）——maskedText 把 "x.h" 遮掉了；
+// 註解掉的 include 行（// #include）不算違規。
+std::vector<Suggestion> IntelligentSuggestionSystem::GetProjectRuleSuggestions(
+    const CodeAnalysis& analysis) {
+
+    std::vector<Suggestion> suggestions;
+
+    std::string path = analysis.filePath;
+    std::replace(path.begin(), path.end(), '\\', '/');
+    const bool inExternal = path.find("external/") != std::string::npos;
+
+    bool hitsThirdPartyJson = false, hitsGameplay = false, hitsCampaign = false;
+    std::string jsonLine, gameplayLine, campaignLine;
+    for (const std::string& imp : analysis.imports) {
+        const size_t fs = imp.find_first_not_of(" \t");
+        if (fs != std::string::npos && imp.compare(fs, 2, "//") == 0) {
+            continue; // 註解掉的 include 不算
+        }
+        if (imp.find("nlohmann") != std::string::npos ||
+            imp.find("json.hpp") != std::string::npos ||
+            imp.find("rapidjson") != std::string::npos) {
+            hitsThirdPartyJson = true;
+            if (jsonLine.empty()) jsonLine = imp;
+        }
+        if (imp.find("Gameplay/") != std::string::npos) {
+            hitsGameplay = true;
+            if (gameplayLine.empty()) gameplayLine = imp;
+        }
+        if (imp.find("Campaign/") != std::string::npos) {
+            hitsCampaign = true;
+            if (campaignLine.empty()) campaignLine = imp;
+        }
+    }
+
+    // R1: 第三方 JSON——repo 規定一律用 Serialization/JsonParser.h
+    if (hitsThirdPartyJson && !inExternal) {
+        Suggestion suggestion;
+        suggestion.type = SuggestionType::Architectural;
+        suggestion.title = "Use Serialization/JsonParser.h";
+        suggestion.description =
+            "Repo policy: JSON goes through Potato::JsonValue — "
+            "third-party JSON libs are external/-only";
+        suggestion.code = "#include \"Serialization/JsonParser.h\"";
+        suggestion.reason = "AGENTS.md: 不要引第三方 JSON 庫";
+        suggestion.confidence = ConfidenceLevel::High;
+        const size_t p = analysis.codeText.find(jsonLine);
+        if (p != std::string::npos) {
+            suggestion.lineNumber = LineOfPosition(analysis.codeText, p);
+        }
+        suggestions.push_back(suggestion);
+    }
+
+    // R2: 依賴方向 PotatoEngine ← Gameplay ← Campaign
+    static const char* kEngineDirs[] = {
+        "Core/", "Security/", "Events/", "FileSystem/", "Logging/",
+        "Memory/", "Platform/", "Scene/", "Serialization/", "Time/",
+        "Rendering/", "Physics/", "Audio/", "Input/", "Resources/",
+        "ECS/", "GameObject/", "MathUtils/", "NeuralGraphics/",
+        "Media/", "AI/"
+    };
+    auto inDir = [&path](const char* d) {
+        return path.compare(0, std::string(d).size(), d) == 0 ||
+               path.find(std::string("/") + d) != std::string::npos;
+    };
+    bool engineSide = false;
+    for (const char* d : kEngineDirs) {
+        if (inDir(d)) { engineSide = true; break; }
+    }
+
+    if (engineSide && (hitsGameplay || hitsCampaign)) {
+        Suggestion suggestion;
+        suggestion.type = SuggestionType::Architectural;
+        suggestion.title = "Engine must not depend on game layer";
+        suggestion.description =
+            "PotatoEngine <- Gameplay <- Campaign: engine code cannot "
+            "include Gameplay/ or Campaign/ headers";
+        suggestion.code = "// Move the dependency to the game layer";
+        suggestion.reason = "AGENTS.md dependency direction rule";
+        suggestion.confidence = ConfidenceLevel::VeryHigh;
+        const std::string& hit = hitsGameplay ? gameplayLine : campaignLine;
+        const size_t p = analysis.codeText.find(hit);
+        if (p != std::string::npos) {
+            suggestion.lineNumber = LineOfPosition(analysis.codeText, p);
+        }
+        suggestions.push_back(suggestion);
+    } else if (!engineSide && inDir("Gameplay/") && hitsCampaign) {
+        Suggestion suggestion;
+        suggestion.type = SuggestionType::Architectural;
+        suggestion.title = "Gameplay must not depend on Campaign";
+        suggestion.description =
+            "Campaign sits above Gameplay — invert the dependency";
+        suggestion.code = "// Move the shared type down to Gameplay";
+        suggestion.reason = "AGENTS.md dependency direction rule";
+        suggestion.confidence = ConfidenceLevel::High;
+        const size_t p = analysis.codeText.find(campaignLine);
+        if (p != std::string::npos) {
+            suggestion.lineNumber = LineOfPosition(analysis.codeText, p);
+        }
+        suggestions.push_back(suggestion);
+    }
+
     return suggestions;
 }
 
@@ -755,6 +884,64 @@ void IntelligentSuggestionSystem::LearnFromFeedback(const std::string& suggestio
 float IntelligentSuggestionSystem::GetAcceptanceRate() const {
     if (totalSuggestions == 0) return 0.0f;
     return static_cast<float>(acceptedSuggestions) / static_cast<float>(totalSuggestions);
+}
+
+void IntelligentSuggestionSystem::SetLearningPersistencePath(
+    const std::string& path) {
+    {
+        std::lock_guard<std::mutex> lk(sharedMutex_);
+        learningPath_ = path;
+    }
+    // Initialize 後才設路徑也要生效——立即載入（未 Initialize 時
+    // weights 表是空的，LoadLearningWeights 合併迴圈自然 no-op）
+    LoadLearningWeights();
+}
+
+// 載入 {"weights":{"bug_fix":0.95,...}}——逐 key 查表合併，
+// 檔案不存在/解析失敗/缺 weights 物件都安靜略過（首次運行正常）
+void IntelligentSuggestionSystem::LoadLearningWeights() {
+    std::string path;
+    {
+        std::lock_guard<std::mutex> lk(sharedMutex_);
+        path = learningPath_;
+    }
+    if (path.empty()) return;
+
+    std::ifstream in(path);
+    if (!in) return;
+    std::stringstream ss;
+    ss << in.rdbuf();
+    Potato::JsonValue j;
+    if (!Potato::JsonValue::ParseOk(ss.str(), j)) return;
+    const Potato::JsonValue& w = j["weights"];
+    if (!w.IsObject()) return;
+
+    std::lock_guard<std::mutex> lk(sharedMutex_);
+    for (auto& kv : suggestionWeights) {
+        const Potato::JsonValue& v = w[kv.first];
+        if (v.IsNumber()) {
+            kv.second = std::clamp(v.AsFloat(kv.second), 0.1f, 1.0f);
+        }
+    }
+}
+
+void IntelligentSuggestionSystem::SaveLearningWeights() {
+    std::string path;
+    std::string json = "{\"version\":1,\"weights\":{";
+    {
+        std::lock_guard<std::mutex> lk(sharedMutex_);
+        path = learningPath_;
+        bool first = true;
+        for (const auto& kv : suggestionWeights) {
+            if (!first) json += ',';
+            first = false;
+            json += '"' + kv.first + "\":" + std::to_string(kv.second);
+        }
+    }
+    if (path.empty()) return;
+    json += "}}";
+    std::ofstream out(path, std::ios::trunc);
+    if (out) out << json << '\n';
 }
 
 float IntelligentSuggestionSystem::CalculateConfidence(const Suggestion& suggestion) {
@@ -795,8 +982,9 @@ std::string IntelligentSuggestionSystem::ExtractFunctionName(const std::string& 
 }
 
 bool IntelligentSuggestionSystem::IsComplexCode(const std::string& code) {
-    int nesting = CalculateNestingDepth(code);
-    int complexity = CalculateCyclomaticComplexity(code);
+    const std::string masked = MaskCommentsAndStrings(code);
+    int nesting = CalculateNestingDepth(masked);
+    int complexity = CalculateCyclomaticComplexity(masked);
     return nesting > 3 || complexity > 10;
 }
 
