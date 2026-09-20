@@ -34,6 +34,7 @@ docs/
 ## 🔬 研究 (research/)
 
 - **[QUANTUM_DEVELOPMENT_RESEARCH.md](./research/QUANTUM_DEVELOPMENT_RESEARCH.md)** — 量子計算開發研究
+- **[GBAA_BAAF_RESEARCH.md](./research/GBAA_BAAF_RESEARCH.md)** — GBAA 台灣區塊鏈會計查證白皮書研究:BAAF 三層架構、查證流程,及對 LedgerChain/HistorianReport 的設計啟發
 
 ## 🗄️ 歸檔 (archive/)
 
@@ -47,4 +48,4 @@ docs/
 
 ---
 
-**🥔 MingGoRTS 文檔索引** — 最後更新:2026-09-16
+**🥔 MingGoRTS 文檔索引** — 最後更新:2026-09-21
