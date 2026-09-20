@@ -30,7 +30,7 @@ class Squad;
 class GovernanceField {
 public:
     struct ConvoyState {
-        const MapConvoy* def = nullptr;
+        MapConvoy def; // 值儲存——Bind 常接暫存 vector，指標會懸空
         Vector2 pos;
         int hp = 0;
         size_t nextWaypoint = 1; // 正前往的 path 索引

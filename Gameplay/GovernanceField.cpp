@@ -17,7 +17,7 @@ void GovernanceField::Bind(
     convoys.reserve(convoyDefs.size());
     for (const auto& d : convoyDefs) {
         ConvoyState s;
-        s.def = &d;
+        s.def = d;
         s.pos = d.path.front();
         s.hp = d.hp;
         convoys.push_back(s);
@@ -97,7 +97,7 @@ void GovernanceField::UpdateConvoys(float dt,
         if (cv.status != ConvoyState::Status::Moving) {
             continue;
         }
-        const MapConvoy& def = *cv.def;
+        const MapConvoy& def = cv.def;
 
         // 敵隊入圈劫掠：扣 hp；歸零 → 依所屬結算
         bool raided = false;
