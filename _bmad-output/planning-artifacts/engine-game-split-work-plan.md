@@ -31,12 +31,12 @@
 - [x] W0.4 上游 repo 落地：**filter-repo 產物直接取代 PotatoEngine repo**——前提已更新：`C:\HWC\PotatoEngine` 現為真 git repo（include/src 佈局 + github.com/ArchaonHW/PotatoEngine remote + 測試已從 Examples 移植）；取代前先備份現 repo。其既有測試已反向同步回 MingGoRTS Examples（commit 5b28ab0），不隨 filter-repo 丟失
 - [x] W0.5 遊戲 Examples 跟遊戲走（連結 Gameplay 的 test 留在引擎會破壞引擎獨立性）
 
-## Phase 1 — 邊界固化（monorepo 內先做）
+## Phase 1 — 邊界固化（monorepo 內先做）✅ 2026-09-21 完成（82f5a1d）
 
-- [ ] W1.1 `GUI/AgentGUI.{h,cpp}` 移出引擎範圍（遊戲側安置），解除 `PotatoEngine`→AIAgentSystem 殘留耦合
-- [ ] W1.2 引擎 CMake：`CMAKE_SOURCE_DIR` → `CMAKE_CURRENT_SOURCE_DIR`（全檔，add_subdirectory 消費前提）
-- [ ] W1.3 standalone 守衛：`if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)` 包住 examples/tests/install——被消費時只產出 lib target
-- [ ] W1.4 驗證：monorepo 建置 + ctest 無回歸（此步可先提交）
+- [x] W1.1 `GUI/AgentGUI.{h,cpp}` 遷至 `MingGoRTS_IDE/`，孤兒 `install(GUI/)` 與 check_all.sh 殘留清除
+- [x] W1.2 `CMAKE_SOURCE_DIR` → `CMAKE_CURRENT_SOURCE_DIR` 全檔 137 處替換
+- [x] W1.3 standalone 守衛包住 examples/tests/install/CPack；NeuralNetwork/Quantum/Media 提升守衛外
+- [x] W1.4 驗證：MSVC(VS18)+MinGW 建置皆過，ctest 68/68 全綠
 
 ## Phase 2 — 歷史拆分（git filter-repo，已安裝）
 
