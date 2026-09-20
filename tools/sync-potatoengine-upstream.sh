@@ -15,7 +15,7 @@ TARGET="${1:-C:/HWC/PotatoEngine}"
 
 MODULES="Core Security Events FileSystem Logging MathUtils Memory Platform \
 Scene Serialization Time Rendering Physics Audio Input Resources ECS \
-GameObject GUI AI Quantum"
+GameObject AI Quantum"
 
 echo "Source : $REPO_ROOT"
 echo "Target : $TARGET"
