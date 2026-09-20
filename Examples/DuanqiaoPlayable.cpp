@@ -17,6 +17,7 @@
 #include "Gameplay/BattleSceneSync.h"
 #include "Gameplay/BattlePicker.h"
 #include "Gameplay/BattleMap.h"
+#include "Gameplay/GovernanceField.h"
 #include "Gameplay/BattlePlanner.h"
 #include "Gameplay/PlanningDeck.h"
 #include "Gameplay/BattlePlan.h"
@@ -52,7 +53,6 @@
 #include <deque>
 #include <filesystem>
 #include <string>
-#include <unordered_set>
 #include <vector>
 
 using namespace Potato;
@@ -571,6 +571,7 @@ int main() {
 
     BattleController battle(GW, GH, CELL);
     map.ApplyToField(battle.GetField());
+    govField.Bind(map.GetInteractables(), map.GetConvoys()); // A-1/A-3/A-4
     battle.SetEventCallback([&](const std::string& e) {
         eventLog.push_back(e);
         if (eventLog.size() > 8) eventLog.pop_front();
