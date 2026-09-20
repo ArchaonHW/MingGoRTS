@@ -57,7 +57,7 @@ FileSystemTest LoggerTest LogTest MemoryTest PlatformTest SceneTest \
 SerializationTest TimeTest CoreSystemsTest RenderPipelineTest \
 RenderTargetTest GLSmokeTest SpriteAtlasTest ModelLoaderTest VrmLoadTest \
 InputTest AudioTest ImageCodecTest NeuralGraphicsTest AITestSuite \
-FakeCheatModule"
+QuasiModelsTest FakeCheatModule"
 
 mkdir -p "$TARGET/tests"
 for t in $TESTS; do
