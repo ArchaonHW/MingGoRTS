@@ -2,6 +2,7 @@
 
 #include "Serialization/JsonParser.h"
 
+#include <algorithm>
 #include <cstdio>
 
 namespace Potato {
@@ -146,6 +147,30 @@ int LedgerChain::SoundnessViolation() const {
     return -1;
 }
 
+int LedgerChain::InjectForgery(const LedgerEntry& e) {
+    // 偽帳走雜湊鏈合法路徑但跳過 WellFormed 守衛——
+    // 對手注入的分錄在鏈上成立、在帳上不成立
+    Chained c;
+    c.entry = e;
+    c.prevHash = RootHash();
+    c.hash = HashEntry(c.prevHash, e);
+    entries.push_back(c);
+    return static_cast<int>(entries.size() - 1);
+}
+
+bool LedgerChain::MarkSuspect(size_t idx) {
+    if (idx >= entries.size() || IsSuspect(idx)) {
+        return false;
+    }
+    auto it = std::lower_bound(suspects.begin(), suspects.end(), idx);
+    suspects.insert(it, idx);
+    return true;
+}
+
+bool LedgerChain::IsSuspect(size_t idx) const {
+    return std::binary_search(suspects.begin(), suspects.end(), idx);
+}
+
 std::array<int, static_cast<size_t>(LedgerAccount::Count)>
 LedgerChain::TrialBalance() const {
     std::array<int, static_cast<size_t>(LedgerAccount::Count)> net{};
@@ -182,7 +207,18 @@ std::string LedgerChain::ToJson() const {
                       i + 1 < entries.size() ? "," : "");
         out += buf;
     }
-    out += "]}";
+    out += ']';
+    if (!suspects.empty()) {
+        out += ",\"suspect\":[";
+        for (size_t i = 0; i < suspects.size(); ++i) {
+            char sbuf[24];
+            std::snprintf(sbuf, sizeof(sbuf), "%zu%s", suspects[i],
+                          i + 1 < suspects.size() ? "," : "");
+            out += sbuf;
+        }
+        out += ']';
+    }
+    out += '}';
     return out;
 }
 
@@ -220,6 +256,13 @@ bool LedgerChain::FromJson(const std::string& json) {
         c.prevHash = ParseHex(j["prev"].AsString());
         c.hash = ParseHex(j["hash"].AsString());
         entries.push_back(c);
+    }
+    suspects.clear();
+    for (const JsonValue& s : root["suspect"].AsArray()) {
+        const int idx = s.AsInt(-1);
+        if (idx >= 0) {
+            MarkSuspect(static_cast<size_t>(idx));
+        }
     }
     return true;
 }

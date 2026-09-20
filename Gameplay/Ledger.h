@@ -74,6 +74,18 @@ public:
     // （偽帳偵測面——載入的帳可雜湊合法但借貸不成立）
     int SoundnessViolation() const;
 
+    // L-4 偽帳注入：雜湊鏈合法但會計不成立的分錄——
+    // 對手軍師攻擊記憶系統用的通道；Append() 拒收的走這裡。
+    // 回傳注入索引；偵測責任在 SoundnessViolation / Verify
+    int InjectForgery(const LedgerEntry& e);
+
+    // 疑帳標記：查帳 UI 標記可疑分錄（L-4 解除對手反制的手段）。
+    // 標記是書寫行為不改鏈內容；存檔隨 "suspect":[idx,...] 持久
+    bool MarkSuspect(size_t idx);
+    bool IsSuspect(size_t idx) const;
+    size_t SuspectCount() const { return suspects.size(); }
+    const std::vector<size_t>& SuspectIndices() const { return suspects; }
+
     // 各帳戶淨額（借方總和 − 貸方總和）；全域總和恆為 0
     std::array<int, static_cast<size_t>(LedgerAccount::Count)>
     TrialBalance() const;
@@ -96,6 +108,7 @@ public:
 
 private:
     std::vector<Chained> entries;
+    std::vector<size_t> suspects; // 已標記疑帳索引（升序不重複）
 };
 
 } // namespace Gameplay
