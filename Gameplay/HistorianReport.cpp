@@ -132,34 +132,57 @@ HistorianReport ComposeHistorianReport(const HistorianInput& in) {
     }
 
     // ---- 片段組裝（史官體）----
+    // E-4 和平語域：無戰章節不經戰鬥狀態機，但照樣書寫——
+    // 路徑句 + 敵將去向（不入陣亡錄），查帳段與省略計數同規。
+    const bool peace = !in.peacePathZh.empty();
     std::string& t = r.text;
-    t += "史官曰：" + in.battleName + "，";
-    t += OutcomeLine(in.outcome);
+    if (peace) {
+        t += "史官曰：" + in.battleName + "之局，兵不血刃。";
+        const std::string g =
+            in.peaceGeneral.empty() ? "敵將" : in.peaceGeneral;
+        if (in.peacePathZh == "談判") {
+            t += "遣使入帳，以民心曉之，「" + g +
+                 "」罷兵言和——議和而去，不入陣亡錄。";
+        } else if (in.peacePathZh == "嚇阻") {
+            t += "陳師疆埸，軍威所懾，「" + g +
+                 "」未交一矢引兵而退——懾服而去，不入陣亡錄。";
+        } else if (in.peacePathZh == "顛覆") {
+            t += "內應發於敵帳，「" + g +
+                 "」眾叛親離——變節投誠，不入陣亡錄。";
+        } else {
+            t += "「" + g + "」偃旗息鼓——不入陣亡錄。";
+        }
+        t += "不戰而定。"; // 戰歷秒數行的無戰對句
+    } else {
+        t += "史官曰：" + in.battleName + "，";
+        t += OutcomeLine(in.outcome);
 
-    {
-        char buf[64];
-        std::snprintf(buf, sizeof(buf), "戰歷 %.0f 秒。", in.elapsedSec);
-        t += buf;
+        {
+            char buf[64];
+            std::snprintf(buf, sizeof(buf), "戰歷 %.0f 秒。",
+                          in.elapsedSec);
+            t += buf;
+        }
+
+        // 戰況摘錄：只列非零項，全零則整段不現
+        if (r.interventionCount + r.revealCount + r.routCount +
+                r.playerLosses + r.enemyLosses + r.neutralLosses >
+            0) {
+            t += "是役也，";
+            AppendCount(t, r.interventionCount, "強令介入 %d 次，");
+            AppendCount(t, r.revealCount, "斥候揭敵 %d 處，");
+            AppendCount(t, r.routCount, "潰逃 %d 起，");
+            AppendCount(t, r.enemyLosses, "斬敵 %d 隊，");
+            AppendCount(t, r.playerLosses, "我軍覆 %d 隊，");
+            AppendCount(t, r.neutralLosses, "殲滅 %d 隊，");
+            // 收尾全形逗號是 3-byte UTF-8（EF BC 8C）——不能只改最後一 byte
+            t.resize(t.size() - 3);
+            t += "。";
+        }
     }
 
-    // 戰況摘錄：只列非零項，全零則整段不現
-    if (r.interventionCount + r.revealCount + r.routCount +
-            r.playerLosses + r.enemyLosses + r.neutralLosses >
-        0) {
-        t += "是役也，";
-        AppendCount(t, r.interventionCount, "強令介入 %d 次，");
-        AppendCount(t, r.revealCount, "斥候揭敵 %d 處，");
-        AppendCount(t, r.routCount, "潰逃 %d 起，");
-        AppendCount(t, r.enemyLosses, "斬敵 %d 隊，");
-        AppendCount(t, r.playerLosses, "我軍覆 %d 隊，");
-        AppendCount(t, r.neutralLosses, "殲滅 %d 隊，");
-        // 收尾全形逗號是 3-byte UTF-8（EF BC 8C）——不能只改最後一 byte
-        t.resize(t.size() - 3);
-        t += "。";
-    }
-
-    // 名冊句：殉國（含遺物）→ 得全 → 斬敵
-    if (in.roster) {
+    // 名冊句：殉國（含遺物）→ 得全 → 斬敵（和平語域無戰可錄，略過）
+    if (!peace && in.roster) {
         for (const RosterEntry& e : in.roster->GetEntries()) {
             if (e.team == in.playerTeam && !e.alive) {
                 t += "「" + e.name + "」隊長殉國";

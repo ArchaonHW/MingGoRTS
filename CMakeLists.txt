@@ -812,6 +812,11 @@ add_executable(NoBattleResolverTest Examples/NoBattleResolverTest.cpp)
 target_include_directories(NoBattleResolverTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(NoBattleResolverTest Campaign)
 
+# E-4 無戰章節敘事與結算無頭測試（和平語域/章尾鉤/結局軌跡）
+add_executable(NoBattleNarrativeTest Examples/NoBattleNarrativeTest.cpp)
+target_include_directories(NoBattleNarrativeTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(NoBattleNarrativeTest Campaign)
+
 # B-1 Potato::Log 輕量日誌無頭測試（stderr 捕獲/級別/檔案 sink）
 add_executable(LogTest Examples/LogTest.cpp)
 target_include_directories(LogTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1022,6 +1027,7 @@ set(POTATO_TESTS
     GovernanceTest
     GovernanceFieldTest
     NoBattleResolverTest
+    NoBattleNarrativeTest
 )
 foreach(test_name IN LISTS POTATO_TESTS)
     if(TARGET ${test_name})

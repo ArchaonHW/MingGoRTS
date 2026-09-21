@@ -46,7 +46,18 @@ ChapterConventions::EntranceJudgment(const GeneralDossier& dossier,
 std::string
 ChapterConventions::ClosingHook(const ClosingContext& ctx) {
     std::string hook;
-    if (ctx.draw) {
+    if (!ctx.peacePathZh.empty()) {
+        // E-4 無戰收場：主語換無戰體——不戰之局不入勝負
+        if (ctx.peacePathZh == "談判") {
+            hook = "談笑罷兵";
+        } else if (ctx.peacePathZh == "嚇阻") {
+            hook = "不戰而退敵";
+        } else if (ctx.peacePathZh == "顛覆") {
+            hook = "敵營自潰";
+        } else {
+            hook = "不戰而定";
+        }
+    } else if (ctx.draw) {
         hook = "勝負未分，兩軍各自收兵";
     } else if (ctx.playerVictory) {
         hook = "我軍奏凱";
@@ -71,7 +82,9 @@ ChapterConventions::ResolveEnding(const EndingInput& in) {
     if (in.corruption >= kFallenCorruption) {
         return EndingVoice::Fallen;
     }
-    const bool conquestHigh = in.annihilated > in.subdued;
+    // E-4：無戰章節計入收服側——不戰而勝是收服的最高形式
+    const int subdued = in.subdued + in.peaceChapters;
+    const bool conquestHigh = in.annihilated > subdued;
     const bool heartsHigh = in.popularSupport >= kHeartsThreshold &&
                             in.civilOrder >= kHeartsThreshold;
     if (conquestHigh && heartsHigh) {
@@ -81,7 +94,7 @@ ChapterConventions::ResolveEnding(const EndingInput& in) {
     if (heartsHigh) return EndingVoice::Mandate;
     // 皆未達檻：兩分數取高者——筆總得落下
     const float conquestScore =
-        (float)in.annihilated + 0.5f * (float)in.subdued;
+        (float)in.annihilated + 0.5f * (float)subdued;
     const float heartsScore = in.popularSupport + in.civilOrder;
     return conquestScore * kHeartsThreshold * 2.0f >= heartsScore
                ? EndingVoice::Conquest
@@ -107,9 +120,27 @@ ChapterConventions::ComposeEnding(EndingVoice voice,
     case EndingVoice::Conquest:
         text = "史曰：兵鋒所至，群雄束手。";
         break;
-    case EndingVoice::Mandate:
+    case EndingVoice::Mandate: {
         text = "史曰：不戰而屈，民心所歸。";
+        // E-4 無戰軌跡：帳本處置記錄數無戰章節——
+        // Negotiated/Intimidated/Defected 皆不戰之勝
+        int peaceN = 0;
+        for (const auto& rec : ledger.Records()) {
+            if (rec.disposition == GeneralDisposition::Negotiated ||
+                rec.disposition == GeneralDisposition::Intimidated ||
+                rec.disposition == GeneralDisposition::Defected) {
+                ++peaceN;
+            }
+        }
+        if (peaceN > 0) {
+            char buf[64];
+            std::snprintf(buf, sizeof(buf),
+                          "凡 %d 章不戰而屈，仁者之師也。", peaceN);
+            text += "\n";
+            text += buf;
+        }
         break;
+    }
     case EndingVoice::Unwritten:
         // 史官擱筆：武功與民心俱高，兩帳相悖，冊頁留白——
         // 只剩累積記錄自身的聲音。

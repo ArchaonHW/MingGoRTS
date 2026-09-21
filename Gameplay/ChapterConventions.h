@@ -49,6 +49,7 @@ public:
         std::string nextForeshadow;         // 下回伏筆詞（如「敵帳中那封回信」）
         bool rivalCountered = false;        // N-3：敵方已針對我軍慣性
         int mythEventCount = 0;             // 本章新增神話事件數
+        std::string peacePathZh;            // E-4：無戰收場路徑（談判/嚇阻/顛覆），空=戰鬥章節
     };
     static std::string ClosingHook(const ClosingContext& ctx);
 
@@ -66,6 +67,7 @@ public:
         float popularSupport = 0.f; // 民心 0~100（治績）
         float civilOrder = 0.f;     // 秩序 0~100（治績）
         float corruption = 0.f;     // 墮落 0~100
+        int peaceChapters = 0;      // E-4：無戰而定的章節數——計入收服側
     };
 
     // 門檻（寫死，與 SageCommand 治平判定同源）

@@ -49,6 +49,13 @@ struct HistorianInput {
     // seed==0 → 以帳簿 RootHash 自引種；<=0 → 維持 L-6 前句式
     uint64_t assuranceSeed = 0;
     int assuranceSample = 3;
+    // E-4 和平語域：非空 → 無戰章節組裝（不經戰鬥狀態機的章節
+    // 同樣被書寫不留白）。呼叫端傳中文路徑名（談判/嚇阻/顛覆）
+    // ——Gameplay 層不回依賴 Campaign 的 NoBattlePath enum。
+    // 失敗/中計不走此徑（仍進戰鬥語域）。
+    std::string peacePathZh;
+    // 敵將名（去向句用）；空 → 「敵將」泛稱
+    std::string peaceGeneral;
 };
 
 struct HistorianReport {
