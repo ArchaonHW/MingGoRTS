@@ -893,9 +893,9 @@ queue:
     acceptance:
       - 閾值轉換錄事件、等級單調
       - 渲染層唯讀消費（架構邊界）
-    status: queued
+    status: done
     size: L
-    note: 神話層機械骨幹；D-2~D-5 全掛在它上面
+    note: 神話層機械骨幹；D-2~D-5 全掛在它上面。已落地 17a1748（review 補丁後 55/55 雙工具鏈）
 
   - id: D-2
     title: 神社與精靈實體（可互動第二張地圖）

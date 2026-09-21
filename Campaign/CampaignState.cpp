@@ -16,6 +16,9 @@ void CampaignState::AdvanceChapter(int arc, int ch,
     chapter.chapter = ch;
     chapter.chapterId = chapterId;
     ledger.AdvanceChapter(ch);
+    // D-1：章節邊界——滲透層以治理快照重推導（跨章同樣只升不降）
+    myth.DeriveFrom(governance.Depravity(), governance.CivilOrder(),
+                    governance.UnrestLevel(), ch);
 }
 
 bool CampaignState::SaveToFile(const std::string& path) const {
@@ -32,6 +35,8 @@ bool CampaignState::SaveToFile(const std::string& path) const {
     }
     // C-2 治理帳已填充；E-6/E-11 預留段仍空物件佔位
     root.objectValue["governance"] = governance.ToJson();
+    // D-1 滲透層已填充；god_stance/intel_ledger 仍佔位
+    root.objectValue["myth_layer"] = myth.ToJson();
     JsonValue empty;
     empty.type = JsonValue::Type::Object;
     root.objectValue["god_stance"] = empty;
@@ -103,12 +108,20 @@ bool CampaignState::LoadFromFile(const std::string& path) {
         POTATO_LOG_ERROR("CampaignState: 治理段損毀，拒絕載入 " + path);
         return false;
     }
+    // D-1 滲透段：缺段容忍（舊檔無此段），有段損毀則拒絕
+    MythLayer newMyth;
+    if (!newMyth.FromJson(root["myth_layer"])) {
+        POTATO_LOG_ERROR("CampaignState: 滲透段損毀，拒絕載入 " + path);
+        return false;
+    }
+    newMyth.SetEventCallback(myth.EventCallback()); // 保留已註冊敘事出口
     // god_stance/intel_ledger：缺段容忍，內容暫不解析
     camp = newCamp;
     roster = newRoster;
     ledger = newLedger;
     chapter = newChapter;
     governance = newGov;
+    myth = newMyth;
     return true;
 }
 

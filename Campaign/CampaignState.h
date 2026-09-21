@@ -17,6 +17,7 @@
 
 #include "Campaign/ChapterState.h"
 #include "Campaign/Governance.h"
+#include "Campaign/MythLayer.h"
 #include "Gameplay/CampaignLedger.h"
 #include "Gameplay/RefitCamp.h"
 #include "Gameplay/Roster.h"
@@ -39,6 +40,9 @@ public:
     // C-2 治理帳：跨章節民心/秩序累加 + 動亂級
     Governance& Gov() { return governance; }
     const Governance& Gov() const { return governance; }
+    // D-1 神話滲透層：區域滲透等級 + 神明好感表
+    MythLayer& Myths() { return myth; }
+    const MythLayer& Myths() const { return myth; }
 
     // 弧/章節id/已收服戰線（章節序由帳本管，AdvanceChapter 同步）
     ChapterState chapter;
@@ -56,6 +60,7 @@ private:
     Gameplay::Roster roster;
     Gameplay::CampaignLedger ledger;
     Governance governance;      // C-2 戰役治理帳（governance 段）
+    MythLayer myth;             // D-1 滲透狀態機（myth_layer 段）
 };
 
 } // namespace Campaign

@@ -81,3 +81,18 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
   summary: Plan-bonus HUD hides at exactly ×1.00 — the moment intel resolves against the tip, the label vanishes instead of showing a "落空" state.
   evidence: DuanqiaoPlayable.cpp ~L1436-1439; UX polish under parallel-session churn.
+- source_spec: `_bmad-output/implementation-artifacts/spec-d1-myth-layer-seepage.md`
+  summary: `MythLayer::ToJson`/`DeriveFrom` iterate `std::unordered_map` — save bytes and MythLog event order are nondeterministic run-to-run. Consider `std::map` or sorted emission if golden-file diffing or replay determinism matters.
+  evidence: Edge-case-hunter review — `Campaign/MythLayer.cpp` ToJson regions/favor loops + DeriveFrom per-region dispatch order.
+- source_spec: `_bmad-output/implementation-artifacts/spec-d1-myth-layer-seepage.md`
+  summary: `JsonValue::AsInt` casts `double`→`int` via `static_cast` — out-of-range input (`"lv":1e20`) is UB before any clamp runs. Pre-existing JsonParser weakness, newly exposed by MythLayer load paths; fix belongs in Serialization.
+  evidence: Edge-case-hunter review — `Serialization/JsonParser.h:73`; affects every `AsInt` consumer repo-wide.
+- source_spec: `_bmad-output/implementation-artifacts/spec-d1-myth-layer-seepage.md`
+  summary: `WriteJson` emits floats via `%g` (6 significant digits) — pressures >~1e6 roundtrip lossily. Shared JsonWriter limitation; current MythLayer constants stay exact, revisit if magnitudes grow.
+  evidence: Acceptance auditor + edge-case hunter — `Campaign/JsonWriter.h:49`.
+- source_spec: `_bmad-output/implementation-artifacts/spec-d1-myth-layer-seepage.md`
+  summary: No production wiring `MythLayer`→`MythLog`: `SetEventCallback` exists and tests exercise it, but `CampaignState` does not register a callback — transitions are recorded in `transitions` only. End-to-end narrative hookup belongs with D-2+ epic work.
+  evidence: Acceptance auditor — `Campaign/CampaignState.cpp` owns no MythLog callback registration; AGENTS.md:47 stale claim that CampaignState aggregates MythLog.
+- source_spec: `_bmad-output/implementation-artifacts/spec-d1-myth-layer-seepage.md`
+  summary: `myth_layer` section has no `potato.myth_layer/1` schema tag — bare object consistent with untagged `governance` section, but no version hook for future migration (NFR5).
+  evidence: Acceptance auditor — spec Code Map names the format; only root carries `potato.campaign/1`.

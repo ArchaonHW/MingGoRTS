@@ -419,6 +419,7 @@ add_library(Campaign STATIC
     Campaign/CampaignState.cpp
     Campaign/ChapterLibrary.cpp
     Campaign/Governance.cpp
+    Campaign/NoBattleResolver.cpp
 )
 target_include_directories(Campaign PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(Campaign PUBLIC Gameplay)
@@ -806,6 +807,11 @@ add_executable(GovernanceFieldTest Examples/GovernanceFieldTest.cpp)
 target_include_directories(GovernanceFieldTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(GovernanceFieldTest Campaign)
 
+# E-1 無戰章節門檻判定無頭測試（定義塊/灰顯報表/三路徑入帳/中計）
+add_executable(NoBattleResolverTest Examples/NoBattleResolverTest.cpp)
+target_include_directories(NoBattleResolverTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(NoBattleResolverTest Campaign)
+
 # B-1 Potato::Log 輕量日誌無頭測試（stderr 捕獲/級別/檔案 sink）
 add_executable(LogTest Examples/LogTest.cpp)
 target_include_directories(LogTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1015,6 +1021,7 @@ set(POTATO_TESTS
     LedgerAssuranceTest
     GovernanceTest
     GovernanceFieldTest
+    NoBattleResolverTest
 )
 foreach(test_name IN LISTS POTATO_TESTS)
     if(TARGET ${test_name})

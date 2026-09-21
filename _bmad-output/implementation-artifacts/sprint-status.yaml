@@ -31,7 +31,7 @@
 # - Legacy spec-*.md files belong to the auto-dev-queue system, not BMAD stories
 
 generated: 2026-09-18
-last_updated: 2026-09-18
+last_updated: 2026-09-21
 project: MingGoRTS
 project_key: NOKEY
 tracking_system: file-system
@@ -67,7 +67,7 @@ development_status:
 
   # Epic D — 神話雙層
   epic-d: backlog
-  d-1-myth-layer-seepage: backlog
+  d-1-myth-layer-seepage: review
   d-2-shrine-spirit-entities: backlog
   d-3-fate-conversion: backlog
   d-4-myth-incursion-events: backlog
