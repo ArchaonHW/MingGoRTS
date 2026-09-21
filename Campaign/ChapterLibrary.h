@@ -58,6 +58,14 @@ struct NoBattleDef {
     }
 };
 
+// 神話入侵定義塊（D-4）：章節定義 "incursion" 欄位。
+// seepage = 觸發所需滲透等級序數（0-3）；kind 見 MythIncursion。
+struct IncursionDef {
+    bool enabled = false;
+    int seepage = 0;        // 滲透等級門檻（>0 才有效；Quiet 章不入侵）
+    std::string kind;       // "ghost_legion" | "fox_rumor"
+};
+
 struct ChapterDef {
     static constexpr const char* kSchema = "potato.campaign_chapter/1";
 
@@ -69,6 +77,7 @@ struct ChapterDef {
     std::string enemyDeck;  // 敵將牌組 id（可空）
     std::string next;       // 預設下一章 id（可空）
     NoBattleDef noBattle;   // 無戰路徑定義（可選欄位，全預設=純戰鬥章節）
+    IncursionDef incursion; // 神話入侵定義（可選欄位，預設=不入侵）
 
     std::vector<std::string> warnings; // 降級記錄（機器可讀）
 

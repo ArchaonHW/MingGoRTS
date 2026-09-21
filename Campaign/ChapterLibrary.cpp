@@ -173,6 +173,35 @@ bool ChapterDef::LoadFromString(const std::string& json) {
             parseOpt("subversion", "intel", noBattle.subversion);
         }
     }
+
+    // incursion（D-4）：可選欄位，缺欄=不入侵。
+    //   "incursion": {"seepage": 2, "kind": "ghost_legion"|"fox_rumor"}
+    // 同 parseOpt 慣例：壞欄記 warnings 且維持關閉。
+    {
+        const JsonValue& iv = root["incursion"];
+        if (!iv.IsNull() && !iv.IsObject()) {
+            warnings.push_back("incursion 型別非物件，略過");
+        } else if (iv.IsObject()) {
+            const JsonValue& sv = iv["seepage"];
+            const JsonValue& kv = iv["kind"];
+            const bool kindOk = kv.IsString() &&
+                (kv.AsString() == "ghost_legion" ||
+                 kv.AsString() == "fox_rumor");
+            const double rawS = sv.AsNumber(0.0);
+            if (!sv.IsNumber() || !std::isfinite(rawS) ||
+                rawS < 1.0 || rawS > 3.0 || rawS != std::floor(rawS)) {
+                warnings.push_back(
+                    "incursion.seepage 缺欄或須為 1-3 整數，略過");
+            } else if (!kindOk) {
+                warnings.push_back(
+                    "incursion.kind 須為 ghost_legion/fox_rumor，略過");
+            } else {
+                incursion.enabled = true;
+                incursion.seepage = static_cast<int>(rawS);
+                incursion.kind = kv.AsString();
+            }
+        }
+    }
     return true;
 }
 

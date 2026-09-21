@@ -60,6 +60,8 @@ public:
     // favor 表是否已有該靈條目（D-3 兌換守衛：防幻影錢包——
     // 未登錄名字不得以 kNeutralFavor 起算扣費）
     bool HasSpirit(const std::string& spirit) const;
+    // 區域綁定的守護靈名（具名三欄用）；未綁回空字串
+    std::string SpiritOf(const std::string& region) const;
 
     // ---- 渲染層唯讀出口 ----
     Seepage Level(const std::string& region) const;
