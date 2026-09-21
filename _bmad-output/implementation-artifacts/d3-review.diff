@@ -1,0 +1,404 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c3de2b7..7a2c24e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -421,6 +421,7 @@ add_library(Campaign STATIC
+     Campaign/ChapterLibrary.cpp
+     Campaign/Governance.cpp
+     Campaign/MythLayer.cpp
++    Campaign/FateExchange.cpp
+     Campaign/NoBattleResolver.cpp
+ )
+ target_include_directories(Campaign PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -833,6 +839,11 @@ add_executable(ShrineFieldTest Examples/ShrineFieldTest.cpp)
+ target_include_directories(ShrineFieldTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+ target_link_libraries(ShrineFieldTest Campaign)
+ 
++# D-3 天命兌換無頭測試（灰顯價目/限次/零副作用拒絕）
++add_executable(FateExchangeTest Examples/FateExchangeTest.cpp)
++target_include_directories(FateExchangeTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
++target_link_libraries(FateExchangeTest Campaign)
++
+ # E-1 無戰章節門檻判定無頭測試（定義塊/灰顯報表/三路徑入帳/中計）
+ add_executable(NoBattleResolverTest Examples/NoBattleResolverTest.cpp)
+ target_include_directories(NoBattleResolverTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -1055,6 +1067,7 @@ set(POTATO_TESTS
+     GovernanceFieldTest
+     MythLayerTest
+     ShrineFieldTest
++    FateExchangeTest
+     NoBattleResolverTest
+     NoBattleNarrativeTest
+ )
+diff --git a/Campaign/Governance.cpp b/Campaign/Governance.cpp
+index 71a74ff..e3881b0 100644
+--- a/Campaign/Governance.cpp
++++ b/Campaign/Governance.cpp
+@@ -30,6 +30,16 @@ void Governance::Accumulate(
+     }
+ }
+ 
++void Governance::AdjustPopularSupport(float delta) {
++    if (!std::isfinite(delta)) return;
++    popularSupport = std::clamp(popularSupport + delta, 0.0f, 100.0f);
++}
++
++void Governance::AdjustCivilOrder(float delta) {
++    if (!std::isfinite(delta)) return;
++    civilOrder = std::clamp(civilOrder + delta, 0.0f, 100.0f);
++}
++
+ int Governance::UnrestLevel() const {
+     if (civilOrder < kUnrestCollapse) return 3;
+     if (civilOrder < kUnrestRiot) return 2;
+diff --git a/Campaign/Governance.h b/Campaign/Governance.h
+index 6dc8a67..9f64f87 100644
+--- a/Campaign/Governance.h
++++ b/Campaign/Governance.h
+@@ -31,6 +31,11 @@ public:
+         const std::unordered_map<Gameplay::GovernanceEvent, int>&
+             battleEvents);
+ 
++    // 直接調整（天命兌換 D-3 等任意值寫入通道；Accumulate 是
++    // 事件固定 delta，兌換價目不走事件表）。夾 [0,100]。
++    void AdjustPopularSupport(float delta);
++    void AdjustCivilOrder(float delta);
++
+     // 動亂級：秩序 >= UNREST_WARN 為 0；以下每跨一檻 +1，最深 3
+     int UnrestLevel() const;
+     // 跨級才產生事件字串（回傳並把已報級記下）；平級/下降回傳空
+diff --git a/Campaign/FateExchange.h b/Campaign/FateExchange.h
+new file mode 100644
+index 0000000..2ba03a8
+--- /dev/null
++++ b/Campaign/FateExchange.h
+@@ -0,0 +1,92 @@
++#pragma once
++
++// 天命兌換器（D-3/Epic D）：神明 favor → 民心/秩序的可見門檻兌換。
++//
++// 貨幣是 MythLayer::favor（逐神 0–100，已持久化於 myth_layer 段）；
++// 兌換一律寫 Campaign::Governance（帳本真相層）——戰中 SageCommand
++// 同名軸不碰。
++//
++// 灰顯可見：Options() 永遠列出全部價目，favor 不足/戰中額度盡的項
++// 附 affordable=false + reason（照 NoBattleResolver::CheckOptions
++// 慣例）——門檻可見是設計本體，不是隱藏。
++//
++// 戰中限次：每場戰 kMaxBattleUses 次（執行期計數，不入存檔）；
++// 章節邊界 Convert(inBattle=false) 不限次，只受 favor 餘額。
++//
++// 入帳：Convert 成功發 FateEvent 型別化回呼（先變異後派出，回呼
++// 可安全再入）。呼叫端決定去向——戰中接
++// recorder.AddRecord(battle.GetElapsed(), msg)，章節邊界接
++// LedgerChain::Append(EntrySource::Myth, ...)。
++
++#include <functional>
++#include <string>
++#include <vector>
++
++namespace Potato {
++namespace Campaign {
++
++class MythLayer;
++class Governance;
++
++// 兌換標的：天命換哪條治理軸
++enum class FateTarget {
++    PopularSupport, // 民心
++    CivilOrder,     // 秩序
++};
++
++const char* FateTargetName(FateTarget t);
++
++// 價目項（Options 回傳；affordable=false 時 reason 給原因）
++struct FateOption {
++    FateTarget target;
++    float cost;
++    float gain;
++    bool affordable;      // favor 足額且層已綁定
++    bool battleUsesLeft;  // 戰中額度尚有剩（UI 判斷戰中灰顯用）
++    std::string reason;   // affordable=false 的中文原因
++};
++
++// 兌換記錄（回呼型別；呼叫端寫 Recorder/LedgerChain）
++struct FateEvent {
++    std::string spirit;
++    FateTarget target;
++    float cost;
++    float gain;
++    bool inBattle;
++};
++
++class FateExchange {
++public:
++    // 綁定兩層（呼叫端擁有生命週期；未綁定時 Convert 拒絕）
++    void Bind(MythLayer& myths, Governance& gov);
++
++    // 灰顯價目：永遠列出全部標的，不足項 affordable=false+reason
++    std::vector<FateOption> Options(const std::string& spirit) const;
++
++    // 兌換：favor 足額 +（戰中時）額度未盡 → 扣 favor、加治理軸、
++    // 發 FateEvent。失敗回 false 且零副作用。
++    bool Convert(const std::string& spirit, FateTarget target,
++                 bool inBattle);
++
++    // 戰中額度（新戰場景由呼叫端重置）
++    void ResetBattleUses() { battleUses = 0; }
++    int BattleUses() const { return battleUses; }
++
++    void SetEventCallback(std::function<void(const FateEvent&)> cb) {
++        onEvent = std::move(cb);
++    }
++
++    // 價目（寫死可調參）
++    static constexpr float kFateCost = 20.0f;
++    static constexpr float kFateGain = 5.0f;
++    static constexpr int kMaxBattleUses = 2;
++
++private:
++    MythLayer* myths = nullptr;
++    Governance* gov = nullptr;
++    int battleUses = 0;
++    std::function<void(const FateEvent&)> onEvent;
++};
++
++} // namespace Campaign
++} // namespace Potato
+diff --git a/Campaign/FateExchange.cpp b/Campaign/FateExchange.cpp
+new file mode 100644
+index 0000000..07016e9
+--- /dev/null
++++ b/Campaign/FateExchange.cpp
+@@ -0,0 +1,69 @@
++#include "Campaign/FateExchange.h"
++
++#include "Campaign/Governance.h"
++#include "Campaign/MythLayer.h"
++
++namespace Potato {
++namespace Campaign {
++
++const char* FateTargetName(FateTarget t) {
++    switch (t) {
++    case FateTarget::PopularSupport: return "民心";
++    case FateTarget::CivilOrder:     return "秩序";
++    }
++    return "未知";
++}
++
++void FateExchange::Bind(MythLayer& m, Governance& g) {
++    myths = &m;
++    gov = &g;
++}
++
++std::vector<FateOption>
++FateExchange::Options(const std::string& spirit) const {
++    const bool bound = myths && gov && !spirit.empty();
++    const float favor =
++        bound ? myths->Favor(spirit) : 0.0f;
++    const bool affordable = bound && favor >= kFateCost;
++    std::string reason;
++    if (!bound) {
++        reason = "未綁定神明";
++    } else if (!affordable) {
++        reason = "天命不足（需 " + std::to_string((int)kFateCost) + "）";
++    }
++    const bool usesLeft = battleUses < kMaxBattleUses;
++    std::vector<FateOption> out;
++    for (FateTarget t : {FateTarget::PopularSupport,
++                         FateTarget::CivilOrder}) {
++        out.push_back(
++            {t, kFateCost, kFateGain, affordable, usesLeft, reason});
++    }
++    return out;
++}
++
++bool FateExchange::Convert(const std::string& spirit,
++                           FateTarget target, bool inBattle) {
++    if (!myths || !gov || spirit.empty()) return false;
++    if (inBattle && battleUses >= kMaxBattleUses) return false;
++    if (myths->Favor(spirit) < kFateCost) return false;
++    if (target != FateTarget::PopularSupport &&
++        target != FateTarget::CivilOrder) {
++        return false; // 非法 enum：先驗型別再放行，保零副作用
++    }
++
++    // 先變異後派出——回呼可安全再入本層
++    myths->AdjustFavor(spirit, -kFateCost);
++    if (target == FateTarget::PopularSupport) {
++        gov->AdjustPopularSupport(kFateGain);
++    } else {
++        gov->AdjustCivilOrder(kFateGain);
++    }
++    if (inBattle) ++battleUses;
++    if (onEvent) {
++        onEvent({spirit, target, kFateCost, kFateGain, inBattle});
++    }
++    return true;
++}
++
++} // namespace Campaign
++} // namespace Potato
+diff --git a/Examples/FateExchangeTest.cpp b/Examples/FateExchangeTest.cpp
+new file mode 100644
+index 0000000..d955e92
+--- /dev/null
++++ b/Examples/FateExchangeTest.cpp
+@@ -0,0 +1,156 @@
++// FateExchangeTest - D-3 天命貨幣與轉換無頭測試
++// 驗收：兌換扣 favor 加治理軸、favor 不足灰顯可見不隱藏、
++//       戰中限次/重置、章節邊界不限次、零副作用拒絕、
++//       FateEvent 回呼入帳接線
++#include "Campaign/FateExchange.h"
++#include "Campaign/Governance.h"
++#include "Campaign/MythLayer.h"
++
++#include <cstdio>
++#include <string>
++#include <vector>
++
++using namespace Potato::Campaign;
++
++static int g_pass = 0, g_fail = 0;
++static void Check(bool ok, const char* name) {
++    if (ok) { g_pass++; printf("  [PASS] %s\n", name); }
++    else    { g_fail++; printf("  [FAIL] %s\n", name); }
++}
++
++int main() {
++    printf("=== FateExchange Tests (D-3) ===\n\n");
++
++    const std::string spirit = "境靈";
++
++    // ---- [1] 兌換成功：扣 favor、加軸、發事件 ----
++    printf("[1] 兌換成功\n");
++    {
++        MythLayer myth;
++        Governance gov;
++        FateExchange ex;
++        ex.Bind(myth, gov);
++        myth.AdjustFavor(spirit, 30.0f); // 50+30=80
++        std::vector<FateEvent> events;
++        ex.SetEventCallback(
++            [&events](const FateEvent& e) { events.push_back(e); });
++
++        Check(ex.Convert(spirit, FateTarget::PopularSupport, false),
++              "兌換民心成功");
++        Check(myth.Favor(spirit) ==
++                  80.0f - FateExchange::kFateCost,
++              "favor 扣 kFateCost");
++        Check(gov.PopularSupport() == 50.0f + FateExchange::kFateGain,
++              "民心 +kFateGain");
++        Check(gov.CivilOrder() == 50.0f, "秩序不受影響");
++        Check(events.size() == 1, "FateEvent 一筆");
++        if (events.size() == 1) {
++            Check(events.at(0).spirit == spirit &&
++                      events.at(0).target ==
++                          FateTarget::PopularSupport &&
++                      events.at(0).cost == FateExchange::kFateCost &&
++                      events.at(0).gain == FateExchange::kFateGain &&
++                      !events.at(0).inBattle,
++                  "事件欄位齊全");
++        }
++    }
++
++    // ---- [2] favor 不足：拒絕 + 灰顯可見 ----
++    printf("[2] favor 不足\n");
++    {
++        MythLayer myth;
++        Governance gov;
++        FateExchange ex;
++        ex.Bind(myth, gov);
++        myth.AdjustFavor(spirit, -40.0f); // 50-40=10 < 20
++        bool cb = false;
++        ex.SetEventCallback([&cb](const FateEvent&) { cb = true; });
++
++        Check(!ex.Convert(spirit, FateTarget::CivilOrder, false),
++              "不足 Convert 拒絕");
++        Check(myth.Favor(spirit) == 10.0f, "favor 不變");
++        Check(gov.CivilOrder() == 50.0f, "秩序不變");
++        Check(!cb, "拒絕不發回呼");
++
++        auto opts = ex.Options(spirit);
++        Check(opts.size() == 2, "兩項價目全列（可見不隱藏）");
++        Check(!opts.at(0).affordable && !opts.at(1).affordable,
++              "兩項 affordable=false");
++        Check(!opts.at(0).reason.empty(), "附原因字串");
++        Check(opts.at(0).cost == FateExchange::kFateCost &&
++                  opts.at(0).gain == FateExchange::kFateGain,
++              "價目常數正確");
++    }
++
++    // ---- [3] 戰中限次 + 重置 ----
++    printf("[3] 戰中限次\n");
++    {
++        MythLayer myth;
++        Governance gov;
++        FateExchange ex;
++        ex.Bind(myth, gov);
++        myth.AdjustFavor(spirit, 50.0f); // 100
++
++        for (int i = 0; i < FateExchange::kMaxBattleUses; ++i) {
++            Check(ex.Convert(spirit, FateTarget::CivilOrder, true),
++                  "戰中額度內成功");
++        }
++        Check(!ex.Convert(spirit, FateTarget::CivilOrder, true),
++              "額度盡拒絕");
++        Check(ex.BattleUses() == FateExchange::kMaxBattleUses,
++              "計數到位");
++        Check(!ex.Options(spirit).at(0).battleUsesLeft,
++              "Options 報額度盡");
++        // 章節邊界不受戰中額度限制
++        Check(ex.Convert(spirit, FateTarget::PopularSupport, false),
++              "章節邊界不限次");
++        ex.ResetBattleUses();
++        Check(ex.Convert(spirit, FateTarget::CivilOrder, true),
++              "重置後戰中可再兌");
++    }
++
++    // ---- [4] 邊界與防禦 ----
++    printf("[4] 邊界防禦\n");
++    {
++        MythLayer myth;
++        Governance gov;
++        FateExchange ex; // 未 Bind
++        Check(!ex.Convert(spirit, FateTarget::PopularSupport, false),
++              "未綁定拒絕");
++        Check(!ex.Options(spirit).at(0).affordable,
++              "未綁定灰顯");
++
++        ex.Bind(myth, gov);
++        Check(!ex.Convert("", FateTarget::PopularSupport, false),
++              "空 spirit 拒絕");
++        Check(!ex.Options("").at(0).affordable, "空 spirit 灰顯");
++
++        // 非法 enum：零副作用
++        myth.AdjustFavor(spirit, 30.0f); // 80
++        Check(!ex.Convert(spirit, (FateTarget)99, false),
++              "非法 target 拒絕");
++        Check(myth.Favor(spirit) == 80.0f, "非法 target 不扣 favor");
++        Check(gov.PopularSupport() == 50.0f, "非法 target 軸不變");
++
++        // 新 spirit 未登錄 → 預設 50，足額可兌
++        Check(ex.Options("新神").at(0).affordable,
++              "未登錄 spirit 以中立 favor 判定");
++    }
++
++    // ---- [5] 軸夾取 ----
++    printf("[5] 夾取\n");
++    {
++        MythLayer myth;
++        Governance gov;
++        FateExchange ex;
++        ex.Bind(myth, gov);
++        myth.AdjustFavor(spirit, 50.0f);
++        gov.AdjustPopularSupport(48.0f); // 98
++        Check(ex.Convert(spirit, FateTarget::PopularSupport, false),
++              "高位兌換");
++        Check(gov.PopularSupport() == 100.0f, "民心夾到 100");
++    }
++
++    printf("\n=== %d PASS, %d FAIL ===\n", g_pass, g_fail);
++    return g_fail == 0 ? 0 : 1;
++}

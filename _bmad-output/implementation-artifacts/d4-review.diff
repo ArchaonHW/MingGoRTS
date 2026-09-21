@@ -1,0 +1,577 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 04c9eaf..a71e00d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -408,6 +408,7 @@ add_library(Gameplay STATIC
+     Gameplay/Ledger.cpp
+     Gameplay/GovernanceField.cpp
+     Gameplay/ShrineField.cpp
++    Gameplay/MythIncursion.cpp
+     Gameplay/BattleCommandAI.cpp
+     Gameplay/BattleCommandEnv.cpp
+ )
+@@ -847,6 +853,11 @@ add_executable(FateExchangeTest Examples/FateExchangeTest.cpp)
+ target_include_directories(FateExchangeTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+ target_link_libraries(FateExchangeTest Campaign)
+ 
++# D-4 神話入侵無頭測試（達閾觸發/稀有性/雙結局/章節旗標）
++add_executable(MythIncursionTest Examples/MythIncursionTest.cpp)
++target_include_directories(MythIncursionTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
++target_link_libraries(MythIncursionTest Campaign)
++
+ # E-1 無戰章節門檻判定無頭測試（定義塊/灰顯報表/三路徑入帳/中計）
+ add_executable(NoBattleResolverTest Examples/NoBattleResolverTest.cpp)
+ target_include_directories(NoBattleResolverTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -1083,6 +1095,7 @@ set(POTATO_TESTS
+     MythLayerTest
+     ShrineFieldTest
+     FateExchangeTest
++    MythIncursionTest
+     NoBattleResolverTest
+     NoBattleNarrativeTest
+ )
+diff --git a/Campaign/ChapterLibrary.cpp b/Campaign/ChapterLibrary.cpp
+index e020596..10da206 100644
+--- a/Campaign/ChapterLibrary.cpp
++++ b/Campaign/ChapterLibrary.cpp
+@@ -173,6 +173,34 @@ bool ChapterDef::LoadFromString(const std::string& json) {
+             parseOpt("subversion", "intel", noBattle.subversion);
+         }
+     }
++
++    // incursion（D-4）：可選欄位，缺欄=不入侵。
++    //   "incursion": {"seepage": 2, "kind": "ghost_legion"|"fox_rumor"}
++    // 同 parseOpt 慣例：壞欄記 warnings 且維持關閉。
++    {
++        const JsonValue& iv = root["incursion"];
++        if (!iv.IsNull() && !iv.IsObject()) {
++            warnings.push_back("incursion 型別非物件，略過");
++        } else if (iv.IsObject()) {
++            const JsonValue& sv = iv["seepage"];
++            const JsonValue& kv = iv["kind"];
++            const bool kindOk = kv.IsString() &&
++                (kv.AsString() == "ghost_legion" ||
++                 kv.AsString() == "fox_rumor");
++            if (!sv.IsNumber() || !std::isfinite(sv.AsNumber(0.0)) ||
++                sv.AsNumber(0.0) < 1.0 || sv.AsNumber(0.0) > 3.0) {
++                warnings.push_back(
++                    "incursion.seepage 缺欄或須為 1-3 整數，略過");
++            } else if (!kindOk) {
++                warnings.push_back(
++                    "incursion.kind 須為 ghost_legion/fox_rumor，略過");
++            } else {
++                incursion.enabled = true;
++                incursion.seepage = static_cast<int>(sv.AsNumber(0.0));
++                incursion.kind = kv.AsString();
++            }
++        }
++    }
+     return true;
+ }
+ 
+diff --git a/Campaign/ChapterLibrary.h b/Campaign/ChapterLibrary.h
+index fab67d7..55eaf22 100644
+--- a/Campaign/ChapterLibrary.h
++++ b/Campaign/ChapterLibrary.h
+@@ -58,6 +58,14 @@ struct NoBattleDef {
+     }
+ };
+ 
++// 神話入侵定義塊（D-4）：章節定義 "incursion" 欄位。
++// seepage = 觸發所需滲透等級序數（0-3）；kind 見 MythIncursion。
++struct IncursionDef {
++    bool enabled = false;
++    int seepage = 0;        // 滲透等級門檻（>0 才有效；Quiet 章不入侵）
++    std::string kind;       // "ghost_legion" | "fox_rumor"
++};
++
+ struct ChapterDef {
+     static constexpr const char* kSchema = "potato.campaign_chapter/1";
+ 
+@@ -69,6 +77,7 @@ struct ChapterDef {
+     std::string enemyDeck;  // 敵將牌組 id（可空）
+     std::string next;       // 預設下一章 id（可空）
+     NoBattleDef noBattle;   // 無戰路徑定義（可選欄位，全預設=純戰鬥章節）
++    IncursionDef incursion; // 神話入侵定義（可選欄位，預設=不入侵）
+ 
+     std::vector<std::string> warnings; // 降級記錄（機器可讀）
+ 
+diff --git a/Campaign/MythLayer.cpp b/Campaign/MythLayer.cpp
+index 0d18000..95f6527 100644
+--- a/Campaign/MythLayer.cpp
++++ b/Campaign/MythLayer.cpp
+@@ -111,6 +111,11 @@ bool MythLayer::HasSpirit(const std::string& spirit) const {
+     return favor.find(spirit) != favor.end();
+ }
+ 
++std::string MythLayer::SpiritOf(const std::string& region) const {
++    const auto it = regions.find(region);
++    return it != regions.end() ? it->second.spirit : std::string{};
++}
++
+ Seepage MythLayer::Level(const std::string& region) const {
+     const auto it = regions.find(region);
+     return it != regions.end() ? it->second.level : Seepage::Quiet;
+diff --git a/Campaign/MythLayer.h b/Campaign/MythLayer.h
+index 97c38c0..0278b86 100644
+--- a/Campaign/MythLayer.h
++++ b/Campaign/MythLayer.h
+@@ -60,6 +60,8 @@ public:
+     // favor 表是否已有該靈條目（D-3 兌換守衛：防幻影錢包——
+     // 未登錄名字不得以 kNeutralFavor 起算扣費）
+     bool HasSpirit(const std::string& spirit) const;
++    // 區域綁定的守護靈名（具名三欄用）；未綁回空字串
++    std::string SpiritOf(const std::string& region) const;
+ 
+     // ---- 渲染層唯讀出口 ----
+     Seepage Level(const std::string& region) const;
+diff --git a/Gameplay/MythIncursion.h b/Gameplay/MythIncursion.h
+new file mode 100644
+index 0000000..d50b6f0
+--- /dev/null
++++ b/Gameplay/MythIncursion.h
+@@ -0,0 +1,132 @@
++#pragma once
++
++// 神話入侵（D-4/Epic D）：mid-battle 插入的意義改變者事件。
++//
++// 觸發：呼叫端 Arm(滲透門檻序數, kind, spawnPos) 後每拍 Update 餵
++// 區域滲透等級快照（Gameplay 不讀 Campaign——依賴方向不倒流）。
++// 達閾→一次性觸發（稀有性守衛：每場最多一次）。
++//
++// 兩種入侵：
++//   鬼軍夜行 GhostLegion——CreateSquad 中場生成 team=2 第三方
++//     小隊（無 doctrine 的 Hold 幽影，威懾性存在）
++//   狐仙假訊 FoxRumor——小額鬼隊 + fog entity 候選格指向虛構
++//     方位（無主雲不渲染，必須綁真 squad；無 fog 時降級為純現身）
++//
++// 解決窗口 kResolveWindow 秒內呼叫端 Resolve：
++//   pacified → 鬼隊消散（ApplyCasualties 全員，無 RemoveSquad API）
++//   ignored/逾時 → 鬼隊留存 + OutcomeEvent(ignored)
++// 逾時由 Update 的 dt 累積結算——全確定性。
++//
++// 三路回呼出口（先變異後派出，回呼可安全再入）：
++//   IncursionEvent → 呼叫端接 MythLog::Record（具名三欄）+
++//     SetTimeScale(0) 暫停提示（UX 層的事）
++//   OutcomeEvent   → pacified 呼叫端 gov.Adjust* 加分；
++//     ignored 呼叫端 MythLayer 推滲透（注壓量呼叫端決定）
++//   事件字串       → 呼叫端 recorder.AddRecord(GetElapsed(), msg)
++
++#include "MathUtils/Vector2.h"
++
++#include <functional>
++#include <string>
++#include <utility>
++
++namespace Potato {
++namespace Gameplay {
++
++class BattleController;
++class Squad;
++
++enum class IncursionKind {
++    GhostLegion, // 鬼軍夜行：實體小隊中場現身
++    FoxRumor,    // 狐仙假訊：幻影小隊+假情報雲
++};
++
++const char* IncursionKindName(IncursionKind k);
++
++// 觸發事件（呼叫端接 MythLog::Record——shrine/spirit/when/detail
++// 即具名四欄）
++struct IncursionEvent {
++    IncursionKind kind;
++    std::string shrine;  // 祠=區域名
++    std::string spirit;  // 靈=守護靈名
++    std::string when;    // 戰役時間標記（T+秒）
++    std::string detail;  // 記事
++};
++
++// 結局事件（呼叫端決定治理加分/滲透注壓量）
++struct OutcomeEvent {
++    bool pacified;       // true=安撫成功；false=忽視
++    std::string region;
++    std::string spirit;
++};
++
++// 渲染層唯讀狀態
++struct IncursionState {
++    bool fired = false;      // 已觸發（稀有性 latch）
++    bool pending = false;    // 待解決（窗口內）
++    bool resolved = false;   // 已結算
++    bool pacified = false;   // 結算結果
++    IncursionKind kind = IncursionKind::GhostLegion;
++    std::string region;
++    std::string spirit;
++    float windowLeft = 0.0f; // 剩餘解決秒數
++};
++
++class MythIncursion {
++public:
++    // 佈防：seepageThreshold 為滲透序數（0-3,與 MythLayer::Seepage
++    // 序數對齊但此處只吃 int——不引 Campaign 型別）；spawnPos 為
++    // 鬼軍現身點。重 Arm 重置全部狀態（新戰場景）。
++    void Arm(int seepageThreshold, IncursionKind kind,
++             Vector2 spawnPos);
++
++    // 每拍驅動：餵區域滲透快照。達閾→觸發生成+發事件；
++    // pending 時累積窗口，逾時自動 ignored 結算。
++    void Update(float dt, BattleController& battle, int seepageLevel,
++                const std::string& region, const std::string& spirit);
++
++    // 解決：pending 中才有效。pacified→鬼隊消散+pacified 結局；
++    // false→ignored 結局（鬼隊留存）。回 false=無 pending。
++    bool Resolve(bool pacified);
++
++    const IncursionState& GetIncursion() const { return state; }
++
++    void SetIncursionCallback(
++        std::function<void(const IncursionEvent&)> cb) {
++        onIncursion = std::move(cb);
++    }
++    void SetOutcomeCallback(
++        std::function<void(const OutcomeEvent&)> cb) {
++        onOutcome = std::move(cb);
++    }
++    void SetEventCallback(
++        std::function<void(const std::string&)> cb) {
++        onEvent = std::move(cb);
++    }
++
++    // 可調參
++    static constexpr float kResolveWindow = 15.0f;
++    static constexpr int kGhostTeam = 2;       // 第三方
++    static constexpr int kGhostMembers = 12;   // 象徵性戰力
++    static constexpr float kRumorOffset = 8.0f; // 假訊雲偏移格數
++
++private:
++    void Trigger(BattleController& battle,
++                 const std::string& region, const std::string& spirit);
++    void Settle(bool pacified);
++
++    bool armed = false;
++    int threshold = 0;
++    IncursionKind kind = IncursionKind::GhostLegion;
++    Vector2 spawnPos{};
++
++    IncursionState state;
++    Squad* ghost = nullptr; // 生成的鬼隊（battle 持有所有權）
++
++    std::function<void(const IncursionEvent&)> onIncursion;
++    std::function<void(const OutcomeEvent&)> onOutcome;
++    std::function<void(const std::string&)> onEvent;
++};
++
++} // namespace Gameplay
++} // namespace Potato
+diff --git a/Gameplay/MythIncursion.cpp b/Gameplay/MythIncursion.cpp
+new file mode 100644
+index 0000000..729d79c
+--- /dev/null
++++ b/Gameplay/MythIncursion.cpp
+@@ -0,0 +1,122 @@
++#include "Gameplay/MythIncursion.h"
++
++#include "Gameplay/BattleController.h"
++#include "Gameplay/QuantumFog.h"
++#include "Gameplay/Squad.h"
++
++#include <cstdio>
++#include <utility>
++#include <vector>
++
++namespace Potato {
++namespace Gameplay {
++
++const char* IncursionKindName(IncursionKind k) {
++    switch (k) {
++    case IncursionKind::GhostLegion: return "鬼軍夜行";
++    case IncursionKind::FoxRumor:    return "狐仙假訊";
++    }
++    return "未知";
++}
++
++void MythIncursion::Arm(int seepageThreshold, IncursionKind k,
++                        Vector2 pos) {
++    armed = seepageThreshold > 0; // Quiet(0) 章不入侵
++    threshold = seepageThreshold;
++    kind = k;
++    spawnPos = pos;
++    state = IncursionState{};
++    ghost = nullptr;
++}
++
++void MythIncursion::Update(float dt, BattleController& battle,
++                           int seepageLevel, const std::string& region,
++                           const std::string& spirit) {
++    if (!armed || state.resolved) return;
++
++    if (!state.fired) {
++        if (seepageLevel >= threshold) {
++            Trigger(battle, region, spirit);
++        }
++        return;
++    }
++
++    if (state.pending) {
++        state.windowLeft -= dt;
++        if (state.windowLeft <= 0.0f) {
++            Settle(false); // 逾時=忽視
++        }
++    }
++}
++
++void MythIncursion::Trigger(BattleController& battle,
++                            const std::string& region,
++                            const std::string& spirit) {
++    const std::string s = spirit.empty() ? "境靈" : spirit;
++    const char* kindTag =
++        kind == IncursionKind::FoxRumor ? "幻影" : "鬼軍";
++    ghost = battle.CreateSquad(std::string(kindTag) + ":" + s,
++                               kGhostTeam, spawnPos, kGhostMembers);
++    if (!ghost) return; // 生成失敗：不消耗 latch，下拍重試
++
++    if (kind == IncursionKind::FoxRumor && battle.GetFog()) {
++        // 假訊：情報雲候選格指向虛構方位（真身其實在 spawnPos）
++        Vector2 fake = spawnPos;
++        fake.x += kRumorOffset;
++        const int eid = battle.GetFog()->AddEntityCloud(
++            ghost->GetName(), /*enemyTeam=*/1, fake, 4.0f, 4, 2.0f);
++        if (eid >= 0) {
++            battle.BindFogSquad(ghost, eid);
++        }
++    }
++
++    state.fired = true;
++    state.pending = true;
++    state.kind = kind;
++    state.region = region;
++    state.spirit = s;
++    state.windowLeft = kResolveWindow;
++
++    char when[32];
++    snprintf(when, sizeof(when), "T+%.1fs", battle.GetElapsed());
++
++    // 先變異後派出
++    if (onIncursion) {
++        onIncursion({kind, region, s, when,
++                     std::string(IncursionKindName(kind)) +
++                         "：神話層越界"});
++    }
++    if (onEvent) {
++        onEvent(std::string("入侵:") + region + " " +
++                IncursionKindName(kind) + " " + s);
++    }
++}
++
++bool MythIncursion::Resolve(bool pacified) {
++    if (!state.pending) return false;
++    Settle(pacified);
++    return true;
++}
++
++void MythIncursion::Settle(bool pacified) {
++    state.pending = false;
++    state.resolved = true;
++    state.pacified = pacified;
++    state.windowLeft = 0.0f;
++
++    if (pacified && ghost) {
++        // 消散=殲滅語義（無 RemoveSquad API）
++        ghost->ApplyCasualties(ghost->GetMembers());
++    }
++
++    if (onOutcome) {
++        onOutcome({pacified, state.region, state.spirit});
++    }
++    if (onEvent) {
++        onEvent(std::string("入侵結算:") + state.region + " " +
++                (pacified ? "安撫" : "忽視") + " " + state.spirit);
++    }
++}
++
++} // namespace Gameplay
++} // namespace Potato
+diff --git a/Examples/MythIncursionTest.cpp b/Examples/MythIncursionTest.cpp
+new file mode 100644
+index 0000000..a1fbf34
+--- /dev/null
++++ b/Examples/MythIncursionTest.cpp
+@@ -0,0 +1,178 @@
++// MythIncursionTest - D-4 神話入侵事件無頭測試
++// 驗收：達閾觸發、稀有性 one-shot、鬼軍/假訊兩種生成、
++//       安撫/忽視/逾時三結局、具名三欄、ChapterDef 旗標解析
++#include "Campaign/ChapterLibrary.h"
++#include "Campaign/MythLayer.h"
++#include "Gameplay/BattleController.h"
++#include "Gameplay/MythIncursion.h"
++#include "Gameplay/QuantumFog.h"
++#include "Gameplay/Squad.h"
++
++#include <cstdio>
++#include <string>
++#include <vector>
++
++using namespace Potato::Campaign;
++using namespace Potato::Gameplay;
++using Potato::Vector2;
++
++static int g_pass = 0, g_fail = 0;
++static void Check(bool ok, const char* name) {
++    if (ok) { g_pass++; printf("  [PASS] %s\n", name); }
++    else    { g_fail++; printf("  [FAIL] %s\n", name); }
++}
++
++static int SquadCount(const BattleController& b) {
++    int n = 0;
++    for (const auto& s : b.GetSquads()) (void)s, ++n;
++    return n;
++}
++
++int main() {
++    printf("=== MythIncursion Tests (D-4) ===\n\n");
++
++    const Vector2 spawn{5.0f, 5.0f};
++
++    // ---- [1] 達閾觸發 + 具名三欄 + 稀有性 ----
++    printf("[1] 觸發與稀有性\n");
++    {
++        BattleController battle(20, 20, 1.0f);
++        MythIncursion inc;
++        std::vector<IncursionEvent> incs;
++        std::vector<OutcomeEvent> outs;
++        std::vector<std::string> strs;
++        inc.SetIncursionCallback(
++            [&](const IncursionEvent& e) { incs.push_back(e); });
++        inc.SetOutcomeCallback(
++            [&](const OutcomeEvent& e) { outs.push_back(e); });
++        inc.SetEventCallback(
++            [&](const std::string& s) { strs.push_back(s); });
++
++        // 未 Arm：達閾也不觸發
++        inc.Update(0.016f, battle, 3, "斷橋", "橋姬");
++        Check(!inc.GetIncursion().fired, "未 Arm 不觸發");
++
++        inc.Arm(2, IncursionKind::GhostLegion, spawn);
++        // 未達閾
++        inc.Update(0.016f, battle, 1, "斷橋", "橋姬");
++        Check(!inc.GetIncursion().fired, "未達閾不觸發");
++        // 達閾觸發
++        inc.Update(0.016f, battle, 2, "斷橋", "橋姬");
++        Check(inc.GetIncursion().fired, "達閾觸發");
++        Check(inc.GetIncursion().pending, "進入待解決");
++        Check(incs.size() == 1, "IncursionEvent 一筆");
++        Check(strs.size() == 1, "入帳字串一筆");
++        if (incs.size() == 1) {
++            const IncursionEvent& e = incs.at(0);
++            Check(e.shrine == "斷橋" && e.spirit == "橋姬" &&
++                      !e.when.empty() && !e.detail.empty(),
++                  "具名三欄齊全");
++            Check(e.kind == IncursionKind::GhostLegion,
++                  "kind=鬼軍夜行");
++        }
++        Check(SquadCount(battle) == 1, "鬼隊已生成");
++        if (SquadCount(battle) == 1) {
++            Check(battle.GetSquads().at(0)->GetTeam() == 2,
++                  "鬼軍 team=2 第三方");
++        }
++        // 稀有性：再達閾不重複
++        inc.Update(0.016f, battle, 3, "斷橋", "橋姬");
++        Check(incs.size() == 1, "one-shot 不重複觸發");
++        // 解決：安撫
++        Check(inc.Resolve(true), "安撫解決");
++        Check(outs.size() == 1 && outs.at(0).pacified,
++              "pacified 結局一筆");
++        Check(inc.GetIncursion().resolved, "已結算");
++        Check(battle.GetSquads().at(0)->IsEliminated(),
++              "安撫後鬼隊消散");
++        Check(!inc.Resolve(true), "重複 Resolve 拒絕");
++    }
++
++    // ---- [2] 逾時=忽視 ----
++    printf("[2] 逾時忽視\n");
++    {
++        BattleController battle(20, 20, 1.0f);
++        MythIncursion inc;
++        inc.Arm(1, IncursionKind::GhostLegion, spawn);
++        OutcomeEvent out{};
++        int outN = 0;
++        inc.SetOutcomeCallback(
++            [&](const OutcomeEvent& e) { out = e; ++outN; });
++        inc.Update(0.016f, battle, 1, "斷橋", "橋姬");
++        Check(inc.GetIncursion().pending, "已觸發待解決");
++        // 累積超過窗口
++        for (int i = 0; i < 2000; ++i) {
++            inc.Update(0.016f, battle, 1, "斷橋", "橋姬");
++        }
++        Check(outN == 1 && !out.pacified, "逾時自動 ignored");
++        Check(inc.GetIncursion().resolved, "逾時已結算");
++        Check(battle.GetSquads().at(0)->GetMembers() > 0,
++              "忽視鬼隊留存");
++        Check(!inc.Resolve(true), "結算後 Resolve 拒絕");
++    }
++
++    // ---- [3] 狐仙假訊 ----
++    printf("[3] 狐仙假訊\n");
++    {
++        BattleController battle(20, 20, 1.0f);
++        QuantumFog fog;
++        battle.BindFog(&fog);
++        MythIncursion inc;
++        inc.Arm(2, IncursionKind::FoxRumor, spawn);
++        inc.Update(0.016f, battle, 2, "斷橋", "狐仙");
++        Check(inc.GetIncursion().fired, "假訊觸發");
++        Check(battle.GetSquads().at(0)->GetName().find("幻影") !=
++                  std::string::npos,
++              "幻影隊命名");
++        Check(battle.GetFogEntityId(battle.GetSquads().at(0).get()) >=
++                  0,
++              "幻影隊已綁 fog entity");
++        // 主動忽視
++        Check(inc.Resolve(false), "主動忽視");
++        Check(inc.GetIncursion().resolved &&
++                  !inc.GetIncursion().pacified,
++              "ignored 結算");
++    }
++
++    // ---- [4] MythLayer::SpiritOf ----
++    printf("[4] SpiritOf\n");
++    {
++        MythLayer myth;
++        myth.BindSpirit("斷橋", "橋姬");
++        Check(myth.SpiritOf("斷橋") == "橋姬", "綁定可查");
++        Check(myth.SpiritOf("他處").empty(), "未綁回空");
++    }
++
++    // ---- [5] ChapterDef incursion 旗標 ----
++    printf("[5] 章節旗標\n");
++    {
++        const char* good = R"({
++            "schema":"potato.campaign_chapter/1","id":"c1",
++            "name":"章一","arc":1,"chapter":1,"map":"m.json",
++            "incursion":{"seepage":2,"kind":"ghost_legion"}})";
++        ChapterDef d;
++        Check(d.LoadFromString(good), "合法 incursion 載入");
++        Check(d.incursion.enabled && d.incursion.seepage == 2 &&
++                  d.incursion.kind == "ghost_legion",
++              "旗標解析正確");
++
++        const char* missing = R"({
++            "schema":"potato.campaign_chapter/1","id":"c2",
++            "name":"章二","arc":1,"chapter":2,"map":"m.json"})";
++        ChapterDef d2;
++        Check(d2.LoadFromString(missing), "缺欄章節載入");
++        Check(!d2.incursion.enabled, "缺欄=關閉");
++
++        const char* bad = R"({
++            "schema":"potato.campaign_chapter/1","id":"c3",
++            "name":"章三","arc":1,"chapter":3,"map":"m.json",
++            "incursion":{"seepage":9,"kind":"bogus"}})";
++        ChapterDef d3;
++        Check(d3.LoadFromString(bad), "壞欄章節仍載入");
++        Check(!d3.incursion.enabled && !d3.warnings.empty(),
++              "壞欄=關閉+警告");
++    }
++
++    printf("\n=== %d PASS, %d FAIL ===\n", g_pass, g_fail);
++    return g_fail == 0 ? 0 : 1;
++}

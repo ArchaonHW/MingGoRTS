@@ -160,3 +160,7 @@ output/videos/
 output/video_ds_test/
 *_test_save.json
 output/vds_hq/
+
+# output/ 全數為可再生產物（資料集/影片/教學工作檔）——上面逐項條列
+# 為歷史記錄，此處整目錄忽略避免新產物漏網
+output/
