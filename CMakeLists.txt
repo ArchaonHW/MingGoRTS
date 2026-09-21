@@ -408,11 +408,14 @@ add_library(Gameplay STATIC
     Gameplay/Ledger.cpp
     Gameplay/GovernanceField.cpp
     Gameplay/ShrineField.cpp
+    Gameplay/BattleCommandAI.cpp
+    Gameplay/BattleCommandEnv.cpp
 )
 target_include_directories(Gameplay PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/Gameplay)
 # BattleSceneSync 需要場景圖/渲染類型;PotatoEngine 不依賴 Gameplay,無循環
 # QuantumFog 需要量子態模擬（疊加態敵情霧）
-target_link_libraries(Gameplay PUBLIC PotatoEngine Quantum)
+# BattleCommandEnv/CommanderAI 需要 DQNAgent/RLEnvironment（訓練-推論共用契約）
+target_link_libraries(Gameplay PUBLIC PotatoEngine Quantum ReinforcementLearning)
 
 # E-7 戰役層：跨章節狀態 facade（potato.campaign/1 聚合存檔）
 # 分層：PotatoEngine ← Gameplay ← Campaign，Campaign 不回流 Gameplay
@@ -874,6 +877,17 @@ add_executable(BattleTrainerDemo Examples/BattleTrainerDemo.cpp)
 target_include_directories(BattleTrainerDemo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(BattleTrainerDemo Gameplay ReinforcementLearning NeuralNetwork)
 
+# RL 指揮官訓練 CLI：--episodes/--eval/--seed/--out 可設定,
+# 產出 trained_battle_agent.json 供 DuanqiaoPlayable 的 AI 指揮官載入
+add_executable(BattleTrainer Examples/BattleTrainer.cpp)
+target_include_directories(BattleTrainer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(BattleTrainer Gameplay ReinforcementLearning NeuralNetwork)
+
+# 指揮官契約/消費端無頭測試（不跑長訓練，驗特徵契約與載入接線）
+add_executable(BattleCommanderAITest Examples/BattleCommanderAITest.cpp)
+target_include_directories(BattleCommanderAITest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(BattleCommanderAITest Gameplay ReinforcementLearning NeuralNetwork)
+
 # 時序訓練資料產線（工具性質：需顯示環境,不進 POTATO_TESTS）
 add_executable(VideoDataDemo Examples/VideoDataDemo.cpp)
 target_include_directories(VideoDataDemo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1021,6 +1035,7 @@ set(POTATO_TESTS
     DoctrineBattleDemo
     AutoPlannerDemo
     BattleTrainerDemo
+    BattleCommanderAITest
     DuanqiaoDemo
     SageCommandTest
     QuantumTest

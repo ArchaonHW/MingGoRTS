@@ -979,9 +979,9 @@ queue:
     acceptance:
       - 兌換扣 favor 加治理軸、事件入帳
       - 門檻可見性（灰顯）規則成立
-    status: queued
+    status: done
     size: M
-    note: 依賴 D-2；神話行為機械放大治理
+    note: 已落地 86bedfa（三路審查補丁後 52/52 雙工具鏈）；幻影錢包/滿軸白扣已堵
 
   - id: D-4
     title: 神話入侵事件（鬼軍夜行/狐仙假訊）

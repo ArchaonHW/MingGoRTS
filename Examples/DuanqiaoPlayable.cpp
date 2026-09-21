@@ -33,6 +33,7 @@
 #include "Gameplay/RefitCamp.h"
 #include "Gameplay/SquadTemplate.h"
 #include "Gameplay/QuantumFog.h"
+#include "Gameplay/BattleCommandAI.h"
 #include "MathUtils/CurlNoise.h"
 #include "MathUtils/GustField.h"
 #include "MathUtils/Matrix4.h"
@@ -865,6 +866,11 @@ int main() {
 
     Squad* selected = nullptr;
     bool planningPhase = true;  // T-9:開戰前停在回合層編牌
+    // RL 指揮官：載入 BattleTrainer 產出的權重檔即代打玩家側。
+    // 檔案不存在 → IsLoaded()=false → UI 只顯示提示，不影響遊戲。
+    BattleCommanderAI commander;
+    commander.LoadFromFile("trained_battle_agent.json");
+    bool aiCommander = false;
     int curDeck = 0, curRule = -1; // 牌組 UI 選中態
     Squad* arrowDragSquad = nullptr; // G-5:拖曳中的箭頭起點小隊
     Vector2 arrowDragPos;            // G-5:拖曳目前落點(cell)
@@ -1085,6 +1091,7 @@ int main() {
         }
 
         battle.Update(dt);
+        if (aiCommander) commander.Update(battle, dt);
         roster.Update(battle); // T-8:殲滅偵測→記陣亡
         sync.Sync(battle);
 
@@ -1423,6 +1430,7 @@ int main() {
                 const int arrows = plan.Apply(battle, &res, 0);
                 battle.BeginExecution();
                 planningPhase = false;
+                commander.Reset(battle, 0); // RL 指揮官接手攻方
                 eventLog.push_back(
                     arrows > 0
                         ? "作戰計畫已下達——開戰(" +
@@ -1445,6 +1453,19 @@ int main() {
             ImGui::Begin("全軍", nullptr,
                          ImGuiWindowFlags_NoCollapse |
                              ImGuiWindowFlags_AlwaysAutoResize);
+            if (commander.IsLoaded()) {
+                if (ImGui::Checkbox("AI 指揮官代打", &aiCommander)) {
+                    eventLog.push_back(aiCommander
+                        ? "AI 指揮官接管全軍"
+                        : "AI 指揮官交還指揮權");
+                }
+                if (aiCommander) {
+                    ImGui::SameLine();
+                    ImGui::TextDisabled("(%s)", commander.LastActionName());
+                }
+            } else {
+                ImGui::TextDisabled("AI 指揮官:缺 trained_battle_agent.json");
+            }
             for (const auto& sq : battle.GetSquads()) {
                 if (sq->GetTeam() != 0) continue;
                 const bool sel = (sq.get() == selected);
