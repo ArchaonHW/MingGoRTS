@@ -866,9 +866,16 @@ queue:
     acceptance:
       - 三條無戰路徑各有門檻與代價結構
       - 判定結果入帳本（Record-is-Truth）
-    status: queued
+    status: done
     size: L
-    note: 依賴 E-7a + N-4 disposition；「不戰之力」主題支柱
+    note: >
+      spec-e1-nobattle-chapters.md + 3ea5c3e 落地：ChapterDef
+      "no_battle" 塊 + NoBattleResolver（CheckOptions 灰顯報表 /
+      Resolve 判定入帳）。談判消民心、嚇阻憑軍威不消耗、顛覆
+      verified 兌換內應（未駁斥 planted → Backfired 中計）。
+      失敗/中計設 enemyAdvantage 旗標交戰鬥層兌現首波優勢。
+      EntrySource +Deterrence/Subversion、Disposition
+      +Negotiated/Intimidated。播放層接線與無戰語域戰報歸 E-4。
 
   - id: E-4
     title: 無戰章節敘事與結算
