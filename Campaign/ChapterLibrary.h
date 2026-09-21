@@ -35,6 +35,29 @@
 namespace Potato {
 namespace Campaign {
 
+// 無戰選項定義（E-1）：章節層級的單一路徑設定。
+// requirement 語義隨路徑而異：
+//   談判 negotiation = 民心消費額（Civil 淨額 ≥ 此值開放，成功即支出）
+//   嚇阻 deterrence  = 軍威門檻（Army 淨額 ≥ 此值開放，不消耗）
+//   顛覆 subversion  = 敵將 verified 判詞條數（情報帳 ≥ 此值開放）
+struct NoBattleOptionDef {
+    bool enabled = false;   // 定義塊是否開放此路徑
+    int requirement = 0;    // 開放門檻（>0 才視為有效定義）
+};
+
+// 無戰定義塊：章節定義 "no_battle" 欄位解析結果。
+// 三路徑獨立開關——章節可只開談判不開顛覆。
+struct NoBattleDef {
+    NoBattleOptionDef negotiation;
+    NoBattleOptionDef deterrence;
+    NoBattleOptionDef subversion;
+
+    bool Offered() const {
+        return negotiation.enabled || deterrence.enabled ||
+               subversion.enabled;
+    }
+};
+
 struct ChapterDef {
     static constexpr const char* kSchema = "potato.campaign_chapter/1";
 
@@ -45,6 +68,7 @@ struct ChapterDef {
     std::string map;        // 相對 assets/ 的地圖路徑
     std::string enemyDeck;  // 敵將牌組 id（可空）
     std::string next;       // 預設下一章 id（可空）
+    NoBattleDef noBattle;   // 無戰路徑定義（可選欄位，全預設=純戰鬥章節）
 
     std::vector<std::string> warnings; // 降級記錄（機器可讀）
 

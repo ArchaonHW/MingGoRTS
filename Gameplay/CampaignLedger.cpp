@@ -13,6 +13,8 @@ const char* DispositionName(GeneralDisposition d) {
     case GeneralDisposition::Slain:    return "Slain";
     case GeneralDisposition::Defected: return "Defected";
     case GeneralDisposition::Retired:  return "Retired";
+    case GeneralDisposition::Negotiated:  return "Negotiated";
+    case GeneralDisposition::Intimidated: return "Intimidated";
     case GeneralDisposition::Unknown:  return "Unknown";
     }
     return "Unknown";
@@ -23,6 +25,7 @@ bool DispositionFromName(const std::string& name,
     static const GeneralDisposition all[] = {
         GeneralDisposition::Subdued, GeneralDisposition::Slain,
         GeneralDisposition::Defected, GeneralDisposition::Retired,
+        GeneralDisposition::Negotiated, GeneralDisposition::Intimidated,
         GeneralDisposition::Unknown,
     };
     for (GeneralDisposition d : all) {

@@ -54,6 +54,8 @@ const char* SourceName(EntrySource s) {
     case EntrySource::Governance:  return "Governance";
     case EntrySource::Myth:        return "Myth";
     case EntrySource::System:      return "System";
+    case EntrySource::Deterrence:  return "Deterrence";
+    case EntrySource::Subversion:  return "Subversion";
     case EntrySource::Count:       break;
     }
     return "Unknown";
@@ -68,6 +70,8 @@ const char* SourceNameZh(EntrySource s) {
     case EntrySource::Governance:  return "治理";
     case EntrySource::Myth:        return "神異";
     case EntrySource::System:      return "紀要";
+    case EntrySource::Deterrence:  return "嚇阻";
+    case EntrySource::Subversion:  return "顛覆";
     case EntrySource::Count:       break;
     }
     return "失考";

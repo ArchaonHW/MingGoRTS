@@ -15,11 +15,13 @@ namespace Gameplay {
  * 結局時引用這些記錄（「斷橋軍師」的帳本自指）。
  */
 enum class GeneralDisposition {
-    Unknown,   // 未見/未決
-    Subdued,   // 收服（無戰屈兵）
-    Slain,     // 授首（陣斬）
-    Defected,  // 變節投誠
-    Retired,   // 歸隱（戰後退出）
+    Unknown,     // 未見/未決
+    Subdued,     // 收服（無戰屈兵）
+    Slain,       // 授首（陣斬）
+    Defected,    // 變節投誠
+    Retired,     // 歸隱（戰後退出）
+    Negotiated,  // 議和（談判罷兵——E-1）
+    Intimidated, // 懾服（嚇阻退兵——E-1）
 };
 
 const char* DispositionName(GeneralDisposition d);

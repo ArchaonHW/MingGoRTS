@@ -131,6 +131,48 @@ bool ChapterDef::LoadFromString(const std::string& json) {
         warnings.push_back("next 型別非字串，已強轉");
     }
     next = nextv.AsString();
+
+    // no_battle（E-1）：可選欄位，缺欄=純戰鬥章節。
+    // 每路徑子物件攜一個正整數門檻欄：
+    //   negotiation.cost / deterrence.threshold / subversion.intel
+    // 型別錯或非正值 → 警告 + 該路徑維持關閉（不產生半成品定義）
+    {
+        const JsonValue& nbv = root["no_battle"];
+        if (!nbv.IsNull() && !nbv.IsObject()) {
+            warnings.push_back("no_battle 型別非物件，略過");
+        } else if (nbv.IsObject()) {
+            auto parseOpt = [&](const char* key, const char* field,
+                                NoBattleOptionDef& out) {
+                const JsonValue& pv = nbv[key];
+                if (pv.IsNull()) {
+                    return; // 未定義此路徑——正常關閉
+                }
+                if (!pv.IsObject()) {
+                    warnings.push_back(std::string("no_battle.") + key +
+                                       " 型別非物件，略過");
+                    return;
+                }
+                const JsonValue& rv = pv[field];
+                if (!rv.IsNumber()) {
+                    warnings.push_back(std::string("no_battle.") + key +
+                                       "." + field + " 缺欄或非數字，略過");
+                    return;
+                }
+                double raw = rv.AsNumber(0.0);
+                if (!std::isfinite(raw) || raw < 1.0 ||
+                    raw > 2147483647.0) {
+                    warnings.push_back(std::string("no_battle.") + key +
+                                       "." + field + " 須為正整數，略過");
+                    return;
+                }
+                out.enabled = true;
+                out.requirement = static_cast<int>(raw);
+            };
+            parseOpt("negotiation", "cost", noBattle.negotiation);
+            parseOpt("deterrence", "threshold", noBattle.deterrence);
+            parseOpt("subversion", "intel", noBattle.subversion);
+        }
+    }
     return true;
 }
 

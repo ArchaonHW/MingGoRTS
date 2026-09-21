@@ -37,6 +37,8 @@ enum class EntrySource {
     Governance,  // 治理——民心秩序事件
     Myth,        // 神異——神話層事件
     System,      // 紀要——系統/初始
+    Deterrence,  // 嚇阻——軍威退兵
+    Subversion,  // 顛覆——情報內應
     Count
 };
 
