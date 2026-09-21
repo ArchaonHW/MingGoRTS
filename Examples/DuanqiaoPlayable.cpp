@@ -495,7 +495,13 @@ int main() {
     if (!fontSans && !fontSerif) {
         io.Fonts->AddFontDefault(); // 字體缺檔也要保證 atlas 非空
     }
-    io.FontDefault = fontSans ? fontSans : io.Fonts->Fonts[0];
+    // F-5/UX-DR3：chronicler 字體回退鏈 serif→sans→內建字。
+    // PushFont(nullptr) 雖會退回目前字體，此處明確化讓回退語意固定。
+    ImFont* fontFallback = fontSans ? fontSans : fontSerif;
+    if (!fontFallback) fontFallback = io.Fonts->Fonts[0];
+    if (!fontSans) fontSans = fontFallback;
+    if (!fontSerif) fontSerif = fontFallback;
+    io.FontDefault = fontSans;
 
     // U-1 殼層狀態:主題/UI 縮放在標題頁設定頁修改
     // F-2：potato.settings/1 持久化——缺檔=預設值不報錯

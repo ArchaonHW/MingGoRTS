@@ -165,6 +165,36 @@ int main() {
               "OFL LICENSE 隨字體打包");
     }
 
+    // F-5：每個主題的 FontRel 引用路徑必須實際存在（引用→資產檢查）
+    for (int i = 0; i < UITheme::kCount; ++i) {
+        std::error_code ec;
+        const auto sz =
+            fs::file_size(DemoAssets::Resolve(UITheme::FontRel(ids[i])), ec);
+        Check(!ec && sz > 1000000, "FontRel 引用檔存在且非空");
+    }
+
+    // F-5：sfnt 標頭檢查——OTTO(CFF/OpenType)或 0x00010000(TrueType)，
+    // 截檔/誤放非字型檔能被抓到
+    for (const char* f : fontFiles) {
+        std::ifstream ifs(DemoAssets::Resolve(f), std::ios::binary);
+        unsigned char magic[4] = {};
+        ifs.read(reinterpret_cast<char*>(magic), 4);
+        const bool sfnt = std::memcmp(magic, "OTTO", 4) == 0 ||
+                          (magic[0] == 0 && magic[1] == 1 &&
+                           magic[2] == 0 && magic[3] == 0);
+        Check(sfnt, "sfnt magic 正確（OTTO/TTF）");
+    }
+
+    // F-5/UX-DR3：缺檔時 LoadFont 回 nullptr（呼叫端走回退鏈），
+    // 且失敗不污染 atlas（Fonts 數量不變）
+    {
+        const int before = io.Fonts->Fonts.size();
+        Check(UITheme::LoadFont(io, "fonts/__missing__.otf", 18.0f) ==
+                  nullptr,
+              "字體缺檔 LoadFont 回 nullptr");
+        Check(io.Fonts->Fonts.size() == before, "缺檔不污染 atlas");
+    }
+
     // DrawAtlasMarker 消費端（F-1）：命中→sprite,缺名/無 tex→形狀降級
     {
         const char* idx = "uitheme_atlas_test.json";
