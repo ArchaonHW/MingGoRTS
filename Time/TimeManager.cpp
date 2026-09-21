@@ -184,14 +184,15 @@ void TimeManager::Update() {
     // 更新時間刻度
     UpdateTimeScale();
     
-    // 更新FPS
-    UpdateFPS();
+    // 更新FPS（用真實時間,暫停時也能反映渲染幀率）
+    UpdateFPS(rawDeltaTime);
     
     // 處理延遲調用
     ProcessDelayedCalls();
     
-    // 調用更新回調
-    for (auto& callback : updateCallbacks) {
+    // 調用更新回調（快照：回調內註冊新回調不會造成迭代器失效）
+    auto callbacks = updateCallbacks;
+    for (auto& callback : callbacks) {
         callback(deltaTime);
     }
 }
@@ -290,6 +291,7 @@ void TimeManager::RegisterUpdateCallback(TimeCallback callback) {
 }
 
 void TimeManager::UnregisterUpdateCallback(TimeCallback callback) {
+    (void)callback; // std::function 無法比較；需改用 handle 機制才能正確移除
     for (auto it = updateCallbacks.begin(); it != updateCallbacks.end(); ) {
         // Note: This is a simple comparison, for proper comparison we'd need to use a different approach
         // For now, just clear the callback if it matches (using target with a specific lambda)
@@ -309,9 +311,9 @@ void TimeManager::PrintStatistics() const {
     std::cout << "Delayed Calls: " << delayedCalls.size() << std::endl;
 }
 
-void TimeManager::UpdateFPS() {
+void TimeManager::UpdateFPS(float rawDeltaTime) {
     frameCount++;
-    fpsUpdateTime += deltaTime;
+    fpsUpdateTime += rawDeltaTime;
     
     if (fpsUpdateTime >= 1.0f) {
         currentFPS = static_cast<int>(frameCount / fpsUpdateTime);
@@ -321,17 +323,24 @@ void TimeManager::UpdateFPS() {
 }
 
 void TimeManager::ProcessDelayedCalls() {
+    // 先收集到期回調再呼叫：回調內可安全呼叫 DelayedCall/Shutdown
+    // 而不會造成迭代器失效
+    std::vector<DelayedCallback> dueCallbacks;
     for (auto it = delayedCalls.begin(); it != delayedCalls.end(); ) {
         it->timer += deltaTime;
         
         if (it->timer >= it->delay) {
             if (it->callback) {
-                it->callback();
+                dueCallbacks.push_back(it->callback);
             }
             it = delayedCalls.erase(it);
         } else {
             ++it;
         }
+    }
+    
+    for (auto& callback : dueCallbacks) {
+        callback();
     }
 }
 

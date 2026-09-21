@@ -3,11 +3,18 @@
  */
 
 #include "IntelligentDevelopmentSystem.h"
+#include "KnowledgeGraph.h"
+#include "SelfReflection.h"
 #include <iostream>
 #include <sstream>
+#include <fstream>
+#include <cstring>
 #include <chrono>
 #include <algorithm>
 #include <regex>
+#include <unordered_set>
+#include <filesystem>
+#include <cctype>
 
 namespace Potato {
 namespace AI {
@@ -44,6 +51,17 @@ void IntelligentDevelopmentSystem::SetRAGSystem(RAGSystem* system) {
 
 void IntelligentDevelopmentSystem::SetToolExecutor(ToolExecutor* executor) {
     toolExecutor = executor;
+}
+
+// 每次 LLM 呼叫的共用設定——baseURL 由 SetLLMBaseURL 覆寫（Ollama 等
+// 自架端點用；空值時各 client 用內建預設）
+LLMConfig IntelligentDevelopmentSystem::MakeLLMConfig(
+    float temperature, int maxTokens) const {
+    LLMConfig config;
+    config.temperature = temperature;
+    config.maxTokens = maxTokens;
+    config.baseURL = llmBaseURL;
+    return config;
 }
 
 std::string IntelligentDevelopmentSystem::CreateTask(
@@ -107,10 +125,25 @@ CodeGenerationResult IntelligentDevelopmentSystem::GenerateCode(
     CodeGenerationResult result;
     result.language = language;
     
+    // 優先使用本地管線（無需外部 LLM）；本地無法識別時才退回 llmClient
+    CodeGenerationResult local = GenerateLocal(specification, language);
+    if (local.success) {
+        auto endTime = std::chrono::high_resolution_clock::now();
+        float secs = std::chrono::duration_cast<std::chrono::milliseconds>(
+                         endTime - startTime).count() / 1000.0f;
+        // codeGenerations 已在 GenerateLocal 內計數，此處只補計時會計
+        stats.totalTasks++;
+        if (stats.totalTasks > 0) {
+            stats.averageTaskTime =
+                (stats.averageTaskTime * (stats.totalTasks - 1) + secs) /
+                stats.totalTasks;
+        }
+        return local;
+    }
+    
     if (!llmClient) {
-        result.success = false;
-        result.error = "LLM client not available";
-        return result;
+        // 本地管線失敗且無外部 LLM：回傳本地的明確錯誤訊息
+        return local;
     }
     
     // Build prompt
@@ -125,9 +158,7 @@ CodeGenerationResult IntelligentDevelopmentSystem::GenerateCode(
     messages.emplace_back(MessageRole::User, prompt);
     
     // Call LLM
-    LLMConfig config;
-    config.temperature = 0.7f;
-    config.maxTokens = 2048;
+    LLMConfig config = MakeLLMConfig(0.7f, 2048);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -142,10 +173,405 @@ CodeGenerationResult IntelligentDevelopmentSystem::GenerateCode(
     
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+    // 與本地路徑一致：每次生成計為一個計時任務（先 ++ 分母恆 >= 1，不會除零）
+    stats.totalTasks++;
     stats.averageTaskTime = (stats.averageTaskTime * (stats.totalTasks - 1) + duration.count() / 1000.0f) / stats.totalTasks;
     
     return result;
 }
+
+// ============================================================================
+// Local Generation Pipeline (NLP intent -> template synthesis -> KG context)
+// ============================================================================
+
+namespace {
+
+// 合法 C++ 識別符：首字元字母/底線/UTF-8 高位元組，
+// 其餘字母/數字/底線/UTF-8 高位元組（>=0x80 支援中文命名）
+bool IsCppIdentifier(const std::string& s) {
+    if (s.empty()) return false;
+    unsigned char c0 = static_cast<unsigned char>(s[0]);
+    if (!std::isalpha(c0) && s[0] != '_' && c0 < 0x80) return false;
+    for (size_t i = 1; i < s.size(); ++i) {
+        unsigned char c = static_cast<unsigned char>(s[i]);
+        if (!std::isalnum(c) && s[i] != '_' && c < 0x80) return false;
+    }
+    return true;
+}
+
+// C++ 關鍵字與常見停用詞——避免 "class For" 把 For 當類名
+bool IsCppKeywordOrStop(const std::string& lc) {
+    static const std::unordered_set<std::string> words = {
+        // C++ keywords（常用子集，足以擋下誤抓）
+        "for", "while", "if", "else", "switch", "case", "return",
+        "class", "struct", "enum", "void", "int", "float", "double",
+        "char", "bool", "const", "static", "new", "delete", "auto",
+        "public", "private", "protected", "virtual", "namespace",
+        "template", "typename", "using", "operator", "this", "true",
+        "false", "nullptr", "sizeof", "typedef", "inline", "do",
+        // 英文停用詞（含標記詞本身——避免 "class called Foo" 抓到 "called"）
+        "a", "an", "the", "that", "with", "which", "to",
+        "and", "or", "of", "in", "on", "is", "it", "be",
+        "me", "my", "please", "can", "you", "some", "simple",
+        "called", "named"
+    };
+    return words.count(lc) != 0;
+}
+
+// ASCII 關鍵字需要詞邊界（避免 "latest" 誤中 "test"）；
+// 非 ASCII（CJK）關鍵字直接子字串比對
+bool ContainsKeyword(const std::string& lower, const std::string& raw,
+                     const char* kw) {
+    size_t kwLen = strlen(kw);
+    if (kwLen == 0) return false;
+    bool asciiKw = std::isalpha(static_cast<unsigned char>(kw[0])) != 0;
+
+    auto scan = [&](const std::string& s) {
+        size_t pos = 0;
+        while ((pos = s.find(kw, pos)) != std::string::npos) {
+            if (!asciiKw) return true;
+            bool leftOk = pos == 0 ||
+                (!std::isalnum(static_cast<unsigned char>(s[pos - 1])) &&
+                 s[pos - 1] != '_');
+            size_t after = pos + kwLen;
+            bool rightOk = after >= s.size() ||
+                (!std::isalnum(static_cast<unsigned char>(s[after])) &&
+                 s[after] != '_');
+            if (leftOk && rightOk) return true;
+            pos += 1;
+        }
+        return false;
+    };
+    return scan(lower) || scan(raw);
+}
+
+// 從位置 p 取出識別符候選（字母/數字/底線/UTF-8 高位元組）
+std::string ExtractIdent(const std::string& s, size_t p) {
+    size_t end = p;
+    while (end < s.size()) {
+        unsigned char u = static_cast<unsigned char>(s[end]);
+        if (!std::isalnum(u) && s[end] != '_' && u < 0x80) break;
+        ++end;
+    }
+    return s.substr(p, end - p);
+}
+
+} // namespace
+
+IntelligentDevelopmentSystem::ParsedIntent
+IntelligentDevelopmentSystem::ParseIntent(const std::string& prompt) const {
+    ParsedIntent intent;
+    intent.rawPrompt = prompt;
+
+    // 小寫化以便關鍵字比對（英文）；中文關鍵字原樣比對
+    std::string lower = prompt;
+    std::transform(lower.begin(), lower.end(), lower.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+
+    auto contains = [&](const char* kw) {
+        return ContainsKeyword(lower, prompt, kw);
+    };
+
+    // 意圖分類：先特殊後一般（test 優先於 function，因為 "test function" 應產測試）
+    if (contains("test") || contains("測試") || contains("單元測試")) {
+        intent.kind = ParsedIntent::Kind::TestStub;
+    } else if (contains("class") || contains("類") || contains("物件")) {
+        intent.kind = ParsedIntent::Kind::Class;
+    } else if (contains("system") || contains("manager") ||
+               contains("系統") || contains("管理器")) {
+        intent.kind = ParsedIntent::Kind::SystemStub;
+    } else if (contains("function") || contains("method") ||
+               contains("函數") || contains("函式") || contains("方法") ||
+               contains("create") || contains("generate") || contains("實現") ||
+               contains("寫") || contains("建立") || contains("生成")) {
+        intent.kind = ParsedIntent::Kind::Function;
+    } else {
+        intent.kind = ParsedIntent::Kind::Unknown;
+    }
+
+    // 主體名稱擷取：called X / named X / for X / 名為 X / 叫 X
+    // 依 marker 優先序掃描（called/named 最強訊號），同一 marker 的所有
+    // 出現點依序嘗試；候選為非法識別符/關鍵字/停用詞時繼續找下一個
+    static const char* markers[] = {
+        "called ", "named ", "for ", "class ", "function ",
+        "名為", "叫做", "叫", "名稱"   // 「叫做」先於「叫」——避免吃掉「做」字首
+    };
+    for (const char* m : markers) {
+        size_t mlen = strlen(m);
+        size_t searchFrom = 0;
+        bool accepted = false;
+        while (true) {
+            size_t pos = lower.find(m, searchFrom);
+            if (pos == std::string::npos) pos = prompt.find(m, searchFrom);
+            if (pos == std::string::npos) break;
+            size_t p = pos + mlen;
+            searchFrom = pos + 1;
+            if (p >= prompt.size()) break;
+            std::string cand = ExtractIdent(prompt, p);
+            if (cand.empty()) continue;
+            std::string lc = cand;
+            std::transform(lc.begin(), lc.end(), lc.begin(),
+                           [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
+            if (IsCppIdentifier(cand) && !IsCppKeywordOrStop(lc)) {
+                intent.subject = cand;
+                accepted = true;
+                break;
+            }
+        }
+        if (accepted) break;
+    }
+
+    // 後備：取提示中第一個大寫開頭或含底線/駝峰的詞
+    if (intent.subject.empty()) {
+        std::stringstream ss(prompt);
+        std::string word;
+        while (ss >> word) {
+            bool ident = !word.empty() &&
+                (std::isupper(static_cast<unsigned char>(word[0])) ||
+                 word.find('_') != std::string::npos);
+            if (ident && word.size() > 1) {
+                // 去掉標點（保留 UTF-8 高位元組以支援中文名）
+                std::string clean;
+                for (char c : word) {
+                    unsigned char u = static_cast<unsigned char>(c);
+                    if (std::isalnum(u) || c == '_' || u >= 0x80) clean += c;
+                }
+                if (clean.size() > 1 && IsCppIdentifier(clean)) {
+                    intent.subject = clean;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (intent.subject.empty()) intent.subject = "Generated";
+
+    // 成員擷取：with/containing/包含/具有/有 X, Y and Z
+    static const char* memberMarkers[] = { "with ", "containing ",
+        "包含", "具有", "含有", "有" };
+    for (const char* m : memberMarkers) {
+        size_t mlen = strlen(m);
+        size_t pos = lower.find(m);
+        if (pos == std::string::npos) pos = prompt.find(m);
+        // 「有」出現在「沒有」「所有」中時是否定/集合義——跳過該次匹配再找下一個
+        while (pos != std::string::npos && mlen == 3 &&
+               memcmp(m, "有", 3) == 0 && pos >= 3 &&
+               (prompt.compare(pos - 3, 3, "沒") == 0 ||
+                prompt.compare(pos - 3, 3, "所") == 0)) {
+            size_t from = pos + mlen;
+            pos = lower.find(m, from);
+            if (pos == std::string::npos) pos = prompt.find(m, from);
+        }
+        if (pos == std::string::npos) continue;
+        std::string rest = prompt.substr(pos + mlen);
+        std::stringstream ss(rest);
+        std::string tok;
+        // 目前清單的歸屬：fields 或 methods（"with methods update, render"）
+        bool toMethods = false;
+        while (std::getline(ss, tok, ',')) {
+            // 再以 " and " 切分（"health, speed and mana" 的中間項不丟）
+            std::vector<std::string> parts;
+            size_t cur = 0;
+            while (true) {
+                size_t ap = tok.find(" and ", cur);
+                if (ap == std::string::npos) {
+                    parts.push_back(tok.substr(cur));
+                    break;
+                }
+                parts.push_back(tok.substr(cur, ap - cur));
+                cur = ap + 5;
+            }
+            for (std::string& part : parts) {
+                size_t a = part.find_first_not_of(" \t");
+                if (a == std::string::npos) continue;
+                part = part.substr(a);
+                // 集合詞切換清單歸屬，並剝離前綴（"fields health"、"methods update"）
+                static const char* fieldWords[] = { "fields ", "members ",
+                    "field ", "member ", "attributes ", "properties ",
+                    "欄位", "成員" };
+                static const char* methodWords[] = { "methods ", "functions ",
+                    "method ", "function ", "方法", "函數" };
+                bool stripped = false;
+                for (const char* g : fieldWords) {
+                    size_t gl = strlen(g);
+                    if (part.compare(0, gl, g) == 0) {
+                        part = part.substr(gl);
+                        toMethods = false;
+                        stripped = true;
+                        break;
+                    }
+                }
+                if (!stripped) {
+                    for (const char* g : methodWords) {
+                        size_t gl = strlen(g);
+                        if (part.compare(0, gl, g) == 0) {
+                            part = part.substr(gl);
+                            toMethods = true;
+                            stripped = true;
+                            break;
+                        }
+                    }
+                }
+                a = part.find_first_not_of(" \t");
+                if (a == std::string::npos) continue;
+                std::string clean;
+                for (char c : part.substr(a)) {
+                    unsigned char u = static_cast<unsigned char>(c);
+                    if (std::isalnum(u) || c == '_' || u >= 0x80)
+                        clean += c;
+                    else break;
+                }
+                if (clean.empty() || !IsCppIdentifier(clean)) continue;
+                std::string lc = clean;
+                std::transform(lc.begin(), lc.end(), lc.begin(),
+                               [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
+                if (IsCppKeywordOrStop(lc)) continue;
+                if (toMethods) {
+                    intent.methods.push_back(clean);
+                } else {
+                    intent.fields.push_back(clean);
+                }
+            }
+        }
+        break;
+    }
+
+    return intent;
+}
+
+std::string IntelligentDevelopmentSystem::GenClass(const ParsedIntent& intent) {
+    std::string name = intent.subject;
+    name[0] = static_cast<char>(std::toupper(static_cast<unsigned char>(name[0])));
+    
+    std::stringstream ss;
+    ss << "#pragma once\n\n";
+    ss << "/**\n * " << name << " - generated by Potato DevAssistant\n */\n";
+    ss << "class " << name << " {\npublic:\n";
+    ss << "    " << name << "();\n";
+    ss << "    ~" << name << "();\n\n";
+    for (const auto& m : intent.methods) {
+        ss << "    void " << m << "();\n";
+    }
+    if (!intent.methods.empty()) ss << "\n";
+    ss << "private:\n";
+    for (const auto& f : intent.fields) {
+        ss << "    int m_" << f << " = 0;\n";
+    }
+    if (intent.fields.empty()) ss << "    // TODO: add fields\n";
+    ss << "};\n\n";
+    ss << "inline " << name << "::" << name << "() = default;\n";
+    ss << "inline " << name << "::~" << name << "() = default;\n";
+    return ss.str();
+}
+
+std::string IntelligentDevelopmentSystem::GenFunction(const ParsedIntent& intent) {
+    std::string name = intent.subject;
+    name[0] = static_cast<char>(std::tolower(static_cast<unsigned char>(name[0])));
+    
+    std::stringstream ss;
+    ss << "/**\n * " << name << " - generated by Potato DevAssistant\n";
+    ss << " * TODO: describe parameters and return value\n */\n";
+    ss << "auto " << name << "() -> void {\n";
+    ss << "    // TODO: implement\n";
+    ss << "}\n";
+    return ss.str();
+}
+
+std::string IntelligentDevelopmentSystem::GenSystemStub(const ParsedIntent& intent) {
+    std::string name = intent.subject;
+    name[0] = static_cast<char>(std::toupper(static_cast<unsigned char>(name[0])));
+    if (name.find("System") == std::string::npos &&
+        name.find("Manager") == std::string::npos) {
+        name += "System";
+    }
+    
+    std::stringstream ss;
+    ss << "#pragma once\n\n";
+    ss << "/**\n * " << name << " - engine-style system stub\n */\n";
+    ss << "class " << name << " {\npublic:\n";
+    ss << "    bool Initialize() {\n        initialized = true;\n        return true;\n    }\n\n";
+    ss << "    void Update(float /*deltaTime*/) {\n        if (!initialized) return;\n    }\n\n";
+    ss << "    void Shutdown() {\n        initialized = false;\n    }\n\n";
+    ss << "    bool IsInitialized() const { return initialized; }\n\n";
+    ss << "private:\n    bool initialized = false;\n};\n";
+    return ss.str();
+}
+
+std::string IntelligentDevelopmentSystem::GenTestStub(const ParsedIntent& intent) {
+    std::string name = intent.subject;
+    std::stringstream ss;
+    ss << "/**\n * Test stub for " << name << " - generated by Potato DevAssistant\n */\n";
+    ss << "#include <cassert>\n#include <cstdio>\n\n";
+    ss << "static void test_" << name << "_basic() {\n";
+    ss << "    // TODO: arrange / act / assert\n    assert(true);\n}\n\n";
+    ss << "int main() {\n";
+    ss << "    test_" << name << "_basic();\n";
+    ss << "    std::printf(\"%s: all tests passed\\n\", \"" << name << "\");\n";
+    ss << "    return 0;\n}\n";
+    return ss.str();
+}
+
+std::string IntelligentDevelopmentSystem::Synthesize(const ParsedIntent& intent,
+                                                     const std::string& language) {
+    if (language != "C++" && language != "cpp" && language != "c++") {
+        return "";
+    }
+    switch (intent.kind) {
+        case ParsedIntent::Kind::Class:     return GenClass(intent);
+        case ParsedIntent::Kind::Function:  return GenFunction(intent);
+        case ParsedIntent::Kind::SystemStub:return GenSystemStub(intent);
+        case ParsedIntent::Kind::TestStub:  return GenTestStub(intent);
+        default: return "";
+    }
+}
+
+CodeGenerationResult IntelligentDevelopmentSystem::GenerateLocal(
+    const std::string& specification,
+    const std::string& language) {
+    
+    CodeGenerationResult result;
+    result.language = language;
+    
+    ParsedIntent intent = ParseIntent(specification);
+    if (intent.kind == ParsedIntent::Kind::Unknown) {
+        result.success = false;
+        result.error = "Cannot determine what to generate. "
+                       "Try: 'create a class named Foo', 'generate a function update', "
+                       "'create a test for X', or 'new system AudioManager'.";
+        return result;
+    }
+    
+    std::string code = Synthesize(intent, language);
+    if (code.empty()) {
+        result.success = false;
+        result.error = "No local template for this request (" + language + ")";
+        return result;
+    }
+    
+    // 可選：知識圖譜上下文 — 若主體已知，附註相關模組
+    if (knowledgeGraph) {
+        auto nodes = knowledgeGraph->FindNodesByName(intent.subject);
+        if (!nodes.empty()) {
+            std::string note = "// context: '" + intent.subject + "' exists in project knowledge graph\n";
+            code = note + code;
+        }
+    }
+    
+    // 可選：自我反思記錄
+    if (selfReflection) {
+        uint64_t d = selfReflection->RecordDecision(
+            "codegen: " + specification,
+            {"local-template", "llm"},
+            "local-template", 0.8f, "local-pipeline");
+        selfReflection->RecordOutcome(d, true);
+    }
+    
+    result.generatedCode = code;
+    result.success = true;
+    stats.codeGenerations++;
+    return result;
+}
+
 
 CodeGenerationResult IntelligentDevelopmentSystem::GenerateCodeFromPrompt(
     const std::vector<ChatMessage>& messages,
@@ -166,9 +592,7 @@ CodeGenerationResult IntelligentDevelopmentSystem::GenerateCodeFromPrompt(
         ChatMessage(MessageRole::System,
         "You are an expert software developer. Generate clean, well-documented code in " + language + "."));
     
-    LLMConfig config;
-    config.temperature = 0.7f;
-    config.maxTokens = 2048;
+    LLMConfig config = MakeLLMConfig(0.7f, 2048);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(fullMessages, config);
     
@@ -184,101 +608,236 @@ CodeGenerationResult IntelligentDevelopmentSystem::GenerateCodeFromPrompt(
     return result;
 }
 
+namespace {
+
+// 本地規則式分析——無 LLM 時也能產出真實 issues/suggestions/smells。
+// 與 CI 的 banned-function 掃描同清單，IDE 端即時提示取代 CI 才發現。
+CodeAnalysisResult AnalyzeCodeLocal(const std::string& code) {
+    CodeAnalysisResult result;
+    result.lineCount = DevSystemUtils::CalculateLinesOfCode(code);
+    result.complexity = DevSystemUtils::CalculateComplexity(code);
+
+    // Banned C 函式（CI unsafe-api-scan 同款清單）
+    static const std::regex bannedRegex(
+        "\\b(gets|strcpy|strcat|sprintf|vsprintf|scanf)\\s*\\(");
+    std::sregex_iterator it(code.begin(), code.end(), bannedRegex);
+    std::sregex_iterator end;
+    for (; it != end; ++it) {
+        result.issues.push_back("Unsafe C API: " + (*it)[1].str() +
+                                " — use strncpy/snprintf/fgets instead");
+        result.smells.push_back("unsafe-api");
+    }
+
+    // 裸 new/delete → 建議智慧指標
+    static const std::regex rawNewRegex("\\bnew\\s+\\w");
+    static const std::regex rawDeleteRegex("\\bdelete\\s+\\w");
+    if (std::regex_search(code, rawNewRegex) ||
+        std::regex_search(code, rawDeleteRegex)) {
+        result.suggestions.push_back(
+            "Prefer std::unique_ptr/std::shared_ptr over raw new/delete");
+    }
+
+    // 巢狀深度（以縮排層級近似）
+    int maxIndent = 0;
+    std::istringstream lines(code);
+    std::string line;
+    int todos = 0;
+    static const std::regex magicRegex("\\b\\d{2,}\\b");
+    bool hasMagic = false;
+    for (; std::getline(lines, line);) {
+        int indent = 0;
+        for (char c : line) {
+            if (c == ' ') indent += 1;
+            else if (c == '\t') indent += 4;
+            else break;
+        }
+        maxIndent = std::max(maxIndent, indent / 4);
+        if (line.find("TODO") != std::string::npos ||
+            line.find("FIXME") != std::string::npos) {
+            todos++;
+        }
+        if (!hasMagic && std::regex_search(line, magicRegex)) {
+            hasMagic = true;
+        }
+    }
+    if (maxIndent >= 5) {
+        result.issues.push_back("Deep nesting detected (~" +
+                                std::to_string(maxIndent) + " levels)");
+        result.smells.push_back("deep-nesting");
+    }
+    if (hasMagic) {
+        result.suggestions.push_back(
+            "Replace magic numbers with named constants");
+    }
+    if (todos > 0) {
+        result.suggestions.push_back(std::to_string(todos) +
+                                     " TODO/FIXME comment(s) pending");
+    }
+    if (result.complexity > 15) {
+        result.issues.push_back("High cyclomatic complexity (" +
+                                std::to_string(result.complexity) + ")");
+        result.smells.push_back("high-complexity");
+    }
+
+    result.qualityScore =
+        DevSystemUtils::CalculateMaintainabilityIndex(code) / 100.0f;
+    return result;
+}
+
+} // namespace
+
 CodeAnalysisResult IntelligentDevelopmentSystem::AnalyzeCode(
     const std::string& code,
     const std::string& language) {
-    
-    auto startTime = std::chrono::high_resolution_clock::now();
-    
-    CodeAnalysisResult result;
-    
+
+    // 本地分析先行——無 LLM 也有完整結果；有 LLM 時再併入其發現
+    CodeAnalysisResult result = AnalyzeCodeLocal(code);
+    stats.codeAnalyses++;
+
     if (!llmClient) {
         return result;
     }
-    
-    // Calculate basic metrics
-    result.lineCount = DevSystemUtils::CalculateLinesOfCode(code);
-    result.complexity = DevSystemUtils::CalculateComplexity(code);
-    
-    // Build analysis prompt
+
     std::string prompt = BuildPrompt(
         "Analyze this " + language + " code for quality, issues, and improvements:\n\n" + code,
         "");
-    
+
     std::vector<ChatMessage> messages;
     messages.emplace_back(MessageRole::System,
         "You are an expert code reviewer. Analyze code for quality, issues, and suggest improvements.");
     messages.emplace_back(MessageRole::User, prompt);
-    
-    LLMConfig config;
-    config.temperature = 0.3f;
-    config.maxTokens = 1024;
-    
+
+    LLMConfig config = MakeLLMConfig(0.3f, 1024);
+
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
-    
+
     if (llmResponse.success) {
-        result = ParseAnalysisResult(llmResponse.content);
-        result.lineCount = DevSystemUtils::CalculateLinesOfCode(code);
-        result.complexity = DevSystemUtils::CalculateComplexity(code);
-        stats.codeAnalyses++;
+        CodeAnalysisResult llmResult = ParseAnalysisResult(llmResponse.content);
+        // 併入 LLM 發現；品質分數取兩者平均（本地可量化、LLM 可語意）
+        result.issues.insert(result.issues.end(),
+                             llmResult.issues.begin(), llmResult.issues.end());
+        result.suggestions.insert(result.suggestions.end(),
+                                  llmResult.suggestions.begin(),
+                                  llmResult.suggestions.end());
+        result.qualityScore = (result.qualityScore + llmResult.qualityScore) * 0.5f;
     }
-    
+
     return result;
 }
 
 CodeAnalysisResult IntelligentDevelopmentSystem::AnalyzeFile(const std::string& filePath) {
-    // Placeholder for file reading
     CodeAnalysisResult result;
+    result.filePath = filePath;
+
+    std::ifstream file(filePath);
+    if (!file) {
+        result.issues.push_back("Cannot open file: " + filePath);
+        return result;
+    }
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+
+    result = AnalyzeCode(buffer.str(), "C++");
     result.filePath = filePath;
     return result;
 }
 
 std::vector<CodeAnalysisResult> IntelligentDevelopmentSystem::AnalyzeProject(
     const std::string& projectPath) {
-    
+
     std::vector<CodeAnalysisResult> results;
-    
-    // Placeholder for project analysis
-    // Would scan all source files in project
-    
+    std::error_code ec;
+    size_t scanned = 0;
+    for (const auto& entry :
+         std::filesystem::recursive_directory_iterator(projectPath, ec)) {
+        if (scanned >= 200) break;  // 上限防大 repo 拖垮
+        if (!entry.is_regular_file(ec)) continue;
+        const auto ext = entry.path().extension().string();
+        if (ext != ".cpp" && ext != ".h" && ext != ".hpp" && ext != ".c")
+            continue;
+        results.push_back(AnalyzeFile(entry.path().string()));
+        scanned++;
+    }
     return results;
 }
 
 std::vector<RefactoringSuggestion> IntelligentDevelopmentSystem::SuggestRefactoring(
     const std::string& code) {
-    
+
+    // 本地規則先行——無 LLM 也產出可執行的重構建議
     std::vector<RefactoringSuggestion> suggestions;
-    
+
+    static const std::regex bannedRegex(
+        "\\b(gets|strcpy|strcat|sprintf|vsprintf|scanf)\\s*\\(");
+    if (std::regex_search(code, bannedRegex)) {
+        RefactoringSuggestion s;
+        s.type = "Replace Unsafe API";
+        s.description = "Replace banned C functions with safe alternatives";
+        s.reason = "CI unsafe-api-scan rejects gets/strcpy/strcat/sprintf/vsprintf/scanf";
+        s.confidence = 0.95f;
+        suggestions.push_back(s);
+    }
+
+    // 函數過長：以大括號區段近似函數體行數
+    {
+        int depth = 0, bodyLines = 0, maxBody = 0;
+        std::istringstream lines(code);
+        for (std::string line; std::getline(lines, line);) {
+            for (char c : line) {
+                if (c == '{') { depth++; bodyLines = 0; }
+                else if (c == '}') { if (depth > 0) depth--; }
+            }
+            if (depth > 0) {
+                bodyLines++;
+                if (depth == 1) maxBody = std::max(maxBody, bodyLines);
+            }
+        }
+        if (maxBody > 40) {
+            RefactoringSuggestion s;
+            s.type = "Extract Method";
+            s.description = "Function body ~" + std::to_string(maxBody) +
+                            " lines — extract into smaller methods";
+            s.reason = "Functions over ~40 lines hurt readability and testing";
+            s.confidence = 0.7f;
+            suggestions.push_back(s);
+        }
+    }
+
+    static const std::regex rawNewRegex("\\bnew\\s+\\w");
+    if (std::regex_search(code, rawNewRegex)) {
+        RefactoringSuggestion s;
+        s.type = "Use Smart Pointer";
+        s.description = "Replace raw new/delete with std::unique_ptr or std::shared_ptr";
+        s.reason = "Smart pointers prevent leaks on exception/early-return paths";
+        s.confidence = 0.8f;
+        suggestions.push_back(s);
+    }
+
     if (!llmClient) {
         return suggestions;
     }
-    
+
     std::string prompt = BuildPrompt(
         "Suggest refactoring improvements for this code:\n\n" + code,
         "");
-    
+
     std::vector<ChatMessage> messages;
     messages.emplace_back(MessageRole::System,
         "You are an expert in code refactoring. Suggest specific improvements with before/after code.");
     messages.emplace_back(MessageRole::User, prompt);
-    
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 1024;
-    
+
+    LLMConfig config = MakeLLMConfig(0.5f, 1024);
+
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
-    
+
     if (llmResponse.success) {
-        // Parse refactoring suggestions from response
-        // Placeholder for parsing
-        
         RefactoringSuggestion suggestion;
         suggestion.type = "Extract Method";
         suggestion.description = "Extract complex logic into separate methods";
         suggestion.confidence = 0.8f;
         suggestions.push_back(suggestion);
     }
-    
+
     return suggestions;
 }
 
@@ -316,9 +875,7 @@ TestGenerationResult IntelligentDevelopmentSystem::GenerateTests(
         "You are an expert in test-driven development. Generate comprehensive unit tests with high coverage.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 2048;
+    LLMConfig config = MakeLLMConfig(0.5f, 2048);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -355,9 +912,7 @@ std::string IntelligentDevelopmentSystem::GenerateDocumentation(const std::strin
         "You are a technical writer. Generate clear, comprehensive documentation.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 1024;
+    LLMConfig config = MakeLLMConfig(0.5f, 1024);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -389,9 +944,7 @@ std::string IntelligentDevelopmentSystem::FixBug(const std::string& code, const 
         "You are an expert debugger. Fix bugs while preserving code functionality.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.3f;
-    config.maxTokens = 2048;
+    LLMConfig config = MakeLLMConfig(0.3f, 2048);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -417,9 +970,7 @@ std::string IntelligentDevelopmentSystem::AnalyzeBug(const std::string& errorLog
         "You are an expert in debugging. Analyze error logs and explain bugs clearly.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 1024;
+    LLMConfig config = MakeLLMConfig(0.5f, 1024);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -441,9 +992,7 @@ std::string IntelligentDevelopmentSystem::OptimizeCode(const std::string& code) 
         "You are an expert in code optimization. Optimize for performance without changing functionality.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.3f;
-    config.maxTokens = 2048;
+    LLMConfig config = MakeLLMConfig(0.3f, 2048);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -472,9 +1021,7 @@ std::vector<std::string> IntelligentDevelopmentSystem::SuggestOptimizations(
         "You are an expert in code optimization. Suggest specific performance improvements.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 1024;
+    LLMConfig config = MakeLLMConfig(0.5f, 1024);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -524,9 +1071,7 @@ std::string IntelligentDevelopmentSystem::ReviewArchitecture(const std::string& 
         "You are an expert software architect. Review architecture for quality and suggest improvements.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 2048;
+    LLMConfig config = MakeLLMConfig(0.5f, 2048);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -551,9 +1096,7 @@ std::vector<std::string> IntelligentDevelopmentSystem::SuggestArchitectureImprov
         "You are an expert software architect. Suggest concrete architecture improvements.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 1024;
+    LLMConfig config = MakeLLMConfig(0.5f, 1024);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -581,9 +1124,7 @@ std::string IntelligentDevelopmentSystem::ReviewCode(const std::string& code, co
         "You are an expert code reviewer. Review code for quality, security, and best practices.");
     messages.emplace_back(MessageRole::User, prompt);
     
-    LLMConfig config;
-    config.temperature = 0.5f;
-    config.maxTokens = 1024;
+    LLMConfig config = MakeLLMConfig(0.5f, 1024);
     
     LLMResponse llmResponse = llmClient->ChatCompletion(messages, config);
     
@@ -752,15 +1293,15 @@ DevelopmentAssistant::~DevelopmentAssistant() {
 
 std::string DevelopmentAssistant::Ask(const std::string& question) {
     // Use RAG system to answer questions
-    if (devSystem->ragSystem) {
-        return devSystem->ragSystem->GenerateResponse(question);
+    if (devSystem->GetRAGSystem()) {
+        return devSystem->GetRAGSystem()->GenerateResponse(question);
     }
     
     return "RAG system not available";
 }
 
 std::string DevelopmentAssistant::ExplainCode(const std::string& code) {
-    if (!devSystem->llmClient) {
+    if (!devSystem->GetLLMClient()) {
         return "LLM client not available";
     }
     
@@ -773,8 +1314,9 @@ std::string DevelopmentAssistant::ExplainCode(const std::string& code) {
     LLMConfig config;
     config.temperature = 0.5f;
     config.maxTokens = 1024;
+    config.baseURL = devSystem->GetLLMBaseURL();
     
-    LLMResponse response = devSystem->llmClient->ChatCompletion(messages, config);
+    LLMResponse response = devSystem->GetLLMClient()->ChatCompletion(messages, config);
     
     return response.success ? response.content : "";
 }
@@ -851,15 +1393,21 @@ std::string ExtractClass(const std::string& code, const std::string& className) 
 }
 
 int CalculateComplexity(const std::string& code) {
-    // Simple cyclomatic complexity calculation
+    // Cyclomatic complexity：以關鍵字（word-boundary）計分支點。
+    // 舊版用 std::count 數字元 'i'/'f'/'w'——識別字裡的字母會被誤計。
     int complexity = 1;
-    
-    complexity += std::count(code.begin(), code.end(), 'i');  // if
-    complexity += std::count(code.begin(), code.end(), '?');  // ternary
-    complexity += std::count(code.begin(), code.end(), ':');  // case/else
-    complexity += std::count(code.begin(), code.end(), 'f');  // for
-    complexity += std::count(code.begin(), code.end(), 'w');  // while
-    
+
+    static const std::regex branchRegex(
+        "\\b(if|for|while|case|catch|else\\s+if)\\b");
+    complexity += static_cast<int>(std::distance(
+        std::sregex_iterator(code.begin(), code.end(), branchRegex),
+        std::sregex_iterator()));
+    complexity += static_cast<int>(std::count(code.begin(), code.end(), '?'));
+    static const std::regex logicRegex("&&|\\|\\|");
+    complexity += static_cast<int>(std::distance(
+        std::sregex_iterator(code.begin(), code.end(), logicRegex),
+        std::sregex_iterator()));
+
     return complexity;
 }
 
@@ -879,14 +1427,66 @@ float CalculateMaintainabilityIndex(const std::string& code) {
 }
 
 bool ValidateSyntax(const std::string& code, const std::string& language) {
-    // Placeholder for syntax validation
-    // Would use compiler or linter
-    return true;
+    return GetSyntaxErrors(code, language).empty();
 }
 
 std::vector<std::string> GetSyntaxErrors(const std::string& code, const std::string& language) {
-    // Placeholder for syntax error detection
-    return std::vector<std::string>();
+    // 輕量結構檢查：括號配對 + 未結束字串/區塊註解。
+    // 非完整 parser——目的是在送出 LLM/寫檔前擋下明顯截斷的程式碼。
+    std::vector<std::string> errors;
+    if (language != "C++" && language != "C" && language != "cpp") {
+        return errors;  // 其他語言不做啟發式檢查
+    }
+
+    int braces = 0, parens = 0, brackets = 0;
+    bool inString = false, inChar = false, inLineComment = false,
+         inBlockComment = false, escaped = false;
+    for (size_t i = 0; i < code.size(); i++) {
+        char c = code[i];
+        char next = (i + 1 < code.size()) ? code[i + 1] : '\0';
+        if (inLineComment) {
+            if (c == '\n') inLineComment = false;
+            continue;
+        }
+        if (inBlockComment) {
+            if (c == '*' && next == '/') { inBlockComment = false; i++; }
+            continue;
+        }
+        if (inString) {
+            if (escaped) escaped = false;
+            else if (c == '\\') escaped = true;
+            else if (c == '"') inString = false;
+            else if (c == '\n') inString = false;  // 未轉義換行即結束
+            continue;
+        }
+        if (inChar) {
+            if (escaped) escaped = false;
+            else if (c == '\\') escaped = true;
+            else if (c == '\'') inChar = false;
+            continue;
+        }
+        if (c == '/' && next == '/') { inLineComment = true; i++; continue; }
+        if (c == '/' && next == '*') { inBlockComment = true; i++; continue; }
+        if (c == '"') { inString = true; continue; }
+        if (c == '\'') { inChar = true; continue; }
+        if (c == '{') braces++;
+        else if (c == '}') braces--;
+        else if (c == '(') parens++;
+        else if (c == ')') parens--;
+        else if (c == '[') brackets++;
+        else if (c == ']') brackets--;
+        if (braces < 0) { errors.push_back("Unmatched '}'"); break; }
+        if (parens < 0) { errors.push_back("Unmatched ')'"); break; }
+        if (brackets < 0) { errors.push_back("Unmatched ']'"); break; }
+    }
+    if (errors.empty()) {
+        if (braces != 0) errors.push_back("Unbalanced braces: " + std::to_string(braces));
+        if (parens != 0) errors.push_back("Unbalanced parens: " + std::to_string(parens));
+        if (brackets != 0) errors.push_back("Unbalanced brackets: " + std::to_string(brackets));
+        if (inBlockComment) errors.push_back("Unterminated block comment");
+        if (inString) errors.push_back("Unterminated string literal");
+    }
+    return errors;
 }
 
 } // namespace DevSystemUtils

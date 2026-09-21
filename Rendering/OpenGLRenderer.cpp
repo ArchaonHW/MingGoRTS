@@ -1,6 +1,8 @@
 #include "OpenGLRenderer.h"
 #include "Logging/Logger.h"
+#include "Platform/GLFWSharedContext.h"
 #include <iostream>
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
@@ -213,6 +215,9 @@ void OpenGLRenderer::SetConfig(const RendererConfig& cfg) {
 }
 
 bool OpenGLRenderer::ShouldClose() const {
+    if (!windowHandle) {
+        return true; // 無窗口視為應關閉,避免 glfwWindowShouldClose(nullptr) UB
+    }
     return glfwWindowShouldClose(static_cast<GLFWwindow*>(windowHandle));
 }
 
@@ -268,7 +273,8 @@ void OpenGLRenderer::SetupOpenGL() {
 
 void OpenGLRenderer::ShutdownGLFW() {
     if (windowHandle) {
-        glfwDestroyWindow(static_cast<GLFWwindow*>(windowHandle));
+        // 走 DestroyGLFWWindow 釋放共享 context,避免 context map 殘留 stale entry
+        DestroyGLFWWindow(static_cast<GLFWwindow*>(windowHandle));
         windowHandle = nullptr;
     }
     
@@ -402,41 +408,124 @@ VertexArray::VertexArray()
     , vertexCount(0)
     , indexCount(0)
 {
-    glGenVertexArrays(1, &vao);
-    glGenBuffers(1, &vbo);
-    glGenBuffers(1, &ebo);
+    // GL 物件延遲到首次使用時才建立（EnsureCreated），
+    // 允許在 GL context 建立前先建構 Mesh/Model
 }
 
 VertexArray::~VertexArray() {
+    ReleaseGLObjects();
+}
+
+void VertexArray::ReleaseGLObjects() {
+    if (glDeleteBuffers == nullptr) return; // GL 未初始化
     if (ebo) glDeleteBuffers(1, &ebo);
     if (vbo) glDeleteBuffers(1, &vbo);
     if (vao) glDeleteVertexArrays(1, &vao);
+    vao = vbo = ebo = 0;
+    buffersUploaded = false;
+}
+
+void VertexArray::EnsureCreated() const {
+    // glad 函式指標未載入（無 GL context）時直接返回——
+    // 允許 headless 建構 Mesh/Model，繪製時由 Bind 再補建
+    if (glGenVertexArrays == nullptr || glBindVertexArray == nullptr ||
+        glBufferData == nullptr) {
+        return;
+    }
+    if (vao == 0) {
+        glGenVertexArrays(1, &vao);
+    }
+    if (vbo == 0) {
+        glGenBuffers(1, &vbo);
+    }
+    if (ebo == 0) {
+        glGenBuffers(1, &ebo);
+    }
+    // 重放 headless 期間暫存的 buffer/attribute（任何一類 pending 都要重放）
+    if (!buffersUploaded && vao != 0 &&
+        (!pendingVertexData.empty() || !pendingIndexData.empty() ||
+         !pendingAttribs.empty())) {
+        glBindVertexArray(vao);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, pendingVertexData.size(),
+                     pendingVertexData.data(), pendingVertexUsage);
+        if (!pendingIndexData.empty()) {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                         pendingIndexData.size() * sizeof(uint32),
+                         pendingIndexData.data(), pendingIndexUsage);
+        }
+        for (const auto& a : pendingAttribs) {
+            glVertexAttribPointer(a.index, a.size, GL_FLOAT, GL_FALSE,
+                                  a.stride, reinterpret_cast<void*>(a.offset));
+            glEnableVertexAttribArray(a.index);
+        }
+        glBindVertexArray(0);
+        buffersUploaded = true;
+        pendingVertexData.clear();
+        pendingIndexData.clear();
+        pendingAttribs.clear();
+    }
 }
 
 void VertexArray::Bind() const {
+    EnsureCreated();
+    if (vao == 0 || !buffersUploaded) return;
     glBindVertexArray(vao);
 }
 
 void VertexArray::Unbind() const {
+    if (glBindVertexArray == nullptr) return;
     glBindVertexArray(0);
 }
 
 void VertexArray::AddVertexBuffer(const void* data, size_t size, uint32 usage) {
+    EnsureCreated();
+    if (vao == 0) {
+        // 無 GL context：暫存，等 EnsureCreated 重放；空資料不暫存
+        if (data != nullptr && size > 0) {
+            const auto* bytes = static_cast<const unsigned char*>(data);
+            pendingVertexData.assign(bytes, bytes + size);
+            pendingVertexUsage = usage;
+        } else {
+            pendingVertexData.clear();
+        }
+        buffersUploaded = false;
+        return;
+    }
+    if (data == nullptr || size == 0) return;
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, size, data, usage);
+    buffersUploaded = true;
     glBindVertexArray(0);
 }
 
 void VertexArray::AddIndexBuffer(const uint32* indices, size_t count, uint32 usage) {
+    EnsureCreated();
+    indexCount = static_cast<uint32>(count);
+    if (vao == 0) {
+        if (indices != nullptr && count > 0) {
+            pendingIndexData.assign(indices, indices + count);
+            pendingIndexUsage = usage;
+        } else {
+            pendingIndexData.clear();
+        }
+        return;
+    }
+    if (indices == nullptr || count == 0) return;
     glBindVertexArray(vao);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32), indices, usage);
-    indexCount = static_cast<uint32>(count);
     glBindVertexArray(0);
 }
 
 void VertexArray::SetVertexAttribute(uint32 index, int size, int stride, size_t offset) {
+    EnsureCreated();
+    if (vao == 0) {
+        pendingAttribs.push_back({index, size, stride, offset});
+        return;
+    }
     glBindVertexArray(vao);
     glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(offset));
     glEnableVertexAttribArray(index);
@@ -480,14 +569,26 @@ void Mesh::Unbind() const {
 }
 
 void Mesh::Draw() const {
+    if (indices.empty() && vertices.empty()) return;
     vertexArray.Bind();
-    glDrawElements(GL_TRIANGLES, static_cast<int>(indices.size()), GL_UNSIGNED_INT, 0);
+    if (!vertexArray.IsUploaded()) return; // headless/未上傳：不繪製（避免畫到外部 VAO）
+    if (!indices.empty()) {
+        glDrawElements(GL_TRIANGLES, static_cast<int>(indices.size()), GL_UNSIGNED_INT, 0);
+    } else {
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertices.size()));
+    }
     vertexArray.Unbind();
 }
 
 void Mesh::DrawInstanced(int instanceCount) const {
+    if (instanceCount <= 0 || (indices.empty() && vertices.empty())) return;
     vertexArray.Bind();
-    glDrawElementsInstanced(GL_TRIANGLES, static_cast<int>(indices.size()), GL_UNSIGNED_INT, 0, instanceCount);
+    if (!vertexArray.IsUploaded()) return;
+    if (!indices.empty()) {
+        glDrawElementsInstanced(GL_TRIANGLES, static_cast<int>(indices.size()), GL_UNSIGNED_INT, 0, instanceCount);
+    } else {
+        glDrawArraysInstanced(GL_TRIANGLES, 0, static_cast<int>(vertices.size()), instanceCount);
+    }
     vertexArray.Unbind();
 }
 
@@ -504,7 +605,7 @@ Texture::Texture()
 }
 
 Texture::~Texture() {
-    if (textureID) {
+    if (textureID && glDeleteTextures != nullptr) {
         glDeleteTextures(1, &textureID);
     }
 }
@@ -512,7 +613,16 @@ Texture::~Texture() {
 bool Texture::LoadFromFile(const std::string& path) {
     // 簡化實現：實際應該使用 stb_image 加載
     std::cout << "Loading texture from file: " << path << std::endl;
-    
+
+    if (glGenTextures == nullptr) {
+        // headless：無 GL context——暫存路徑，首次 Bind 時由 EnsureUploaded 補載
+        pendingPath = path;
+        return true;
+    }
+
+    pendingPixels.clear();
+    pendingPath.clear();
+
     // 創建紋理
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_2D, textureID);
@@ -531,37 +641,74 @@ bool Texture::LoadFromFile(const std::string& path) {
 }
 
 bool Texture::LoadFromMemory(const unsigned char* data, int w, int h, int ch) {
+    // 只支援 1/3/4 channel；ch==2 或其他值會造成 driver 越界讀
+    if (data == nullptr || w <= 0 || h <= 0 ||
+        (ch != 1 && ch != 3 && ch != 4)) {
+        return false;
+    }
     width = w;
     height = h;
     channels = ch;
-    
+
+    if (glGenTextures == nullptr) {
+        // headless：暫存像素，首次 Bind 時補上傳
+        const size_t sz = static_cast<size_t>(w) * h * ch;
+        pendingPixels.assign(data, data + sz);
+        return true;
+    }
+
+    // 清掉之前的暫存狀態，避免 EnsureUploaded 重放舊像素
+    pendingPixels.clear();
+    pendingPath.clear();
+
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_2D, textureID);
-    
+
     GLenum format = GL_RGB;
     if (channels == 4) format = GL_RGBA;
     else if (channels == 1) format = GL_RED;
-    
+
     glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-    
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
+
     return true;
 }
 
+void Texture::EnsureUploaded() const {
+    if (glGenTextures == nullptr) return;
+    // headless LoadFromFile：context 就緒後補做真正的檔案載入
+    if (textureID == 0 && !pendingPath.empty()) {
+        std::string path;
+        path.swap(pendingPath);
+        const_cast<Texture*>(this)->LoadFromFile(path);
+        return;
+    }
+    if (pendingPixels.empty()) return;
+    // 補上傳：複用 LoadFromMemory 的寫法（會清掉 pendingPixels）
+    std::vector<unsigned char> pixels;
+    pixels.swap(pendingPixels);
+    const_cast<Texture*>(this)->LoadFromMemory(pixels.data(), width, height,
+                                             channels);
+}
+
 void Texture::Bind(uint32 unit) const {
+    EnsureUploaded();
+    if (textureID == 0 || glActiveTexture == nullptr) return;
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
 void Texture::Unbind() const {
+    if (glBindTexture == nullptr) return;
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Texture::SetWrapMode(WrapMode mode) {
+    if (glBindTexture == nullptr || textureID == 0) return;
     glBindTexture(GL_TEXTURE_2D, textureID);
     
     GLenum wrap = GL_REPEAT;
@@ -576,6 +723,7 @@ void Texture::SetWrapMode(WrapMode mode) {
 }
 
 void Texture::SetFilterMode(FilterMode mode) {
+    if (glBindTexture == nullptr || textureID == 0) return;
     glBindTexture(GL_TEXTURE_2D, textureID);
     
     GLenum minFilter = GL_LINEAR;

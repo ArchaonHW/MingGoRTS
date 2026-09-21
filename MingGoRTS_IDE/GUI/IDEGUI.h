@@ -8,11 +8,14 @@
 #include "../IDECore.h"
 #include "../AIIntegration.h"
 #include "../IntelligentSuggestion.h"
+#include "../../AI/IntelligentDevelopmentSystem.h"
 #include "I18N.h"
 #include "imgui.h"
 #include <string>
 #include <vector>
 #include <memory>
+#include <future>
+#include <unordered_map>
 
 namespace MingGoRTSIDE {
 
@@ -104,6 +107,14 @@ struct IDEGUIState {
     // AI Agent panel state
     char aiInputBuffer[1024];
     std::vector<std::string> aiConversation;
+    // chat 背景處理：submit 投到 worker，PollAIChatResult 每幀輪詢寫回——
+    // 外部 LLM 連線（OpenAI/Anthropic/Ollama）時不阻塞 UI thread。
+    // pendingIndex 指 conversation 裡 "thinking" placeholder 的位置，
+    // 完成時原地替換以保訊息順序。
+    std::future<std::string> aiChatFuture;
+    bool aiChatPending = false;
+    int aiChatPendingIndex = -1;
+    bool aiScrollToBottom = false;
     
     // Terminal state
     char terminalBuffer[1024];
@@ -180,6 +191,19 @@ struct IDEGUIState {
     char developmentPrompt[4096];
     char developmentResponse[8192];
     bool developmentProcessing = false;
+    // 背景生成任務（非阻塞 UI）；worker 完成後在 render 迴圈輪詢寫回
+    std::future<Potato::AI::CodeGenerationResult> devGenFuture;
+    
+    // Card Gallery（武將名冊）state
+    bool showCardGallery = false;
+    int cardGallerySelected = -1;
+
+    // AI / LLM 設定（Settings 面板可覆寫；預設讀自 POTATO_LLM_* 環境變數）
+    char llmProvider[64];
+    char llmModel[128];
+    char llmBaseUrl[256];
+    char llmApiKey[256];
+    char llmAgent[128];
 };
 
 /**
@@ -280,6 +304,8 @@ public:
     
     // Intelligent Development System Integration
     void GenerateCodeFromPrompt();
+    void PollDevelopmentResult();
+    void ConfigureDevSystemLLM();
     void AnalyzeCodeWithAI();
     void GenerateTestsWithAI();
     void GenerateDocumentationWithAI();
@@ -287,6 +313,10 @@ public:
     void OptimizeCodeWithAI();
     void ReviewCodeWithAI();
     void ShowDevelopmentAssistant();
+    void RenderDevelopmentAssistant();
+
+    // Card Gallery（武將名冊）：瀏覽 assets/cards 角色卡 + 立繪上屏
+    void RenderCardGallery();
     
     // File System
     std::vector<std::string> ScanDirectory(const std::string& path);
@@ -303,6 +333,7 @@ public:
     void HandleFileOpen(const std::string& filePath);
     void HandleFileSave(const std::string& filePath);
     void HandleAISubmit();
+    void PollAIChatResult();
     void HandleTerminalCommand();
     void HandleKeyboardShortcuts();
     
@@ -357,12 +388,27 @@ private:
     void DetectSyntaxErrors();
     void DetectStyleIssues();
     void DetectPotentialBugs();
-    std::vector<std::string> GetCppKeywords();
-    std::vector<std::string> GetStandardLibraryFunctions();
-    
-    // Autocomplete helpers
-    std::vector<std::string> GetSuggestionsForContext(const std::string& context);
-    bool ShouldShowAutocomplete();
+
+    // Card Gallery internals
+    struct CardEntry {
+        std::string jsonPath;
+        std::string id, name, epithet, rarity, faction, artRel;
+    };
+    struct CardTexture {
+        unsigned int id = 0;   // GLuint；不透過 GL 標頭保持此檔純 C++
+        int w = 0, h = 0;
+        bool failed = false;   // 解碼/上傳失敗——避免每帧重試
+    };
+    std::vector<CardEntry> cardEntries;
+    bool cardListScanned = false;
+    std::unordered_map<std::string, CardTexture> cardTextures;
+    std::future<int> cardBakeFuture;   // 背景「重新產生立繪」任務
+    int cardBakeTarget = -1;
+    void ScanCardGallery();
+    std::string ResolveCardArtPath(const CardEntry& card) const;
+    const CardTexture* EnsureCardTexture(const std::string& path);
+    void InvalidateCardTexture(const std::string& path);
+    void ReleaseCardTextures();
 };
 
 } // namespace MingGoRTSIDE

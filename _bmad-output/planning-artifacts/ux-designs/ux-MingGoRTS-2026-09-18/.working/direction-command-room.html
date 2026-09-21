@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>MingGoRTS · 方向二 · 軍電作戰室 command-room</title>
+<style>
+/* ==========================================================================
+   方向二 · 軍電作戰室 COMMAND-ROOM
+   Rationale: 玩家不在戰場,而在一間深夜的作戰室裡——戰場是中央那張
+   黃銅鑲邊的兵棋桌,所有 HUD 都是電報紙條、卷宗夾與印章。
+   事件不是「訊息」而是「剛送達的軍電」,命令不是按鈕而是蓋下去的戳。
+   密度中等、材質厚重,每一件東西都像能拿起來掂量。
+   ==========================================================================
+   PALETTE
+   wood       #241a12  深色胡桃木
+   wood-hi    #3a2a1a  木紋亮部(燈光暈)
+   wood-dk    #140d08  房間暗角
+   brass      #8a6a3a  黃銅框/件
+   brass-hi   #d8b878  黃銅高光
+   brass-dk   #5a4322  黃銅暗面
+   slip       #e6d9b8  電報/卷宗紙
+   slip-dk    #c9b98f  紙緣舊色
+   ink        #2e2a20  紙上墨字
+   seal       #a8322a  印章紅
+   estop      #a02020  急停鈕瓷紅
+   map        #c9b489  兵棋桌地圖紙
+   river      #6a7a80  河道藍灰
+   friendly   #4c5a44  友軍瓷釉綠
+   cloud      #6a4a8c  敵蹤紫墨雲
+   enemy      #7a3a2a  已確認敵軍紅褐
+   ========================================================================== */
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:#0c0805;}
+body{font-family:"PMingLiU","Noto Serif TC","Songti TC",serif;color:#2e2a20;}
+.stage{position:relative;width:1920px;height:1080px;margin:0 auto;overflow:hidden;
+  background:
+    radial-gradient(ellipse 1500px 850px at 50% 46%, #3a2a1a 0%, #241a12 55%, #140d08 100%); /* wood 燈暈 */
+}
+/* 木紋直線(檯面) */
+.stage::before{content:"";position:absolute;inset:0;opacity:.35;
+  background:repeating-linear-gradient(90deg, rgba(0,0,0,.28) 0 2px, transparent 2px 9px,
+    rgba(216,184,120,.05) 9px 10px, transparent 10px 17px);}
+.stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 160px rgba(0,0,0,.75);}
+
+/* ---------- 頂部黃銅橫杆 ---------- */
+.rail{position:absolute;left:0;right:0;top:0;height:76px;
+  background:linear-gradient(180deg,#3f2f1c,#2b1f11 70%,#241a10);
+  border-bottom:3px solid #8a6a3a;                                                   /* brass */
+  box-shadow:0 1px 0 #d8b878, 0 8px 24px rgba(0,0,0,.55);                            /* brass-hi line */
+  display:flex;align-items:center;padding:0 40px;gap:30px;}
+.t-slip{background:#e6d9b8;padding:8px 18px;box-shadow:0 3px 6px rgba(0,0,0,.5);
+  clip-path:polygon(0 0,100% 0,100% 78%,97% 100%,3% 100%,0 80%);                     /* 撕邊電報紙 */
+  transform:rotate(-.6deg);}
+.t-slip .h{font-size:10px;letter-spacing:.4em;color:#8a6a3a;border-bottom:1px dashed #8a6a3a;
+  padding-bottom:2px;margin-bottom:3px;}
+.t-slip .m{font-size:19px;font-weight:bold;letter-spacing:.2em;}
+.clock-plate{background:linear-gradient(180deg,#a8843c,#6a4f28);padding:3px;
+  box-shadow:0 3px 8px rgba(0,0,0,.6), inset 0 1px 0 #d8b878;}
+.clock-plate .inner{background:#1a130c;color:#d8b878;font-size:24px;font-weight:bold;
+  letter-spacing:.15em;padding:7px 20px;font-family:"PMingLiU",serif;}
+.rail .lbl{font-size:12px;color:#a8843c;letter-spacing:.25em;align-self:center;}
+.speed-chip{background:#1a130c;border:1.5px solid #8a6a3a;color:#d8b878;
+  font-size:17px;padding:6px 14px;letter-spacing:.1em;}
+.pause-slip{background:#e6d9b8;padding:6px 14px;font-size:12px;letter-spacing:.15em;
+  color:#2e2a20;box-shadow:0 3px 6px rgba(0,0,0,.5);transform:rotate(.7deg);
+  align-self:center;}
+.pause-slip b{border:1.5px solid #2e2a20;padding:0 6px;border-radius:3px;}
+
+/* ---------- 右上資源黃銅牌 ---------- */
+.res-plate{position:absolute;right:36px;top:96px;display:flex;align-items:center;gap:22px;
+  background:linear-gradient(180deg,#3a2c18,#2a1e10);padding:12px 22px;
+  border:2px solid #8a6a3a;box-shadow:0 5px 14px rgba(0,0,0,.6), inset 0 1px 0 #d8b878;}
+.intel-slip{background:#e6d9b8;padding:6px 16px;transform:rotate(-1deg);
+  box-shadow:0 2px 4px rgba(0,0,0,.5);text-align:center;}
+.intel-slip .h{font-size:10px;letter-spacing:.35em;color:#8a6a3a;}
+.intel-slip .v{font-size:20px;font-weight:bold;}
+.cp-studs{display:flex;gap:9px;align-items:center;}
+.cp-studs .lb{font-size:12px;color:#a8843c;letter-spacing:.2em;margin-right:4px;}
+.stud{width:20px;height:20px;border-radius:50%;
+  background:radial-gradient(circle at 32% 28%,#e8cf95,#8a6a3a 60%,#5a4322);           /* brass stud */
+  box-shadow:0 2px 3px rgba(0,0,0,.6), inset 0 -2px 3px rgba(0,0,0,.4);}
+.estop-btn{width:62px;height:62px;border-radius:50%;position:relative;
+  background:radial-gradient(circle at 35% 30%,#c23838,#a02020 55%,#701414);           /* estop */
+  box-shadow:0 0 0 6px #8a6a3a, 0 0 0 8px #5a4322, 0 6px 12px rgba(0,0,0,.7),
+    inset 0 -4px 8px rgba(0,0,0,.45);
+  color:#f4e6c8;display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:bold;letter-spacing:.08em;}
+
+/* ---------- 左側卷宗夾(部隊名冊) ---------- */
+.dossier{position:absolute;left:40px;top:200px;width:262px;}
+.folder{position:relative;background:#e6d9b8;margin-bottom:20px;padding:14px 16px 13px 20px;
+  box-shadow:0 5px 12px rgba(0,0,0,.55);border-right:5px solid #c9b98f;}               /* slip-dk 側緣 */
+.folder::before{content:"";position:absolute;left:14px;top:-11px;width:96px;height:12px;
+  background:#c9b98f;border-radius:5px 5px 0 0;box-shadow:0 -2px 3px rgba(0,0,0,.3);}  /* 卷宗耳 */
+.folder .nm{font-size:19px;font-weight:bold;letter-spacing:.28em;}
+.folder .st{position:absolute;right:14px;top:15px;font-size:10px;color:#8a6a3a;
+  letter-spacing:.2em;border:1px solid #8a6a3a;padding:1px 7px;}
+.fbar{height:7px;margin-top:8px;background:rgba(46,42,32,.14);border:1px solid rgba(46,42,32,.4);}
+.fbar>i{display:block;height:100%;background:#4c5a44;}                                /* friendly */
+.fbar.mor>i{background:#8a6a3a;}                                                      /* brass 士氣 */
+.fbar-lbl{font-size:10px;letter-spacing:.18em;color:#6a5a3a;margin-top:4px;
+  display:flex;justify-content:space-between;}
+/* 後衛營:接管印章(本方向狀態變體:CP 奪管倒數 8s) */
+.seize-stamp{position:absolute;right:-16px;top:-24px;width:86px;height:86px;
+  border:3px double #a8322a;border-radius:50%;color:#a8322a;transform:rotate(12deg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:rgba(230,217,184,.35);font-weight:bold;z-index:3;}
+.seize-stamp .t1{font-size:12px;letter-spacing:.15em;}
+.seize-stamp .t2{font-size:19px;letter-spacing:.05em;}
+.seize-stamp .t3{font-size:8px;letter-spacing:.2em;}
+
+/* ---------- 中央兵棋桌 ---------- */
+.table{position:absolute;left:330px;top:190px;width:1240px;height:700px;
+  background:
+    repeating-linear-gradient(0deg, rgba(60,45,25,.14) 0 1px, transparent 1px 80px),
+    repeating-linear-gradient(90deg, rgba(60,45,25,.14) 0 1px, transparent 1px 80px),
+    radial-gradient(ellipse 900px 480px at 55% 50%, rgba(138,116,74,.35), transparent 75%),
+    #c9b489;                                                                          /* map */
+  box-shadow:0 0 0 10px #6a4f28, 0 0 0 15px #8a6a3a, 0 0 0 17px #d8b878,
+    0 24px 70px rgba(0,0,0,.75), inset 0 0 90px rgba(60,40,15,.45);}
+.t-river{position:absolute;left:-40px;top:300px;width:1340px;height:126px;
+  transform:rotate(-5deg);
+  background:linear-gradient(180deg,transparent,rgba(106,122,128,.6) 20%,               /* river */
+    #6a7a80 40%,#7e9296 55%,#6a7a80 75%,rgba(106,122,128,.5) 90%,transparent);}
+.t-bridge{position:absolute;left:596px;top:262px;width:56px;transform:rotate(-5deg);
+  background:repeating-linear-gradient(0deg,#6a5236 0 8px,#54422c 8px 10px);
+  box-shadow:0 2px 4px rgba(40,25,8,.5);}
+.tb1{height:62px;top:262px;clip-path:polygon(0 0,100% 0,100% 78%,70% 100%,45% 80%,20% 100%,0 82%);}
+.tb2{height:70px;top:360px;clip-path:polygon(0 10%,28% 0,55% 15%,80% 2%,100% 14%,100% 100%,0 100%);}
+.t-river-name{position:absolute;left:180px;top:400px;transform:rotate(-5deg);
+  font-size:12px;letter-spacing:.55em;color:#5e7076;opacity:.85;}
+
+/* 桌上單位:瓷釉棋子 */
+.piece{position:absolute;height:32px;border-radius:16px;background:#4c5a44;             /* friendly */
+  border:2px solid #d8b878;color:#f0e6cc;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:bold;letter-spacing:.12em;padding:0 16px;
+  box-shadow:0 4px 8px rgba(30,20,8,.55), inset 0 1px 0 rgba(255,255,255,.18);}
+.piece.sel{background:#5a6a50;box-shadow:0 0 0 3px rgba(216,184,120,.55),0 4px 8px rgba(30,20,8,.55);}
+.p-ring{position:absolute;width:170px;height:96px;border:2px solid #d8b878;border-radius:50%;
+  box-shadow:0 0 0 1px rgba(90,67,34,.6);}
+.p-morale{position:absolute;width:7px;height:84px;border:1.5px solid #8a6a3a;
+  background:rgba(46,42,32,.15);}
+.p-morale>i{position:absolute;bottom:0;left:0;right:0;background:#8a6a3a;}
+.p-morale .cap{position:absolute;top:-19px;left:-16px;font-size:10px;color:#6a5a3a;white-space:nowrap;}
+.piece.enemy{background:#7a3a2a;border-color:#d8b878;}                                  /* enemy */
+.piece.seizing{background:#5a4436;border-color:#a8322a;}                                /* 接管中的後衛營 */
+.piece-tag{position:absolute;font-size:10px;letter-spacing:.15em;color:#a8322a;
+  border:1px solid #a8322a;background:rgba(230,217,184,.85);padding:1px 7px;
+  transform:rotate(-2deg);white-space:nowrap;}
+
+/* 桌上敵蹤雲 */
+.t-cloud{position:absolute;width:190px;height:130px;}
+.t-cloud .d{position:absolute;border-radius:50%;filter:blur(5px);
+  background:radial-gradient(circle,#6a4a8c 0%,rgba(106,74,140,.5) 45%,transparent 72%);}
+.t-cloud .a{width:105px;height:95px;left:8px;top:18px;}
+.t-cloud .b{width:82px;height:78px;left:82px;top:0;}
+.t-cloud .c{width:90px;height:82px;left:64px;top:52px;}
+.t-cloud .lbl{position:absolute;left:18px;top:112px;font-size:11px;color:#5a4a3a;
+  letter-spacing:.2em;border-bottom:1px dashed #5a4a3a;padding-bottom:1px;white-space:nowrap;}
+.t-cloud .q{position:absolute;left:118px;top:96px;width:56px;height:56px;border-radius:50%;
+  border:2px solid rgba(168,50,42,.7);color:#a8322a;display:flex;align-items:center;
+  justify-content:center;font-size:15px;font-weight:bold;transform:rotate(-8deg);
+  background:rgba(230,217,184,.4);}
+
+/* ---------- 右側電報堆(事件 feed) ---------- */
+.telegrams{position:absolute;right:36px;top:200px;width:282px;}
+.telegram{position:relative;background:#e6d9b8;padding:12px 16px 14px;margin-bottom:18px;
+  box-shadow:0 5px 12px rgba(0,0,0,.55);
+  clip-path:polygon(0 4%,4% 0,96% 0,100% 5%,100% 100%,0 100%);}
+.telegram .h{display:flex;justify-content:space-between;font-size:10px;
+  letter-spacing:.4em;color:#8a6a3a;border-bottom:1px dashed #8a6a3a;padding-bottom:4px;
+  margin-bottom:7px;}
+.telegram .m{font-size:14px;line-height:1.6;color:#2e2a20;}
+.telegram .m b{color:#a8322a;}
+.telegram .stamp{position:absolute;right:10px;bottom:8px;width:34px;height:34px;
+  border:2.5px solid #a8322a;border-radius:4px;color:#a8322a;font-size:14px;
+  font-weight:bold;display:flex;align-items:center;justify-content:center;
+  transform:rotate(-10deg);opacity:.8;}
+.tg1{transform:rotate(1.1deg);} .tg2{transform:rotate(-.8deg);} .tg3{transform:rotate(1.4deg);}
+
+/* ---------- 右下黃銅干預盤 ---------- */
+.cmd-plate{position:absolute;right:36px;top:560px;width:282px;
+  background:linear-gradient(180deg,#342712,#241a0e);padding:16px 18px;
+  border:2px solid #8a6a3a;box-shadow:0 6px 16px rgba(0,0,0,.6), inset 0 1px 0 #d8b878;}
+.cmd-plate .ph{font-size:10px;letter-spacing:.45em;color:#a8843a;margin-bottom:12px;
+  border-bottom:1px solid #5a4322;padding-bottom:6px;}
+.cmd-row{display:flex;gap:10px;margin-bottom:16px;}
+.cmd-btn{flex:1;height:52px;background:linear-gradient(180deg,#b8934c,#8a6a3a 55%,#6a4f28);
+  border:1px solid #d8b878;color:#241a0e;font-family:inherit;font-size:17px;
+  font-weight:bold;letter-spacing:.15em;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 6px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,240,200,.5);
+  text-shadow:0 1px 0 rgba(255,240,200,.3);}
+.cmd-btn.hot{background:linear-gradient(180deg,#a8322a,#7c2418);color:#f0e0c0;
+  border-color:#d8b878;text-shadow:none;}
+.cmd-cap{display:flex;gap:10px;margin-top:-10px;margin-bottom:10px;}
+.cmd-cap span{flex:1;text-align:center;font-size:9px;color:#a8843a;letter-spacing:.15em;}
+.mini-plate{background:#1a130c;border:1.5px solid #8a6a3a;padding:6px;position:relative;}
+.mini-grid{height:118px;position:relative;overflow:hidden;
+  background:
+    repeating-linear-gradient(0deg, rgba(216,184,120,.14) 0 1px, transparent 1px 20px),
+    repeating-linear-gradient(90deg, rgba(216,184,120,.14) 0 1px, transparent 1px 20px),
+    #241c10;}
+.mini-grid .r{position:absolute;left:-8px;top:46px;width:270px;height:20px;
+  background:rgba(106,122,128,.65);transform:rotate(-6deg);}
+.mdot{position:absolute;width:8px;height:8px;border-radius:50%;}
+.mf{background:#7d9a72;} .me{background:#a84a3a;} .mc{background:#6a4a8c;filter:blur(1.5px);width:12px;height:12px;}
+.mini-plate .cap{position:absolute;top:8px;left:9px;font-size:9px;color:#a8843a;
+  letter-spacing:.3em;z-index:2;}
+
+/* ---------- 左下:規劃層卡匣 ---------- */
+.drawer{position:absolute;left:40px;top:920px;width:330px;height:128px;
+  background:linear-gradient(180deg,#1a120a,#241a10);border:2px solid #8a6a3a;
+  box-shadow:0 6px 16px rgba(0,0,0,.6), inset 0 8px 18px rgba(0,0,0,.6);}
+.drawer .dh{position:absolute;top:-14px;left:14px;background:#8a6a3a;color:#1a120a;
+  font-size:11px;font-weight:bold;letter-spacing:.35em;padding:3px 12px;
+  box-shadow:0 2px 4px rgba(0,0,0,.5);}
+.dcards{position:absolute;left:16px;bottom:10px;display:flex;gap:12px;}
+.dcard{width:88px;height:92px;background:#e6d9b8;box-shadow:0 -3px 8px rgba(0,0,0,.5);
+  padding:8px 9px;font-size:10px;line-height:1.45;color:#2e2a20;
+  border-top:4px solid #a8322a;}
+.dcard b{font-size:12px;}
+.dcard .c{color:#6a5a3a;font-size:9px;}
+.dcard.d2{border-top-color:#4c5a44;} .dcard.d3{border-top-color:#8a6a3a;}
+
+/* ---------- 角落人格註記(黃銅刻字) ---------- */
+.dirnote{position:absolute;right:44px;bottom:22px;font-size:12px;color:#a8843a;
+  letter-spacing:.2em;text-shadow:0 1px 0 rgba(0,0,0,.8);}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <!-- 頂部黃銅橫杆 -->
+  <div class="rail">
+    <div class="t-slip"><div class="h">軍 電 · 階 段</div><div class="m">「交戰」</div></div>
+    <span class="lbl">時刻</span>
+    <div class="clock-plate"><div class="inner">01:42</div></div>
+    <span class="lbl">倍速</span>
+    <div class="speed-chip">×1</div>
+    <div class="pause-slip"><b>SPACE</b> 暫停發令</div>
+  </div>
+
+  <!-- 右上資源黃銅牌 -->
+  <div class="res-plate">
+    <div class="intel-slip"><div class="h">情 報</div><div class="v">8 / 10</div></div>
+    <div class="cp-studs"><span class="lb">指揮點 CP 3/3</span>
+      <span class="stud"></span><span class="stud"></span><span class="stud"></span></div>
+    <div class="estop-btn">急停</div>
+  </div>
+
+  <!-- 左側卷宗夾 -->
+  <div class="dossier">
+    <div class="folder">
+      <span class="nm">前鋒營</span><span class="st">接敵中</span>
+      <div class="fbar"><i style="width:78%;"></i></div>
+      <div class="fbar-lbl"><span>兵力</span><span>78%</span></div>
+      <div class="fbar mor"><i style="width:64%;"></i></div>
+      <div class="fbar-lbl"><span>士氣</span><span>64%</span></div>
+    </div>
+    <div class="folder">
+      <span class="nm">偵查隊</span><span class="st">搜索中</span>
+      <div class="fbar"><i style="width:100%;"></i></div>
+      <div class="fbar-lbl"><span>兵力</span><span>100%</span></div>
+      <div class="fbar mor"><i style="width:82%;"></i></div>
+      <div class="fbar-lbl"><span>士氣</span><span>82%</span></div>
+    </div>
+    <div class="folder">
+      <div class="seize-stamp"><span class="t1">接管中</span><span class="t2">08s</span><span class="t3">CP 奪管</span></div>
+      <span class="nm">後衛營</span><span class="st" style="border-color:#a8322a;color:#a8322a;">士氣動搖</span>
+      <div class="fbar"><i style="width:45%;"></i></div>
+      <div class="fbar-lbl"><span>兵力</span><span>45%</span></div>
+      <div class="fbar mor"><i style="width:31%;background:#a8322a;"></i></div>
+      <div class="fbar-lbl"><span>士氣</span><span style="color:#a8322a;">31%</span></div>
+    </div>
+    <div class="folder">
+      <span class="nm">砲　隊</span><span class="st">待命</span>
+      <div class="fbar"><i style="width:92%;"></i></div>
+      <div class="fbar-lbl"><span>兵力</span><span>92%</span></div>
+      <div class="fbar mor"><i style="width:70%;"></i></div>
+      <div class="fbar-lbl"><span>士氣</span><span>70%</span></div>
+    </div>
+  </div>
+
+  <!-- 中央兵棋桌 -->
+  <div class="table">
+    <div class="t-river"></div>
+    <div class="t-bridge tb1"></div>
+    <div class="t-bridge tb2"></div>
+    <div class="t-river-name">濁 水 溪</div>
+
+    <div class="piece" style="left:290px;top:370px;">偵查隊</div>
+    <div class="p-ring" style="left:505px;top:404px;"></div>
+    <div class="piece sel" style="left:540px;top:435px;">前鋒營</div>
+    <div class="p-morale" style="left:686px;top:412px;"><span class="cap">士氣 64</span><i style="height:64%;"></i></div>
+    <div class="piece seizing" style="left:420px;top:530px;">後衛營</div>
+    <div class="piece-tag" style="left:416px;top:512px;">接管 08s</div>
+    <div class="piece" style="left:200px;top:545px;">砲　隊</div>
+
+    <div class="piece enemy" style="left:750px;top:130px;">格洛克部</div>
+    <div class="piece enemy" style="left:830px;top:172px;">格洛克部</div>
+    <div class="piece-tag" style="left:748px;top:108px;border-color:#7a3a2a;color:#7a3a2a;">已確認敵軍</div>
+
+    <div class="t-cloud" style="left:940px;top:150px;">
+      <div class="d a"></div><div class="d b"></div><div class="d c"></div>
+      <div class="q">?</div>
+      <div class="lbl">未確認敵蹤·雲</div>
+    </div>
+  </div>
+
+  <!-- 右側電報堆 -->
+  <div class="telegrams">
+    <div class="telegram tg1">
+      <div class="h"><span>軍 電</span><span>01:38</span></div>
+      <div class="m">前鋒營 觸發『接敵→交火』</div>
+      <div class="stamp">達</div>
+    </div>
+    <div class="telegram tg2">
+      <div class="h"><span>軍 電</span><span>01:39</span></div>
+      <div class="m">偵查隊 接觸揭露:<br><b>敵·第3縱隊</b></div>
+      <div class="stamp">達</div>
+    </div>
+    <div class="telegram tg3">
+      <div class="h"><span>急 電</span><span>01:41</span></div>
+      <div class="m"><b>後衛營 士氣&lt;30→撤退</b><br>執行率 70%</div>
+      <div class="stamp">急</div>
+    </div>
+  </div>
+
+  <!-- 右下黃銅干預盤 -->
+  <div class="cmd-plate">
+    <div class="ph">CP 干 預 令</div>
+    <div class="cmd-row">
+      <div class="cmd-btn hot">攻進</div>
+      <div class="cmd-btn">撤回</div>
+      <div class="cmd-btn">駐守</div>
+    </div>
+    <div class="cmd-cap"><span>CP-1</span><span>CP-1</span><span>CP-1</span></div>
+    <div class="mini-plate">
+      <div class="mini-grid">
+        <span class="cap">全 圖</span>
+        <div class="r"></div>
+        <div class="mdot mf" style="left:110px;top:78px;"></div>
+        <div class="mdot mf" style="left:70px;top:70px;"></div>
+        <div class="mdot mf" style="left:86px;top:94px;"></div>
+        <div class="mdot mf" style="left:46px;top:96px;"></div>
+        <div class="mdot me" style="left:150px;top:34px;"></div>
+        <div class="mdot mc" style="left:190px;top:42px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 左下:規劃層卡匣 -->
+  <div class="drawer">
+    <div class="dh">規 劃 層 · 手 令 匣</div>
+    <div class="dcards">
+      <div class="dcard"><b>接敵→交火</b><br><span class="c">敵接觸時自動</span></div>
+      <div class="dcard d2"><b>士氣&lt;30→撤退</b><br><span class="c">執行率 70%</span></div>
+      <div class="dcard d3"><b>砲擊·徐進</b><br><span class="c">需情報 ≥6</span></div>
+    </div>
+  </div>
+
+  <div class="dirnote">方向二 — 電報比部隊跑得快,印章比命令重。</div>
+</div>
+</body>
+</html>

@@ -29,6 +29,7 @@
 
 # CMake build outputs
 build/
+build-mingw/
 CMakeFiles/
 CMakeCache.txt
 CMakeScripts/
@@ -112,3 +113,38 @@ Backup_*
 !.github/**/*.json
 !.github/**/*.yml
 !.github/**/*.md
+# 演示程式執行輸出（replay/roster 等）
+duanqiao_replay.json
+duanqiao_roster.json
+*_replay.json
+*_roster.json
+audiotest_*.wav
+
+# VRM avatar binaries (downloaded from github.com/tary159951123/my-vrm-models*)
+# 正典目錄為 assets/avatars/（已入版控的三支模型）；assets/vrm/ 是重複副本，
+# 已移除並忽略以防再次誤存
+assets/avatars/
+assets/vrm/
+Testing/
+
+# SynthDataDemo 產生的訓練資料集（量大可再生，不入版控）
+output/synth_dataset/
+
+# PortraitRenderer 產生的立繪輸出（可再生）
+output/portraits/
+
+# Java services: Maven build output and embedded H2 database files
+services/**/target/
+services/data/
+
+# VrmLoadTest/訓練管線產生的資料集（可再生）
+output/vrm_dataset/
+
+# VideoDataDemo 影格資料集與影音管線產物（可再生，不入版控）
+output/video_ds/
+output/media_test/
+output/media_pipeline/
+
+# 臨時 patch/除錯檔
+*.patch
+nul

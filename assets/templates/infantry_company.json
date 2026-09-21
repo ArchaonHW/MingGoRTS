@@ -1,0 +1,21 @@
+{
+    "schema": "potato.squad_template/1",
+    "id": "infantry_company",
+    "name": "步兵連",
+    "members": 20,
+    "unit_class": "infantry",
+    "cost": 100,
+    "stats": {
+        "speed": 2.0,
+        "engage_range": 1.5,
+        "damage_per_member": 0.05,
+        "stamina": {
+            "drain_move": 0.03,
+            "drain_combat": 0.05,
+            "regen": 0.06,
+            "threshold": 0.3,
+            "penalty_mul": 0.6
+        }
+    },
+    "note": "遷移自舊扁平 schema——原 morale 欄位已廢（v1 不收錄士氣），其餘數值保留"
+}

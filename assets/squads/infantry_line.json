@@ -1,0 +1,21 @@
+{
+  "schema": "potato.squad_template/1",
+  "id": "infantry_line",
+  "name": "步兵線列",
+  "unit_class": "infantry",
+  "members": 30,
+  "cost": 100,
+  "stats": {
+    "speed": 2.0,
+    "engage_range": 1.5,
+    "damage_per_member": 0.05,
+    "stamina": {
+      "drain_move": 0.03,
+      "drain_combat": 0.05,
+      "regen": 0.06,
+      "threshold": 0.3,
+      "penalty_mul": 0.6
+    }
+  },
+  "note": "標準線列步兵——人數厚、數值對齊 Squad 預設手感，克制騎兵"
+}

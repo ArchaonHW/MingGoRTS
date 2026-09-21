@@ -125,25 +125,25 @@ DQNAgent::DQNAgent(int stateSize, int numActions,
     , batchSize(batchSize)
     , rng(std::random_device{}()) {
     
-    // Create networks
-    qNetwork = new NeuralNetwork();
+    // Create networks（輸出層 linear——Q 值可為負，ReLU 會截斷）
+    qNetwork = std::make_unique<NeuralNetwork>();
     qNetwork->AddLayer(stateSize);
     qNetwork->AddLayer(128, "relu");
     qNetwork->AddLayer(128, "relu");
-    qNetwork->AddLayer(numActions);
+    qNetwork->AddLayer(numActions, "linear");
     qNetwork->Build();
     qNetwork->SetLossFunction("mse");
     
-    targetNetwork = new NeuralNetwork();
+    targetNetwork = std::make_unique<NeuralNetwork>();
     targetNetwork->AddLayer(stateSize);
     targetNetwork->AddLayer(128, "relu");
     targetNetwork->AddLayer(128, "relu");
-    targetNetwork->AddLayer(numActions);
+    targetNetwork->AddLayer(numActions, "linear");
     targetNetwork->Build();
     targetNetwork->SetLossFunction("mse");
     
     // Initialize target network with qNetwork weights
-    *targetNetwork = *qNetwork;
+    targetNetwork->CopyWeightsFrom(*qNetwork);
 }
 
 Action DQNAgent::SelectAction(const State& state, bool explore) {
@@ -178,13 +178,19 @@ void DQNAgent::TrainFromReplayBuffer() {
     for (size_t i = 0; i < batchSize; i++) {
         const Experience& exp = replayBuffer[indices[i]];
         
-        // Compute target Q-value
-        std::vector<float> nextQValues = PredictQValues(exp.nextState);
-        float maxNextQ = *std::max_element(nextQValues.begin(), nextQValues.end());
-        float target = exp.done ? exp.reward : exp.reward + discountFactor * maxNextQ;
+        // TD target 用凍結的 target network bootstrap（標準 DQN）；
+        // 終局不回推未來價值
+        std::vector<float> nextQ = PredictTargetQValues(exp.nextState);
+        float maxNextQ = *std::max_element(nextQ.begin(), nextQ.end());
+        float tdTarget = exp.done ? exp.reward
+                                  : exp.reward + discountFactor * maxNextQ;
         
-        // Train network (simplified - would need proper target computation)
-        // This is a placeholder for full DQN training
+        // 只更新被執行動作的 Q 值：其餘動作維持現值（不引入誤差）
+        std::vector<float> target = PredictQValues(exp.state);
+        if (exp.action.id >= 0 && exp.action.id < (int)target.size()) {
+            target[exp.action.id] = tdTarget;
+        }
+        qNetwork->TrainStep(exp.state.features, target, learningRate);
     }
 }
 
@@ -206,8 +212,7 @@ void DQNAgent::DecayExplorationRate(float decay) {
 
 void DQNAgent::UpdateTargetNetwork() {
     // Copy weights from qNetwork to targetNetwork
-    // This is a simplified version
-    *targetNetwork = *qNetwork;
+    targetNetwork->CopyWeightsFrom(*qNetwork);
 }
 
 float DQNAgent::PredictQValue(const State& state, int action) {
@@ -217,6 +222,49 @@ float DQNAgent::PredictQValue(const State& state, int action) {
 
 std::vector<float> DQNAgent::PredictQValues(const State& state) {
     return qNetwork->Forward(state.features);
+}
+
+std::vector<float> DQNAgent::PredictTargetQValues(const State& state) {
+    return targetNetwork->Forward(state.features);
+}
+
+void DQNAgent::SetExplorationRate(float rate) {
+    explorationRate = std::clamp(rate, 0.0f, 1.0f);
+}
+
+void DQNAgent::SetSeed(unsigned int seed) {
+    rng.seed(seed);
+}
+
+void DQNAgent::SeedWeights(unsigned int seed) {
+    // NeuralNetwork::Build 會 append layers——不能直接對已建網路重 seed,
+    // 必須整個重建（架構與 ctor 相同）
+    auto build = [&](unsigned s) {
+        auto net = std::make_unique<NeuralNetwork>();
+        net->AddLayer(stateSize);
+        net->AddLayer(128, "relu");
+        net->AddLayer(128, "relu");
+        net->AddLayer(numActions, "linear");
+        net->Build(s);
+        net->SetLossFunction("mse");
+        return net;
+    };
+    qNetwork = build(seed);
+    targetNetwork = build(seed + 1);
+    targetNetwork->CopyWeightsFrom(*qNetwork);
+    replayBuffer.clear();
+}
+
+std::string DQNAgent::Serialize() const {
+    return qNetwork->Serialize();
+}
+
+bool DQNAgent::Deserialize(const std::string& data) {
+    if (!qNetwork->Deserialize(data)) {
+        return false;
+    }
+    targetNetwork->CopyWeightsFrom(*qNetwork);
+    return true;
 }
 
 // ============================================================================
@@ -231,11 +279,11 @@ PolicyGradientAgent::PolicyGradientAgent(int stateSize, int numActions,
     , learningRate(learningRate)
     , discountFactor(discountFactor) {
     
-    policyNetwork = new NeuralNetwork();
+    policyNetwork = std::make_unique<NeuralNetwork>();
     policyNetwork->AddLayer(stateSize);
     policyNetwork->AddLayer(64, "relu");
     policyNetwork->AddLayer(64, "relu");
-    policyNetwork->AddLayer(numActions);
+    policyNetwork->AddLayer(numActions, "linear");
     policyNetwork->Build();
 }
 
@@ -264,11 +312,27 @@ void PolicyGradientAgent::UpdatePolicy() {
     
     std::vector<float> returns = ComputeReturns();
     
-    // Update policy using REINFORCE algorithm
-    // This is a simplified version
+    // REINFORCE with mean-return baseline：advantage>0 提高被選動作機率、
+    // <0 壓低。用 probs + A·(onehot−probs) 當目標做一步監督更新，
+    // 等價於朝 log-prob 加權梯度方向走（引擎級近似）。
+    float mean = 0.0f;
+    for (float r : returns) mean += r;
+    mean /= static_cast<float>(returns.size());
+    float var = 0.0f;
+    for (float r : returns) {
+        float d = r - mean;
+        var += d * d;
+    }
+    float stddev = std::sqrt(var / static_cast<float>(returns.size())) + 1e-6f;
+    
     for (size_t i = 0; i < trajectory.size(); i++) {
-        // Update policy network
-        // Would need full implementation
+        const TrajectoryStep& step = trajectory[i];
+        float advantage = (returns[i] - mean) / stddev;
+        std::vector<float> target = GetActionProbabilities(step.state);
+        if (step.action.id >= 0 && step.action.id < (int)target.size()) {
+            target[step.action.id] += advantage * (1.0f - target[step.action.id]);
+        }
+        policyNetwork->TrainStep(step.state.features, target, learningRate);
     }
     
     ClearTrajectory();
@@ -309,17 +373,17 @@ ActorCriticAgent::ActorCriticAgent(int stateSize, int numActions,
     , criticLearningRate(criticLearningRate)
     , discountFactor(discountFactor) {
     
-    actorNetwork = new NeuralNetwork();
+    actorNetwork = std::make_unique<NeuralNetwork>();
     actorNetwork->AddLayer(stateSize);
     actorNetwork->AddLayer(64, "relu");
     actorNetwork->AddLayer(64, "relu");
-    actorNetwork->AddLayer(numActions);
+    actorNetwork->AddLayer(numActions, "linear");
     actorNetwork->Build();
     
-    criticNetwork = new NeuralNetwork();
+    criticNetwork = std::make_unique<NeuralNetwork>();
     criticNetwork->AddLayer(stateSize);
     criticNetwork->AddLayer(64, "relu");
-    criticNetwork->AddLayer(1);
+    criticNetwork->AddLayer(1, "linear");
     criticNetwork->Build();
 }
 
@@ -339,9 +403,16 @@ void ActorCriticAgent::TrainStep(const State& state, const Action& action,
     float nextValue = done ? 0.0f : GetValue(nextState);
     float tdError = reward + discountFactor * nextValue - value;
     
-    // Update critic
-    // Update actor
-    // This is a simplified version
+    // Critic：V(s) 朝 TD target 更新
+    std::vector<float> criticTarget = {reward + discountFactor * nextValue};
+    criticNetwork->TrainStep(state.features, criticTarget, criticLearningRate);
+    
+    // Actor：tdError>0 提高被選動作機率、<0 壓低（同 PG 的近似更新）
+    std::vector<float> target = GetActionProbabilities(state);
+    if (action.id >= 0 && action.id < (int)target.size()) {
+        target[action.id] += tdError * (1.0f - target[action.id]);
+    }
+    actorNetwork->TrainStep(state.features, target, actorLearningRate);
 }
 
 std::vector<float> ActorCriticAgent::GetActionProbabilities(const State& state) {
@@ -420,7 +491,7 @@ State GridWorldEnvironment::Reset() {
     return state;
 }
 
-RLEnvironment::StepResult GridWorldEnvironment::Step(const Action& action) {
+StepResult GridWorldEnvironment::Step(const Action& action) {
     StepResult result;
     
     int dx = 0, dy = 0;
@@ -596,7 +667,7 @@ float RewardShaper::CurriculumScaling(float reward,
 Action Exploration::EpsilonGreedy(const std::vector<Action>& actions,
                                   const std::vector<float>& values,
                                   float epsilon) {
-    static std::mt19937 rng(std::random_device{});
+    static std::mt19937 rng(std::random_device{}());
     
     if (std::uniform_real_distribution<float>(0.0f, 1.0f)(rng) < epsilon) {
         return actions[std::uniform_int_distribution<int>(0, actions.size() - 1)(rng)];
@@ -635,7 +706,7 @@ Action Exploration::UCB(const std::vector<Action>& actions,
 Action Exploration::Boltzmann(const std::vector<Action>& actions,
                               const std::vector<float>& values,
                               float temperature) {
-    static std::mt19937 rng(std::random_device{});
+    static std::mt19937 rng(std::random_device{}());
     
     // Compute softmax probabilities
     std::vector<float> expValues(values.size());

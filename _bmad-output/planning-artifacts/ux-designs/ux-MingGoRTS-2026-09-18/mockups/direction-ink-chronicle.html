@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>MingGoRTS · 方向四 · 水墨史卷 ink-chronicle</title>
+<style>
+/* ==========================================================================
+   方向四 · 水墨史卷 INK-CHRONICLE
+   Rationale: 整個 HUD 都是史官正在書寫的「戰報」——宣紙做底、墨色分層、
+   界線是筆觸、按鈕是印章。密度最低、留白最多,資訊像被毛筆點在紙上;
+   戰場不是地圖,是一幅還未乾的畫,玩家的介入是朱筆批在卷緣。
+   ==========================================================================
+   PALETTE
+   paper      #efe7d4  宣紙底
+   paper-warm #e8ddc4  紙色暖沉區
+   ink        #2e2c26  濃墨
+   ink-soft   #55524a  淡墨
+   ink-faint  rgba(46,44,38,.35)  飛白
+   wash       rgba(90,100,105,...)  水色渲淡(河道)
+   vermilion  #a33b28  朱砂(印章、警示)
+   vermilion-dk #8a3a26  已確認敵軍赭朱
+   cloud      rgba(110,80,140,...)  敵蹤紫靄
+   friendly   #3a382f  友軍墨團
+   morale     #7a6a3a  士氣赭
+   ========================================================================== */
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:#d9cfae;}
+body{font-family:"PMingLiU","Noto Serif TC","Songti TC",serif;color:#2e2c26;}
+.stage{position:relative;width:1920px;height:1080px;margin:0 auto;overflow:hidden;
+  background:
+    radial-gradient(ellipse 800px 500px at 24% 18%, rgba(46,44,38,.07), transparent 70%),   /* 淡墨漬 */
+    radial-gradient(ellipse 1100px 600px at 70% 60%, rgba(232,221,196,.6), transparent 75%),/* paper-warm */
+    radial-gradient(ellipse 600px 400px at 88% 20%, rgba(46,44,38,.05), transparent 70%),
+    #efe7d4;                                                                              /* paper */
+}
+/* 紙纖維:極淡橫絲 */
+.stage::before{content:"";position:absolute;inset:0;opacity:.5;
+  background:repeating-linear-gradient(0deg, rgba(120,110,85,.05) 0 1px, transparent 1px 5px);}
+.stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 120px rgba(120,100,60,.28);}
+
+/* 筆觸分隔線:兩端飛白的長筆 */
+.brush{height:7px;border-radius:50%;
+  background:linear-gradient(90deg,transparent,#2e2c26 12%,#2e2c26 60%,
+    rgba(46,44,38,.7) 85%,transparent);}
+.brush.thin{height:4px;}
+
+/* ---------- 卷首題字(左緣直書) ---------- */
+.vtitle{position:absolute;left:34px;top:96px;writing-mode:vertical-rl;
+  font-size:36px;font-weight:bold;letter-spacing:.42em;color:#2e2c26;}
+.vtitle .sub{font-size:13px;letter-spacing:.5em;color:#55524a;margin-right:14px;}
+.vseal{position:absolute;left:44px;top:640px;width:44px;height:44px;background:#a33b28;
+  color:#efe7d4;display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:bold;box-shadow:2px 3px 6px rgba(80,30,15,.35);
+  transform:rotate(-2deg);border-radius:3px;}
+
+/* ---------- 卷上小注:階段/時刻/倍速/暫停 ---------- */
+.headnote{position:absolute;right:56px;top:38px;display:flex;gap:26px;align-items:baseline;
+  font-size:15px;letter-spacing:.2em;color:#2e2c26;}
+.headnote .k{font-size:11px;letter-spacing:.3em;color:#55524a;}
+.headnote .phase{font-weight:bold;font-size:19px;letter-spacing:.3em;}
+.headnote .key{border:1px solid #55524a;padding:1px 8px;font-size:11px;border-radius:2px;
+  color:#55524a;}
+.headline{position:absolute;left:170px;top:86px;width:1420px;}
+
+/* ---------- 資源:情報墨數 / CP 朱點 / 急停朱印 ---------- */
+.res{position:absolute;right:56px;top:118px;display:flex;align-items:center;gap:22px;}
+.res .it{font-size:14px;letter-spacing:.15em;color:#2e2c26;}
+.res .it b{font-size:20px;}
+.res .it .k{font-size:11px;color:#55524a;letter-spacing:.3em;margin-right:6px;}
+.cp-dots{display:flex;gap:7px;}
+.cp-dot{width:12px;height:12px;border-radius:50%;background:#a33b28;                     /* 朱點 */
+  box-shadow:1px 1px 2px rgba(80,30,15,.4);}
+.seal-stop{width:40px;height:40px;border:2px solid #a33b28;color:#a33b28;
+  display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:bold;
+  transform:rotate(3deg);border-radius:3px;}
+
+/* ---------- 左側部隊:墨條名冊 ---------- */
+.roster{position:absolute;left:150px;top:150px;width:300px;}
+.rentry{margin-bottom:44px;}
+.rentry .nm{font-size:21px;font-weight:bold;letter-spacing:.3em;}
+.rentry .st{font-size:11px;color:#55524a;letter-spacing:.25em;margin-left:10px;}
+.rentry .st.warn{color:#a33b28;border:1px solid #a33b28;padding:0 7px;border-radius:2px;}
+.ibar{height:9px;margin-top:9px;background:rgba(46,44,38,.10);border-radius:5px;overflow:hidden;}
+.ibar>i{display:block;height:100%;border-radius:5px;
+  background:linear-gradient(90deg,#3a382f 0%,#3a382f 85%,rgba(58,56,47,.4));}            /* 墨筆收白 */
+.ibar.mor{height:6px;}
+.ibar.mor>i{background:linear-gradient(90deg,#7a6a3a 0%,#7a6a3a 80%,rgba(122,106,58,.35));}
+.ibar-lbl{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.2em;
+  color:#55524a;margin-top:4px;}
+.ibar.collapse>i{background:repeating-linear-gradient(90deg,#a33b28 0 10px,
+  rgba(163,59,40,.45) 10px 16px);}                                                       /* 崩潰斷筆 */
+
+/* ---------- 戰場:水墨河、斷橋、墨團 ---------- */
+.iriver{position:absolute;left:-60px;top:430px;width:2060px;height:210px;
+  transform:rotate(-5deg);filter:blur(1px);
+  background:linear-gradient(180deg,transparent 0%,rgba(90,100,105,.20) 22%,
+    rgba(90,100,105,.42) 48%,rgba(90,100,105,.28) 72%,transparent 100%);}                /* wash */
+.iriver::after{content:"";position:absolute;left:200px;right:260px;top:96px;height:3px;
+  background:linear-gradient(90deg,transparent,rgba(70,80,86,.5) 20%,
+    rgba(70,80,86,.5) 80%,transparent);border-radius:50%;}
+.iriver-name{position:absolute;left:330px;top:560px;writing-mode:horizontal-tb;
+  transform:rotate(-5deg);font-size:14px;letter-spacing:.7em;color:rgba(70,80,86,.75);}
+.ibridge{position:absolute;width:150px;height:13px;background:#2e2c26;border-radius:7px;
+  filter:blur(.6px);}
+.ib1{left:960px;top:455px;transform:rotate(74deg);}   /* 斷橋上段筆觸 */
+.ib2{left:976px;top:586px;transform:rotate(72deg);}   /* 斷橋下段筆觸 */
+.ib-splinter{position:absolute;width:34px;height:5px;background:rgba(46,44,38,.6);
+  border-radius:3px;}
+.ib-note{position:absolute;left:1090px;top:545px;font-size:13px;color:#a33b28;
+  transform:rotate(-7deg);letter-spacing:.2em;}
+
+/* 墨團單位:邊緣微暈的墨丸 */
+.dab{position:absolute;height:40px;border-radius:20px;padding:0 20px;
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;
+  letter-spacing:.18em;color:#efe7d4;background:radial-gradient(ellipse at 45% 40%,
+    #4a473e 0%,#3a382f 55%,#2e2c26 100%);
+  box-shadow:0 0 0 2px rgba(46,44,38,.15), 0 0 12px rgba(46,44,38,.35),                 /* 暈邊 */
+    0 4px 7px rgba(60,50,30,.3);}
+.dab.enemy{background:radial-gradient(ellipse at 45% 40%,#9a4630 0%,#8a3a26 60%,#6e2c1c 100%);
+  box-shadow:0 0 0 2px rgba(138,58,38,.15),0 0 12px rgba(138,58,38,.35),0 4px 7px rgba(60,30,15,.3);}
+.sel-ring{position:absolute;width:196px;height:120px;border-radius:50%;
+  border:1.5px solid rgba(46,44,38,.75);transform:rotate(-3deg);}                       /* 墨圈 */
+.sel-ring::after{content:"";position:absolute;inset:3px;border-radius:50%;
+  border:1px solid rgba(46,44,38,.3);}
+.vmorale{position:absolute;width:7px;height:92px;border-radius:4px;
+  background:rgba(46,44,38,.12);}
+.vmorale>i{position:absolute;bottom:0;left:0;right:0;border-radius:4px;
+  background:linear-gradient(180deg,rgba(122,106,58,.5),#7a6a3a);}
+.vmorale .cap{position:absolute;top:-22px;left:-20px;font-size:10px;color:#55524a;
+  letter-spacing:.15em;white-space:nowrap;}
+
+/* 敵蹤紫靄 + 探查墨環(本方向狀態變體) */
+.mist{position:absolute;width:250px;height:170px;}
+.mist .m{position:absolute;border-radius:50%;filter:blur(11px);
+  background:radial-gradient(circle,rgba(110,80,140,.45) 0%,rgba(110,80,140,.18) 50%,transparent 75%);}
+.mist .a{width:135px;height:120px;left:16px;top:26px;}
+.mist .b{width:105px;height:96px;left:110px;top:6px;}
+.mist .c{width:115px;height:100px;left:86px;top:70px;}
+.mist-ring{position:absolute;left:6px;top:-4px;width:228px;height:190px;border-radius:50%;
+  background:conic-gradient(rgba(46,44,38,.8) 0 250deg,transparent 250deg);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px));
+          mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px));
+  transform:rotate(-90deg);}
+.mist-lbl{position:absolute;left:206px;top:10px;writing-mode:vertical-rl;
+  font-size:13px;letter-spacing:.35em;color:#55524a;}
+.mist-count{position:absolute;left:210px;top:120px;font-size:11px;color:#a33b28;
+  transform:rotate(5deg);letter-spacing:.15em;white-space:nowrap;}
+.enemy-vtag{position:absolute;writing-mode:vertical-rl;font-size:12px;letter-spacing:.3em;
+  color:#8a3a26;border-right:1px solid rgba(138,58,38,.6);padding-right:6px;}
+
+/* ---------- 右側戰報(事件 feed) ---------- */
+.report{position:absolute;right:64px;top:220px;width:330px;}
+.report .rh{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;}
+.report .rh .t{font-size:20px;font-weight:bold;letter-spacing:.5em;}
+.report .rh .s{font-size:11px;color:#55524a;letter-spacing:.25em;}
+.rline{display:flex;gap:12px;padding:13px 2px;align-items:flex-start;
+  border-bottom:1px solid rgba(46,44,38,.18);}
+.rline .dot{width:8px;height:8px;border-radius:50%;background:#2e2c26;margin-top:8px;flex:none;}
+.rline .tx{font-size:15px;line-height:1.7;letter-spacing:.06em;}
+.rline .tm{font-size:10px;color:#55524a;display:block;letter-spacing:.2em;margin-bottom:2px;}
+.rline.urgent .dot{background:#a33b28;}
+.rline.urgent .tx b{color:#a33b28;}
+.rline .miniseal{width:22px;height:22px;flex:none;margin-top:4px;border:1.5px solid #a33b28;
+  color:#a33b28;font-size:11px;display:flex;align-items:center;justify-content:center;
+  border-radius:2px;transform:rotate(-6deg);}
+
+/* ---------- 右下:朱印干預 + 墨格小圖 ---------- */
+.cp-seals{position:absolute;right:64px;top:760px;display:flex;gap:18px;}
+.cseal{width:60px;text-align:center;}
+.cseal .sq{width:60px;height:60px;border:2px solid #2e2c26;display:flex;align-items:center;
+  justify-content:center;font-size:26px;font-weight:bold;border-radius:4px;
+  background:rgba(46,44,38,.04);}
+.cseal.hot .sq{border-color:#a33b28;color:#a33b28;background:rgba(163,59,40,.06);}
+.cseal .cp{font-size:10px;letter-spacing:.25em;color:#55524a;margin-top:6px;}
+.minimap{position:absolute;right:64px;top:570px;width:230px;height:150px;
+  border:1.5px solid rgba(46,44,38,.55);border-radius:2px;
+  background:
+    repeating-linear-gradient(0deg, rgba(46,44,38,.07) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(90deg, rgba(46,44,38,.07) 0 1px, transparent 1px 22px);}
+.minimap .cap{position:absolute;left:9px;top:7px;font-size:10px;letter-spacing:.4em;color:#55524a;}
+.minimap .r{position:absolute;left:-8px;top:58px;width:250px;height:24px;
+  background:rgba(90,100,105,.3);transform:rotate(-5deg);border-radius:50%;}
+.mmd{position:absolute;width:8px;height:8px;border-radius:50%;}
+.mmd.f{background:#3a382f;} .mmd.e{background:#8a3a26;}
+.mmd.c{background:rgba(110,80,140,.55);filter:blur(2px);width:13px;height:13px;}
+
+/* ---------- 左下:規劃層籤條 ---------- */
+.planstrip{position:absolute;left:150px;top:878px;}
+.planstrip .ph{font-size:11px;letter-spacing:.5em;color:#55524a;margin-bottom:10px;}
+.planstrip .ph::before{content:"";display:inline-block;width:26px;height:3px;
+  background:#a33b28;vertical-align:middle;margin-right:10px;border-radius:2px;}
+.pslips{display:flex;gap:14px;}
+.pslip{width:96px;height:86px;background:#f4edda;border:1px solid rgba(46,44,38,.25);
+  box-shadow:1px 3px 6px rgba(60,50,30,.2);padding:9px 10px;border-radius:2px;
+  border-top:5px solid #2e2c26;}
+.pslip .n{font-size:12px;font-weight:bold;letter-spacing:.05em;line-height:1.4;}
+.pslip .c{font-size:9px;color:#55524a;margin-top:5px;letter-spacing:.08em;}
+.pslip.s2{border-top-color:#a33b28;} .pslip.s3{border-top-color:#7a6a3a;}
+.pslip.s1{transform:rotate(-1deg);} .pslip.s2{transform:rotate(.8deg);}
+.pslip.s3{transform:rotate(-.5deg);}
+
+/* ---------- 角落人格註記(卷末款識) ---------- */
+.dirnote{position:absolute;right:64px;bottom:22px;font-size:12px;color:#55524a;
+  letter-spacing:.3em;}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <!-- 卷首題字 -->
+  <div class="vtitle"><span class="sub">民國十六年 · 北伐夜戰</span>斷 橋 之 役</div>
+  <div class="vseal">斷</div>
+
+  <!-- 卷上小注 -->
+  <div class="headnote">
+    <span><span class="k">階段</span><span class="phase">「交戰」</span></span>
+    <span><span class="k">時刻</span><b style="font-size:22px;">01:42</b></span>
+    <span><span class="k">倍速</span>×1</span>
+    <span class="key">空白鍵 · 暫停</span>
+  </div>
+  <div class="brush headline"></div>
+
+  <!-- 資源 -->
+  <div class="res">
+    <span class="it"><span class="k">情報</span><b>8</b>/10</span>
+    <span class="it"><span class="k">指揮點</span>CP 3/3</span>
+    <span class="cp-dots"><span class="cp-dot"></span><span class="cp-dot"></span><span class="cp-dot"></span></span>
+    <span class="seal-stop">止</span>
+  </div>
+
+  <!-- 左側部隊墨條 -->
+  <div class="roster">
+    <div class="rentry">
+      <span class="nm">前鋒營</span><span class="st">接敵中</span>
+      <div class="ibar"><i style="width:78%;"></i></div>
+      <div class="ibar-lbl"><span>兵力 78</span><span>士氣 64</span></div>
+      <div class="ibar mor"><i style="width:64%;"></i></div>
+    </div>
+    <div class="rentry">
+      <span class="nm">偵查隊</span><span class="st">搜索中</span>
+      <div class="ibar"><i style="width:100%;"></i></div>
+      <div class="ibar-lbl"><span>兵力 100</span><span>士氣 82</span></div>
+      <div class="ibar mor"><i style="width:82%;"></i></div>
+    </div>
+    <div class="rentry">
+      <span class="nm">後衛營</span><span class="st warn">士氣動搖</span>
+      <div class="ibar"><i style="width:45%;"></i></div>
+      <div class="ibar-lbl"><span>兵力 45</span><span style="color:#a33b28;">士氣 31</span></div>
+      <div class="ibar mor collapse"><i style="width:31%;"></i></div>
+    </div>
+    <div class="rentry">
+      <span class="nm">砲　隊</span><span class="st">待命</span>
+      <div class="ibar"><i style="width:92%;"></i></div>
+      <div class="ibar-lbl"><span>兵力 92</span><span>士氣 70</span></div>
+      <div class="ibar mor"><i style="width:70%;"></i></div>
+    </div>
+  </div>
+
+  <!-- 戰場:河與斷橋 -->
+  <div class="iriver"></div>
+  <div class="iriver-name">濁 水 溪</div>
+  <div class="ibridge ib1"></div>
+  <div class="ibridge ib2"></div>
+  <div class="ib-splinter" style="left:1014px;top:528px;transform:rotate(40deg);"></div>
+  <div class="ib-splinter" style="left:1000px;top:542px;transform:rotate(-25deg);"></div>
+  <div class="ib-note">橋斷於此</div>
+
+  <!-- 墨團單位 -->
+  <div class="dab" style="left:590px;top:566px;">偵查隊</div>
+  <div class="sel-ring" style="left:786px;top:600px;"></div>
+  <div class="dab" style="left:824px;top:640px;">前鋒營</div>
+  <div class="vmorale" style="left:996px;top:610px;"><span class="cap">士氣 64</span><i style="height:64%;"></i></div>
+  <div class="dab" style="left:720px;top:786px;">後衛營</div>
+  <div class="dab" style="left:460px;top:740px;">砲　隊</div>
+
+  <div class="dab enemy" style="left:1050px;top:286px;">格洛克部</div>
+  <div class="dab enemy" style="left:1130px;top:330px;">格洛克部</div>
+  <div class="enemy-vtag" style="left:1024px;top:264px;height:110px;">已確認敵軍</div>
+
+  <!-- 敵蹤紫靄 + 探查墨環 -->
+  <div class="mist" style="left:1240px;top:330px;">
+    <div class="mist-ring"></div>
+    <div class="m a"></div><div class="m b"></div><div class="m c"></div>
+    <div class="mist-lbl">未確認敵蹤·雲</div>
+    <div class="mist-count">探·六息</div>
+  </div>
+
+  <!-- 右側戰報 -->
+  <div class="report">
+    <div class="rh"><span class="t">戰 報</span><span class="s">教條所記 · 隨軍</span></div>
+    <div class="brush thin" style="margin-bottom:4px;"></div>
+    <div class="rline"><span class="dot"></span>
+      <span class="tx"><span class="tm">01:38</span>前鋒營 觸發『接敵→交火』</span></div>
+    <div class="rline"><span class="dot"></span>
+      <span class="tx"><span class="tm">01:39</span>偵查隊 接觸揭露:敵·第3縱隊</span></div>
+    <div class="rline urgent"><span class="dot"></span>
+      <span class="tx"><span class="tm">01:41</span><b>後衛營 士氣&lt;30→撤退</b> 執行率70%</span>
+      <span class="miniseal">急</span></div>
+  </div>
+
+  <!-- 右下:朱印干預 + 小圖 -->
+  <div class="minimap">
+    <span class="cap">全 圖</span>
+    <div class="r"></div>
+    <div class="mmd f" style="left:118px;top:102px;"></div>
+    <div class="mmd f" style="left:80px;top:92px;"></div>
+    <div class="mmd f" style="left:96px;top:116px;"></div>
+    <div class="mmd f" style="left:56px;top:112px;"></div>
+    <div class="mmd e" style="left:148px;top:40px;"></div>
+    <div class="mmd c" style="left:182px;top:48px;"></div>
+  </div>
+  <div class="cp-seals">
+    <div class="cseal hot"><div class="sq">攻</div><div class="cp">攻進 CP-1</div></div>
+    <div class="cseal"><div class="sq">撤</div><div class="cp">撤回 CP-1</div></div>
+    <div class="cseal"><div class="sq">守</div><div class="cp">駐守 CP-1</div></div>
+  </div>
+
+  <!-- 左下:規劃層籤條 -->
+  <div class="planstrip">
+    <div class="ph">規 劃 層 · 夜 裡 寫 好 的 手 令</div>
+    <div class="pslips">
+      <div class="pslip s1"><div class="n">接敵→交火</div><div class="c">敵接觸時自動</div></div>
+      <div class="pslip s2"><div class="n">士氣&lt;30→撤退</div><div class="c">執行率 70%</div></div>
+      <div class="pslip s3"><div class="n">砲擊·徐進</div><div class="c">需情報 ≥6</div></div>
+    </div>
+  </div>
+
+  <div class="dirnote">方向四 — 史官之筆:戰報落墨之處,即是戰場。</div>
+</div>
+</body>
+</html>

@@ -41,6 +41,33 @@
    .\AIAgentGUIExample.exe
    ```
 
+#### 方法 3: MinGW 建置（已驗證：全部 27 個目標可建置）
+
+1. **安裝依賴**（Scoop 為例）
+   ```bash
+   scoop install mingw cmake glfw
+   ```
+
+2. **建置**
+   ```bash
+   # GLFW_ROOT 指向 GLFW 安裝目錄（含 include/ 與 lib-mingw-w64/）
+   cmake -B build-mingw -G "MinGW Makefiles" \
+       -DCMAKE_BUILD_TYPE=Release \
+       -DGLFW_ROOT="C:/Users/<you>/scoop/apps/glfw/current"
+   cmake --build build-mingw -j8
+   ```
+
+   - 未設 `GLFW_ROOT` 時 CMake 會自動從 GitHub FetchContent 下載 GLFW
+   - GLAD 使用 repo 內的 `external/glad_gen`（glad1 API，提供 `<glad/glad.h>`)
+   - MinGW 產物已靜態連結 libgcc/libstdc++/winpthread，可離開 MinGW 環境執行
+   - 產物位於 `build-mingw/bin/*.exe`、`build-mingw/lib/libPotatoEngine.a`
+
+3. **驗證**
+   ```bash
+   ./build-mingw/bin/MathTest.exe            # 數學庫測試
+   ./build-mingw/bin/SecurityRedTeamTest.exe # 安全模組紅隊測試（39 項檢查）
+   ```
+
 ### Linux 建置
 
 ```bash

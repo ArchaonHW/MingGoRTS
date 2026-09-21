@@ -1,0 +1,59 @@
+#pragma once
+
+#include "Gameplay/BattleController.h"
+#include "Gameplay/BattleRecorder.h"
+#include "Gameplay/Roster.h"
+
+#include <string>
+
+namespace Potato {
+namespace Gameplay {
+
+/**
+ * 史官戰報組裝器（HistorianReport）——N-1 帳本文法核心。
+ *
+ * 「帳本是失真地圖」：BattleRecorder 記下全部事件（完整帳），
+ * 本組裝器只書寫其中值得入史的事件（節選帳），其餘記入省略計數。
+ * 每份報告文末必帶「本報告省略 N 項」——回放即審計工具，
+ * 記錄與書寫是同一個機制。
+ *
+ * 用法：
+ *   HistorianInput in;
+ *   in.battleName = "斷橋之役";
+ *   in.outcome = battle.GetOutcome();
+ *   in.elapsedSec = battle.GetElapsed();
+ *   in.recorder = &recorder;
+ *   in.roster = &roster;
+ *   HistorianReport r = ComposeHistorianReport(in);
+ *   // r.text 逐字敲出；r.omittedCount 供 UI/審計
+ */
+
+struct HistorianInput {
+    std::string battleName = "斷橋之役";
+    BattleOutcome outcome = BattleOutcome::Ongoing;
+    float elapsedSec = 0.0f;
+    const BattleRecorder* recorder = nullptr; // 無記錄 → omitted=0
+    const Roster* roster = nullptr;           // 無名冊 → 略過名冊句
+    int playerTeam = 0;
+    int enemyTeam = 1;
+    // N-3 帳本外洩：敵軍針對的我軍慣用 trigger 名（如 "EnemyInRange"）；
+    // 非空 → 名冊句後、省略計數前插入判詞行「彼之陣法…」
+    std::string counteredHabit;
+};
+
+struct HistorianReport {
+    std::string text;          // 組裝全文（史官體）
+    int narratedCount = 0;     // 被書寫入報的事件數
+    int omittedCount = 0;      // 記錄了但未書寫的事件數
+    int routCount = 0;         // 潰逃起數
+    int playerLosses = 0;      // 我軍殲滅隊數
+    int enemyLosses = 0;       // 敵軍殲滅隊數
+    int neutralLosses = 0;     // 隊別不明的殲滅（roster 查無）
+    int revealCount = 0;       // 情報揭露次數
+    int interventionCount = 0; // CP 強令次數
+};
+
+HistorianReport ComposeHistorianReport(const HistorianInput& in);
+
+} // namespace Gameplay
+} // namespace Potato

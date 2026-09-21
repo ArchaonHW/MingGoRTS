@@ -3,8 +3,14 @@
  */
 
 #include "IDEGUI.h"
+#include "GuiTextUtils.h"
 #include "../IntelligentSuggestion.h"
 #include "../../AI/IntelligentDevelopmentSystem.h"
+#include "../../AI/KnowledgeGraph.h"
+#include "../../AI/SelfReflection.h"
+#include "../../Serialization/JsonParser.h"
+#include "../../Rendering/ImageCodec.h"
+#include <GLFW/glfw3.h>   // GL 1.1 texture API（此 target 未定義 GLFW_INCLUDE_NONE）
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -12,13 +18,39 @@
 #include <algorithm>
 #include <ctime>
 #include <iomanip>
+#include <future>
+#include <memory>
+#include <chrono>
+#include <cctype>
+#include <mutex>
+#include <unordered_set>
+#include <functional>
 
 namespace MingGoRTSIDE {
 
-// Intelligent Development System instance
-static Potato::AI::IntelligentDevelopmentSystem* g_DevSystem = nullptr;
-static Potato::AI::DevelopmentAssistant* g_DevAssistant = nullptr;
-static Potato::AI::LLMManager* g_LLMManager = nullptr;
+// Intelligent Development System instance（unique_ptr：Shutdown 自動釋放，
+// 逾時分支刻意不 reset 等同保留原「洩漏以避免 UAF」語義）
+static std::unique_ptr<Potato::AI::IntelligentDevelopmentSystem> g_DevSystem;
+static std::unique_ptr<Potato::AI::DevelopmentAssistant> g_DevAssistant;
+static std::unique_ptr<Potato::AI::LLMManager> g_LLMManager;
+static std::unique_ptr<Potato::AI::KnowledgeGraph> g_KnowledgeGraph;
+static std::unique_ptr<Potato::AI::SelfReflection> g_SelfReflection;
+
+// 智能建議系統實例（規則式分析引擎，無外部依賴）
+static std::unique_ptr<IntelligentSuggestionSystem> g_SuggestionSystem;
+
+// 使用者已關閉的建議標題集合——同一標題不再自動出現（id 每次生成皆不同，
+// 以 title 作為抑止鍵才能跨分析週期生效）
+static std::unordered_set<std::string> g_DismissedSuggestionTitles;
+
+// g_DevSystem 非執行緒安全（stats/tasks/knowledgeGraph/selfReflection 未同步）——
+// 背景生成 worker 與 UI 端各處理器共用此 mutex 互斥
+static std::mutex g_DevSystemMutex;
+
+// 建議系統互斥已由 IntelligentSuggestionSystem 內建（sharedMutex_ +
+// worker 自持有）——UI 端不再需要外部 mutex / future 管理
+
+// GetEnvVar / CopyToBuffer 移至 GuiTextUtils.h（header-only，供煙霧測試直接覆蓋）
 
 IDEGUI::IDEGUI()
     : core(nullptr)
@@ -31,17 +63,52 @@ IDEGUI::IDEGUI()
     memset(state.developmentPrompt, 0, sizeof(state.developmentPrompt));
     memset(state.developmentResponse, 0, sizeof(state.developmentResponse));
     
+    // AI/LLM 設定：先讀 POTATO_LLM_* 環境變數作為預設值（各快取一次，不重複呼叫）
+    std::string envProvider = GetEnvVar("POTATO_LLM_PROVIDER");
+    std::string envModel = GetEnvVar("POTATO_LLM_MODEL");
+    std::string envBaseUrl = GetEnvVar("POTATO_LLM_BASEURL");
+    std::string envApiKey = GetEnvVar("POTATO_LLM_APIKEY");
+    std::string envAgent = GetEnvVar("POTATO_LLM_AGENT");
+    CopyToBuffer(state.llmProvider, sizeof(state.llmProvider),
+                 envProvider.empty() ? "local" : envProvider);
+    CopyToBuffer(state.llmModel, sizeof(state.llmModel),
+                 envModel.empty() ? "llama-2-7b" : envModel);
+    CopyToBuffer(state.llmBaseUrl, sizeof(state.llmBaseUrl), envBaseUrl);
+    CopyToBuffer(state.llmApiKey, sizeof(state.llmApiKey), envApiKey);
+    CopyToBuffer(state.llmAgent, sizeof(state.llmAgent),
+                 envAgent.empty() ? "local-pipeline" : envAgent);
+    
     // Set default path
     state.currentPath = "C:\\HWC\\MingGoRTS";
     
-    // Initialize Intelligent Development System
-    g_LLMManager = new Potato::AI::LLMManager();
-    auto localClient = std::make_unique<Potato::AI::LocalModelClient>("llama-2-7b");
-    g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local, std::move(localClient));
-    g_LLMManager->SetDefaultProvider(Potato::AI::LLMProvider::Local);
-    
-    g_DevSystem = new Potato::AI::IntelligentDevelopmentSystem();
-    // Note: We'll initialize properly when IDECore is available
+    // Initialize Intelligent Development System（本地管線為主，外部 LLM 可選）
+    // 防重複初始化：第二個 IDEGUI 實例共用全域，不重建也不覆蓋
+    if (!g_DevSystem) {
+        g_LLMManager = std::make_unique<Potato::AI::LLMManager>();
+        auto localClient = std::make_unique<Potato::AI::LocalModelClient>("llama-2-7b");
+        g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local, std::move(localClient));
+        g_LLMManager->SetDefaultProvider(Potato::AI::LLMProvider::Local);
+
+        g_KnowledgeGraph = std::make_unique<Potato::AI::KnowledgeGraph>();
+        g_SelfReflection = std::make_unique<Potato::AI::SelfReflection>();
+
+        // 種入引擎模組知識，供生成時參考專案上下文
+        g_KnowledgeGraph->AddRelationByName("AIAgent", "part-of", "AIAgentSystem");
+        g_KnowledgeGraph->AddRelationByName("DeveloperAgent", "is-a", "AIAgent");
+        g_KnowledgeGraph->AddRelationByName("IntelligentDevelopmentSystem", "uses", "LLMIntegration");
+        g_KnowledgeGraph->AddRelationByName("IntelligentDevelopmentSystem", "uses", "KnowledgeGraph");
+
+        g_DevSystem = std::make_unique<Potato::AI::IntelligentDevelopmentSystem>();
+        // 本地管線為主；已註冊的 Local 客戶端作為可選 LLM 後備（非擁有指標）
+        g_DevSystem->Initialize(
+            g_LLMManager->GetClient(Potato::AI::LLMProvider::Local), nullptr);
+        g_DevSystem->SetKnowledgeGraph(g_KnowledgeGraph.get());
+        g_DevSystem->SetSelfReflection(g_SelfReflection.get());
+        g_DevAssistant = std::make_unique<Potato::AI::DevelopmentAssistant>(g_DevSystem.get());
+
+        g_SuggestionSystem = std::make_unique<IntelligentSuggestionSystem>();
+        g_SuggestionSystem->Initialize();
+    }
 }
 
 IDEGUI::~IDEGUI() {
@@ -68,6 +135,51 @@ bool IDEGUI::Initialize(IDECore* ideCore) {
     // Setup ImGui style
     SetupImGuiStyle();
     
+    // AI Agent 智能後端掛鉤：agent 面板的問答走 DevSystem 本地管線
+    // （可識別意圖產程式碼，否則回離線分析摘要）；與背景 worker 互斥
+    if (core && core->GetAIInterface()) {
+        core->GetAIInterface()->SetAssistantHook(
+            [](const std::string& q) -> std::string {
+                std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+                if (!g_DevSystem) return std::string();
+                // ProcessRequest 會帶意圖標籤轉送；依標籤走對應管線
+                auto stripTag = [&q](const char* tag, std::string& out) -> bool {
+                    const size_t len = std::strlen(tag);
+                    if (q.rfind(tag, 0) != 0) return false;
+                    out = q.substr(len);
+                    return true;
+                };
+                std::string body;
+                if (stripTag("analyze: ", body) || stripTag("perf: ", body) ||
+                    stripTag("build: ", body)) {
+                    // 分析/效能/建置意圖：對請求本文跑離線分析
+                    auto analysis = g_DevSystem->AnalyzeCode(body, "C++");
+                    std::string out = "離線分析: " + std::to_string(analysis.lineCount) +
+                                      " 行, 複雜度 " + std::to_string(analysis.complexity) +
+                                      ", 品質分 " + std::to_string(static_cast<int>(analysis.qualityScore));
+                    for (const auto& iss : analysis.issues) out += "\n  - " + iss;
+                    for (const auto& sug : analysis.suggestions) out += "\n  * " + sug;
+                    return out;
+                }
+                // generate:/design:/chat:/asset: 皆走本地生成管線（NLP 意圖解析）
+                if (!stripTag("generate: ", body) && !stripTag("design: ", body) &&
+                    !stripTag("chat: ", body) && !stripTag("asset: ", body)) {
+                    body = q;
+                }
+                auto gen = g_DevSystem->GenerateCode(body, "C++");
+                if (gen.success) {
+                    return std::string("本地生成:\n") + gen.generatedCode;
+                }
+                return "無法辨識請求——試著加上「生成/分析/建置/關卡」等關鍵字";
+            });
+    }
+
+    // 啟動即套用 LLM 設定（POTATO_LLM_* env / Settings 預設值）——
+    // 不需先開 Settings 按適用才生效。"local" 會把 llmClient 設
+    // nullptr 走純本地管線（避免對 localhost:11434 發死請求）
+    ConfigureDevSystemLLM();
+    AddOutputLog(std::string("[AI] LLM provider: ") + state.llmProvider);
+
     // Initialize AI conversation
     state.aiConversation.push_back("AI Assistant: Hello! I'm ready to help with your game development.");
     
@@ -81,20 +193,63 @@ bool IDEGUI::Initialize(IDECore* ideCore) {
 
 void IDEGUI::Shutdown() {
     std::cout << "Shutting down MingGoRTS IDE GUI..." << std::endl;
+
+    // GL context 仍有效（此函式在 ImGui_ImplOpenGL3_Shutdown 之前呼叫）
+    ReleaseCardTextures();
+
+    // chat worker 可能仍在執行（外部 LLM 長連線）——
+    // 同下方 devGenFuture 策略：有界等待，逾時洩漏 future 避免 UAF
+    if (state.aiChatFuture.valid()) {
+        if (state.aiChatFuture.wait_for(std::chrono::seconds(5)) !=
+            std::future_status::ready) {
+            AddOutputLog("[AI] Shutdown: chat still running, "
+                         "leaking future to avoid UAF");
+            auto* abandoned =
+                new std::future<std::string>(std::move(state.aiChatFuture));
+            (void)abandoned;
+            running = false;
+            return;
+        }
+    }
+    state.aiChatPending = false;
+
+    // 等待背景生成任務完成，避免 worker 存取已刪除的 g_DevSystem
+    if (state.devGenFuture.valid()) {
+        // 有界等待：本地管線為確定性即時運算，5 秒足夠；
+        // 若異常超時，跳過刪除（洩漏而非 UAF）
+        if (state.devGenFuture.wait_for(std::chrono::seconds(5)) !=
+            std::future_status::ready) {
+            AddOutputLog("[Dev] Shutdown: generation still running, "
+                         "leaking AI globals to avoid UAF");
+            // 刻意洩漏 future：std::async 產生的 future 解構時會阻塞等 worker，
+            // 移到 heap 放棄擁有權，讓關閉流程繼續走完
+            auto* abandoned =
+                new std::future<Potato::AI::CodeGenerationResult>(
+                    std::move(state.devGenFuture));
+            (void)abandoned;
+            running = false;
+            return;
+        }
+    }
+    state.developmentProcessing = false;
     
     if (g_DevAssistant) {
-        delete g_DevAssistant;
-        g_DevAssistant = nullptr;
+        g_DevAssistant.reset();
     }
     if (g_DevSystem) {
+        // worker 仍在執行的情況已在上方逾時分支提前 return，此處可安全互斥
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
         g_DevSystem->Shutdown();
-        delete g_DevSystem;
-        g_DevSystem = nullptr;
+        g_DevSystem.reset();
     }
-    if (g_LLMManager) {
-        delete g_LLMManager;
-        g_LLMManager = nullptr;
+    if (g_SuggestionSystem) {
+        // worker 由 system 自持有——Shutdown 內 join，無需外部等待
+        g_SuggestionSystem->Shutdown();
+        g_SuggestionSystem.reset();
     }
+    g_KnowledgeGraph.reset();
+    g_SelfReflection.reset();
+    g_LLMManager.reset();
     
     if (g_I18N) {
         g_I18N->Shutdown();
@@ -291,6 +446,7 @@ void IDEGUI::RenderMainMenu() {
             ImGui::MenuItem("Debugger", "F8", &state.showDebugger);
             ImGui::MenuItem("Git Panel", "F9", &state.showGitPanel);
             ImGui::MenuItem("Code Analysis", "F7", &state.showCodeAnalysis);
+            ImGui::MenuItem("Card Gallery", nullptr, &state.showCardGallery);
             ImGui::Separator();
             ImGui::MenuItem("Toolbar", nullptr, &state.showToolbar);
             ImGui::MenuItem("Status Bar", nullptr, &state.showStatusBar);
@@ -644,6 +800,9 @@ void IDEGUI::RenderCodeEditor() {
 }
 
 void IDEGUI::RenderAIAgentPanel() {
+    // 每幀輪詢背景 chat 結果（面板隱藏也消化，避免旗標卡住）
+    PollAIChatResult();
+
     if (!state.showAIAgentPanel) return;
     
     ImGui::SetNextWindowPos(state.aiAgentPos, ImGuiCond_FirstUseEver);
@@ -675,6 +834,15 @@ void IDEGUI::RenderAIAgentPanel() {
         ImGui::PushStyleColor(ImGuiCol_Text, collabEnabled ? ImVec4(0.5f, 0.8f, 0.5f, 1.0f) : ImVec4(0.8f, 0.5f, 0.5f, 1.0f));
         ImGui::Text("%s: %s", T(TranslationKey::AIAgent_Collaboration).c_str(), collabEnabled ? "Enabled" : "Disabled");
         ImGui::PopStyleColor();
+
+        // Agent 名冊
+        for (auto* ag : core->GetAIInterface()->GetAgentManager()->GetAllAgents()) {
+            ImGui::Bullet();
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.7f, 0.85f, 1.0f, 1.0f));
+            auto* pa = ag->GetPotatoAgent();
+            ImGui::Text("%s", pa ? pa->GetDesc().name.c_str() : "(unnamed)");
+            ImGui::PopStyleColor();
+        }
     } else {
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
         ImGui::Text("No AI Agent Manager initialized");
@@ -711,6 +879,12 @@ void IDEGUI::RenderAIAgentPanel() {
         ImGui::Separator();
     }
     
+    // 新訊息（送出/收到回覆）時滾到底
+    if (state.aiScrollToBottom) {
+        ImGui::SetScrollHereY(1.0f);
+        state.aiScrollToBottom = false;
+    }
+    
     ImGui::EndChild();
     ImGui::PopStyleColor();
     
@@ -722,12 +896,14 @@ void IDEGUI::RenderAIAgentPanel() {
     ImGui::InputText("##aiinput", state.aiInputBuffer, sizeof(state.aiInputBuffer));
     ImGui::PopStyleColor();
     
-    // Styled buttons
+    // Styled buttons（pending 時停用 Send，避免重複投遞）
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.5f, 0.3f, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.6f, 0.4f, 1.0f));
+    ImGui::BeginDisabled(state.aiChatPending);
     if (ImGui::Button(T(TranslationKey::AIAgent_Send).c_str())) {
         HandleAISubmit();
     }
+    ImGui::EndDisabled();
     ImGui::PopStyleColor(2);
     
     ImGui::SameLine();
@@ -933,22 +1109,64 @@ void IDEGUI::HandleFileSave(const std::string& filePath) {
 
 void IDEGUI::HandleAISubmit() {
     std::string input(state.aiInputBuffer);
-    if (input.empty()) return;
-    
-    // Add user message
+    if (input.empty() || state.aiChatPending) return;
+
+    // Add user message + thinking placeholder（完成時原地替換保訊息序）
     state.aiConversation.push_back("You: " + input);
-    
-    // Process with AI
-    std::string aiResponse = "AI: ";
-    if (core && core->GetAIInterface()) {
-        aiResponse += core->GetAIInterface()->ProcessRequest(input);
-    } else {
-        aiResponse += "I understand your request. In a full implementation, I would process this with an LLM.";
-    }
-    
-    state.aiConversation.push_back(aiResponse);
+    state.aiConversation.push_back("AI: thinking...");
+    state.aiChatPendingIndex = static_cast<int>(state.aiConversation.size()) - 1;
+    state.aiChatPending = true;
+    state.aiScrollToBottom = true;
     memset(state.aiInputBuffer, 0, sizeof(state.aiInputBuffer));
-    
+
+    // 背景執行——ProcessRequest 經 assistantHook 可能走外部 LLM HTTP，
+    // 同步呼叫會凍結整個 render loop（比照 devGenFuture 模式）。
+    // 捕獲指標值：Shutdown 的等待保證 core/aiInterface 生命期覆蓋 worker。
+    AIAgentInterface* ai = core ? core->GetAIInterface() : nullptr;
+    state.aiChatFuture = std::async(std::launch::async, [ai, input]() -> std::string {
+        if (!ai) {
+            return "I understand your request. In a full implementation, "
+                   "I would process this with an LLM.";
+        }
+        return ai->ProcessRequest(input);
+    });
+
+    AddOutputLog("AI request submitted");
+}
+
+// 每幀輪詢 chat worker——RenderAIAgentPanel 呼叫（面板隱藏也照跑，
+// 只消化結果不畫面）
+void IDEGUI::PollAIChatResult() {
+    if (!state.aiChatPending) return;
+    if (!state.aiChatFuture.valid()) {
+        state.aiChatPending = false;
+        return;
+    }
+    if (state.aiChatFuture.wait_for(std::chrono::milliseconds(0)) !=
+        std::future_status::ready) {
+        return;
+    }
+
+    std::string response;
+    try {
+        response = state.aiChatFuture.get();
+    } catch (const std::exception& e) {
+        response = std::string("AI request failed: ") + e.what();
+    } catch (...) {
+        response = "AI request failed: unknown error";
+    }
+
+    const std::string msg = "AI: " + response;
+    if (state.aiChatPendingIndex >= 0 &&
+        state.aiChatPendingIndex <
+            static_cast<int>(state.aiConversation.size())) {
+        state.aiConversation[state.aiChatPendingIndex] = msg;
+    } else {
+        state.aiConversation.push_back(msg);
+    }
+    state.aiChatPendingIndex = -1;
+    state.aiChatPending = false;
+    state.aiScrollToBottom = true;
     AddOutputLog("AI interaction completed");
 }
 
@@ -1405,7 +1623,12 @@ void IDEGUI::UpdateCursorPosition() {
 
 std::string IDEGUI::GetCurrentTime() {
     auto now = std::time(nullptr);
-    auto tm = *std::localtime(&now);
+    std::tm tm;
+#ifdef _WIN32
+    localtime_s(&tm, &now);
+#else
+    localtime_r(&now, &tm);
+#endif
     
     std::ostringstream oss;
     oss << std::put_time(&tm, "%H:%M:%S");
@@ -1515,9 +1738,50 @@ void IDEGUI::RenderSettings() {
     ImGui::Checkbox("Word Wrap", &state.wordWrap);
     ImGui::Checkbox("Show Minimap", &state.showMinimap);
     
+    // AI / LLM 設定（預設讀自 POTATO_LLM_* 環境變數）
+    ImGui::Separator();
+    ImGui::Text("AI / LLM Settings");
+    ImGui::TextDisabled("Local pipeline works without these; set only for external providers");
+    
+    ImGui::Text("Provider:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmprovider", state.llmProvider, sizeof(state.llmProvider));
+    
+    ImGui::Text("Model:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmmodel", state.llmModel, sizeof(state.llmModel));
+    
+    ImGui::Text("Base URL:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmbaseurl", state.llmBaseUrl, sizeof(state.llmBaseUrl));
+    
+    ImGui::Text("API Key:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmapikey", state.llmApiKey, sizeof(state.llmApiKey),
+                   ImGuiInputTextFlags_Password);
+    
+    ImGui::Text("Agent:");
+    ImGui::SameLine();
+    ImGui::InputText("##llmagent", state.llmAgent, sizeof(state.llmAgent));
+    
     // Apply button
     ImGui::Separator();
     if (ImGui::Button("Apply Settings")) {
+        // 套用至可插拔的 LLM 管理器（本地管線不需這些設定；
+        // provider/model 變更會重新註冊本地模型客戶端）
+        if (g_LLMManager) {
+            std::string model(state.llmModel);
+            auto client = std::make_unique<Potato::AI::LocalModelClient>(
+                model.empty() ? "local" : model);
+            g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local, std::move(client));
+        }
+        // 依 provider/apiKey 重新接上（或解除）DevSystem 的外部 LLM fallback，
+        // 讓新註冊的客戶端生效（內部會對 g_DevSystem 互斥）
+        ConfigureDevSystemLLM();
+        // baseUrl/agent 目前沒有可消費的設定通道——
+        // 僅保留在設定狀態中，供未來外部 provider 使用
+        AddOutputLog("[Settings] baseUrl/agent stored "
+                     "(reserved: no per-client URL/agent channel yet)");
         AddOutputLog("Settings applied successfully");
     }
     
@@ -1530,6 +1794,11 @@ void IDEGUI::RenderSettings() {
         state.autoSaveInterval = 300;
         state.wordWrap = false;
         state.showMinimap = false;
+        CopyToBuffer(state.llmProvider, sizeof(state.llmProvider), "local");
+        CopyToBuffer(state.llmModel, sizeof(state.llmModel), "llama-2-7b");
+        memset(state.llmBaseUrl, 0, sizeof(state.llmBaseUrl));
+        memset(state.llmApiKey, 0, sizeof(state.llmApiKey));
+        CopyToBuffer(state.llmAgent, sizeof(state.llmAgent), "local-pipeline");
         SetDarkTheme();
         AddOutputLog("Settings reset to defaults");
     }
@@ -2340,26 +2609,81 @@ std::vector<std::string> IDEGUI::GetStandardLibraryFunctions() {
 // ============================================================================
 
 void IDEGUI::UpdateIntelligentSuggestions() {
-    if (!state.intelligentSuggestionsEnabled) return;
-    
-    // In a real implementation, this would:
-    // 1. Get current code context
-    // 2. Call IntelligentSuggestionSystem::GenerateSuggestions
-    // 3. Update state.currentSuggestions
-    
-    // For now, add a placeholder suggestion
-    Suggestion suggestion;
-    suggestion.type = SuggestionType::CodeCompletion;
-    suggestion.title = "Intelligent Suggestion";
-    suggestion.description = "AI-powered code analysis and suggestions";
-    suggestion.code = "// Suggested code";
-    suggestion.reason = "Based on code patterns and best practices";
-    suggestion.confidence = ConfidenceLevel::High;
-    suggestion.confidenceScore = 0.85f;
-    
-    state.currentSuggestions.clear();
-    state.currentSuggestions.push_back(suggestion);
-    state.showSuggestions = true;
+    if (!state.intelligentSuggestionsEnabled || !g_SuggestionSystem) {
+        state.showSuggestions = false;
+        return;
+    }
+
+    // 無開啟分頁時不分析（編輯器實際編輯的是 tab.buffer，不是 state.editorBuffer）
+    if (state.activeTab < 0 ||
+        state.activeTab >= static_cast<int>(state.openTabs.size())) {
+        state.showSuggestions = false;
+        return;
+    }
+    const auto& tab = state.openTabs[state.activeTab];
+    if (tab.buffer[0] == '\0') {
+        state.showSuggestions = false;
+        return;
+    }
+
+    // 去抖動：內容（含檔案路徑）變更時重設計時器，
+    // 停止編輯滿 500ms 才重跑全檔分析，避免打字途中洗掉使用者正在看的建議。
+    // 分析在 IntelligentSuggestionSystem 內建 worker 執行（SubmitAnalysis），
+    // render thread 只做投遞與輪詢寫回；單槽 supersede，不積壓舊 job。
+    static size_t s_contentHash = 0;
+    static bool s_analysisPending = false;
+    static auto s_lastEditTime = std::chrono::steady_clock::now();
+    static size_t s_shownSignature = 0;
+    static uint64_t s_pendingJobId = 0;
+
+    const std::string hashInput = std::string(tab.buffer) + "\x1F" + tab.filePath;
+    const size_t contentHash = std::hash<std::string>{}(hashInput);
+    const auto now = std::chrono::steady_clock::now();
+
+    if (contentHash != s_contentHash) {
+        s_contentHash = contentHash;
+        s_lastEditTime = now;
+        s_analysisPending = true;
+    }
+
+    // 收取背景分析結果（非阻塞輪詢；只套用最新投遞的 job）
+    uint64_t doneId = 0;
+    std::vector<Suggestion> done;
+    if (g_SuggestionSystem->PollResult(doneId, done) &&
+        doneId == s_pendingJobId) {
+        // 過濾已被使用者關閉過的建議（以標題為抑止鍵）
+        done.erase(
+            std::remove_if(done.begin(), done.end(),
+                [](const Suggestion& s) {
+                    return g_DismissedSuggestionTitles.count(s.title) > 0;
+                }),
+            done.end());
+
+        if (done.empty()) {
+            state.currentSuggestions.clear();
+            state.showSuggestions = false;
+        } else {
+            size_t signature = 0;
+            for (const auto& s : done) {
+                signature ^= std::hash<std::string>{}(s.title);
+            }
+            if (signature != s_shownSignature) {
+                s_shownSignature = signature;
+                state.showSuggestions = true;
+            }
+            state.currentSuggestions = std::move(done);
+        }
+    }
+
+    if (!s_analysisPending) return;
+    if (now - s_lastEditTime < std::chrono::milliseconds(500)) return;
+
+    s_analysisPending = false;
+    // 投遞快照給內建 worker——worker 不讀 GUI state，
+    // 生命期由 system 自持的 thread + Shutdown join 保證
+    s_pendingJobId = g_SuggestionSystem->SubmitAnalysis(
+        std::string(tab.buffer), tab.filePath,
+        tab.currentLine, tab.currentColumn);
 }
 
 void IDEGUI::RenderIntelligentSuggestions() {
@@ -2415,12 +2739,16 @@ void IDEGUI::RenderIntelligentSuggestions() {
         if (ImGui::SmallButton("Apply")) {
             ApplySuggestion(suggestion);
             LearnFromSuggestion(suggestion.id, true);
+            // 套用後移除該建議，避免重複點擊重複插入
+            state.currentSuggestions.erase(state.currentSuggestions.begin() + i);
+            i--;
         }
         
         // Dismiss button
         ImGui::SameLine();
         if (ImGui::SmallButton("Dismiss")) {
             LearnFromSuggestion(suggestion.id, false);
+            g_DismissedSuggestionTitles.insert(suggestion.title);
             state.currentSuggestions.erase(state.currentSuggestions.begin() + i);
             i--;
         }
@@ -2438,29 +2766,27 @@ void IDEGUI::RenderIntelligentSuggestions() {
 }
 
 void IDEGUI::ApplySuggestion(const Suggestion& suggestion) {
-    // In a real implementation, this would:
-    // 1. Insert the suggested code at the cursor position
-    // 2. Update the editor buffer
-    // 3. Mark the file as modified
-    
     AddOutputLog("[AI] Applied suggestion: " + suggestion.title);
     AddOutputLog("[AI] Code: " + suggestion.code);
-    
-    // Placeholder: add suggestion code to current editor content
-    if (state.activeTab >= 0) {
-        std::string currentContent = state.editorBuffer;
+
+    // 附加建議程式碼到作用中分頁的編輯緩衝區（tab.buffer 才是編輯器實際內容）
+    if (state.activeTab >= 0 &&
+        state.activeTab < static_cast<int>(state.openTabs.size())) {
+        auto& tab = state.openTabs[state.activeTab];
+        std::string currentContent = tab.buffer;
         currentContent += "\n" + suggestion.code + "\n";
-        strncpy(state.editorBuffer, currentContent.c_str(), sizeof(state.editorBuffer) - 1);
-        state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
-        state.openTabs[state.activeTab].modified = true;
+        CopyToBuffer(tab.buffer, sizeof(tab.buffer), currentContent);
+        tab.content = tab.buffer;
+        tab.modified = true;
     }
 }
 
 void IDEGUI::LearnFromSuggestion(const std::string& suggestionId, bool accepted) {
-    // In a real implementation, this would:
-    // 1. Call IntelligentSuggestionSystem::LearnFromFeedback
-    // 2. Update suggestion weights based on acceptance
-    
+    if (g_SuggestionSystem) {
+        // 權重/歷史的執行緒互斥由 system 內部 sharedMutex_ 保證
+        g_SuggestionSystem->LearnFromFeedback(suggestionId, accepted);
+    }
+
     if (accepted) {
         AddOutputLog("[AI] Suggestion accepted - learning from feedback");
     } else {
@@ -2601,38 +2927,118 @@ std::vector<std::string> IDEGUI::FindLongFunctions(const std::string& code, int 
 // Intelligent Development System Integration
 // ============================================================================
 
+// 依 Settings 的 provider/apiKey 設定 g_DevSystem 的外部 LLM client。
+// "local"/空值 → nullptr（純本地管線，避免 mock client 產生假輸出）；
+// openai/anthropic + apiKey → 註冊對應 client 作為 fallback。
+void IDEGUI::ConfigureDevSystemLLM() {
+    if (!g_DevSystem || !g_LLMManager) return;
+    // g_DevSystem 非執行緒安全——與背景生成 worker 互斥
+    std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+
+    std::string provider(state.llmProvider);
+    std::transform(provider.begin(), provider.end(), provider.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    std::string key(state.llmApiKey);
+
+    Potato::AI::ILLMClient* client = nullptr;
+    if (provider == "ollama") {
+        // Ollama 免 API key——模型名取自 llmModel，伺服器走預設 localhost:11434
+        std::string model(state.llmModel);
+        if (model.empty()) model = "llama3";
+        auto c = std::make_unique<Potato::AI::LocalModelClient>(model);
+        client = c.get();
+        g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Local,
+                                     std::move(c));
+    } else if (!key.empty()) {
+        if (provider == "openai") {
+            auto c = std::make_unique<Potato::AI::OpenAIClient>(key);
+            client = c.get();
+            g_LLMManager->RegisterClient(Potato::AI::LLMProvider::OpenAI,
+                                         std::move(c));
+        } else if (provider == "anthropic") {
+            auto c = std::make_unique<Potato::AI::AnthropicClient>(key);
+            client = c.get();
+            g_LLMManager->RegisterClient(Potato::AI::LLMProvider::Anthropic,
+                                         std::move(c));
+        }
+    }
+    // 端點覆寫隨 client 一起生效（Ollama 相容伺服器；空值用各 client 預設）
+    g_DevSystem->SetLLMBaseURL(state.llmBaseUrl);
+    g_DevSystem->Initialize(client, nullptr);
+}
+
 void IDEGUI::GenerateCodeFromPrompt() {
     if (!g_DevSystem) {
         AddOutputLog("[Dev] Development system not initialized");
         return;
     }
+    if (state.developmentProcessing) {
+        return; // 已在生成中，忽略重複提交
+    }
+    
+    // 空提示：靜默返回
+    std::string prompt(state.developmentPrompt);
+    bool hasContent = false;
+    for (char c : prompt) {
+        if (!std::isspace(static_cast<unsigned char>(c))) { hasContent = true; break; }
+    }
+    if (!hasContent) return;
+    
+    // 依 Settings 接上（或解除）外部 LLM fallback
+    ConfigureDevSystemLLM();
     
     state.developmentProcessing = true;
     AddOutputLog("[Dev] Generating code from prompt...");
     
-    std::string prompt(state.developmentPrompt);
-    Potato::AI::CodeGenerationResult result = g_DevSystem->GenerateCode(prompt, "C++");
-    
-    if (result.success) {
-        // Insert generated code into editor
-        if (state.activeTab >= 0) {
-            std::string currentContent = state.editorBuffer;
-            currentContent += "\n" + result.generatedCode + "\n";
-            strncpy(state.editorBuffer, currentContent.c_str(), sizeof(state.editorBuffer) - 1);
-            state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
-            state.openTabs[state.activeTab].modified = true;
-        }
-        
-        AddOutputLog("[Dev] Code generated successfully");
-        strncpy(state.developmentResponse, result.generatedCode.c_str(), sizeof(state.developmentResponse) - 1);
-        state.developmentResponse[sizeof(state.developmentResponse) - 1] = '\0';
-    } else {
-        AddOutputLog("[Dev] Code generation failed: " + result.error);
-        std::string errorMsg = "Error: " + result.error;
-        strncpy(state.developmentResponse, errorMsg.c_str(), sizeof(state.developmentResponse) - 1);
-        state.developmentResponse[sizeof(state.developmentResponse) - 1] = '\0';
+    // 背景執行，UI 不阻塞；結果在 RenderDevelopmentAssistant 輪詢寫回
+    // 捕獲 sys 指標值而非在 worker 內重讀全域（配合 Shutdown 的 wait 保證生命期）
+    Potato::AI::IntelligentDevelopmentSystem* sys = g_DevSystem.get();
+    try {
+        state.devGenFuture = std::async(std::launch::async, [prompt, sys]() {
+            // DevSystem 內部狀態未同步——與 UI 端各處理器互斥
+            std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+            return sys->GenerateCode(prompt, "C++");
+        });
+    } catch (const std::exception& e) {
+        // worker 啟動失敗：立即解除旗標，避免 UI 卡在 Processing 狀態
+        state.developmentProcessing = false;
+        std::string msg = std::string("[Dev] Failed to start generation: ") + e.what();
+        AddOutputLog(msg);
+        CopyToBuffer(state.developmentResponse, sizeof(state.developmentResponse), msg);
+    }
+}
+
+void IDEGUI::PollDevelopmentResult() {
+    if (!state.developmentProcessing) return;
+    if (!state.devGenFuture.valid()) {
+        // 旗標已設但無有效 worker（啟動失敗等）：解除卡住狀態
+        state.developmentProcessing = false;
+        return;
+    }
+    if (state.devGenFuture.wait_for(std::chrono::milliseconds(0)) != std::future_status::ready) {
+        return;
     }
     
+    Potato::AI::CodeGenerationResult result;
+    try {
+        result = state.devGenFuture.get();
+    } catch (const std::exception& e) {
+        result.success = false;
+        result.error = e.what();
+    } catch (...) {
+        result.success = false;
+        result.error = "Unknown generation error";
+    }
+    
+    if (result.success) {
+        AddOutputLog("[Dev] Code generated successfully");
+    } else {
+        AddOutputLog("[Dev] Code generation failed: " + result.error);
+    }
+    // 寫回邏輯抽到 WriteGenerationResult(GuiTextUtils.h)——與 headless 測試共用
+    MingGoRTSIDE::WriteGenerationResult(result.success, result.generatedCode,
+                                        result.error, state.developmentResponse,
+                                        sizeof(state.developmentResponse));
     state.developmentProcessing = false;
 }
 
@@ -2643,7 +3049,11 @@ void IDEGUI::AnalyzeCodeWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    Potato::AI::CodeAnalysisResult result = g_DevSystem->AnalyzeCode(code, "C++");
+    Potato::AI::CodeAnalysisResult result;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        result = g_DevSystem->AnalyzeCode(code, "C++");
+    }
     
     AddOutputLog("[Dev] Code Analysis Results:");
     AddOutputLog("  Lines of Code: " + std::to_string(result.lineCount));
@@ -2666,7 +3076,11 @@ void IDEGUI::GenerateTestsWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    Potato::AI::TestGenerationResult result = g_DevSystem->GenerateTestsForFunction(code);
+    Potato::AI::TestGenerationResult result;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        result = g_DevSystem->GenerateTestsForFunction(code);
+    }
     
     if (result.success) {
         AddOutputLog("[Dev] Tests generated successfully");
@@ -2685,7 +3099,11 @@ void IDEGUI::GenerateDocumentationWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    std::string documentation = g_DevSystem->GenerateDocumentation(code);
+    std::string documentation;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        documentation = g_DevSystem->GenerateDocumentation(code);
+    }
     
     AddOutputLog("[Dev] Generated Documentation:");
     AddOutputLog(documentation);
@@ -2700,12 +3118,15 @@ void IDEGUI::FixBugWithAI() {
     std::string code(state.editorBuffer);
     std::string bugDescription = state.developmentPrompt;
     
-    std::string fixedCode = g_DevSystem->FixBug(code, bugDescription);
+    std::string fixedCode;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        fixedCode = g_DevSystem->FixBug(code, bugDescription);
+    }
     
     if (fixedCode != code) {
         // Update editor with fixed code
-        strncpy(state.editorBuffer, fixedCode.c_str(), sizeof(state.editorBuffer) - 1);
-        state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
+        CopyToBuffer(state.editorBuffer, sizeof(state.editorBuffer), fixedCode);
         if (state.activeTab >= 0) {
             state.openTabs[state.activeTab].modified = true;
         }
@@ -2722,18 +3143,20 @@ void IDEGUI::OptimizeCodeWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    std::vector<std::string> optimizations = g_DevSystem->SuggestOptimizations(code);
+    std::vector<std::string> optimizations;
+    std::string optimizedCode;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        optimizations = g_DevSystem->SuggestOptimizations(code);
+        optimizedCode = g_DevSystem->OptimizeCode(code);
+    }
     
     AddOutputLog("[Dev] Optimization Suggestions:");
     for (const auto& opt : optimizations) {
         AddOutputLog("  - " + opt);
     }
-    
-    // Also try to optimize the code
-    std::string optimizedCode = g_DevSystem->OptimizeCode(code);
     if (optimizedCode != code) {
-        strncpy(state.editorBuffer, optimizedCode.c_str(), sizeof(state.editorBuffer) - 1);
-        state.editorBuffer[sizeof(state.editorBuffer) - 1] = '\0';
+        CopyToBuffer(state.editorBuffer, sizeof(state.editorBuffer), optimizedCode);
         if (state.activeTab >= 0) {
             state.openTabs[state.activeTab].modified = true;
         }
@@ -2748,7 +3171,11 @@ void IDEGUI::ReviewCodeWithAI() {
     }
     
     std::string code(state.editorBuffer);
-    std::string review = g_DevSystem->ReviewCode(code);
+    std::string review;
+    {
+        std::lock_guard<std::mutex> devLock(g_DevSystemMutex);
+        review = g_DevSystem->ReviewCode(code);
+    }
     
     AddOutputLog("[Dev] Code Review:");
     AddOutputLog(review);
@@ -2759,6 +3186,9 @@ void IDEGUI::ShowDevelopmentAssistant() {
 }
 
 void IDEGUI::RenderDevelopmentAssistant() {
+    // 每幀輪詢背景生成結果（即使面板暫時關閉也要消化結果、解除旗標）
+    PollDevelopmentResult();
+    
     if (!state.showDevelopmentAssistant) return;
     
     ImGui::SetNextWindowPos(ImVec2(state.codeEditorPos.x + 50, 
@@ -2778,9 +3208,11 @@ void IDEGUI::RenderDevelopmentAssistant() {
                                ImVec2(-1, 80));
     
     // Action buttons
+    ImGui::BeginDisabled(state.developmentProcessing);
     if (ImGui::Button("Generate Code")) {
         GenerateCodeFromPrompt();
     }
+    ImGui::EndDisabled();
     ImGui::SameLine();
     if (ImGui::Button("Analyze Code")) {
         AnalyzeCodeWithAI();
@@ -2823,6 +3255,246 @@ void IDEGUI::RenderDevelopmentAssistant() {
                                    ImGuiInputTextFlags_ReadOnly);
     }
     
+    ImGui::End();
+}
+
+// ============================================================
+// Card Gallery（武將名冊）：assets/cards 瀏覽 + 立繪上屏
+// ============================================================
+
+void IDEGUI::ScanCardGallery() {
+    cardEntries.clear();
+    std::string root = core ? core->GetConfig().workspacePath : ".";
+    std::error_code ec;
+
+    // assets/cards 解析：workspace 絕對路徑優先，cwd 相對前綴保底
+    std::filesystem::path cardsDir;
+    const std::filesystem::path candidates[] = {
+        std::filesystem::path(root) / "assets" / "cards",
+        "assets/cards", "../assets/cards", "../../assets/cards",
+        "../../../assets/cards",
+    };
+    for (const auto& c : candidates) {
+        if (std::filesystem::is_directory(c, ec)) { cardsDir = c; break; }
+    }
+    if (cardsDir.empty()) {
+        AddOutputLog("[CardGallery] 找不到 assets/cards 目錄");
+        cardListScanned = true;
+        return;
+    }
+
+    for (const auto& e :
+         std::filesystem::recursive_directory_iterator(cardsDir, ec)) {
+        if (e.path().extension() != ".json") continue;
+        std::ifstream f(e.path(), std::ios::binary);
+        if (!f) continue;
+        std::ostringstream ss;
+        ss << f.rdbuf();
+        Potato::JsonValue j = Potato::JsonValue::Parse(ss.str());
+        if (j["schema"].AsString() != "potato.character_card/1") continue;
+        CardEntry c;
+        c.jsonPath = e.path().string();
+        c.id      = j["id"].AsString();
+        c.name    = j["name"].AsString();
+        c.epithet = j["epithet"].AsString();
+        c.rarity  = j["rarity"].AsString();
+        c.faction = j["faction"].AsString();
+        c.artRel  = j["art"].AsString();
+        cardEntries.push_back(std::move(c));
+    }
+    std::sort(cardEntries.begin(), cardEntries.end(),
+              [](const CardEntry& a, const CardEntry& b) {
+                  return a.id < b.id;
+              });
+    cardListScanned = true;
+    AddOutputLog("[CardGallery] 掃描到 " +
+                 std::to_string(cardEntries.size()) + " 張角色卡");
+}
+
+// art 欄位（cards/art/x.png）→ 檔案系統路徑；空欄位按 <id>.png 慣例猜
+std::string IDEGUI::ResolveCardArtPath(const CardEntry& card) const {
+    std::string rel = card.artRel;
+    if (rel.empty() && !card.id.empty())
+        rel = "cards/art/" + card.id + ".png";
+    if (rel.empty()) return {};
+
+    std::string root = core ? core->GetConfig().workspacePath : ".";
+    std::error_code ec;
+    const std::filesystem::path bases[] = {
+        std::filesystem::path(root) / "assets",
+        "assets", "../assets", "../../assets", "../../../assets",
+    };
+    for (const auto& b : bases) {
+        std::filesystem::path p = b / rel;
+        if (std::filesystem::exists(p, ec))
+            return p.lexically_normal().string();
+    }
+    return {};
+}
+
+const IDEGUI::CardTexture*
+IDEGUI::EnsureCardTexture(const std::string& path) {
+    auto it = cardTextures.find(path);
+    if (it != cardTextures.end())
+        return it->second.failed ? nullptr : &it->second;
+
+    CardTexture tex;
+    std::ifstream f(path, std::ios::binary);
+    if (f) {
+        std::ostringstream ss;
+        ss << f.rdbuf();
+        std::string bytes = ss.str();
+        std::vector<Potato::uint8> rgba;
+        int w = 0, h = 0;
+        std::string err;
+        if (Potato::ImageCodec::DecodeImage(
+                reinterpret_cast<const Potato::uint8*>(bytes.data()),
+                bytes.size(), rgba, w, h, &err)) {
+            GLuint t = 0;
+            glGenTextures(1, &t);
+            glBindTexture(GL_TEXTURE_2D, t);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);  // RGBA8 任意寬度對齊
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, rgba.data());
+            tex.id = t;
+            tex.w = w;
+            tex.h = h;
+        } else {
+            tex.failed = true;
+            AddOutputLog("[CardGallery] 解碼失敗 " + path + ": " + err);
+        }
+    } else {
+        tex.failed = true;
+    }
+    auto res = cardTextures.emplace(path, tex);
+    return res.first->second.failed ? nullptr : &res.first->second;
+}
+
+void IDEGUI::InvalidateCardTexture(const std::string& path) {
+    auto it = cardTextures.find(path);
+    if (it != cardTextures.end()) {
+        if (it->second.id) glDeleteTextures(1, &it->second.id);
+        cardTextures.erase(it);
+    }
+}
+
+void IDEGUI::ReleaseCardTextures() {
+    for (auto& kv : cardTextures) {
+        if (kv.second.id) glDeleteTextures(1, &kv.second.id);
+    }
+    cardTextures.clear();
+}
+
+void IDEGUI::RenderCardGallery() {
+    if (!state.showCardGallery) return;
+    if (!cardListScanned) ScanCardGallery();
+
+    // 背景 rebake 完成 → invalidate texture 強迫下一帧重載
+    if (cardBakeFuture.valid() &&
+        cardBakeFuture.wait_for(std::chrono::seconds(0)) ==
+            std::future_status::ready) {
+        int rc = cardBakeFuture.get();
+        if (cardBakeTarget >= 0 &&
+            cardBakeTarget < static_cast<int>(cardEntries.size())) {
+            std::string art =
+                ResolveCardArtPath(cardEntries[cardBakeTarget]);
+            if (!art.empty()) InvalidateCardTexture(art);
+            AddOutputLog(rc == 0 ? "[CardGallery] 立繪重新產生完成"
+                                 : "[CardGallery] 立繪產生失敗");
+        }
+        cardBakeTarget = -1;
+    }
+
+    if (!ImGui::Begin("Card Gallery 武將名冊", &state.showCardGallery)) {
+        ImGui::End();
+        return;
+    }
+
+    if (ImGui::Button("Rescan")) cardListScanned = false;
+    ImGui::SameLine();
+    ImGui::TextDisabled("%zu cards", cardEntries.size());
+
+    ImGui::BeginChild("##cardlist", ImVec2(200, 0), true);
+    for (int i = 0; i < static_cast<int>(cardEntries.size()); ++i) {
+        const CardEntry& c = cardEntries[i];
+        bool hasArt = !ResolveCardArtPath(c).empty();
+        std::string label = c.name.empty() ? c.id : c.name;
+        if (!hasArt) label += "  [缺圖]";
+        if (ImGui::Selectable(label.c_str(),
+                              i == state.cardGallerySelected))
+            state.cardGallerySelected = i;
+    }
+    ImGui::EndChild();
+    ImGui::SameLine();
+
+    ImGui::BeginChild("##carddetail", ImVec2(0, 0), true);
+    int sel = state.cardGallerySelected;
+    if (sel < 0 || sel >= static_cast<int>(cardEntries.size())) {
+        ImGui::TextDisabled("從左側選擇一張角色卡");
+    } else {
+        const CardEntry& c = cardEntries[sel];
+        ImGui::Text("%s  %s", c.name.c_str(), c.epithet.c_str());
+        ImGui::TextDisabled("%s | %s | %s", c.id.c_str(),
+                            c.rarity.c_str(), c.faction.c_str());
+        ImGui::Separator();
+
+        std::string art = ResolveCardArtPath(c);
+        if (!art.empty()) {
+            const CardTexture* tex = EnsureCardTexture(art);
+            if (tex) {
+                float w = 256.0f;
+                float h = static_cast<float>(tex->h) *
+                          (w / static_cast<float>(tex->w));
+                ImGui::Image(ImTextureRef((ImTextureID)tex->id),
+                             ImVec2(w, h));
+            } else {
+                ImGui::TextColored(ImVec4(1, 0.3f, 0.3f, 1),
+                                   "圖片解碼失敗");
+            }
+            ImGui::TextDisabled("%s", c.artRel.c_str());
+        } else {
+            ImGui::TextColored(ImVec4(1, 0.3f, 0.3f, 1),
+                               "無立繪（art 欄位空且慣例路徑不存在）");
+        }
+
+        bool baking = cardBakeFuture.valid();
+        if (baking) ImGui::BeginDisabled();
+        if (ImGui::Button("重新產生立繪")) {
+            // baker exe 與輸出檔解析（輸出落在 assets/cards/art/<id>.png）
+            std::string root = core ? core->GetConfig().workspacePath : ".";
+            std::error_code bec;
+            std::filesystem::path baker =
+                std::filesystem::path(root) /
+                "build/bin/Release/PortraitBaker.exe";
+            if (!std::filesystem::exists(baker, bec))
+                baker = std::filesystem::path(root) /
+                        "build/bin/PortraitBaker.exe";
+
+            std::string out = art;
+            if (out.empty() && !c.id.empty()) {
+                std::filesystem::path p = std::filesystem::path(root) /
+                    "assets" / "cards" / "art" / (c.id + ".png");
+                out = p.string();
+            }
+            if (!std::filesystem::exists(baker, bec)) {
+                AddOutputLog("[CardGallery] 找不到 PortraitBaker.exe");
+            } else if (out.empty()) {
+                AddOutputLog("[CardGallery] 無法決定輸出路徑（card id 空）");
+            } else {
+                cardBakeTarget = sel;
+                cardBakeFuture = std::async(std::launch::async,
+                    [baker, cardJson = c.jsonPath, out]() {
+                        // 無 shell 啟動：參數獨立傳遞，無注入面
+                        return RunProcess(baker.string(), {cardJson, out});
+                    });
+                AddOutputLog("[CardGallery] 重新產生立繪中...");
+            }
+        }
+        if (baking) ImGui::EndDisabled();
+    }
+    ImGui::EndChild();
     ImGui::End();
 }
 

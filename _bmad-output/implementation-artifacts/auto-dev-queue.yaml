@@ -1,0 +1,695 @@
+# 智能自動開發項目佇列
+# 每個 item 走完：pick → spec (gds-quick-dev) → implement → verify → review → commit
+# 規則見 auto-dev-workflow.md
+version: 1
+updated: 2026-09-18 (U-1 done; N 層敘事系統新增)
+
+queue:
+
+  # ---- 層級 C：合成資料管線擴充（渲染 → 訓練資料產生 第二期）----
+  - id: C-1
+    title: SynthDataDemo depth pass
+    source: spec-render-training-data 後續
+    summary: >
+      現有 RGBA capture 之外再加 depth 附件（GL_DEPTH_COMPONENT FBO 或
+      顏色編碼深度 shader），輸出每張樣本的深度圖 + labels.csv 加 depth 欄位，
+      供回歸/深度預測任務使用。
+    acceptance:
+      - output/synth_dataset/ 產出 img_XXXX_depth.png 與 RGB 並列
+      - dataset.json 標註 depth_format（near/far 正規化說明）
+      - 新增一個深度回歸訓練驗證（MSE 收斂 + 閾值 PASS）
+      - headless [SKIP] 語義不變；ctest 註冊
+    status: done
+    note: >
+      glReadPixels GL_DEPTH_COMPONENT 讀回 depth renderbuffer，
+      每筆產 img_XXXX_depth.png（ortho 線性深度，近亮遠暗）；
+      labels.csv 加 depth_file 欄、dataset.json 加 depth 區塊；
+      深度回歸驗證：16x16 反轉深度 → (posX,posZ) sigmoid 回歸，
+      平均誤差 0.060 < 0.15 閾值。踩坑：深度特徵全≈1 會讓
+      relu 層壞死（loss 卡常數），改用 1-d 反轉特徵後收斂。
+    size: M
+
+  - id: C-2
+    title: SynthDataDemo instance-segmentation pass
+    source: spec-render-training-data 後續
+    summary: >
+      第二 pass 以 instance-id 顏色渲染（每個 mesh 一個唯一 ID 色），
+      輸出分割 mask PNG；manifest 記錄 id→label 映射。
+      可與 C-1 共用 FBO pass 架構。
+    acceptance:
+      - img_XXXX_mask.png 產出，像素色 = instance id
+      - dataset.json 含 instance_map
+      - ctest PASS、MSVC+MinGW 編譯
+    status: done
+    note: >
+      第二 pass 以 kMaskFragSrc 平色 shader 重渲染同場景；
+      InstanceColor() 8 色調色盤（instance 1 = 紅）；每筆產
+      img_XXXX_mask.png、labels.csv 加 mask_file 欄、
+      dataset.json 加 segmentation.instance_map；內建驗證
+      每張 mask 前景像素 >0 且色值匹配（實測最小 151 px、
+      異色 0）。MSVC+MinGW 皆 PASS。
+    size: M
+
+  # ---- 層級 A：斷橋表現層 T-9~T-12 ----
+  - id: A-1
+    title: T-9 回合層 UI：卡槽欄 + 卡編輯器 + 地圖圖釘
+    source: brainstorming-session-2026-09-16 引擎任務
+    summary: >
+      doctrine 卡槽欄（4→7 槽）、卡內容編輯（觸發條件/動作下拉）、
+      地圖上可放圖釘作為條件錨點；內建新手套牌模板一鍵載入。
+    acceptance:
+      - BattlePlanner UI 可新增/拖放/刪除卡
+      - 模板載入後 10 分鐘內可開戰（對齊 brief 驗收）
+      - 既有 BattlePlanner 邏輯不回歸
+    status: done
+    note: >
+      PlanningDeck（headless 牌組模型：Init/AddRule/SetRule/
+      SwapRules/Validate/Commit + LoadPlannerTemplate 保留 rationale）
+      + PlanningDeckTest 30 項全過。DuanqiaoPlayable 開場進
+      Planning phase：三欄卡編輯器、Alt+點移 objective/rally 圖釘、
+      AI 參謀一鍵載入、開戰 Commit+BeginExecution。
+      DoctrineSet 補 Rules()/RemoveRule；BattleController 補
+      GetDoctrine 回讀。
+    size: XL
+
+  - id: A-2
+    title: T-10 即時層 UI：狀態/士氣條 + CP 鈕 + 訊息流
+    source: brainstorming-session-2026-09-16 引擎任務
+    summary: >
+      戰鬥即時層 HUD：小隊狀態條、士氣可視化、CP 介入按鈕、
+      doctrine 觸發訊息流（哪張卡觸發、結果）。
+    status: done
+    note: >
+      「全軍」面板：每隊 Selectable（點選同步場景選取）、
+      兵力條（綠→紅漸變）、士氣條（藍系/潰逃轉紅+標註）、
+      命令名；選中隊下方 CP 介入按鈕列（攻進目標/撤回集結/
+      原地駐守，CP=0 自動 disable）。doctrine 觸發訊息流為
+      既有 Emit（trigger→action 已在戰況窗）。
+    size: L
+
+  - id: A-3
+    title: T-11 戰後層：史官筆戰報 + 名冊 + 回放時間軸
+    source: brainstorming-session-2026-09-16 引擎任務
+    summary: >
+      戰後結算畫面：史官體文字戰報（逐字敲出）、傷亡名冊（有名有姓）、
+      回放時間軸可拖曳跳到事件點。吃 BattleRecorder 事件流。
+    status: done
+    note: >
+      DuanqiaoPlayable 接 BattleRecorder（包在事件回調外層）+
+      Roster（兩軍具名隊長入冊，我軍帶遺物）。戰果確定後出
+      「戰後結算」窗：史官體戰報逐字敲出（UTF-8 邊界對齊）、
+      雙欄名冊（生還綠/陣亡紅+時刻+遺物、敵軍在逃/授首）、
+      回放時間軸 SliderFloat 拖曳跳到事件點（末 10 則自動捲底）。
+    size: L
+
+  - id: A-4
+    title: T-12 單位視覺：膠囊體/色塊
+    source: brainstorming-session-2026-09-16 引擎任務
+    summary: >
+      戰場單位先用膠囊體+陣營色塊渲染（3D），支援選取框與血條。
+      依賴現有 Mesh + 簡單 shader；不接蒙皮動畫。
+    status: done
+    note: >
+      隨 E4-3 交付（commit d4eb1e4）：MakeCapsule lathe mesh + 隊色、
+      選取環、直立血條（綠→紅漸變）；潰逃壓暗 / 全滅隱藏。
+    size: M
+
+  # ---- 層級 B：殘留債務 ----
+  - id: B-1
+    title: IDE 建議分析移出 render thread
+    source: deferred-work.md
+    summary: >
+      GenerateSuggestions 仍在 UI 執行緒 quiet-period 後同步掃描 8KB。
+      regex 已快取；剩下是搬到背景執行緒 + 結果回投。
+    status: done
+    note: >
+      實作為 IntelligentSuggestionSystem 內建 worker（SubmitAnalysis/
+      PollResult，單槽 supersede）；IDEGUI 改投遞+輪詢，
+      std::async/future 機制移除；DevAssistantSmoke §19 新增
+      submit→poll/supersede/shutdown 測試。
+    size: M
+
+  - id: B-2
+    title: brainstorming-session 檔案提交決策
+    source: deferred-work.md
+    summary: session 檔長期有未暫存編輯；決定提交或保留工作檔。
+    status: blocked
+    note: 使用者檔案，需本人決定
+    size: S
+
+  # ---- 層級 Q：量子批次（疊加態機制深化）----
+  # 依據：docs/research/QUANTUM_DEVELOPMENT_RESEARCH.md +
+  #       _bmad-output/research/quantum-gameplay-modeling-2026-09-17/research.md
+  # 現況：QubitRegister（≤16 qubit statevector）/ Qudit / QuantumFog
+  #       （Observe 塌縮 + Diffuse 退相干 + 情報時效）已落地，
+  #       QuantumTest 入 ctest、QuantumFogDemo 為 ImGui 視覺驗證。
+  # 已拒絕：真 QPU 硬體、量子尋路/QAOA（對 flow-field 無優勢）。
+
+  - id: Q-1
+    title: QuantumFog 接入斷橋戰場（核心整合）
+    source: quantum-gameplay-modeling research §2
+    summary: >
+      敵方小隊進場時註冊為 UncertainEntity（候選格由人格/地形推先驗）；
+      未觀測小隊以機率雲渲染（GetCloud），情報卡或偵查 doctrine 動作
+      觸發 Observe 塌縮；情報時效到回疊加。BattleSceneSync 需同步
+      revealed 狀態與雲分佈到場景層。
+    acceptance:
+      - DuanqiaoPlayable 中未觀測敵軍顯示機率雲而非實體標記
+      - 情報點消費 → Observe → 顯示真實位置；intelDuration 過期回雲
+      - doctrine「偵查」類 action 可觸發觀測（走既有 ActionType 或新增）
+      - QuantumFogTest / BattleControllerTest / DoctrineBattleDemo 無回歸
+    status: done
+    note: >
+      commit aa51f42。Reveal(免費)/EliminateCandidate(負面觀測消雲)、
+      Scout doctrine、IsHiddenByFog 感知閘、sync 雲標記、demo 情報經濟。
+      兩路 review 修完:Scout 卡死、情報洩漏、marker 殘留、Detach 懸空。
+    size: XL
+
+  - id: Q-2
+    title: 糾纏小隊：測 A 即知 B
+    source: research §5 limits「multi-entity correlations 未暴露」
+    summary: >
+      QuantumFog.Entangle(a, b)：觀測 A 時 B 同步塌縮到相關候選
+      （如佯攻隊與主力同向）。實作用共享 joint qudit
+      （dim = candA × candB）；QubitRegister 的 CNOT 為位元級參考。
+      doctrine 卡範例：「連坐偵查」。
+    acceptance:
+      - Entangle API + 測試：observe A 後 B 機率集中於相關候選格
+      - 單獨觀測 B 的行為（對稱/非對稱）在 spec 寫死
+      - 至少一張 doctrine 卡或 demo 情境使用 Entangle
+    status: done
+    note: >
+      commit db85b7a。雲質心相對偏移建 corr 表（同向機動假設），
+      塌縮轉換時對方雲 blend 0.7 集中但不揭露；對稱雙向；
+      已消去候選不復活；Probe 不傳遞。review 修掉 Reveal 每 tick
+      複利收縮（改僅塌縮轉換時傳遞）。demo e0/e1 糾纏。
+    size: M
+
+  - id: Q-3
+    title: 弱觀測 Probe：廉價部分塌縮
+    source: 情報點經濟（brief：觀察/道權主題）
+    summary: >
+      Probe(entityId, strength)：不付全額情報點，機率雲向真值方向
+      收縮（amplitude reweight）但不完全塌縮——弱測量。
+      花費與收縮強度掛鉤，可連續逼近。
+    acceptance:
+      - Probe 後候選機率方差下降且仍 >1 個非零候選
+      - 費用 < Observe；重複 Probe 可逼近塌縮
+      - QuantumTest 覆蓋機率單調收斂 + 不歸一化防護
+    status: done
+    size: M
+
+  - id: Q-4
+    title: 敵將人格 → 先驗機率
+    source: assets/cards/*.json personality 欄位 + EnemyGeneral
+    summary: >
+      角色卡 personality（aggression/caution 等）偏置 AddEntity 的
+      priors：侵略型靠前線候選格、謹慎型靠後方/伏擊格。
+      BattleController 建敵軍時讀卡注入。
+    acceptance:
+      - 不同人格卡產生的 priors 分佈有測得出的差異
+      - 無卡/缺欄位退回均勻先驗，不崩潰
+    status: done
+    note: >
+      已落地（spec-q4-personality-priors.md）：EnemyGeneral
+      FogBiasPoint（aggression→敵向前推、cunning→左翼）+
+      FogPriorScale（discipline→先驗集中度）；AddEntityCloud
+      接 priorScale；DuanqiaoPlayable 用格洛克人格偏置雲。
+      QuantumTest 覆蓋差異/退化/缺欄位。
+    size: S
+
+  - id: Q-5
+    title: QuantumBitSource 後端落地
+    source: research §1「QuantumBitSource seam」
+    summary: >
+      已宣告的隨機源縫補實：預設 mt19937_64（seeded，回放可重現）、
+      OS entropy（std::random_device）後端；HTTP QRNG 僅留介面不實作。
+      QubitRegister/Qudit 建構可注入。
+    acceptance:
+      - 兩後端可切換；seeded 後端同 seed 結果逐位一致
+      - 不引入網路依賴；既有 API 行為不變
+    status: done
+    note: >
+      新增 Quantum/RandomSource.h：IRandomSource 縫 +
+      SeededRandomSource（mt19937_64，同 seed 逐位一致）+
+      EntropyRandomSource（random_device 拼 64-bit）；
+      HTTP QRNG 走介面不附網路依賴。QubitRegister/Qudit/
+      QuantumBitSource 加 unique_ptr<IRandomSource> 建構注入，
+      測量走 Roll()：注入源優先、空則內建 seeded RNG。
+      QuantumTest 新增注入段（劇本源驗證塌縮可預測）。
+    size: S
+
+  - id: Q-6
+    title: 疊加態存檔 + 回放事件
+    source: BattleRecorder / Roster 既有管線
+    summary: >
+      QuantumFog 序列化（candidates+priors+amplitudes+revealed+timer）
+      進 battle save；Observe/Collapse/Expire 發 recorder 事件，
+      回放時間軸可重現機率雲變化。
+    acceptance:
+      - 存檔→讀檔後 GetCloud 分佈一致（±1e-6）
+      - recorder 事件含 entityId 與候選分佈摘要
+      - BattleRecorderTest 無回歸
+    status: done
+    size: M
+
+  - id: Q-7
+    title: 相位干涉 doctrine（實驗性）
+    source: research §4「interference mechanics：相位存在但無玩法消費」
+    summary: >
+      Qudit 振幅相位目前恆 0。新 doctrine 條件：同 tick 兩次觀測
+      作用同一實體時相位干涉——建設性（情報穿透加成）或
+      破壞性（情報被拒/部分被拒）。需 Qudit 支援帶相位初始化。
+    acceptance:
+      - Qudit 相位初始化 API（不破壞既有機率語義）
+      - doctrine 條件範例 + QuantumTest 覆干涉雙向結果
+      - 功能開關可關閉（experimental flag）
+    status: done
+    size: M
+    note: 設計風險最高——先做機制原型驗手感，再決定進正式牌組
+
+  - id: Q-8
+    title: 大規模疊加態效能
+    source: research §5 state space limits
+    summary: >
+      50+ 實體 × 多候選的 qudit Update/Observe 成本量測；
+      超標時做 LOD（遠距實體粗格化或共享 qudit 池）或數量上限。
+    acceptance:
+      - 100 實體 × 6 候選的 Update 單幀 < 1ms（Release）
+      - benchmark 進 QuantumTest 或獨立 target
+    status: done
+    size: S
+
+  - id: Q-9
+    title: 量子偵查教學情境
+    source: QuantumFogDemo 後續
+    summary: >
+      腳本化教學關卡：引導玩家走 observe → probe → 情報時效 循環。
+      吃 DuanqiaoPlayable 殼，不依賴外部檔案。
+    acceptance:
+      - 三段引導可完成、可重看
+      - 全離線資源
+    status: done
+    size: M
+
+  # ---- 層級 P：物理批次後續（UNSOLVED_PHYSICS_TO_ENGINE 消費端）----
+
+  - id: P-1
+    title: TurbulenceField 接入戰場（霧漂移/風偏）
+    source: UNSOLVED_PHYSICS_TO_ENGINE §2 + Q-1 落地後
+    summary: >
+      CurlNoise 湍流場目前只有測試消費。接到 DuanqiaoPlayable：
+      機率雲標記位置疊加無散度微擾（視覺漂移），或砲彈/投射物
+      彈道風偏。需定義「風場強度」參數進 battle config。
+    acceptance:
+      - 機率雲標記隨時間平滑漂移且不回跳（場連續性）
+      - 強度參數=0 時行為與現況一致（可關閉）
+      - QuantumFogBattleTest / BattleSceneTest 無回歸
+    status: done
+    note: >
+      BattleSceneSync::SetFogDrift(field, strength)——雲標記 XZ 疊加
+      TurbulenceField::Sample(pos, elapsed) × strength，場連續故
+      平滑不跳；strength=0/nullptr 行為不變。BattleSceneTest [14]
+      五斷言（漂移生效有界/XZ-only/關閉回原位）；DuanqiaoPlayable
+      接 0.4·CELL 漂移。彈道風偏留給未來拋射物系統。
+    size: M
+
+  - id: P-2
+    title: VelocityVerlet 採用決策（哪些系統切過去）
+    source: PhysicsMathTest 驗證結論
+    summary: >
+      Verlet 已證明對拋物線/長時間模擬嚴格優於 Euler。
+      盤點哪些 PhysicsWorld 消費者需要：戰鬥回放、拋射物、
+      長時間背景模擬 → 決定切換或維持 Euler 預設。
+      注意半步相位語義對 GetLinearVelocity 呼叫端的影響。
+    acceptance:
+      - 列出所有 PhysicsWorld 消費點 + 各自的切換結論與理由
+      - 若有切換：對應測試不回歸
+    status: done
+    note: >
+      全倉盤點：生產碼無任何 PhysicsWorld 消費者（僅 Physics 模組
+      + 兩個測試）。決策：預設維持 Euler（無可切換對象、不改語義），
+      新消費者（拋射物/回放敏感/長時間模擬）建議 opt-in Verlet；
+      半步相位語義已記錄。見 UNSOLVED_PHYSICS_TO_ENGINE 附錄。
+    size: S
+
+  # ---- 層級 C 延伸：立繪訓練資料 ----
+
+  - id: C-3
+    title: PortraitRenderer 多通道訓練資料（depth/normal）
+    source: C-1 depth pass 模式 + VRM 立繪管線
+    summary: >
+      立繪烘焙除了 RGB 外，同 FBO 產 depth PNG（GL_DEPTH_COMPONENT
+      讀回，C-1 模式）與 normal PNG（法線著色 pass 或 MToon 通道），
+      形成 VRM 角色多角度訓練集：img_XXXX_{rgb,depth,normal}.png +
+      manifest.json（姿勢/鏡位/camera 參數標註）。
+    acceptance:
+      - 每張立繪產出 rgb+depth+normal 三通道 PNG
+      - manifest 記錄 camera yaw/pitch/dist、姿勢 ID、模型來源
+      - 至少一個 3-VRM × N-姿勢 batch 產出驗證
+    status: done
+    size: L
+    note: >
+      --channels rgb,depth,normal + --poses/--pitch/--manifest；
+      normal pass = view-space n*0.5+0.5（vViewNormal varying，
+      alphaCutoff 保留髮卡鏤空）；depth 正規化到模型 z 厚度
+      （全 far-plane 只剩 ~23 灰階已修正）；manifest.json 記
+      yaw/pitch/camera_distance/pose/model。實跑驗證：
+      3 VRM × 2 pose × 3 yaw = 54 PNG + manifest 18 entries，
+      深度對比度目視確認（臉亮臂暗背景黑）。
+
+  # ---- 層級 G：參考作機制（REFERENCE_GAMES_MECHANICS.md）----
+  # Total War / Mount&Blade / HOI4 / ELIN 萃取；建議批次順序見研究文件
+
+  - id: G-1
+    title: 士氣連鎖潰逃（TW chain rout）
+    source: Total War
+    summary: >
+      潰逃中的小隊對半徑內同隊友軍施加士氣減益；一隊崩盤可觸發
+      連鎖。現有 Squad.morale/routing 上加傳染項即可，不改狀態機。
+    acceptance:
+      - A 潰逃時範圍內友軍 morale 下降（可配置衰減）
+      - 範圍外/敵軍不受影響；連鎖可被高士氣部隊擋住
+      - DoctrineBattleDemo 無回歸；新增斷言進 BattleSceneTest 或獨立測試
+    status: done
+    note: >
+      BattleController::SetRoutShock(radius, moraleHit)——潰逃轉換偵測
+      （routEmitted 每隊一次），半徑內同隊友軍 AdjustMorale 減益，
+      被擊潰者同 tick 續傳 → 連鎖；預設關閉保回歸。DoctrineBattleDemo
+      新增情境：a潰→near跟崩→far -0.4、敵軍與半徑外錨點不動、
+      高士氣擋住連鎖、關閉時零效果；DuanqiaoPlayable 接
+      SetRoutShock(4格, 0.15)。ALL CHECKS PASSED。
+    size: S
+
+  - id: G-3
+    title: 疲勞系統（TW fatigue）
+    source: Total War
+    summary: >
+      Squad 加 stamina：移動/交戰消耗、駐守回復；疲憊（<閾值）時
+      降移速與輸出。doctrine 可加 StaminaBelow 觸發（後續）。
+    acceptance:
+      - stamina 0~1，跑動耗損、駐守回復，數值可測
+      - 疲憊懲罰生效（速度或攻擊修正任一）
+    status: done
+    size: S
+    note: >
+      Squad.stamina：MoveToward 實際位移耗 drainMove(0.03/s)、
+      engaged 耗 drainCombat(0.05/s)、駐守未接戰回 regen(0.06/s)；
+      stamina<0.3 → GetEffectiveSpeed ×0.6；SetStaminaParams 可調。
+      SquadFatigueTest 15/15 PASS；doctrine StaminaBelow 觸發留後續。
+
+  - id: G-2
+    title: 兵種克制 + 戰線寬度（TW/HOI4）
+    source: Total War + HOI4
+    summary: >
+      Squad 加 unitClass（infantry/archer/cavalry），ResolveCombat
+      套克制矩陣修正；同時交戰上限（combat width）限制圍毆。
+    acceptance:
+      - 克制關係產生可測的傷害差（騎>弓>步>騎三角）
+      - combat width 超過時多出者只圍觀不輸出
+      - EnemyGeneral 卡可標兵種
+    status: done
+    note: >
+      Squad.UnitClass（infantry/archer/cavalry）+ CounterMultiplier
+      （克×1.5/被克×0.7）+ SetCombatWidth（每守方攻擊者上限，超出
+      維持接戰不輸出）+ 卡欄位 unit_class 解析→ApplyTo 覆寫全軍。
+      預設 width=0 無上限保回歸；DuanqiaoPlayable 掠奪隊=騎+width=2。
+      demo 驗證：騎→弓20/步→弓14/步→騎20、width=1 損失減半、
+      卡解析+套用全過。踩坑：測試首版忘設守方兵種出現假反轉。
+    size: M
+
+  - id: G-4
+    title: 地形加成（高地/伏擊/減速）
+    source: Total War
+    summary: >
+      FlowField 格子加 terrain flag（height/forest/mud），戰鬥解析
+      時吃位置修正：高地射程/傷害加成、森林被命中減免、泥濘減速。
+      BattleMap JSON schema 加 terrain 層。
+    acceptance:
+      - 地圖可標 terrain 且 loader 讀取
+      - 高地 vs 平地的傷害差可測
+      - BattleMap 無 terrain 欄位時退回全平地
+    status: done
+    size: M
+
+  - id: G-7
+    title: 戰後流轉：戰利品 + 傷兵恢復（M&B）
+    source: Mount & Blade
+    summary: >
+      戰鬥結算後：Roster 的 casualties 分「傷兵（可恢復）/陣亡」，
+      戰利品依殲滅數入帳 BattleResources；下一場可見恢復結果。
+    acceptance:
+      - 戰後報告含傷亡分類與戰利品清單
+      - 傷兵恢復率可配置；回放記錄戰後事件
+    status: done
+    size: M
+    note: >
+      新模組 Gameplay/PostBattle：Settle 產 PostBattleReport
+      （lost 拆 wounded/dead、殲滅敵隊計 lootPoints、敵將遺物清單）、
+      ApplyLoot 入帳 BattleResources.loot（新增 AddLoot/SpendLoot/
+      GetLoot meta 貨幣）、RecordTo 以 BattleRecorder::AddRecord
+      補記戰後事件。woundedRatio/lootPerEliminated 可配置；
+      TotalWounded 供下一場整補。PostBattleTest 18/18 PASS。
+
+  - id: G-6
+    title: 小隊編制模板（HOI4 division designer）
+    source: HOI4
+    summary: >
+      Squad 模板 JSON：組成/人數/兵種/成本；編成階段用模板建隊，
+      預算限制下配兵。吃 assets/cards 的 schema 風格。
+    acceptance:
+      - 模板檔可載入並建出對應 squad
+      - 預算超支時拒絕或降規（寫死規則）
+    status: done
+    size: L
+    note: >
+      potato.squad_template/1 巢狀 schema（stats{speed,engage_range,
+      damage_per_member,stamina{五欄}}）；SquadTemplate::LoadFromFile/
+      LoadFromString（schema 嚴驗、失敗重置、數值消毒+警告）、
+      Instantiate/ApplyStats、SquadTemplateLibrary（LoadDir keep-latest
+      除重/Find/SortedByCost）、BudgetedBuild（budget<=0 無上限、
+      超支跳過記 skipped）。RefitCamp::Deploy 增 library 參數回補
+      招募單位 stats；舊扁平 assets/templates/*.json 已遷移。
+      SquadTemplateTest 98/98、MSVC+MinGW 過、四路 review 加固
+      （commit 81925f1）。
+
+  - id: G-5
+    title: 作戰計畫箭頭（HOI4 battle plan → doctrine）
+    source: HOI4
+    summary: >
+      回合層 UI 畫進攻箭頭/戰線 → 轉譯成 doctrine 規則集 +
+      計畫加成（CP/情報）；執行層依計畫跑、可中途介入。
+      這是 A-1 回合層 UI 的旗艦功能。
+    acceptance:
+      - 畫箭頭能產出合法 DoctrineSet（序列化可驗證）
+      - 計畫加成數值在執行層生效
+    status: done
+    size: XL
+    note: >
+      Gameplay/BattlePlan：PlanArrow（squadName/from/to/priority）→
+      ArrowToDoctrine（HealthBelow→RetreatToRally prio10、
+      ObjectiveReached→AttackNearest prio20、Always→AdvanceToObjective
+      用箭頭 priority）。Apply 指派專屬箭頭或通用兜底 +
+      SetSquadObjective（BattleController 新 squad pin，優先於
+      team objective）+ rally + 計畫加成（attackMul×damagePerMember、
+      BattleResources::AddIntel/AddCP 同步 controller）。
+      potato.battle_plan/1 與 potato.doctrine_set/1 序列化雙向
+      （DoctrineSet::ToJson/FromJson + TriggerFromName/ActionFromName）。
+      BattlePlanTest 36/36 PASS。UI 畫箭頭留給 A-1 層消費。
+
+  - id: G-9
+    title: 戰鬥間整補循環（ELIN 基地層）
+    source: ELIN
+    summary: >
+      戰鬥間的 meta 層：兵員招募/傷兵恢復（接 G-7）/裝備補充/
+      doctrine 卡解鎖。資源跨場累積。
+    acceptance:
+      - 兩場戰鬥之間有整補介面且狀態跨場持續
+      - 招募/恢復消費戰利品資源
+    status: done
+    size: XL
+    note: >
+      Gameplay/RefitCamp（並行 session）：meta 層跨場持續——
+      Deploy 從名冊建隊保存兵力、招募/傷兵恢復消費 loot
+      （接 G-7 BattleResources）、存檔/讀檔 JSON。
+      DuanqiaoPlayable Title 整補營區塊 + 戰後自動結算轉存；
+      殘編再損以部署兵力起算（Squad.maxMembers=部署值）。
+      RefitCampTest 42/42，MSVC Debug + MinGW 雙綠
+      （部署、跨場兵力、存讀檔、loot 保存、殲滅移除）。
+
+  - id: G-10
+    title: 程序戰場生成（ELIN × NeuralTerrainGen）
+    source: ELIN + 既有 NeuralTerrainGen
+    summary: >
+      seeded 生成 BattleMap JSON：NeuralTerrainGen 產 heightmap →
+      規則化為格子地形（河/橋/高地/森林）→ 直接餵 BattleMap loader。
+      對齊 SynthDataDemo 的「渲染→資料」思路，這裡是「生成→關卡」。
+    acceptance:
+      - seed 可重現同一張圖；異 seed 產出可辨差異
+      - 產出的 JSON 通過 BattleMap loader + 可打一場
+      - headless 測試（不需視窗）
+    status: done
+    size: M
+    note: >
+      純程序生成（無 NeuralTerrainGen）：Gameplay/MapGenerator
+      以 seeded 正弦疊加標量場（CurlNoise 思路標量版）產高度/
+      植被場 + 蜿蜒河道中心線，規則化為 potato.battle_map/1
+      JSON（河道 blocked / 渡口通行 / 河岸泥濘 cost2 / 高地
+      highland / 森林 forest、南北部署區與圖釘）。同 seed
+      逐位一致可回放。MapGenTest 11/11 PASS：決定性、異
+      seed 差異、loader 接受、渡口可通行河道擋路、開戰
+      推進且小隊有行動。
+
+  - id: G-8
+    title: 玩家將軍親臨（M&B commander）
+    source: Mount & Blade
+    summary: >
+      我軍方加一支「將軍衛隊」可控單位：手動技能（喊話士氣/
+      突擊）走 CP；將軍陣亡直接戰敗。為俯視 RTS 版的親臨，
+      不做第一人稱。
+    acceptance:
+      - 將軍單位可被選取/下令，陣亡觸發落敗結局
+      - 至少一個主動技能走 CP
+    status: done
+    note: >
+      Squad::IsGeneralGuard 旗標（不開子類）；CheckOutcome 衛隊全滅即敗
+      （潰逃不算、雙方同歿平手）；GeneralRally 半徑 6 士氣+0.3、
+      GeneralCharge 6s 速度/火力×1.5（chargeTimer+getter 疊乘仿 G-3）；
+      各扣 1 CP。DuanqiaoPlayable 衛隊+兩顆 CP 鈕。
+      GeneralGuardTest 25/25 MSVC+MinGW。
+    size: L
+
+  # ---- 層級 N：敘事系統（narrative-design.md → E-11）----
+  # 依據：_bmad-output/narrative-design.md §Narrative System Requirements
+  # 範圍守衛：戰役框架（章節/結局）是 E-7 之後的事；N-1~N-3 是戰鬥層可先做。
+
+  - id: N-1
+    title: 模組化史官戰報 + 省略計數
+    source: narrative-design §Structure「The ledger is a lossy map」
+    summary: >
+      BattleRecorder 事件流 → 事件片段 + 判詞模板 組裝戰報（不再全手寫
+      散文）；每份戰報標示「本報告省略 N 項」，回放即審計工具——
+      記錄與書寫是同一個機制。
+    acceptance:
+      - 戰報由片段/模板組裝產出（headless 可測，非手寫字串）
+      - 每份報告輸出省略計數欄位
+      - DuanqiaoPlayable 戰後結算吃新組裝器；既有回放格式不破壞
+    status: done
+    size: M
+    note: >
+      Gameplay/HistorianReport（並行 session）：BattleRecorder 事件流
+      → 片段+判詞模板組裝戰報，每份輸出省略計數
+      （「本報告省略 N 項」），結局句（勝/敗/平/未決）與名冊
+      殉國/得全句皆模板化。HistorianReportTest 27/27 PASS。
+      DuanqiaoPlayable 接線見 ee1fc5b。
+      戰鬥層已先落地；墮落路線「省略數暴漲」屬 E-7 之後
+
+  - id: N-2
+    title: 敵將判詞（聽聞態，非真相態）
+    source: narrative-design §Structure「判詞 is hearsay」
+    summary: >
+      敵將檔案面板加「判詞」行：傳聞值，系統性低估（固定可學習偏差）；
+      偵查/觀測可驗證或推翻；高狡詐敵將能放假判詞進傳聞。
+      接 EnemyGeneral 三軸 + dossier UX（已規格）。
+    acceptance:
+      - 檔案顯示判詞（聽聞）與驗證後真相的分層呈現
+      - 低估偏差為固定規則；觀測後判詞更新
+      - 狡詐高者放假判詞有測試覆蓋
+    status: done
+    size: M
+    note: >
+      Gameplay/GeneralDossier（並行 session）：聽聞值 = 真值×0.8
+      系統性低估；判詞依顯性軸產出（好戰/守紀/中庸等），
+      狡詐 ≥70 放假判詞掩真軸；Verify 觀測後回填真值、
+      揭發假判詞。GeneralDossierTest 21/21 PASS。
+
+  - id: N-3
+    title: 對手軍師反制牌組（ledger leaks）
+    source: narrative-design §Opposition + §「ledger leaks」
+    summary: >
+      對手軍師讀玩家上一場最常用 trigger 類型 → 下一場牌組針對反制；
+      戰報留痕「彼之陣法，似針對我軍慣用」。吃 BattleRecorder
+      統計 + EnemyGeneral 牌組生成。
+    acceptance:
+      - 記錄玩家 trigger 使用分佈並跨場讀取
+      - 反制牌組產出合法 DoctrineSet（可驗證）
+      - 戰報輸出對應判詞行
+    status: done
+    size: L
+    note: >
+      Gameplay/RivalDeck：BattleController 記各隊 trigger 命中統計
+      （EvaluateDoctrines 命中即計），RecordBattle 跨場累積；
+      MostUsedTrigger → BuildCounterDeck 產針對性 DoctrineSet
+      （推進→據守誘敵、撤退→追擊、接戰→拒戰拉扯等 8 種映射）；
+      WarningLine 產「彼之陣法，似針對我軍慣用『X』」；
+      potato.rival_deck/1 序列化跨場持久化。
+      RivalDeckTest 17/17 PASS（含模擬連續兩場）。
+      敘事身份掛 E-7。
+
+  - id: N-4
+    title: 敵將處置與聲望持久化
+    source: narrative-design §System Requirements
+    summary: >
+      每章記敵將處置（收服/授首/變節/歸隱）與稱號軌跡
+      （「斷橋軍師」）；結局引用這些記錄。
+    acceptance:
+      - 處置狀態跨場持久化（存檔格式）
+      - 稱號隨章節演變且帳本自指可讀
+    status: done
+    size: M
+    note: >
+      Gameplay/CampaignLedger：RecordDisposition（同 id 覆寫）、
+      EarnTitle 稱號軌跡、AdvanceChapter 單調前進、
+      EndingCitations 結局證詞行；potato.campaign_ledger/1
+      序列化跨場持久化。CampaignLedgerTest 22/22 PASS。
+      E-7 章節框架掛鉤留 meta 層消費。
+
+  - id: N-5
+    title: 神話事件具名記錄 + 滲透掛鉤
+    source: narrative-design §System Requirements + UX myth seepage
+    summary: >
+      具名神話事件日誌（哪座祠、哪尊靈、何時）——結局時神的證詞
+      引用之；同時作為 UX 神話滲透主題切換的事件來源（玩家可映射）。
+    acceptance:
+      - 事件日誌含祠/靈/時三欄並持久化
+      - 滲透觸發介面已定義（即使 E-6 未做也可 stub）
+    status: done
+    size: S
+    note: >
+      Gameplay/MythLog：祠/靈/時/記事四欄事件、SetSeepageCallback
+      滲透觸發介面（UX 可映射）、TestimonyLines 結局證詞、
+      potato.myth_log/1 持久化。MythLogTest 14/14。
+
+  - id: N-6
+    title: 章節慣例文字層（題詞/判詞/欲知後事）
+    source: narrative-design §Structure Type
+    summary: >
+      演義章回慣例入 UI：章開題詞（一句詩問）、敵將入場判詞、
+      章尾「欲知後事」鉤；結局四聲部（霸業/仁政/無字/對手之筆）。
+    acceptance:
+      - 章節 UI 呈現三慣例
+      - 結局文由累積記錄生成（非選項選擇）
+    status: done
+    size: S
+    note: >
+      Gameplay/ChapterConventions：OpeningVerse 韻庫題詞（主題嵌句）、
+      EntranceJudgment 接 N-2 dossier（據報/驗證/虛實未聞三態）、
+      ClosingHook 欲知後事（勝敗/神話/N-3 反制入鉤）、
+      ResolveEnding+ComposeEnding 四聲部（墮落→對手之筆、
+      武功民心俱高→無字留白、武功顯→霸業、治績顯→仁政），
+      結局引帳本處置/稱號+神話證詞。ChapterConventionsTest 29/29。
+
+  # ---- 層級 U：demo 化 ----
+  - id: U-1
+    title: 垂直切片 demo（標題殼 + 主題系統 + 字體自包含 + 打包）
+    source: 2026-09-18 評估 B 決策 + UX phasing(tactical-sim/war-map 先行)
+    summary: >
+      DuanqiaoPlayable 從 dev 工具升級為可散布 demo：Title→Battle→Title
+      殼迴圈、token 驅動雙主題、OFL Noto 字體打包、exe-relative 資產
+      resolver、tools/package_demo.bat 產出 dist/。
+    status: done
+    note: >
+      殼層+主題程式碼隨平行 session G-8 commit 65a4227 入庫（方向反轉
+      的掃入）；本 commit 補 DemoAssets.h/UITheme.h/fonts/tools/spec。
+      dist 包 32MB:exe+maps+fonts+README。
+    size: L

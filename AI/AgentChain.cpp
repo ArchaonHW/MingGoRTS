@@ -5,6 +5,7 @@
 #include "AgentChain.h"
 #include <iostream>
 #include <sstream>
+#include <cstring>
 #include <algorithm>
 #include <chrono>
 #include <queue>

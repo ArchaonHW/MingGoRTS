@@ -2,6 +2,8 @@
 #include "Logging/Logger.h"
 #include <fstream>
 #include <cstring>
+#include <algorithm>
+#include <new>
 
 namespace Potato {
 
@@ -178,8 +180,7 @@ void OpenALAudioManager::UnloadAllAudio() {
 }
 
 AudioSource* OpenALAudioManager::CreateSource() {
-    auto source = MakeUnique<AudioSource>();
-    AudioSource* sourcePtr = source.get();
+    AudioSource* sourcePtr = new AudioSource();
     sources.push_back(sourcePtr);
     
     LOG_INFO("Created audio source with ID: " + std::to_string(sourcePtr->GetSourceID()));
@@ -190,9 +191,10 @@ AudioSource* OpenALAudioManager::CreateSource() {
 void OpenALAudioManager::DestroySource(AudioSource* source) {
     auto it = std::find(sources.begin(), sources.end(), source);
     if (it != sources.end()) {
+        int sourceID = source->GetSourceID(); // 先取出 ID：delete 後再讀是 UAF
         sources.erase(it);
         delete source;
-        LOG_INFO("Destroyed audio source with ID: " + std::to_string(source->GetSourceID()));
+        LOG_INFO("Destroyed audio source with ID: " + std::to_string(sourceID));
     }
 }
 
@@ -261,23 +263,67 @@ bool OpenALAudioManager::LoadWAV(const std::string& filePath, AudioData& data) {
     // 讀取 WAV 頭部
     char header[44];
     file.read(header, 44);
-    
+    if (!file.good()) {
+        LOG_ERROR("WAV file too small or unreadable: " + filePath);
+        return false;
+    }
+
+    // 驗證 RIFF/WAVE magic——非 WAV 檔（或截斷檔）直接拒絕,
+    // 否則會把任意二進位資料當音訊 payload
+    if (std::memcmp(header, "RIFF", 4) != 0 ||
+        std::memcmp(header + 8, "WAVE", 4) != 0) {
+        LOG_ERROR("Not a RIFF/WAVE file: " + filePath);
+        return false;
+    }
+    // fmt chunk magic（PCM WAV 標準佈局,offset 12 = "fmt "）
+    if (std::memcmp(header + 12, "fmt ", 4) != 0) {
+        LOG_ERROR("WAV missing fmt chunk: " + filePath);
+        return false;
+    }
+
     // 簡化解析
     data.format = AudioFormat::WAV;
     data.channels = 2;
     data.sampleRate = 44100;
     data.bitsPerSample = 16;
-    
+
     // 讀取音頻數據
     file.seekg(0, std::ios::end);
-    size_t fileSize = file.tellg();
+    std::streampos endPos = file.tellg();
+    if (endPos < 44 || endPos == std::streampos(-1)) {
+        LOG_ERROR("WAV file too small: " + filePath);
+        return false;
+    }
     file.seekg(44, std::ios::beg);
+
+    // 上限 512MB：防止畸形/超大檔案讓 resize 丟 bad_alloc
+    constexpr std::streamoff kMaxWAVPayload = 512ull * 1024 * 1024;
+    if (endPos - std::streampos(44) > kMaxWAVPayload) {
+        LOG_ERROR("WAV payload too large: " + filePath);
+        return false;
+    }
+
+    size_t dataSize = static_cast<size_t>(endPos) - 44;
+    try {
+        data.data.resize(dataSize);
+    } catch (const std::bad_alloc&) {
+        LOG_ERROR("WAV payload allocation failed: " + filePath);
+        return false;
+    }
+    if (dataSize > 0) {
+        file.read(reinterpret_cast<char*>(data.data.data()), dataSize);
+        if (!file) {
+            LOG_ERROR("WAV payload read failed: " + filePath);
+            data.data.clear();
+            return false;
+        }
+    }
     
-    size_t dataSize = fileSize - 44;
-    data.data.resize(dataSize);
-    file.read(reinterpret_cast<char*>(data.data.data()), dataSize);
-    
-    data.duration = static_cast<int>((dataSize / (data.channels * data.sampleRate * (data.bitsPerSample / 8))) * 1000);
+    // duration（毫秒）= 資料大小 / 每秒位元組數 * 1000
+    size_t bytesPerSecond = static_cast<size_t>(data.channels) * data.sampleRate * (data.bitsPerSample / 8);
+    data.duration = (bytesPerSecond > 0)
+        ? static_cast<int>((dataSize * 1000) / bytesPerSecond)
+        : 0;
     
     return true;
 }
