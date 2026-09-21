@@ -25,7 +25,8 @@ namespace Gameplay {
  *   fords:       [{name, rect:[x,y,w,h]}]          // 可通行的水域缺口
  *   deployZones: {"0": {rect:[...]}, "1": {...}}    // 各隊部署範圍
  *   pins:        [{name, pos:[x,y], note}]
- *   interactables: [{type, pos:[x,y], radius, note}]
+ *   interactables: [{type, pos:[x,y], radius, note,
+ *                    spirit?, offering?}]  // shrine 專用欄，缺省空字串
  */
 struct MapRect {
     int x = 0, y = 0, w = 0, h = 0;
@@ -44,10 +45,13 @@ struct MapPin {
 };
 
 struct MapInteractable {
-    std::string type;    // oil_slick / rockfall / supply_cache ...
+    std::string type;    // oil_slick / rockfall / supply_cache / shrine ...
     Vector2 pos;
     float radius = 1.0f;
     std::string note;
+    // D-2 shrine 節點欄（其他 type 留空；置末位保聚合初始化相容）
+    std::string spirit;   // 神祇 id（空 = 通用境靈）
+    std::string offering; // 供品態字串（環境敘事，渲染層讀）
 };
 
 // 運輸隊定義（A.3）：起點=path[0]，沿 waypoint 直線段前進——

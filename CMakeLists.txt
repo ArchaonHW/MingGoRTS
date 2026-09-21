@@ -407,6 +407,7 @@ add_library(Gameplay STATIC
     Gameplay/ChapterConventions.cpp
     Gameplay/Ledger.cpp
     Gameplay/GovernanceField.cpp
+    Gameplay/ShrineField.cpp
 )
 target_include_directories(Gameplay PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/Gameplay)
 # BattleSceneSync 需要場景圖/渲染類型;PotatoEngine 不依賴 Gameplay,無循環
@@ -419,6 +420,7 @@ add_library(Campaign STATIC
     Campaign/CampaignState.cpp
     Campaign/ChapterLibrary.cpp
     Campaign/Governance.cpp
+    Campaign/MythLayer.cpp
     Campaign/NoBattleResolver.cpp
 )
 target_include_directories(Campaign PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -807,6 +809,16 @@ add_executable(GovernanceFieldTest Examples/GovernanceFieldTest.cpp)
 target_include_directories(GovernanceFieldTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(GovernanceFieldTest Campaign)
 
+# D-1 神話滲透狀態機無頭測試（四階 ratchet/怒神加成/跨章重推導）
+add_executable(MythLayerTest Examples/MythLayerTest.cpp)
+target_include_directories(MythLayerTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(MythLayerTest Campaign)
+
+# D-2 神社與精靈實體無頭測試（佔領觸發/選擇入帳/favor 回呼接線）
+add_executable(ShrineFieldTest Examples/ShrineFieldTest.cpp)
+target_include_directories(ShrineFieldTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(ShrineFieldTest Campaign)
+
 # E-1 無戰章節門檻判定無頭測試（定義塊/灰顯報表/三路徑入帳/中計）
 add_executable(NoBattleResolverTest Examples/NoBattleResolverTest.cpp)
 target_include_directories(NoBattleResolverTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1026,6 +1038,8 @@ set(POTATO_TESTS
     LedgerAssuranceTest
     GovernanceTest
     GovernanceFieldTest
+    MythLayerTest
+    ShrineFieldTest
     NoBattleResolverTest
     NoBattleNarrativeTest
 )

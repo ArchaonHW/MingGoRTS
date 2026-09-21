@@ -109,6 +109,8 @@ bool BattleMap::LoadFromString(const std::string& json) {
         it.pos = ParsePos(o["pos"]);
         it.radius = o["radius"].AsFloat(1.0f);
         it.note = o["note"].AsString();
+        it.spirit = o["spirit"].AsString();     // D-2 shrine
+        it.offering = o["offering"].AsString(); // D-2 shrine
         interactables.push_back(it);
     }
     // A.3 運輸隊：path 不足 2 點的條目跳過（內容側寫壞不中止載入）

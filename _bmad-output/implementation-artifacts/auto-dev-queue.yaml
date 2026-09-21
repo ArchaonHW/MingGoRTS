@@ -921,9 +921,9 @@ queue:
     acceptance:
       - 進駐觸發互動、選擇入帳
       - 視覺狀態供渲染層讀取
-    status: queued
+    status: done
     size: L
-    note: 依賴 D-1 + F-1（神社 sprite）；BattleMap schema 擴充
+    note: 已落地 aab33fe（review 補丁後 45/45 雙工具鏈）；同 commit 修復 D-1 CMake 註冊回歸
 
   - id: D-3
     title: 天命貨幣與轉換

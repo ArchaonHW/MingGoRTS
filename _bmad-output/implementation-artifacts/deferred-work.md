@@ -96,3 +96,9 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-d1-myth-layer-seepage.md`
   summary: `myth_layer` section has no `potato.myth_layer/1` schema tag — bare object consistent with untagged `governance` section, but no version hook for future migration (NFR5).
   evidence: Acceptance auditor — spec Code Map names the format; only root carries `potato.campaign/1`.
+- source_spec: `_bmad-output/implementation-artifacts/spec-d2-shrine-spirits.md`
+  summary: `ShrineField`/`GovernanceField`/`BattleController` all hardcode `team == 0` as player — a battle where the player faction isn't team 0 silently never triggers field interactions. Needs a shared player-team parameter across the three sites, not a per-class fix.
+  evidence: Blind-hunter review — `Gameplay/ShrineField.cpp` occupation predicate mirrors `GovernanceField.cpp:53`; convention-wide limitation, out of D-2 scope.
+- source_spec: `_bmad-output/implementation-artifacts/spec-d2-shrine-spirits.md`
+  summary: `ShrineField::Bind` re-bind resets settled state → same node can pay favor twice. Documented in header (favor is persistent, unlike governance counts); enforce one-shot only if hot-reload becomes real.
+  evidence: Edge-case-hunter review — consistent with `GovernanceField::Bind` semantics; flagged because favor is a resource.
