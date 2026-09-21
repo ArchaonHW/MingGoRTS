@@ -880,8 +880,11 @@ queue:
     acceptance:
       - 無系統字體依賴驗證（乾淨環境測試）
       - 字體載入失敗有降級路徑
-    status: queued
+    status: done
     size: S
+    note: e89cdf0 落地——UIThemeTest 加 FontRel 引用檔存在/sfnt magic/
+      缺檔回 nullptr 不污染 atlas 檢查；DuanqiaoPlayable serif→sans→
+      內建字回退鏈明確化（UX-DR3）
     note: U-1 已覆蓋大半；補降級與字級驗收即可
 
   # ---- 層級 E：戰役與無戰章節（epics Epic E stories；依賴 E-7）----
