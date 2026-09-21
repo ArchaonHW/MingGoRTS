@@ -2,7 +2,7 @@
 title: 'F-2 UI scale 真管線（75–150%）——絕對重建 + 全 token 縮放 + 設定持久化'
 type: 'feature'
 created: '2026-09-21'
-status: 'in-progress'
+status: 'done'
 context:
   - '{project-root}/_bmad-output/implementation-artifacts/spec-u1-vertical-slice-demo.md'
   - '{project-root}/_bmad-output/planning-artifacts/gdds/gdd-MingGoRTS-2026-09-17/epics.md'
@@ -99,10 +99,10 @@ schema：`{"schema":"potato.settings/1","theme":0,"uiScale":1.0}`
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] `Examples/UITheme.h` — ClampScale/ApplyScaled/Px
-- [ ] `Examples/UISettings.h` — 新檔
-- [ ] `Examples/DuanqiaoPlayable.cpp` — 接線
-- [ ] `Examples/UIScaleTest.cpp` + CMakeLists 註冊
+- [x] `Examples/UITheme.h` — ClampScale/ApplyScaled/Px
+- [x] `Examples/UISettings.h` — 新檔
+- [x] `Examples/DuanqiaoPlayable.cpp` — 接線
+- [x] `Examples/UIScaleTest.cpp` + CMakeLists 註冊
 
 **Acceptance Criteria:**
 - Given 重複切換 scale/theme，when ApplyScaled 兩次同參數，then

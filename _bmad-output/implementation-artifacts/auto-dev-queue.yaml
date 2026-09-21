@@ -794,9 +794,14 @@ queue:
     acceptance:
       - 0.75/1.5 邊界值排版不破框
       - 設定存檔持久、免重啟
-    status: queued
+    status: done
     size: M
-    note: U-1 已做 ScaleAllSizes 粗版；本項為全 token 真管線
+    note: >
+      已落地 ecd1a76：UITheme::ApplyScaled 絕對重建（修 U-1 換主題
+      打回基底的 bug）、Px() 尺寸閘門全面板過閘（錨點不動 UX-DR4）、
+      UISettings potato.settings/1 持久化（saves/settings.json，
+      tmp+rename、拖曳中不落盤、缺檔預設/壞檔拒絕/越界鉗制）、
+      滑桿下限 1.0→0.75。UIScaleTest 雙工具鏈全綠。
 
   - id: F-3
     title: HUD 密度三檔（minimal/standard/verbose）
