@@ -479,6 +479,11 @@ add_executable(QuasiModelsTest Examples/QuasiModelsTest.cpp)
 target_include_directories(QuasiModelsTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(QuasiModelsTest PotatoEngine)
 
+# 第三批引擎件測試（headless:GustField 間歇場、GolombRuler 全異距）
+add_executable(UnsolvedBatch3Test Examples/UnsolvedBatch3Test.cpp)
+target_include_directories(UnsolvedBatch3Test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(UnsolvedBatch3Test PotatoEngine)
+
 # RTS 點選層測試（headless：螢幕→射線→地面/小隊包圍球）
 add_executable(BattlePickerTest Examples/BattlePickerTest.cpp)
 target_include_directories(BattlePickerTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1015,6 +1020,7 @@ set(POTATO_TESTS
     QuantumTest
     QuasiRandomTest
     QuasiModelsTest
+    UnsolvedBatch3Test
     QuantumFogBattleTest
     QuantumBench
     TutorialScriptTest

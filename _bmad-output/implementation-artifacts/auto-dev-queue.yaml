@@ -2,7 +2,7 @@
 # 每個 item 走完：pick → spec (gds-quick-dev) → implement → verify → review → commit
 # 規則見 auto-dev-workflow.md
 version: 1
-updated: 2026-09-21 (GBAA BAAF 研究 → L-6/L-7/L-8 需求入列；未解問題第二批 P-3/M-1 落地)
+updated: 2026-09-21 (GBAA BAAF 研究 → L-6/L-7/L-8 需求入列；未解問題第二批 P-3/M-1、第三批 P-4/M-2 落地)
 
 queue:
 
@@ -353,6 +353,27 @@ queue:
       JammingBattleTest 玩法層（擁擠群 <孤隊 70% 位移、關閉復位）。
     size: M
 
+  - id: P-4
+    title: 湍流間歇性：GustField 乘性陣風場
+    source: UNSOLVED_PHYSICS_TO_ENGINE 對照表（湍流子項）
+    summary: >
+      Navier–Stokes 未解的不只光滑性——耗散集中稀疏突發區域
+      （間歇性）。CurlNoise 給無散度基底流但場太平滑；取對數
+      正態式級聯強度場做乘性調製，E[g]≈1、重尾突發、seeded
+      決定性。消費點：雲標記漂移忽強忽弱（fog drift）。
+    acceptance:
+      - Intensity 恆正、集合平均≈1、存在 ≫均值 突發
+      - BattleSceneSync::SetFogDriftGust opt-in；預設不調製
+      - 誠實標註 g·v 非嚴格無散度
+    status: done
+    note: >
+      MathUtils/GustField.h（GustField：Σ Aᵢ·sin(kᵢ·p+ωᵢt+φᵢ)
+      歸一化 → g=exp(σχ̂−σ²/2)，header-only）+
+      BattleSceneSync::SetFogDriftGust 乘進 P-1 漂移量 +
+      DuanqiaoPlayable 接 sigma=0.7。UnsolvedBatch3Test：
+      E[g]=1.002、max≈4×mean、60% 點 <1（重尾形狀符合間歇性）。
+    size: S
+
   # ---- 層級 M：數學批次後續（UNSOLVED_MATH_TO_ENGINE 消費端）----
 
   - id: M-1
@@ -373,6 +394,25 @@ queue:
       ~1% 格成 DeepForest（type=forest/note 特徵點）。場值分佈
       實測：scale=320 時中位 0.39、P(>=0.9)≈0.9%。
       QuasiModelsTest + MapGenTest [5b] 覆蓋。
+    size: S
+
+  - id: M-2
+    title: Golomb 全異距尺：最優尺表 + 貪心構造
+    source: UNSOLVED_MATH_TO_ENGINE 對照表
+    summary: >
+      最優 Golomb 尺（n 刻度最短尺）只證到 n≤27，一般 n 無閉式
+      解。引擎取「全異距」性質：任意兩對刻度間距不重複 →
+      採樣抽頭去共振、編隊槽位去同心環對稱。
+    acceptance:
+      - 內建 n≤12 已驗證最優尺表（長度對 OEIS A079426）
+      - n>12 貪心構造保持全異距（誠實標註長度非最優）
+      - FormationOffsets 槽位半徑全異；退化輸入防禦
+    status: done
+    note: >
+      MathUtils/GolombRuler.h（OptimalGolombRuler/IsGolomb/
+      GolombMarks/FormationOffsets，header-only）。尺表 Python
+      驗證 n=1..12 全異距+最優長度；n=13 貪心=147（最優 106）。
+      UnsolvedBatch3Test 逐階驗證 + 槽位半徑全異。
     size: S
 
   # ---- 層級 C 延伸：立繪訓練資料 ----

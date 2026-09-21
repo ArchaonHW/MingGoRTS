@@ -12,7 +12,7 @@ class SceneGraph;
 class SceneNode;
 class Mesh;
 class RenderableComponent;
-namespace Quasi { class TurbulenceField; }
+namespace Quasi { class TurbulenceField; class GustField; }
 
 namespace Gameplay {
 
@@ -64,6 +64,9 @@ public:
     // strength 是世界單位偏移量級；0（預設）= 行為與無場一致。
     // field 生命週期由呼叫端持有；nullptr 關閉。
     void SetFogDrift(const Quasi::TurbulenceField* field, float strength);
+    // P-4 間歇陣風（可選）：漂移量再乘 GustField::Intensity——
+    // 雲漂移忽強忽弱而非恆速。nullptr（預設）= 不調製。
+    void SetFogDriftGust(const Quasi::GustField* gust);
 
     // 選取的小隊(顯示選取環);nullptr 取消選取
     void SetSelectedSquad(const Squad* squad);
@@ -101,6 +104,7 @@ private:
     SharedPtr<Mesh> fogMarkerMesh;
     const Quasi::TurbulenceField* fogDrift = nullptr;
     float fogDriftStrength = 0.0f;
+    const Quasi::GustField* fogGust = nullptr; // P-4 陣風調製
     const Squad* selected = nullptr;
     float barY = 2.0f;
     float barWidth = 1.2f;

@@ -13,6 +13,7 @@
 | **湍流**（Navier–Stokes 千禧年難題，「古典物理最後未解之謎」） | 不可壓縮湍流的關鍵不變量是「無散度」——curl noise 用向量勢解析構造，散度嚴格為零 | **採用** → `MathUtils/CurlNoise.h`（`TurbulenceField`） |
 | **決定性混沌 / Lyapunov 指數**（三體敏感度無解析刻畫） | 蝴蝶效應即「seeded 但不可預測」——本身就是引擎要的行為；seed 控制已內建 | **已涵蓋**——QuasiRandom seed 語義 + 本批測試斷言敏感度 |
 | **玻璃轉變/阻塞（jamming）** | 顆粒/人群壓力無統一理論；可用行為級近似（擁擠→移速懲罰） | **採用** → `MathUtils/JammingModel.h` |
+| **湍流間歇性**（耗散集中稀疏突發、異常標度指數未解） | 平滑場畫不出「一陣一陣」——對數正態式乘性調製給重尾突發強度 | **採用** → `MathUtils/GustField.h`（`GustField`） |
 | **量子測量問題 / 量子重力** | 量子批次已用「測量=情報消費」玩法化 | **已涵蓋**於 Q-層 |
 | **高溫超導機制** | 無對應玩法 | **拒絕** |
 | **暗物質/暗能量** | 世界觀素材，非引擎技術 | **拒絕** |
@@ -71,6 +72,20 @@ QuasiRandom 的塑性常數方向取樣，避免週期性條紋。
 
 擱置理由消失：當時「等 Squad 密度玩法需求出現」——斷橋原型
 多隊擠渡口已是日常場景，故落地為 opt-in 機制。
+
+### 第三批（2026-09-21）：湍流間歇性
+
+- `MathUtils/GustField.h` — `GustField`（對數正態式級聯強度場
+  `g = exp(σ·χ̂ − σ²/2)`，E[g]≈1、重尾突發、seeded 決定性；
+  header-only）
+- `Gameplay/BattleSceneSync::SetFogDriftGust` — 雲標記漂移量乘
+  間歇強度（P-1 湍流漂移的乘性調製）；nullptr 預設=不調製
+- `Examples/DuanqiaoPlayable` — 接 `fogGust`（sigma=0.7）
+- `Examples/UnsolvedBatch3Test.cpp` — E[g]≈1/重尾/恆正/決定性/
+  sigma=0 退化 → CTest
+
+誠實性：g·v 非嚴格無散度（∇·(gv)=∇g·v）——用不變量換突發
+外觀，嚴格無散度仍走 TurbulenceField 本體。
 
 ---
 

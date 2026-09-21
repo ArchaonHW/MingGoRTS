@@ -34,6 +34,7 @@
 #include "Gameplay/SquadTemplate.h"
 #include "Gameplay/QuantumFog.h"
 #include "MathUtils/CurlNoise.h"
+#include "MathUtils/GustField.h"
 #include "MathUtils/Matrix4.h"
 #include "DemoAssets.h"
 #include "UITheme.h"
@@ -830,6 +831,10 @@ int main() {
     Quasi::TurbulenceField fogTurb(/*octaves=*/6, /*seed=*/42,
                                   /*baseFreq=*/0.15f, /*baseAmp=*/1.0f);
     sync.SetFogDrift(&fogTurb, 0.4f * CELL);
+    // P-4 間歇陣風:漂移量乘對數正態強度場,雲忽快忽慢（預設關閉時 g≡1）
+    Quasi::GustField fogGust(/*octaves=*/5, /*seed=*/42,
+                             /*baseFreq=*/0.08f, /*sigma=*/0.7f);
+    sync.SetFogDriftGust(&fogGust);
     sync.Sync(battle);
 
     // T-9 圖釘:objective(紅)/rally(藍)——Planning 中 Alt+點地移動,

@@ -1,6 +1,7 @@
 #include "BattleSceneSync.h"
 
 #include "MathUtils/CurlNoise.h"
+#include "MathUtils/GustField.h"
 #include "QuantumFog.h"
 #include "BattleController.h"
 #include "Squad.h"
@@ -212,8 +213,12 @@ void BattleSceneSync::Sync(BattleController& battle) {
                     // P-1：場在 (pos,t) 連續 → 標記平滑漂移不跳動
                     const Vector3 dv =
                         fogDrift->Sample(mpos, battle.GetElapsed());
-                    mpos.x += dv.x * fogDriftStrength;
-                    mpos.z += dv.z * fogDriftStrength;
+                    // P-4：間歇陣風調製（E[g]=1，重尾突發）
+                    const float g = fogGust
+                        ? fogGust->Intensity(mpos, battle.GetElapsed())
+                        : 1.0f;
+                    mpos.x += dv.x * fogDriftStrength * g;
+                    mpos.z += dv.z * fogDriftStrength * g;
                 }
                 c->SetLocalPosition(mpos);
                 const float s = 0.4f + static_cast<float>(cloud[i].second) * 2.0f;
@@ -263,6 +268,10 @@ void BattleSceneSync::SetFogDrift(const Quasi::TurbulenceField* field,
                                   float strength) {
     fogDrift = field;
     fogDriftStrength = strength;
+}
+
+void BattleSceneSync::SetFogDriftGust(const Quasi::GustField* gust) {
+    fogGust = gust;
 }
 
 void BattleSceneSync::SetFogMarkerMesh(SharedPtr<Mesh> mesh) {
