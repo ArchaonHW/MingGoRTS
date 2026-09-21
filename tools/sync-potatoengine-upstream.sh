@@ -33,7 +33,7 @@ AI_FILES="NeuralNetwork.h NeuralNetwork.cpp"
 EXAMPLES="AIDemo AITestSuite AngelLegionVideo AntiTamperTest AudioTest \
 ContentScannerTest CoreSystemsTest \
 EngineExample FakeCheatModule FileSystemTest GLSmokeTest ImageCodecTest \
-InputTest LogTest LoggerTest MathTest MediaPipeTest MemoryTest MinimalTest \
+InputTest JobSystemTest LogTest LoggerTest MathTest MediaPipeTest MemoryTest MinimalTest \
 MiniaudioBackendTest ModelLoaderTest NeuralArtTool NeuralGraphicsTest \
 OptimizedAIDemo \
 PhysicsMathTest PhysicsTest PlatformTest PortraitBaker PortraitRenderer \

@@ -405,7 +405,6 @@ add_library(Gameplay STATIC
     Gameplay/GovernanceField.cpp
     Gameplay/ShrineField.cpp
     Gameplay/MythIncursion.cpp
-    Gameplay/SeepageStage.cpp
     Gameplay/BattleCommandAI.cpp
     Gameplay/BattleCommandEnv.cpp
 )
@@ -884,14 +883,6 @@ add_executable(MythIncursionTest Examples/MythIncursionTest.cpp)
 target_include_directories(MythIncursionTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(MythIncursionTest Campaign)
 
-# D-5 滲透視效無頭測試（等級→指令包/scrim 過渡/降檔/設定相容）
-add_executable(SeepageStageTest Examples/SeepageStageTest.cpp)
-target_include_directories(SeepageStageTest PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui
-)
-target_link_libraries(SeepageStageTest Gameplay)
-
 # E-1 無戰章節門檻判定無頭測試（定義塊/灰顯報表/三路徑入帳/中計）
 add_executable(NoBattleResolverTest Examples/NoBattleResolverTest.cpp)
 target_include_directories(NoBattleResolverTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1140,7 +1131,6 @@ set(POTATO_TESTS
     ShrineFieldTest
     FateExchangeTest
     MythIncursionTest
-    SeepageStageTest
     NoBattleResolverTest
     NoBattleNarrativeTest
 )
