@@ -722,6 +722,9 @@ int main() {
     battle.SetRoutShock(/*radius=*/4.0f, /*moraleHit=*/0.15f);
     // G-2：掠奪隊標騎兵（快攻克制弓），守橋隊預設步兵；戰線寬 2
     battle.SetCombatWidth(2);
+    // P-3 擁擠阻塞：渡口寬 2 格是天然 chokepoint——多隊同擠渡口時
+    // 密度過臨界值移速急降（jamming 行為級近似），孤隊不受影響
+    battle.SetJamming(/*radius=*/2.0f);
     if (e2) e2->SetUnitClass(UnitClass::Cavalry);
 
     // ---- Q-1/Q-3 敵情霧:敵軍以疊加態存在,觀測或接觸才塌縮 ----
