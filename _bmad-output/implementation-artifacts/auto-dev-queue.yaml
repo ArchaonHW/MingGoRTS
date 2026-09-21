@@ -996,7 +996,8 @@ queue:
     acceptance:
       - 入侵觸發/效果/記錄鏈完整
       - 稀有性守衛（意義改變者才用）
-    status: queued
+    status: done
+    note: 三路審查補丁後 50/50 雙工具鏈；假訊觀測方/收隊/事件序已修
     size: L
     note: 依賴 D-1 + D-2 + N-5（已落地）
 

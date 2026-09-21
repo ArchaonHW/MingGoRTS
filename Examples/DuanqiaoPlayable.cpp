@@ -268,6 +268,7 @@ enum class ShellScreen { Title, Battle, Quit };
 // 寫到 out 參數，由主迴圈（部署層）套用，UI 不直接改戰役狀態。
 static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
                               UITheme::Id& theme, float& uiScale,
+                              int& hudDensity,
                               ImFont* fontSans, ImFont* fontSerif,
                               UITheme::Id& appliedTheme, float& appliedScale,
                               RefitCamp& camp, const SquadTemplateLibrary& campLibrary,
@@ -424,6 +425,11 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
                                "%.2fx")) {
             settingsDirty = true;
         }
+        // F-3：HUD 密度三檔——資訊冗餘可裁，控制面與關鍵情報恆在
+        if (ImGui::Combo("HUD 密度", &hudDensity,
+                         "精簡\0標準\0詳盡\0")) {
+            settingsDirty = true;
+        }
     }
     // F-2 持久化：拖曳中不落盤，放開控制項才原子寫（收起頁面也照存）
     if (settingsDirty && !ImGui::IsAnyItemActive()) {
@@ -431,7 +437,8 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
             (DemoAssets::ExeDir() / "saves" / "settings.json")
                 .generic_string();
         UISettings::Save(kSettingsPath,
-                         UISettings::Data{(int)theme, uiScale});
+                         UISettings::Data{(int)theme, uiScale,
+                                          hudDensity});
         settingsDirty = false;
     }
     if (ImGui::Button("離 開", ImVec2(-1, 0))) next = ShellScreen::Quit;
@@ -511,6 +518,7 @@ int main() {
             .generic_string();
     UITheme::Id theme = UITheme::Id::TacticalSim;
     float uiScale = 1.0f;
+    int hudDensity = (int)HUDDensityUI::Density::Standard;
     {
         UISettings::Data st;
         if (UISettings::Load(kSettingsPath, st)) {
@@ -518,8 +526,10 @@ int main() {
                 theme = (UITheme::Id)st.theme;
             }
             uiScale = st.uiScale;
+            hudDensity = st.hudDensity;
         }
     }
+
     UITheme::Id appliedTheme = theme;
     float appliedScale = uiScale;
     UITheme::ApplyScaled(ImGui::GetStyle(), theme, uiScale);
@@ -576,8 +586,9 @@ int main() {
     while (screen != ShellScreen::Quit && !renderer.ShouldClose()) {
         if (screen == ShellScreen::Title) {
             screen = TitleFrame(window, renderer, theme, uiScale,
-                                fontSans, fontSerif, appliedTheme,
-                                appliedScale, camp, campLibrary,
+                                hudDensity, fontSans, fontSerif,
+                                appliedTheme, appliedScale, camp,
+                                campLibrary,
                                 campaign, chapters, pendingChapter);
             continue;
         }
@@ -881,6 +892,10 @@ int main() {
 
     std::printf("斷橋可玩 demo — 左鍵選取,右鍵下令(CP),Space 暫停\n");
 
+    // F-3：HUD 密度（title 設定頁可改，進場時鎖成本場值）
+    const HUDDensityUI::Density hd =
+        HUDDensityUI::DensityFromInt(hudDensity);
+
     while (!renderer.ShouldClose() && !backToTitle) {
         renderer.PollEvents();
         double now = glfwGetTime();
@@ -1181,24 +1196,34 @@ int main() {
             ImGui::SameLine(0.0f, 16.0f);
             UITheme::FixedField(tbuf, 88.0f * uiScale);
         }
-        ImGui::Text("未揭露敵軍: %d / %d", hiddenFoes, (int)fog.EntityCount());
-        ImGui::Separator();
-        if (selected) {
-            ImGui::Text("選取: %s", selected->GetName().c_str());
-            ImGui::Text("兵力 %d/%d  士氣 %.0f%%  命令 %s",
-                        selected->GetMembers(), selected->GetMaxMembers(),
-                        selected->GetMorale() * 100.0f,
-                        OrderName(selected->GetOrder()));
-        } else {
-            ImGui::TextDisabled("未選取小隊(左鍵點選)");
+        // F-3：霧情報計數屬 verbose 層（未揭露數非關鍵情報）
+        if (HUDShown(HUDDensityUI::Feature::FogIntel, hd)) {
+            ImGui::Text("未揭露敵軍: %d / %d", hiddenFoes,
+                        (int)fog.EntityCount());
         }
         ImGui::Separator();
-        ImGui::TextDisabled("左鍵選取 | 點雲探測(1情報) | Shift+點雲觀測(2情報)");
-        ImGui::TextDisabled("右鍵下令 | Space 暫停 | 1/2/3 倍速");
-        ImGui::TextDisabled("WASD 平移 | 滾輪縮放 | Esc 取消選取");
-        if (planningPhase) {
-            ImGui::TextDisabled("Alt+左鍵=移目標點 | Alt+右鍵=移集結點");
-            ImGui::TextDisabled("Ctrl+左鍵自小隊拖出=畫進攻箭頭");
+        // F-3：選取明細屬 standard 層；minimal 下只留「未選取」提示也裁
+        if (HUDShown(HUDDensityUI::Feature::SquadDetail, hd)) {
+            if (selected) {
+                ImGui::Text("選取: %s", selected->GetName().c_str());
+                ImGui::Text("兵力 %d/%d  士氣 %.0f%%  命令 %s",
+                            selected->GetMembers(), selected->GetMaxMembers(),
+                            selected->GetMorale() * 100.0f,
+                            OrderName(selected->GetOrder()));
+            } else {
+                ImGui::TextDisabled("未選取小隊(左鍵點選)");
+            }
+            ImGui::Separator();
+        }
+        // F-3：操作提示屬 standard 層
+        if (HUDShown(HUDDensityUI::Feature::HelpHints, hd)) {
+            ImGui::TextDisabled("左鍵選取 | 點雲探測(1情報) | Shift+點雲觀測(2情報)");
+            ImGui::TextDisabled("右鍵下令 | Space 暫停 | 1/2/3 倍速");
+            ImGui::TextDisabled("WASD 平移 | 滾輪縮放 | Esc 取消選取");
+            if (planningPhase) {
+                ImGui::TextDisabled("Alt+左鍵=移目標點 | Alt+右鍵=移集結點");
+                ImGui::TextDisabled("Ctrl+左鍵自小隊拖出=畫進攻箭頭");
+            }
         }
         ImGui::End();
 
@@ -1208,7 +1233,8 @@ int main() {
             if (guardEid >= 0 && fog.IsRevealed(guardEid)) {
                 dossier.Verify(glock); // 冪等：寫真值+標 verified
             }
-            if (const HearsayEntry* he = dossier.Find(glock.GetName())) {
+            if (const HearsayEntry* he = dossier.Find(glock.GetName());
+                he && HUDShown(HUDDensityUI::Feature::EnemyDossier, hd)) {
                 ImGui::SetNextWindowPos(
                     ImVec2(ww - UITheme::Px(308, uiScale), 8),
                     ImGuiCond_Always);
@@ -1554,22 +1580,28 @@ int main() {
         }
 
         // 事件流(ImGui 座標是 window 空間;視窗最小化時 wh=0,clamp 防負值)
-        ImGui::SetNextWindowPos(
-            ImVec2(8, std::max(0.0f,
-                               (float)wh - UITheme::Px(190, uiScale))),
-            ImGuiCond_Always);
-        ImGui::SetNextWindowSize(
-            ImVec2(UITheme::Px(430, uiScale),
-                   UITheme::Px(182, uiScale)),
-            ImGuiCond_Always);
-        ImGui::Begin("戰況", nullptr,
-                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
-        for (const auto& e : eventLog) ImGui::TextUnformatted(e.c_str());
-        ImGui::End();
+        // F-3：戰況卷軸屬 standard 層
+        if (HUDShown(HUDDensityUI::Feature::EventLog, hd)) {
+            ImGui::SetNextWindowPos(
+                ImVec2(8, std::max(0.0f,
+                                   (float)wh - UITheme::Px(190, uiScale))),
+                ImGuiCond_Always);
+            ImGui::SetNextWindowSize(
+                ImVec2(UITheme::Px(430, uiScale),
+                       UITheme::Px(182, uiScale)),
+                ImGuiCond_Always);
+            ImGui::Begin("戰況", nullptr,
+                         ImGuiWindowFlags_NoCollapse |
+                             ImGuiWindowFlags_NoResize);
+            for (const auto& e : eventLog)
+                ImGui::TextUnformatted(e.c_str());
+            ImGui::End();
+        }
 
         // ---- 小地圖（右下錨點;形狀編碼:■我 ◆敵 ●雲,DESIGN 強制——
         //      陣營不靠色相區分,色弱/主題切換下語義不變）----
-        {
+        // F-3：小地圖屬 standard 層
+        if (HUDShown(HUDDensityUI::Feature::Minimap, hd)) {
             const float ms = UITheme::Px(170, uiScale);
             ImGui::SetNextWindowPos(
                 ImVec2((float)ww - ms - UITheme::Px(18, uiScale),

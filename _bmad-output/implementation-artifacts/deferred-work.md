@@ -105,3 +105,9 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-d3-fate-conversion.md`
   summary: `FateExchange::battleUses` is runtime-only (spec Never: no schema change) — mid-battle save/reload refills the per-battle quota (save-scum). Persist per-battle exchange count if mid-battle saves become real.
   evidence: Edge-case-hunter + blind-hunter review — spec explicitly froze `potato.campaign/1`; logged so the save-integration story sees it.
+- source_spec: `_bmad-output/implementation-artifacts/spec-d4-myth-incursion.md`
+  summary: `MythIncursion` 持有非擁有 `Squad*`/`QuantumFog*`、吃 `BattleController&` — 生命期契約全憑呼叫端紀律：Update 只能在 Execution 拍以「已乘 timeScale 的 dt」驅動、不可在 squad 迭代回呼內呼叫（CreateSquad 會 rehash 迭代器）、物件不得比 battle 長命。已寫進檔頭契約；若未來加 BattlePhase getter 可改為 field 內自守。
+  evidence: Three-layer review — `Gameplay/MythIncursion.h` 契約註記；專案無 phase 查詢 API（BattleController 無 GetPhase）。
+- source_spec: `_bmad-output/implementation-artifacts/spec-d4-myth-incursion.md`
+  summary: FoxRumor 假雲觀測方硬編 team 0 — 與 ShrineField/GovernanceField 的 team-0 慣例同一洞：玩家非 team 0 的戰場情報計費會指錯邊。需跨三處的共享玩家 team 參數，非單類修復。
+  evidence: Edge-case-hunter review — `QuantumFog::AddEntityCloud` team 參數是觀測方語義；同 D-2 deferred 條目。

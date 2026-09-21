@@ -105,14 +105,9 @@ endif()
 add_library(glad STATIC external/glad_gen/src/glad.c)
 target_include_directories(glad PUBLIC external/glad_gen/include)
 
-# OpenAL - 音頻庫 (可選)
-# include(FetchContent)
-# FetchContent_Declare(
-#     openal
-#     GIT_REPOSITORY https://github.com/kcat/openal-soft.git
-#     GIT_TAG 1.23.1
-# )
-# FetchContent_MakeAvailable(openal)
+# miniaudio - F-4 音訊後端（external/miniaudio 單標頭庫,public domain/MIT-0;
+# MINIAUDIO_IMPLEMENTATION 集中 Audio/MiniaudioImpl.cpp,隨 Audio/*.cpp
+# glob 進 PotatoEngine,不需獨立 target)
 
 # 包含目錄
 include_directories(
@@ -194,10 +189,11 @@ target_include_directories(PotatoEngine PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/MathUtils
 )
 
-# tinygltf 實作單元（Rendering/TinyGltfImpl.cpp）只需私有 include 路徑；
+# tinygltf/miniaudio 實作單元只需私有 include 路徑；
 # PUBLIC 會把 header-only 庫的 include 污染給所有下游 target
 target_include_directories(PotatoEngine PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/external/tinygltf
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/miniaudio
 )
 
 target_link_libraries(PotatoEngine
@@ -749,6 +745,20 @@ target_include_directories(UIScaleTest PRIVATE
 )
 target_link_libraries(UIScaleTest PotatoEngine)
 
+# F-3 HUD 密度三檔無頭測試（門檻矩陣/序數鉗制/settings 持久化）
+add_executable(HUDDensityTest
+    Examples/HUDDensityTest.cpp
+    external/imgui/imgui.cpp
+    external/imgui/imgui_draw.cpp
+    external/imgui/imgui_tables.cpp
+    external/imgui/imgui_widgets.cpp
+)
+target_include_directories(HUDDensityTest PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui
+)
+target_link_libraries(HUDDensityTest PotatoEngine)
+
 # RenderTarget 離屏 FBO 測試（GL-gated：無顯示環境 SKIP）
 add_executable(RenderTargetTest Examples/RenderTargetTest.cpp)
 target_include_directories(RenderTargetTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -920,6 +930,11 @@ add_executable(AudioTest Examples/AudioTest.cpp)
 target_include_directories(AudioTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(AudioTest PotatoEngine)
 
+# F-4 miniaudio 後端降級契約測試（ma_backend_null 全無頭;缺檔/無裝置/冪等)
+add_executable(MiniaudioBackendTest Examples/MiniaudioBackendTest.cpp)
+target_include_directories(MiniaudioBackendTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(MiniaudioBackendTest PotatoEngine)
+
 add_executable(TimeTest Examples/TimeTest.cpp)
 target_include_directories(TimeTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(TimeTest PotatoEngine)
@@ -1027,6 +1042,7 @@ set(POTATO_TESTS
     VrmLoadTest
     InputTest
     AudioTest
+    MiniaudioBackendTest
     TimeTest
     ImageCodecTest
     CoreSystemsTest
@@ -1065,6 +1081,7 @@ set(POTATO_TESTS
     MediaPipeTest
     UIThemeTest
     UIScaleTest
+    HUDDensityTest
     RenderTargetTest
     HistorianReportTest
     RivalDeckTest
