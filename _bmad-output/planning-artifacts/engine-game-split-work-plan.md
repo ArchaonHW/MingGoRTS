@@ -65,8 +65,8 @@
 ## Phase 5 — 交接
 
 - [x] W5.0 置換決策：遊戲側**維持 `C:\HWC\MingGoRTS` 不動**（平行 session 在途，引擎仍是 repo 內真相來源）；`C:\HWC\PotatoEngine` 由 filter-repo 產物取代（舊鏡像 repo 備份 `PotatoEngine-mirror-old/`）。遊戲側正式切出（`game-src` 已驗證，存 `_split_stage/`）留待平行工作收斂後執行
-- [ ] W5.1 兩側 README/AGENTS/docs 更新（引擎新 AGENTS.md 已入帳）
-- [ ] W5.2 `sync-potatoengine-upstream.sh` 退役或改寫為引擎 repo 的 CI 發布腳本
+- [x] W5.1 兩側 README/AGENTS/docs 更新（引擎新 AGENTS.md 已入帳 55c28fb；MingGoRTS AGENTS.md 鏡像描述改為獨立 repo ca0980f）
+- [x] W5.2 `sync-potatoengine-upstream.sh` 改寫為扁平佈局目錄級同步（ca0980f）：AI/ 混合目錄改檔案級白名單、舊 include/src 佈局安全閘、imgui submodule 不觸碰；upstream-mirror CI 路徑對齊
 - [ ] W5.3 remote/branch/PR 由 user 決定——不直推 main/develop，commit 用 conventional commits（新引擎 repo 歷史重寫過，推送需 force）
 
 ## 風險
