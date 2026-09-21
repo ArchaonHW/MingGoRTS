@@ -471,6 +471,11 @@ add_executable(QuasiRandomTest Examples/QuasiRandomTest.cpp)
 target_include_directories(QuasiRandomTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(QuasiRandomTest Gameplay)
 
+# Collatz 雜湊/擁擠阻塞模型測試（headless,純引擎層,可同步上游）
+add_executable(QuasiModelsTest Examples/QuasiModelsTest.cpp)
+target_include_directories(QuasiModelsTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(QuasiModelsTest PotatoEngine)
+
 # RTS 點選層測試（headless：螢幕→射線→地面/小隊包圍球）
 add_executable(BattlePickerTest Examples/BattlePickerTest.cpp)
 target_include_directories(BattlePickerTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -972,6 +977,7 @@ set(POTATO_TESTS
     SageCommandTest
     QuantumTest
     QuasiRandomTest
+    QuasiModelsTest
     QuantumFogBattleTest
     QuantumBench
     TutorialScriptTest
