@@ -33,7 +33,8 @@ AI_FILES="NeuralNetwork.h NeuralNetwork.cpp"
 EXAMPLES="AIDemo AITestSuite AngelLegionVideo AudioTest CoreSystemsTest \
 EngineExample FakeCheatModule FileSystemTest GLSmokeTest ImageCodecTest \
 InputTest LogTest LoggerTest MathTest MediaPipeTest MemoryTest MinimalTest \
-ModelLoaderTest NeuralArtTool NeuralGraphicsTest OptimizedAIDemo \
+MiniaudioBackendTest ModelLoaderTest NeuralArtTool NeuralGraphicsTest \
+OptimizedAIDemo \
 PhysicsMathTest PhysicsTest PlatformTest PortraitBaker PortraitRenderer \
 QuasiModelsTest RenderPipelineTest RenderTargetTest SceneTest \
 SecurityRedTeamTest SerializationTest SimpleExample SpriteAtlasTest \
@@ -77,9 +78,9 @@ for f in $AI_FILES; do
     fi
 done
 
-# 2) vendored 依賴:只同步 glad_gen + tinygltf;
+# 2) vendored 依賴:同步 glad_gen + tinygltf + miniaudio(F-4);
 #    external/imgui 是上游 submodule,絕不觸碰
-for dep in glad_gen tinygltf; do
+for dep in glad_gen tinygltf miniaudio; do
     if [ -d "$REPO_ROOT/external/$dep" ]; then
         rm -rf "$TARGET/external/$dep"
         mkdir -p "$TARGET/external"
