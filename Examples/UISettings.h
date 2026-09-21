@@ -21,6 +21,7 @@ struct Data {
     int theme = 0;         // UITheme::Id 序數
     float uiScale = 1.0f;  // ClampScale 守衛 0.75–1.5
     int hudDensity = 1;    // HUDDensityUI::Density 序數（預設 Standard）
+    int motionReduction = 0; // D-5：非零=滲透/主題過渡降為 crossfade
 };
 
 inline bool Save(const std::string& path, const Data& d) {
@@ -33,6 +34,8 @@ inline bool Save(const std::string& path, const Data& d) {
         Potato::JsonValue::Number(UITheme::ClampScale(d.uiScale));
     root.objectValue["hudDensity"] = Potato::JsonValue::Number(
         (int)HUDDensityUI::DensityFromInt(d.hudDensity));
+    root.objectValue["motionReduction"] =
+        Potato::JsonValue::Number(d.motionReduction ? 1 : 0);
 
     // 首次存設定時 saves/ 可能尚未建立（原本由 campaign 存檔建立）
     std::error_code dirc;
@@ -78,6 +81,8 @@ inline bool Load(const std::string& path, Data& out) {
     // F-3：可選欄位——舊檔無 hudDensity → Standard；越界鉗回
     d.hudDensity = (int)HUDDensityUI::DensityFromInt(
         root["hudDensity"].AsInt(1));
+    // D-5：可選欄位——舊檔無 motionReduction → 0（不降速）
+    d.motionReduction = root["motionReduction"].AsInt(0) ? 1 : 0;
     out = d;
     return true;
 }

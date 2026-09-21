@@ -68,6 +68,16 @@ public:
     // 雲漂移忽強忽弱而非恆速。nullptr（預設）= 不調製。
     void SetFogDriftGust(const Quasi::GustField* gust);
 
+    // D-5 滲透視效（UX-DR5，唯讀消費——呼叫端從 SeepageStage 取值注入，
+    // sync 不寫滲透狀態）：
+    // tint——敵情雲底色 RGB 加算偏移（等級1 霧色偏移）；
+    // jitterAmp——雲標記定域正弦微移（等級2 物件微移；無亂數、
+    //   相位依候選索引，回放可重現）；
+    // shadowOffset——雲標記 +x 向靜態錯位（陰影錯位感）。
+    // 全零（預設）= 行為與無滲透一致。
+    void SetSeepageFX(const Vector3& tint, float jitterAmp,
+                      float shadowOffset);
+
     // 選取的小隊(顯示選取環);nullptr 取消選取
     void SetSelectedSquad(const Squad* squad);
     const Squad* GetSelectedSquad() const { return selected; }
@@ -105,6 +115,9 @@ private:
     const Quasi::TurbulenceField* fogDrift = nullptr;
     float fogDriftStrength = 0.0f;
     const Quasi::GustField* fogGust = nullptr; // P-4 陣風調製
+    Vector3 seepageTint;     // D-5 滲透霧色偏移
+    float seepageJitter = 0.0f; // D-5 微移幅度
+    float seepageShadow = 0.0f; // D-5 陰影錯位
     const Squad* selected = nullptr;
     float barY = 2.0f;
     float barWidth = 1.2f;
