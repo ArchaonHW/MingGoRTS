@@ -276,6 +276,82 @@ int main() {
         std::remove(path);
     }
 
+    // [16] R3 header 缺 include guard
+    std::printf("[16] header guard\n");
+    {
+        const std::string bare = "struct Foo { int x; };\n";
+        auto sug = sys.GenerateSuggestions(bare, "Gameplay/Foo.h", 1, 1);
+        Check(HasTitle(sug, "Missing include guard"),
+              ".h 無 guard → 建議");
+        auto cpp = sys.GenerateSuggestions(bare, "Gameplay/Foo.cpp", 1, 1);
+        Check(!HasTitle(cpp, "Missing include guard"),
+              ".cpp 不報 guard");
+        const std::string guarded = "#pragma once\nstruct Foo {};\n";
+        auto ok = sys.GenerateSuggestions(guarded, "Gameplay/Foo.h", 1, 1);
+        Check(!HasTitle(ok, "Missing include guard"),
+              "#pragma once 不報");
+    }
+
+    // [17] R4 引擎層禁用 ImGui
+    std::printf("[17] engine+imgui\n");
+    {
+        const std::string gui =
+            "#include \"imgui.h\"\nvoid f() { ImGui::Begin(\"x\"); }\n";
+        auto eng = sys.GenerateSuggestions(gui, "Rendering/Panel.cpp", 1, 1);
+        Check(HasTitle(eng, "Engine must not use ImGui"),
+              "引擎檔 include imgui → 違規");
+        auto demo = sys.GenerateSuggestions(gui, "Examples/demo.cpp", 1, 1);
+        Check(!HasTitle(demo, "Engine must not use ImGui"),
+              "Examples 不報");
+        // 無 include 但有 ImGui:: 呼叫也抓
+        const std::string call = "void f() { ImGui::Text(\"x\"); }\n";
+        auto eng2 = sys.GenerateSuggestions(call, "Core/Util.cpp", 1, 1);
+        Check(HasTitle(eng2, "Engine must not use ImGui"),
+              "引擎檔 ImGui:: 呼叫 → 違規");
+    }
+
+    // [18] R5 非確定性 RNG
+    std::printf("[18] nondeterministic RNG\n");
+    {
+        auto sug = sys.GenerateSuggestions(
+            "int f() { return rand() % 10; }\n", "Gameplay/AI.cpp", 1, 1);
+        Check(HasTitle(sug, "Nondeterministic RNG"), "rand() → 建議");
+        auto uni = sys.GenerateSuggestions(
+            "std::uniform_int_distribution<int> d(0,9);\n",
+            "Gameplay/AI.cpp", 1, 1);
+        Check(HasTitle(uni, "Nondeterministic RNG"),
+              "uniform_int_distribution → 建議");
+        auto srand = sys.GenerateSuggestions(
+            "void f() { srand(42); }\n", "Gameplay/AI.cpp", 1, 1);
+        Check(!HasTitle(srand, "Nondeterministic RNG"),
+              "srand( 不誤報 rand(\\b 邊界)");
+        auto det = sys.GenerateSuggestions(
+            "std::mt19937_64 rng(seed); int x = (int)(rng() % 10);\n",
+            "Gameplay/AI.cpp", 1, 1);
+        Check(!HasTitle(det, "Nondeterministic RNG"),
+              "mt19937_64+modulo 不報");
+    }
+
+    // [19] R6 持久化文件缺 schema
+    std::printf("[19] schema tag\n");
+    {
+        auto sug = sys.GenerateSuggestions(
+            "void W() { o.objectValue[\"k\"] = JsonValue::Number(1); }\n",
+            "Gameplay/Foo.cpp", 1, 1);
+        Check(HasTitle(sug, "Persisted doc without schema tag"),
+              "objectValue 寫入無 schema → 建議");
+        auto ok = sys.GenerateSuggestions(
+            "void W() { o.objectValue[\"schema\"] = "
+            "JsonValue::String(\"potato.x/1\"); }\n",
+            "Gameplay/Foo.cpp", 1, 1);
+        Check(!HasTitle(ok, "Persisted doc without schema tag"),
+              "有 schema 不報");
+        auto consumer = sys.GenerateSuggestions(
+            "void f() { doc.SaveToFile(p); }\n", "Examples/demo.cpp", 1, 1);
+        Check(!HasTitle(consumer, "Persisted doc without schema tag"),
+              "consumer SaveToFile 呼叫不誤報");
+    }
+
     sys.Shutdown();
     std::printf("\n=== %d PASS, %d FAIL ===\n", g_pass, g_fail);
     return g_fail == 0 ? 0 : 1;

@@ -857,6 +857,118 @@ std::vector<Suggestion> IntelligentSuggestionSystem::GetProjectRuleSuggestions(
         suggestions.push_back(suggestion);
     }
 
+    // R3: header 缺 include guard——.h/.hpp 無 #pragma once 也無 #ifndef
+    const bool isHeader =
+        path.size() >= 2 && path.compare(path.size() - 2, 2, ".h") == 0;
+    const bool isHpp =
+        path.size() >= 4 && path.compare(path.size() - 4, 4, ".hpp") == 0;
+    if ((isHeader || isHpp) && !inExternal &&
+        analysis.codeText.find("#pragma once") == std::string::npos &&
+        analysis.codeText.find("#ifndef") == std::string::npos) {
+        Suggestion suggestion;
+        suggestion.type = SuggestionType::BestPractice;
+        suggestion.title = "Missing include guard";
+        suggestion.description =
+            "Header without #pragma once or #ifndef — double-include "
+            "will break the build";
+        suggestion.code = "#pragma once";
+        suggestion.reason = "Repo headers uniformly use #pragma once";
+        suggestion.confidence = ConfidenceLevel::High;
+        suggestion.lineNumber = 1;
+        suggestions.push_back(suggestion);
+    }
+
+    // R4: 引擎層禁用 ImGui——external/imgui 是遊戲層 vendored 工具，
+    // 引擎模組必須保持 headless 可測（雲標記等語義色屬 UITheme）
+    if (engineSide && !inExternal) {
+        bool hitsImgui = false;
+        std::string imguiLine;
+        for (const std::string& imp : analysis.imports) {
+            const size_t fs = imp.find_first_not_of(" \t");
+            if (fs != std::string::npos && imp.compare(fs, 2, "//") == 0) {
+                continue; // 註解掉的 include 不算
+            }
+            if (imp.find("imgui") != std::string::npos) {
+                hitsImgui = true;
+                imguiLine = imp;
+                break;
+            }
+        }
+        if (!hitsImgui &&
+            analysis.maskedText.find("ImGui::") != std::string::npos) {
+            hitsImgui = true;
+        }
+        if (hitsImgui) {
+            Suggestion suggestion;
+            suggestion.type = SuggestionType::Architectural;
+            suggestion.title = "Engine must not use ImGui";
+            suggestion.description =
+                "imgui is vendored for the game layer — engine modules "
+                "must stay headless-testable";
+            suggestion.code = "// Keep UI calls in Examples/ or MingGoRTS_IDE/";
+            suggestion.reason = "Engine layer has no display dependency";
+            suggestion.confidence = ConfidenceLevel::VeryHigh;
+            if (!imguiLine.empty()) {
+                const size_t p = analysis.codeText.find(imguiLine);
+                if (p != std::string::npos) {
+                    suggestion.lineNumber =
+                        LineOfPosition(analysis.codeText, p);
+                }
+            }
+            suggestions.push_back(suggestion);
+        }
+    }
+
+    // R5: rand()/uniform_*_distribution——回放確定性要求 seeded
+    // mt19937_64；uniform_* 結果隨標準庫實作而異（L-8 採 modulo 取樣）
+    if (!inExternal) {
+        static const std::regex nondetRe(
+            R"(\brand\s*\(|\buniform_(?:int|real)_distribution\b)");
+        std::sregex_iterator it(analysis.maskedText.begin(),
+                                analysis.maskedText.end(), nondetRe), end;
+        if (it != end) {
+            const int hits =
+                static_cast<int>(std::distance(it, end));
+            Suggestion suggestion;
+            suggestion.type = SuggestionType::BugFix;
+            suggestion.title = "Nondeterministic RNG";
+            suggestion.description =
+                "rand()/uniform_*_distribution break replay determinism — "
+                "use seeded mt19937_64 (+ modulo sampling)";
+            if (hits > 1) {
+                suggestion.description +=
+                    " (" + std::to_string(hits) + " occurrences)";
+            }
+            suggestion.code = "std::mt19937_64 rng(seed);";
+            suggestion.reason =
+                "Replay/L-8 sampling requires cross-toolchain determinism";
+            suggestion.confidence = ConfidenceLevel::High;
+            suggestion.lineNumber =
+                LineOfPosition(analysis.maskedText,
+                               static_cast<size_t>(it->position()));
+            suggestions.push_back(suggestion);
+        }
+    }
+
+    // R6: 持久化文件缺版本 schema——producer 訊號是 objectValue[ 寫入；
+    // consumer 呼叫 .SaveToFile() 不算（schema 由 producer 檔負責）
+    if (!inExternal &&
+        analysis.maskedText.find("objectValue[") != std::string::npos &&
+        analysis.codeText.find("\"schema\"") == std::string::npos) {
+        Suggestion suggestion;
+        suggestion.type = SuggestionType::Architectural;
+        suggestion.title = "Persisted doc without schema tag";
+        suggestion.description =
+            "JSON producers should stamp \"schema\": \"potato.<name>/N\" — "
+            "old saves degrade gracefully by version check";
+        suggestion.code = "root.objectValue[\"schema\"] = "
+                          "JsonValue::String(\"potato.xxx/1\");";
+        suggestion.reason = "All repo JSON docs are schema-versioned";
+        suggestion.confidence = ConfidenceLevel::Medium;
+        suggestion.lineNumber = 1;
+        suggestions.push_back(suggestion);
+    }
+
     return suggestions;
 }
 
