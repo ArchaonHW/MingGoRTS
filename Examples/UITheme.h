@@ -410,4 +410,27 @@ inline void FixedField(const char* text, float width) {
     ImGui::TextUnformatted(text);
 }
 
+// ---- F-2 UI scale 真管線 ----
+// 範圍 0.75–1.5；ClampScale 是滑桿與存檔載入共用的單一守衛
+inline constexpr float kScaleMin = 0.75f;
+inline constexpr float kScaleMax = 1.5f;
+inline float ClampScale(float s) {
+    if (s < kScaleMin) return kScaleMin;
+    if (s > kScaleMax) return kScaleMax;
+    return s;
+}
+
+// 絕對重建：Apply 基底 token → ScaleAllSizes(scale)。
+// 不做比值累乘——同參數恆同 style，換主題也不殘留舊縮放。
+inline void ApplyScaled(ImGuiStyle& s, Id id, float scale) {
+    Apply(s, id);
+    s.ScaleAllSizes(ClampScale(scale));
+}
+
+// 面板/子窗/按鈕寫死尺寸的 scale 閘門。
+// 錨點位置不經此（UX-DR4）——右緣面板用 `ww - Px(w+8, s)` 保持貼齊。
+inline float Px(float base, float scale) {
+    return base * ClampScale(scale);
+}
+
 } // namespace UITheme

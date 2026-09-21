@@ -37,6 +37,7 @@
 #include "MathUtils/Matrix4.h"
 #include "DemoAssets.h"
 #include "UITheme.h"
+#include "UISettings.h"
 
 #include <glad/glad.h>
 #ifndef GLFW_INCLUDE_NONE
@@ -283,13 +284,14 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
 
     ImGuiIO& io = ImGui::GetIO();
     static float themeFade = 0.0f;
-    if (appliedTheme != theme) {
-        UITheme::Apply(ImGui::GetStyle(), theme);
+    if (appliedTheme != theme || uiScale != appliedScale) {
+        // F-2 絕對重建：基底 token × scale——不累乘漂移，
+        // 換主題時也不再打回未縮放的尺寸（U-1 粗版 bug）
+        UITheme::ApplyScaled(ImGui::GetStyle(), theme, uiScale);
+        if (appliedTheme != theme) {
+            themeFade = 1.0f; // 換主題 → 全屏 scrim 淡出過場(DESIGN 主題切換規範)
+        }
         appliedTheme = theme;
-        themeFade = 1.0f; // 換主題 → 全屏 scrim 淡出過場(DESIGN 主題切換規範)
-    }
-    if (uiScale != appliedScale) {
-        ImGui::GetStyle().ScaleAllSizes(uiScale / appliedScale);
         appliedScale = uiScale;
     }
     io.FontGlobalScale = uiScale;
@@ -306,7 +308,8 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
 
     ImGui::SetNextWindowPos(ImVec2(ww * 0.5f, wh * 0.46f), ImGuiCond_Always,
                             ImVec2(0.5f, 0.5f));
-    ImGui::SetNextWindowSize(ImVec2(430, 0), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(UITheme::Px(430, uiScale), 0),
+                             ImGuiCond_Always);
     ImGui::Begin("##title", nullptr,
                  ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove |
                      ImGuiWindowFlags_AlwaysAutoResize |
@@ -322,7 +325,7 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
     ImGui::Separator();
     ImGui::Spacing();
 
-    if (ImGui::Button("開 戰", ImVec2(-1, 34))) {
+    if (ImGui::Button("開 戰", ImVec2(-1, UITheme::Px(34, uiScale)))) {
         next = ShellScreen::Battle;
     }
 
@@ -405,14 +408,29 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
             "Space 暫停,WASD 平移,滾輪升降,Esc 取消選取。");
         ImGui::PopTextWrapPos();
     }
+    static bool settingsDirty = false;
     if (ImGui::Button("設 定", ImVec2(-1, 0))) showSettings = !showSettings;
     if (showSettings) {
         int t = (int)theme;
         if (ImGui::Combo("主題", &t,
                          "現代軍事\0泥濘沙盤\0軍電作戰室\0水墨史卷\0")) {
             theme = (UITheme::Id)t;
+            settingsDirty = true;
         }
-        ImGui::SliderFloat("介面縮放", &uiScale, 1.0f, 1.5f, "%.2fx");
+        if (ImGui::SliderFloat("介面縮放", &uiScale,
+                               UITheme::kScaleMin, UITheme::kScaleMax,
+                               "%.2fx")) {
+            settingsDirty = true;
+        }
+    }
+    // F-2 持久化：拖曳中不落盤，放開控制項才原子寫（收起頁面也照存）
+    if (settingsDirty && !ImGui::IsAnyItemActive()) {
+        static const std::string kSettingsPath =
+            (DemoAssets::ExeDir() / "saves" / "settings.json")
+                .generic_string();
+        UISettings::Save(kSettingsPath,
+                         UISettings::Data{(int)theme, uiScale});
+        settingsDirty = false;
     }
     if (ImGui::Button("離 開", ImVec2(-1, 0))) next = ShellScreen::Quit;
 
@@ -422,7 +440,8 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
     // CJK 直書標題（印章式，標題窗右側;DESIGN:直書僅限標題/印章）
     ImGui::PushFont(fontSerif ? fontSerif : ImGui::GetFont(), 30.0f);
     UITheme::VTextAt(ImGui::GetForegroundDrawList(),
-                     ImVec2(ww * 0.5f + 245.0f, wh * 0.28f),
+                     ImVec2(ww * 0.5f + UITheme::Px(245, uiScale),
+                            wh * 0.28f),
                      "斷橋攻防戰",
                      ImGui::GetColorU32(ImGuiCol_Text));
     ImGui::PopFont();
@@ -478,10 +497,24 @@ int main() {
     io.FontDefault = fontSans ? fontSans : io.Fonts->Fonts[0];
 
     // U-1 殼層狀態:主題/UI 縮放在標題頁設定頁修改
+    // F-2：potato.settings/1 持久化——缺檔=預設值不報錯
+    const std::string kSettingsPath =
+        (DemoAssets::ExeDir() / "saves" / "settings.json")
+            .generic_string();
     UITheme::Id theme = UITheme::Id::TacticalSim;
+    float uiScale = 1.0f;
+    {
+        UISettings::Data st;
+        if (UISettings::Load(kSettingsPath, st)) {
+            if (st.theme >= 0 && st.theme < UITheme::kCount) {
+                theme = (UITheme::Id)st.theme;
+            }
+            uiScale = st.uiScale;
+        }
+    }
     UITheme::Id appliedTheme = theme;
-    float uiScale = 1.0f, appliedScale = 1.0f;
-    UITheme::Apply(ImGui::GetStyle(), theme);
+    float appliedScale = uiScale;
+    UITheme::ApplyScaled(ImGui::GetStyle(), theme, uiScale);
 
     // ImGui/renderer 已初始化後的失敗路徑都要走這個清理
     auto shutdownAll = [&]() {
@@ -1106,7 +1139,8 @@ int main() {
         }
 
         ImGui::SetNextWindowPos(ImVec2(8, 8), ImGuiCond_Always);
-        ImGui::SetNextWindowSize(ImVec2(300, 0), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(UITheme::Px(300, uiScale), 0),
+                                 ImGuiCond_Always);
         ImGui::Begin("斷橋指揮", nullptr,
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
         ImGui::Text("階段: %s%s",
@@ -1157,9 +1191,12 @@ int main() {
                 dossier.Verify(glock); // 冪等：寫真值+標 verified
             }
             if (const HearsayEntry* he = dossier.Find(glock.GetName())) {
-                ImGui::SetNextWindowPos(ImVec2(ww - 308.0f, 8),
-                                        ImGuiCond_Always);
-                ImGui::SetNextWindowSize(ImVec2(300, 0), ImGuiCond_Always);
+                ImGui::SetNextWindowPos(
+                    ImVec2(ww - UITheme::Px(308, uiScale), 8),
+                    ImGuiCond_Always);
+                ImGui::SetNextWindowSize(
+                    ImVec2(UITheme::Px(300, uiScale), 0),
+                    ImGuiCond_Always);
                 ImGui::Begin("敵將檔案", nullptr,
                              ImGuiWindowFlags_NoCollapse |
                                  ImGuiWindowFlags_AlwaysAutoResize);
@@ -1185,9 +1222,13 @@ int main() {
 
         // ---- T-9 回合層:作戰計畫視窗(三欄:小隊/卡槽/編輯器)----
         if (planningPhase) {
-            ImGui::SetNextWindowPos(ImVec2(ww * 0.5f - 330, 40),
-                                    ImGuiCond_FirstUseEver);
-            ImGui::SetNextWindowSize(ImVec2(660, 420), ImGuiCond_FirstUseEver);
+            ImGui::SetNextWindowPos(
+                ImVec2(ww * 0.5f - UITheme::Px(330, uiScale), 40),
+                ImGuiCond_FirstUseEver);
+            ImGui::SetNextWindowSize(
+                ImVec2(UITheme::Px(660, uiScale),
+                       UITheme::Px(420, uiScale)),
+                ImGuiCond_FirstUseEver);
             ImGui::Begin("作戰計畫 — 戰前軍議", nullptr,
                          ImGuiWindowFlags_NoCollapse);
 
@@ -1196,7 +1237,10 @@ int main() {
             if (curRule >= (int)cd.rules.size()) curRule = -1;
 
             // 左欄:小隊清單
-            ImGui::BeginChild("squads", ImVec2(150, 300), true);
+            ImGui::BeginChild("squads",
+                              ImVec2(UITheme::Px(150, uiScale),
+                                     UITheme::Px(300, uiScale)),
+                              true);
             for (int i = 0; i < deck.SquadCount(); ++i) {
                 const auto& d = deck.Deck(i);
                 char lbl[64];
@@ -1212,7 +1256,10 @@ int main() {
             ImGui::SameLine();
 
             // 中欄:卡槽列
-            ImGui::BeginChild("slots", ImVec2(230, 300), true);
+            ImGui::BeginChild("slots",
+                              ImVec2(UITheme::Px(230, uiScale),
+                                     UITheme::Px(300, uiScale)),
+                              true);
             for (int i = 0; i < (int)cd.rules.size(); ++i) {
                 const auto& r = cd.rules[i];
                 char lbl[96];
@@ -1250,7 +1297,9 @@ int main() {
             ImGui::SameLine();
 
             // 右欄:卡編輯器 + AI 理由
-            ImGui::BeginChild("editor", ImVec2(0, 300), true);
+            ImGui::BeginChild("editor",
+                              ImVec2(0, UITheme::Px(300, uiScale)),
+                              true);
             if (curRule >= 0 && curRule < (int)cd.rules.size()) {
                 DoctrineRule r = cd.rules[curRule];
                 bool changed = false;
@@ -1353,7 +1402,9 @@ int main() {
                 }
                 if (ImGui::Button("清除箭頭")) plan.ClearArrows();
             }
-            if (ImGui::Button("開 戰", ImVec2(120, 32))) {
+            if (ImGui::Button("開 戰",
+                              ImVec2(UITheme::Px(120, uiScale),
+                                     UITheme::Px(32, uiScale)))) {
                 deck.Commit(battle);
                 // G-5:箭頭計畫在卡組之後套用——有箭頭的小隊
                 // doctrine/目標點以箭頭軸線為準,加成經 res 入帳
@@ -1374,9 +1425,12 @@ int main() {
 
         // ---- T-10 全軍狀態列:每隊兵力/士氣條 + CP 介入按鈕 ----
         if (!planningPhase) {
-            ImGui::SetNextWindowPos(ImVec2((float)ww - 272.0f, 8.0f),
-                                    ImGuiCond_Always);
-            ImGui::SetNextWindowSize(ImVec2(264, 0), ImGuiCond_Always);
+            ImGui::SetNextWindowPos(
+                ImVec2((float)ww - UITheme::Px(272, uiScale), 8.0f),
+                ImGuiCond_Always);
+            ImGui::SetNextWindowSize(
+                ImVec2(UITheme::Px(264, uiScale), 0),
+                ImGuiCond_Always);
             ImGui::Begin("全軍", nullptr,
                          ImGuiWindowFlags_NoCollapse |
                              ImGuiWindowFlags_AlwaysAutoResize);
@@ -1468,9 +1522,14 @@ int main() {
         }
 
         // 事件流(ImGui 座標是 window 空間;視窗最小化時 wh=0,clamp 防負值)
-        ImGui::SetNextWindowPos(ImVec2(8, std::max(0.0f, (float)wh - 190.0f)),
-                                ImGuiCond_Always);
-        ImGui::SetNextWindowSize(ImVec2(430, 182), ImGuiCond_Always);
+        ImGui::SetNextWindowPos(
+            ImVec2(8, std::max(0.0f,
+                               (float)wh - UITheme::Px(190, uiScale))),
+            ImGuiCond_Always);
+        ImGui::SetNextWindowSize(
+            ImVec2(UITheme::Px(430, uiScale),
+                   UITheme::Px(182, uiScale)),
+            ImGuiCond_Always);
         ImGui::Begin("戰況", nullptr,
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
         for (const auto& e : eventLog) ImGui::TextUnformatted(e.c_str());
@@ -1479,13 +1538,16 @@ int main() {
         // ---- 小地圖（右下錨點;形狀編碼:■我 ◆敵 ●雲,DESIGN 強制——
         //      陣營不靠色相區分,色弱/主題切換下語義不變）----
         {
-            const float ms = 170.0f * uiScale;
+            const float ms = UITheme::Px(170, uiScale);
             ImGui::SetNextWindowPos(
-                ImVec2((float)ww - ms - 18.0f,
-                       std::max(0.0f, (float)wh - ms - 60.0f)),
+                ImVec2((float)ww - ms - UITheme::Px(18, uiScale),
+                       std::max(0.0f, (float)wh - ms -
+                                          UITheme::Px(60, uiScale))),
                 ImGuiCond_Always);
-            ImGui::SetNextWindowSize(ImVec2(ms + 16.0f, ms + 62.0f),
-                                     ImGuiCond_Always);
+            ImGui::SetNextWindowSize(
+                ImVec2(ms + UITheme::Px(16, uiScale),
+                       ms + UITheme::Px(62, uiScale)),
+                ImGuiCond_Always);
             ImGui::Begin("小地圖", nullptr,
                          ImGuiWindowFlags_NoCollapse |
                              ImGuiWindowFlags_NoResize |
@@ -1560,9 +1622,13 @@ int main() {
                          : battle.GetOutcome() == BattleOutcome::Defeat
                              ? ImVec4(1.0f, 0.4f, 0.4f, 1.0f)
                              : ImVec4(1.0f, 1.0f, 0.4f, 1.0f);
-            ImGui::SetNextWindowPos(ImVec2(ww * 0.5f - 120, wh * 0.35f),
-                                    ImGuiCond_Always);
-            ImGui::SetNextWindowSize(ImVec2(240, 0), ImGuiCond_Always);
+            ImGui::SetNextWindowPos(
+                ImVec2(ww * 0.5f - UITheme::Px(120, uiScale),
+                       wh * 0.35f),
+                ImGuiCond_Always);
+            ImGui::SetNextWindowSize(
+                ImVec2(UITheme::Px(240, uiScale), 0),
+                ImGuiCond_Always);
             ImGui::Begin("##outcome", nullptr,
                          ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs |
                          ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
@@ -1593,9 +1659,13 @@ int main() {
             const float maxT = recorder.Count() > 0
                                    ? recorder.GetRecords().back().t : 0.0f;
 
-            ImGui::SetNextWindowPos(ImVec2(ww * 0.5f - 330, wh * 0.42f),
-                                    ImGuiCond_Always);
-            ImGui::SetNextWindowSize(ImVec2(660, 0), ImGuiCond_Always);
+            ImGui::SetNextWindowPos(
+                ImVec2(ww * 0.5f - UITheme::Px(330, uiScale),
+                       wh * 0.42f),
+                ImGuiCond_Always);
+            ImGui::SetNextWindowSize(
+                ImVec2(UITheme::Px(660, uiScale), 0),
+                ImGuiCond_Always);
             ImGui::Begin("戰後結算", nullptr,
                          ImGuiWindowFlags_NoCollapse |
                              ImGuiWindowFlags_AlwaysAutoResize);
@@ -1637,7 +1707,9 @@ int main() {
             ImGui::Text("回放時間軸(%zu 則)", recorder.Count());
             ImGui::SliderFloat("##timeline", &replayCursor, 0.0f, maxT,
                                "%.1fs");
-            ImGui::BeginChild("replaylist", ImVec2(0, 130), true);
+            ImGui::BeginChild("replaylist",
+                              ImVec2(0, UITheme::Px(130, uiScale)),
+                              true);
             int lastIdx = -1;
             for (int i = 0; i < (int)recorder.Count(); ++i) {
                 if (recorder.GetRecords()[i].t <= replayCursor) lastIdx = i;
@@ -1651,7 +1723,9 @@ int main() {
             if (lastIdx >= 0) ImGui::SetScrollHereY(1.0f);
             ImGui::EndChild();
             ImGui::Separator();
-            if (ImGui::Button("返回主選單", ImVec2(150, 30))) {
+            if (ImGui::Button("返回主選單",
+                              ImVec2(UITheme::Px(150, uiScale),
+                                     UITheme::Px(30, uiScale)))) {
                 backToTitle = true;
             }
             ImGui::End();

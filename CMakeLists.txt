@@ -721,6 +721,20 @@ target_include_directories(UIThemeTest PRIVATE
 )
 target_link_libraries(UIThemeTest PotatoEngine) # SpriteAtlas(F-1)
 
+# F-2 UI scale 真管線無頭測試（絕對重建/鉗制/Px/settings 持久化）
+add_executable(UIScaleTest
+    Examples/UIScaleTest.cpp
+    external/imgui/imgui.cpp
+    external/imgui/imgui_draw.cpp
+    external/imgui/imgui_tables.cpp
+    external/imgui/imgui_widgets.cpp
+)
+target_include_directories(UIScaleTest PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/imgui
+)
+target_link_libraries(UIScaleTest PotatoEngine)
+
 # RenderTarget 離屏 FBO 測試（GL-gated：無顯示環境 SKIP）
 add_executable(RenderTargetTest Examples/RenderTargetTest.cpp)
 target_include_directories(RenderTargetTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1017,6 +1031,7 @@ set(POTATO_TESTS
     QuantumPlanTest
     MediaPipeTest
     UIThemeTest
+    UIScaleTest
     RenderTargetTest
     HistorianReportTest
     RivalDeckTest
