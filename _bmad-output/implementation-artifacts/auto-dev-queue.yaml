@@ -886,9 +886,16 @@ queue:
     acceptance:
       - 無戰章節同樣被書寫不留白
       - 結局階梯計入無戰軌跡
-    status: queued
+    status: done
     size: M
-    note: 依賴 E-1 + ChapterConventions（已落地）
+    note: >
+      已落地 8eec04b：HistorianInput 和平語域（peacePathZh/peaceGeneral，
+      三路徑句+去向「不入陣亡錄」，戰歷行改「不戰而定」，查帳/字號/
+      確信/省略計數保留）；ClosingContext.peacePathZh 無戰體鉤句；
+      EndingInput.peaceChapters 計入收服側；ComposeEnding Mandate
+      附「凡 N 章不戰而屈」（帳本數 Negotiated/Intimidated/Defected）。
+      無專屬 GovernedPeace 聲部——依 spec 計入既有 Mandate 階梯。
+      NoBattleNarrativeTest 27 項雙工具鏈全綠。
 
   # ---- 層級 D：神話雙層（epics Epic D stories；依賴 E-7a + N-5）----
   - id: D-1
