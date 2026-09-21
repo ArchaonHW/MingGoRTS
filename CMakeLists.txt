@@ -632,6 +632,16 @@ add_executable(ContentScannerTest Examples/ContentScannerTest.cpp)
 target_include_directories(ContentScannerTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ContentScannerTest PotatoEngine)
 
+# 資料防護層測試：ProtectedValue 混淆容器 + SignData 簽章（headless）
+add_executable(SecurityDataTest Examples/SecurityDataTest.cpp)
+target_include_directories(SecurityDataTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(SecurityDataTest PotatoEngine)
+
+# 記憶體混淆/資料簽章防竄改測試（headless,純引擎層）
+add_executable(AntiTamperTest Examples/AntiTamperTest.cpp)
+target_include_directories(AntiTamperTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(AntiTamperTest PotatoEngine)
+
 # 紅隊測試用的無害 DLL（模擬被注入的作弊模組）
 add_library(FakeCheatModule SHARED Examples/FakeCheatModule.cpp)
 set_target_properties(FakeCheatModule PROPERTIES OUTPUT_NAME "FakeCheat" PREFIX "")
@@ -1056,6 +1066,8 @@ set(POTATO_TESTS
     GLSmokeTest
     SecurityRedTeamTest
     ContentScannerTest
+    SecurityDataTest
+    AntiTamperTest
     AITestSuite
     DevAssistantSmoke
     SuggestionRulesTest

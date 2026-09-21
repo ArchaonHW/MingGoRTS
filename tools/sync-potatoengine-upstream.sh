@@ -30,14 +30,16 @@ Security Serialization Time"
 AI_FILES="NeuralNetwork.h NeuralNetwork.cpp"
 
 # 引擎側 Examples 白名單(不含副檔名;遊戲側範例留在 MingGoRTS)
-EXAMPLES="AIDemo AITestSuite AngelLegionVideo AudioTest CoreSystemsTest \
+EXAMPLES="AIDemo AITestSuite AngelLegionVideo AntiTamperTest AudioTest \
+ContentScannerTest CoreSystemsTest \
 EngineExample FakeCheatModule FileSystemTest GLSmokeTest ImageCodecTest \
 InputTest LogTest LoggerTest MathTest MediaPipeTest MemoryTest MinimalTest \
 MiniaudioBackendTest ModelLoaderTest NeuralArtTool NeuralGraphicsTest \
 OptimizedAIDemo \
 PhysicsMathTest PhysicsTest PlatformTest PortraitBaker PortraitRenderer \
 QuasiModelsTest RenderPipelineTest RenderTargetTest SceneTest \
-SecurityRedTeamTest SerializationTest SimpleExample SpriteAtlasTest \
+SecurityDataTest SecurityRedTeamTest SerializationTest SimpleExample \
+SpriteAtlasTest \
 SynthDataDemo TimeTest UnsolvedBatch3Test VrmLoadTest compat_log"
 
 echo "Source : $REPO_ROOT"
