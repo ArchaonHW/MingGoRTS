@@ -17,7 +17,7 @@ C++20 遊戲引擎 + MingGoRTS IDE，CMake 建置，無 UE5 依賴。BMAD v6 已
 - 引擎與所有 target 定義：根 `CMakeLists.txt`（唯一 CMake 清單，無子目錄 CMakeLists）
 - Windows 建置入口：`BuildEngine.bat`（需 VS Developer Command Prompt）
 - Agent 語言規則：`.windsurf/AGENT_LANGUAGE_CONFIG`——回覆與註解用繁體中文，識別符與檔名保持英文
-- `C:\HWC\PotatoEngine`（repo 外）是**產生的唯讀鏡像**——repo 內引擎是唯一真相來源，上游不直接編輯；引擎模組變更後跑 `tools/sync-potatoengine-upstream.sh`（Git Bash）重新同步，上游殘留檔自動移入其 `legacy/`
+- `C:\HWC\PotatoEngine`（repo 外）是**獨立引擎 repo**（filter-repo 保留歷史，扁平模組佈局；舊 include/+src/ 唯讀鏡像已廢除）——遊戲側正式切出（`add_subdirectory` 消費）前 repo 內引擎仍是真相來源，上游模組目錄不直接編輯；引擎模組變更後跑 `tools/sync-potatoengine-upstream.sh`（Git Bash）單向同步到上游，並在上游 repo 提交結果
 
 ## Running and verifying
 

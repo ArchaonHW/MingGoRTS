@@ -1,7 +1,9 @@
 name: Upstream Mirror Check
 
-# 驗證引擎模組改動已同步到上游 PotatoEngine 鏡像 repo
+# 驗證引擎模組改動已同步到上游 PotatoEngine repo
 # (C:\HWC\PotatoEngine → github.com/ArchaonHW/PotatoEngine)
+# 拆倉後上游是獨立 git repo(扁平模組佈局,非 include/+src/ 鏡像);
+# 遊戲側切出前 repo 內引擎仍是真相來源。
 # 做法:checkout 上游 repo、跑同步腳本、git status 非空 = 漂移
 
 on:
@@ -26,9 +28,9 @@ on:
       - 'Resources/**'
       - 'ECS/**'
       - 'GameObject/**'
-      - 'GUI/**'
       - 'AI/**'
       - 'Quantum/**'
+      - 'Media/**'
       - 'external/glad_gen/**'
       - 'external/tinygltf/**'
       - 'Examples/**'
@@ -54,9 +56,9 @@ on:
       - 'Resources/**'
       - 'ECS/**'
       - 'GameObject/**'
-      - 'GUI/**'
       - 'AI/**'
       - 'Quantum/**'
+      - 'Media/**'
       - 'external/glad_gen/**'
       - 'external/tinygltf/**'
       - 'Examples/**'
