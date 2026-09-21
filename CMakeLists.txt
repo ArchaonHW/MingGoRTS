@@ -630,6 +630,11 @@ add_executable(SecurityRedTeamTest Examples/SecurityRedTeamTest.cpp)
 target_include_directories(SecurityRedTeamTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(SecurityRedTeamTest PotatoEngine)
 
+# 內容掃毒測試：EICAR/黑名單/啟發式/隔離（headless,純引擎層）
+add_executable(ContentScannerTest Examples/ContentScannerTest.cpp)
+target_include_directories(ContentScannerTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(ContentScannerTest PotatoEngine)
+
 # 紅隊測試用的無害 DLL（模擬被注入的作弊模組）
 add_library(FakeCheatModule SHARED Examples/FakeCheatModule.cpp)
 set_target_properties(FakeCheatModule PROPERTIES OUTPUT_NAME "FakeCheat" PREFIX "")
@@ -1028,6 +1033,7 @@ set(POTATO_TESTS
     NeuralGraphicsTest
     GLSmokeTest
     SecurityRedTeamTest
+    ContentScannerTest
     AITestSuite
     DevAssistantSmoke
     SuggestionRulesTest
