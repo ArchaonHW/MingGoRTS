@@ -57,6 +57,9 @@ public:
     void BindSpirit(const std::string& region, const std::string& spirit);
     void AdjustFavor(const std::string& spirit, float delta);
     float Favor(const std::string& spirit) const; // 未登錄 = kNeutralFavor
+    // favor 表是否已有該靈條目（D-3 兌換守衛：防幻影錢包——
+    // 未登錄名字不得以 kNeutralFavor 起算扣費）
+    bool HasSpirit(const std::string& spirit) const;
 
     // ---- 渲染層唯讀出口 ----
     Seepage Level(const std::string& region) const;

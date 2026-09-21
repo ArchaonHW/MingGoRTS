@@ -31,6 +31,11 @@ public:
         const std::unordered_map<Gameplay::GovernanceEvent, int>&
             battleEvents);
 
+    // 直接調整（天命兌換 D-3 等任意值寫入通道；Accumulate 是
+    // 事件固定 delta，兌換價目不走事件表）。夾 [0,100]。
+    void AdjustPopularSupport(float delta);
+    void AdjustCivilOrder(float delta);
+
     // 動亂級：秩序 >= UNREST_WARN 為 0；以下每跨一檻 +1，最深 3
     int UnrestLevel() const;
     // 跨級才產生事件字串（回傳並把已報級記下）；平級/下降回傳空

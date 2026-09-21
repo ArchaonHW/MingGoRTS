@@ -421,6 +421,7 @@ add_library(Campaign STATIC
     Campaign/ChapterLibrary.cpp
     Campaign/Governance.cpp
     Campaign/MythLayer.cpp
+    Campaign/FateExchange.cpp
     Campaign/NoBattleResolver.cpp
 )
 target_include_directories(Campaign PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -838,6 +839,11 @@ add_executable(ShrineFieldTest Examples/ShrineFieldTest.cpp)
 target_include_directories(ShrineFieldTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ShrineFieldTest Campaign)
 
+# D-3 天命兌換無頭測試（灰顯價目/限次/零副作用拒絕）
+add_executable(FateExchangeTest Examples/FateExchangeTest.cpp)
+target_include_directories(FateExchangeTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(FateExchangeTest Campaign)
+
 # E-1 無戰章節門檻判定無頭測試（定義塊/灰顯報表/三路徑入帳/中計）
 add_executable(NoBattleResolverTest Examples/NoBattleResolverTest.cpp)
 target_include_directories(NoBattleResolverTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1061,6 +1067,7 @@ set(POTATO_TESTS
     GovernanceFieldTest
     MythLayerTest
     ShrineFieldTest
+    FateExchangeTest
     NoBattleResolverTest
     NoBattleNarrativeTest
 )

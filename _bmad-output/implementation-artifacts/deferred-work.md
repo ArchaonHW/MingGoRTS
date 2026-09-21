@@ -102,3 +102,6 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-d2-shrine-spirits.md`
   summary: `ShrineField::Bind` re-bind resets settled state → same node can pay favor twice. Documented in header (favor is persistent, unlike governance counts); enforce one-shot only if hot-reload becomes real.
   evidence: Edge-case-hunter review — consistent with `GovernanceField::Bind` semantics; flagged because favor is a resource.
+- source_spec: `_bmad-output/implementation-artifacts/spec-d3-fate-conversion.md`
+  summary: `FateExchange::battleUses` is runtime-only (spec Never: no schema change) — mid-battle save/reload refills the per-battle quota (save-scum). Persist per-battle exchange count if mid-battle saves become real.
+  evidence: Edge-case-hunter + blind-hunter review — spec explicitly froze `potato.campaign/1`; logged so the save-integration story sees it.

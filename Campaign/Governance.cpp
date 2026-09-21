@@ -30,6 +30,19 @@ void Governance::Accumulate(
     }
 }
 
+void Governance::AdjustPopularSupport(float delta) {
+    if (!std::isfinite(delta)) return;
+    // 現值被毒化（理論上 FromJson 已擋）→ 先回中立再調整
+    if (!std::isfinite(popularSupport)) popularSupport = 50.0f;
+    popularSupport = std::clamp(popularSupport + delta, 0.0f, 100.0f);
+}
+
+void Governance::AdjustCivilOrder(float delta) {
+    if (!std::isfinite(delta)) return;
+    if (!std::isfinite(civilOrder)) civilOrder = 50.0f;
+    civilOrder = std::clamp(civilOrder + delta, 0.0f, 100.0f);
+}
+
 int Governance::UnrestLevel() const {
     if (civilOrder < kUnrestCollapse) return 3;
     if (civilOrder < kUnrestRiot) return 2;
@@ -79,15 +92,17 @@ bool Governance::FromJson(const JsonValue& j) {
     if (!j.IsObject()) {
         return false;
     }
-    popularSupport = std::clamp(
-        static_cast<float>(j["popular_support"].AsNumber(50.0)),
-        0.0f, 100.0f);
-    civilOrder = std::clamp(
-        static_cast<float>(j["civil_order"].AsNumber(50.0)),
-        0.0f, 100.0f);
+    // strtod 會讀進 "nan"/"inf" 字串——clamp(NaN) 仍回 NaN，
+    // 會永久毒化該軸（UnrestLevel/兌換全啞）。非有限值回預設。
+    const auto finiteOr = [](double v, float def) {
+        return std::isfinite(v) ? std::clamp(
+                   static_cast<float>(v), 0.0f, 100.0f)
+                                : def;
+    };
+    popularSupport = finiteOr(j["popular_support"].AsNumber(50.0), 50.0f);
+    civilOrder = finiteOr(j["civil_order"].AsNumber(50.0), 50.0f);
     // 舊檔無 depravity 欄位 → 0（相容，不降級警告）
-    depravity = std::clamp(
-        static_cast<float>(j["depravity"].AsNumber(0.0)), 0.0f, 100.0f);
+    depravity = finiteOr(j["depravity"].AsNumber(0.0), 0.0f);
     lastUnrestLevel = std::clamp(j["last_unrest_level"].AsInt(0), 0, 3);
     return true;
 }

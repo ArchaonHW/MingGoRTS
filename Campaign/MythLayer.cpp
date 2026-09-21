@@ -107,6 +107,10 @@ float MythLayer::Favor(const std::string& spirit) const {
     return it != favor.end() ? it->second : kNeutralFavor;
 }
 
+bool MythLayer::HasSpirit(const std::string& spirit) const {
+    return favor.find(spirit) != favor.end();
+}
+
 Seepage MythLayer::Level(const std::string& region) const {
     const auto it = regions.find(region);
     return it != regions.end() ? it->second.level : Seepage::Quiet;
