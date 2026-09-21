@@ -853,9 +853,15 @@ queue:
     acceptance:
       - 三檔切換免重啟、存檔持久
       - 必要雙編碼資訊不被裁撤
-    status: queued
+    status: done
     size: M
-    note: 執行層 12+ 項常駐資訊的分層答案
+    note: >
+      f1fe91e 落地（CMakeLists 註冊行被平行 F-4 commit 1b48674
+      順帶捲入，tip 一致）：HUDDensity.h 面板級門檻矩陣——Minimal
+      全裁/Standard 開戰況·小地圖·敵將檔案·選取明細·提示、Verbose
+      加霧情報計數；恆在件（CP/時鐘/全軍控制面/結算）不列舉即不裁。
+      UISettings 加 hudDensity 可選欄位（舊檔相容+雙端鉗制）；
+      設定頁 combo 沿用 F-2 落盤管線。HUDDensityTest 16 項雙工具鏈綠。
 
   - id: F-4
     title: Audio milestone（miniaudio vendor）
