@@ -2,7 +2,7 @@
 # 每個 item 走完：pick → spec (gds-quick-dev) → implement → verify → review → commit
 # 規則見 auto-dev-workflow.md
 version: 1
-updated: 2026-09-21 (GBAA BAAF 研究 → L-6/L-7/L-8 需求入列)
+updated: 2026-09-21 (GBAA BAAF 研究 → L-6/L-7/L-8 需求入列；未解問題第二批 P-3/M-1 落地)
 
 queue:
 
@@ -331,6 +331,48 @@ queue:
       + 兩個測試）。決策：預設維持 Euler（無可切換對象、不改語義），
       新消費者（拋射物/回放敏感/長時間模擬）建議 opt-in Verlet；
       半步相位語義已記錄。見 UNSOLVED_PHYSICS_TO_ENGINE 附錄。
+    size: S
+
+  - id: P-3
+    title: 擁擠阻塞 jamming：密度→移速懲罰（備選落地）
+    source: UNSOLVED_PHYSICS_TO_ENGINE 對照表備選項
+    summary: >
+      玻璃轉變/阻塞無統一理論；取基本圖式近似——密度過臨界值
+      移速急降至殘速。當時擱置理由「等 Squad 密度玩法需求」已消失：
+      斷橋多隊擠渡口即該場景。
+    acceptance:
+      - JammingModel 純函式：自由流/阻塞邊界、單調不增、NaN/退化防禦
+      - BattleController::SetJamming opt-in；擁擠群實測位移下降
+      - 預設關閉：既有測試零回歸
+    status: done
+    note: >
+      MathUtils/JammingModel.h（JammingParams/JammingSpeedFactor/
+      IsJammed/CrowdDensity 含員額加權）+ Squad.crowdFactor 乘進
+      GetEffectiveSpeed + BattleController::ApplyJamming 每 tick
+      密度→倍率（敵我一律計入）。QuasiModelsTest 引擎層 +
+      JammingBattleTest 玩法層（擁擠群 <孤隊 70% 位移、關閉復位）。
+    size: M
+
+  # ---- 層級 M：數學批次後續（UNSOLVED_MATH_TO_ENGINE 消費端）----
+
+  - id: M-1
+    title: Collatz 停滯時間雜湊 → 地形特徵點（備選落地）
+    source: UNSOLVED_MATH_TO_ENGINE 對照表備選項
+    summary: >
+      停滯時間函式確定性、無週期、重尾——天然適合撒佈稀有
+      地形特徵。當時擱置理由「無明確消費者」已消失：
+      G-10 MapGenerator 需要非週期特徵來源。
+    acceptance:
+      - CollatzStoppingTime 熔斷+溢位摺疊（不假定猜想成立）
+      - MapGenerator featureThr：稀有高值格→「古林深處」特徵
+      - 同 seed 逐位一致不變；loader 接受
+    status: done
+    note: >
+      MathUtils/CollatzHash.h（StoppingTime/Field01/Feature，
+      header-only）；MapGenerator Config.featureThr=0.90 預設
+      ~1% 格成 DeepForest（type=forest/note 特徵點）。場值分佈
+      實測：scale=320 時中位 0.39、P(>=0.9)≈0.9%。
+      QuasiModelsTest + MapGenTest [5b] 覆蓋。
     size: S
 
   # ---- 層級 C 延伸：立繪訓練資料 ----

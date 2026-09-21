@@ -16,7 +16,7 @@
 | **P vs NP / TSP** | 尋路是圖上最短路（多項式可解）；TSP 只出現在巡邏路線 | **拒絕**——flow-field 已最優；TSP 需求不存在 |
 | **N 體問題**（n≥3 無一般解析解） | 物理本就走數值積分；剛體模擬不吃解析解 | **拒絕**——無新技術可得 |
 | **黎曼猜想/素數分佈** | 素數雜湊、goldilocks seed 擴散已有更好工程解（xxHash 類） | **拒絕**——無 gameplay 價值 |
-| **Collatz 猜想** | 停滯時間可作確定性雜湊產生地形特徵 | **備選**——有趣但無明確消費者，暫不實作 |
+| **Collatz 猜想** | 停滯時間可作確定性雜湊產生地形特徵 | **採用** → `MathUtils/CollatzHash.h` |
 | **量子混沌/譜統計**（RMT–黎曼零點連結） | 量子批次的退相干/機率雲已在走 | **已涵蓋**於量子批次 Q-層 |
 
 ## 首批採用項（本研究直接產出）
@@ -53,3 +53,16 @@ Bridson 2007 給出 O(n) 近似，遊戲業界標準。
 - `Gameplay/QuantumFog` — `AddEntityCloud`（藍噪候選格生成）
 - `Examples/QuasiRandomTest.cpp` — headless 驗證（差異度比較、最小間距、
   種子決定性）→ CTest
+
+### 第二批（2026-09-21）：Collatz 備選落地
+
+- `MathUtils/CollatzHash.h` — `CollatzStoppingTime`（熔斷+溢位摺疊，
+  不假定猜想成立）/ `CollatzField01`（重尾場值 [0,1]）/
+  `CollatzFeature`（特徵桶）；header-only
+- `Gameplay/MapGenerator` — `Config.featureThr`：Collatz 場稀有高值格
+  →「古林深處」特徵（type=forest，守方減傷）；<=0 關閉
+- `Examples/QuasiModelsTest.cpp` — 已知停滯值/熔斷/重尾分佈/值域 → CTest
+
+擱置理由消失：當時「無明確消費者」——G-10 MapGenerator 落地後
+程序戰場需要「非週期、稀有、確定性」的特徵點來源，正是停滯時間
+分佈的形狀。

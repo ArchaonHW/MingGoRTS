@@ -667,6 +667,11 @@ add_executable(MapGenTest Examples/MapGenTest.cpp)
 target_include_directories(MapGenTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(MapGenTest Gameplay)
 
+# P-3 擁擠阻塞玩法接線測試（headless：SetJamming→crowdFactor→減速）
+add_executable(JammingBattleTest Examples/JammingBattleTest.cpp)
+target_include_directories(JammingBattleTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(JammingBattleTest Gameplay)
+
 add_executable(SquadTemplateTest Examples/SquadTemplateTest.cpp)
 target_include_directories(SquadTemplateTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(SquadTemplateTest Gameplay)
@@ -975,6 +980,7 @@ set(POTATO_TESTS
     TerrainBonusTest
     PostBattleTest
     MapGenTest
+    JammingBattleTest
     SquadTemplateTest
     GeneralGuardTest
     RefitCampTest

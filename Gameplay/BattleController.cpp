@@ -264,6 +264,42 @@ void BattleController::ApplyRoutShock() {
 }
 
 // ---------------------------------------------------------------------------
+// P-3 擁擠阻塞（jamming）
+// ---------------------------------------------------------------------------
+
+void BattleController::SetJamming(float radius,
+                                  const Quasi::JammingParams& params) {
+    jamRadius = radius;
+    jamParams = params;
+    if (jamRadius <= 0.0f) {
+        for (auto& s : squads) s->SetCrowdFactor(1.0f); // 關閉時復位
+    }
+}
+
+void BattleController::ApplyJamming() {
+    if (jamRadius <= 0.0f) return;
+    // 員額加權密度：活著的小隊都佔地（敵我一律，擁擠不分陣營）
+    std::vector<Vector2> pos;
+    std::vector<float> weight;
+    pos.reserve(squads.size());
+    weight.reserve(squads.size());
+    for (const auto& s : squads) {
+        if (s->IsEliminated()) continue;
+        pos.push_back(s->GetPosition());
+        weight.push_back(static_cast<float>(s->GetMembers()));
+    }
+    for (const auto& s : squads) {
+        if (s->IsEliminated()) {
+            s->SetCrowdFactor(1.0f);
+            continue;
+        }
+        const float d = Quasi::CrowdDensity(s->GetPosition(), pos, weight,
+                                            jamRadius, jamParams.unitArea);
+        s->SetCrowdFactor(Quasi::JammingSpeedFactor(d, jamParams));
+    }
+}
+
+// ---------------------------------------------------------------------------
 // C-2 治理事件
 // ---------------------------------------------------------------------------
 
@@ -327,6 +363,8 @@ void BattleController::Update(float realDt) {
         doctrineTimer = 0.0f;
         EvaluateDoctrines();
     }
+
+    ApplyJamming(); // P-3：移動前先按最新密度更新擁擠倍率
 
     for (auto& squad : squads) {
         // 潰逃小隊可能留著陳舊 orderTarget（如敵方 objective），

@@ -1,5 +1,7 @@
 #include "MapGenerator.h"
 
+#include "MathUtils/CollatzHash.h"
+
 #include <algorithm>
 #include <cmath>
 #include <random>
@@ -39,7 +41,8 @@ struct ScalarField {
 };
 
 // 格子類別（合併 rect 的 key）
-enum class Cell : uint8 { Plain, Water, Ford, Mud, Highland, Forest };
+enum class Cell : uint8 { Plain, Water, Ford, Mud, Highland, Forest,
+                          DeepForest };
 
 const char* CellNote(Cell c) {
     switch (c) {
@@ -48,6 +51,7 @@ const char* CellNote(Cell c) {
     case Cell::Mud:      return "河岸泥濘（減速）";
     case Cell::Highland: return "高地（攻方加成）";
     case Cell::Forest:   return "森林（守方減傷）";
+    case Cell::DeepForest: return "古林深處（守方減傷，特徵點）";
     default:             return "";
     }
 }
@@ -106,6 +110,13 @@ std::string MapGenerator::GenerateJson(uint64_t seed, const Config& cfg) {
                                         static_cast<float>(y));
             if (h > cfg.highlandThr) c = Cell::Highland;
             else if (v > cfg.forestThr) c = Cell::Forest;
+            // Collatz 特徵點（UNSOLVED_MATH 備選落地）：停滯時間重尾
+            // 分佈的稀有高值格 → 與植被場無關的「古林深處」
+            else if (cfg.featureThr > 0.0f &&
+                     Quasi::CollatzField01(x, y, seed ^ 0xC011A7u) >=
+                         cfg.featureThr) {
+                c = Cell::DeepForest;
+            }
         }
     }
     riverTop = std::max(0, riverTop);
@@ -151,14 +162,18 @@ std::string MapGenerator::GenerateJson(uint64_t seed, const Config& cfg) {
         const bool blocked = (p.cell == Cell::Water);
         const float cost = (p.cell == Cell::Mud || p.cell == Cell::Ford)
                                ? 2.0f
-                               : (p.cell == Cell::Forest ? 1.5f : 1.0f);
+                               : (p.cell == Cell::Forest ||
+                                          p.cell == Cell::DeepForest
+                                      ? 1.5f
+                                      : 1.0f);
         js << "    {\"rect\": [" << p.x << ", " << p.y << ", " << p.w
            << ", " << p.h << "]"
            << ", \"blocked\": " << (blocked ? "true" : "false")
            << ", \"cost\": " << cost;
         // Water/Ford 不標 type（保持 Plain）；其餘給 G-4 地形類型
         if (p.cell == Cell::Highland) js << ", \"type\": \"highland\"";
-        else if (p.cell == Cell::Forest) js << ", \"type\": \"forest\"";
+        else if (p.cell == Cell::Forest || p.cell == Cell::DeepForest)
+            js << ", \"type\": \"forest\"";
         else if (p.cell == Cell::Mud || p.cell == Cell::Ford)
             js << ", \"type\": \"mud\"";
         js << ", \"note\": \"" << CellNote(p.cell) << "\"}";

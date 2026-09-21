@@ -63,6 +63,22 @@ int main() {
         Check(foundWater, "河道其餘格擋路");
     }
 
+    // [5b] Collatz 特徵點（UNSOLVED_MATH 備選落地）：
+    //      降閾值產「古林深處」格、featureThr<=0 關閉、loader 接受
+    {
+        MapGenerator::Config fc;
+        fc.featureThr = 0.80f;
+        const std::string f1 = MapGenerator::GenerateJson(42, fc);
+        Check(f1.find("古林深處") != std::string::npos,
+              "降閾值產生古林特徵格");
+        fc.featureThr = 0.0f;
+        Check(MapGenerator::GenerateJson(42, fc).find("古林") ==
+                  std::string::npos,
+              "featureThr<=0 關閉特徵點");
+        BattleMap fm;
+        Check(fm.LoadFromString(f1), "含特徵點地圖通過 loader");
+    }
+
     // [5] 可打一場：雙方部署 → doctrine → 時間推進且有行動
     {
         const MapPin* rally = map.FindPin("北岸集結點");

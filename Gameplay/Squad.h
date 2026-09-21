@@ -92,6 +92,12 @@ public:
     void StartCharge(float seconds);
     bool IsCharging() const { return chargeTimer > 0.0f; }
 
+    // 擁擠阻塞（P-3 jamming）：由 BattleController 每 tick
+    // 依鄰近密度（MathUtils/JammingModel.h）寫入；<1 時拖慢移速。
+    // 預設 1.0 = 無擁擠。
+    void SetCrowdFactor(float f) { crowdFactor = std::clamp(f, 0.0f, 1.0f); }
+    float GetCrowdFactor() const { return crowdFactor; }
+
     // 疲勞參數（每秒速率 / 閾值 / 疲憊移速倍率）
     void SetStaminaParams(float drainMove, float drainCombat,
                           float regen, float threshold, float penaltyMul);
@@ -140,6 +146,9 @@ private:
     // 將軍衛隊（G-8）與帶隊突擊計時
     bool generalGuard = false;
     float chargeTimer = 0.0f;
+
+    // 擁擠速度倍率（P-3）：1.0 = 自由流，<1 = 阻塞懲罰
+    float crowdFactor = 1.0f;
 
     // 疲勞（G-3）：移動/交戰消耗，駐守回復；低於閾值移速打折
     float stamina;

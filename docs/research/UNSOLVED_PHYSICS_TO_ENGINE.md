@@ -12,7 +12,7 @@
 | **N 體問題**（n≥3 無一般閉式解） | 既然只能數值積分，積分器品質就是全部——辛積分器（symplectic）長期保能量 | **採用** → `PhysicsWorld::SetIntegrator(VelocityVerlet)` |
 | **湍流**（Navier–Stokes 千禧年難題，「古典物理最後未解之謎」） | 不可壓縮湍流的關鍵不變量是「無散度」——curl noise 用向量勢解析構造，散度嚴格為零 | **採用** → `MathUtils/CurlNoise.h`（`TurbulenceField`） |
 | **決定性混沌 / Lyapunov 指數**（三體敏感度無解析刻畫） | 蝴蝶效應即「seeded 但不可預測」——本身就是引擎要的行為；seed 控制已內建 | **已涵蓋**——QuasiRandom seed 語義 + 本批測試斷言敏感度 |
-| **玻璃轉變/阻塞（jamming）** | 顆粒/人群壓力無統一理論；可用行為級近似（擁擠→移速懲罰） | **備選**——等 Squad 密度玩法需求出現再做 |
+| **玻璃轉變/阻塞（jamming）** | 顆粒/人群壓力無統一理論；可用行為級近似（擁擠→移速懲罰） | **採用** → `MathUtils/JammingModel.h` |
 | **量子測量問題 / 量子重力** | 量子批次已用「測量=情報消費」玩法化 | **已涵蓋**於 Q-層 |
 | **高溫超導機制** | 無對應玩法 | **拒絕** |
 | **暗物質/暗能量** | 世界觀素材，非引擎技術 | **拒絕** |
@@ -58,6 +58,19 @@ QuasiRandom 的塑性常數方向取樣，避免週期性條紋。
 - `MathUtils/CurlNoise.h` — 解析無散度湍流場（header-only）
 - `Examples/PhysicsMathTest.cpp` — 落體精度、能量守恆漂移、
   散度為零、決定性驗證 → CTest
+
+### 第二批（2026-09-21）：jamming 備選落地
+
+- `MathUtils/JammingModel.h` — 密度→移速倍率（基本圖式近似，
+  header-only）+ `CrowdDensity` 圓盤佔有率（含員額加權版）
+- `Gameplay/Squad` — `crowdFactor` 乘進 `GetEffectiveSpeed`
+- `Gameplay/BattleController::SetJamming(radius, params)` — 每 tick
+  依鄰近小隊密度設定 crowdFactor；預設關閉保回歸
+- `Examples/QuasiModelsTest.cpp`（引擎層，可同步上游）+
+  `Examples/JammingBattleTest.cpp`（玩法層）→ CTest
+
+擱置理由消失：當時「等 Squad 密度玩法需求出現」——斷橋原型
+多隊擠渡口已是日常場景，故落地為 opt-in 機制。
 
 ---
 

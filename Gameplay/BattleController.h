@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/CoreTypes.h"
+#include "MathUtils/JammingModel.h"
 #include "MathUtils/Vector2.h"
 #include "FlowField.h"
 #include "Squad.h"
@@ -122,6 +123,16 @@ public:
     // width<=0（預設）= 無上限。
     void SetCombatWidth(int width) { combatWidth = width; }
     int GetCombatWidth() const { return combatWidth; }
+
+    // P-3 擁擠阻塞（jamming，UNSOLVED_PHYSICS_TO_ENGINE 備選落地）：
+    // radius（格）>0 時每 tick 以鄰近小隊員額加權密度計算
+    // Squad.crowdFactor → 渡口/橋頭多隊擁擠會真實減速。
+    // 敵我一律計入（物理上擁擠不分陣營）。radius<=0（預設）= 關閉。
+    void SetJamming(float radius,
+                    const Quasi::JammingParams& params =
+                        Quasi::JammingParams{});
+    bool IsJammingEnabled() const { return jamRadius > 0.0f; }
+    float GetJamRadius() const { return jamRadius; }
     // G-2 克制矩陣：攻方→守方傷害倍率（騎>弓、弓>步、步>騎）
     static float CounterMultiplier(UnitClass attacker, UnitClass defender);
 
@@ -193,6 +204,7 @@ private:
     void CheckOutcome();
     void Emit(const std::string& msg);
     void ApplyRoutShock(); // G-1：偵測新潰逃 → 範圍士氣衝擊（每隊一次）
+    void ApplyJamming();   // P-3：鄰近密度 → Squad.crowdFactor
     void DetectGovernanceEvents(); // C-2：潰逃/暴行自動偵測
 
     SquadContext BuildContext(const Squad& squad) const;
@@ -237,6 +249,8 @@ private:
     std::unordered_map<Squad*, int> govRoutMembers;          // 潰逃時員額（暴行偵測）
     std::unordered_set<Squad*> govAtrocityDone;              // 已記暴行的潰逃隊
     int combatWidth = 0;              // G-2：<=0 無上限
+    float jamRadius = 0.0f;           // P-3：<=0 關閉
+    Quasi::JammingParams jamParams;
     mutable std::mt19937 execRng{std::random_device{}()};
 
     static constexpr float DOCTRINE_INTERVAL = 0.25f; // 每 0.25s 遊戲時間評估一次

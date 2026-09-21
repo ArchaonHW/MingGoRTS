@@ -28,6 +28,8 @@ public:
         int fordWidth = 2;          // 渡口寬（格）
         float highlandThr = 0.55f;  // 高度場閾值 → 高地
         float forestThr = 0.45f;    // 植被場閾值 → 森林
+        float featureThr = 0.90f;   // Collatz 特徵點閾值（<=0 關閉；
+                                    // 重尾分佈下 ~1% 格成「古林深處」）
     };
 
     // 產生整張地圖 JSON；同 seed+config 輸出逐位一致

@@ -37,7 +37,7 @@ float Squad::GetEffectiveSpeed() const {
     if (chargeTimer > 0.0f) {
         s *= 1.5f; // G-8 帶隊突擊
     }
-    return s;
+    return s * crowdFactor; // P-3 擁擠懲罰（預設 1.0）
 }
 
 void Squad::StartCharge(float seconds) {
