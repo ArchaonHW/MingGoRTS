@@ -8,6 +8,7 @@
 #include "Serialization/JsonParser.h"
 #include "Campaign/JsonWriter.h"
 #include "UITheme.h"
+#include "HUDDensity.h"
 
 #include <filesystem>
 #include <fstream>
@@ -19,6 +20,7 @@ namespace UISettings {
 struct Data {
     int theme = 0;         // UITheme::Id 序數
     float uiScale = 1.0f;  // ClampScale 守衛 0.75–1.5
+    int hudDensity = 1;    // HUDDensityUI::Density 序數（預設 Standard）
 };
 
 inline bool Save(const std::string& path, const Data& d) {
@@ -29,6 +31,8 @@ inline bool Save(const std::string& path, const Data& d) {
     root.objectValue["theme"] = Potato::JsonValue::Number(d.theme);
     root.objectValue["uiScale"] =
         Potato::JsonValue::Number(UITheme::ClampScale(d.uiScale));
+    root.objectValue["hudDensity"] = Potato::JsonValue::Number(
+        (int)HUDDensityUI::DensityFromInt(d.hudDensity));
 
     // 首次存設定時 saves/ 可能尚未建立（原本由 campaign 存檔建立）
     std::error_code dirc;
@@ -71,6 +75,9 @@ inline bool Load(const std::string& path, Data& out) {
     Data d;
     d.theme = root["theme"].AsInt(0);
     d.uiScale = UITheme::ClampScale(root["uiScale"].AsFloat(1.0f));
+    // F-3：可選欄位——舊檔無 hudDensity → Standard；越界鉗回
+    d.hudDensity = (int)HUDDensityUI::DensityFromInt(
+        root["hudDensity"].AsInt(1));
     out = d;
     return true;
 }
