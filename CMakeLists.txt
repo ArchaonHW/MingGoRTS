@@ -408,6 +408,7 @@ add_library(Gameplay STATIC
     Gameplay/Ledger.cpp
     Gameplay/GovernanceField.cpp
     Gameplay/ShrineField.cpp
+    Gameplay/MythIncursion.cpp
     Gameplay/BattleCommandAI.cpp
     Gameplay/BattleCommandEnv.cpp
 )
@@ -866,6 +867,11 @@ add_executable(FateExchangeTest Examples/FateExchangeTest.cpp)
 target_include_directories(FateExchangeTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(FateExchangeTest Campaign)
 
+# D-4 神話入侵無頭測試（達閾觸發/稀有性/雙結局/章節旗標）
+add_executable(MythIncursionTest Examples/MythIncursionTest.cpp)
+target_include_directories(MythIncursionTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(MythIncursionTest Campaign)
+
 # E-1 無戰章節門檻判定無頭測試（定義塊/灰顯報表/三路徑入帳/中計）
 add_executable(NoBattleResolverTest Examples/NoBattleResolverTest.cpp)
 target_include_directories(NoBattleResolverTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1104,6 +1110,7 @@ set(POTATO_TESTS
     MythLayerTest
     ShrineFieldTest
     FateExchangeTest
+    MythIncursionTest
     NoBattleResolverTest
     NoBattleNarrativeTest
 )
