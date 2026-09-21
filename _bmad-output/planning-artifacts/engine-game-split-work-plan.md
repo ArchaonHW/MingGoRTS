@@ -38,33 +38,36 @@
 - [x] W1.3 standalone 守衛包住 examples/tests/install/CPack；NeuralNetwork/Quantum/Media 提升守衛外
 - [x] W1.4 驗證：MSVC(VS18)+MinGW 建置皆過，ctest 68/68 全綠
 
-## Phase 2 — 歷史拆分（git filter-repo，已安裝）
+## Phase 2 — 歷史拆分（git filter-repo，已完成）
 
-- [ ] W2.1 導出未提交變更：`git diff HEAD` + untracked 清單 → 依歸屬表分側
-- [ ] W2.2 clone → engine repo → `filter-repo --paths-from-file`（引擎路徑清單）
-- [ ] W2.3 clone → game repo → `filter-repo --paths-from-file`（遊戲路徑清單）
-- [ ] W2.4 跨界檔後處理：engine `git rm GUI/AgentGUI.*`；game `git rm AI/NeuralNetwork.*`（header 經引擎 include path 取得）
-- [ ] W2.5 未提交變更回灌各側 working tree
+- [x] W2.1 導出未提交變更：`git diff HEAD` + untracked 清單 → 依歸屬表分側（快照存 `C:\HWC\_split_stage\`）
+- [x] W2.2 clone → engine repo → `filter-repo --paths-from-file`（引擎路徑清單，165 檔）
+- [x] W2.3 clone → game repo → `filter-repo --paths-from-file`（遊戲路徑清單，2351 檔）
+- [x] W2.4 跨界檔後處理：AgentGUI 已在 `MingGoRTS_IDE/`（Phase 1 完成）、NeuralNetwork 留引擎；路徑清單不含 GUI/ 於引擎側
+- [x] W2.5 未提交變更回灌各側 working tree（L-6/L-8/Jamming/QuasiModels 依歸屬分側；平行 session 持續提交的 L-6/L-8 commit 以 format-patch 補植）
 
-## Phase 3 — 新 CMake 架構
+注意：`--paths-from-file` 的路徑行**不加前綴**（`path:` 會被當字面路徑，產出空 repo）；路徑清單需與切點時刻的 `git ls-files` 對帳——新增檔案（如 LedgerRegistryTest/LedgerAssuranceTest）要補進清單再濾。
 
-- [ ] W3.1 引擎 CMakeLists 精簡：去遊戲 lib/executable/POTATO_TESTS 遊戲項
-- [ ] W3.2 遊戲 CMakeLists：`project(MingGoRTS)` + `POTATO_ENGINE_ROOT` cache var + `add_subdirectory`
-- [ ] W3.3 imgui/external 引用改 `${POTATO_ENGINE_ROOT}/external/...`（IDE_GUI、DuanqiaoPlayable 等直接編 imgui .cpp 的 target）
-- [ ] W3.4 `MingGoRTS_IDE_GUI` 直接編譯的 `Rendering/ImageCodec.cpp`、`Logging/Logger.cpp` 改指引擎路徑（或改連結 PotatoEngine lib——建議後者）
+## Phase 3 — 新 CMake 架構（已完成）
 
-## Phase 4 — 驗證
+- [x] W3.1 引擎 CMakeLists 精簡：去遊戲 lib/executable/POTATO_TESTS 遊戲項；`glfw` imported target 提升 `GLOBAL`（imported target 預設目錄範圍，消費端看不到）
+- [x] W3.2 遊戲 CMakeLists：`project(MingGoRTS)` + `POTATO_ENGINE_ROOT` cache var + `add_subdirectory` + 雙根目錄 include
+- [x] W3.3 imgui/external 引用改 `${POTATO_ENGINE_ROOT}/external/...`
+- [x] W3.4 `MingGoRTS_IDE_GUI` 的 `ImageCodec.cpp`/`Logger.cpp` 改指 `${POTATO_ENGINE_ROOT}/`——**不**改連結 PotatoEngine：`GLFW_INCLUDE_NONE` 會傳染，IDEGUI 依賴 `glfw3.h` 帶入的系統 `gl.h`
 
-- [ ] W4.1 引擎 repo standalone：configure + build + ctest（MSVC）
-- [ ] W4.2 遊戲 repo：`cmake -DPOTATO_ENGINE_ROOT=...` + build + ctest
-- [ ] W4.3 MinGW 雙邊建置（AGENTS.md 要求 MSVC+MinGW 都過）
-- [ ] W4.4 `.github/workflows` 拆分兩側（遊戲 CI 加 engine checkout 步驟）
+## Phase 4 — 驗證（已完成，staging 於 `C:\HWC\_split_stage\`）
+
+- [x] W4.1 引擎 standalone：MSVC 建置 + ctest **28/28**、MinGW 建置 + ctest **28/28**
+- [x] W4.2 遊戲 repo：`-DPOTATO_ENGINE_ROOT=../engine-src` MSVC 建置 + ctest **44/44**
+- [x] W4.3 MinGW 雙邊建置：遊戲 **44/44**（合計 72 = 68 基線 + L-6/L-8/Jamming/QuasiModels 新增）
+- [ ] W4.4 `.github/workflows` 拆分兩側（遊戲 CI 加 engine checkout 步驟）——待遊戲側正式切出時做
 
 ## Phase 5 — 交接
 
-- [ ] W5.1 兩側 README/AGENTS/docs 更新
+- [x] W5.0 置換決策：遊戲側**維持 `C:\HWC\MingGoRTS` 不動**（平行 session 在途，引擎仍是 repo 內真相來源）；`C:\HWC\PotatoEngine` 由 filter-repo 產物取代（舊鏡像 repo 備份 `PotatoEngine-mirror-old/`）。遊戲側正式切出（`game-src` 已驗證，存 `_split_stage/`）留待平行工作收斂後執行
+- [ ] W5.1 兩側 README/AGENTS/docs 更新（引擎新 AGENTS.md 已入帳）
 - [ ] W5.2 `sync-potatoengine-upstream.sh` 退役或改寫為引擎 repo 的 CI 發布腳本
-- [ ] W5.3 remote/branch/PR 由 user 決定——不直推 main/develop，commit 用 conventional commits
+- [ ] W5.3 remote/branch/PR 由 user 決定——不直推 main/develop，commit 用 conventional commits（新引擎 repo 歷史重寫過，推送需 force）
 
 ## 風險
 
