@@ -61,7 +61,7 @@ C++20 遊戲引擎 + MingGoRTS IDE，CMake 建置，無 UE5 依賴。BMAD v6 已
 - 原則：不改 `external/` 既有內容；新增第三方庫僅允許「新增子目錄」形式：`external/<lib>/`
 - 必要條件：目錄內附 `README.md` 記錄 來源 URL / 版本 / license；實作巨集（如 `TINYGLTF_IMPLEMENTATION`、`STB_IMAGE_IMPLEMENTATION`）集中放在引擎目錄的單一 TU（例：`Rendering/TinyGltfImpl.cpp`），其他檔案不得重複定義
 - 引入前優先評估是否已有自研方案可複用（如 `Rendering/ImageCodec` 的零依賴 PNG）
-- 目前 vendored：`external/tinygltf/`（tinygltf v2.9.7 + nlohmann/json + stb_image/stb_image_write，glTF/VRM 載入用）
+- 目前 vendored：`external/tinygltf/`（tinygltf v2.9.7 + nlohmann/json + stb_image/stb_image_write，glTF/VRM 載入用）、`external/miniaudio/`（miniaudio 0.11.22 單標頭，public domain/MIT-0，F-4 音訊後端——實作巨集在 `Audio/MiniaudioImpl.cpp`）
 
 ## 平行開發衛生（多 session 協作）
 
