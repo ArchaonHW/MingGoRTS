@@ -33,8 +33,20 @@
             <Button x:Name="BtnSpeed" Content="速度 ×1" Click="BtnSpeed_Click"
                     Margin="0,0,0,10" Padding="6,4"/>
 
+            <TextBlock Text="全軍" Foreground="#FF9FB2BD" FontSize="12"/>
+            <ListBox x:Name="RosterList" Height="96" Margin="0,0,0,8"
+                     Background="#FF141B20" Foreground="#FF9FB2BD"
+                     FontSize="11"
+                     SelectionChanged="RosterList_SelectionChanged"/>
+
             <TextBlock x:Name="HudSelected" Foreground="#FF9FB2BD"
                        FontSize="12" TextWrapping="Wrap"/>
+
+            <TextBlock Text="戰況" Foreground="#FF9FB2BD" FontSize="12"
+                       Margin="0,8,0,0"/>
+            <ListBox x:Name="EventList" Height="120" Margin="0,0,0,4"
+                     Background="#FF141B20" Foreground="#FF8E9AA4"
+                     FontSize="10" IsHitTestVisible="False"/>
             <TextBlock x:Name="HudOutcome" Foreground="#FFD4A23C"
                        FontSize="15" FontWeight="Bold"
                        TextWrapping="Wrap" Margin="0,8,0,0"/>

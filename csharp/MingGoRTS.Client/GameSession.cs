@@ -8,7 +8,11 @@ public sealed class GameSession : IDisposable
     public int GridW { get; }
     public int GridH { get; }
     public float Cell { get; }
+    // squadId/entityId → 部署時指派的名稱（快照不含字串）
+    public Dictionary<int, string> SquadNames { get; } = new();
+    public Dictionary<int, string> FogNames { get; } = new();
     private byte[] buf;
+    private byte[] eventBuf = new byte[8192];
 
     private GameSession(IntPtr h, int w, int g, float cell)
     {
@@ -69,6 +73,7 @@ public sealed class GameSession : IDisposable
         foreach (var (n, x, y, m, cls) in atkPos)
         {
             int id = NativeBridge.PB_AddSquad(h, n, 0, x, y, m);
+            s.SquadNames[id] = n;
             NativeBridge.PB_SetUnitClass(h, id, cls);
             NativeBridge.PB_SetDoctrineJson(h, id, atkDoctrine);
         }
@@ -81,11 +86,16 @@ public sealed class GameSession : IDisposable
         foreach (var (n, x, y, m) in defPos)
         {
             int id = NativeBridge.PB_AddSquad(h, n, 1, x, y, m);
+            s.SquadNames[id] = n;
             NativeBridge.PB_SetDoctrineJson(h, id, defDoctrine);
             // Q-1：每支守軍一朵機率雲（真實位置附近散佈）
             int eid = NativeBridge.PB_FogAddCloud(h, n, 1, x, y,
                                                 2.5f, 5, 1.2f);
-            if (eid >= 0) NativeBridge.PB_FogBindSquad(h, id, eid);
+            if (eid >= 0)
+            {
+                s.FogNames[eid] = n;
+                NativeBridge.PB_FogBindSquad(h, id, eid);
+            }
         }
 
         if (NativeBridge.PB_BeginExecution(h) == 0)
@@ -100,6 +110,20 @@ public sealed class GameSession : IDisposable
         if (need > buf.Length) buf = new byte[need + 64];
         int n = NativeBridge.PB_Snapshot(Handle, buf, buf.Length);
         return n > 0 ? Snapshot.Parse(buf, n) : null;
+    }
+
+    // 取走待讀戰況事件（'\n' 分隔 UTF-8 → 行陣列）；無則空陣列
+    public string[] DrainEvents()
+    {
+        int need = NativeBridge.PB_EventBytes(Handle);
+        if (need <= 0) return Array.Empty<string>();
+        if (need > eventBuf.Length) eventBuf = new byte[need + 256];
+        int n = NativeBridge.PB_DrainEvents(Handle, eventBuf,
+                                          eventBuf.Length);
+        if (n <= 0) return Array.Empty<string>();
+        return System.Text.Encoding.UTF8
+            .GetString(eventBuf, 0, n)
+            .Split('\n', StringSplitOptions.RemoveEmptyEntries);
     }
 
     public void Dispose() => NativeBridge.PB_Destroy(Handle);

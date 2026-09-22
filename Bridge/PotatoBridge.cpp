@@ -24,8 +24,11 @@
 #include "Gameplay/BattleResources.h"
 #include "Gameplay/QuantumFog.h"
 
+#include <cstdio>
 #include <cstring>
+#include <deque>
 #include <memory>
+#include <string>
 #include <vector>
 
 #if defined(_WIN32)
@@ -44,6 +47,7 @@ struct PB_Battle {
     std::unique_ptr<QuantumFog> fog;      // PB_EnableFog 後內建持有
     std::unique_ptr<BattleResources> res; // fog 觀測的情報點池
     std::vector<Squad*> squadIndex;       // squadId → Squad*
+    std::deque<std::string> events;       // 戰況卷軸（ring buffer）
 };
 
 PB_Battle* As(void* h) { return static_cast<PB_Battle*>(h); }
@@ -80,6 +84,14 @@ PB_API void* PB_Create(int gridW, int gridH, float cellSize) {
     if (gridW <= 0 || gridH <= 0 || cellSize <= 0.0f) return nullptr;
     auto* b = new PB_Battle();
     b->battle = std::make_unique<BattleController>(gridW, gridH, cellSize);
+    // 事件流 → 戰況卷軸 ring buffer（[秒] 訊息；滿 128 丟最舊）
+    b->battle->SetEventCallback([b](const std::string& m) {
+        char head[32];
+        std::snprintf(head, sizeof(head), "[%5.1f]",
+                      static_cast<double>(b->battle->GetElapsed()));
+        b->events.emplace_back(std::string(head) + " " + m);
+        if (b->events.size() > 128) b->events.pop_front();
+    });
     return b;
 }
 
@@ -357,4 +369,37 @@ PB_API int PB_Snapshot(void* h, unsigned char* dst, int capacity) {
     }
     if (!w.ok) return 0;
     return static_cast<int>(w.p - dst);
+}
+
+// ---- 戰況卷軸 ----
+// PB_EventBytes 查待讀位元組；PB_DrainEvents 寫 '\n' 分隔 UTF-8
+// 並只移除實際寫入的條目（容量不足時剩餘事件保留待下次）。
+// dst=nullptr 時純清空（呼叫端主動丟棄）。
+PB_API int PB_EventBytes(void* h) {
+    auto* b = As(h);
+    if (!b) return 0;
+    int n = 0;
+    for (const auto& e : b->events)
+        n += static_cast<int>(e.size()) + 1;
+    return n;
+}
+PB_API int PB_DrainEvents(void* h, char* dst, int capacity) {
+    auto* b = As(h);
+    if (!b) return 0;
+    if (!dst || capacity <= 0) {
+        b->events.clear();
+        return 0;
+    }
+    int n = 0;
+    size_t consumed = 0;
+    for (const auto& e : b->events) {
+        const int need = static_cast<int>(e.size()) + 1;
+        if (n + need > capacity) break;
+        std::memcpy(dst + n, e.data(), e.size());
+        n += static_cast<int>(e.size());
+        dst[n++] = '\n';
+        ++consumed;
+    }
+    while (consumed--) b->events.pop_front();
+    return n;
 }

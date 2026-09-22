@@ -81,4 +81,8 @@ internal static class NativeBridge
     // ---- 快照 ----
     [DllImport(Dll)] internal static extern int PB_SnapshotSize(IntPtr h);
     [DllImport(Dll)] internal static extern int PB_Snapshot(IntPtr h, byte[] dst, int capacity);
+
+    // ---- 戰況卷軸 ----
+    [DllImport(Dll)] internal static extern int PB_EventBytes(IntPtr h);
+    [DllImport(Dll)] internal static extern int PB_DrainEvents(IntPtr h, byte[] dst, int capacity);
 }
