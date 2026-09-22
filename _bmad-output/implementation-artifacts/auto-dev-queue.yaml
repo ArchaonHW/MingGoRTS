@@ -1022,9 +1022,9 @@ queue:
     acceptance:
       - 三階視效規則實裝、渲染層唯讀
       - DESIGN 禁令（關鍵資訊可讀）不違規
-    status: queued
+    status: done
     size: L
-    note: 依賴 D-1 + F-1 + F-4；神話層的視覺簽名
+    note: 三路審查補丁後 33/33 雙工具鏈；producer 注壓/縮放 dt/audioLevel 單源/BackgroundDrawList 已修
 
   # ---- 層級 L：帳本機械化（區塊鏈與會計概念，2026-09-19）----
   - id: L-1

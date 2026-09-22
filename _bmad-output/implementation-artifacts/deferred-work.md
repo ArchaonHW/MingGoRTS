@@ -111,3 +111,12 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-d4-myth-incursion.md`
   summary: FoxRumor 假雲觀測方硬編 team 0 — 與 ShrineField/GovernanceField 的 team-0 慣例同一洞：玩家非 team 0 的戰場情報計費會指錯邊。需跨三處的共享玩家 team 參數，非單類修復。
   evidence: Edge-case-hunter review — `QuantumFog::AddEntityCloud` team 參數是觀測方語義；同 D-2 deferred 條目。
+- source_spec: `_bmad-output/implementation-artifacts/spec-d5-seepage-visual.md`
+  summary: MythLayer 區域鍵目前用章節 `def.map` 去副檔名推導（"duanqiao"）——與 D-2 shrine region 同命名空間但無正式 `region` 欄位。若多張地圖共用檔名或章節需要跨圖滲透，ChapterDef 需補顯式 region 欄。
+  evidence: D-5 spec 區域鍵慣例註記 + 三路審查——慣例可行但非 schema 級契約。
+- source_spec: `_bmad-output/implementation-artifacts/spec-d5-seepage-visual.md`
+  summary: `AudioCues.h` 音檔路徑為 cwd 相對（assets/audio/ 目前不存在）——miniaudio 降級契約下不會崩，但 dist 包/不同工作目錄啟動時 cue 靜默失效。屬 F-4 資產管線範疇。
+  evidence: D-5 review 附帶發現——F-4 音景床 decode 也受此影響；D-5 只負責送 audioLevel。
+- source_spec: `_bmad-output/implementation-artifacts/spec-d5-seepage-visual.md`
+  summary: DuanqiaoPlayable 事件文字匹配（"doctrine"/"潰逃" 子字串）可能過寬觸發 cue——非 rout 訊息含「潰逃」字樣會放錯音效。屬 F-4 事件→cue 文案契約範疇。
+  evidence: D-5 review 附帶發現——F-4 的 PlayCueForEvent 文字表。

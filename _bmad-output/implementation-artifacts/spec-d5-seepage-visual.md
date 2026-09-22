@@ -2,7 +2,7 @@
 title: 'D-5 滲透視效消費端（UX-DR5——等級→呈現映射 + scrim 過渡）'
 type: 'feature'
 created: '2026-09-22'
-status: 'in-review'
+status: 'done'
 baseline_commit: '5a67158'
 context:
   - '{project-root}/_bmad-output/implementation-artifacts/epic-d-context.md'
@@ -132,3 +132,65 @@ MythLayer 區域鍵（與 D-2 shrine region 同命名空間）；正式
 - `cd build && ctest -C Release` -- 全綠（含 UIThemeTest 不回歸）
 - MinGW 編譯 `SeepageStageTest` target -- 通過
 - banned 函式掃描 `gets|strcpy|strcat|sprintf|vsprintf|scanf` -- 無新增命中
+
+## Review Log（三路審查後修訂）
+
+- `SeepageVisual` 純量全補 NSDMI——L0 常態路徑 `lv==level` 不會
+  走 `ForLevel`，未初始化時會把垃圾值送進 sync。
+- **Producer 補線**：`"duanqiao"` 區域原無 Feed 來源——
+  DuanqiaoPlayable 戰後結算段把 `GetGovernanceEvents()`
+  （event→count 對映）逐次餵 `Myths().Feed`，區域由此建檔。
+- `Update` 改餵 `dt * GetTimeScale()`——暫停中 scrim 與世界
+  同凍（契約已寫進檔頭）。
+- `svfx.audioLevel` 每幀消費取代事件回呼映射——單一映射源，
+  讀檔後（FromJson 不發事件）音景自動補齊。
+- 曲線快照：`scrimReduced` 在過渡觸發當下鎖定——途中切
+  motion-reduction 不跳變；release 分支加零時長守衛。
+- jitter 相位綁候選格子座標（非可見槽位索引）——候選被篩掉
+  時倖存標記不跳相位；`Detach` 歸零全部 seepage 欄位。
+- `PickFogCloud` 加 `shadowOffset` 參數——點選命中與渲染
+  位移一致。
+- **Manifest fallback**：玩家主題已是 InkChronicle 時 L3 改切
+  WarMap——Manifest 須有可見信號。
+- `motionReduction` 改用 `AsNumber` 解析——避極端值 `AsInt`
+  轉換 UB；舊檔缺欄預設 0。
+- **偏離追認**：scrim 用 `GetBackgroundDrawList`（非凍結區的
+  ForegroundDrawList）——罩 3D 場景底色、不遮 HUD 面板，
+  比字面規格更滿足「關鍵資訊雙編碼恆在」驗收條。
+
+## Suggested Review Order
+
+**映射與過渡**
+
+- ForLevel——三階映射表（tint/shadow/jitter/audio/theme）
+  [`SeepageStage.cpp:19`](../Gameplay/SeepageStage.cpp#L19)
+
+- Update/ScrimAlpha——上升才觸發、跳級直取、曲線快照、
+  dt 守衛、release 除零
+  [`SeepageStage.cpp:46`](../Gameplay/SeepageStage.cpp#L46)
+
+**消費端**
+
+- Sync 修飾段——shadow 靜態偏移 + 相位綁格子的 jitter + tint
+  [`BattleSceneSync.cpp:224`](../Gameplay/BattleSceneSync.cpp#L224)
+
+- Detach 歸零 + SetSeepageFX
+  [`BattleSceneSync.cpp:295`](../Gameplay/BattleSceneSync.cpp#L295)
+
+**接線**
+
+- 戰鬥迴圈——縮放 dt、指令包→sync/cues/theme、scrim 用
+  BackgroundDrawList、Manifest fallback
+  [`DuanqiaoPlayable.cpp:1180`](../Examples/DuanqiaoPlayable.cpp#L1180)
+
+- Producer——戰後治理事件計數餵 MythLayer
+  [`DuanqiaoPlayable.cpp:1952`](../Examples/DuanqiaoPlayable.cpp#L1952)
+
+- Picker 偏移一致
+  [`DuanqiaoPlayable.cpp:1099`](../Examples/DuanqiaoPlayable.cpp#L1099)
+
+**測試**
+
+- I/O 矩陣 + 過渡一次性 + reduced 曲線 + 跳級 + 越界 clamp +
+  UISettings 相容
+  [`SeepageStageTest.cpp`](../Examples/SeepageStageTest.cpp)
