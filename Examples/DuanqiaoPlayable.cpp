@@ -33,7 +33,11 @@
 #include "Gameplay/RefitCamp.h"
 #include "Gameplay/SquadTemplate.h"
 #include "Gameplay/QuantumFog.h"
+#include "Gameplay/SeepageStage.h"
 #include "Gameplay/BattleCommandAI.h"
+#include "Audio/AudioSystem.h"
+#include "Audio/AudioCues.h"
+#include "Audio/MiniaudioBackend.h"
 #include "MathUtils/CurlNoise.h"
 #include "MathUtils/GustField.h"
 #include "MathUtils/Matrix4.h"
@@ -215,9 +219,21 @@ static SharedPtr<SceneNode> AddStaticBox(SharedPtr<SceneNode> parent,
 static double g_scroll = 0.0;
 static void ScrollCallback(GLFWwindow*, double, double yoff) { g_scroll += yoff; }
 
+// F-4:UI 點擊音——點在 ImGui item 上放一聲;無 cues/無裝置/缺檔皆靜音。
+// NewFrame 後呼叫:此時 HoveredId 仍是上一幀提交的 item,語意正確。
+static AudioCues* sAudioCues = nullptr;
+static void PlayUiClick() {
+    if (sAudioCues &&
+        ImGui::IsMouseClicked(ImGuiMouseButton_Left) &&
+        ImGui::IsAnyItemHovered()) {
+        sAudioCues->Play("ui_click");
+    }
+}
+
 // 點選機率雲:ray 與雲高平面求交,取最近候選格的 entity(-1 = 沒點到)
 static int PickFogCloud(const QuantumFog& fog, const BattleController& battle,
-                        const PickRay& ray, float cell) {
+                        const PickRay& ray, float cell,
+                        float seepShadow = 0.0f) {
     Vector3 g;
     if (!BattlePicker::IntersectGround(ray, 0.5f * cell, g)) return -1;
     int best = -1;
@@ -228,7 +244,9 @@ static int PickFogCloud(const QuantumFog& fog, const BattleController& battle,
         const Squad* owner = battle.GetFogSquad(eid);
         if (!owner || owner->IsEliminated()) continue; // 無主雲不可觀測
         for (const auto& c : fog.GetCloud(eid)) {
-            const float dx = c.first.x * cell - g.x;
+            // D-5：判定位置與渲染同步套用陰影錯位——看見即點到
+            const float dx =
+                c.first.x * cell + seepShadow * cell * 0.5f - g.x;
             const float dz = c.first.y * cell - g.z;
             const float d = std::sqrt(dx * dx + dz * dz);
             if (d < bestDist) { bestDist = d; best = eid; }
@@ -268,7 +286,7 @@ enum class ShellScreen { Title, Battle, Quit };
 // 寫到 out 參數，由主迴圈（部署層）套用，UI 不直接改戰役狀態。
 static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
                               UITheme::Id& theme, float& uiScale,
-                              int& hudDensity,
+                              int& hudDensity, int& motionReduction,
                               ImFont* fontSans, ImFont* fontSerif,
                               UITheme::Id& appliedTheme, float& appliedScale,
                               RefitCamp& camp, const SquadTemplateLibrary& campLibrary,
@@ -302,6 +320,7 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+    PlayUiClick();
     // 紙本三主題走 serif、戰術面板走 sans（DESIGN §Typography）
     ImGui::PushFont(theme != UITheme::Id::TacticalSim ? fontSerif : fontSans,
                     18.0f);
@@ -430,6 +449,12 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
                          "精簡\0標準\0詳盡\0")) {
             settingsDirty = true;
         }
+        // D-5：動態減弱——滲透/主題過渡降為短 crossfade
+        bool mr = motionReduction != 0;
+        if (ImGui::Checkbox("動態減弱", &mr)) {
+            motionReduction = mr ? 1 : 0;
+            settingsDirty = true;
+        }
     }
     // F-2 持久化：拖曳中不落盤，放開控制項才原子寫（收起頁面也照存）
     if (settingsDirty && !ImGui::IsAnyItemActive()) {
@@ -438,7 +463,7 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
                 .generic_string();
         UISettings::Save(kSettingsPath,
                          UISettings::Data{(int)theme, uiScale,
-                                          hudDensity});
+                                          hudDensity, motionReduction});
         settingsDirty = false;
     }
     if (ImGui::Button("離 開", ImVec2(-1, 0))) next = ShellScreen::Quit;
@@ -511,6 +536,13 @@ int main() {
     if (!fontSerif) fontSerif = fontFallback;
     io.FontDefault = fontSans;
 
+    // F-4 音訊:miniaudio 後端;無裝置/缺檔靜音降級,初始化失敗不擋遊戲
+    InitializeAudioManager();
+    auto* audioImpl = dynamic_cast<MiniaudioAudioManager*>(
+        GetAudioManager()->GetImplementation());
+    AudioCues cues = AudioCues::Defaults(audioImpl);
+    sAudioCues = &cues;
+
     // U-1 殼層狀態:主題/UI 縮放在標題頁設定頁修改
     // F-2：potato.settings/1 持久化——缺檔=預設值不報錯
     const std::string kSettingsPath =
@@ -519,6 +551,7 @@ int main() {
     UITheme::Id theme = UITheme::Id::TacticalSim;
     float uiScale = 1.0f;
     int hudDensity = (int)HUDDensityUI::Density::Standard;
+    int motionReduction = 0; // D-5：過渡降為 crossfade
     {
         UISettings::Data st;
         if (UISettings::Load(kSettingsPath, st)) {
@@ -527,6 +560,7 @@ int main() {
             }
             uiScale = st.uiScale;
             hudDensity = st.hudDensity;
+            motionReduction = st.motionReduction;
         }
     }
 
@@ -536,6 +570,7 @@ int main() {
 
     // ImGui/renderer 已初始化後的失敗路徑都要走這個清理
     auto shutdownAll = [&]() {
+        ShutdownAudioManager();
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
@@ -563,6 +598,21 @@ int main() {
     // C-3 目錄整併：舊 templates/ 已併入 squads/，單一目錄載入
     campLibrary.LoadDir(DemoAssets::Resolve("squads"));
 
+    // F-4 滲透音景:Seep(2) 起低吟 bed、Manifest(3) 疊高頻層——
+    // UX「滲透聲先於形」;升階瞬間放 seepage_up cue。
+    // CampaignState::LoadFromFile 會保留此回呼(跨存檔重置存活)
+    int seepageAudioLv = 0;
+    campaign.Myths().SetEventCallback([&](const MythEvent&) {
+        int mx = 0;
+        for (const auto& [r, lv] : campaign.Myths().Levels()) {
+            mx = (std::max)(mx, static_cast<int>(lv));
+        }
+        const int lv2 = mx >= 3 ? 2 : (mx >= 2 ? 1 : 0);
+        if (lv2 > seepageAudioLv) cues.Play("seepage_up");
+        seepageAudioLv = lv2;
+        cues.SetSeepageLevel(lv2);
+    });
+
     // ---- C-1 戰役存檔接線：啟動讀檔 + 章節定義庫 ----
     // 存檔放 exe 旁 saves/（與啟動 cwd 無關）；無檔=新戰役不報錯
     const std::string kCampaignSave =
@@ -586,7 +636,8 @@ int main() {
     while (screen != ShellScreen::Quit && !renderer.ShouldClose()) {
         if (screen == ShellScreen::Title) {
             screen = TitleFrame(window, renderer, theme, uiScale,
-                                hudDensity, fontSans, fontSerif,
+                                hudDensity, motionReduction,
+                                fontSans, fontSerif,
                                 appliedTheme, appliedScale, camp,
                                 campLibrary,
                                 campaign, chapters, pendingChapter);
@@ -628,6 +679,12 @@ int main() {
         eventLog.push_back(e);
         if (eventLog.size() > 8) eventLog.pop_front();
         std::printf("  [戰報] %s\n", e.c_str());
+        // F-4 事件音:字串戰報薄映射——doctrine 觸發/士氣潰逃,缺檔靜音
+        if (e.find("doctrine") != std::string::npos) {
+            cues.Play("doctrine");
+        } else if (e.find("潰逃") != std::string::npos) {
+            cues.Play("morale_rout");
+        }
     });
 
     // T-11 戰後素材:T-7 錄製器包在事件回調外層(錄下全部戰報)
@@ -855,6 +912,14 @@ int main() {
     sync.SetFogDriftGust(&fogGust);
     sync.Sync(battle);
 
+    // ---- D-5 滲透視效消費端（UX-DR5）----
+    // 滲透等級→呈現指令包；sync/HUD 唯讀消費，不回寫狀態。
+    // 區域鍵=地圖名（與 MythLayer region 同命名空間的慣例）；
+    // 音景已由 F-4 的 Myths() 事件回呼接線（SetSeepageLevel）。
+    SeepageStage seepageStage;
+    seepageStage.SetMotionReduction(motionReduction != 0);
+    const std::string seepageRegion = "duanqiao";
+
     // T-9 圖釘:objective(紅)/rally(藍)——Planning 中 Alt+點地移動,
     // 開戰後仍顯示作為戰場錨點
     auto objPinNode = AddStaticBox(root, pinMesh, Vector3(0, 0.9f, 0),
@@ -1031,7 +1096,9 @@ int main() {
                     sync.SetSelectedSquad(hit);
                 } else {
                     // 點到敵情雲:LMB=探測(1情報,雲收縮) Shift+LMB=觀測(2情報,塌縮)
-                    const int eid = PickFogCloud(fog, battle, ray, CELL);
+                    const int eid = PickFogCloud(
+                        fog, battle, ray, CELL,
+                        seepageStage.GetVisual().shadowOffset);
                     if (eid >= 0) {
                         Squad* ts = battle.GetFogSquad(eid);
                         const bool full =
@@ -1108,6 +1175,30 @@ int main() {
         battle.Update(dt);
         if (aiCommander) commander.Update(battle, dt);
         roster.Update(battle); // T-8:殲滅偵測→記陣亡
+        if (gAudioManager) gAudioManager->Update(); // F-4
+
+        // D-5：滲透等級→呈現指令包（唯讀消費 MythLayer）。
+        // dt 乘 timeScale——暫停中 scrim 與世界同凍（契約見標頭）
+        seepageStage.Update(
+            dt * battle.GetTimeScale(),
+            (int)campaign.Myths().Level(seepageRegion));
+        const SeepageVisual& svfx = seepageStage.GetVisual();
+        sync.SetSeepageFX(svfx.fogTint, svfx.jitterAmp,
+                          svfx.shadowOffset);
+        // 音景單一映射源（涵蓋讀檔後每幀補齊）：指令包→cues
+        cues.SetSeepageLevel(svfx.audioLevel);
+        // L3 全主題切換：token swap（錨點不動，肌肉記憶不變）；
+        // 玩家已是 InkChronicle 時切 WarMap——Manifest 須有可見信號
+        const UITheme::Id manifestTheme =
+            theme == UITheme::Id::InkChronicle ? UITheme::Id::WarMap
+                                              : UITheme::Id::InkChronicle;
+        const UITheme::Id battleTheme =
+            svfx.themeOverride ? manifestTheme : theme;
+        if (appliedTheme != battleTheme) {
+            UITheme::ApplyScaled(ImGui::GetStyle(), battleTheme,
+                                 uiScale);
+            appliedTheme = battleTheme;
+        }
         sync.Sync(battle);
 
         // A-1/A-3/A-4 治理源：佔領/焚村/護輜由 GovernanceField
@@ -1115,8 +1206,8 @@ int main() {
         govField.Update(dt, battle);
 
         // ---- 渲染 ----
-        { // U-1:clear color 跟主題走
-            const ImVec4 cc = UITheme::ClearColor(theme);
+        { // U-1:clear color 跟主題走（D-5：Manifest 期間跟覆寫主題）
+            const ImVec4 cc = UITheme::ClearColor(battleTheme);
             renderer.SetClearColor(Vector3(cc.x, cc.y, cc.z));
         }
         renderer.Clear();
@@ -1128,9 +1219,19 @@ int main() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        ImGui::PushFont(theme != UITheme::Id::TacticalSim ? fontSerif
-                                                        : fontSans,
+        PlayUiClick();
+        ImGui::PushFont(battleTheme != UITheme::Id::TacticalSim
+                            ? fontSerif : fontSans,
                         18.0f);
+        // D-5 scrim 過渡：BackgroundDrawList——罩 3D 場景底色氛圍，
+        // 不遮 HUD（士氣崩潰/倒數等關鍵資訊保持雙編碼可讀）
+        if (seepageStage.ScrimAlpha() > 0.0f) {
+            const ImVec4 fc = UITheme::ClearColor(battleTheme);
+            ImGui::GetBackgroundDrawList()->AddRectFilled(
+                ImVec2(0, 0), ImVec2((float)ww, (float)wh),
+                ImGui::GetColorU32(
+                    ImVec4(fc.x, fc.y, fc.z, seepageStage.ScrimAlpha())));
+        }
 
         // ---- G-5 計畫箭頭疊加線:規劃中亮金,開戰後淡化作軸線錨點 ----
         if (plan.ArrowCount() > 0 || arrowDragSquad) {
@@ -1848,6 +1949,13 @@ int main() {
         }
         // C-2 治理折帳:本場治理事件計數折進戰役帳,動亂事件入史官筆
         campaign.Gov().Accumulate(battle.GetGovernanceEvents());
+        // D-5 滲透注壓：同一批治理事件餵 MythLayer——戰場暴行
+        // 是滲透來源（Feed 建檔區域,讓 D-5 消費端有 producer）
+        for (const auto& [gev, cnt] : battle.GetGovernanceEvents()) {
+            for (int i = 0; i < cnt; ++i) {
+                campaign.Myths().Feed(seepageRegion, gev);
+            }
+        }
         for (const auto& msg : campaign.Gov().PollUnrestEvents()) {
             chronicler += msg + "\n";
         }
@@ -1867,6 +1975,8 @@ int main() {
                                         : ShellScreen::Title;
     }
 
+    sAudioCues = nullptr;
+    ShutdownAudioManager();
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();

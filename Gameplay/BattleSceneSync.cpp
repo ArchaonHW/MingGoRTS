@@ -10,6 +10,7 @@
 #include "Rendering/RenderableComponent.h"
 
 #include <algorithm>
+#include <cmath>
 #include <string>
 #include <unordered_set>
 
@@ -220,9 +221,26 @@ void BattleSceneSync::Sync(BattleController& battle) {
                     mpos.x += dv.x * fogDriftStrength * g;
                     mpos.z += dv.z * fogDriftStrength * g;
                 }
+                // D-5 滲透修飾（唯讀消費）：陰影錯位靜態偏移 +
+                // 定域正弦微移（相位依候選索引，無亂數可重現）
+                if (seepageShadow > 0.0f) {
+                    mpos.x += seepageShadow * cellSize * 0.5f;
+                }
+                if (seepageJitter > 0.0f) {
+                    // 相位綁候選格子座標（非可見槽位索引）——
+                    // 候選被 GetCloud 篩掉時倖存標記不跳變
+                    const float ph = cloud[i].first.x * 1.7f +
+                                     cloud[i].first.y * 2.3f;
+                    mpos.y += seepageJitter * cellSize *
+                              std::sin(battle.GetElapsed() * 3.0f + ph);
+                }
                 c->SetLocalPosition(mpos);
                 const float s = 0.4f + static_cast<float>(cloud[i].second) * 2.0f;
                 c->SetLocalScale(Vector3(s, s, s));
+                if (auto* rc = c->GetRenderable()) {
+                    // 滲透霧色偏移（等級1 局部異常）——零偏移=原色
+                    rc->color = Vector3(0.55f, 0.45f, 0.85f) + seepageTint;
+                }
             }
         }
     }
@@ -272,6 +290,13 @@ void BattleSceneSync::SetFogDrift(const Quasi::TurbulenceField* field,
 
 void BattleSceneSync::SetFogDriftGust(const Quasi::GustField* gust) {
     fogGust = gust;
+}
+
+void BattleSceneSync::SetSeepageFX(const Vector3& tint, float jitterAmp,
+                                   float shadowOffset) {
+    seepageTint = tint;
+    seepageJitter = jitterAmp;
+    seepageShadow = shadowOffset;
 }
 
 void BattleSceneSync::SetFogMarkerMesh(SharedPtr<Mesh> mesh) {
@@ -326,6 +351,9 @@ void BattleSceneSync::Detach() {
     fog = nullptr;      // 外層持有的 fog 不隨綁定續命
     fogMarkerMesh.reset();
     selected = nullptr; // 綁定已清,選取指標不得留給下一場 battle
+    seepageTint = Vector3(); // D-5 修飾不跨場殘留
+    seepageJitter = 0.0f;
+    seepageShadow = 0.0f;
     scene = nullptr;
 }
 
