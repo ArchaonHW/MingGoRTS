@@ -648,6 +648,16 @@ add_executable(JobSystemTest Examples/JobSystemTest.cpp)
 target_include_directories(JobSystemTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(JobSystemTest PotatoEngine)
 
+# Profiler 區段計時契約測試（headless：巢狀/啟停/序列化報表）
+add_executable(ProfilerTest Examples/ProfilerTest.cpp)
+target_include_directories(ProfilerTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(ProfilerTest PotatoEngine)
+
+# 簽章存檔測試（headless：往返/竄改偵測/錯金鑰/截短）
+add_executable(SignedSaveFileTest Examples/SignedSaveFileTest.cpp)
+target_include_directories(SignedSaveFileTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(SignedSaveFileTest PotatoEngine)
+
 # 紅隊測試用的無害 DLL（模擬被注入的作弊模組）
 add_library(FakeCheatModule SHARED Examples/FakeCheatModule.cpp)
 set_target_properties(FakeCheatModule PROPERTIES OUTPUT_NAME "FakeCheat" PREFIX "")
@@ -906,6 +916,15 @@ target_link_libraries(BattleSandboxTest Gameplay)
 add_library(PotatoBridge SHARED Bridge/PotatoBridge.cpp)
 target_include_directories(PotatoBridge PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(PotatoBridge PRIVATE Gameplay)
+# MinGW：去 lib 前綴 + 靜態連結執行庫——C# DllImport("PotatoBridge")
+# 依模組名解析，libPotatoBridge.dll 不命中；且 dotnet 行程 PATH
+# 無 MinGW bin，DLL 須自含（否則 0x8007007E）
+if(WIN32 AND NOT MSVC)
+    set_target_properties(PotatoBridge PROPERTIES
+        PREFIX "" OUTPUT_NAME "PotatoBridge")
+    target_link_options(PotatoBridge PRIVATE
+        -static-libgcc -static-libstdc++ -static)
+endif()
 
 # E-1 無戰章節門檻判定無頭測試（定義塊/灰顯報表/三路徑入帳/中計）
 add_executable(NoBattleResolverTest Examples/NoBattleResolverTest.cpp)
@@ -1098,6 +1117,8 @@ set(POTATO_TESTS
     SecurityDataTest
     AntiTamperTest
     JobSystemTest
+    ProfilerTest
+    SignedSaveFileTest
     AITestSuite
     DevAssistantSmoke
     SuggestionRulesTest

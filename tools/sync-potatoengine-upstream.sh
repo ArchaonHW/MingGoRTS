@@ -36,9 +36,9 @@ EngineExample FakeCheatModule FileSystemTest GLSmokeTest ImageCodecTest \
 InputTest JobSystemTest LogTest LoggerTest MathTest MediaPipeTest MemoryTest MinimalTest \
 MiniaudioBackendTest ModelLoaderTest NeuralArtTool NeuralGraphicsTest \
 OptimizedAIDemo \
-PhysicsMathTest PhysicsTest PlatformTest PortraitBaker PortraitRenderer \
+PhysicsMathTest PhysicsTest PlatformTest PortraitBaker PortraitRenderer ProfilerTest \
 QuasiModelsTest RenderPipelineTest RenderTargetTest SceneTest \
-SecurityDataTest SecurityRedTeamTest SerializationTest SimpleExample \
+SecurityDataTest SecurityRedTeamTest SerializationTest SignedSaveFileTest SimpleExample \
 SpriteAtlasTest \
 SynthDataDemo TimeTest UnsolvedBatch3Test VrmLoadTest compat_log"
 

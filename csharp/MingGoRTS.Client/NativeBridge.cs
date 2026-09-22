@@ -3,6 +3,7 @@
 // DLL 搜尋序：exe 旁 → repo build/bin/Release → build-mingw/bin
 // （MinGW 產物前綴 lib）。selftest/無裝置環境以 LoadLibrary 顯式
 // 探路後才觸發 P/Invoke 繫結。
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace MingGoRTS.Client;
@@ -56,6 +57,8 @@ internal static class NativeBridge
 
     // ---- 敵情霧 ----
     [DllImport(Dll)] internal static extern void PB_EnableFog(IntPtr h);
+    [DllImport(Dll)] internal static extern void PB_SetupResources(IntPtr h, int team, int intel, int cp);
+    [DllImport(Dll)] internal static extern void PB_AddIntel(IntPtr h, int team, int amount);
     [DllImport(Dll, CharSet = CharSet.Ansi)]
     internal static extern int PB_FogAddCloud(IntPtr h, string name, int team,
         float centerX, float centerY, float radius, int count, float minSpacing);

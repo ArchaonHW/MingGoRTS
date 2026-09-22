@@ -37,6 +37,7 @@
 namespace {
 
 using namespace Potato::Gameplay;
+using Potato::Vector2;
 
 struct PB_Battle {
     std::unique_ptr<BattleController> battle;

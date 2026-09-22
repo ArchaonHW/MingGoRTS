@@ -164,3 +164,7 @@ output/vds_hq/
 # output/ 全數為可再生產物（資料集/影片/教學工作檔）——上面逐項條列
 # 為歷史記錄，此處整目錄忽略避免新產物漏網
 output/
+
+# .NET 建置產物（csharp/ 客戶端）
+csharp/**/bin/
+csharp/**/obj/
