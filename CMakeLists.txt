@@ -892,6 +892,15 @@ target_include_directories(SeepageStageTest PRIVATE
 )
 target_link_libraries(SeepageStageTest Gameplay)
 
+# G-4 沙盤模擬器（FR14 平衡工具）：CLI + 無頭測試共用 BattleSandboxCore
+add_executable(BattleSandbox Examples/BattleSandbox.cpp)
+target_include_directories(BattleSandbox PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(BattleSandbox Gameplay)
+
+add_executable(BattleSandboxTest Examples/BattleSandboxTest.cpp)
+target_include_directories(BattleSandboxTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(BattleSandboxTest Gameplay)
+
 # E-1 無戰章節門檻判定無頭測試（定義塊/灰顯報表/三路徑入帳/中計）
 add_executable(NoBattleResolverTest Examples/NoBattleResolverTest.cpp)
 target_include_directories(NoBattleResolverTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1141,6 +1150,7 @@ set(POTATO_TESTS
     FateExchangeTest
     MythIncursionTest
     SeepageStageTest
+    BattleSandboxTest
     NoBattleResolverTest
     NoBattleNarrativeTest
 )
