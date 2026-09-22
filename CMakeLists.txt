@@ -901,6 +901,12 @@ add_executable(BattleSandboxTest Examples/BattleSandboxTest.cpp)
 target_include_directories(BattleSandboxTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(BattleSandboxTest Gameplay)
 
+# C# 前端橋：C ABI DLL——無頭 BattleController 部署/執行/二進制快照
+# （csharp/MingGoRTS.Client 經 P/Invoke 消費；MinGW 產物名 libPotatoBridge.dll）
+add_library(PotatoBridge SHARED Bridge/PotatoBridge.cpp)
+target_include_directories(PotatoBridge PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(PotatoBridge PRIVATE Gameplay)
+
 # E-1 無戰章節門檻判定無頭測試（定義塊/灰顯報表/三路徑入帳/中計）
 add_executable(NoBattleResolverTest Examples/NoBattleResolverTest.cpp)
 target_include_directories(NoBattleResolverTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
