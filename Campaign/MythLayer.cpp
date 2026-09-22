@@ -148,7 +148,14 @@ void MythLayer::DeriveFrom(float depravity, float civilOrder,
         return; // 清廉治理（或異常輸入）：不注入也不回落
     }
     std::vector<Gameplay::MythEvent> pending;
-    for (auto& [id, r] : regions) {
+    // 排序迭代：unordered_map 順序不確定，pending 事件序（→ MythLog
+    // 記事序）會逐次漂移——排序鍵讓同狀態同輸出（record-is-truth）
+    std::vector<std::string> keys;
+    keys.reserve(regions.size());
+    for (const auto& [id, r] : regions) keys.push_back(id);
+    std::sort(keys.begin(), keys.end());
+    for (const std::string& id : keys) {
+        Region& r = regions[id];
         r.pressure += inject;
         Ratchet(id, r, pending);
     }
@@ -162,19 +169,29 @@ JsonValue MythLayer::ToJson() const {
 
     JsonValue regs;
     regs.type = JsonValue::Type::Array;
-    for (const auto& [id, r] : regions) {
-        JsonValue e;
-        e.type = JsonValue::Type::Object;
-        e.objectValue["id"] = JsonValue::String(id);
-        e.objectValue["lv"] = JsonValue::Number(static_cast<int>(r.level));
-        e.objectValue["p"] = JsonValue::Number(r.pressure);
-        if (!r.spirit.empty()) {
-            e.objectValue["sp"] = JsonValue::String(r.spirit);
+    // 排序輸出：unordered_map 迭代序不確定，存檔位元組會逐次漂移
+    {
+        std::vector<std::string> keys;
+        keys.reserve(regions.size());
+        for (const auto& [id, r] : regions) keys.push_back(id);
+        std::sort(keys.begin(), keys.end());
+        for (const std::string& id : keys) {
+            const Region& r = regions.at(id);
+            JsonValue e;
+            e.type = JsonValue::Type::Object;
+            e.objectValue["id"] = JsonValue::String(id);
+            e.objectValue["lv"] =
+                JsonValue::Number(static_cast<int>(r.level));
+            e.objectValue["p"] = JsonValue::Number(r.pressure);
+            if (!r.spirit.empty()) {
+                e.objectValue["sp"] = JsonValue::String(r.spirit);
+            }
+            regs.arrayValue.push_back(e);
         }
-        regs.arrayValue.push_back(e);
     }
     o.objectValue["regions"] = regs;
 
+    // favor 是 object——WriteJson 的物件鍵已排序輸出,此處不需排序
     JsonValue fav;
     fav.type = JsonValue::Type::Object;
     for (const auto& [id, v] : favor) {
