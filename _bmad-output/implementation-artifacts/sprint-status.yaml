@@ -29,9 +29,12 @@
 # - Parallel-landed code (CampaignState/CampaignLedger/MythLog/HistorianReport)
 #   noted in epics.md; story status stays backlog until its AC is verified
 # - Legacy spec-*.md files belong to the auto-dev-queue system, not BMAD stories
+# - 2026-09-22 reconcile vs auto-dev-queue: c-1 落在 GeneralDossier（非
+#   IntelLedger 名）、c-4 落在 MythLayer favor（非 GodStance 名）——
+#   按功能標 done；c-2/c-5、g-1/g-2/g-3/g-5、e-2/e-3 無程式證據保持 backlog
 
 generated: 2026-09-18
-last_updated: 2026-09-21
+last_updated: 2026-09-22
 project: MingGoRTS
 project_key: NOKEY
 tracking_system: file-system
@@ -39,12 +42,12 @@ story_location: "{implementation_artifacts}"
 
 development_status:
   # Epic A — 治理之軸實裝
-  epic-a: backlog
-  a-1-village-occupation-morale: backlog
-  a-2-surrender-defection-ledger: backlog
-  a-3-convoy-entity-path: backlog
-  a-4-convoy-settlement-raiding: backlog
-  a-5-governance-accumulator: backlog
+  epic-a: done
+  a-1-village-occupation-morale: done
+  a-2-surrender-defection-ledger: done
+  a-3-convoy-entity-path: done
+  a-4-convoy-settlement-raiding: done
+  a-5-governance-accumulator: done
   epic-a-retrospective: optional
 
   # Epic B — 戰役持久骨架
@@ -57,45 +60,45 @@ development_status:
   epic-b-retrospective: optional
 
   # Epic C — 敘事戰役系統
-  epic-c: backlog
-  c-1-intel-ledger: backlog
+  epic-c: in-progress
+  c-1-intel-ledger: done
   c-2-narrative-pack: backlog
-  c-3-chapter-conventions: backlog
-  c-4-god-stance: backlog
+  c-3-chapter-conventions: done
+  c-4-god-stance: done
   c-5-ending-page: backlog
   epic-c-retrospective: optional
 
   # Epic D — 神話雙層
-  epic-d: backlog
-  d-1-myth-layer-seepage: review
-  d-2-shrine-spirit-entities: review
-  d-3-fate-conversion: review
-  d-4-myth-incursion-events: review
-  d-5-seepage-visual-consumer: review
+  epic-d: done
+  d-1-myth-layer-seepage: done
+  d-2-shrine-spirit-entities: done
+  d-3-fate-conversion: done
+  d-4-myth-incursion-events: done
+  d-5-seepage-visual-consumer: done
   epic-d-retrospective: optional
 
   # Epic E — 無戰章節
-  epic-e: backlog
-  e-1-no-battle-chapter-thresholds: backlog
+  epic-e: in-progress
+  e-1-no-battle-chapter-thresholds: done
   e-2-negotiation-deterrence: backlog
   e-3-subversion-insider: backlog
-  e-4-no-battle-narrative-settlement: backlog
+  e-4-no-battle-narrative-settlement: done
   epic-e-retrospective: optional
 
   # Epic F — 呈現層補完
-  epic-f: backlog
-  f-1-sprite-atlas-pipeline: backlog
-  f-2-ui-scale-pipeline: backlog
-  f-3-hud-density-tiers: backlog
-  f-4-audio-miniaudio: backlog
-  f-5-bundled-cjk-fonts: backlog
+  epic-f: done
+  f-1-sprite-atlas-pipeline: done
+  f-2-ui-scale-pipeline: done
+  f-3-hud-density-tiers: done
+  f-4-audio-miniaudio: done
+  f-5-bundled-cjk-fonts: done
   epic-f-retrospective: optional
 
   # Epic G — 內容與工具
-  epic-g: backlog
+  epic-g: in-progress
   g-1-doctrine-card-pool: backlog
   g-2-deck-looting: backlog
   g-3-general-editor: backlog
-  g-4-sandbox-simulator: backlog
+  g-4-sandbox-simulator: done
   g-5-tutorial-chapter: backlog
   epic-g-retrospective: optional
