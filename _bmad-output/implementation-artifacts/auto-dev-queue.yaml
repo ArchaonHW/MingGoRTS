@@ -873,9 +873,14 @@ queue:
     acceptance:
       - 事件音效對應播放、滲透 2 級音景循環
       - 無音檔/無裝置不崩潰
-    status: queued
+    status: done
     size: L
-    note: additive milestone——不阻塞 F-1/D 層
+    note: 5a67158 落地——external/miniaudio 0.11.22 vendored;
+      MiniaudioAudioManager（ma_backend 降級,無裝置/缺檔靜音不擋遊戲）
+      取代 OpenAL 殼為預設實作;AudioCues 事件層 doctrine/潰逃/
+      滲透升階/UI 點擊四線接入 DuanqiaoPlayable;滲透音景
+      Seep→bed、Manifest→bed+layer 兩級循環。
+      MiniaudioBackendTest 23 項雙工具鏈綠（ma_backend_null 無頭）。
 
   - id: F-5
     title: 字體打包完整性收尾
