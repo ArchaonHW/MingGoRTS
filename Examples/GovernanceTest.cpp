@@ -8,9 +8,11 @@
 #include "Gameplay/BattleController.h"
 #include "Gameplay/SageCommand.h"
 
-#include <cstdio>
+#include <cmath>
 #include <cstdio>
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 using namespace Potato;
 using namespace Potato::Gameplay;
@@ -26,6 +28,14 @@ static void Check(bool cond, const char* name) {
     }
 }
 
+// 缺鍵回 0 而非 at() 拋例外——斷言失敗應計 FAIL 不應崩潰
+static int EvCount(
+    const std::unordered_map<GovernanceEvent, int>& evs,
+    GovernanceEvent k) {
+    auto it = evs.find(k);
+    return it == evs.end() ? 0 : it->second;
+}
+
 int main() {
     setvbuf(stdout, nullptr, _IONBF, 0);
     printf("=== Governance Tests (C-2) ===\n");
@@ -34,9 +44,9 @@ int main() {
     printf("\n[1] 自動偵測\n");
     {
         BattleController battle(10, 10, 1.0f);
-        int emits = 0;
+        std::vector<std::string> emitted;
         battle.SetEventCallback(
-            [&](const std::string&) { ++emits; });
+            [&](const std::string& s) { emitted.push_back(s); });
         Squad* mine = battle.CreateSquad("我軍", 0, Vector2(1, 1), 10);
         Squad* foe = battle.CreateSquad("敵軍", 1, Vector2(8, 8), 10);
         // 留一隊未潰逃敵軍：foe 全潰會翻勝負讓 Update 提前 no-op
@@ -52,24 +62,28 @@ int main() {
         Check(foe->IsRouting(), "敵隊已潰逃");
         battle.Update(0.1f);
         auto& evs = battle.GetGovernanceEvents();
-        Check(evs.count(GovernanceEvent::SurrenderAccepted) &&
-                  evs.at(GovernanceEvent::SurrenderAccepted) == 1,
+        Check(EvCount(evs, GovernanceEvent::SurrenderAccepted) == 1,
               "新潰逃 → SurrenderAccepted×1");
-        Check(emits > 0, "事件進 recorder 事件流");
+        // 治理事件進 recorder 事件流——只數「治理：」前綴，
+        // 排除部署階段的其他 emit
+        bool sawGovEmit = false;
+        for (const auto& s : emitted) {
+            if (s.rfind("治理：", 0) == 0) sawGovEmit = true;
+        }
+        Check(sawGovEmit, "治理事件進 recorder 事件流");
 
         battle.Update(0.1f);
-        Check(evs.at(GovernanceEvent::SurrenderAccepted) == 1,
+        Check(EvCount(evs, GovernanceEvent::SurrenderAccepted) == 1,
               "同隊潰逃不重發");
 
         // 潰逃中損員 → 暴行（屠殺已降者）
         foe->ApplyCasualties(3);
         battle.Update(0.1f);
-        Check(evs.count(GovernanceEvent::Atrocity) &&
-                  evs.at(GovernanceEvent::Atrocity) == 1,
+        Check(EvCount(evs, GovernanceEvent::Atrocity) == 1,
               "潰逃損員 → Atrocity×1");
         foe->ApplyCasualties(2);
         battle.Update(0.1f);
-        Check(evs.at(GovernanceEvent::Atrocity) == 1,
+        Check(EvCount(evs, GovernanceEvent::Atrocity) == 1,
               "暴行同隊只記一次");
 
         // 我軍潰逃不算敵軍受降
@@ -77,14 +91,14 @@ int main() {
             battle.CreateSquad("我軍二隊", 0, Vector2(2, 2), 10);
         mine2->AdjustMorale(-1.0f);
         battle.Update(0.1f);
-        Check(evs.at(GovernanceEvent::SurrenderAccepted) == 1,
+        Check(EvCount(evs, GovernanceEvent::SurrenderAccepted) == 1,
               "我軍潰逃不計受降");
 
         // 手動餵入：村莊/護輜（有地圖知識的呼叫端路徑）
         battle.RecordGovernanceEvent(GovernanceEvent::VillageOccupied);
         battle.RecordGovernanceEvent(GovernanceEvent::ConvoyProtected);
-        Check(evs.at(GovernanceEvent::VillageOccupied) == 1 &&
-                  evs.at(GovernanceEvent::ConvoyProtected) == 1,
+        Check(EvCount(evs, GovernanceEvent::VillageOccupied) == 1 &&
+                  EvCount(evs, GovernanceEvent::ConvoyProtected) == 1,
               "RecordGovernanceEvent 計數");
     }
 

@@ -75,9 +75,11 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
   summary: Orphaned install(DIRECTORY GUI/) rule ships AgentGUI.h with no compiled symbols; build-video/check_all.sh still lists GUI/AgentGUI.cpp.
   evidence: CMakeLists.txt ~L889; parallel engine/game split cleanup.
+  resolution: 已修（拆倉 Phase 1，82f5a1d）：AgentGUI 遷入 MingGoRTS_IDE/，孤兒 install 規則與 check_all.sh 殘留皆已清。
 - source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
   summary: GovernanceTest hygiene — leftover [dbg] printf, weak `emits>0` assertion counts deploy emits not governance, `evs.at` throws instead of FAIL.
   evidence: Examples/GovernanceTest.cpp §1; parallel test file.
+  resolution: 已修（2026-09-23）：emit 斷言改計「治理：」前綴字串（排除部署 emit）；EvCount 缺鍵回 0 取代 at() 拋例外；補 unordered_map/cmath 明確 include。
 - source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
   summary: Plan-bonus HUD hides at exactly ×1.00 — the moment intel resolves against the tip, the label vanishes instead of showing a "落空" state.
   evidence: DuanqiaoPlayable.cpp ~L1436-1439; UX polish under parallel-session churn.
@@ -120,6 +122,7 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-d5-seepage-visual.md`
   summary: `AudioCues.h` 音檔路徑為 cwd 相對（assets/audio/ 目前不存在）——miniaudio 降級契約下不會崩，但 dist 包/不同工作目錄啟動時 cue 靜默失效。屬 F-4 資產管線範疇。
   evidence: D-5 review 附帶發現——F-4 音景床 decode 也受此影響；D-5 只負責送 audioLevel。
+  resolution: 已修（2026-09-23）：`AudioCues::Defaults` 加 assetsRoot 參數（預設 "assets" 保舊行為）；DuanqiaoPlayable 改傳 `DemoAssets::Root()`——以 exe 定位資產根，cwd 無關。
 - source_spec: `_bmad-output/implementation-artifacts/spec-d5-seepage-visual.md`
   summary: DuanqiaoPlayable 事件文字匹配（"doctrine"/"潰逃" 子字串）可能過寬觸發 cue——非 rout 訊息含「潰逃」字樣會放錯音效。屬 F-4 事件→cue 文案契約範疇。
   evidence: D-5 review 附帶發現——F-4 的 PlayCueForEvent 文字表。
