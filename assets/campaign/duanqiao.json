@@ -7,5 +7,10 @@
     "map": "maps/duanqiao.json",
     "enemy_deck": "",
     "next": "",
-    "note": "首章定義：軍閥弧第一章，斷橋遭遇戰——MVP 垂直切片的唯一章節"
+    "no_battle": {
+        "negotiation": {"cost": 30},
+        "deterrence": {"threshold": 20},
+        "subversion": {"intel": 1}
+    },
+    "note": "首章定義：軍閥弧第一章，斷橋遭遇戰——MVP 垂直切片的唯一章節；no_battle 為 E-2 罷兵路徑（談判民心30/嚇阻軍威20/顛覆情報1）"
 }

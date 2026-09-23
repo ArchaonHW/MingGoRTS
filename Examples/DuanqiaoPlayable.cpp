@@ -28,6 +28,9 @@
 #include "Gameplay/PostBattle.h"
 #include "Campaign/CampaignState.h"
 #include "Campaign/ChapterLibrary.h"
+#include "Campaign/NoBattleResolver.h"
+#include "Gameplay/Ledger.h"
+#include "Gameplay/NoBattleAdvantage.h"
 #include "Gameplay/HistorianReport.h"
 #include "Gameplay/GeneralDossier.h"
 #include "Gameplay/RefitCamp.h"
@@ -594,6 +597,10 @@ int main() {
     Campaign::CampaignState campaign;
     RefitCamp& camp = campaign.Camp();
     GeneralDossier dossier;
+    // E-2 無戰帳鏈：Civil/Army 淨額是談判/嚇阻門檻的試算來源——
+    // 殼層持有跨章節累積；不進 campaign 存檔（schema 不變），
+    // 啟動時以持久民心開帳、勝場於結算補記武功/軍威分錄。
+    Gameplay::LedgerChain campaignChain;
     SquadTemplateLibrary campLibrary;
     // C-3 目錄整併：舊 templates/ 已併入 squads/，單一目錄載入
     campLibrary.LoadDir(DemoAssets::Resolve("squads"));
@@ -627,6 +634,22 @@ int main() {
             campaign.AdvanceChapter(sorted.front()->arc,
                                     sorted.front()->chapter,
                                     sorted.front()->id);
+        }
+    }
+    // E-2 帳鏈開帳：持久民心映射為 Civil 期初——NoBattleResolver
+    // 的門檻試算全吃帳鏈淨額，不開帳則民心恆 0、路徑全灰死碼。
+    // 談判成功時雙軌同步（Gov 軸同扣）維持兩帳一致。
+    {
+        const int civilSeed =
+            (int)std::lround(campaign.Gov().PopularSupport());
+        if (civilSeed > 0) {
+            Gameplay::LedgerEntry seed;
+            seed.debit = Gameplay::LedgerAccount::Civil;
+            seed.credit = Gameplay::LedgerAccount::Supply;
+            seed.amount = civilSeed;
+            seed.memo = "開帳——民心期初";
+            seed.prov.source = Gameplay::EntrySource::System;
+            campaignChain.Append(seed);
         }
     }
     ShellScreen screen = ShellScreen::Title;
@@ -942,6 +965,11 @@ int main() {
 
     Squad* selected = nullptr;
     bool planningPhase = true;  // T-9:開戰前停在回合層編牌
+    // ---- E-2 無戰路徑：章節定義開放 noBattle 時部署階段出示 ----
+    Campaign::NoBattleResolver noBattleResolver;
+    bool noBattleResolved = false; // 判定過/婉拒過就不再重複出示
+    std::string peacePathZh;       // E-4 和平語域（非空=無戰成功）
+    bool peaceSettlement = false;  // 無戰成功→走結算不經戰鬥結果
     // RL 指揮官：載入 BattleTrainer 產出的權重檔即代打玩家側。
     // 檔案不存在 → IsLoaded()=false → UI 只顯示提示，不影響遊戲。
     BattleCommanderAI commander;
@@ -1365,6 +1393,94 @@ int main() {
             }
         }
 
+        // ---- E-2 無戰路徑:部署階段出示罷兵選項 ----
+        // 章節定義開放才彈;CheckOptions 報表灰顯原因,
+        // 未達標仍可強行嘗試——失敗/中計的代價是敵獲首波優勢
+        if (planningPhase && !noBattleResolved) {
+            if (const Campaign::ChapterDef* nbDef =
+                    chapters.Find(campaign.chapter.chapterId);
+                nbDef && nbDef->noBattle.Offered()) {
+                Campaign::NoBattleContext nbCtx =
+                    Campaign::NoBattleResolver::Gather(
+                        campaignChain, dossier, glock.GetName());
+                nbCtx.chapterId = campaign.chapter.chapterId;
+                nbCtx.chapter = campaign.chapter.chapter;
+                nbCtx.generalId = glock.GetCardId();
+                nbCtx.generalName = glock.GetName();
+                ImGui::SetNextWindowPos(
+                    ImVec2(ww * 0.5f - UITheme::Px(170, uiScale),
+                           wh * 0.28f),
+                    ImGuiCond_FirstUseEver);
+                ImGui::SetNextWindowSize(
+                    ImVec2(UITheme::Px(340, uiScale), 0),
+                    ImGuiCond_Always);
+                ImGui::Begin("罷兵之議", nullptr,
+                             ImGuiWindowFlags_NoCollapse |
+                                 ImGuiWindowFlags_AlwaysAutoResize);
+                ImGui::TextWrapped(
+                    "%s 陣前——可試以罷兵;事敗則敵獲首波優勢",
+                    glock.GetName().c_str());
+                ImGui::Separator();
+                for (const auto& opt :
+                     noBattleResolver.CheckOptions(*nbDef, nbCtx)) {
+                    char lbl[96];
+                    std::snprintf(lbl, sizeof(lbl), "%s(現 %d/需 %d)",
+                                  Campaign::NoBattlePathNameZh(opt.path),
+                                  opt.current, opt.threshold);
+                    if (!opt.available) {
+                        ImGui::PushStyleColor(
+                            ImGuiCol_Button,
+                            ImVec4(0.25f, 0.25f, 0.28f, 1.0f));
+                    }
+                    const bool pressed = ImGui::Button(
+                        lbl, ImVec2(-1, UITheme::Px(26, uiScale)));
+                    if (!opt.available) ImGui::PopStyleColor();
+                    ImGui::TextDisabled(
+                        "%s%s", opt.reason.c_str(),
+                        opt.available ? ""
+                                      : "——可強行嘗試,敗則陷敵先機");
+                    if (!pressed) continue;
+                    noBattleResolved = true;
+                    Campaign::NoBattleResult nbr = noBattleResolver.Resolve(
+                        opt.path, *nbDef, nbCtx, campaignChain,
+                        campaign.Ledger());
+                    eventLog.push_back(nbr.summary);
+                    if (nbr.verdict == Campaign::NoBattleVerdict::Success) {
+                        // 和平語域(E-4):跳過戰鬥狀態機直進結算
+                        peacePathZh =
+                            Campaign::NoBattlePathNameZh(opt.path);
+                        peaceSettlement = true;
+                        planningPhase = false;
+                        if (opt.path ==
+                            Campaign::NoBattlePath::Negotiation) {
+                            // 民心雙軌同步:帳鏈扣 Civil,Gov 軸同扣
+                            campaign.Gov().AdjustPopularSupport(
+                                -(float)nbr.spent);
+                        }
+                    } else if (nbr.enemyAdvantage) {
+                        // 事敗/中計:敵搶先機——部署修正後照常開戰
+                        Gameplay::ApplyFirstWaveAdvantage(battle, res, 1, 0);
+                        recorder.AddRecord(
+                            0.0f, std::string(Campaign::NoBattlePathNameZh(
+                                      opt.path)) +
+                                      "事敗——敵獲首波優勢");
+                        deck.Commit(battle);
+                        plan.SetRallyPoint(battle.GetRallyPoint(0));
+                        plan.Apply(battle, &res, 0);
+                        battle.BeginExecution();
+                        planningPhase = false;
+                        commander.Reset(battle, 0);
+                    }
+                }
+                ImGui::Separator();
+                if (ImGui::Button("回部署",
+                                  ImVec2(-1, UITheme::Px(24, uiScale)))) {
+                    noBattleResolved = true; // 婉拒後不再出示;開戰仍在主視窗
+                }
+                ImGui::End();
+            }
+        }
+
         // ---- T-9 回合層:作戰計畫視窗(三欄:小隊/卡槽/編輯器)----
         if (planningPhase) {
             ImGui::SetNextWindowPos(
@@ -1777,12 +1893,16 @@ int main() {
             ImGui::End();
         }
 
-        // 戰果 banner
-        if (battle.GetOutcome() != BattleOutcome::Ongoing) {
-            const char* txt = battle.GetOutcome() == BattleOutcome::Victory ? "勝 利"
+        // 戰果 banner(無戰成功以「罷兵」呈現,同進戰後層)
+        if (battle.GetOutcome() != BattleOutcome::Ongoing ||
+            peaceSettlement) {
+            const char* txt = peaceSettlement ? "罷 兵"
+                            : battle.GetOutcome() == BattleOutcome::Victory ? "勝 利"
                             : battle.GetOutcome() == BattleOutcome::Defeat  ? "敗 北"
                                                                           : "平 手";
-            ImVec4 col = battle.GetOutcome() == BattleOutcome::Victory
+            ImVec4 col = peaceSettlement
+                         ? ImVec4(0.6f, 0.9f, 1.0f, 1.0f)
+                         : battle.GetOutcome() == BattleOutcome::Victory
                              ? ImVec4(0.4f, 1.0f, 0.4f, 1.0f)
                          : battle.GetOutcome() == BattleOutcome::Defeat
                              ? ImVec4(1.0f, 0.4f, 0.4f, 1.0f)
@@ -1807,7 +1927,10 @@ int main() {
                 // N-1:史官體戰報改由片段組裝器產出(含省略計數)
                 HistorianInput hin;
                 hin.battleName = "斷橋之役";
-                hin.outcome = battle.GetOutcome();
+                // 無戰成功:史官走和平語域(E-4),outcome 記勝
+                hin.outcome = peaceSettlement ? BattleOutcome::Victory
+                                              : battle.GetOutcome();
+                hin.peacePathZh = peacePathZh;
                 hin.elapsedSec = battle.GetElapsed();
                 hin.recorder = &recorder;
                 hin.roster = &roster;
@@ -1904,19 +2027,45 @@ int main() {
     }
 
     // G-9 戰後收口:戰鬥有結果才結算——傷亡/戰利品/遺物轉存整補營
-    if (battle.GetOutcome() != BattleOutcome::Ongoing) {
-        const bool iWon = battle.GetOutcome() == BattleOutcome::Victory;
-        const int winnerTeam = iWon ? 0
-            : battle.GetOutcome() == BattleOutcome::Defeat ? 1 : -1;
-        PostBattle postBattle;
-        PostBattleReport report = postBattle.Settle(battle, roster, winnerTeam);
-        // 戰利品與遺物是勝者的拾獲;敗北/平手我軍不入帳
-        if (!iWon) {
-            report.lootPoints = 0;
-            report.relics.clear();
+    // E-2 無戰成功同進此口:跳過 PostBattle/治理折帳(無戰鬥事件),
+    // 章節推進與存檔與戰鬥勝利同權
+    if (battle.GetOutcome() != BattleOutcome::Ongoing || peaceSettlement) {
+        const bool iWon = peaceSettlement ||
+            battle.GetOutcome() == BattleOutcome::Victory;
+        if (!peaceSettlement) {
+            const int winnerTeam = iWon ? 0
+                : battle.GetOutcome() == BattleOutcome::Defeat ? 1 : -1;
+            PostBattle postBattle;
+            PostBattleReport report =
+                postBattle.Settle(battle, roster, winnerTeam);
+            // 戰利品與遺物是勝者的拾獲;敗北/平手我軍不入帳
+            if (!iWon) {
+                report.lootPoints = 0;
+                report.relics.clear();
+            }
+            camp.DepositLoot(report.lootPoints);
+            camp.Absorb(report, roster, 0);
+
+            // E-2 帳鏈 producer：勝場記武功/軍威——無戰門檻的
+            // Army 淨額由此累積（敗北不記軍威）
+            if (iWon) {
+                constexpr int kVictoryCredit = 25; // 勝場武功/軍威額度
+                campaignChain.Append(Gameplay::LedgerEntry::BattleVictory(
+                    kVictoryCredit, campaign.chapter.chapter,
+                    "勝仗武功——" + campaign.chapter.chapterId));
+                Gameplay::LedgerEntry army;
+                army.debit = Gameplay::LedgerAccount::Army;
+                army.credit = Gameplay::LedgerAccount::Supply;
+                army.amount = kVictoryCredit;
+                army.chapter = campaign.chapter.chapter;
+                army.memo = "勝場立威——" + campaign.chapter.chapterId;
+                army.prov.source = Gameplay::EntrySource::Battle;
+                army.prov.tick = campaign.chapter.chapter;
+                army.prov.eventId =
+                    campaign.chapter.chapterId + ":victory";
+                campaignChain.Append(army);
+            }
         }
-        camp.DepositLoot(report.lootPoints);
-        camp.Absorb(report, roster, 0);
 
         // C-1 章節邊界存檔：勝利且章節定義有 next 才跳章，
         // 任一結果都寫出 campaign 檔（戰果/傷亡跨場持續）
@@ -1947,8 +2096,30 @@ int main() {
                 }
             }
         }
+        if (!peaceSettlement) {
         // C-2 治理折帳:本場治理事件計數折進戰役帳,動亂事件入史官筆
+        // E-2:民心 delta 先量後折——鏡像入帳鏈 Civil 保持雙帳一致
+        const float psBefore = campaign.Gov().PopularSupport();
         campaign.Gov().Accumulate(battle.GetGovernanceEvents());
+        const int civilDelta = (int)std::lround(
+            campaign.Gov().PopularSupport() - psBefore);
+        if (civilDelta != 0) {
+            Gameplay::LedgerEntry civ;
+            if (civilDelta > 0) {
+                civ.debit = Gameplay::LedgerAccount::Civil;
+                civ.credit = Gameplay::LedgerAccount::Supply;
+            } else {
+                civ.debit = Gameplay::LedgerAccount::Supply;
+                civ.credit = Gameplay::LedgerAccount::Civil;
+            }
+            civ.amount = std::abs(civilDelta);
+            civ.chapter = campaign.chapter.chapter;
+            civ.memo = "治理民心折帳——" + campaign.chapter.chapterId;
+            civ.prov.source = Gameplay::EntrySource::Governance;
+            civ.prov.tick = campaign.chapter.chapter;
+            civ.prov.eventId = campaign.chapter.chapterId + ":gov";
+            campaignChain.Append(civ);
+        }
         // D-5 滲透注壓：同一批治理事件餵 MythLayer——戰場暴行
         // 是滲透來源（Feed 建檔區域,讓 D-5 消費端有 producer）
         for (const auto& [gev, cnt] : battle.GetGovernanceEvents()) {
@@ -1959,6 +2130,7 @@ int main() {
         for (const auto& msg : campaign.Gov().PollUnrestEvents()) {
             chronicler += msg + "\n";
         }
+        } // !peaceSettlement——無戰無治理事件,折帳/注壓/動亂全跳過
         {
             std::error_code ec;
             std::filesystem::create_directories(

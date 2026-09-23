@@ -406,6 +406,7 @@ add_library(Gameplay STATIC
     Gameplay/ShrineField.cpp
     Gameplay/MythIncursion.cpp
     Gameplay/SeepageStage.cpp
+    Gameplay/NoBattleAdvantage.cpp
     Gameplay/BattleCommandAI.cpp
     Gameplay/BattleCommandEnv.cpp
 )
@@ -931,6 +932,11 @@ add_executable(NoBattleResolverTest Examples/NoBattleResolverTest.cpp)
 target_include_directories(NoBattleResolverTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(NoBattleResolverTest Campaign)
 
+# E-2 首波優勢兌現無頭測試（敵資源增量/我軍士氣減益夾取/邊界）
+add_executable(NoBattleAdvantageTest Examples/NoBattleAdvantageTest.cpp)
+target_include_directories(NoBattleAdvantageTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(NoBattleAdvantageTest Gameplay)
+
 # E-4 無戰章節敘事與結算無頭測試（和平語域/章尾鉤/結局軌跡）
 add_executable(NoBattleNarrativeTest Examples/NoBattleNarrativeTest.cpp)
 target_include_directories(NoBattleNarrativeTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1180,6 +1186,7 @@ set(POTATO_TESTS
     BattleSandboxTest
     NoBattleResolverTest
     NoBattleNarrativeTest
+    NoBattleAdvantageTest
 )
 foreach(test_name IN LISTS POTATO_TESTS)
     if(TARGET ${test_name})
