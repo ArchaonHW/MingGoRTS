@@ -427,6 +427,7 @@ add_library(Campaign STATIC
     Campaign/MythLayer.cpp
     Campaign/FateExchange.cpp
     Campaign/NoBattleResolver.cpp
+    Campaign/EndingPage.cpp
 )
 target_include_directories(Campaign PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(Campaign PUBLIC Gameplay)
@@ -951,6 +952,10 @@ target_link_libraries(CardValidator Gameplay)
 add_executable(CardValidatorTest Examples/CardValidatorTest.cpp)
 target_include_directories(CardValidatorTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(CardValidatorTest Gameplay)
+# C-5 四手結局生成無頭測試（帳目聚合/無字/對手之筆/證詞）
+add_executable(EndingPageTest Examples/EndingPageTest.cpp)
+target_include_directories(EndingPageTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(EndingPageTest Campaign)
 
 # E-4 無戰章節敘事與結算無頭測試（和平語域/章尾鉤/結局軌跡）
 add_executable(NoBattleNarrativeTest Examples/NoBattleNarrativeTest.cpp)
@@ -1204,6 +1209,7 @@ set(POTATO_TESTS
     NoBattleAdvantageTest
     SubversionDefectTest
     CardValidatorTest
+    EndingPageTest
 )
 foreach(test_name IN LISTS POTATO_TESTS)
     if(TARGET ${test_name})
