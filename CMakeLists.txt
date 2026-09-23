@@ -407,6 +407,7 @@ add_library(Gameplay STATIC
     Gameplay/MythIncursion.cpp
     Gameplay/SeepageStage.cpp
     Gameplay/NoBattleAdvantage.cpp
+    Gameplay/SubversionDefect.cpp
     Gameplay/CardValidator.cpp
     Gameplay/BattleCommandAI.cpp
     Gameplay/BattleCommandEnv.cpp
@@ -937,6 +938,11 @@ target_link_libraries(NoBattleResolverTest Campaign)
 add_executable(NoBattleAdvantageTest Examples/NoBattleAdvantageTest.cpp)
 target_include_directories(NoBattleAdvantageTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(NoBattleAdvantageTest Gameplay)
+
+# E-3 顛覆內應無頭測試（倒戈翻面/排序/情報消費/全倒戈自動勝利）
+add_executable(SubversionDefectTest Examples/SubversionDefectTest.cpp)
+target_include_directories(SubversionDefectTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(SubversionDefectTest Campaign)
 # G-3 敵將編輯器 headless 半邊：卡目錄驗證 CLI + 無頭測試
 add_executable(CardValidator Examples/CardValidator.cpp)
 target_include_directories(CardValidator PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1196,6 +1202,7 @@ set(POTATO_TESTS
     NoBattleResolverTest
     NoBattleNarrativeTest
     NoBattleAdvantageTest
+    SubversionDefectTest
     CardValidatorTest
 )
 foreach(test_name IN LISTS POTATO_TESTS)

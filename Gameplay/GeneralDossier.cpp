@@ -77,6 +77,18 @@ bool GeneralDossier::Verify(const EnemyGeneral& g) {
     return false;
 }
 
+int GeneralDossier::ConsumeVerified(const std::string& generalName) {
+    int n = 0;
+    for (auto& e : entries) {
+        if (e.generalName == generalName && e.verified && !e.planted &&
+            !e.consumed) {
+            e.consumed = true;
+            ++n;
+        }
+    }
+    return n;
+}
+
 const HearsayEntry* GeneralDossier::Find(
     const std::string& generalName) const {
     for (const auto& e : entries) {

@@ -45,8 +45,8 @@ NoBattleContext NoBattleResolver::Gather(
         if (e.generalName != generalName) {
             continue;
         }
-        if (e.verified && !e.planted) {
-            ++ctx.verifiedIntel;
+        if (e.verified && !e.planted && !e.consumed) {
+            ++ctx.verifiedIntel; // E-3：已兌換的判詞不再計入可用情報
         } else if (e.planted && !e.verified) {
             ctx.plantedUnrefuted = true; // 未驗證的假情報——陷阱仍埋著
         }

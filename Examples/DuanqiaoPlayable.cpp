@@ -31,6 +31,7 @@
 #include "Campaign/NoBattleResolver.h"
 #include "Gameplay/Ledger.h"
 #include "Gameplay/NoBattleAdvantage.h"
+#include "Gameplay/SubversionDefect.h"
 #include "Gameplay/HistorianReport.h"
 #include "Gameplay/GeneralDossier.h"
 #include "Gameplay/RefitCamp.h"
@@ -543,7 +544,8 @@ int main() {
     InitializeAudioManager();
     auto* audioImpl = dynamic_cast<MiniaudioAudioManager*>(
         GetAudioManager()->GetImplementation());
-    AudioCues cues = AudioCues::Defaults(audioImpl);
+    AudioCues cues = AudioCues::Defaults(
+        audioImpl, DemoAssets::Root().generic_string());
     sAudioCues = &cues;
 
     // U-1 殼層狀態:主題/UI 縮放在標題頁設定頁修改
@@ -1445,8 +1447,38 @@ int main() {
                         opt.path, *nbDef, nbCtx, campaignChain,
                         campaign.Ledger());
                     eventLog.push_back(nbr.summary);
-                    if (nbr.verdict == Campaign::NoBattleVerdict::Success) {
-                        // 和平語域(E-4):跳過戰鬥狀態機直進結算
+                    if (nbr.verdict == Campaign::NoBattleVerdict::Success &&
+                        opt.path == Campaign::NoBattlePath::Subversion) {
+                        // E-3 顛覆：情報兌換內應——敵軍小隊開場倒戈,
+                        // 戰鬥仍進行;全倒戈 → 首 tick 自動 Victory
+                        dossier.ConsumeVerified(glock.GetName());
+                        int enemyAlive = 0;
+                        for (const auto& s : battle.GetSquads()) {
+                            if (s->GetTeam() == 1 && !s->IsEliminated() &&
+                                !s->IsRouting()) {
+                                ++enemyAlive;
+                            }
+                        }
+                        const int flipped = Gameplay::ApplyDefection(
+                            battle, 1, 0, nbCtx.verifiedIntel);
+                        recorder.AddRecord(
+                            0.0f, "內應倒戈——敵營 " +
+                                      std::to_string(flipped) +
+                                      " 隊陣前易幟");
+                        if (flipped >= enemyAlive && enemyAlive > 0) {
+                            // 全軍倒戈=不戰而勝:戰報走顛覆語域
+                            peacePathZh =
+                                Campaign::NoBattlePathNameZh(opt.path);
+                        }
+                        deck.Commit(battle);
+                        plan.SetRallyPoint(battle.GetRallyPoint(0));
+                        plan.Apply(battle, &res, 0);
+                        battle.BeginExecution();
+                        planningPhase = false;
+                        commander.Reset(battle, 0);
+                    } else if (nbr.verdict ==
+                               Campaign::NoBattleVerdict::Success) {
+                        // 談判/嚇阻(E-2):和平語域跳過戰鬥直進結算
                         peacePathZh =
                             Campaign::NoBattlePathNameZh(opt.path);
                         peaceSettlement = true;

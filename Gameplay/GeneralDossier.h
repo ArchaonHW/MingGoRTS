@@ -30,6 +30,7 @@ struct HearsayEntry {
     float estCunning = 0.0f;
     bool verified = false; // 觀測驗證後為真相
     bool planted = false;  // 狡詐者放假判詞（驗證後才揭曉）
+    bool consumed = false; // E-3：已兌換成內應——檔案仍在但不再計入可用情報
 };
 
 class GeneralDossier {
@@ -47,6 +48,11 @@ public:
     // 觀測驗證：三軸回真值、verified=true；planted 檔案
     // verdict 附加「（前判有詐）」。查無檔案回 false。
     bool Verify(const EnemyGeneral& g);
+
+    // E-3 情報消費：顛覆成功把該將的 verified && !planted 判詞
+    // 標為已兌現——記錄仍在（歷史），但不再計入可用情報。
+    // 回傳實際消耗條數。
+    int ConsumeVerified(const std::string& generalName);
 
     const HearsayEntry* Find(const std::string& generalName) const;
     const std::vector<HearsayEntry>& Entries() const { return entries; }

@@ -111,6 +111,11 @@ public:
     // 指揮層（SageCommand 政策效果等）直接調整士氣；不造成傷亡。
     // 士氣歸零同樣觸發潰逃（routing），已潰逃者不會因士氣回升而復歸。
     void AdjustMorale(float delta);
+
+    // E-3 陣前倒戈：team 翻面、清空追擊目標、order 歸 Hold——
+    // 倒戈隊先按兵等待新令（doctrine 由呼叫端在部署階段補編）。
+    // 不改 members/morale——倒戈是立場轉換不是損耗。
+    void Defect(int newTeam);
     // 士氣回復（每秒），僅未接戰時
     void RecoverMorale(float dt);
 

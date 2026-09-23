@@ -110,6 +110,12 @@ void Squad::AdjustMorale(float delta) {
     }
 }
 
+void Squad::Defect(int newTeam) {
+    team = newTeam;
+    engageTarget = nullptr;  // 舊陣營的追擊目標全部作廢
+    order = SquadOrder::Hold; // 陣前易幟先按兵——等新主 doctrine
+}
+
 void Squad::RecoverMorale(float dt) {
     if (!engaged && !routing) {
         morale = std::min(1.0f, morale + 0.02f * dt);
