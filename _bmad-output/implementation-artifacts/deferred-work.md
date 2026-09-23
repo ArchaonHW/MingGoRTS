@@ -84,12 +84,15 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-d1-myth-layer-seepage.md`
   summary: `MythLayer::ToJson`/`DeriveFrom` iterate `std::unordered_map` — save bytes and MythLog event order are nondeterministic run-to-run. Consider `std::map` or sorted emission if golden-file diffing or replay determinism matters.
   evidence: Edge-case-hunter review — `Campaign/MythLayer.cpp` ToJson regions/favor loops + DeriveFrom per-region dispatch order.
+  resolution: 已修（2026-09-22）：`DeriveFrom`/`ToJson` regions 陣列改排序鍵迭代；`WriteJsonValue` 物件鍵一律排序輸出（favor 等 object 段同時治好）。MythLayerTest [11] 驗同狀態異插入序位元組一致 + 事件序確定。
 - source_spec: `_bmad-output/implementation-artifacts/spec-d1-myth-layer-seepage.md`
   summary: `JsonValue::AsInt` casts `double`→`int` via `static_cast` — out-of-range input (`"lv":1e20`) is UB before any clamp runs. Pre-existing JsonParser weakness, newly exposed by MythLayer load paths; fix belongs in Serialization.
   evidence: Edge-case-hunter review — `Serialization/JsonParser.h:73`; affects every `AsInt` consumer repo-wide.
+  resolution: 已修（2026-09-22）：`AsInt` 先 `isnan` 回 def，再夾取到 `numeric_limits<int>` 極值後轉型——UB 消除。SerializationTest 加 1e20/−1e20/NaN/截斷四格。
 - source_spec: `_bmad-output/implementation-artifacts/spec-d1-myth-layer-seepage.md`
   summary: `WriteJson` emits floats via `%g` (6 significant digits) — pressures >~1e6 roundtrip lossily. Shared JsonWriter limitation; current MythLayer constants stay exact, revisit if magnitudes grow.
   evidence: Acceptance auditor + edge-case hunter — `Campaign/JsonWriter.h:49`.
+  resolution: 已修（2026-09-22）：改「最短 roundtrip」寫法——6→17 位逐步升精度直到 `strtod` 讀回原值；0.6 仍寫 0.6、大數值不再截斷。MythLayerTest [12] 驗 1234567.8901234567 無損往返。
 - source_spec: `_bmad-output/implementation-artifacts/spec-d1-myth-layer-seepage.md`
   summary: No production wiring `MythLayer`→`MythLog`: `SetEventCallback` exists and tests exercise it, but `CampaignState` does not register a callback — transitions are recorded in `transitions` only. End-to-end narrative hookup belongs with D-2+ epic work.
   evidence: Acceptance auditor — `Campaign/CampaignState.cpp` owns no MythLog callback registration; AGENTS.md:47 stale claim that CampaignState aggregates MythLog.
