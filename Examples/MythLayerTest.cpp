@@ -290,6 +290,48 @@ int main() {
         std::remove(kLegacy.c_str());
     }
 
+    // [11] 序列化確定性：同邏輯狀態、不同插入序 → 同位元組輸出
+    //      （unordered_map 迭代序不確定，ToJson 排序鍵 + WriteJson
+    //      排序物件鍵讓存檔可 golden-diff/replay 比對）
+    {
+        const char* j1 =
+            R"({"chapter":2,"regions":[{"id":"渡口","lv":1,"p":5},)"
+            R"({"id":"神社","lv":2,"p":35}]})";
+        const char* j2 =
+            R"({"chapter":2,"regions":[{"id":"神社","lv":2,"p":35},)"
+            R"({"id":"渡口","lv":1,"p":5}]})";
+        MythLayer a, b;
+        Check(a.FromJson(JsonValue::Parse(j1)), "a 載入(渡先神後)");
+        Check(b.FromJson(JsonValue::Parse(j2)), "b 載入(神先渡後)");
+        Check(WriteJson(a.ToJson()) == WriteJson(b.ToJson()),
+              "ToJson 位元組與插入序無關");
+
+        // DeriveFrom 事件序確定：排序鍵迭代 → 同序轉換記錄
+        std::vector<std::string> ea, eb;
+        a.SetEventCallback(
+            [&](const MythEvent& e) { ea.push_back(e.shrine); });
+        b.SetEventCallback(
+            [&](const MythEvent& e) { eb.push_back(e.shrine); });
+        // inject = 200*0.15 = 30：渡口 p5→35 跨 Seep、神社 p35→65 跨 Manifest
+        a.DeriveFrom(200.0f, 50.0f, 0, 3);
+        b.DeriveFrom(200.0f, 50.0f, 0, 3);
+        Check(ea == eb, "DeriveFrom 事件序與插入序無關");
+        Check(ea.size() == 2 && ea[0] == "渡口" && ea[1] == "神社",
+              "事件序為排序鍵序（渡<神 by UTF-8 bytes）");
+    }
+
+    // [12] 最短 roundtrip 全精度：大數值 WriteJson→Parse 無損
+    {
+        JsonValue big;
+        big.type = JsonValue::Type::Object;
+        big.objectValue["p"] = JsonValue::Number(1234567.8901234567);
+        JsonValue back;
+        Check(JsonValue::ParseOk(WriteJson(big), back),
+              "解析最短 roundtrip 輸出");
+        Check(back["p"].AsNumber() == 1234567.8901234567,
+              "大數值 roundtrip 無損（%g 六位會截斷）");
+    }
+
     printf("\n=== %d PASS, %d FAIL ===\n", g_pass, g_fail);
     return g_fail == 0 ? 0 : 1;
 }

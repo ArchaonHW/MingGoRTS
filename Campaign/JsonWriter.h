@@ -3,13 +3,15 @@
 // JsonValue → 字串的最小遞迴寫出器。
 // JsonParser.h 只讀不寫；戰役存檔需要把聚合的 JsonValue 文件
 // 落成單一檔案，故補一個對稱的寫出器（含字串跳脫與數字格式）。
-// 數字用 %.17g 寫出：整數不帶小數點、浮點全精度——
-// 17 位有效數字保證 double roundtrip 無損（%g 六位在 >~1e6 時截斷）。
+// 數字用「最短 roundtrip」寫出：由 6 位有效數字起逐步升精度，
+// 直到 strtod 讀回原值——0.6 寫 0.6 而非 0.59999999999999998，
+// 同時保證任意 double roundtrip 無損（舊 %g 六位在 >~1e6 時截斷）。
 
 #include "Serialization/JsonParser.h"
 
 #include <algorithm>
 #include <cstdio>
+#include <cstdlib>
 #include <string>
 #include <vector>
 
@@ -49,7 +51,12 @@ inline void WriteJsonValue(std::string& out, const JsonValue& v) {
         break;
     case JsonValue::Type::Number: {
         char buf[32];
-        std::snprintf(buf, sizeof(buf), "%.17g", v.numberValue);
+        // 最短 roundtrip：由低到高試精度，第一個能讀回原值的就用
+        for (int prec = 6; prec <= 17; ++prec) {
+            std::snprintf(buf, sizeof(buf), "%.*g", prec,
+                          v.numberValue);
+            if (std::strtod(buf, nullptr) == v.numberValue) break;
+        }
         out += buf;
         break;
     }
