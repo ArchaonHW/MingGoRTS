@@ -206,8 +206,11 @@ target_link_libraries(PotatoEngine
 
 # Windows: psapi.lib（Security 模組的模組枚舉用；MSVC 由 #pragma comment 處理，MinGW 需顯式連結）
 # wintrust: Authenticode 簽章驗證;bcrypt: BCryptGenRandom 隨機數
+# ws2_32: Networking UdpSocket 的 Winsock2
 if(WIN32 AND NOT MSVC)
-    target_link_libraries(PotatoEngine psapi wintrust bcrypt)
+    target_link_libraries(PotatoEngine psapi wintrust bcrypt ws2_32)
+elseif(MSVC)
+    target_link_libraries(PotatoEngine ws2_32)
 endif()
 
 target_compile_definitions(PotatoEngine PRIVATE POTATO_ENGINE_VERSION="${PROJECT_VERSION}")
@@ -411,6 +414,7 @@ add_library(Gameplay STATIC
     Gameplay/CardValidator.cpp
     Gameplay/BattleCommandAI.cpp
     Gameplay/BattleCommandEnv.cpp
+    Gameplay/NarrativePack.cpp
 )
 target_include_directories(Gameplay PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/Gameplay)
 # BattleSceneSync 需要場景圖/渲染類型;PotatoEngine 不依賴 Gameplay,無循環
@@ -661,6 +665,31 @@ target_link_libraries(ProfilerTest PotatoEngine)
 add_executable(SignedSaveFileTest Examples/SignedSaveFileTest.cpp)
 target_include_directories(SignedSaveFileTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(SignedSaveFileTest PotatoEngine)
+
+# CPU 粒子模擬測試（headless:發射/壽命/積分/流場/決定性）
+add_executable(ParticleSystemTest Examples/ParticleSystemTest.cpp)
+target_include_directories(ParticleSystemTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(ParticleSystemTest PotatoEngine)
+
+# UDP + lockstep 同步測試（headless,localhost loopback）
+add_executable(NetworkingTest Examples/NetworkingTest.cpp)
+target_include_directories(NetworkingTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(NetworkingTest PotatoEngine)
+
+# Tween 插值/Ease 曲線測試（headless）
+add_executable(TweenTest Examples/TweenTest.cpp)
+target_include_directories(TweenTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(TweenTest PotatoEngine)
+
+# SpatialHash + A*/FlowField 測試（headless,純 MathUtils）
+add_executable(SpatialPathTest Examples/SpatialPathTest.cpp)
+target_include_directories(SpatialPathTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(SpatialPathTest PotatoEngine)
+
+# FileWatcher 輪詢監視測試（headless,temp dir）
+add_executable(FileWatcherTest Examples/FileWatcherTest.cpp)
+target_include_directories(FileWatcherTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(FileWatcherTest PotatoEngine)
 
 # 紅隊測試用的無害 DLL（模擬被注入的作弊模組）
 add_library(FakeCheatModule SHARED Examples/FakeCheatModule.cpp)
@@ -957,6 +986,11 @@ add_executable(EndingPageTest Examples/EndingPageTest.cpp)
 target_include_directories(EndingPageTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(EndingPageTest Campaign)
 
+# C-2 敘事內容包無頭測試（載入/locale 降級/壞檔跳過/戰報消費）
+add_executable(NarrativePackTest Examples/NarrativePackTest.cpp)
+target_include_directories(NarrativePackTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(NarrativePackTest Gameplay)
+
 # E-4 無戰章節敘事與結算無頭測試（和平語域/章尾鉤/結局軌跡）
 add_executable(NoBattleNarrativeTest Examples/NoBattleNarrativeTest.cpp)
 target_include_directories(NoBattleNarrativeTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1047,6 +1081,11 @@ target_link_libraries(NeuralGraphicsTest PotatoEngine NeuralNetwork)
 add_executable(NeuralArtTool Examples/NeuralArtTool.cpp)
 target_include_directories(NeuralArtTool PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(NeuralArtTool PotatoEngine NeuralNetwork)
+
+# assets/neural/ 預訓 .pnn 權重載入 + 推論示範（CPU/headless）
+add_executable(NeuralArtDemo Examples/NeuralArtDemo.cpp)
+target_include_directories(NeuralArtDemo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(NeuralArtDemo PotatoEngine NeuralNetwork)
 
 # GL 煙霧測試：需要顯示環境,無顯示時自行 SKIP
 add_executable(GLSmokeTest Examples/GLSmokeTest.cpp)
@@ -1145,6 +1184,11 @@ set(POTATO_TESTS
     JobSystemTest
     ProfilerTest
     SignedSaveFileTest
+    ParticleSystemTest
+    NetworkingTest
+    TweenTest
+    SpatialPathTest
+    FileWatcherTest
     AITestSuite
     DevAssistantSmoke
     SuggestionRulesTest
@@ -1210,6 +1254,7 @@ set(POTATO_TESTS
     SubversionDefectTest
     CardValidatorTest
     EndingPageTest
+    NarrativePackTest
 )
 foreach(test_name IN LISTS POTATO_TESTS)
     if(TARGET ${test_name})

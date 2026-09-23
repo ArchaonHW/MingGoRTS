@@ -39,6 +39,8 @@ OptimizedAIDemo \
 PhysicsMathTest PhysicsTest PlatformTest PortraitBaker PortraitRenderer ProfilerTest \
 QuasiModelsTest RenderPipelineTest RenderTargetTest SceneTest \
 SecurityDataTest SecurityRedTeamTest SerializationTest SignedSaveFileTest SimpleExample \
+    NetworkingTest ParticleSystemTest NeuralArtDemo \
+    FileWatcherTest SpatialPathTest TweenTest \
 SpriteAtlasTest \
 SynthDataDemo TimeTest UnsolvedBatch3Test VrmLoadTest compat_log"
 
