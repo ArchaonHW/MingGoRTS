@@ -1,6 +1,7 @@
 // MainWindow — C# 戰場渲染端：每 ~33ms PB_Step + PB_Snapshot →
 // Canvas 重畫。地形/障礙/小隊/機率雲/HUD 全由此端呈現，
 // C++ 只跑無頭 BattleController。
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,6 +23,13 @@ public partial class MainWindow : Window
 
     // SquadOrder 序數（與 C++ enum 對齊）
     private const int OrderAttackMove = 2;
+    private static readonly string[] OrderNames =
+        { "駐守", "移動", "攻擊移動", "撤退", "追擊" };
+    private static readonly string[] ClassNames =
+        { "步", "騎", "弓" };
+
+    // 全軍名冊：ListBoxItem.Tag = squadId（一次性建立，逐幀改 Content）
+    private bool rosterBuilt;
 
     private static readonly Brush BrT0 = new SolidColorBrush(Color.FromRgb(0x35, 0xD0, 0xC5));
     private static readonly Brush BrT1 = new SolidColorBrush(Color.FromRgb(0xC9, 0x50, 0x4E));
@@ -62,8 +70,37 @@ public partial class MainWindow : Window
             paused ? 0.0f : timeScale);
         snap = session.Step(paused ? 0.0001f : dt);
         if (snap == null) return;
+        DrainEvents();
         Render();
         UpdateHud();
+    }
+
+    private void DrainEvents()
+    {
+        foreach (var line in session.DrainEvents())
+        {
+            EventList.Items.Add(line);
+            if (EventList.Items.Count > 200)
+                EventList.Items.RemoveAt(0);
+        }
+        if (EventList.Items.Count > 0)
+            EventList.ScrollIntoView(
+                EventList.Items[EventList.Items.Count - 1]);
+    }
+
+    private void BuildRoster()
+    {
+        foreach (var q in snap!.Squads)
+        {
+            if (q.Team != 0) continue;
+            var item = new ListBoxItem
+            {
+                Tag = q.Id,
+                Padding = new Thickness(2, 1, 2, 1),
+            };
+            RosterList.Items.Add(item);
+        }
+        rosterBuilt = true;
     }
 
     private void Render()
@@ -110,6 +147,22 @@ public partial class MainWindow : Window
                 Canvas.SetTop(e, Oy() + c.Y * cp - sz / 2);
                 Field.Children.Add(e);
             }
+        }
+
+        // 指令目標線（我方有向指令 → 目標點虛線）
+        var brOrder = new SolidColorBrush(Color.FromArgb(140, 0xD4, 0xA2, 0x3C));
+        foreach (var q in s.Squads)
+        {
+            if (q.Team != 0 || q.Eliminated || q.Order == 0) continue;
+            if (q.OrderTX == 0 && q.OrderTY == 0) continue;
+            var line = new Line
+            {
+                X1 = Ox() + q.X * cp, Y1 = Oy() + q.Y * cp,
+                X2 = Ox() + q.OrderTX * cp, Y2 = Oy() + q.OrderTY * cp,
+                Stroke = brOrder, StrokeThickness = 1,
+                StrokeDashArray = new DoubleCollection { 3, 3 },
+            };
+            Field.Children.Add(line);
         }
 
         // 小隊（被未揭露雲綁定的敵隊由雲代表，不畫真身）
@@ -168,13 +221,37 @@ public partial class MainWindow : Window
         HudCp.Text = $"CP {s.Cp0}　情報 {s.Intel0}";
         HudIntel.Text = $"速度 ×{timeScale:0.##}";
 
+        // 全軍名冊（首次建 item，之後逐幀改文字）
+        if (!rosterBuilt) BuildRoster();
+        foreach (var item in RosterList.Items.OfType<ListBoxItem>())
+        {
+            int id = (int)item.Tag!;
+            var q = s.Squads[id];
+            string cls = q.UnitClass >= 0 && q.UnitClass < ClassNames.Length
+                ? ClassNames[q.UnitClass] : "?";
+            string ord = q.Order >= 0 && q.Order < OrderNames.Length
+                ? OrderNames[q.Order] : "?";
+            item.Content = q.Eliminated
+                ? $"{NameOf(id)}　全滅"
+                : $"{NameOf(id)}（{cls}）{q.Members}人 " +
+                  $"士{q.Morale * 100:F0} {ord}" +
+                  (q.Engaged ? " ⚔" : "") + (q.Routing ? " 潰" : "");
+            item.Foreground = q.Eliminated
+                ? new SolidColorBrush(Color.FromRgb(0x55, 0x5D, 0x66))
+                : BrT0;
+        }
+
         if (selected >= 0 && selected < s.Squads.Count)
         {
             var q = s.Squads[selected];
+            string ord = q.Order >= 0 && q.Order < OrderNames.Length
+                ? OrderNames[q.Order] : "?";
             HudSelected.Text = q.Eliminated
                 ? "已全滅"
-                : $"[{q.Id}] 兵力 {q.Members}/{q.MaxMembers} " +
-                  $"士氣 {q.Morale:P0}{(q.Routing ? " 潰逃" : "")}";
+                : $"[{q.Id}] {NameOf(q.Id)} 兵力 {q.Members}/{q.MaxMembers} " +
+                  $"士氣 {q.Morale:P0} 令 {ord}" +
+                  $"{(q.Engaged ? " 交戰中" : "")}" +
+                  $"{(q.Routing ? " 潰逃" : "")}";
         }
         else HudSelected.Text = "";
 
@@ -185,6 +262,18 @@ public partial class MainWindow : Window
             3 => "鳴金收兵——和局",
             _ => "",
         };
+    }
+
+    private string NameOf(int squadId) =>
+        session.SquadNames.TryGetValue(squadId, out var n)
+            ? n : $"#{squadId}";
+
+    private void RosterList_SelectionChanged(object sender,
+        SelectionChangedEventArgs e)
+    {
+        if (RosterList.SelectedItem is ListBoxItem item &&
+            item.Tag is int id)
+            selected = id;
     }
 
     private Point WorldAt(MouseButtonEventArgs e)

@@ -10,7 +10,17 @@ internal static class SelfTest
         {
             using var s = GameSession.CreateDuanqiao();
             Snapshot? last = null;
-            for (int i = 0; i < 200; ++i) last = s.Step(0.05f); // 10s
+            int events = 0;
+            for (int i = 0; i < 200; ++i)
+            {
+                last = s.Step(0.05f); // 10s
+                events += s.DrainEvents().Length;
+            }
+            if (events <= 0)
+            {
+                Console.Error.WriteLine("no events drained");
+                return 1;
+            }
             if (last == null) { Console.Error.WriteLine("snapshot null"); return 1; }
             if (last.Squads.Count != 8)
             {
@@ -32,7 +42,8 @@ internal static class SelfTest
             Console.WriteLine(
                 $"selftest OK: squads={last.Squads.Count} " +
                 $"fogs={last.Fogs.Count} elapsed={last.Elapsed:F1}s " +
-                $"outcome={last.Outcome} moved={moved}");
+                $"outcome={last.Outcome} moved={moved} " +
+                $"events={events}");
             return moved > 0 ? 0 : 1; // 攻方 doctrine 應已推進
         }
         catch (Exception ex)
