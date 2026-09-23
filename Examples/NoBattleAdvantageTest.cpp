@@ -7,10 +7,13 @@
 #include "Gameplay/NoBattleAdvantage.h"
 #include "Gameplay/Squad.h"
 
+#include <cmath>
 #include <cstdio>
 
 using namespace Potato::Gameplay;
 using Potato::Vector2;
+
+static bool Near(float a, float b) { return std::fabs(a - b) < 0.001f; }
 
 static int failures = 0;
 static void Check(bool cond, const char* name) {
@@ -42,7 +45,7 @@ int main() {
         Check(res.GetIntel(1) == 2, "敵 intel +2");
         Check(res.GetCP(0) == 5 && res.GetIntel(0) == 8,
               "我軍資源不變");
-        Check(mine->GetMorale() == mBefore - 0.10f, "我軍士氣 -0.10");
+        Check(Near(mine->GetMorale(), mBefore - 0.10f), "我軍士氣 -0.10");
         Check(foe->GetMorale() == fBefore, "敵隊士氣不減");
     }
 
@@ -55,11 +58,11 @@ int main() {
         Squad* s = battle.CreateSquad("弱旅", 0, Vector2(4, 4), 30);
         // 先壓到 0.05
         s->AdjustMorale(0.05f - s->GetMorale());
-        Check(s->GetMorale() == 0.05f, "前置士氣 0.05");
+        Check(Near(s->GetMorale(), 0.05f), "前置士氣 0.05");
 
         ApplyFirstWaveAdvantage(battle, res, 1, 0);
 
-        Check(s->GetMorale() == 0.10f, "士氣夾到 0.10");
+        Check(Near(s->GetMorale(), 0.10f), "士氣夾到 0.10");
         Check(!s->IsRouting(), "不觸發潰逃");
     }
 

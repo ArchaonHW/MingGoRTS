@@ -2050,9 +2050,13 @@ int main() {
             // Army 淨額由此累積（敗北不記軍威）
             if (iWon) {
                 constexpr int kVictoryCredit = 25; // 勝場武功/軍威額度
-                campaignChain.Append(Gameplay::LedgerEntry::BattleVictory(
+                auto vic = Gameplay::LedgerEntry::BattleVictory(
                     kVictoryCredit, campaign.chapter.chapter,
-                    "勝仗武功——" + campaign.chapter.chapterId));
+                    "勝仗武功——" + campaign.chapter.chapterId);
+                vic.prov.tick = campaign.chapter.chapter;
+                vic.prov.eventId =
+                    campaign.chapter.chapterId + ":victory";
+                campaignChain.Append(vic);
                 Gameplay::LedgerEntry army;
                 army.debit = Gameplay::LedgerAccount::Army;
                 army.credit = Gameplay::LedgerAccount::Supply;
