@@ -960,6 +960,28 @@ queue:
       帳鏈不進存檔（schema 不變）——跨 session 民心由 Gov 軸
       重新開帳，軍威僅 session 內累積。
 
+  - id: E-3
+    title: 顛覆與內應——倒戈小隊生成 + 情報消費
+    source: epics.md Story E.3 + spec-e3-subversion-defection.md
+    summary: >
+      顛覆成功不再是佔位和平：敵軍部分小隊開場倒戈（士氣最弱
+      者先，1 條 verified 情報 = 1 支內應隊），戰鬥仍進行；
+      全倒戈 → 首 tick 自動 Victory 湧現不戰而勝。verified
+      判詞兌換後標 consumed——情報資產真消耗，Gather 不再
+      計入；失敗/中計不消耗（情報網還在）。
+    acceptance:
+      - 倒戈隊翻 team 0、按兵待命、補編兜底 doctrine
+      - 情報消費機械真實（consumed 排除於 Gather）
+      - 全倒戈收斂為不戰而勝
+    status: done
+    size: M
+    note: >
+      95114b6 落地：Squad::Defect + Gameplay/ApplyDefection
+      （確定性排序無亂數）+ HearsayEntry.consumed +
+      ConsumeVerified + Gather 排除。SubversionDefectTest
+      18 項雙工具鏈全綠；相鄰回歸 7/7。E-2 的 Subversion
+      佔位和平路徑已被本機制取代（spec 明定「目前」）。
+
   - id: E-4
     title: 無戰章節敘事與結算
     source: epics.md Story E.4
