@@ -414,7 +414,6 @@ add_library(Gameplay STATIC
     Gameplay/CardValidator.cpp
     Gameplay/BattleCommandAI.cpp
     Gameplay/BattleCommandEnv.cpp
-    Gameplay/NarrativePack.cpp
 )
 target_include_directories(Gameplay PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/Gameplay)
 # BattleSceneSync 需要場景圖/渲染類型;PotatoEngine 不依賴 Gameplay,無循環
@@ -986,11 +985,6 @@ add_executable(EndingPageTest Examples/EndingPageTest.cpp)
 target_include_directories(EndingPageTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(EndingPageTest Campaign)
 
-# C-2 敘事內容包無頭測試（載入/locale 降級/壞檔跳過/戰報消費）
-add_executable(NarrativePackTest Examples/NarrativePackTest.cpp)
-target_include_directories(NarrativePackTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(NarrativePackTest Gameplay)
-
 # E-4 無戰章節敘事與結算無頭測試（和平語域/章尾鉤/結局軌跡）
 add_executable(NoBattleNarrativeTest Examples/NoBattleNarrativeTest.cpp)
 target_include_directories(NoBattleNarrativeTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1254,7 +1248,6 @@ set(POTATO_TESTS
     SubversionDefectTest
     CardValidatorTest
     EndingPageTest
-    NarrativePackTest
 )
 foreach(test_name IN LISTS POTATO_TESTS)
     if(TARGET ${test_name})
