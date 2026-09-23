@@ -2,7 +2,9 @@ package com.potato.rts.roster;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -259,6 +261,23 @@ class RosterControllerTest {
         when(rosterRepository.findById(99L)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/rosters/99"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deleteRoster_knownId_returns204AndDeletes() throws Exception {
+        when(rosterRepository.existsById(1L)).thenReturn(true);
+
+        mockMvc.perform(delete("/api/rosters/1"))
+                .andExpect(status().isNoContent());
+        verify(rosterRepository).deleteById(1L);
+    }
+
+    @Test
+    void deleteRoster_unknownId_returns404() throws Exception {
+        when(rosterRepository.existsById(99L)).thenReturn(false);
+
+        mockMvc.perform(delete("/api/rosters/99"))
                 .andExpect(status().isNotFound());
     }
 }

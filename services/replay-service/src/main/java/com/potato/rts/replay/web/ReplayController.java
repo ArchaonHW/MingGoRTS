@@ -11,6 +11,7 @@ import com.potato.rts.replay.model.Replay;
 import com.potato.rts.replay.repo.ReplayRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -103,6 +104,16 @@ public class ReplayController {
             return error(HttpStatus.INTERNAL_SERVER_ERROR, "stored replay document is corrupt");
         }
         return ResponseEntity.ok(doc);
+    }
+
+    /** REPLAY_DELETE: removes a stored replay by id, 404 when unknown. */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<JsonNode> deleteReplay(@PathVariable long id) {
+        if (!replayRepository.existsById(id)) {
+            return error(HttpStatus.NOT_FOUND, "unknown replay id: " + id);
+        }
+        replayRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     /** Replay metadata projection for list responses. */

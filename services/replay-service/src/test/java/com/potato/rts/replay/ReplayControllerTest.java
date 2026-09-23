@@ -2,7 +2,9 @@ package com.potato.rts.replay;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -195,5 +197,22 @@ class ReplayControllerTest {
 
         mockMvc.perform(get("/api/replays/5"))
                 .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void deleteReplay_knownId_returns204AndDeletes() throws Exception {
+        when(replayRepository.existsById(1L)).thenReturn(true);
+
+        mockMvc.perform(delete("/api/replays/1"))
+                .andExpect(status().isNoContent());
+        verify(replayRepository).deleteById(1L);
+    }
+
+    @Test
+    void deleteReplay_unknownId_returns404() throws Exception {
+        when(replayRepository.existsById(99L)).thenReturn(false);
+
+        mockMvc.perform(delete("/api/replays/99"))
+                .andExpect(status().isNotFound());
     }
 }

@@ -54,6 +54,7 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-game-backend-services.md`
   summary: Add DELETE endpoints (or a documented retention policy) for /api/replays and /api/rosters — currently the only way to remove a bad upload is deleting the H2 files.
   evidence: Blind-hunter review — services accept unauthenticated writes forever with no removal path; deferred because DELETE adds public API surface the spec's intent did not request.
+  resolution: 已修（2026-09-23）：`DELETE /api/replays/{id}`、`DELETE /api/rosters/{id}`——存在回 204、未知回 404 JSON error。各補兩格 MockMvc 測試（verify deleteById）；replay 16/16、roster 21/21。
 - source_spec: `_bmad-output/implementation-artifacts/spec-game-backend-services.md`
   summary: Extract a services-common Maven module for the duplicated parse/json/badRequest/notFound helpers in RosterController and ReplayController.
   evidence: Blind-hunter review — two controllers already diverge in style (StringBuilder concat vs record serialization); a shared module is a structural refactor beyond this change's scope.

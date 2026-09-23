@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -142,6 +143,16 @@ public class RosterController {
             return error(HttpStatus.INTERNAL_SERVER_ERROR, "stored roster document is corrupt");
         }
         return ResponseEntity.ok(doc);
+    }
+
+    /** ROSTER_DELETE: removes a stored roster by id, 404 when unknown. */
+    @DeleteMapping("/rosters/{id}")
+    public ResponseEntity<JsonNode> deleteRoster(@PathVariable long id) {
+        if (!rosterRepository.existsById(id)) {
+            return error(HttpStatus.NOT_FOUND, "unknown roster id: " + id);
+        }
+        rosterRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     /** Roster metadata projection for list responses. */
