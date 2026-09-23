@@ -936,6 +936,30 @@ queue:
       EntrySource +Deterrence/Subversion、Disposition
       +Negotiated/Intimidated。播放層接線與無戰語域戰報歸 E-4。
 
+  - id: E-2
+    title: 談判與嚇阻決算——無戰路徑 playable 整合 + 首波優勢兌現
+    source: epics.md Story E.2 + spec-e2-nobattle-resolution.md
+    summary: >
+      E-1 resolver 的消費端：部署階段「罷兵之議」modal 出示
+      CheckOptions 灰顯報表（強行嘗試合法）；成功→跳過戰鬥
+      走 E-4 和平語域結算（章節推進/存檔同權）；失敗/中計→
+      ApplyFirstWaveAdvantage（敵+2CP/+2intel、我軍士氣−0.10
+      夾 ≥0.10）後照常開戰。LedgerChain 殼層持有跨章節累積，
+      持久民心開帳、勝場補記武功/軍威、治理 delta 鏡像 Civil。
+    acceptance:
+      - CheckOptions 報表部署階段可見、未達標灰顯含原因
+      - 成功路徑不產生假戰鬥、peacePathZh 進史官語域
+      - enemyAdvantage 兌現確定性無亂數
+    status: done
+    size: M
+    note: >
+      91198a4 + a6e45eb 落地：Gameplay/NoBattleAdvantage +
+      playable 接線 + duanqiao.json 門檻（民心30/軍威20/情報1）。
+      NoBattleAdvantageTest 10/10 雙工具鏈；MSVC 全量 92/92。
+      談判成功雙軌同步 AdjustPopularSupport(-spent)。
+      帳鏈不進存檔（schema 不變）——跨 session 民心由 Gov 軸
+      重新開帳，軍威僅 session 內累積。
+
   - id: E-4
     title: 無戰章節敘事與結算
     source: epics.md Story E.4

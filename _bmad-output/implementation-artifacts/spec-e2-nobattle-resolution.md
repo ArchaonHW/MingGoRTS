@@ -2,7 +2,7 @@
 title: 'E-2 談判與嚇阻決算——無戰路徑 playable 整合 + 首波優勢兌現'
 type: 'feature'
 created: '2026-09-22'
-status: 'in-progress'
+status: 'done'
 baseline_commit: '25907c3'
 context:
   - '{project-root}/_bmad-output/planning-artifacts/gdds/gdd-MingGoRTS-2026-09-17/epics.md'
@@ -147,3 +147,34 @@ AC 不區分。
 - `cd build && ctest -C Release -R "NoBattle"` -- 判定器回歸 + 新測試
 - MinGW 編譯 `NoBattleAdvantageTest` target -- 通過
 - banned 函式掃描 `gets|strcpy|strcat|sprintf|vsprintf|scanf` -- 無新增命中
+
+## Review Log（收尾記錄）
+
+- **帳鏈 producer 補丁**（實作期新增，spec 未明示）：`Gather` 全吃
+  `LedgerChain::TrialBalance()`，若無人入帳則民心/軍威恆 0、
+  路徑全灰死碼（D-5 producer 同型教訓）。補三處：啟動以持久
+  `Gov().PopularSupport()` 開帳 Civil 期初；勝場結算記
+  `BattleVictory`（武功+25）+ 軍威分錄（Army+25，`EntrySource::
+  Battle`）；治理折帳前後量測民心 delta 鏡像入 Civil
+  （`EntrySource::Governance`）。帳鏈殼層持有跨章節累積、
+  不進 `potato.campaign/1`（schema 不變）；跨 session 民心由
+  Gov 軸重新開帳、軍威僅 session 內有效——屬 demo 尺度取捨，
+  如需跨存檔軍威另行立項。
+- **民心雙軌同步**：談判成功時除帳鏈扣 Civil 外，呼叫端
+  `Gov().AdjustPopularSupport(-spent)`——兩帳表示一致。
+- **duanqiao.json 補 `no_battle`**（民心30/軍威20/情報1）：
+  spec 列「新章節檔」為 Out，但既有章節補定義塊是讓功能
+  可觸達的必要 producer——否則 modal 永不彈出。軍威 20 經
+  一場勝仗（+25）解鎖；情報 1 需先觀測驗證敵將判詞。
+- **UI 形態**：獨立「罷兵之議」視窗（非阻塞 modal），出示一次；
+  「回部署」婉拒後不再彈出，「開戰」恆在主視窗保留。
+  強行嘗試按鈕置灰但可點（spec「可強行嘗試」明確）。
+- **事敗流程**：Failed/Backfired → 首波優勢套用 + 直接
+  `BeginExecution`（不再回部署）——「敵搶先機」是設計代價；
+  `recorder.AddRecord(0.0f)` 留回放事件。
+- **偏離**：無。凍結區全數依循（介面/schema/E-3 邊界未動）。
+- **驗證**：NoBattleAdvantageTest 10/10（MSVC+MinGW）；
+  MSVC 全量 92/92；banned 掃描乾淨；NoBattle* 回歸 3/3。
+- **提交**：`91198a4` 主體 + `a6e45eb` 修正（測試 epsilon
+  比較——`1.0f-0.95f≠0.05f` 精確值誤報；勝仗分錄補
+  provenance tick/eventId）。
