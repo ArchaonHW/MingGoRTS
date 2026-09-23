@@ -407,6 +407,7 @@ add_library(Gameplay STATIC
     Gameplay/MythIncursion.cpp
     Gameplay/SeepageStage.cpp
     Gameplay/NoBattleAdvantage.cpp
+    Gameplay/CardValidator.cpp
     Gameplay/BattleCommandAI.cpp
     Gameplay/BattleCommandEnv.cpp
 )
@@ -936,6 +937,14 @@ target_link_libraries(NoBattleResolverTest Campaign)
 add_executable(NoBattleAdvantageTest Examples/NoBattleAdvantageTest.cpp)
 target_include_directories(NoBattleAdvantageTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(NoBattleAdvantageTest Gameplay)
+# G-3 敵將編輯器 headless 半邊：卡目錄驗證 CLI + 無頭測試
+add_executable(CardValidator Examples/CardValidator.cpp)
+target_include_directories(CardValidator PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(CardValidator Gameplay)
+
+add_executable(CardValidatorTest Examples/CardValidatorTest.cpp)
+target_include_directories(CardValidatorTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(CardValidatorTest Gameplay)
 
 # E-4 無戰章節敘事與結算無頭測試（和平語域/章尾鉤/結局軌跡）
 add_executable(NoBattleNarrativeTest Examples/NoBattleNarrativeTest.cpp)
@@ -1187,6 +1196,7 @@ set(POTATO_TESTS
     NoBattleResolverTest
     NoBattleNarrativeTest
     NoBattleAdvantageTest
+    CardValidatorTest
 )
 foreach(test_name IN LISTS POTATO_TESTS)
     if(TARGET ${test_name})
