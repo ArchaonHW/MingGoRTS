@@ -100,6 +100,7 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
   evidence: Acceptance auditor — `Campaign/CampaignState.cpp` owns no MythLog callback registration; AGENTS.md:47 stale claim that CampaignState aggregates MythLog.
 - source_spec: `_bmad-output/implementation-artifacts/spec-d1-myth-layer-seepage.md`
   summary: `myth_layer` section has no `potato.myth_layer/1` schema tag — bare object consistent with untagged `governance` section, but no version hook for future migration (NFR5).
+  resolution: 已修（2026-09-23）：`ToJson` 寫出 `potato.myth_layer/1`；`FromJson` 軟驗證——缺 tag 舊檔容忍、錯 tag 拒絕且不動狀態。MythLayerTest [13] 七格覆蓋。
   evidence: Acceptance auditor — spec Code Map names the format; only root carries `potato.campaign/1`.
 - source_spec: `_bmad-output/implementation-artifacts/spec-d2-shrine-spirits.md`
   summary: `ShrineField`/`GovernanceField`/`BattleController` all hardcode `team == 0` as player — a battle where the player faction isn't team 0 silently never triggers field interactions. Needs a shared player-team parameter across the three sites, not a per-class fix.

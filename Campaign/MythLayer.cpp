@@ -9,6 +9,10 @@
 namespace Potato {
 namespace Campaign {
 
+// NFR5 版本鉤：存檔段自帶 schema tag,未來格式遷移可依號分流。
+// FromJson 軟驗證——缺 tag 的舊檔容忍、有 tag 必須相符。
+static const char* kMythLayerSchema = "potato.myth_layer/1";
+
 const char* SeepageName(Seepage s) {
     switch (s) {
     case Seepage::Quiet:     return "平靜";
@@ -165,6 +169,7 @@ void MythLayer::DeriveFrom(float depravity, float civilOrder,
 JsonValue MythLayer::ToJson() const {
     JsonValue o;
     o.type = JsonValue::Type::Object;
+    o.objectValue["schema"] = JsonValue::String(kMythLayerSchema);
     o.objectValue["chapter"] = JsonValue::Number(chapter);
 
     JsonValue regs;
@@ -223,6 +228,11 @@ bool MythLayer::FromJson(const JsonValue& j) {
         return true;
     }
     if (!j.IsObject()) {
+        return false;
+    }
+    // schema 軟驗證：缺=舊檔容忍；有則必須是 potato.myth_layer/1
+    const JsonValue& sj = j["schema"];
+    if (!sj.IsNull() && sj.AsString() != kMythLayerSchema) {
         return false;
     }
     // 段內欄位：缺則容忍（舊檔），在則必須型別正確——壞段拒絕

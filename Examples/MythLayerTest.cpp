@@ -332,6 +332,45 @@ int main() {
               "大數值 roundtrip 無損（%g 六位會截斷）");
     }
 
+    // [13] myth_layer schema tag：寫出帶 potato.myth_layer/1;
+    //      讀入缺 tag 容忍（舊檔）、錯 tag 拒絕（版本鉤）
+    {
+        MythLayer m;
+        JsonValue out = m.ToJson();
+        Check(out["schema"].AsString() == "potato.myth_layer/1",
+              "ToJson 帶 schema tag");
+
+        // 舊檔（無 schema）仍可讀
+        JsonValue legacy;
+        Check(JsonValue::ParseOk(
+                  "{\"chapter\":2,\"regions\":[],\"favor\":{}}",
+                  legacy),
+              "解析舊檔段");
+        Check(m.FromJson(legacy) &&
+                  m.ToJson()["chapter"].AsInt() == 2,
+              "無 schema 舊檔容忍");
+
+        // 錯 schema → 拒絕且不污染現狀
+        JsonValue wrong;
+        Check(JsonValue::ParseOk(
+                  "{\"schema\":\"potato.myth_layer/2\",\"chapter\":9}",
+                  wrong),
+              "解析錯 tag 段");
+        Check(!m.FromJson(wrong) &&
+                  m.ToJson()["chapter"].AsInt() == 2,
+              "錯 schema 拒絕、狀態不變");
+
+        // 正確 schema 讀入
+        JsonValue good;
+        Check(JsonValue::ParseOk(
+                  "{\"schema\":\"potato.myth_layer/1\",\"chapter\":3}",
+                  good),
+              "解析帶 tag 段");
+        Check(m.FromJson(good) &&
+                  m.ToJson()["chapter"].AsInt() == 3,
+              "正確 schema 讀入");
+    }
+
     printf("\n=== %d PASS, %d FAIL ===\n", g_pass, g_fail);
     return g_fail == 0 ? 0 : 1;
 }
