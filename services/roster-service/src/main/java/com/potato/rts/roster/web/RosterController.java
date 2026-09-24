@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.potato.rts.common.web.JsonSupport;
 import com.potato.rts.roster.model.Card;
 import com.potato.rts.roster.model.Roster;
 import com.potato.rts.roster.repo.CardRepository;
@@ -116,7 +116,8 @@ public class RosterController {
 
         // Canonical re-serialization: always valid UTF-8 regardless of the
         // charset Jackson auto-detected on the request body.
-        Roster roster = new Roster(ROSTER_SCHEMA, entries.size(), Instant.now(), toJson(root));
+        Roster roster = new Roster(ROSTER_SCHEMA, entries.size(), Instant.now(),
+                JsonSupport.toJson(objectMapper, root));
         Roster saved = rosterRepository.save(roster);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -203,31 +204,14 @@ public class RosterController {
     }
 
     private JsonNode parseQuietly(byte[] bytes) {
-        try {
-            return objectMapper.readTree(bytes);
-        } catch (Exception e) {
-            return null;
-        }
+        return JsonSupport.parseQuietly(objectMapper, bytes);
     }
 
     private JsonNode parseQuietly(String text) {
-        try {
-            return objectMapper.readTree(text);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private String toJson(JsonNode node) {
-        try {
-            return objectMapper.writeValueAsString(node);
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException("failed to serialize parsed document", e);
-        }
+        return JsonSupport.parseQuietly(objectMapper, text);
     }
 
     private ResponseEntity<JsonNode> error(HttpStatus status, String message) {
-        return ResponseEntity.status(status)
-                .body(objectMapper.createObjectNode().put("error", message));
+        return JsonSupport.error(objectMapper, status, message);
     }
 }

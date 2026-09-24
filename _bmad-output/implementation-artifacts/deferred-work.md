@@ -58,6 +58,7 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-game-backend-services.md`
   summary: Extract a services-common Maven module for the duplicated parse/json/badRequest/notFound helpers in RosterController and ReplayController.
   evidence: Blind-hunter review — two controllers already diverge in style (StringBuilder concat vs record serialization); a shared module is a structural refactor beyond this change's scope.
+  resolution: 已修（2026-09-24）：新增 `services/services-common` 模組，`JsonSupport` 集中 parseQuietly×2/toJson/error；兩 controller 私有 helper 改薄委派。parent pom 掛模組、雙 service pom 加依賴；JsonSupportTest 7/7,controller 測試全綠。
 - source_spec: `_bmad-output/implementation-artifacts/spec-game-backend-services.md`
   summary: Manage H2 schema with Flyway instead of ddl-auto=update, and wire Maven into CI when Java services are expected to build in CI.
   evidence: Blind-hunter + verification-gap reviews — schema drift is unmanaged and Java tests never run in CI; both were explicitly out of this spec's boundaries.

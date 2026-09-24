@@ -20,6 +20,7 @@
     <description>Spring Cloud backend for MingGoRTS game data (cards, rosters, battle replays)</description>
 
     <modules>
+        <module>services-common</module>
         <module>discovery-server</module>
         <module>api-gateway</module>
         <module>roster-service</module>
