@@ -68,7 +68,13 @@ C++20 遊戲引擎 + MingGoRTS IDE，CMake 建置，無 UE5 依賴。BMAD v6 已
 - 本 repo 常有多 session 並行——提交前 `git status` 認清自己的檔，只 stage 自己改的（`git add <path>` 不用 `-A`）
 - 提交引用**未追蹤檔案**的 CMakeLists 會讓乾淨 checkout 斷 build——註冊新 target 時源檔必須同 commit 入帳
 - `CMakeLists.txt`/`DuanqiaoPlayable.cpp`/佇列檔是高碰撞熱區；要拆 hunk 可「checkout HEAD → 重放自己的編輯 → stage → 還原工作檔」
+- **hash-object staged 法**（Epic D retro 實證，三次 index 競態後採用）：對混有平行 session 變更的熱區檔，`git show HEAD:<file> > base` → 套用自己的 hunk → `git hash-object -w` → `git update-index --cacheinfo 100644,<blob>,<file>`——stage 的是乾淨 blob 而非整檔工作區內容。提交一律 `git commit -- <path>...`（path-limited）防 commit 間隙被對方 stage 污染
 - 測試同時寫同名 JSON 會互撞——ctest 批量失敗先單獨重跑確認是不是平行測試競爭，再當真 bug 追
+
+## Story 完成定義（採用閘門，Epic D retro 規則）
+
+- 機械層 story 不算 done 除非至少有一個**測試外消費者**（playable/工具/資產檔）實際呼叫——否則標「mechanism-only」並在 queue/spec 明記採用層另立 story。Epic D 的 D-2/D-3/D-4 曾因缺此閘門讓單測全綠的死碼活到 retro 才浮現
+- 新機制入帳時同步檢查：內容端（assets JSON schema 欄位）是否有至少一個定義塊觸發它
 
 ## 已知環境坑：MinGW libstdc++ DLL 錯配
 

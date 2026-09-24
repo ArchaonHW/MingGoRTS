@@ -6,6 +6,7 @@
 #include "Gameplay/BattleSceneSync.h"
 #include "Gameplay/QuantumFog.h"
 #include "MathUtils/CurlNoise.h"
+#include "MathUtils/GustField.h"
 #include "Scene/SceneNode.h"
 #include "Rendering/SceneRenderer.h"
 #include "Rendering/RenderableComponent.h"
@@ -234,6 +235,51 @@ int main() {
         wispNode->GetChildren()[0]->GetLocalPosition();
     Check((restored - basePos).Length() < 1e-4f,
           "關閉漂移後標記回候選格（strength=0 行為不變）");
+
+    // [15] D-5 滲透 FX 消費端：tint/shadow/jitter 實際作用於雲標記
+    sync.SetSeepageFX(Vector3(-0.20f, 0.10f, 0.0f), 0.0f, 1.0f);
+    sync.Sync(battle);
+    const Vector3 fxPos =
+        wispNode->GetChildren()[0]->GetLocalPosition();
+    Check(std::abs((fxPos.x - basePos.x) - 0.5f * CELL) < 1e-4f,
+          "shadowOffset 標記 +x 半格", fxPos.x - basePos.x, 0.5f * CELL);
+    const RenderableComponent* mrc =
+        wispNode->GetChildren()[0]->GetRenderable();
+    Check(mrc && std::abs(mrc->color.y - 0.55f) < 1e-4f,
+          "tint 偏移入標記色", mrc ? mrc->color.y : 0.0f, 0.55f);
+
+    sync.SetSeepageFX(Vector3(0, 0, 0), 0.0f, 0.0f);
+    sync.Sync(battle);
+    Check((wispNode->GetChildren()[0]->GetLocalPosition() - basePos)
+              .Length() < 1e-4f,
+          "FX 歸零後標記回候選格");
+
+    sync.SetSeepageFX(Vector3(0, 0, 0), 0.5f, 0.0f);
+    sync.Sync(battle);
+    const Vector3 jitPos =
+        wispNode->GetChildren()[0]->GetLocalPosition();
+    Check(std::abs(jitPos.x - basePos.x) < 1e-4f &&
+              std::abs(jitPos.z - basePos.z) < 1e-4f,
+          "jitter 只動 y 不動 XZ");
+    Check(std::abs(jitPos.y - basePos.y) <= 0.5f * CELL + 1e-4f,
+          "jitter 幅度 ≤ amp×cell", jitPos.y - basePos.y, 0.5f * CELL);
+    sync.SetSeepageFX(Vector3(0, 0, 0), 0.0f, 0.0f);
+
+    // [16] P-4 陣風調製：同 drift 場，gust 在場改變偏移量
+    sync.SetFogDrift(&drift, 0.5f);
+    sync.Sync(battle);
+    const Vector3 calm =
+        wispNode->GetChildren()[0]->GetLocalPosition();
+    Quasi::GustField gust(4, /*seed=*/11, 0.09f, 0.8f);
+    sync.SetFogDriftGust(&gust);
+    sync.Sync(battle);
+    const Vector3 gusty =
+        wispNode->GetChildren()[0]->GetLocalPosition();
+    Check((gusty - calm).Length() > 1e-6f,
+          "陣風調製改變漂移偏移");
+    sync.SetFogDriftGust(nullptr);
+    sync.SetFogDrift(nullptr, 0.0f);
+    sync.Sync(battle);
 
     sync.Detach();
     Check(sync.BindingCount() == 0, "Detach 清空綁定");
