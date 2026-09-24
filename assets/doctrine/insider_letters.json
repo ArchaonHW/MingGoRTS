@@ -1,0 +1,11 @@
+{
+  "schema": "potato.doctrine/1",
+  "id": "insider_letters",
+  "name": "內應密札",
+  "flavor": "書信往來敵帳中，事成於無形。",
+  "axis": "nobattle",
+  "cost": 3,
+  "modifiers": [
+    {"key": "nobattle.subversion", "value": 0.18}
+  ]
+}

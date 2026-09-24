@@ -415,6 +415,7 @@ add_library(Gameplay STATIC
     Gameplay/BattleCommandAI.cpp
     Gameplay/BattleCommandEnv.cpp
     Gameplay/NarrativePack.cpp
+    Gameplay/DoctrineLibrary.cpp
 )
 target_include_directories(Gameplay PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/Gameplay)
 # BattleSceneSync 需要場景圖/渲染類型;PotatoEngine 不依賴 Gameplay,無循環
@@ -991,6 +992,11 @@ add_executable(NarrativePackTest Examples/NarrativePackTest.cpp)
 target_include_directories(NarrativePackTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(NarrativePackTest Gameplay)
 
+# G-1 doctrine 卡池無頭測試（potato.doctrine/1 載入/驗證/掛鉤加總）
+add_executable(DoctrineLibraryTest Examples/DoctrineLibraryTest.cpp)
+target_include_directories(DoctrineLibraryTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(DoctrineLibraryTest Gameplay)
+
 # E-4 無戰章節敘事與結算無頭測試（和平語域/章尾鉤/結局軌跡）
 add_executable(NoBattleNarrativeTest Examples/NoBattleNarrativeTest.cpp)
 target_include_directories(NoBattleNarrativeTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1255,6 +1261,7 @@ set(POTATO_TESTS
     CardValidatorTest
     EndingPageTest
     NarrativePackTest
+    DoctrineLibraryTest
 )
 foreach(test_name IN LISTS POTATO_TESTS)
     if(TARGET ${test_name})

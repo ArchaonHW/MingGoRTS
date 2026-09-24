@@ -1,0 +1,15 @@
+{
+  "schema": "potato.doctrine/1",
+  "id": "martial_parade",
+  "name": "陳師觀兵",
+  "flavor": "耀旌旗於疆埸，敵自辟易。",
+  "axis": "nobattle",
+  "cost": 2,
+  "modifiers": [
+    {"key": "nobattle.deterrence", "value": 0.20}
+  ],
+  "rules": [
+    {"trigger": "Always", "action": "HoldPosition",
+     "threshold": 0, "priority": 90, "cooldown": 0}
+  ]
+}

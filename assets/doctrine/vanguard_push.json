@@ -1,0 +1,14 @@
+{
+  "schema": "potato.doctrine/1",
+  "id": "vanguard_push",
+  "name": "前鋒令",
+  "flavor": "見敵即擊，不待中軍。",
+  "axis": "combat",
+  "cost": 1,
+  "rules": [
+    {"trigger": "EnemyInRange", "action": "AttackNearest",
+     "threshold": 8.0, "priority": 10, "cooldown": 0},
+    {"trigger": "Always", "action": "AdvanceToObjective",
+     "threshold": 0, "priority": 90, "cooldown": 0}
+  ]
+}

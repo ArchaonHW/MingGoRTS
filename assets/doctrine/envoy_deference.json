@@ -1,0 +1,11 @@
+{
+  "schema": "potato.doctrine/1",
+  "id": "envoy_deference",
+  "name": "行人辭令",
+  "flavor": "一介使者，可抵千兵。",
+  "axis": "nobattle",
+  "cost": 1,
+  "modifiers": [
+    {"key": "nobattle.negotiation", "value": 0.15}
+  ]
+}

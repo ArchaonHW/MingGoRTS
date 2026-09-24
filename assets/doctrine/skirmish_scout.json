@@ -1,0 +1,14 @@
+{
+  "schema": "potato.doctrine/1",
+  "id": "skirmish_scout",
+  "name": "遊騎偵巡",
+  "flavor": "霧未散處，蹄聲先至。",
+  "axis": "combat",
+  "cost": 2,
+  "rules": [
+    {"trigger": "EnemyInRange", "action": "RetreatToRally",
+     "threshold": 4.0, "priority": 20, "cooldown": 3.0},
+    {"trigger": "Always", "action": "Scout",
+     "threshold": 0, "priority": 80, "cooldown": 0}
+  ]
+}

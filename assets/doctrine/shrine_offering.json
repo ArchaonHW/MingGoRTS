@@ -1,0 +1,11 @@
+{
+  "schema": "potato.doctrine/1",
+  "id": "shrine_offering",
+  "name": "祀神安撫",
+  "flavor": "牲醴既陳，神怒可解。",
+  "axis": "myth",
+  "cost": 1,
+  "modifiers": [
+    {"key": "myth.soothing", "value": 0.20}
+  ]
+}

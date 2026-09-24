@@ -1,0 +1,12 @@
+{
+  "schema": "potato.doctrine/1",
+  "id": "quarter_accept",
+  "name": "受降安民",
+  "flavor": "降者不殺，投戈者安之。",
+  "axis": "nobattle",
+  "cost": 2,
+  "modifiers": [
+    {"key": "nobattle.surrender", "value": 0.15},
+    {"key": "nobattle.negotiation", "value": 0.05}
+  ]
+}

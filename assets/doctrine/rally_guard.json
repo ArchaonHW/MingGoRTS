@@ -1,0 +1,16 @@
+{
+  "schema": "potato.doctrine/1",
+  "id": "rally_guard",
+  "name": "護翼",
+  "flavor": "友軍接戰，即往赴之。",
+  "axis": "combat",
+  "cost": 1,
+  "rules": [
+    {"trigger": "Outnumbered", "action": "RetreatToRally",
+     "threshold": 0, "priority": 15, "cooldown": 4.0},
+    {"trigger": "AllyEngaged", "action": "DefendNearestAlly",
+     "threshold": 0, "priority": 25, "cooldown": 0},
+    {"trigger": "Always", "action": "HoldPosition",
+     "threshold": 0, "priority": 90, "cooldown": 0}
+  ]
+}

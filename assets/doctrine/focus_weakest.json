@@ -1,0 +1,14 @@
+{
+  "schema": "potato.doctrine/1",
+  "id": "focus_weakest",
+  "name": "擊其惰歸",
+  "flavor": "避其銳氣，擊其惰歸。",
+  "axis": "combat",
+  "cost": 2,
+  "rules": [
+    {"trigger": "EnemyInRange", "action": "AttackWeakest",
+     "threshold": 10.0, "priority": 10, "cooldown": 0},
+    {"trigger": "Always", "action": "AdvanceToObjective",
+     "threshold": 0, "priority": 90, "cooldown": 0}
+  ]
+}

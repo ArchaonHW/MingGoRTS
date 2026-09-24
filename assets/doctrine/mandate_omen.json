@@ -1,0 +1,12 @@
+{
+  "schema": "potato.doctrine/1",
+  "id": "mandate_omen",
+  "name": "天命徽兆",
+  "flavor": "白魚躍舟，赤羽集社——天命有歸。",
+  "axis": "myth",
+  "cost": 3,
+  "modifiers": [
+    {"key": "myth.fate", "value": 0.15},
+    {"key": "nobattle.deterrence", "value": 0.05}
+  ]
+}
