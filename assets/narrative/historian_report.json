@@ -1,0 +1,89 @@
+{
+  "schema": "potato.narrative_pack/1",
+  "entries": [
+    {
+      "id": "historian.open",
+      "zh-TW": "史官曰：{battle}，",
+      "en": "The historian writes: at {battle},",
+      "register": "historian",
+      "tags": ["report", "opening"]
+    },
+    {
+      "id": "historian.outcome.victory",
+      "zh-TW": "我軍克敵，奪南岸而還。",
+      "en": "Our force prevailed and took the southern bank.",
+      "register": "historian",
+      "tags": ["report", "outcome"]
+    },
+    {
+      "id": "historian.outcome.defeat",
+      "zh-TW": "我軍失利，退守北岸。",
+      "en": "Our force was beaten and fell back to the northern bank.",
+      "register": "historian",
+      "tags": ["report", "outcome"]
+    },
+    {
+      "id": "historian.outcome.draw",
+      "zh-TW": "兩軍相持，鳴金收兵。",
+      "en": "The armies deadlocked; the gong sounded withdrawal.",
+      "register": "historian",
+      "tags": ["report", "outcome"]
+    },
+    {
+      "id": "historian.outcome.ongoing",
+      "zh-TW": "戰事未決，筆錄至此。",
+      "en": "The battle is undecided; this record ends here.",
+      "register": "historian",
+      "tags": ["report", "outcome"]
+    },
+    {
+      "id": "historian.peace.open",
+      "zh-TW": "史官曰：{battle}之局，兵不血刃。",
+      "en": "The historian writes: at {battle}, not a blade was bloodied.",
+      "register": "historian",
+      "tags": ["peace", "opening"]
+    },
+    {
+      "id": "historian.peace.negotiation",
+      "zh-TW": "遣使入帳，以民心曉之，「{g}」罷兵言和——議和而去，不入陣亡錄。",
+      "en": "Envoys entered the tent and reasoned with the people's hearts; {g} sheathed arms in accord — retired by treaty, not the roll of the dead.",
+      "register": "historian",
+      "tags": ["peace", "negotiation"]
+    },
+    {
+      "id": "historian.peace.deterrence",
+      "zh-TW": "陳師疆埸，軍威所懾，「{g}」未交一矢引兵而退——懾服而去，不入陣亡錄。",
+      "en": "Arrayed at the border, our menace sufficed; {g} withdrew without an arrow loosed — cowed, not slain.",
+      "register": "historian",
+      "tags": ["peace", "deterrence"]
+    },
+    {
+      "id": "historian.peace.subversion",
+      "zh-TW": "內應發於敵帳，「{g}」眾叛親離——變節投誠，不入陣亡錄。",
+      "en": "Insiders turned within the enemy camp; {g}, abandoned by all, defected — not the roll of the dead.",
+      "register": "historian",
+      "tags": ["peace", "subversion"]
+    },
+    {
+      "id": "historian.peace.generic",
+      "zh-TW": "「{g}」偃旗息鼓——不入陣亡錄。",
+      "en": "{g} furled the banners and stilled the drums — not the roll of the dead.",
+      "register": "historian",
+      "tags": ["peace"]
+    },
+    {
+      "id": "historian.peace.closing",
+      "zh-TW": "不戰而定。",
+      "en": "Settled without battle.",
+      "register": "historian",
+      "tags": ["peace", "closing"]
+    },
+    {
+      "id": "historian.countered",
+      "zh-TW": "彼之陣法，似針對我軍慣用「{habit}」",
+      "en": "Their formation seems aimed at our habit of {habit}",
+      "register": "historian",
+      "tags": ["report", "rival"]
+    }
+  ]
+}

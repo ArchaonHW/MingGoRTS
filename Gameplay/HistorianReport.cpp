@@ -1,9 +1,11 @@
 #include "HistorianReport.h"
+#include "NarrativePack.h"
 
 #include "Gameplay/Ledger.h"
 
 #include <algorithm>
 #include <cstdio>
+#include <map>
 
 namespace Potato {
 namespace Gameplay {
@@ -136,26 +138,61 @@ HistorianReport ComposeHistorianReport(const HistorianInput& in) {
     // 路徑句 + 敵將去向（不入陣亡錄），查帳段與省略計數同規。
     const bool peace = !in.peacePathZh.empty();
     std::string& t = r.text;
-    if (peace) {
-        t += "史官曰：" + in.battleName + "之局，兵不血刃。";
-        const std::string g =
-            in.peaceGeneral.empty() ? "敵將" : in.peaceGeneral;
-        if (in.peacePathZh == "談判") {
-            t += "遣使入帳，以民心曉之，「" + g +
-                 "」罷兵言和——議和而去，不入陣亡錄。";
-        } else if (in.peacePathZh == "嚇阻") {
-            t += "陳師疆埸，軍威所懾，「" + g +
-                 "」未交一矢引兵而退——懾服而去，不入陣亡錄。";
-        } else if (in.peacePathZh == "顛覆") {
-            t += "內應發於敵帳，「" + g +
-                 "」眾叛親離——變節投誠，不入陣亡錄。";
-        } else {
-            t += "「" + g + "」偃旗息鼓——不入陣亡錄。";
+    const std::string g =
+        in.peaceGeneral.empty() ? "敵將" : in.peaceGeneral;
+    // C-2：pack 在場時碎片取資料檔，查無 id 回退內建字串
+    const std::map<std::string, std::string> pairs = {
+        {"{battle}", in.battleName}, {"{g}", g},
+        {"{habit}", in.counteredHabit}};
+    auto Frag = [&](const char* id, const char* fallback) {
+        if (in.pack) {
+            return in.pack->Frag(id, fallback, pairs);
         }
-        t += "不戰而定。"; // 戰歷秒數行的無戰對句
+        // 無 pack：回退字串照樣代換佔位符，行為與 pack 命中一致
+        std::string s = fallback;
+        for (const auto& [k, v] : pairs) {
+            size_t p = 0;
+            while ((p = s.find(k, p)) != std::string::npos) {
+                s.replace(p, k.size(), v);
+                p += v.size();
+            }
+        }
+        return s;
+    };
+    if (peace) {
+        t += Frag("historian.peace.open",
+                  "史官曰：{battle}之局，兵不血刃。");
+        if (in.peacePathZh == "談判") {
+            t += Frag("historian.peace.negotiation",
+                      "遣使入帳，以民心曉之，「{g}」罷兵言和——"
+                      "議和而去，不入陣亡錄。");
+        } else if (in.peacePathZh == "嚇阻") {
+            t += Frag("historian.peace.deterrence",
+                      "陳師疆埸，軍威所懾，「{g}」未交一矢引兵而退——"
+                      "懾服而去，不入陣亡錄。");
+        } else if (in.peacePathZh == "顛覆") {
+            t += Frag("historian.peace.subversion",
+                      "內應發於敵帳，「{g}」眾叛親離——"
+                      "變節投誠，不入陣亡錄。");
+        } else {
+            t += Frag("historian.peace.generic",
+                      "「{g}」偃旗息鼓——不入陣亡錄。");
+        }
+        t += Frag("historian.peace.closing", "不戰而定。");
     } else {
-        t += "史官曰：" + in.battleName + "，";
-        t += OutcomeLine(in.outcome);
+        t += Frag("historian.open", "史官曰：{battle}，");
+        if (!in.pack) {
+            t += OutcomeLine(in.outcome);
+        } else {
+            const char* oid = "historian.outcome.ongoing";
+            switch (in.outcome) {
+            case BattleOutcome::Victory: oid = "historian.outcome.victory"; break;
+            case BattleOutcome::Defeat:  oid = "historian.outcome.defeat";  break;
+            case BattleOutcome::Draw:    oid = "historian.outcome.draw";    break;
+            default: break;
+            }
+            t += Frag(oid, OutcomeLine(in.outcome));
+        }
 
         {
             char buf[64];
@@ -208,7 +245,8 @@ HistorianReport ComposeHistorianReport(const HistorianInput& in) {
     // 置於名冊句之後、省略計數之前（審計欄位恆為全文最後一段）。
     // 措辭與 RivalDeck::WarningLine 一致——同一判詞兩處書寫
     if (!in.counteredHabit.empty()) {
-        t += "彼之陣法，似針對我軍慣用「" + in.counteredHabit + "」";
+        t += Frag("historian.countered",
+                  "彼之陣法，似針對我軍慣用「{habit}」");
     }
 
     // L-3 查帳段：帳簿在場才書。斷鏈 → 帳目遭篡；借貸不成立 →

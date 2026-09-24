@@ -11,6 +11,7 @@ namespace Potato {
 namespace Gameplay {
 
 class LedgerChain;
+class NarrativePack;
 
 /**
  * 史官戰報組裝器（HistorianReport）——N-1 帳本文法核心。
@@ -56,6 +57,9 @@ struct HistorianInput {
     std::string peacePathZh;
     // 敵將名（去向句用）；空 → 「敵將」泛稱
     std::string peaceGeneral;
+    // C-2 敘事包：非空 → 碎片從 pack 取（zh-TW），
+    // 查無 id 回退內建字串；pack 的 LookupMisses 計未命中數
+    const class NarrativePack* pack = nullptr;
 };
 
 struct HistorianReport {
