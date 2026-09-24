@@ -44,7 +44,7 @@ C++20 遊戲引擎 + MingGoRTS IDE，CMake 建置，無 UE5 依賴。BMAD v6 已
 
 ## Campaign 層（戰役持久，Epic B 已完成）
 
-- `Campaign/`：`CampaignState`（potato.campaign/1 facade，聚合 Camp/Ledger/Dossier/MythLog，章節邊界 tmp+rename 原子存檔）/`ChapterLibrary`（章節定義庫，arc→chapter→id 排序）/`Governance`（治理累加器：佔村/護輜/暴行→民心秩序軸）
+- `Campaign/`：`CampaignState`（potato.campaign/1 facade，聚合 Camp/NamedRoster/CampaignLedger/Governance/MythLayer，章節邊界 tmp+rename 原子存檔；**不含** GeneralDossier/MythLog——兩者目前 session 級）/`ChapterLibrary`（章節定義庫，arc→chapter→id 排序）/`Governance`（治理累加器：佔村/護輜/暴行→民心秩序軸）
 - `Gameplay` 不依賴 `Campaign`——依賴方向 PotatoEngine ← Gameplay ← Campaign
 - 垂直切片：`Examples/DuanqiaoPlayable`（標題殼→章節選擇→戰鬥→史官戰報+整補→再戰）；`tools/package_demo.bat` 產出 `dist/` 自包含包
 
