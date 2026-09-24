@@ -86,6 +86,11 @@ public:
     void Arm(int seepageThreshold, IncursionKind kind,
              Vector2 spawnPos);
 
+    // 解除佈防：清空 ghost/fog/ghostEid 指標與全部狀態，
+    // 不觸碰它們指向的對象。battle/fog 生命期結束前呼叫——
+    // 之後 Arm/Update/Resolve 皆安全（無 UAF 窗口）。
+    void Disarm();
+
     // 每拍驅動：餵區域滲透快照。達閾→觸發生成+發事件；
     // pending 時累積窗口，逾時自動 ignored 結算。
     // 【呼叫端契約】只在 Execution 期間驅動；dt 餵真實秒數——

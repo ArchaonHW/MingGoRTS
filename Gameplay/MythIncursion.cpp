@@ -28,20 +28,37 @@ bool ParseIncursionKind(const std::string& s, IncursionKind& out) {
 
 void MythIncursion::Arm(int seepageThreshold, IncursionKind k,
                         Vector2 pos) {
-    // 重綁=新場域：先消散舊鬼隊，不讓上一場的幻影留存
+    // 重綁=新場域：先消散舊鬼隊，不讓上一場的幻影留存。
+    // 假訊隊收隊前先 Reveal——否則假雲永遠綁在死隊上不可觀測
     if (ghost && !ghost->IsEliminated()) {
+        if (fog && ghostEid >= 0) {
+            fog->Reveal(ghostEid, ghost->GetPosition());
+        }
         ghost->ApplyCasualties(ghost->GetMembers());
     }
     ghost = nullptr;
     ghostEid = -1;
     fog = nullptr;
-    // 越界門檻視為關閉（滲透序數上限 Manifest=3）
-    armed = seepageThreshold >= 1 && seepageThreshold <= 3;
+    // 越界門檻視為關閉（滲透序數上限 Manifest=3）；
+    // 非法 enum/非有限座標同樣拒絕——靜默退化會讓內容錯誤無痕
+    const bool kindOk = k == IncursionKind::GhostLegion ||
+                        k == IncursionKind::FoxRumor;
+    const bool posOk = std::isfinite(pos.x) && std::isfinite(pos.y);
+    armed = kindOk && posOk &&
+            seepageThreshold >= 1 && seepageThreshold <= 3;
     threshold = seepageThreshold;
-    kind = k;
+    kind = kindOk ? k : IncursionKind::GhostLegion;
     spawnPos = pos;
     state = IncursionState{};
-    state.kind = k; // 渲染層在觸發前就能讀到正確 kind
+    state.kind = kind; // 渲染層在觸發前就能讀到正確 kind
+}
+
+void MythIncursion::Disarm() {
+    armed = false;
+    ghost = nullptr;
+    ghostEid = -1;
+    fog = nullptr;
+    state = IncursionState{};
 }
 
 void MythIncursion::Update(float dt, BattleController& battle,
@@ -72,23 +89,44 @@ void MythIncursion::Trigger(BattleController& battle,
         kind == IncursionKind::FoxRumor ? "幻影" : "鬼軍";
     const std::string display =
         spirit.empty() ? "境靈" : spirit;
+
+    // 先 latch 再生成——CreateSquad 會 Emit，回呼可再入
+    // Arm/Resolve；未 latch 時再入會在半成品狀態上繼續變異
+    state.fired = true;
+    state.pending = true;
+    state.kind = kind;
+    state.region = region;
+    state.spirit = display; // 存回填名——下游 AdjustFavor 不吃空鍵
+    state.windowLeft = kResolveWindow;
+
+    // 現身點夾進場界——內容可給場外座標（護欄同假雲 clamp）
+    const float cell = battle.GetField().GetCellSize();
+    const float maxX =
+        (std::max)(0.0f,
+                   battle.GetField().GetWidth() * cell - 1.0f);
+    const float maxY =
+        (std::max)(0.0f,
+                   battle.GetField().GetHeight() * cell - 1.0f);
+    spawnPos.x = std::clamp(spawnPos.x, 0.0f, maxX);
+    spawnPos.y = std::clamp(spawnPos.y, 0.0f, maxY);
+
     ghost = battle.CreateSquad(std::string(kindTag) + ":" + display,
                                kGhostTeam, spawnPos, kGhostMembers);
-    if (!ghost) return; // 生成失敗：不消耗 latch，下拍重試
+    if (!ghost) {
+        // 生成失敗：回滾 latch，下拍重試
+        state.fired = false;
+        state.pending = false;
+        return;
+    }
 
     if (kind == IncursionKind::FoxRumor && battle.GetFog()) {
         fog = battle.GetFog();
         // 假訊：情報雲候選格指向虛構方位（真身其實在 spawnPos）。
         // entity team=觀測方 0——觀測扣的是玩家情報點（Duanqiao 慣例）
         Vector2 fake = spawnPos;
-        fake.x += kRumorOffset;
-        // 夾進場界，防止假雲全部落格線外
-        const float maxX =
-            battle.GetField().GetWidth() * battle.GetField().GetCellSize();
-        const float maxY =
-            battle.GetField().GetHeight() * battle.GetField().GetCellSize();
-        fake.x = std::clamp(fake.x, 0.0f, maxX - 1.0f);
-        fake.y = std::clamp(fake.y, 0.0f, maxY - 1.0f);
+        fake.x += kRumorOffset * cell;
+        fake.x = std::clamp(fake.x, 0.0f, maxX);
+        fake.y = std::clamp(fake.y, 0.0f, maxY);
         ghostEid = fog->AddEntityCloud(ghost->GetName(),
                                        /*觀測方=*/0, fake, 4.0f, 4,
                                        2.0f);
@@ -96,13 +134,6 @@ void MythIncursion::Trigger(BattleController& battle,
             battle.BindFogSquad(ghost, ghostEid);
         }
     }
-
-    state.fired = true;
-    state.pending = true;
-    state.kind = kind;
-    state.region = region;
-    state.spirit = spirit; // 存原始名（可能為空）——OutcomeEvent 如實回傳
-    state.windowLeft = kResolveWindow;
 
     char when[32];
     snprintf(when, sizeof(when), "T+%.1fs", battle.GetElapsed());

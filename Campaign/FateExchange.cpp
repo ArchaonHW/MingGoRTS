@@ -30,6 +30,10 @@ void FateExchange::Bind(MythLayer& m, Governance& g) {
 std::vector<FateOption>
 FateExchange::Options(const std::string& spirit) const {
     const bool bound = myths && gov;
+    // 未登錄 spirit：仍以中立 50 顯示價目（顯示≠可成交，
+    // 見檔頭契約）——known=false 讓 UI 能灰顯「未聞名」
+    // 而非放出一個注定失敗的可點按鈕
+    const bool known = bound && myths->HasSpirit(spirit);
     const float favor =
         bound ? myths->Favor(spirit) : 0.0f;
     const bool affordable =
@@ -39,6 +43,8 @@ FateExchange::Options(const std::string& spirit) const {
         reason = "兌換層未綁定";
     } else if (spirit.empty()) {
         reason = "未指定神明";
+    } else if (!known) {
+        reason = "神明未聞名";
     } else if (!affordable) {
         reason = "天命不足（需 " + std::to_string((int)kFateCost) + "）";
     } else if (battleUses >= kMaxBattleUses) {
@@ -51,7 +57,7 @@ FateExchange::Options(const std::string& spirit) const {
     for (FateTarget t : {FateTarget::PopularSupport,
                          FateTarget::CivilOrder}) {
         FateOption o{t, kFateCost, kFateGain, affordable, usesLeft,
-                     reason};
+                     known, reason};
         // 目標軸已滿：名目可兌但實得為零——灰顯擋下白扣費
         if (o.affordable && bound && Axis(*gov, t) >= 100.0f) {
             o.affordable = false;

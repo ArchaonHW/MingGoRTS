@@ -136,6 +136,8 @@ int main() {
         // 幻影錢包防線：未登錄 spirit 不得以中立 50 起算扣費
         Check(ex.Options("新神").at(0).affordable,
               "未登錄 spirit 價目仍顯示（中立 50）");
+        Check(!ex.Options("新神").at(0).known,
+              "未登錄 spirit known=false（UI 可灰顯）");
         Check(!ex.Convert("新神", FateTarget::CivilOrder, false),
               "未登錄 spirit Convert 拒絕");
         Check(!myth.HasSpirit("新神"), "拒絕不鑄錢包");

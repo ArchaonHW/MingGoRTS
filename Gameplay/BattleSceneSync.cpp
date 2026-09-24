@@ -354,6 +354,9 @@ void BattleSceneSync::Detach() {
     seepageTint = Vector3(); // D-5 修飾不跨場殘留
     seepageJitter = 0.0f;
     seepageShadow = 0.0f;
+    fogDrift = nullptr;        // 外層持有的漂移/陣風場不隨綁定續命
+    fogDriftStrength = 0.0f;
+    fogGust = nullptr;
     scene = nullptr;
 }
 

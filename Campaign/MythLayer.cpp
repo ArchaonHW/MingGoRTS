@@ -40,6 +40,8 @@ static float PressureOf(Gameplay::GovernanceEvent ev) {
 
 void MythLayer::Feed(const std::string& region,
                      Gameplay::GovernanceEvent ev) {
+    // 空 region 鍵早退——內容筆誤不該無痕建立幻影區域
+    if (region.empty()) return;
     Region& r = regions[region]; // 未知區域自動建檔 Quiet
     float delta = PressureOf(ev);
     // 怒神加成：綁定守護靈且 favor 過低時，暴行類壓力放大
@@ -49,7 +51,10 @@ void MythLayer::Feed(const std::string& region,
     if (atrocity && !r.spirit.empty() && Favor(r.spirit) < kAngryFavor) {
         delta *= kAngerBoost;
     }
-    r.pressure = (std::max)(0.0f, r.pressure + delta);
+    // 突變端再夾一次：載入端擋了非有限讀入，但累加本身可
+    // 溢出成 inf——%g 寫 "inf" 後存檔永久讀不回
+    const float np = r.pressure + delta;
+    r.pressure = std::isfinite(np) ? (std::max)(0.0f, np) : 0.0f;
     std::vector<Gameplay::MythEvent> pending;
     Ratchet(region, r, pending);
     Dispatch(pending);
@@ -248,6 +253,7 @@ bool MythLayer::FromJson(const JsonValue& j) {
     for (const JsonValue& e : rj.AsArray()) {
         Region r;
         const std::string id = e["id"].AsString();
+        if (id.empty()) continue; // 空鍵區域不可達——跳過不留幻影
         r.level = static_cast<Seepage>(
             std::clamp(e["lv"].AsInt(0), 0, 3));
         // 非有限/負壓力一律歸零——否則 %g 寫出 nan/inf 後 parser 讀不回，

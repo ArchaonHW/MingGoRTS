@@ -10,6 +10,7 @@
 #include "UITheme.h"
 #include "HUDDensity.h"
 
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -76,7 +77,9 @@ inline bool Load(const std::string& path, Data& out) {
         return false; // 壞檔/異版拒絕載入，不動現況
     }
     Data d;
-    d.theme = root["theme"].AsInt(0);
+    // 範圍檢查在 Load 層做掉——下游免各自防 out-of-range 序數
+    d.theme = std::clamp(root["theme"].AsInt(0), 0,
+                         UITheme::kCount - 1);
     d.uiScale = UITheme::ClampScale(root["uiScale"].AsFloat(1.0f));
     // F-3：可選欄位——舊檔無 hudDensity → Standard；越界鉗回
     d.hudDensity = (int)HUDDensityUI::DensityFromInt(

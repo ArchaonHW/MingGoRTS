@@ -14,7 +14,8 @@
 //
 // 兌換守衛：Convert 要求 spirit 已登錄 favor 表（HasSpirit）——
 // 未登錄名字不得以 kNeutralFavor 起算鑄幣；Options 則仍以
-// 中立 50 顯示價目（顯示≠可成交）。
+// 中立 50 顯示價目（顯示≠可成交）——此時 FateOption.known=false
+// 讓 UI 灰顯「神明未聞名」而非放出注定失敗的可點按鈕。
 //
 // 回呼再入注意：onEvent 內呼叫 ResetBattleUses 會重置本場額度
 // （呼叫端自傷，favor 有界故可封頂）——比照 MythLayer 慣例不堵。
@@ -53,7 +54,9 @@ struct FateOption {
     float gain;
     bool affordable;      // favor 足額且層已綁定
     bool battleUsesLeft;  // 戰中額度尚有剩（UI 判斷戰中灰顯用）
-    std::string reason;   // affordable=false 的中文原因
+    bool known;           // spirit 已登錄 favor 表（Convert 前置條件；
+                          // false 時 affordable 僅表中立價目預覽）
+    std::string reason;   // affordable=false 或未聞名的中文原因
 };
 
 // 兌換記錄（回呼型別；呼叫端寫 Recorder/LedgerChain）

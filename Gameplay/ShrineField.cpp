@@ -26,7 +26,9 @@ void ShrineField::Bind(
         ShrineState s;
         s.mapIndex = i;
         s.pos = it.pos;
-        s.radius = it.radius;
+        // 退化半徑保底：0/負半徑的神社永遠觸發不到（內容筆誤
+        // 無痕死節點）——夾到 1 格讓錯誤可被發現
+        s.radius = it.radius > 0.0f ? it.radius : 1.0f;
         s.spirit = it.spirit;
         s.offering = it.offering;
         shrines.push_back(s);

@@ -5,10 +5,12 @@
 #include "Campaign/MythLayer.h"
 #include "Gameplay/BattleController.h"
 #include "Gameplay/BattleResources.h"
+#include "Gameplay/GovernanceEvent.h"
 #include "Gameplay/MythIncursion.h"
 #include "Gameplay/QuantumFog.h"
 #include "Gameplay/Squad.h"
 
+#include <cmath>
 #include <cstdio>
 #include <string>
 #include <vector>
@@ -238,6 +240,104 @@ int main() {
                   k == IncursionKind::FoxRumor,
               "kind 解析 fox_rumor");
         Check(!ParseIncursionKind("bogus", k), "未知 kind 拒絕");
+    }
+
+    // ---- [7] 強化組（retro 修復覆蓋）----
+    printf("[7] 強化組\n");
+    {
+        // 忽視鬼軍不軟鎖勝利：第三方隊不計 CheckOutcome
+        {
+            BattleController battle(20, 20, 1.0f);
+            MythIncursion inc;
+            inc.Arm(1, IncursionKind::GhostLegion, spawn);
+            inc.Update(0.016f, battle, 1, "斷橋", "橋姬");
+            Check(inc.GetIncursion().fired, "鬼軍觸發");
+            Check(inc.Resolve(false), "忽視結算");
+            // 玩家隊在場、敵軍全無、鬼軍留存——仍應 Victory
+            Squad* player = battle.CreateSquad("玩家隊", 0,
+                                             Vector2{2.0f, 2.0f}, 30);
+            Check(player != nullptr, "玩家隊生成");
+            battle.BeginExecution();
+            battle.Update(0.1f);
+            Check(battle.GetOutcome() == BattleOutcome::Victory,
+                  "忽視鬼軍不擋勝利");
+        }
+
+        // 鬼軍潰逃/被補刀不進治理帳（不記受降/暴行）
+        {
+            BattleController battle(20, 20, 1.0f);
+            MythIncursion inc;
+            inc.Arm(1, IncursionKind::GhostLegion, spawn);
+            inc.Update(0.016f, battle, 1, "斷橋", "橋姬");
+            Squad* ghost = battle.GetSquads().at(0).get();
+            ghost->AdjustMorale(-1.0f); // 歸零即潰
+            Check(ghost->IsRouting(), "鬼軍進入潰逃");
+            battle.BeginExecution();
+            battle.Update(0.05f); // 內部觸發治理偵測
+            const auto& gev = battle.GetGovernanceEvents();
+            Check(gev.find(GovernanceEvent::SurrenderAccepted) ==
+                      gev.end(),
+                  "鬼軍潰逃不記受降");
+            ghost->ApplyCasualties(3); // 潰逃中續損員
+            battle.Update(0.05f);
+            Check(gev.find(GovernanceEvent::Atrocity) == gev.end(),
+                  "補刀鬼軍不記暴行");
+        }
+
+        // 非法 kind / NaN 座標拒絕佈防
+        {
+            BattleController battle(20, 20, 1.0f);
+            MythIncursion inc;
+            inc.Arm(1, static_cast<IncursionKind>(99), spawn);
+            inc.Update(0.016f, battle, 3, "斷橋", "橋姬");
+            Check(!inc.GetIncursion().fired, "非法 kind 拒絕");
+            inc.Arm(1, IncursionKind::GhostLegion,
+                    Vector2{NAN, 0.0f});
+            inc.Update(0.016f, battle, 3, "斷橋", "橋姬");
+            Check(!inc.GetIncursion().fired, "NaN 座標拒絕");
+        }
+
+        // 場外 spawnPos 夾進場界
+        {
+            BattleController battle(20, 20, 1.0f);
+            MythIncursion inc;
+            inc.Arm(1, IncursionKind::GhostLegion,
+                    Vector2{999.0f, -50.0f});
+            inc.Update(0.016f, battle, 1, "斷橋", "橋姬");
+            Check(inc.GetIncursion().fired, "場外座標仍觸發");
+            const Vector2 gp =
+                battle.GetSquads().at(0)->GetPosition();
+            Check(gp.x <= 20.0f && gp.y >= 0.0f,
+                  "現身點夾進場界");
+        }
+
+        // Disarm：清空指標與狀態，之後呼叫安全
+        {
+            BattleController battle(20, 20, 1.0f);
+            MythIncursion inc;
+            inc.Arm(1, IncursionKind::GhostLegion, spawn);
+            inc.Update(0.016f, battle, 1, "斷橋", "橋姬");
+            inc.Disarm();
+            Check(!inc.GetIncursion().pending &&
+                      !inc.GetIncursion().fired,
+                  "Disarm 清空狀態");
+            Check(!inc.Resolve(true), "Disarm 後 Resolve 拒絕");
+            inc.Update(0.016f, battle, 3, "斷橋", "橋姬");
+            Check(!inc.GetIncursion().fired, "Disarm 後不觸發");
+        }
+
+        // 空靈名結局回傳回填名（不產空鍵幻影錢包）
+        {
+            BattleController battle(20, 20, 1.0f);
+            MythIncursion inc;
+            inc.Arm(1, IncursionKind::GhostLegion, spawn);
+            OutcomeEvent out{};
+            inc.SetOutcomeCallback(
+                [&](const OutcomeEvent& e) { out = e; });
+            inc.Update(0.016f, battle, 1, "斷橋", "");
+            Check(inc.Resolve(true), "空靈名安撫解決");
+            Check(out.spirit == "境靈", "結局回傳回填名");
+        }
     }
 
     printf("\n=== %d PASS, %d FAIL ===\n", g_pass, g_fail);

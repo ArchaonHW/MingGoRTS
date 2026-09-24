@@ -310,8 +310,9 @@ void BattleController::RecordGovernanceEvent(GovernanceEvent ev) {
 
 void BattleController::DetectGovernanceEvents() {
     for (const auto& s : squads) {
-        // 只評敵軍（team!=0 慣例：team 0 = 玩家）
-        if (s->GetTeam() == 0) continue;
+        // 只評敵軍（team 1）——第三方神話隊（team>=2）潰逃/被補刀
+        // 不進治理帳：鬼軍不是「投降的敵軍」，記受降/暴行是幻影入帳
+        if (s->GetTeam() != 1) continue;
         if (!s->IsRouting()) continue;
         auto it = govRoutMembers.find(s.get());
         if (it == govRoutMembers.end()) {
@@ -880,7 +881,11 @@ void BattleController::CheckOutcome() {
     bool alive[2] = {false, false};
     bool generalSlain[2] = {false, false};
     for (const auto& squad : squads) {
-        int t = squad->GetTeam() == 0 ? 0 : 1;
+        // 第三方隊（team>=2,如神話入侵鬼軍）不計勝負——
+        // 忽視存活的鬼軍不該讓戰鬥永遠 Ongoing
+        const int team = squad->GetTeam();
+        if (team != 0 && team != 1) continue;
+        int t = team;
         if (!squad->IsEliminated() && !squad->IsRouting()) {
             alive[t] = true;
         }
