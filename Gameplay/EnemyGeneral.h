@@ -52,6 +52,12 @@ public:
     const std::string& GetFaction() const { return faction; }
     const std::string& GetRarity() const { return rarity; }
     const std::string& GetCardId() const { return cardId; }
+    // G-2 牌庫掠奪：卡片 "signatureDoctrineId" 欄位指向
+    // assets/doctrine 卡池的 doctrine 卡 id（potato.doctrine/1），
+    // 敵將被擊敗/收服時此卡解鎖進玩家牌庫。未指定為空字串。
+    const std::string& GetSignatureCardId() const {
+        return signatureCardId;
+    }
 
     // G-2 兵種：卡片 "unit_class"（infantry/archer/cavalry）——
     // 該將全軍的兵種標記；未標記時 HasUnitClass=false 不覆寫。
@@ -88,6 +94,7 @@ private:
     std::string faction;
     std::string rarity;
     std::string cardId;
+    std::string signatureCardId; // G-2：可掠奪的 doctrine 卡 id
     float aggression = 50.0f;
     float discipline = 50.0f;
     float cunning = 50.0f;

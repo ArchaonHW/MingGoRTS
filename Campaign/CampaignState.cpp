@@ -37,6 +37,8 @@ bool CampaignState::SaveToFile(const std::string& path) const {
     root.objectValue["governance"] = governance.ToJson();
     // D-1 滲透層已填充；god_stance/intel_ledger 仍佔位
     root.objectValue["myth_layer"] = myth.ToJson();
+    // G-2 牌庫段：掠奪卡與強化層持久化
+    root.objectValue["player_deck"] = deck.ToJson();
     JsonValue empty;
     empty.type = JsonValue::Type::Object;
     root.objectValue["god_stance"] = empty;
@@ -115,6 +117,12 @@ bool CampaignState::LoadFromFile(const std::string& path) {
         return false;
     }
     newMyth.SetEventCallback(myth.EventCallback()); // 保留已註冊敘事出口
+    // G-2 牌庫段：缺段容忍（舊檔無此段），有段損毀則拒絕
+    PlayerDeck newDeck;
+    if (!newDeck.FromJson(root["player_deck"])) {
+        POTATO_LOG_ERROR("CampaignState: 牌庫段損毀，拒絕載入 " + path);
+        return false;
+    }
     // god_stance/intel_ledger：缺段容忍，內容暫不解析
     camp = newCamp;
     roster = newRoster;
@@ -122,6 +130,7 @@ bool CampaignState::LoadFromFile(const std::string& path) {
     chapter = newChapter;
     governance = newGov;
     myth = newMyth;
+    deck = newDeck;
     return true;
 }
 

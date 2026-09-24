@@ -9,6 +9,7 @@
   "role": "commander",
   "personality": { "aggression": 90, "discipline": 85, "cunning": 70 },
   "stats": { "command": 84, "attack": 92, "defense": 70, "mobility": 78, "moraleAura": 80 },
+  "signatureDoctrineId": "steel_corps_charge",
   "signatureDoctrine": {
     "name": "鋼軍突進",
     "trigger": "Always", "threshold": 0.0, "action": "AttackNearest",

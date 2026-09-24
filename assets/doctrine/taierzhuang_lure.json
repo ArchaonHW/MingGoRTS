@@ -1,0 +1,17 @@
+{
+  "schema": "potato.doctrine/1",
+  "id": "taierzhuang_lure",
+  "name": "台兒莊誘敵",
+  "flavor": "示弱誘敵深入，聚而殲之。",
+  "axis": "combat",
+  "cost": 3,
+  "rules": [
+    {"trigger": "Outnumbered", "action": "HoldPosition",
+     "threshold": 0, "priority": 10, "cooldown": 0},
+    {"trigger": "Always", "action": "HoldPosition",
+     "threshold": 0, "priority": 90, "cooldown": 0}
+  ],
+  "modifiers": [
+    {"key": "nobattle.deterrence", "value": 0.10}
+  ]
+}

@@ -9,6 +9,7 @@
   "role": "commander",
   "personality": { "aggression": 65, "discipline": 90, "cunning": 94 },
   "stats": { "command": 88, "attack": 78, "defense": 84, "mobility": 74, "moraleAura": 74 },
+  "signatureDoctrineId": "cage_sweep",
   "signatureDoctrine": {
     "name": "囚籠掃蕩",
     "trigger": "Always", "threshold": 0.0, "action": "AttackWeakest",

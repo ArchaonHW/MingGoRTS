@@ -68,6 +68,8 @@ bool EnemyGeneral::LoadFromString(const std::string& json) {
     discipline = std::clamp(p["discipline"].AsFloat(discipline), 0.0f, 100.0f);
     cunning = std::clamp(p["cunning"].AsFloat(cunning), 0.0f, 100.0f);
 
+    signatureCardId = root["signatureDoctrineId"].AsString();
+
     cards.clear();
     const JsonValue& sig = root["signatureDoctrine"];
     if (sig.IsObject()) {

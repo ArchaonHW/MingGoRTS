@@ -1,0 +1,12 @@
+{
+  "schema": "potato.doctrine/1",
+  "id": "steel_corps_charge",
+  "name": "鋼軍突進",
+  "flavor": "不計代價正面碾壓——第五師團的攻勢教條。",
+  "axis": "combat",
+  "cost": 2,
+  "rules": [
+    {"trigger": "Always", "action": "AttackNearest",
+     "threshold": 0, "priority": 5, "cooldown": 0}
+  ]
+}

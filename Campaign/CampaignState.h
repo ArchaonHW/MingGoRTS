@@ -18,6 +18,7 @@
 #include "Campaign/ChapterState.h"
 #include "Campaign/Governance.h"
 #include "Campaign/MythLayer.h"
+#include "Campaign/PlayerDeck.h"
 #include "Gameplay/CampaignLedger.h"
 #include "Gameplay/RefitCamp.h"
 #include "Gameplay/Roster.h"
@@ -43,6 +44,9 @@ public:
     // D-1 神話滲透層：區域滲透等級 + 神明好感表
     MythLayer& Myths() { return myth; }
     const MythLayer& Myths() const { return myth; }
+    // G-2 玩家牌庫：deck=科技樹，掠奪敵將 signature 卡成長
+    PlayerDeck& Deck() { return deck; }
+    const PlayerDeck& Deck() const { return deck; }
 
     // 弧/章節id/已收服戰線（章節序由帳本管，AdvanceChapter 同步）
     ChapterState chapter;
@@ -61,6 +65,7 @@ private:
     Gameplay::CampaignLedger ledger;
     Governance governance;      // C-2 戰役治理帳（governance 段）
     MythLayer myth;             // D-1 滲透狀態機（myth_layer 段）
+    PlayerDeck deck;            // G-2 牌庫掠奪（player_deck 段）
 };
 
 } // namespace Campaign

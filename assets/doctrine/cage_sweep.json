@@ -1,0 +1,14 @@
+{
+  "schema": "potato.doctrine/1",
+  "id": "cage_sweep",
+  "name": "囚籠掃蕩",
+  "flavor": "梳篦式掃蕩，殘敵必殲。",
+  "axis": "combat",
+  "cost": 2,
+  "rules": [
+    {"trigger": "Always", "action": "AttackWeakest",
+     "threshold": 0, "priority": 5, "cooldown": 0},
+    {"trigger": "EnemyInRange", "action": "AttackWeakest",
+     "threshold": 7.0, "priority": 10, "cooldown": 5.0}
+  ]
+}

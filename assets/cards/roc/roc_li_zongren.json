@@ -19,6 +19,7 @@
     "mobility": 58,
     "moraleAura": 88
   },
+  "signatureDoctrineId": "taierzhuang_lure",
   "signatureDoctrine": {
     "name": "台兒莊誘敵",
     "trigger": "Outnumbered",

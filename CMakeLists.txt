@@ -433,6 +433,7 @@ add_library(Campaign STATIC
     Campaign/FateExchange.cpp
     Campaign/NoBattleResolver.cpp
     Campaign/EndingPage.cpp
+    Campaign/PlayerDeck.cpp
 )
 target_include_directories(Campaign PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(Campaign PUBLIC Gameplay)
@@ -997,6 +998,11 @@ add_executable(DoctrineLibraryTest Examples/DoctrineLibraryTest.cpp)
 target_include_directories(DoctrineLibraryTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(DoctrineLibraryTest Gameplay)
 
+# G-2 牌庫掠奪無頭測試（signature 卡解鎖/強化/轉資源/存檔聚合）
+add_executable(PlayerDeckTest Examples/PlayerDeckTest.cpp)
+target_include_directories(PlayerDeckTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(PlayerDeckTest Campaign)
+
 # E-4 無戰章節敘事與結算無頭測試（和平語域/章尾鉤/結局軌跡）
 add_executable(NoBattleNarrativeTest Examples/NoBattleNarrativeTest.cpp)
 target_include_directories(NoBattleNarrativeTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1262,6 +1268,7 @@ set(POTATO_TESTS
     EndingPageTest
     NarrativePackTest
     DoctrineLibraryTest
+    PlayerDeckTest
 )
 foreach(test_name IN LISTS POTATO_TESTS)
     if(TARGET ${test_name})
