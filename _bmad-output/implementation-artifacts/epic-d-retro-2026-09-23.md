@@ -114,6 +114,8 @@ banned 函式乾淨；Gameplay↛Campaign 依賴方向守住（新類只收 int�
 
 *（全部為提案——retro 不自動套用修復；人決定哪些進 dev loop）*
 
+**落地追蹤（2026-09-23 更新）**：item 2/3/4 已由 `30d2475` 實作——CheckOutcome/DetectGovernanceEvents 第三方隊隔離、MythIncursion 全組（kind/座標驗證、latch 先行、re-Arm Reveal、Disarm、spirit 回填、cellSize 單位）、Feed 有限性重夾+空鍵早退+FromJson 空 id 跳過、FateOption.known、Detach 歸零、radius 保底、theme 夾取。MythIncursionTest +[7] 強化組 16 格，66/66 雙工具鏈全綠。item 1（採用 story）、5-7（流程規則/補測試）仍 open。
+
 ### 優先：補採用層（AV-1 直接對應）
 
 1. **[新 story 提案] D-6 神話層 playable 採用** — owner: dev session
