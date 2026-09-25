@@ -431,6 +431,7 @@ add_library(Campaign STATIC
     Campaign/ChapterLibrary.cpp
     Campaign/Governance.cpp
     Campaign/MythLayer.cpp
+    Campaign/PeaceHazard.cpp
     Campaign/FateExchange.cpp
     Campaign/NoBattleResolver.cpp
     Campaign/EndingPage.cpp
@@ -927,6 +928,15 @@ add_executable(MythLayerTest Examples/MythLayerTest.cpp)
 target_include_directories(MythLayerTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(MythLayerTest Campaign)
 
+# PPAH 和平/崩壞首達時層：無頭驗證 + Monte-Carlo 模擬工具
+add_executable(PeaceHazardTest Examples/PeaceHazardTest.cpp)
+target_include_directories(PeaceHazardTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(PeaceHazardTest Campaign)
+
+add_executable(PeaceDynamicsSim Examples/PeaceDynamicsSim.cpp)
+target_include_directories(PeaceDynamicsSim PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(PeaceDynamicsSim Campaign)
+
 # D-2 神社與精靈實體無頭測試（佔領觸發/選擇入帳/favor 回呼接線）
 add_executable(ShrineFieldTest Examples/ShrineFieldTest.cpp)
 target_include_directories(ShrineFieldTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1284,6 +1294,7 @@ set(POTATO_TESTS
     GovernanceTest
     GovernanceFieldTest
     MythLayerTest
+    PeaceHazardTest
     ShrineFieldTest
     FateExchangeTest
     MythIncursionTest

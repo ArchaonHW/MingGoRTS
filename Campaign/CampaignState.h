@@ -18,6 +18,7 @@
 #include "Campaign/ChapterState.h"
 #include "Campaign/Governance.h"
 #include "Campaign/MythLayer.h"
+#include "Campaign/PeaceHazard.h"
 #include "Campaign/PlayerDeck.h"
 #include "Gameplay/CampaignLedger.h"
 #include "Gameplay/RefitCamp.h"
@@ -47,6 +48,9 @@ public:
     // G-2 玩家牌庫：deck=科技樹，掠奪敵將 signature 卡成長
     PlayerDeck& Deck() { return deck; }
     const PlayerDeck& Deck() const { return deck; }
+    // PPAH 和平/崩壞競爭風險層：章節邊界抽樣首達吸收態
+    PeaceHazard& Peace() { return peace; }
+    const PeaceHazard& Peace() const { return peace; }
 
     // 弧/章節id/已收服戰線（章節序由帳本管，AdvanceChapter 同步）
     ChapterState chapter;
@@ -66,6 +70,7 @@ private:
     Governance governance;      // C-2 戰役治理帳（governance 段）
     MythLayer myth;             // D-1 滲透狀態機（myth_layer 段）
     PlayerDeck deck;            // G-2 牌庫掠奪（player_deck 段）
+    PeaceHazard peace;          // PPAH 首達時層（peace_hazard 段）
 };
 
 } // namespace Campaign
