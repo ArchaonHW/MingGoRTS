@@ -434,6 +434,7 @@ add_library(Campaign STATIC
     Campaign/NoBattleResolver.cpp
     Campaign/EndingPage.cpp
     Campaign/PlayerDeck.cpp
+    Campaign/TutorialFlow.cpp
 )
 target_include_directories(Campaign PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(Campaign PUBLIC Gameplay)
@@ -1014,6 +1015,11 @@ add_executable(PlayerDeckTest Examples/PlayerDeckTest.cpp)
 target_include_directories(PlayerDeckTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(PlayerDeckTest Campaign)
 
+# G-5 教學章節無頭測試（tutor 解析/序列驗證/亂序拒絕/pack 文案）
+add_executable(TutorialFlowTest Examples/TutorialFlowTest.cpp)
+target_include_directories(TutorialFlowTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(TutorialFlowTest Campaign)
+
 # E-4 無戰章節敘事與結算無頭測試（和平語域/章尾鉤/結局軌跡）
 add_executable(NoBattleNarrativeTest Examples/NoBattleNarrativeTest.cpp)
 target_include_directories(NoBattleNarrativeTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1282,6 +1288,7 @@ set(POTATO_TESTS
     NarrativePackTest
     DoctrineLibraryTest
     PlayerDeckTest
+    TutorialFlowTest
 )
 foreach(test_name IN LISTS POTATO_TESTS)
     if(TARGET ${test_name})

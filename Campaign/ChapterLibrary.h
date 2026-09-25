@@ -78,6 +78,11 @@ struct ChapterDef {
     std::string next;       // 預設下一章 id（可空）
     NoBattleDef noBattle;   // 無戰路徑定義（可選欄位，全預設=純戰鬥章節）
     IncursionDef incursion; // 神話入侵定義（可選欄位，預設=不入侵）
+    // G-5 教學章節："tutor": true → 正典四步；或
+    // {"tutor": {"steps": ["pick_card","deploy",...]}} 自訂序列
+    // （須為正典序的子序列，見 TutorialFlow::CanonicalSteps）
+    bool tutor = false;
+    std::vector<std::string> tutorSteps;
 
     std::vector<std::string> warnings; // 降級記錄（機器可讀）
 

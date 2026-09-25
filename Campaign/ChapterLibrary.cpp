@@ -202,6 +202,40 @@ bool ChapterDef::LoadFromString(const std::string& json) {
             }
         }
     }
+
+    // tutor（G-5）：可選欄位，缺欄=一般章節。
+    //   "tutor": true                        → 正典四步序列
+    //   "tutor": {"steps": ["id", ...]}      → 自訂序列
+    // 步 id 非字串/空字串 → 警告略過該步；序列合法性由
+    // TutorialFlow::Validate 判斷（此處只管解析）。
+    {
+        const JsonValue& tv = root["tutor"];
+        if (tv.IsBool() && tv.AsBool()) {
+            tutor = true; // 空 steps = 正典序列（TutorialFlow 兜底）
+        } else if (tv.IsBool()) {
+            // tutor:false = 一般章節，無需記錄
+        } else if (tv.IsNull()) {
+            // 缺欄 = 一般章節
+        } else if (!tv.IsObject()) {
+            warnings.push_back("tutor 型別非布林/物件，略過");
+        } else {
+            tutor = true;
+            const JsonValue& sv = tv["steps"];
+            if (!sv.IsArray() || sv.AsArray().empty()) {
+                warnings.push_back(
+                    "tutor.steps 缺欄或空陣列，用正典序列");
+            } else {
+                for (const JsonValue& s : sv.AsArray()) {
+                    if (!s.IsString() || s.AsString().empty()) {
+                        warnings.push_back(
+                            "tutor.steps 含非字串/空步，略過");
+                        continue;
+                    }
+                    tutorSteps.push_back(s.AsString());
+                }
+            }
+        }
+    }
     return true;
 }
 

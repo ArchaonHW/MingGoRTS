@@ -1,0 +1,40 @@
+{
+  "schema": "potato.narrative_pack/1",
+  "entries": [
+    {
+      "id": "tutorial.step.pick_card",
+      "zh-TW": "先寫軍令：選一張 doctrine 卡配給麾下小隊——令出自動行。",
+      "en": "Write your first order: assign a doctrine card to a squad — it executes itself.",
+      "register": "human",
+      "tags": ["tutorial"]
+    },
+    {
+      "id": "tutorial.step.deploy",
+      "zh-TW": "部署：把小隊放上橋頭陣地，旗語已定。",
+      "en": "Deploy: place your squad on the bridgehead; the banners are set.",
+      "register": "human",
+      "tags": ["tutorial"]
+    },
+    {
+      "id": "tutorial.step.watch_trigger",
+      "zh-TW": "觀敵：看 doctrine 依條件自行觸發——見敵即擊，不待中軍。",
+      "en": "Observe: watch the doctrine trigger on its own condition — attack on sight, no orders needed.",
+      "register": "human",
+      "tags": ["tutorial"]
+    },
+    {
+      "id": "tutorial.step.cp_intervene",
+      "zh-TW": "干預：按一次 CP 強令凌駕 doctrine——將在外，君命亦可至。",
+      "en": "Intervene: spend CP once to override doctrine — the general's hand still reaches the field.",
+      "register": "human",
+      "tags": ["tutorial"]
+    },
+    {
+      "id": "tutorial.done",
+      "zh-TW": "教學畢。此後各章節皆依此法——軍令狀自己寫。",
+      "en": "Tutorial complete. Every chapter hence works the same — write your own standing orders.",
+      "register": "human",
+      "tags": ["tutorial", "closing"]
+    }
+  ]
+}

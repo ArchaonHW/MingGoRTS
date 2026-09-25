@@ -1,0 +1,12 @@
+{
+    "schema": "potato.campaign_chapter/1",
+    "id": "tutorial_01",
+    "name": "初陣",
+    "arc": 0,
+    "chapter": 1,
+    "map": "maps/duanqiao.json",
+    "enemy_deck": "",
+    "next": "duanqiao",
+    "tutor": {"steps": ["pick_card", "deploy", "watch_trigger", "cp_intervene"]},
+    "note": "G-5 教學章：軍閥弧首章——核心迴路引導（選卡→部署→觸發→介入），可跳過；引導文案走 narrative pack tutorial.step.*"
+}
