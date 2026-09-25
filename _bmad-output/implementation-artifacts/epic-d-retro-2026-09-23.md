@@ -116,6 +116,8 @@ banned 函式乾淨；Gameplay↛Campaign 依賴方向守住（新類只收 int�
 
 **落地追蹤（2026-09-23 更新）**：item 2/3/4 已由 `30d2475` 實作——CheckOutcome/DetectGovernanceEvents 第三方隊隔離、MythIncursion 全組（kind/座標驗證、latch 先行、re-Arm Reveal、Disarm、spirit 回填、cellSize 單位）、Feed 有限性重夾+空鍵早退+FromJson 空 id 跳過、FateOption.known、Detach 歸零、radius 保底、theme 夾取。MythIncursionTest +[7] 強化組 16 格，66/66 雙工具鏈全綠。item 1（採用 story）、5-7（流程規則/補測試）仍 open。
 
+**落地追蹤（2026-09-25 更新）**：item 1 已由 `6e132a1` 落地（D-6 採用接線：ShrineField/FateExchange/MythIncursion/MythLog 全進 playable，內容補兩祠+incursion 塊，103/103 雙工具鏈）。item 5/6 已由 `2e20bba`+`277aa6b` 固化（AGENTS.md hash-object staged 法+採用閘門規則）；item 7 的 BattleSceneTest 補斷言同入 `2e20bba`（+[15][16] 滲透 FX/陣風）。剩餘已知限制：MythLog 持久化屬 C-5；整合層無無頭測試縫（沿用既有記錄）。**全部 action items 已清零。**
+
 ### 優先：補採用層（AV-1 直接對應）
 
 1. **[新 story 提案] D-6 神話層 playable 採用** — owner: dev session

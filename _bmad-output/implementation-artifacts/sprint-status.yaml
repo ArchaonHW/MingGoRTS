@@ -75,6 +75,7 @@ development_status:
   d-3-fate-conversion: done
   d-4-myth-incursion-events: done
   d-5-seepage-visual-consumer: done
+  d-6-myth-adoption: done  # retro action item 1：採用接線 6e132a1
   # retro 2026-09-23 已執行（verdict: accepted-with-open-items）
   # ref: _bmad-output/implementation-artifacts/epic-d-retro-2026-09-23.md
   # 腳本 sprint_status.py 不支援字母 epic key——手寫維護

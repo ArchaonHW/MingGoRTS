@@ -1072,6 +1072,20 @@ queue:
     size: L
     note: 三路審查補丁後 33/33 雙工具鏈；producer 注壓/縮放 dt/audioLevel 單源/BackgroundDrawList 已修
 
+  - id: D-6
+    title: 神話層採用接線（playable 消費端）
+    source: epic-d-retro-2026-09-23 action item 1 + spec-d6-myth-adoption.md
+    summary: >
+      D-2/D-3/D-4 機械層死碼修復：ShrineField 接神社互動
+      （favor 生產端）、FateExchange 兌換面板、MythIncursion
+      章節驅動暫停抉擇窗、MythLog 神蹟錄；內容補兩祠+incursion 塊。
+    acceptance:
+      - 四系統皆有 playable 消費者（採用閘門）
+      - 全量 CTest 綠、banned 乾淨
+    status: done
+    size: M
+    note: 已落地 6e132a1；103/103 雙工具鏈。MythLog 持久化留 C-5；整合無無頭縫屬已知限制
+
   # ---- 層級 L：帳本機械化（區塊鏈與會計概念，2026-09-19）----
   - id: L-1
     title: 複式記帳分錄層（五帳戶借貸平衡）

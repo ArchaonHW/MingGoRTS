@@ -1,6 +1,6 @@
 # Spec: D-6 神話層採用接線（playable 消費端）
 
-- 狀態：draft
+- 狀態：done（6e132a1，2026-09-25）
 - 來源：epic-d-retro-2026-09-23 action item 1——D-2/D-3/D-4 機械層單測全綠但無 playable 消費者（死碼三連）
 - 前置：D-1~D-5 done；retro 強化包 9debcf5（第三方隊隔離/生命期/契約修復）
 
@@ -85,3 +85,17 @@
 - DuanqiaoPlayable 是平行 session 熱區——所有接線集中單檔，分批小 commit
 - SetEventCallback 單槽：若平行 session 改動回呼結構，加 MythLog.Record 的行要重對齊
 - 整合無無頭測試縫（retro 已知限制）——驗收靠 playable 人工跑+全量 CTest 不迴歸
+
+## Review Log（2026-09-25 實作後補記）
+
+- 實作 commit：`6e132a1`（DuanqiaoPlayable +243、兩 assets）
+- Ask First 採用提案值：神社三選一內嵌不暫停；spawnPos=「南岸敵營」pin fallback 場心；kind=fox_rumor
+- 帳目設計：FateEvent→帳鏈分錄 debit=Civil / credit=Fate（天命帳扣費）/source=Myth，amount=夾取後 gain（record-is-truth）
+- 境靈綁定策略：距「斷橋」pin 最近的 shrine 守護靈 = 區域靈（橋姬）——內容驅動不寫死
+- 暫停語義：IncursionEvent 回呼設 paused=true，Update 在暫停中不餵——抉擇窗期間窗口凍結，符合 MythIncursion 標頭契約
+- 發現修正：LedgerAccount 無 Myth 帳戶（列舉是 Martial/Civil/Fate/Army/Supply）——credit 用 Fate
+- 驗證：MSVC+MinGW 建置過、CTest 103/103、banned 乾淨；整合層無無頭縫（已知限制）
+
+## Suggested Review Order
+
+`DuanqiaoPlayable.cpp`（接線主體）→ `assets/maps/duanqiao.json`（兩祠）→ `assets/campaign/duanqiao.json`（incursion 塊）
