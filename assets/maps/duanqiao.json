@@ -34,7 +34,13 @@
     {"type": "village", "pos": [4.0, 4.0], "radius": 2.0,
      "note": "北岸村落：我軍進駐即佔領（治理：村莊佔領）"},
     {"type": "convoy", "pos": [4.0, 11.0], "radius": 2.0,
-     "note": "輜重道：我軍進駐即護輜（治理：護輜）"}
+     "note": "輜重道：我軍進駐即護輜（治理：護輜）"},
+    {"type": "shrine", "pos": [5.0, 5.0], "radius": 2.0,
+     "spirit": "河伯", "offering": "北岸新穀",
+     "note": "河伯祠：北岸偵查路徑上的水神小祠（D-2 神社互動）"},
+    {"type": "shrine", "pos": [13.5, 9.0], "radius": 2.0,
+     "spirit": "橋姬", "offering": "斷桅殘片",
+     "note": "橋姬祠：渡口南岸端的橋靈祠（D-2 神社互動）"}
   ],
   "convoys": [
     {"id": "supply-1", "team": 0,

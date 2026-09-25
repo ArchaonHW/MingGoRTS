@@ -38,6 +38,10 @@
 #include "Gameplay/SquadTemplate.h"
 #include "Gameplay/QuantumFog.h"
 #include "Gameplay/SeepageStage.h"
+#include "Gameplay/ShrineField.h"
+#include "Gameplay/MythIncursion.h"
+#include "Gameplay/MythLog.h"
+#include "Campaign/FateExchange.h"
 #include "Gameplay/BattleCommandAI.h"
 #include "Audio/AudioSystem.h"
 #include "Audio/AudioCues.h"
@@ -603,6 +607,12 @@ int main() {
     // 殼層持有跨章節累積；不進 campaign 存檔（schema 不變），
     // 啟動時以持久民心開帳、勝場於結算補記武功/軍威分錄。
     Gameplay::LedgerChain campaignChain;
+    // D-6 採用接線：神蹟錄與天命兌換器（殼層跨場持有）。
+    // MythLog session 級不進存檔（持久化屬 C-5 範疇）；
+    // FateExchange 綁 CampaignState 聚合體——引用跨存檔穩定。
+    Gameplay::MythLog mythLog;
+    Campaign::FateExchange fateExchange;
+    fateExchange.Bind(campaign.Myths(), campaign.Gov());
     SquadTemplateLibrary campLibrary;
     // C-3 目錄整併：舊 templates/ 已併入 squads/，單一目錄載入
     campLibrary.LoadDir(DemoAssets::Resolve("squads"));
@@ -611,7 +621,10 @@ int main() {
     // UX「滲透聲先於形」;升階瞬間放 seepage_up cue。
     // CampaignState::LoadFromFile 會保留此回呼(跨存檔重置存活)
     int seepageAudioLv = 0;
-    campaign.Myths().SetEventCallback([&](const MythEvent&) {
+    campaign.Myths().SetEventCallback([&](const MythEvent& ev) {
+        // D-6：升階事件同步入神蹟錄——單槽回呼共用，
+        // 音景與記錄同一來源（見檔頭 MythLog 接線註）
+        mythLog.Record(ev.shrine, ev.spirit, ev.when, ev.detail);
         int mx = 0;
         for (const auto& [r, lv] : campaign.Myths().Levels()) {
             mx = (std::max)(mx, static_cast<int>(lv));
@@ -985,6 +998,86 @@ int main() {
     bool prevL = false, prevR = false, prevSpace = false, prevEsc = false;
     double prevTime = glfwGetTime();
 
+    // ---- D-6 神話層採用接線（retro：D-2/D-3/D-4 機械層死碼修復）----
+    // 境靈綁定：距渡口最近的 shrine 守護靈註冊為區域靈——
+    // favor 錢包中立 50 起帳，SpiritOf 供入侵具名
+    if (campaign.Myths().SpiritOf(seepageRegion).empty()) {
+        const MapPin* fordPin = map.FindPin("斷橋");
+        float best = 1e9f;
+        std::string spirit;
+        for (const auto& it : map.GetInteractables()) {
+            if (it.type != "shrine" || it.spirit.empty()) continue;
+            const float d = fordPin
+                ? (it.pos - fordPin->pos).LengthSquared() : 0.0f;
+            if (d < best) { best = d; spirit = it.spirit; }
+        }
+        if (!spirit.empty()) {
+            campaign.Myths().BindSpirit(seepageRegion, spirit);
+        }
+    }
+
+    // D-2：神社駐點——發現事件入戰報，favor 是唯一生產端
+    ShrineField shrineField;
+    shrineField.Bind(map.GetInteractables());
+    shrineField.SetEventCallback([&](const std::string& m) {
+        eventLog.push_back(m);
+        if (eventLog.size() > 8) eventLog.pop_front();
+        recorder.AddRecord(battle.GetElapsed(), m);
+    });
+    shrineField.SetFavorCallback(
+        [&](const std::string& spirit, float delta) {
+            campaign.Myths().AdjustFavor(spirit, delta);
+        });
+
+    // D-3：兌換入帳——FateEvent→帳鏈 Myth 分錄（gain=實得量，
+    // record-is-truth）；每場額度歸零
+    fateExchange.SetEventCallback([&](const Campaign::FateEvent& e) {
+        Gameplay::LedgerEntry le;
+        le.debit = Gameplay::LedgerAccount::Civil;
+        le.credit = Gameplay::LedgerAccount::Fate; // 扣天命帳
+        le.amount = (int)std::lround(e.gain);
+        le.memo = "天命兌換——" + e.spirit + "→" +
+                  Campaign::FateTargetName(e.target);
+        le.prov.source = Gameplay::EntrySource::Myth;
+        campaignChain.Append(le);
+    });
+    fateExchange.ResetBattleUses();
+
+    // D-4：神話入侵——章節定義塊驅動；觸發暫停出示抉擇窗
+    MythIncursion incursion;
+    if (const Campaign::ChapterDef* cdef =
+            chapters.Find(campaign.chapter.chapterId);
+        cdef && cdef->incursion.enabled) {
+        IncursionKind ik;
+        if (ParseIncursionKind(cdef->incursion.kind, ik)) {
+            // 現身點：南岸敵營 pin，fallback 渡口場心
+            Vector2 ipos(12.0f, 7.5f);
+            if (const MapPin* p = map.FindPin("南岸敵營")) {
+                ipos = p->pos;
+            }
+            incursion.Arm(cdef->incursion.seepage, ik, ipos);
+        }
+    }
+    incursion.SetIncursionCallback(
+        [&](const IncursionEvent& e) {
+            mythLog.Record(e.shrine, e.spirit, e.when, e.detail);
+            paused = true; // 暫停出示抉擇窗
+        });
+    incursion.SetOutcomeCallback([&](const OutcomeEvent& e) {
+        if (e.pacified) {
+            campaign.Gov().AdjustPopularSupport(3.0f);
+        } else {
+            // 忽視神蹟=任滲透蔓延——注壓同暴行量級
+            campaign.Myths().Feed(e.region,
+                                  GovernanceEvent::Atrocity);
+        }
+    });
+    incursion.SetEventCallback([&](const std::string& m) {
+        eventLog.push_back(m);
+        if (eventLog.size() > 8) eventLog.pop_front();
+        recorder.AddRecord(battle.GetElapsed(), m);
+    });
+
     std::printf("斷橋可玩 demo — 左鍵選取,右鍵下令(CP),Space 暫停\n");
 
     // F-3：HUD 密度（title 設定頁可改，進場時鎖成本場值）
@@ -1234,6 +1327,20 @@ int main() {
         // A-1/A-3/A-4 治理源：佔領/焚村/護輜由 GovernanceField
         // 追蹤（地圖知識在此層），事件經 battle 入帳
         govField.Update(dt, battle);
+
+        // D-6：神社發現掃描（我軍進駐半徑→三選一待決）+
+        //      神話入侵驅動。暫停中不呼叫 incursion.Update——
+        //      抉擇窗期間窗口凍結（標頭契約：暫停勿餵 Update）
+        if (battle.GetPhase() == BattlePhase::Execution) {
+            shrineField.Update(battle);
+            if (!paused) {
+                incursion.Update(
+                    dt * battle.GetTimeScale(), battle,
+                    (int)campaign.Myths().Level(seepageRegion),
+                    seepageRegion,
+                    campaign.Myths().SpiritOf(seepageRegion));
+            }
+        }
 
         // ---- 渲染 ----
         { // U-1:clear color 跟主題走（D-5：Manifest 期間跟覆寫主題）
@@ -1511,6 +1618,129 @@ int main() {
                 }
                 ImGui::End();
             }
+        }
+
+        // ---- D-6 神社互動：發現後三選一（內嵌不暫停，
+        //      神社抉擇不打斷指揮節奏）----
+        for (const auto& sh : shrineField.GetShrines()) {
+            if (!shrineField.IsPending(sh.mapIndex)) continue;
+            const std::string wname =
+                "神社##" + std::to_string(sh.mapIndex);
+            ImGui::SetNextWindowPos(
+                ImVec2(ww * 0.5f - UITheme::Px(150, uiScale),
+                       wh * 0.62f),
+                ImGuiCond_FirstUseEver);
+            ImGui::Begin(wname.c_str(), nullptr,
+                         ImGuiWindowFlags_NoCollapse |
+                             ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::TextWrapped(
+                "%s 祠前——供品：%s",
+                sh.spirit.empty() ? "境靈" : sh.spirit.c_str(),
+                sh.offering.empty() ? "無" : sh.offering.c_str());
+            const float bw = UITheme::Px(88, uiScale);
+            if (ImGui::Button("安撫", ImVec2(bw, 0))) {
+                shrineField.ApplyChoice(sh.mapIndex,
+                                        ShrineChoice::Appease);
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("挑釁", ImVec2(bw, 0))) {
+                shrineField.ApplyChoice(sh.mapIndex,
+                                        ShrineChoice::Provoke);
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("獻祭", ImVec2(bw, 0))) {
+                shrineField.ApplyChoice(sh.mapIndex,
+                                        ShrineChoice::Offer);
+            }
+            ImGui::End();
+        }
+
+        // ---- D-6 神蹟示現：入侵待決窗（觸發回呼已自動暫停，
+        //      Update 暫停凍結窗口；逾時僅在未暫停時發生）----
+        if (incursion.GetIncursion().pending) {
+            const IncursionState& ist = incursion.GetIncursion();
+            ImGui::SetNextWindowPos(
+                ImVec2(ww * 0.5f - UITheme::Px(160, uiScale),
+                       wh * 0.40f),
+                ImGuiCond_Always);
+            ImGui::Begin("神蹟示現", nullptr,
+                         ImGuiWindowFlags_NoCollapse |
+                             ImGuiWindowFlags_AlwaysAutoResize);
+            ImGui::TextWrapped("%s·%s", ist.spirit.c_str(),
+                               IncursionKindName(ist.kind));
+            ImGui::TextDisabled("抉擇窗口剩 %.0f 秒",
+                                ist.windowLeft);
+            if (ImGui::Button("安撫（鬼神退散）",
+                              ImVec2(-1, UITheme::Px(26, uiScale)))) {
+                if (incursion.Resolve(true)) paused = false;
+            }
+            if (ImGui::Button("忽視（幻影留存）",
+                              ImVec2(-1, UITheme::Px(26, uiScale)))) {
+                if (incursion.Resolve(false)) paused = false;
+            }
+            ImGui::End();
+        }
+
+        // ---- D-6 天命兌換：神明 favor → 民心/秩序——
+        //      灰顯原因全透明（known/affordable/戰中額度）----
+        if (battle.GetOutcome() == BattleOutcome::Ongoing) {
+            const bool inBattle =
+                battle.GetPhase() == BattlePhase::Execution;
+            // 通神靈集=地圖 shrine 靈名去重——未聞名也列出
+            std::vector<std::string> spirits;
+            for (const auto& it : map.GetInteractables()) {
+                if (it.type == "shrine" && !it.spirit.empty() &&
+                    std::find(spirits.begin(), spirits.end(),
+                              it.spirit) == spirits.end()) {
+                    spirits.push_back(it.spirit);
+                }
+            }
+            ImGui::SetNextWindowPos(
+                ImVec2(ww - UITheme::Px(250, uiScale) - 8.0f, 8.0f),
+                ImGuiCond_FirstUseEver);
+            ImGui::Begin("天命兌換", nullptr,
+                         ImGuiWindowFlags_NoCollapse |
+                             ImGuiWindowFlags_AlwaysAutoResize);
+            if (inBattle) {
+                ImGui::TextDisabled("戰中額度 %d/%d",
+                    Campaign::FateExchange::kMaxBattleUses -
+                        fateExchange.BattleUses(),
+                    Campaign::FateExchange::kMaxBattleUses);
+            }
+            if (spirits.empty()) {
+                ImGui::TextDisabled("場上無祠可通神");
+            }
+            for (const auto& sp : spirits) {
+                ImGui::Text("%s  天命 %.0f", sp.c_str(),
+                            campaign.Myths().Favor(sp));
+                const auto opts = fateExchange.Options(sp);
+                for (const auto& o : opts) {
+                    const bool usable =
+                        o.known && o.affordable &&
+                        (!inBattle || o.battleUsesLeft);
+                    char lbl[64];
+                    std::snprintf(lbl, sizeof(lbl), "%s +%.0f",
+                                  Campaign::FateTargetName(o.target),
+                                  o.gain);
+                    if (!usable) {
+                        ImGui::PushStyleColor(
+                            ImGuiCol_Button,
+                            ImVec4(0.25f, 0.25f, 0.28f, 1.0f));
+                    }
+                    const bool pressed = ImGui::Button(
+                        lbl, ImVec2(UITheme::Px(110, uiScale), 0));
+                    if (!usable) ImGui::PopStyleColor();
+                    if (pressed && usable) {
+                        fateExchange.Convert(sp, o.target, inBattle);
+                    }
+                }
+                // 灰顯原因列一行（兩項共用同一綁定/favor 判定）
+                if (!opts.empty() && !opts.at(0).reason.empty() &&
+                    (!opts.at(0).known || !opts.at(0).affordable)) {
+                    ImGui::TextDisabled("%s", opts.at(0).reason.c_str());
+                }
+            }
+            ImGui::End();
         }
 
         // ---- T-9 回合層:作戰計畫視窗(三欄:小隊/卡槽/編輯器)----
@@ -2023,6 +2253,16 @@ int main() {
             ImGui::Columns(1);
             ImGui::Separator();
 
+            // D-6：神蹟錄——具名神話事件證詞（MythLog 殼層
+            // session 級；持久化屬 C-5 EndingPage 範疇）
+            if (mythLog.Count() > 0) {
+                ImGui::TextDisabled("神蹟錄");
+                for (const auto& line : mythLog.TestimonyLines()) {
+                    ImGui::TextWrapped("%s", line.c_str());
+                }
+                ImGui::Separator();
+            }
+
             // 回放時間軸:拖曳跳到事件點
             ImGui::Text("回放時間軸(%zu 則)", recorder.Count());
             ImGui::SliderFloat("##timeline", &replayCursor, 0.0f, maxT,
@@ -2177,6 +2417,7 @@ int main() {
 
     battle.BindFog(nullptr); // fog 是 local,先於 battle 解構——解綁防懸空
     battle.BindPlan(nullptr); // plan 同為 local——一併解綁
+    incursion.Disarm(); // D-6：跨場清 ghost/fog 指標,防 UAF
 
         } // ---- 戰鬥場次 scope 結束:battle/fog/scene 全數析構 ----
         screen = renderer.ShouldClose() ? ShellScreen::Quit
