@@ -11,8 +11,14 @@ spring:
     password: ""
   jpa:
     hibernate:
-      ddl-auto: update
+      # schema 由 Flyway(db/migration)管理;Hibernate 只驗證 entity 與表一致
+      ddl-auto: validate
     open-in-view: false
+  flyway:
+    enabled: true
+    # 既有 ddl-auto 建的 DB 無 flyway_schema_history——baseline 至 V1
+    # 視為已套用,只跑後續遷移;全新 DB 則正常套用 V1
+    baseline-on-migrate: true
   jackson:
     parser:
       # Reject JSON documents with duplicate keys (e.g. two "schema" fields).

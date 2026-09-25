@@ -69,3 +69,22 @@ jobs:
       run: |
         cd build
         ctest --output-on-failure
+
+  services-test:
+    name: Java Services
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: services
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Setup JDK 21
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '21'
+        cache: maven
+    - name: Maven test (all service modules)
+      run: mvn -B test
