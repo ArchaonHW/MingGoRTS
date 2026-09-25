@@ -3,7 +3,7 @@
 //       怒神壓力加成、跳階各錄一筆、DeriveFrom 跨章重推導、
 //       JSON roundtrip、缺段降級、渲染唯讀、CampaignState 整合
 #include "Campaign/CampaignState.h"
-#include "Campaign/JsonWriter.h"
+#include "Serialization/JsonWriter.h"
 #include "Campaign/MythLayer.h"
 #include "Gameplay/GovernanceEvent.h"
 #include "Gameplay/MythLog.h"
@@ -280,7 +280,7 @@ int main() {
             Check(root.objectValue.erase("myth_layer") == 1,
                   "myth_layer 段已剝除");
             std::ofstream f(kLegacy, std::ios::trunc);
-            f << WriteJson(root);
+            f << Potato::WriteJson(root);
         }
         CampaignState legacy;
         Check(legacy.LoadFromFile(kLegacy), "缺段舊檔照載");
@@ -303,7 +303,7 @@ int main() {
         MythLayer a, b;
         Check(a.FromJson(JsonValue::Parse(j1)), "a 載入(渡先神後)");
         Check(b.FromJson(JsonValue::Parse(j2)), "b 載入(神先渡後)");
-        Check(WriteJson(a.ToJson()) == WriteJson(b.ToJson()),
+        Check(Potato::WriteJson(a.ToJson()) == Potato::WriteJson(b.ToJson()),
               "ToJson 位元組與插入序無關");
 
         // DeriveFrom 事件序確定：排序鍵迭代 → 同序轉換記錄
@@ -326,7 +326,7 @@ int main() {
         big.type = JsonValue::Type::Object;
         big.objectValue["p"] = JsonValue::Number(1234567.8901234567);
         JsonValue back;
-        Check(JsonValue::ParseOk(WriteJson(big), back),
+        Check(JsonValue::ParseOk(Potato::WriteJson(big), back),
               "解析最短 roundtrip 輸出");
         Check(back["p"].AsNumber() == 1234567.8901234567,
               "大數值 roundtrip 無損（%g 六位會截斷）");

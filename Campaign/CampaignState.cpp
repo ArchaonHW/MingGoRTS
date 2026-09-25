@@ -1,6 +1,6 @@
 #include "Campaign/CampaignState.h"
 
-#include "Campaign/JsonWriter.h"
+#include "Serialization/JsonWriter.h"
 #include "Logging/Logger.h"
 
 #include <filesystem>

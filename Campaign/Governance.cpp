@@ -1,6 +1,6 @@
 #include "Campaign/Governance.h"
 
-#include "Campaign/JsonWriter.h"
+#include "Serialization/JsonWriter.h"
 
 #include <algorithm>
 #include <cmath>

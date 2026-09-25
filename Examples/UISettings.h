@@ -6,7 +6,7 @@
 // theme 存 int 序數——本檔不引入 UITheme::Id 以外的狀態型別。
 
 #include "Serialization/JsonParser.h"
-#include "Campaign/JsonWriter.h"
+#include "Serialization/JsonWriter.h"
 #include "UITheme.h"
 #include "HUDDensity.h"
 
@@ -46,7 +46,7 @@ inline bool Save(const std::string& path, const Data& d) {
     {
         std::ofstream f(tmp, std::ios::trunc);
         if (!f) return false;
-        f << Potato::Campaign::WriteJson(root);
+        f << Potato::WriteJson(root);
         if (!f.good()) return false;
     }
     // tmp+rename 原子替換；Windows rename 不覆蓋，先移除目標

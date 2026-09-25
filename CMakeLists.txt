@@ -412,6 +412,7 @@ add_library(Gameplay STATIC
     Gameplay/NoBattleAdvantage.cpp
     Gameplay/SubversionDefect.cpp
     Gameplay/CardValidator.cpp
+    Gameplay/CardEditor.cpp
     Gameplay/BattleCommandAI.cpp
     Gameplay/BattleCommandEnv.cpp
     Gameplay/NarrativePack.cpp
@@ -995,6 +996,15 @@ target_link_libraries(CardValidator Gameplay)
 add_executable(CardValidatorTest Examples/CardValidatorTest.cpp)
 target_include_directories(CardValidatorTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(CardValidatorTest Gameplay)
+
+# G-3 敵將編輯器存回半邊：編輯 CLI + 無頭測試
+add_executable(CardEditor Examples/CardEditor.cpp)
+target_include_directories(CardEditor PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(CardEditor Gameplay)
+
+add_executable(CardEditorTest Examples/CardEditorTest.cpp)
+target_include_directories(CardEditorTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(CardEditorTest Gameplay)
 # C-5 四手結局生成無頭測試（帳目聚合/無字/對手之筆/證詞）
 add_executable(EndingPageTest Examples/EndingPageTest.cpp)
 target_include_directories(EndingPageTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1284,6 +1294,7 @@ set(POTATO_TESTS
     NoBattleAdvantageTest
     SubversionDefectTest
     CardValidatorTest
+    CardEditorTest
     EndingPageTest
     NarrativePackTest
     DoctrineLibraryTest
