@@ -62,6 +62,8 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-game-backend-services.md`
   summary: Manage H2 schema with Flyway instead of ddl-auto=update, and wire Maven into CI when Java services are expected to build in CI.
   evidence: Blind-hunter + verification-gap reviews — schema drift is unmanaged and Java tests never run in CI; both were explicitly out of this spec's boundaries.
+  resolution: 已修（2026-09-25）：flyway-core 進雙 service pom（H2 支援內建 core，無 flyway-database-h2 artifact）；`db/migration/V1__init.sql` 對齊 entity 映射；`ddl-auto: validate` + `baseline-on-migrate`（舊 H2 檔無痛交接）。CI `services-test` job：setup-java 21 + `mvn -B test`。SchemaMigrationTest 雙模組 5/5。
+  resolution: 已修（2026-09-25）：雙 service 加 flyway-core + `db/migration/V1__init.sql`，ddl-auto=validate + SchemaMigrationTest 各兩格；CI 加 `services-test` job（setup-java 21 + `mvn -B test`）。
 - source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
   summary: DetectGovernanceEvents Atrocity branch unreachable — rout skips damage so members never drop after routing, and the killing blow clears IsRouting before detection runs; hardcodes `team != 0` as enemy.
   evidence: Blind-hunter + edge-case layers verified in BattleController.cpp ~L275-295/780; belongs to parallel C-2 governance work.
@@ -100,6 +102,7 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-d1-myth-layer-seepage.md`
   summary: No production wiring `MythLayer`→`MythLog`: `SetEventCallback` exists and tests exercise it, but `CampaignState` does not register a callback — transitions are recorded in `transitions` only. End-to-end narrative hookup belongs with D-2+ epic work.
   evidence: Acceptance auditor — `Campaign/CampaignState.cpp` owns no MythLog callback registration; AGENTS.md:47 stale claim that CampaignState aggregates MythLog.
+  resolution: 已修（2026-09-25，D-6 `6e132a1`）：DuanqiaoPlayable 殼層持有 MythLog，`Myths()` 事件回呼內同步 `Record`（與音景共用單槽）；結算頁「神蹟錄」段消費 `TestimonyLines()`。AGENTS.md 錯誤描述已勘誤（277aa6b）。MythLog 仍 session 級——持久化屬 C-5 範疇。
 - source_spec: `_bmad-output/implementation-artifacts/spec-d1-myth-layer-seepage.md`
   summary: `myth_layer` section has no `potato.myth_layer/1` schema tag — bare object consistent with untagged `governance` section, but no version hook for future migration (NFR5).
   resolution: 已修（2026-09-23）：`ToJson` 寫出 `potato.myth_layer/1`；`FromJson` 軟驗證——缺 tag 舊檔容忍、錯 tag 拒絕且不動狀態。MythLayerTest [13] 七格覆蓋。
@@ -116,6 +119,7 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-d4-myth-incursion.md`
   summary: `MythIncursion` 持有非擁有 `Squad*`/`QuantumFog*`、吃 `BattleController&` — 生命期契約全憑呼叫端紀律：Update 只能在 Execution 拍以「已乘 timeScale 的 dt」驅動、不可在 squad 迭代回呼內呼叫（CreateSquad 會 rehash 迭代器）、物件不得比 battle 長命。已寫進檔頭契約；若未來加 BattlePhase getter 可改為 field 內自守。
   evidence: Three-layer review — `Gameplay/MythIncursion.h` 契約註記；專案無 phase 查詢 API（BattleController 無 GetPhase）。
+  resolution: 已修（2026-09-23，`9debcf5` + D-6 `6e132a1`）：新增 `Disarm()` 清 ghost/fog/ghostEid；Arm 驗證非法 kind/NaN 座標、re-Arm 先 Reveal、Trigger latch 先行防 Emit 重入；playable 戰後 scope 結束前呼叫 Disarm（契約落地）。GetPhase 自守強化仍未做——半開放。
 - source_spec: `_bmad-output/implementation-artifacts/spec-d4-myth-incursion.md`
   summary: FoxRumor 假雲觀測方硬編 team 0 — 與 ShrineField/GovernanceField 的 team-0 慣例同一洞：玩家非 team 0 的戰場情報計費會指錯邊。需跨三處的共享玩家 team 參數，非單類修復。
   evidence: Edge-case-hunter review — `QuantumFog::AddEntityCloud` team 參數是觀測方語義；同 D-2 deferred 條目。

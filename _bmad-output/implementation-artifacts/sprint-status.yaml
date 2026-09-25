@@ -59,13 +59,13 @@ development_status:
   b-5-chapter-map-shell: done
   epic-b-retrospective: optional
 
-  # Epic C — 敘事戰役系統
-  epic-c: in-progress
+  # Epic C — 敘事戰役系統（2026-09-25 對齊：c-2/c-5 平行 session 已入帳）
+  epic-c: done
   c-1-intel-ledger: done
-  c-2-narrative-pack: backlog
+  c-2-narrative-pack: done      # 14a2e6f potato.narrative_pack/1
   c-3-chapter-conventions: done
   c-4-god-stance: done
-  c-5-ending-page: backlog
+  c-5-ending-page: done         # 6e53c9f 四手結局由累積帳目生成
   epic-c-retrospective: optional
 
   # Epic D — 神話雙層
@@ -98,11 +98,11 @@ development_status:
   f-5-bundled-cjk-fonts: done
   epic-f-retrospective: optional
 
-  # Epic G — 內容與工具
+  # Epic G — 內容與工具（2026-09-25 對齊：g-1/g-2/g-5 平行 session 已入帳）
   epic-g: in-progress
-  g-1-doctrine-card-pool: backlog
-  g-2-deck-looting: backlog
+  g-1-doctrine-card-pool: done   # 458e755 DoctrineLibrary potato.doctrine/1
+  g-2-deck-looting: done         # 6e45b97 PlayerDeck 掠奪持久化
   g-3-general-editor: backlog
   g-4-sandbox-simulator: done
-  g-5-tutorial-chapter: backlog
+  g-5-tutorial-chapter: done     # d0a9aa3 TutorialFlow 引導狀態機
   epic-g-retrospective: optional
