@@ -1086,6 +1086,25 @@ queue:
     size: M
     note: 已落地 6e132a1；103/103 雙工具鏈。MythLog 持久化留 C-5；整合無無頭縫屬已知限制
 
+  - id: G-3E
+    title: 敵將編輯器（epics Story G.3 內容工具）
+    source: epics.md Story G.3 + spec-g3-card-editor.md
+    summary: >
+      敵將卡 potato.character_card/1 的資料驅動編輯：CardValidator
+      診斷 + FixCard 自動修 + CardEditor 型別化手動編輯（人格軸/
+      簽名卡/signatureDoctrineId/文字欄/cards[]）+ 驗證守門原子存回；
+      doctrineDir 交叉驗證補上 signatureDoctrineId 跨檔引用檢查。
+    acceptance:
+      - 三軸人格/signature/文字碎片可編輯並驗證存回
+      - 驗證器 headless 可掃全卡目錄（CI 可用）
+      - 未知 doctrine id 等非法組合 → 拒存 + 明確錯誤
+    status: done
+    size: M
+    note: >
+      三筆落地：729824d 驗證器、4d679f6 FixCard+--fix、
+      9903e89 CardEditor+交叉驗證+JsonWriter 下移 Serialization。
+      CardEditorTest 31 格 + CardValidatorTest 全綠。
+
   # ---- 層級 L：帳本機械化（區塊鏈與會計概念，2026-09-19）----
   - id: L-1
     title: 複式記帳分錄層（五帳戶借貸平衡）

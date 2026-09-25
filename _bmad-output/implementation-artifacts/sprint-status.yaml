@@ -102,7 +102,7 @@ development_status:
   epic-g: in-progress
   g-1-doctrine-card-pool: done   # 458e755 DoctrineLibrary potato.doctrine/1
   g-2-deck-looting: done         # 6e45b97 PlayerDeck 掠奪持久化
-  g-3-general-editor: backlog
+  g-3-general-editor: done       # 729824d + 4d679f6 + 9903e89
   g-4-sandbox-simulator: done
   g-5-tutorial-chapter: done     # d0a9aa3 TutorialFlow 引導狀態機
   epic-g-retrospective: optional
