@@ -172,17 +172,18 @@ scenario completion.
 ### FR Coverage Map
 
 - FR1–FR4, FR7, FR8, FR15: implemented (E-1..E-4, G-9)
-- FR5, FR6: Epic A
-- FR6 (ending): Epic C
-- FR9: Epic E
-- FR10: Epic D
-- FR11: Epic B
-- FR12: Epic G
-- FR13: Epic C (N-1~N-3 battle-layer landed)
-- FR14: Epic G
-- UX-DR1/2/3/6/7: landed (UITheme/minimap/VText)
-- UX-DR4/8/9/10/11/12: Epic F
-- UX-DR5: Epic D
+- FR5, FR6: Epic A ✅
+- FR6 (ending): Epic C ✅
+- FR9: Epic E ✅（NoBattleResolver/Advantage/SubversionDefect 全鏈）
+- FR10: Epic D ✅（機械層+採用層，D-6 playable 接線）
+- FR11: Epic B ✅（機制；內容 2/15 章屬內容缺口）
+- FR12: Epic G ✅
+- FR13: Epic C ✅（C-2 NarrativePack/C-5 EndingPage 已落地）
+- FR14: Epic G ✅（BattleSandbox d030375）
+- UX-DR1~3/6/7: landed；UX-DR5: Epic D ✅；UX-DR8~11: Epic F 已落地
+- UX-DR4/12: partial
+- 註：下方 FR 表「Epic」欄為萃取時的舊編號（E-6=E pic D 等），
+  逐條追溯見 `_bmad-output/test-artifacts/traceability/traceability-matrix.md`
 
 ---
 
@@ -198,16 +199,16 @@ Extracted 2026-09-18 from gdd.md + game-architecture.md + narrative-design.md + 
 | FR2 | Real-time execution + CP interventions (~8s seizures, stratagems) | E-4 ✅ |
 | FR3 | Probability-cloud fog (superposition/observe/probe/decay/entanglement/priors) | E-2 ✅ |
 | FR4 | Morale→execution rate; broken squads disobey/defect | E-1 ✅ |
-| FR5 | In-battle governance sources (village/surrender/convoy/shrine → 民心秩序; atrocity → 墮落) | E-5 ⚠️ |
-| FR6 | Five-rung outcome ladder (SubdueWithoutWar…Fallen) | E-5 ✅/⚠️ |
+| FR5 | In-battle governance sources (village/surrender/convoy/shrine → 民心秩序; atrocity → 墮落) | E-5 ✅ |
+| FR6 | Five-rung outcome ladder (SubdueWithoutWar…Fallen) | E-5 ✅ |
 | FR7 | Named roster + casualty persistence + replay + historian report | E-4/G-9 ✅ |
 | FR8 | Readable enemy personality decks (3 axes + signatures) | E-1/E-9 ✅ |
-| FR9 | 無戰 chapters (negotiation/deterrence/subversion) | E-8 ❌ |
-| FR10 | Myth layer (shrines/天命/conversion/incursions) | E-6 ❌ |
-| FR11 | Campaign frame (~15 chapters, persistent accumulators, carry-over) | E-7 ❌ |
-| FR12 | Doctrine library looting (deck = tech tree) | E-9 ⚠️ |
-| FR13 | Narrative systems (report/判詞/counter-deck/dispositions/myth log/conventions/4 endings) | E-11 ⚠️ (N-1~N-3 ✅) |
-| FR14 | Doctrine sandbox simulator | E-10 ❌ |
+| FR9 | 無戰 chapters (negotiation/deterrence/subversion) | E-8 ✅ |
+| FR10 | Myth layer (shrines/天命/conversion/incursions) | E-6 ✅ |
+| FR11 | Campaign frame (~15 chapters, persistent accumulators, carry-over) | E-7 ✅ 機制（內容 2/15 章） |
+| FR12 | Doctrine library looting (deck = tech tree) | E-9 ✅ |
+| FR13 | Narrative systems (report/判詞/counter-deck/dispositions/myth log/conventions/4 endings) | E-11 ✅ |
+| FR14 | Doctrine sandbox simulator | E-10 ✅ |
 | FR15 | Persistent refit camp (deploy/heal/recruit/loot) | G-9 ✅ |
 
 ### Non-Functional Requirements
@@ -240,13 +241,13 @@ Extracted 2026-09-18 from gdd.md + game-architecture.md + narrative-design.md + 
 | UX-DR2 | Dual-encoding: shape+icon, never hue alone (minimap ■◆● landed) | ✅ partial |
 | UX-DR3 | Contrast floor ≥4.5:1; gloss tokens never carry gameplay info | ✅ UIThemeTest |
 | UX-DR4 | Chronicler register typography; fixed-advance numerics | ⚠️ partial |
-| UX-DR5 | One anchor layout; myth seepage = full theme swap, bounded | ❌ pending E-6 |
+| UX-DR5 | One anchor layout; myth seepage = full theme swap, bounded | ✅ landed（Epic D SeepageStage+UISettings） |
 | UX-DR6 | Minimap shape-coding + WorldToScreen | ✅ landed |
 | UX-DR7 | Vertical CJK for titles/seals only (VTextAt) | ✅ landed |
-| UX-DR8 | UI scale 75–150% via ScaleAllSizes + dynamic atlas | ⚠️ slider exists |
-| UX-DR9 | Sprite/texture atlas pipeline (portraits/stamps/ink strokes) | ❌ largest shared dep |
-| UX-DR10 | Audio milestone — OpenAL stub; miniaudio recommended; visual-first signals | ❌ gated |
-| UX-DR11 | HUD density tiers 極簡/標準/完整 | ❌ |
+| UX-DR8 | UI scale 75–150% via ScaleAllSizes + dynamic atlas | ✅ landed（UIScaleTest） |
+| UX-DR9 | Sprite/texture atlas pipeline (portraits/stamps/ink strokes) | ✅ landed（SpriteAtlasTest） |
+| UX-DR10 | Audio milestone — OpenAL stub; miniaudio recommended; visual-first signals | ✅ landed（miniaudio + AudioCues） |
+| UX-DR11 | HUD density tiers 極簡/標準/完整 | ✅ landed（HUDDensityTest） |
 | UX-DR12 | Ship libre fonts (Noto Serif/Sans TC + mono) | ⚠️ font packaging exists |
 
 ---
