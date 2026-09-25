@@ -185,6 +185,16 @@ Vector2 EnemyGeneral::FogBiasPoint(Vector2 center, Vector2 enemyDir,
     return center + dir * fwd + perp * flank;
 }
 
+void EnemyGeneral::AddCard(std::string name, const DoctrineRule& rule) {
+    cards.push_back({std::move(name), rule});
+}
+
+bool EnemyGeneral::HasCard(const std::string& name) const {
+    for (const auto& c : cards)
+        if (c.name == name) return true;
+    return false;
+}
+
 float EnemyGeneral::FogPriorScale() const {
     // 紀律 → 先驗集中度:100→0.6(守位集中),0→1.4(鬆散),50→1.0
     return 1.4f - 0.8f * (discipline / 100.0f);

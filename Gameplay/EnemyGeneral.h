@@ -82,6 +82,11 @@ public:
     // 對整隊敵軍套用：強者帶簽名卡主攻、弱者依人格守/伏
     void ApplyTo(BattleController& battle, int team) const;
 
+    // enemy_deck 消費口：章節牌組攤平的規則併入手牌。
+    // name 作去重鍵（deck 以卡池 id 為名，同卡不重複併入）。
+    void AddCard(std::string name, const DoctrineRule& rule);
+    bool HasCard(const std::string& name) const;
+
     // doctrine 卡 action 字串 → 列舉（供測試/工具直接驗證映射）
     static DoctrineAction ActionFromString(const std::string& s);
 

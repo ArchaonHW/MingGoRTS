@@ -5,7 +5,7 @@
     "arc": 0,
     "chapter": 1,
     "map": "maps/duanqiao.json",
-    "enemy_deck": "",
+    "enemy_deck": "duanqiao_garrison",
     "next": "",
     "no_battle": {
         "negotiation": {"cost": 30},

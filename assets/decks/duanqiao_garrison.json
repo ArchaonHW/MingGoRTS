@@ -1,0 +1,7 @@
+{
+  "schema": "potato.enemy_deck/1",
+  "id": "duanqiao_garrison",
+  "name": "斷橋守軍",
+  "description": "守勢配置：堅壁為骨、哨探為眼——格洛克以寡擊眾的橋頭防線",
+  "cards": ["hold_line", "skirmish_scout", "rally_guard"]
+}

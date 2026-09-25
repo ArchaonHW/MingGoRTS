@@ -153,6 +153,7 @@ file(GLOB_RECURSE ENGINE_SOURCES
     "Resources/*.cpp"
     "ECS/*.cpp"
     "GameObject/*.cpp"
+    "Networking/*.cpp"
     # "GUI/*.cpp"      # AgentGUI 依賴遊戲側 AIAgentSystem,不進引擎
     # "MathUtils/*.cpp"      # 全 header-only
     # "AI/*.cpp"      # AI 模組另有獨立靜態庫目標,避免重複編譯
@@ -177,6 +178,8 @@ file(GLOB_RECURSE ENGINE_HEADERS
     "Time/*.h"
     "AI/*.h"
     "MathUtils/*.h"
+    "Security/*.h"
+    "Networking/*.h"
 )
 
 # 創建引擎庫
@@ -413,6 +416,7 @@ add_library(Gameplay STATIC
     Gameplay/SubversionDefect.cpp
     Gameplay/CardValidator.cpp
     Gameplay/CardEditor.cpp
+    Gameplay/EnemyDeck.cpp
     Gameplay/BattleCommandAI.cpp
     Gameplay/BattleCommandEnv.cpp
     Gameplay/NarrativePack.cpp
@@ -998,6 +1002,7 @@ target_link_libraries(NoBattleAdvantageTest Gameplay)
 add_executable(SubversionDefectTest Examples/SubversionDefectTest.cpp)
 target_include_directories(SubversionDefectTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(SubversionDefectTest Campaign)
+
 # G-3 敵將編輯器 headless 半邊：卡目錄驗證 CLI + 無頭測試
 add_executable(CardValidator Examples/CardValidator.cpp)
 target_include_directories(CardValidator PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1015,6 +1020,12 @@ target_link_libraries(CardEditor Gameplay)
 add_executable(CardEditorTest Examples/CardEditorTest.cpp)
 target_include_directories(CardEditorTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(CardEditorTest Gameplay)
+
+# enemy_deck 消費半邊：章節牌組束 → 卡池攤平 → 敵將手牌
+add_executable(EnemyDeckTest Examples/EnemyDeckTest.cpp)
+target_include_directories(EnemyDeckTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(EnemyDeckTest Gameplay)
+
 # C-5 四手結局生成無頭測試（帳目聚合/無字/對手之筆/證詞）
 add_executable(EndingPageTest Examples/EndingPageTest.cpp)
 target_include_directories(EndingPageTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1235,11 +1246,11 @@ set(POTATO_TESTS
     JobSystemTest
     ProfilerTest
     SignedSaveFileTest
-    ParticleSystemTest
     NetworkingTest
     TweenTest
     SpatialPathTest
     FileWatcherTest
+    ParticleSystemTest
     AITestSuite
     DevAssistantSmoke
     SuggestionRulesTest
@@ -1306,6 +1317,7 @@ set(POTATO_TESTS
     SubversionDefectTest
     CardValidatorTest
     CardEditorTest
+    EnemyDeckTest
     EndingPageTest
     NarrativePackTest
     DoctrineLibraryTest
