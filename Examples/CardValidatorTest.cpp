@@ -129,6 +129,66 @@ int main() {
         for (const auto& r : reports) errs += ErrCount(r);
         Check(errs == 0, "real card dir has zero errors");
     }
+    // [9] G-3 寫回半邊：warn 級自動修、error 級拒存
+    {
+        using Potato::Gameplay::FixResult;
+        // 缺人格塊 + 負值規則 + 缺簽名卡 → 全修
+        const char* broken = R"({
+          "schema": "potato.character_card/1",
+          "id": "fixable", "name": "待修將",
+          "cards": [{"trigger": "Always", "action": "HoldPosition",
+                     "threshold": -1.0, "cooldown": -2.0}]
+        })";
+        FixResult fr = CardValidator::FixCard(broken);
+        Check(fr.writable, "fixable card writable");
+        Check(fr.changed && fr.fixes.size() >= 3,
+              "fix records changes");
+        // 修正後重驗證應零 error（缺 name 已在 broken 補了——
+        // 不，broken 有 name；驗 personality 已補齊）
+        Check(ErrCount(fr.report) == 0, "fixed card zero errors");
+        Check(fr.json.find("\"aggression\":50") !=
+                  std::string::npos,
+              "personality block filled");
+        Check(fr.json.find("\"threshold\":0") != std::string::npos,
+              "negative threshold zeroed");
+        Check(fr.json.find("signatureDoctrine") !=
+                  std::string::npos,
+              "default signature inserted");
+
+        // 越界人格軸 clamp
+        const char* over = R"({
+          "schema": "potato.character_card/1",
+          "id": "over", "name": "過界將",
+          "personality": {"aggression": 150, "cunning": -5},
+          "signatureDoctrine": {"trigger": "Always",
+                                "action": "HoldPosition"}
+        })";
+        FixResult fo = CardValidator::FixCard(over);
+        Check(fo.writable && fo.changed, "out-of-range fixed");
+        Check(fo.json.find("\"aggression\":100") !=
+                      std::string::npos &&
+                  fo.json.find("\"cunning\":0") != std::string::npos,
+              "axes clamped to [0,100]");
+        Check(fo.json.find("\"discipline\":50") !=
+                  std::string::npos,
+              "missing axis filled 50");
+
+        // error 級不修：未知 trigger → 拒存
+        const char* bad = R"({
+          "schema": "potato.character_card/1",
+          "id": "bad", "name": "壞將",
+          "signatureDoctrine": {"trigger": "Nonsense",
+                                "action": "HoldPosition"}
+        })";
+        FixResult fb = CardValidator::FixCard(bad);
+        Check(!fb.writable, "unknown trigger not writable");
+        // 壞 JSON → 拒存
+        Check(!CardValidator::FixCard("{{{not json").writable,
+              "broken json not writable");
+        // 合法卡不需要修 → unchanged
+        FixResult fg = CardValidator::FixCard(kGood);
+        Check(fg.writable && !fg.changed, "good card unchanged");
+    }
     std::printf("%s\n", failures == 0 ? "ALL PASS" : "FAILURES");
     return failures == 0 ? 0 : 1;
 }

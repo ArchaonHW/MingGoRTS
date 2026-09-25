@@ -1,6 +1,10 @@
 #include "CardValidator.h"
+#include "Gameplay/DoctrineLibrary.h"
 #include "Serialization/JsonParser.h"
+#include "Serialization/JsonWriter.h"
 
+#include <algorithm>
+#include <cmath>
 #include <filesystem>
 #include <fstream>
 #include <set>
@@ -68,6 +72,30 @@ void CheckRule(const JsonValue& j, const std::string& base,
         Warn(r, base + ".cooldown", "cooldown 為負");
 }
 
+// doctrine 池交叉檢查：sigId/doctrineId 引用須在池內。
+// 池目錄不可用（不存在/零卡）→ warn 一次不擋——池壞不是卡的錯。
+void CheckDoctrineRefs(const JsonValue& root, CardReport& r,
+                       const std::string& doctrineDir) {
+    if (doctrineDir.empty()) return;
+    DoctrineLibrary lib;
+    if (lib.LoadDir(doctrineDir) <= 0) {
+        Warn(r, "(doctrine)", "doctrine 池不可用，跳過交叉檢查："
+                              + doctrineDir);
+        return;
+    }
+    auto checkId = [&](const JsonValue& v, const char* field) {
+        const std::string id = v.AsString();
+        if (!id.empty() && lib.Find(id) == nullptr)
+            Err(r, field, "未知 doctrine id「" + id + "」（池內無此卡）");
+    };
+    checkId(root["signatureDoctrineId"], "signatureDoctrineId");
+    int idx = 0;
+    for (const auto& c : root["cards"].AsArray())
+        checkId(c["doctrineId"],
+                ("cards[" + std::to_string(idx++) + "].doctrineId")
+                    .c_str());
+}
+
 } // namespace
 
 const char* const* CardValidator::TriggerNames() { return kTriggers; }
@@ -83,7 +111,8 @@ bool CardReport::Ok() const {
 
 CardReport CardValidator::ValidateString(const std::string& json,
                                          const std::string& pathLabel,
-                                         const std::string& assetsRoot) {
+                                         const std::string& assetsRoot,
+                                         const std::string& doctrineDir) {
     CardReport r;
     r.path = pathLabel;
 
@@ -146,11 +175,13 @@ CardReport CardValidator::ValidateString(const std::string& json,
         !fs::exists(fs::path(assetsRoot) / art))
         Warn(r, "art", "立繪檔不存在：" + art);
 
+    CheckDoctrineRefs(root, r, doctrineDir);
     return r;
 }
 
 CardReport CardValidator::ValidateFile(const std::string& path,
-                                       const std::string& assetsRoot) {
+                                       const std::string& assetsRoot,
+                                       const std::string& doctrineDir) {
     std::ifstream f(path);
     if (!f) {
         CardReport r;
@@ -160,11 +191,12 @@ CardReport CardValidator::ValidateFile(const std::string& path,
     }
     std::ostringstream ss;
     ss << f.rdbuf();
-    return ValidateString(ss.str(), path, assetsRoot);
+    return ValidateString(ss.str(), path, assetsRoot, doctrineDir);
 }
 
 std::vector<CardReport> CardValidator::ValidateDir(
-    const std::string& dir, const std::string& assetsRoot) {
+    const std::string& dir, const std::string& assetsRoot,
+    const std::string& doctrineDir) {
     std::vector<CardReport> out;
     std::error_code ec;
     if (!fs::is_directory(dir, ec)) return out;
@@ -172,7 +204,8 @@ std::vector<CardReport> CardValidator::ValidateDir(
     for (const auto& e : fs::recursive_directory_iterator(dir, ec)) {
         if (!e.is_regular_file() || e.path().extension() != ".json")
             continue;
-        out.push_back(ValidateFile(e.path().string(), assetsRoot));
+        out.push_back(ValidateFile(e.path().string(), assetsRoot,
+                                   doctrineDir));
     }
 
     // 跨卡：id 重複（同名 id 會讓卡池指向不明）
@@ -183,6 +216,103 @@ std::vector<CardReport> CardValidator::ValidateDir(
             Err(r, "id", "卡 id 重複：" + r.cardId);
     }
     return out;
+}
+
+// ---- G-3 寫回：warn 級自動修，error 級拒存 ----
+
+namespace {
+
+void Note(FixResult& res, std::string msg) {
+    res.changed = true;
+    res.fixes.push_back(std::move(msg));
+}
+
+// 規則物件的 warn 修復：負 threshold/cooldown → 0
+void FixRule(JsonValue& rule, const std::string& base,
+             FixResult& res) {
+    if (!rule.IsObject()) return;
+    for (const char* k : {"threshold", "cooldown"}) {
+        const JsonValue& v = rule[k];
+        if (v.IsNumber() && v.AsFloat(0.0f) < 0.0f) {
+            rule.objectValue[k] = JsonValue::Number(0.0);
+            Note(res, base + "." + k + " 負值歸零");
+        }
+    }
+}
+
+JsonValue DefaultSignature() {
+    JsonValue sig;
+    sig.type = JsonValue::Type::Object;
+    sig.objectValue["name"] = JsonValue::String("駐守");
+    sig.objectValue["trigger"] = JsonValue::String("Always");
+    sig.objectValue["action"] = JsonValue::String("HoldPosition");
+    sig.objectValue["threshold"] = JsonValue::Number(0.0);
+    sig.objectValue["priority"] = JsonValue::Number(0.0);
+    sig.objectValue["cooldown"] = JsonValue::Number(0.0);
+    return sig;
+}
+
+} // namespace
+
+FixResult CardValidator::FixCard(const std::string& json) {
+    FixResult res;
+    JsonValue root;
+    if (!JsonValue::ParseOk(json, root) || !root.IsObject()) {
+        res.report = ValidateString(json, "(fix)");
+        return res; // 壞 JSON 無從修——拒存
+    }
+
+    // 人格塊：缺塊補齊三軸 50；缺軸/非數字補 50；越界 clamp
+    JsonValue& p = root.objectValue["personality"];
+    if (!p.IsObject()) {
+        p.type = JsonValue::Type::Object;
+        for (const char* a : {"aggression", "discipline", "cunning"})
+            p.objectValue[a] = JsonValue::Number(50.0);
+        Note(res, "personality 缺塊，三軸補 50");
+    } else {
+        for (const char* a : {"aggression", "discipline", "cunning"}) {
+            const JsonValue& v = p[a];
+            if (!v.IsNumber()) {
+                if (v.IsNull()) {
+                    p.objectValue[a] = JsonValue::Number(50.0);
+                    Note(res, std::string("personality.") + a +
+                              " 缺軸補 50");
+                }
+                // 非數字非 Null（字串等）：不修，留給驗證器記帳
+            } else {
+                const float f = v.AsFloat(50.0f);
+                if (!std::isfinite(f) || f < 0.0f || f > 100.0f) {
+                    p.objectValue[a] = JsonValue::Number(
+                        std::clamp(std::isfinite(f) ? f : 50.0f,
+                                   0.0f, 100.0f));
+                    Note(res, std::string("personality.") + a +
+                              " 越界 clamp");
+                }
+            }
+        }
+    }
+
+    // 缺 signatureDoctrine → 補預設駐守卡（敵將總要有招式）
+    if (!root["signatureDoctrine"].IsObject()) {
+        root.objectValue["signatureDoctrine"] = DefaultSignature();
+        Note(res, "signatureDoctrine 缺，補預設駐守卡");
+    }
+    // 規則負值歸零（signature + 附加卡槽）
+    FixRule(root.objectValue["signatureDoctrine"],
+            "signatureDoctrine", res);
+    // cards 缺欄時不要經 objectValue[] 憑空造 null 鍵
+    if (root["cards"].IsArray()) {
+        JsonValue& cards = root.objectValue["cards"];
+        int idx = 0;
+        for (JsonValue& c : cards.arrayValue)
+            FixRule(c, "cards[" + std::to_string(idx++) + "]", res);
+    }
+
+    res.json = WriteJson(root);
+    // 修正後重驗證：writable 只由「修正後無 error」決定
+    res.report = ValidateString(res.json, "(fixed)");
+    res.writable = res.report.Ok();
+    return res;
 }
 
 } // namespace Gameplay
