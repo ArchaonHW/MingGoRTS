@@ -40,6 +40,7 @@ int main() {
         BattleController battle(10, 10, 1.0f);
         battle.CreateSquad("我軍", 0, Vector2(4, 4), 10);
         battle.CreateSquad("敵軍", 1, Vector2(9, 9), 10);
+        battle.BeginExecution();
 
         GovernanceField field;
         field.Bind({{"village", Vector2(4, 4), 2.0f, ""},
@@ -62,6 +63,7 @@ int main() {
         BattleController battle(10, 10, 1.0f);
         Squad* foe = battle.CreateSquad("敵軍", 1, Vector2(4, 4), 10);
         battle.CreateSquad("我軍", 0, Vector2(9, 9), 10);
+        battle.BeginExecution();
 
         GovernanceField field;
         field.Bind({{"village", Vector2(4, 4), 2.0f, ""}}, {});
@@ -82,6 +84,7 @@ int main() {
     {
         BattleController battle(10, 10, 1.0f);
         battle.CreateSquad("敵軍", 1, Vector2(9, 9), 10); // 遠離路徑
+        battle.BeginExecution();
 
         MapConvoy def;
         def.id = "supply-1";
@@ -113,6 +116,7 @@ int main() {
     {
         BattleController battle(10, 10, 1.0f);
         battle.CreateSquad("敵軍", 1, Vector2(0.5f, 0), 10); // 圈內劫掠
+        battle.BeginExecution();
 
         MapConvoy def;
         def.id = "supply-1";
@@ -146,6 +150,7 @@ int main() {
         battle.CreateSquad("我軍", 0, Vector2(0.5f, 0), 10); // 圈內劫掠
         Squad* foeFar =
             battle.CreateSquad("敵軍", 1, Vector2(9, 9), 10);
+        battle.BeginExecution();
         const float morale0 = foeFar->GetMorale();
 
         MapConvoy def;
@@ -192,6 +197,58 @@ int main() {
         good[GovernanceEvent::SurrenderAccepted] = 10;
         gov.Accumulate(good);
         Check(gov.Depravity() == 6.0f, "墮落只增不減");
+    }
+
+    // ---- [7] phase 閘：部署/結算階段 Update 為 no-op ----
+    printf("\n[7] 戰鬥 phase 閘控\n");
+    {
+        BattleController battle(10, 10, 1.0f);
+        battle.CreateSquad("我軍", 0, Vector2(4, 4), 10); // 站村內
+        battle.CreateSquad("敵軍", 1, Vector2(9, 9), 10);
+
+        MapConvoy def;
+        def.id = "supply-1";
+        def.team = 0;
+        def.path = {Vector2(0, 0), Vector2(3, 0)};
+        def.speed = 2.0f;
+        def.hp = 60;
+        def.raidRadius = 1.0f;
+
+        GovernanceField field;
+        field.Bind({{"village", Vector2(4, 4), 2.0f, ""}}, {def});
+
+        // Deployment 階段：佔村/焚村/護輜全部不該動
+        field.Update(0.5f, battle);
+        Check(CountOf(battle, GovernanceEvent::VillageOccupied) == 0,
+              "部署階段佔村不記帳");
+        Check(std::fabs(field.GetConvoys()[0].pos.x - 0.0f) < 1e-4f,
+              "部署階段運輸隊不動");
+
+        battle.BeginExecution();
+        field.Update(0.1f, battle);
+        Check(CountOf(battle, GovernanceEvent::VillageOccupied) == 1,
+              "進執行階段佔村記帳");
+        field.Update(0.5f, battle);
+        Check(std::fabs(field.GetConvoys()[0].pos.x - 1.2f) < 1e-4f,
+              "執行階段運輸隊前進");
+    }
+
+    // ---- [8] radius<=0 互動物停用 ----
+    printf("\n[8] radius<=0 停用點\n");
+    {
+        BattleController battle(10, 10, 1.0f);
+        battle.CreateSquad("我軍", 0, Vector2(4, 4), 10);
+        battle.CreateSquad("敵軍", 1, Vector2(9, 9), 10);
+        battle.BeginExecution();
+
+        GovernanceField field;
+        // 我軍站在 (4,4) 上,但兩點 radius 皆 <=0——永不觸發
+        field.Bind({{"village", Vector2(4, 4), 0.0f, ""},
+                    {"village", Vector2(4, 4), -1.0f, ""}},
+                   {});
+        field.Update(0.1f, battle);
+        Check(CountOf(battle, GovernanceEvent::VillageOccupied) == 0,
+              "radius<=0 互動物不觸發");
     }
 
     printf("\n=== 結果: %s ===\n", failures == 0 ? "全部 PASS" : "有 FAIL");

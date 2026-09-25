@@ -42,7 +42,9 @@ public:
     void Bind(const std::vector<MapInteractable>& interactables,
               const std::vector<MapConvoy>& convoys);
 
-    // 每拍驅動：佔領偵測 → 焚村偵測 → 護輜推進/劫掠
+    // 每拍驅動：佔領偵測 → 焚村偵測 → 護輜推進/劫掠。
+    // 只在 BattlePhase::Execution 生效——部署/結算階段呼叫為 no-op，
+    // 部署中佔村的隊伍不會搶先記帳
     void Update(float dt, BattleController& battle);
 
     // 渲染層讀取：村莊互動物是否已被戰火波及（intact/burned）

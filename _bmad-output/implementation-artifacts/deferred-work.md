@@ -62,8 +62,7 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-game-backend-services.md`
   summary: Manage H2 schema with Flyway instead of ddl-auto=update, and wire Maven into CI when Java services are expected to build in CI.
   evidence: Blind-hunter + verification-gap reviews — schema drift is unmanaged and Java tests never run in CI; both were explicitly out of this spec's boundaries.
-  resolution: 已修（2026-09-25）：flyway-core 進雙 service pom（H2 支援內建 core，無 flyway-database-h2 artifact）；`db/migration/V1__init.sql` 對齊 entity 映射；`ddl-auto: validate` + `baseline-on-migrate`（舊 H2 檔無痛交接）。CI `services-test` job：setup-java 21 + `mvn -B test`。SchemaMigrationTest 雙模組 5/5。
-  resolution: 已修（2026-09-25）：雙 service 加 flyway-core + `db/migration/V1__init.sql`，ddl-auto=validate + SchemaMigrationTest 各兩格；CI 加 `services-test` job（setup-java 21 + `mvn -B test`）。
+  resolution: 已修（2026-09-25）：flyway-core 進雙 service pom（H2 支援內建 core）；`db/migration/V1__init.sql` 對齊 entity 映射；`ddl-auto: validate` + `baseline-on-migrate`（舊 H2 檔無痛交接）。CI `services-test` job：setup-java 21 + `mvn -B test`。SchemaMigrationTest 雙模組 5/5。
 - source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
   summary: DetectGovernanceEvents Atrocity branch unreachable — rout skips damage so members never drop after routing, and the killing blow clears IsRouting before detection runs; hardcodes `team != 0` as enemy.
   evidence: Blind-hunter + edge-case layers verified in BattleController.cpp ~L275-295/780; belongs to parallel C-2 governance work.
@@ -76,6 +75,7 @@ Findings deferred from `spec-ide-dev-assistant` review (iteration 1). All items 
 - source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
   summary: Village/convoy occupation scan ungated by battle phase (fires during Deployment/post-battle); interactable radius<=0 can never fire; interactable feed has no headless test coverage.
   evidence: DuanqiaoPlayable.cpp ~L1043-1070; verification-gap layer disposition=defer — extracting a Gameplay seam exceeds this spec.
+  resolution: 已修（2026-09-25）：`GovernanceField::Update` 開頭自守 `battle.GetPhase() != Execution → return`——佔領/焚村/護輜三偵測全閘在執行階段（部署期佔村不記帳、運輸隊不走）；`DetectOccupation` 對 `radius<=0` 明確跳過視為停用點。GovernanceFieldTest [7] 驗部署期靜默+進執行後正常觸發、[8] 驗 radius 0/負值不觸發；既有五段補 `BeginExecution` 對齊新契約。
 - source_spec: `_bmad-output/implementation-artifacts/spec-quantum-plan-effects.md`
   summary: Orphaned install(DIRECTORY GUI/) rule ships AgentGUI.h with no compiled symbols; build-video/check_all.sh still lists GUI/AgentGUI.cpp.
   evidence: CMakeLists.txt ~L889; parallel engine/game split cleanup.

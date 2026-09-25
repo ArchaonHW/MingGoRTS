@@ -25,6 +25,10 @@ void GovernanceField::Bind(
 }
 
 void GovernanceField::Update(float dt, BattleController& battle) {
+    // 治理事件只屬於執行階段——部署期佔位或戰後殘局不該記帳
+    if (battle.GetPhase() != BattlePhase::Execution) {
+        return;
+    }
     DetectOccupation(battle);
     DetectBurning(battle);
     UpdateConvoys(dt, battle);
@@ -40,6 +44,11 @@ void GovernanceField::DetectOccupation(BattleController& battle) {
             continue;
         }
         const auto& inter = interactables[gi];
+        // radius<=0 視為停用點——距離檢查永遠不成立，明確跳過
+        // 避免誤以為是有效互動物
+        if (inter.radius <= 0.0f) {
+            continue;
+        }
         GovernanceEvent gev;
         if (inter.type == "village") {
             gev = GovernanceEvent::VillageOccupied;
