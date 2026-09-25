@@ -40,7 +40,7 @@ PhysicsMathTest PhysicsTest PlatformTest PortraitBaker PortraitRenderer Profiler
 QuasiModelsTest RenderPipelineTest RenderTargetTest SceneTest \
 SecurityDataTest SecurityRedTeamTest SerializationTest SignedSaveFileTest SimpleExample \
     NetworkingTest ParticleSystemTest NeuralArtDemo \
-    FileWatcherTest SpatialPathTest TweenTest \
+    FileWatcherTest SpatialPathTest TweenTest SecurityPipelineTest AuditLedgerTest \
 SpriteAtlasTest \
 SynthDataDemo TimeTest UnsolvedBatch3Test VrmLoadTest compat_log"
 

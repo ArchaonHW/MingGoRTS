@@ -67,6 +67,15 @@ struct ScanSummary {
     int clean = 0, suspicious = 0, malicious = 0, errors = 0;
 };
 
+// 隔離區清單條目（ListQuarantine 回傳；對應 <sha256>.json 內容）
+struct QuarantineEntry {
+    std::string sha256;
+    std::string originalPath;
+    std::string verdict;
+    std::string quarantinedAt;
+    uint64_t size = 0;
+};
+
 // 掃描進度/發現回呼（每掃完一個檔案呼叫一次）
 using ScanCallback = std::function<void(const FileScanResult&)>;
 
@@ -88,6 +97,11 @@ public:
     //  "patterns": [{"id": "...", "hex": "4d5a...", "description": "..."}]}
     // 回傳成功載入的條目數；-1 表示檔案/格式錯誤
     int LoadSignatureDB(const std::string& jsonPath);
+    // 載入 HMAC 簽章的特徵庫（SignFile 產生的 blob：JSON || MAC 尾）。
+    // 特徵庫本身是攻擊面——被替換成空庫等於盲化掃描器；
+    // 簽章驗證失敗（竄改/錯金鑰/非簽章檔）一律回 -1 且不加載任何條目。
+    int LoadSignedSignatureDB(const std::string& signedPath,
+                              const void* key, size_t keyLen);
     size_t SignatureCount() const;
 
     // ---- 掃描 ----
@@ -108,6 +122,14 @@ public:
     // result 可為 nullptr（會自行先掃描）。失敗回 false 並填 err。
     bool QuarantineFile(const std::string& filePath, const std::string& quarantineDir,
                         const FileScanResult* result, std::string* err) const;
+    // 列出隔離區：讀 quarantineDir 下全部 <sha256>.json 清單
+    std::vector<QuarantineEntry> ListQuarantine(const std::string& quarantineDir) const;
+    // 還原隔離檔到 destPath。還原前重算檔案 SHA-256 必須等於 sha256Hex
+    // （隔離區檔案本身被竄改則拒絕還原）；清單檔保留供稽核。
+    bool RestoreFromQuarantine(const std::string& quarantineDir,
+                               const std::string& sha256Hex,
+                               const std::string& destPath,
+                               std::string* err) const;
 
     // ---- 設定 ----
     void SetMaxScanBytes(uint64_t bytes) { maxScanBytes = bytes; }
@@ -127,6 +149,9 @@ private:
     // ScanFile/ScanBuffer 共用的內容檢查鏈
     void RunContentChecks(FileScanResult& r,
                           const std::vector<uint8_t>& content) const;
+
+    // LoadSignatureDB/LoadSignedSignatureDB 共用的 JSON 解析
+    int LoadSignatureDbFromText(const std::string& text);
 
     // 各啟發式檢查，命中時 push finding
     void CheckFilename(const std::string& filePath, FileScanResult& r) const;

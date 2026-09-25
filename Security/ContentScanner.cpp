@@ -240,9 +240,21 @@ int ContentScanner::LoadSignatureDB(const std::string& jsonPath) {
     if (!f) return -1;
     std::stringstream ss;
     ss << f.rdbuf();
+    return LoadSignatureDbFromText(ss.str());
+}
 
+int ContentScanner::LoadSignedSignatureDB(const std::string& signedPath,
+                                          const void* key, size_t keyLen) {
+    // 簽章驗證失敗 = 整庫不可信,一條都不載（fail-closed）
+    std::vector<uint8_t> blob;
+    if (!VerifySignedFile(signedPath, key, keyLen, &blob)) return -1;
+    return LoadSignatureDbFromText(
+        std::string(reinterpret_cast<const char*>(blob.data()), blob.size()));
+}
+
+int ContentScanner::LoadSignatureDbFromText(const std::string& text) {
     JsonValue root;
-    if (!JsonValue::ParseOk(ss.str(), root)) return -1;
+    if (!JsonValue::ParseOk(text, root)) return -1;
 
     int loaded = 0;
     const JsonValue& hashes = root["hashes"];
@@ -499,6 +511,82 @@ bool ContentScanner::QuarantineFile(const std::string& filePath,
         return false;  // 檔案已搬走,但回報失敗讓呼叫端知道清單缺失
     }
     mf << manifest;
+    return true;
+}
+
+std::vector<QuarantineEntry>
+ContentScanner::ListQuarantine(const std::string& quarantineDir) const {
+    namespace fs = std::filesystem;
+    std::vector<QuarantineEntry> out;
+    std::error_code ec;
+    if (!fs::is_directory(quarantineDir, ec)) return out;
+
+    for (fs::directory_iterator it(quarantineDir, ec), end;
+         !ec && it != end; it.increment(ec)) {
+        std::error_code eec;
+        if (!it->is_regular_file(eec)) continue;
+        if (it->path().extension() != ".json") continue;
+
+        std::ifstream f(it->path(), std::ios::binary);
+        if (!f) continue;
+        std::stringstream ss;
+        ss << f.rdbuf();
+        JsonValue root;
+        if (!JsonValue::ParseOk(ss.str(), root)) continue;
+
+        QuarantineEntry e;
+        e.sha256 = root["sha256"].AsString();
+        e.originalPath = root["original_path"].AsString();
+        e.verdict = root["verdict"].AsString();
+        e.quarantinedAt = root["quarantined_at"].AsString();
+        e.size = static_cast<uint64_t>(root["size"].AsNumber(0));
+        // 對應的 .quarantine 檔必須還在,否則這筆清單是孤兒
+        fs::path qfile = it->path().parent_path() / (e.sha256 + ".quarantine");
+        if (!e.sha256.empty() && fs::exists(qfile, eec))
+            out.push_back(std::move(e));
+    }
+    return out;
+}
+
+bool ContentScanner::RestoreFromQuarantine(const std::string& quarantineDir,
+                                           const std::string& sha256Hex,
+                                           const std::string& destPath,
+                                           std::string* err) const {
+    namespace fs = std::filesystem;
+    std::error_code ec;
+
+    const fs::path src = fs::path(quarantineDir) / (sha256Hex + ".quarantine");
+    if (!fs::exists(src, ec)) {
+        if (err) *err = "隔離檔不存在: " + sha256Hex;
+        return false;
+    }
+
+    // 還原前驗身：隔離區檔案被竄改就不該放回
+    const std::string actual = ComputeFileSHA256(src.string());
+    std::string expected = sha256Hex;
+    for (auto& c : expected)
+        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    if (actual != expected) {
+        if (err) *err = "隔離檔雜湊不符（檔案可能被竄改）";
+        return false;
+    }
+
+    fs::path dest = destPath;
+    if (fs::exists(dest, ec)) {
+        if (err) *err = "目的檔已存在: " + destPath;
+        return false;
+    }
+
+    fs::rename(src, dest, ec);
+    if (ec) {
+        ec.clear();
+        fs::copy_file(src, dest, ec);
+        if (ec) {
+            if (err) *err = "還原失敗: " + ec.message();
+            return false;
+        }
+        fs::remove(src, ec);
+    }
     return true;
 }
 

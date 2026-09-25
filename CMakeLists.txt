@@ -643,6 +643,17 @@ add_executable(ContentScannerTest Examples/ContentScannerTest.cpp)
 target_include_directories(ContentScannerTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ContentScannerTest PotatoEngine)
 
+# 掃毒整合管線測試：ResourceManager 載入閘門/DownloadGuard 落盤即掃/
+# IntegrityManifest 自身完整性（headless,純引擎層）
+add_executable(SecurityPipelineTest Examples/SecurityPipelineTest.cpp)
+target_include_directories(SecurityPipelineTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(SecurityPipelineTest PotatoEngine)
+
+# 稽核帳本測試：hash 鏈 append-only/零容忍調節/L0-L2 分層揭露（headless,純引擎層）
+add_executable(AuditLedgerTest Examples/AuditLedgerTest.cpp)
+target_include_directories(AuditLedgerTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(AuditLedgerTest PotatoEngine)
+
 # 資料防護層測試：ProtectedValue 混淆容器 + SignData 簽章（headless）
 add_executable(SecurityDataTest Examples/SecurityDataTest.cpp)
 target_include_directories(SecurityDataTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -1191,6 +1202,8 @@ set(POTATO_TESTS
     GLSmokeTest
     SecurityRedTeamTest
     ContentScannerTest
+    SecurityPipelineTest
+    AuditLedgerTest
     SecurityDataTest
     AntiTamperTest
     JobSystemTest
