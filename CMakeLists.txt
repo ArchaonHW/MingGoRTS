@@ -381,6 +381,12 @@ add_test(NAME potato_test_json COMMAND potato_test_json)
 add_test(NAME potato_test_map COMMAND potato_test_map)
 add_test(NAME potato_test_squad COMMAND potato_test_squad)
 
+# Doctrine interpreter + potato.doctrine_cards/1 library 測試
+add_executable(potato_test_doctrine Examples/potato_test_doctrine.cpp)
+target_include_directories(potato_test_doctrine PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_doctrine PotatoGameplay)
+add_test(NAME potato_test_doctrine COMMAND potato_test_doctrine)
+
 if(WIN32)
     # Gameplay 層依賴方向守衛：禁 Rendering/GUI/Platform/GL 標頭
     add_test(NAME gameplay_dep_guard

@@ -40,7 +40,7 @@ development_status:
   1-2-jsonvalue-dom-parser-schema-guard: done
   1-3-battlemap-model: done
   1-4-squad-model: done
-  1-5-doctrine-interpreter: backlog
+  1-5-doctrine-interpreter: done
   1-6-battlecontroller-three-beat-loop: backlog
   1-7-cp-interventions: backlog
   1-8-quantumfog: backlog

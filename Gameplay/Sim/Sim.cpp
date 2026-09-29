@@ -10,15 +10,15 @@ std::uint64_t Avalanche(std::uint64_t z) {
 }
 } // namespace
 
-Sim::Sim(std::uint64_t seed) : rngState_(seed) {}
-
-std::uint64_t Sim::NextRandom() {
-    rngState_ += 0x9E3779B97F4A7C15ull;
-    return Avalanche(rngState_);
+std::uint64_t Prng::Next() {
+    state_ += 0x9E3779B97F4A7C15ull;
+    return Avalanche(state_);
 }
 
+Sim::Sim(std::uint64_t seed) : rng_(seed) {}
+
 void Sim::Tick() {
-    const std::uint64_t draw = NextRandom();
+    const std::uint64_t draw = rng_.Next();
     checksum_ = Avalanche(checksum_ + draw + (tickCount_ * 0x9E3779B97F4A7C15ull));
     ++tickCount_;
 }

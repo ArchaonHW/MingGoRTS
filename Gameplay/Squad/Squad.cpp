@@ -2,6 +2,7 @@
 
 #include "Gameplay/Json/Json.h"
 
+#include <cstdint>
 #include <set>
 #include <utility>
 
@@ -120,8 +121,9 @@ void Squad::ApplyHit(int hpLoss, int cohesionLoss) {
 void Squad::RestoreCohesion(int amount) {
     if (amount < 0) return; // damage goes through ApplyHit + the table
     if (state == SquadState::Routed || state == SquadState::Destroyed) return;
-    cohesion += amount;
-    if (cohesion > 100) cohesion = 100;
+    // int64 intermediate: saturation, no signed overflow.
+    const std::int64_t sum = static_cast<std::int64_t>(cohesion) + amount;
+    cohesion = sum > 100 ? 100 : static_cast<int>(sum);
     // Deliberate: restoring cohesion never un-routs — rout is a morale
     // collapse, sticky for the battle (see header).
 }
@@ -129,11 +131,12 @@ void Squad::RestoreCohesion(int amount) {
 void Squad::Heal(int amount) {
     if (amount < 0) return; // damage goes through ApplyHit + the table
     if (state == SquadState::Routed || state == SquadState::Destroyed) return;
-    hp += amount;
-    if (hp > maxHp) hp = maxHp;
+    const std::int64_t sum = static_cast<std::int64_t>(hp) + amount;
+    hp = sum > maxHp ? maxHp : static_cast<int>(sum);
 }
 
-Squad Squad::Instantiate(const SquadTemplate& t, std::size_t regionIndex) {
+Squad Squad::Instantiate(const SquadTemplate& t, std::size_t regionIndex,
+                         int side) {
     Squad s;
     s.id = t.id;
     s.name = t.name;
@@ -144,6 +147,7 @@ Squad Squad::Instantiate(const SquadTemplate& t, std::size_t regionIndex) {
     s.speedMilli = SpeedMilli(t.speed);
     s.cohesion = t.cohesion < 0 ? 0 : (t.cohesion > 100 ? 100 : t.cohesion);
     s.cost = t.cost < 0 ? 0 : t.cost;
+    s.side = side;
     s.regionIndex = regionIndex;
     // A template already below the rout threshold spawns broken —
     // Holding with cohesion < 20 would be an incoherent zombie state.

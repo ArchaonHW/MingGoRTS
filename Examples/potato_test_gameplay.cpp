@@ -38,6 +38,8 @@ int main() {
     Check(a1.Checksum() != b.Checksum(), "different seed -> different checksum");
     Check(z0.Checksum() != 0, "seed 0 produces non-degenerate checksum");
     Check(z0.Checksum() != a1.Checksum(), "seed 0 distinct from other seeds");
+    // Golden pin — locks the PRNG bit stream against refactor drift.
+    Check(a1.Checksum() == 8436903512816397795ull, "golden checksum (seed 1234 x 200)");
 
     std::printf("%s\n", failures == 0 ? "SMOKE TICK PASS" : "SMOKE TICK FAIL");
     return failures == 0 ? 0 : 1;

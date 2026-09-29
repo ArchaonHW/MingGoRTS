@@ -111,6 +111,7 @@ struct Squad {
     int speedMilli = 1000; // see SpeedMilli
     int cohesion = 100;    // 0–100 percent
     int cost = 0;          // 物資 (template field; refit uses it later)
+    int side = 0;          // 0 = player, 1 = enemy (symmetric AI reads same)
 
     std::size_t regionIndex = NO_REGION;
     std::size_t edgeTarget = NO_REGION;
@@ -150,9 +151,10 @@ struct Squad {
     // Instantiate a runtime squad from a loaded template. Defensive:
     // clamps template values (hand-built templates aren't loader-gated)
     // and evaluates the spawn state (cohesion < ROUT_THRESHOLD spawns
-    // Routing, not a "Holding" zombie).
+    // Routing, not a "Holding" zombie). Pass `side` (0=player,1=enemy)
+    // at spawn — forgetting it leaves enemy_* doctrine triggers blind.
     static Squad Instantiate(const struct SquadTemplate& t,
-                             std::size_t regionIndex);
+                             std::size_t regionIndex, int side = 0);
 };
 
 struct SquadTemplate {

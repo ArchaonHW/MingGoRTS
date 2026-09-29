@@ -1,0 +1,164 @@
+#pragma once
+
+#include "Gameplay/Json/JsonValue.h"
+#include "Gameplay/Result.h"
+#include "Gameplay/Sim/Sim.h"
+
+#include <cassert>
+#include <cstddef>
+#include <cstdint>
+#include <string>
+#include <string_view>
+#include <vector>
+
+namespace Potato::Gameplay {
+
+class BattleMap;
+struct Squad;
+
+// Data-driven doctrine cards — the player's authorship surface.
+// trigger → condition → action → modifier; per-card cooldown.
+// Both sides run the identical interpreter (symmetric AI).
+
+enum class TriggerKind : std::uint8_t {
+    Always,
+    CohesionBelow,  // param: percent
+    EnemyInRegion,  // enemy side squad in my region (snapshot)
+    EnemyAdjacent,  // enemy side squad in a neighboring region (snapshot)
+};
+
+enum class ConditionKind : std::uint8_t {
+    Always,
+    CohesionAbove, // param: percent
+    CohesionBelow, // param: percent
+    CpAtLeast,     // param: CP points
+};
+
+enum class ActionKind : std::uint8_t {
+    Hold,            // record only — still fires + cooldowns
+    Brace,           // param: cohesion restored
+    Move,            // param: region index (pending move order)
+    Retreat,         // move to lowest-index neighbor (map-edge proxy)
+};
+
+enum class ModifierKind : std::uint8_t {
+    None,
+    AttackBoost, // param: attack delta
+};
+
+struct DoctrineCard {
+    std::string id;
+    std::string name;
+    TriggerKind trigger = TriggerKind::Always;
+    std::int64_t triggerParam = 0;
+    ConditionKind condition = ConditionKind::Always;
+    std::int64_t conditionParam = 0;
+    ActionKind action = ActionKind::Hold;
+    std::int64_t actionParam = 0;
+    ModifierKind modifier = ModifierKind::None;
+    std::int64_t modifierParam = 0;
+    int cooldownTicks = 100; // 5 s default at 20 Hz
+};
+
+// Runtime slot on a squad's doctrine sheet.
+struct CardSlot {
+    std::size_t cardIndex = ~std::size_t{0}; // index into DoctrineLibrary
+    int cooldownRemaining = 0;               // ticks until fireable
+};
+
+// 3–5 slotted cards per squad sheet.
+struct SquadSheet {
+    static constexpr std::size_t MIN_SLOTS = 3;
+    static constexpr std::size_t MAX_SLOTS = 5;
+
+    std::vector<CardSlot> slots;
+
+    // Build a sheet from card ids; all must resolve in the library.
+    static Result<SquadSheet> Build(const class DoctrineLibrary& cards,
+                                    const std::vector<std::string>& cardIds);
+};
+
+// Sim event emitted by the interpreter — the recorded truth.
+struct SimEvent {
+    enum class Kind : std::uint8_t { CardFired };
+
+    Kind kind = Kind::CardFired;
+    int tick = 0;
+    int squadIndex = -1;
+    int slotIndex = -1;
+    std::string cardId;
+};
+
+// Pending write from an action/modifier — applied AFTER all slots eval
+// (snapshot isolation: same-tick writes are never visible to triggers).
+struct PendingDelta {
+    enum class Kind : std::uint8_t { Cohesion, Move, Attack };
+
+    Kind kind = Kind::Cohesion;
+    int squadIndex = -1;
+    int amount = 0;                  // Cohesion/Attack
+    std::size_t region = ~std::size_t{0}; // Move target
+};
+
+struct EvalOutcome {
+    std::vector<SimEvent> events;
+    std::vector<PendingDelta> deltas;
+};
+
+// potato.doctrine_cards/1 — a card library file.
+class DoctrineLibrary {
+public:
+    static Result<DoctrineLibrary> Load(std::string_view path);
+    static Result<DoctrineLibrary> FromJson(const JsonValue& root);
+
+    std::size_t Count() const { return cards_.size(); }
+    // Precondition: index < Count().
+    const DoctrineCard& At(std::size_t index) const {
+        assert(index < cards_.size());
+        return cards_[index];
+    }
+    // nullptr on miss; valid for the library's lifetime.
+    const DoctrineCard* Find(std::string_view id) const;
+    std::size_t IndexOf(std::string_view id) const { // Count() on miss
+        for (std::size_t i = 0; i < cards_.size(); ++i) {
+            if (cards_[i].id == id) return i;
+        }
+        return cards_.size();
+    }
+
+private:
+    std::vector<DoctrineCard> cards_;
+};
+
+// The interpreter. EvalTick is pure w.r.t. squads — reads the caller's
+// tick-start state (pass a snapshot copy if deltas must not leak between
+// calls), writes events + pending deltas; ApplyDeltas commits them.
+// Cooldowns live on the (mutable) sheets and tick once per occupied
+// slot per EvalTick — even for squads that can't act.
+// Routing/Routed/Destroyed squads evaluate nothing. Enemy-detection
+// triggers currently read true snapshot state — the QuantumFog
+// certainty seam lands in Story 1.8 and rewires these two kinds.
+namespace Doctrine {
+
+// snapshot: squads' state at tick start; sheets are per-squad, aligned
+// by index with snapshot (asserted equal; a shorter sheets vector
+// silently skips trailing squads in release builds — don't do that).
+// cpPool is the shared CP pool both sides read (per-side pools land
+// with symmetric AI in Story 1.10). rng is reserved for future draws —
+// vocab v0 draws nothing, so draw-order determinism is structural.
+EvalOutcome EvalTick(const BattleMap& map,
+                     const std::vector<Squad>& snapshot,
+                     std::vector<SquadSheet>& sheets,
+                     const DoctrineLibrary& cards,
+                     Prng& rng,
+                     int cpPool,
+                     int tick);
+
+// Apply pending deltas to live squads — call AFTER EvalTick.
+// Terminal squads (Routed/Destroyed) ignore deltas.
+void ApplyDeltas(std::vector<Squad>& squads,
+                 const std::vector<PendingDelta>& deltas);
+
+} // namespace Doctrine
+
+} // namespace Potato::Gameplay
