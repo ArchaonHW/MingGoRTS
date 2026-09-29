@@ -127,6 +127,59 @@ int main() {
         Check(s6.hp == 80 && s6.cohesion == 100, "heal/restore clamped");
     }
 
+    // --- Review-hardening edges ---
+    {
+        Squad s7 = Squad::Instantiate(*vg, 0);
+        Check(!s7.IssueMove(0), "IssueMove to self rejected");
+        Check(!s7.IssueMove(Squad::NO_REGION), "IssueMove to NO_REGION rejected");
+        Check(s7.IssueMove(1), "IssueMove to valid target ok");
+
+        // ApplyHit negative args are caller bugs — clamped, not heals.
+        s7.ApplyHit(-50, -50);
+        Check(s7.hp == 100 && s7.cohesion == 100 && s7.state == SquadState::Moving,
+              "negative losses clamped to 0 (no overheal)");
+
+        // speedMilli corruption cannot crash or teleport.
+        s7.speedMilli = 0;
+        s7.TickMove();
+        Check(s7.state == SquadState::Moving && s7.edgeProgress == 1,
+              "speedMilli=0 falls back to base ticks, no crash");
+        s7.speedMilli = 1000;
+    }
+    {
+        Squad s8 = Squad::Instantiate(*vg, 0);
+        s8.ApplyHit(0, 90); // -> Routing
+        s8.RestoreCohesion(100);
+        Check(s8.cohesion == 100 && s8.state == SquadState::Routing,
+              "rout is sticky: restored cohesion does not un-rout");
+        Check(s8.ApplyEvent(SquadEvent::RetreatComplete), "RetreatComplete via ApplyEvent");
+        Check(s8.state == SquadState::Routed, "Routing -> Routed");
+        s8.ApplyHit(50, 0);
+        Check(s8.hp == 100, "ApplyHit no-op on Routed");
+        s8.Heal(10);
+        s8.RestoreCohesion(10);
+        Check(s8.hp == 100 && s8.cohesion == 100, "heal/restore no-op on Routed");
+        Check(!s8.IssueMove(1), "IssueMove rejected on Routed");
+    }
+    {
+        Squad s9 = Squad::Instantiate(*vg, 0);
+        s9.ApplyHit(100, 0); // -> Destroyed
+        Check(!s9.ApplyEvent(SquadEvent::MoveOrder), "ApplyEvent gated on terminal");
+        s9.Heal(50);
+        Check(s9.hp == 0, "Heal no-op on Destroyed (no zombie)");
+    }
+    {
+        // Hand-built (non-loader) templates get clamped at instantiate.
+        SquadTemplate rough;
+        rough.id = "rough"; rough.unit = UnitType::Militia;
+        rough.hp = 0; rough.attack = -5; rough.cohesion = -10; rough.cost = -1;
+        rough.speed = Speed::Slow;
+        Squad s10 = Squad::Instantiate(rough, 0);
+        Check(s10.maxHp == 1 && s10.hp == 1 && s10.attack == 0 &&
+              s10.cohesion == 0 && s10.state == SquadState::Routing,
+              "Instantiate clamps hand-built template + broken spawn routs");
+    }
+
     // --- Validation rejects ---
     auto reject = [](const char* json, const char* name) {
         auto d = JsonValue::Parse(json);
@@ -147,6 +200,10 @@ int main() {
            "hp < 1 rejected");
     reject(R"({"squads":[{"id":"a","unit":"infantry","speed":"fast"}]})",
            "missing hp rejected");
+    reject(R"({"squads":[{"id":"a","hp":10,"speed":"fast"}]})",
+           "missing unit rejected");
+    reject(R"({"squads":[{"id":"a","unit":"infantry","hp":10}]})",
+           "missing speed rejected");
     reject(R"({"squads":[{"id":"a","unit":"infantry","hp":10,"speed":"fast","cohesion":150}]})",
            "cohesion > 100 rejected");
     reject(R"({"schema":"potato.squad/2","squads":[{"id":"a","unit":"infantry","hp":10,"speed":"fast"}]})",

@@ -2,7 +2,8 @@
 
 #include "Gameplay/Json/Json.h"
 
-#include <map>
+#include <set>
+#include <utility>
 
 namespace Potato::Gameplay {
 
@@ -61,18 +62,19 @@ Result<int> ReadInt(const JsonValue& obj, const char* key, int fallback,
     return Ok<int>(static_cast<int>(v));
 }
 
-bool Apply(Squad& s, SquadEvent ev) {
-    if (!CanTransition(s.state, ev)) return false;
-    s.state = TargetOf(ev);
-    return true;
-}
-
 } // namespace
 
 // --- Squad runtime -------------------------------------------------------
 
+bool Squad::ApplyEvent(SquadEvent ev) {
+    if (!CanTransition(state, ev)) return false;
+    state = TargetOf(ev);
+    return true;
+}
+
 bool Squad::IssueMove(std::size_t target) {
-    if (!Apply(*this, SquadEvent::MoveOrder)) return false;
+    if (target == NO_REGION || target == regionIndex) return false;
+    if (!ApplyEvent(SquadEvent::MoveOrder)) return false;
     edgeTarget = target;
     edgeProgress = 0;
     return true;
@@ -82,43 +84,53 @@ void Squad::TickMove() {
     if (state != SquadState::Moving) return;
     if (++edgeProgress >= TicksForEdge(speedMilli)) {
         regionIndex = edgeTarget;
-        edgeTarget = ~std::size_t{0};
+        edgeTarget = NO_REGION;
         edgeProgress = 0;
-        state = SquadState::Holding; // Arrived — always valid from Moving
+        ApplyEvent(SquadEvent::Arrived); // Moving -> Holding per the table
     }
 }
 
 void Squad::ApplyHit(int hpLoss, int cohesionLoss) {
+    if (state == SquadState::Routed || state == SquadState::Destroyed) return;
+    if (hpLoss < 0) hpLoss = 0;
+    if (cohesionLoss < 0) cohesionLoss = 0;
+
     hp -= hpLoss;
     if (hp < 0) hp = 0;
+    if (hp > maxHp) hp = maxHp;
     cohesion -= cohesionLoss;
     if (cohesion < 0) cohesion = 0;
     if (cohesion > 100) cohesion = 100;
 
     if (hp == 0) {
-        Apply(*this, SquadEvent::HpZero);
-        edgeTarget = ~std::size_t{0};
-        edgeProgress = 0;
+        if (ApplyEvent(SquadEvent::HpZero)) {
+            edgeTarget = NO_REGION;
+            edgeProgress = 0;
+        }
         return;
     }
     if (cohesion < ROUT_THRESHOLD) {
-        if (Apply(*this, SquadEvent::CohesionBreak)) {
-            edgeTarget = ~std::size_t{0};
+        if (ApplyEvent(SquadEvent::CohesionBreak)) {
+            edgeTarget = NO_REGION;
             edgeProgress = 0;
         }
     }
 }
 
 void Squad::RestoreCohesion(int amount) {
+    if (amount < 0) return; // damage goes through ApplyHit + the table
+    if (state == SquadState::Routed || state == SquadState::Destroyed) return;
     cohesion += amount;
     if (cohesion > 100) cohesion = 100;
-    if (cohesion < 0) cohesion = 0;
+    // Deliberate: restoring cohesion never un-routs — rout is a morale
+    // collapse, sticky for the battle (see header).
 }
 
 void Squad::Heal(int amount) {
+    if (amount < 0) return; // damage goes through ApplyHit + the table
+    if (state == SquadState::Routed || state == SquadState::Destroyed) return;
     hp += amount;
     if (hp > maxHp) hp = maxHp;
-    if (hp < 0) hp = 0;
 }
 
 Squad Squad::Instantiate(const SquadTemplate& t, std::size_t regionIndex) {
@@ -126,14 +138,17 @@ Squad Squad::Instantiate(const SquadTemplate& t, std::size_t regionIndex) {
     s.id = t.id;
     s.name = t.name;
     s.unit = t.unit;
-    s.maxHp = t.hp;
-    s.hp = t.hp;
-    s.attack = t.attack;
+    s.maxHp = t.hp < 1 ? 1 : t.hp;   // hand-built templates aren't gated
+    s.hp = s.maxHp;
+    s.attack = t.attack < 0 ? 0 : t.attack;
     s.speedMilli = SpeedMilli(t.speed);
-    s.cohesion = t.cohesion;
-    s.cost = t.cost;
+    s.cohesion = t.cohesion < 0 ? 0 : (t.cohesion > 100 ? 100 : t.cohesion);
+    s.cost = t.cost < 0 ? 0 : t.cost;
     s.regionIndex = regionIndex;
-    s.state = SquadState::Holding;
+    // A template already below the rout threshold spawns broken —
+    // Holding with cohesion < 20 would be an incoherent zombie state.
+    s.state = s.cohesion < ROUT_THRESHOLD ? SquadState::Routing
+                                          : SquadState::Holding;
     return s;
 }
 
@@ -162,7 +177,7 @@ Result<SquadTemplateLibrary> SquadTemplateLibrary::FromJson(const JsonValue& roo
     }
 
     SquadTemplateLibrary lib;
-    std::map<std::string, bool, std::less<>> seen;
+    std::set<std::string, std::less<>> seen;
     for (const JsonValue& js : squads.Items()) {
         if (!js.IsObject()) {
             return Fail<SquadTemplateLibrary>("squad", "squad entry is not an object");
@@ -177,6 +192,7 @@ Result<SquadTemplateLibrary> SquadTemplateLibrary::FromJson(const JsonValue& roo
         if (seen.count(*sid) != 0) {
             return Fail<SquadTemplateLibrary>("squad", "duplicate squad id '" + *sid + "'");
         }
+        seen.insert(*sid);
 
         SquadTemplate t;
         t.id = *sid;
@@ -214,7 +230,6 @@ Result<SquadTemplateLibrary> SquadTemplateLibrary::FromJson(const JsonValue& roo
         if (!cohesion.ok()) return Fail<SquadTemplateLibrary>(cohesion.error, cohesion.reason);
         t.cohesion = cohesion.value;
 
-        seen.emplace(t.id, true);
         lib.templates_.push_back(std::move(t));
     }
     return Ok(std::move(lib));

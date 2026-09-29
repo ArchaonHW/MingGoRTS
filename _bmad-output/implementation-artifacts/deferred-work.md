@@ -20,3 +20,11 @@
 - `RegionIndexOf`/`FindRegion` are O(n) linear scans; the `indexOf` map built during validation is discarded — fine at tens-of-regions scale; retain the map only if measured hot.
 - `IsStrategicPoint` hardcodes the capturable-bit mask — deliberate enumeration; revisit if a 4th `STRATEGIC_*` bit lands.
 - Region/map `id` hygiene: whitespace-only, embedded NUL, invalid UTF-8 accepted — hand-authored content; strictness deliberately on structure, not content hygiene.
+
+## Deferred from: code review of 1-4-squad-model (2026-09-29)
+
+- `Squad` is not flat POD (`std::string id/name`) — when `BattleState::Checksum` lands (Story 1.6+/recorder), hash string *contents*, not object memory. Also gate: per-squad POD arrays vs struct-of-objects decision is made there.
+- No rally transition (`Routing`→`Holding`) — deliberate design: rout is morale collapse, sticky in-battle; RefitCamp is the recovery path. Revisit only if a "rally" doctrine card is ever designed.
+- `potato.squad/1` cannot express artillery's "(ranged)" qualifier or the counters/countered-by column — add `potato.squad/2` when combat resolution needs ranged/role data.
+- Invalid `SquadState` values via public `state` field freeze the squad — accepted (serialization writes land in later stories; validate on deserialize then).
+- `Heal`/`RestoreCohesion` no-op on terminal states; `ApplyHit` no-op on Routed/Destroyed — Routed squads are off-field (cannot be finished off); revisit if pursuit mechanics are designed.

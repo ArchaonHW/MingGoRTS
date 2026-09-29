@@ -3,6 +3,7 @@
 #include "Gameplay/Json/JsonValue.h"
 #include "Gameplay/Result.h"
 
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <string>
@@ -63,8 +64,11 @@ constexpr int SpeedMilli(Speed s) {
 
 // Ticks to traverse one edge at a given speed. Integer division —
 // deterministic; slow 66 / medium 40 / fast 26 / very_fast 20.
+// speedMilli <= 0 (field corruption) falls back to base; result >= 1.
 constexpr int TicksForEdge(int speedMilli) {
-    return TICKS_PER_EDGE_BASE * 1000 / speedMilli;
+    if (speedMilli <= 0) return TICKS_PER_EDGE_BASE;
+    const int t = TICKS_PER_EDGE_BASE * 1000 / speedMilli;
+    return t < 1 ? 1 : t;
 }
 
 // Explicit transition table — the table IS the spec (architecture pattern).
@@ -95,6 +99,9 @@ constexpr SquadState TargetOf(SquadEvent ev) {
 }
 
 struct Squad {
+    // Matches BattleMap::NO_REGION; kept local so Squad stays decoupled.
+    static constexpr std::size_t NO_REGION = ~std::size_t{0};
+
     std::string id;        // battle-scoped named identity
     std::string name;      // display, may carry UTF-8 CJK
     UnitType unit = UnitType::Infantry;
@@ -105,8 +112,8 @@ struct Squad {
     int cohesion = 100;    // 0–100 percent
     int cost = 0;          // 物資 (template field; refit uses it later)
 
-    std::size_t regionIndex = ~std::size_t{0}; // BattleMap::NO_REGION-shaped
-    std::size_t edgeTarget = ~std::size_t{0};
+    std::size_t regionIndex = NO_REGION;
+    std::size_t edgeTarget = NO_REGION;
     int edgeProgress = 0; // ticks elapsed on current edge
 
     SquadState state = SquadState::Holding;
@@ -115,20 +122,35 @@ struct Squad {
         return state != SquadState::Routed && state != SquadState::Destroyed;
     }
 
+    // Route all state changes through the transition table — never write
+    // `state` directly. Fires events like RetreatComplete that internal
+    // helpers don't produce.
+    bool ApplyEvent(SquadEvent ev);
+
     // Issue a move order toward an adjacent region. Only valid from
-    // Holding (table-gated); adjacency validation is the caller's job.
+    // Holding (table-gated); rejects self-moves and NO_REGION. Adjacency
+    // validation is the caller's job (controller owns the BattleMap).
     bool IssueMove(std::size_t target);
     // Advance edge traversal one tick; arrives when progress reaches
     // TicksForEdge(speedMilli). No-op unless Moving.
     void TickMove();
     // Combat interface: apply losses, then evaluate the state table.
+    // Negative losses are caller bugs — clamped to 0. No-op on terminal
+    // states (Routed squads are off-field, Destroyed is final).
     // HpZero takes precedence over CohesionBreak. A rout cancels any
     // in-flight move.
     void ApplyHit(int hpLoss, int cohesionLoss);
+    // Rally is deliberately NOT a state path — a rout is a morale
+    // collapse (GDD victory condition), sticky for the battle; recovery
+    // happens at RefitCamp. RestoreCohesion lifts the number on
+    // non-terminal squads but never un-routs.
     void RestoreCohesion(int amount);
     void Heal(int amount);
 
-    // Instantiate a runtime squad from a loaded template.
+    // Instantiate a runtime squad from a loaded template. Defensive:
+    // clamps template values (hand-built templates aren't loader-gated)
+    // and evaluates the spawn state (cohesion < ROUT_THRESHOLD spawns
+    // Routing, not a "Holding" zombie).
     static Squad Instantiate(const struct SquadTemplate& t,
                              std::size_t regionIndex);
 };
@@ -151,7 +173,12 @@ public:
     static Result<SquadTemplateLibrary> FromJson(const JsonValue& root);
 
     std::size_t Count() const { return templates_.size(); }
-    const SquadTemplate& At(std::size_t index) const { return templates_[index]; }
+    // Precondition: index < Count().
+    const SquadTemplate& At(std::size_t index) const {
+        assert(index < templates_.size());
+        return templates_[index];
+    }
+    // Pointer valid for the library's lifetime (dangles if it dies).
     const SquadTemplate* Find(std::string_view id) const;
 
 private:

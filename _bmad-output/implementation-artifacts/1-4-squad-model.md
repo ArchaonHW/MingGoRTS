@@ -4,7 +4,25 @@ baseline_commit: NO_VCS
 
 # Story 1.4: Squad Model
 
-Status: review
+Status: done
+
+### Review Findings
+
+- [x] [Review][Patch] `ApplyHit` missing upper hp clamp — negative `hpLoss` overhealed past `maxHp`; negative args now clamp to 0, hp capped at maxHp [Squad.cpp]
+- [x] [Review][Patch] `TicksForEdge(0)` integer divide-by-zero; `speedMilli<=0`→base, result floor 1 tick (no teleport) [Squad.h]
+- [x] [Review][Patch] `RetreatComplete` unreachable — added public `Squad::ApplyEvent(SquadEvent)`; `TickMove`/`IssueMove`/`ApplyHit` all route through it (the table is the spec) [Squad.h/.cpp]
+- [x] [Review][Patch] `Heal`/`RestoreCohesion` negative amounts bypassed the table (could kill/un-kill without events) — negative → early return; both no-op on Routed/Destroyed [Squad.cpp]
+- [x] [Review][Patch] `ApplyHit` mutated terminal states (Routed+hp0 incoherence) — early return on Routed/Destroyed [Squad.cpp]
+- [x] [Review][Patch] `IssueMove` accepted self-target/NO_REGION (sentinel committed into `regionIndex`) — rejected [Squad.cpp]
+- [x] [Review][Patch] `Instantiate` trusted hand-built templates (hp≤0 zombie, cohesion<20 "Holding") — clamped fields; cohesion<ROUT_THRESHOLD spawns `Routing` [Squad.cpp]
+- [x] [Review][Patch] `At()` unasserted; `~size_t{0}` sentinel duplicated; `<cassert>`/`<utility>`/`std::set` hygiene [Squad.h/.cpp]
+- [x] [Review][Patch] test coverage +18 checks: sticky rout, terminal gating, ApplyEvent path, corrupt speedMilli, broken-spawn, missing unit/speed rejects
+- [x] [Review][Defer] no rally path (`Routing`→`Holding` absent) — intentional: rout is morale collapse, sticky in-battle; recovery is RefitCamp's job. Documented in header.
+- [x] [Review][Defer] `Squad` carries `std::string` members — not flat-POD; BattleState checksum (1.6+) must hash string contents, not memory. Noted for recorder story.
+- [x] [Review][Defer] `artillery` "(ranged)" qualifier + counters column not expressible in `potato.squad/1` — defer to schema v2 when combat resolution needs it
+- [x] [Review][Defer] invalid `SquadState` injection via public `state` field — accepted (serialization-owned writes land later)
+- [x] [Review][Defer] missing `unit`/`speed` reports generic "must be a string token" — cosmetic
+- [x] [Review][Defer] `IsEffective()` counts Routing — intended (still on-field)
 
 ## Story
 
@@ -93,7 +111,8 @@ SWE-2 High (Devin)
 - Transition table `CanTransition`+`TargetOf` is constexpr — the spec itself; terminal states reject all events. HpZero takes precedence over CohesionBreak in `ApplyHit`.
 - Movement: `TicksForEdge = 40*1000/speedMilli` — slow 66/medium 40/fast 26/very_fast 20 ticks per edge (integer division, deterministic). Edge distances uniform this story.
 - Routing is a state only (no auto-pathing) — retreat orders are a BattleController concern (1.6+).
-- `FromJson` re-checks schema tag when present (1.3 review pattern); 42 checks green; ctest 5/5.
+- `FromJson` re-checks schema tag when present (1.3 review pattern); post-review hardening: negative-arg clamps, terminal-state gating, `ApplyEvent` public API, sentinel/self-move rejection, Instantiate spawn-state evaluation.
+- 58 checks green; ctest 5/5.
 - MSVC still unverified (no `cl`); stdlib-only code.
 
 ### File List
