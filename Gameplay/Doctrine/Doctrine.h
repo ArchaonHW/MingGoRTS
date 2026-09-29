@@ -78,14 +78,17 @@ struct SquadSheet {
                                     const std::vector<std::string>& cardIds);
 };
 
-// Sim event emitted by the interpreter — the recorded truth.
+// Sim event — the recorded truth, append-only into the battle log.
 struct SimEvent {
-    enum class Kind : std::uint8_t { CardFired };
+    enum class Kind : std::uint8_t { CardFired, BeatChanged };
 
     Kind kind = Kind::CardFired;
     int tick = 0;
     int squadIndex = -1;
     int slotIndex = -1;
+    // BeatChanged: new BattleBeat ordinal — wire-format stable
+    // (Planning=0, Execution=1, Aftermath=2; recorder/replay depends on it).
+    int aux = 0;
     std::string cardId;
 };
 

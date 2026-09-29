@@ -387,6 +387,12 @@ target_include_directories(potato_test_doctrine PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_doctrine PotatoGameplay)
 add_test(NAME potato_test_doctrine COMMAND potato_test_doctrine)
 
+# BattleController 三拍迴圈測試
+add_executable(potato_test_battle Examples/potato_test_battle.cpp)
+target_include_directories(potato_test_battle PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_battle PotatoGameplay)
+add_test(NAME potato_test_battle COMMAND potato_test_battle)
+
 if(WIN32)
     # Gameplay 層依賴方向守衛：禁 Rendering/GUI/Platform/GL 標頭
     add_test(NAME gameplay_dep_guard

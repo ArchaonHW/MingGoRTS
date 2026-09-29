@@ -37,3 +37,10 @@
 - Determinism test is vacuous w.r.t. `rng` (vocab v0 draws nothing) — AC2 holds structurally; when a card draws PRNG, add a draw-order sensitivity test.
 - `potato.doctrine_cards/1` is a library file vs architecture's singular `potato.doctrine_card/<ver>` naming — deliberate (consistent with potato.map/1, potato.squad/1); rename only if architecture text is updated.
 - `ReadClause` treats `param` on a no-param kind (`always`, `hold`, `retreat`, `none`) strictly (only `0` allowed) — loosen to "ignore" if content authors find it hostile.
+
+## Deferred from: code review of 1-6-battlecontroller-three-beat-loop (2026-09-29)
+
+- Deployed squads share their template's `id` — two infantry from one template collide on battle-scoped identity. Events key on `squadIndex` so nothing corrupts; battle-scoped instance naming belongs to the roster/naming work (Epic B/C).
+- `cpPool` has no upper cap (`SetCpPool` clamps negatives only) — CP economy (regen +1/60s, cap 5, intervention costs) is Story 1.7's job.
+- Manual `RequestBeat(Aftermath)` mid-Execution is the concede path; `BattleOutcome::forced` distinguishes it from a wipe draw. Sub-story: whether "concede" should still produce a winner by objective score is Story 1.12 win-evaluation territory.
+- `ROUT_TICKS` (2 s) is a v0 constant — rout-off-field pacing may want per-terrain or card-driven variance later.

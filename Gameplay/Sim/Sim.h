@@ -32,6 +32,10 @@ public:
     // Advances the simulation exactly one tick.
     void Tick();
 
+    // The battle's single PRNG stream — callers (doctrine interpreter)
+    // draw through this; never construct a second stream.
+    Prng& Rng() { return rng_; }
+
     std::uint64_t TickCount() const { return tickCount_; }
 
     // Deterministic fingerprint of sim state. Identical seeds produce
