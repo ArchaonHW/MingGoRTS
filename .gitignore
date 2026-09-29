@@ -29,6 +29,7 @@
 
 # CMake build outputs
 build/
+build-*/
 CMakeFiles/
 CMakeCache.txt
 CMakeScripts/
