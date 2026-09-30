@@ -265,7 +265,7 @@ EvalOutcome EvalTick(const BattleMap& map,
                      std::vector<SquadSheet>& sheets,
                      const DoctrineLibrary& cards,
                      Prng& rng,
-                     int cpPool,
+                     const std::array<int, 2>& cpPools,
                      int tick) {
     (void)rng; // reserved for future draws — canonical order contract holds
     assert(sheets.size() == snapshot.size()); // sheets align by squad index
@@ -278,15 +278,20 @@ EvalOutcome EvalTick(const BattleMap& map,
         for (std::size_t sl = 0; sl < sheet.slots.size(); ++sl) {
             CardSlot& slot = sheet.slots[sl];
             if (slot.cooldownRemaining > 0) --slot.cooldownRemaining;
+            // CP override flag: cleared on visit even if the squad can't
+            // act — a stale flag must never fire out of turn.
+            const bool forced = slot.forceNext;
+            slot.forceNext = false;
             if (!sq.IsEffective() || sq.state == SquadState::Routing) continue;
-            if (slot.cooldownRemaining > 0) continue;
+            if (slot.cooldownRemaining > 0 && !forced) continue;
             if (slot.cardIndex >= cards.Count()) continue;
 
             const DoctrineCard& card = cards.At(slot.cardIndex);
 
-            // Trigger — reads the tick-start snapshot only.
-            bool fired = false;
-            switch (card.trigger) {
+            // Trigger — reads the tick-start snapshot only; an override
+            // bypasses the check entirely.
+            bool fired = forced;
+            if (!forced) switch (card.trigger) {
                 case TriggerKind::Always:
                     fired = true;
                     break;
@@ -303,9 +308,9 @@ EvalOutcome EvalTick(const BattleMap& map,
             }
             if (!fired) continue;
 
-            // Condition gate.
+            // Condition gate — an override bypasses trigger AND condition.
             bool pass = true;
-            switch (card.condition) {
+            if (!forced) switch (card.condition) {
                 case ConditionKind::Always: break;
                 case ConditionKind::CohesionAbove:
                     pass = sq.cohesion > card.conditionParam;
@@ -313,9 +318,11 @@ EvalOutcome EvalTick(const BattleMap& map,
                 case ConditionKind::CohesionBelow:
                     pass = sq.cohesion < card.conditionParam;
                     break;
-                case ConditionKind::CpAtLeast:
-                    pass = cpPool >= card.conditionParam;
+                case ConditionKind::CpAtLeast: {
+                    const int sideIdx = (sq.side == 1) ? 1 : 0;
+                    pass = cpPools[sideIdx] >= card.conditionParam;
                     break;
+                }
             }
             if (!pass) continue;
 
@@ -378,7 +385,7 @@ EvalOutcome EvalTick(const BattleMap& map,
             slot.cooldownRemaining = card.cooldownTicks;
             out.events.push_back({SimEvent::Kind::CardFired, tick,
                                   static_cast<int>(si),
-                                  static_cast<int>(sl), 0, card.id});
+                                  static_cast<int>(sl), -1, 0, card.id});
         }
     }
     return out;

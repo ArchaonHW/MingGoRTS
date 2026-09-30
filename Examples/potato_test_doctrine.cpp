@@ -3,6 +3,7 @@
 #include "Gameplay/Squad/Squad.h"
 #include "Gameplay/Json/JsonValue.h"
 
+#include <array>
 #include <cstdio>
 #include <string>
 #include <vector>
@@ -94,10 +95,10 @@ int main() {
 
         // No enemy adjacent, cohesion 80, cp 0: brace trigger fails,
         // flee trigger fails, hold condition (cp>=3) fails.
-        auto o0 = Doctrine::EvalTick(map, squads, sheets, cards, rng, 0, 0);
+        auto o0 = Doctrine::EvalTick(map, squads, sheets, cards, rng, std::array<int,2>{0,0}, 0);
         Check(o0.events.empty(), "no fire when trigger/condition unmet");
         // card_hold fires once cp>=3.
-        auto o1 = Doctrine::EvalTick(map, squads, sheets, cards, rng, 3, 1);
+        auto o1 = Doctrine::EvalTick(map, squads, sheets, cards, rng, std::array<int,2>{3,3}, 1);
         Check(o1.events.size() == 1 && o1.events[0].cardId == "card_hold" &&
               o1.events[0].squadIndex == 0 && o1.events[0].slotIndex == 2,
               "cp_at_least gates; event records slot");
@@ -114,7 +115,7 @@ int main() {
             SquadSheet::Build(cards, {"card_brace","card_flee","card_hold"}).value };
         Prng rng(7);
 
-        auto o0 = Doctrine::EvalTick(map, squads, sheets, cards, rng, 5, 0);
+        auto o0 = Doctrine::EvalTick(map, squads, sheets, cards, rng, std::array<int,2>{5,5}, 0);
         // each side: card_brace (enemy adjacent, cohesion 100>50) +
         // card_hold (cp5>=3) fire; card_flee (cohesion 100 !<30) doesn't.
         Check(o0.events.size() == 4, "both sides' sheets fire (symmetric)");
@@ -130,13 +131,13 @@ int main() {
         // deleting the cooldown check must be observable here.
         bool leaked = false;
         for (int i = 1; i <= 99; ++i) {
-            auto sup = Doctrine::EvalTick(map, squads, sheets, cards, rng, 5, i);
+            auto sup = Doctrine::EvalTick(map, squads, sheets, cards, rng, std::array<int,2>{5,5}, i);
             if (!sup.events.empty()) leaked = true;
         }
         Check(!leaked, "cooldown suppresses re-fire for 99 ticks");
         // cooldown 5s = 100 ticks: slot fired at t0, counts down t1..t99
         // (99 decrements), fires again at t100.
-        auto oCd = Doctrine::EvalTick(map, squads, sheets, cards, rng, 5, 100);
+        auto oCd = Doctrine::EvalTick(map, squads, sheets, cards, rng, std::array<int,2>{5,5}, 100);
         bool refired = false;
         for (const auto& e : oCd.events)
             if (e.cardId == "card_brace") refired = true;
@@ -158,7 +159,7 @@ int main() {
             SquadSheet::Build(cards, {"card_push","card_push","card_push"}).value,
             SquadSheet::Build(cards, {"card_brace","card_flee","card_hold"}).value };
         Prng rng(9);
-        auto o = Doctrine::EvalTick(map, squads, sheets, cards, rng, 5, 0);
+        auto o = Doctrine::EvalTick(map, squads, sheets, cards, rng, std::array<int,2>{5,5}, 0);
         Check(squads[0].state == SquadState::Holding &&
               squads[0].regionIndex == 1,
               "live squads untouched during eval (pending deltas only)");
@@ -182,7 +183,7 @@ int main() {
             SquadSheet::Build(cards, {"card_hold","card_hold","card_hold"}).value,
             SquadSheet::Build(cards, {"card_hold","card_hold","card_hold"}).value };
         Prng rng(1);
-        auto o = Doctrine::EvalTick(map, squads, sheets, cards, rng, 5, 0);
+        auto o = Doctrine::EvalTick(map, squads, sheets, cards, rng, std::array<int,2>{5,5}, 0);
         Check(o.events.size() == 6, "all slots fire");
         bool ordered = true;
         for (std::size_t i = 0; i < o.events.size(); ++i) {
@@ -207,7 +208,7 @@ int main() {
             Prng rng(seed);
             std::vector<SimEvent> all;
             for (int i = 0; i < 60; ++i) {
-                auto o = Doctrine::EvalTick(map, squads, sheets, cards, rng, 5, i);
+                auto o = Doctrine::EvalTick(map, squads, sheets, cards, rng, std::array<int,2>{5,5}, i);
                 Doctrine::ApplyDeltas(squads, o.deltas);
                 for (auto& e : o.events) all.push_back(e);
             }
@@ -233,7 +234,7 @@ int main() {
             SquadSheet::Build(cards, {"card_hold","card_hold","card_hold"}).value };
         sheets[0].slots[0].cooldownRemaining = 5;
         Prng rng(2);
-        auto o = Doctrine::EvalTick(map, squads, sheets, cards, rng, 5, 0);
+        auto o = Doctrine::EvalTick(map, squads, sheets, cards, rng, std::array<int,2>{5,5}, 0);
         Check(o.events.empty() && o.deltas.empty(),
               "destroyed squad evaluates nothing");
         Check(sheets[0].slots[0].cooldownRemaining == 4,
@@ -252,7 +253,7 @@ int main() {
             SquadSheet::Build(cards, {"card_garrison","card_routwarn","card_hold"}).value,
             SquadSheet::Build(cards, {"card_garrison","card_routwarn","card_hold"}).value };
         Prng rng(11);
-        auto o = Doctrine::EvalTick(map, squads, sheets, cards, rng, 5, 0);
+        auto o = Doctrine::EvalTick(map, squads, sheets, cards, rng, std::array<int,2>{5,5}, 0);
         int garrison = 0, routwarn = 0;
         for (const auto& e : o.events) {
             if (e.cardId == "card_garrison") ++garrison;
@@ -264,7 +265,7 @@ int main() {
         // NO_REGION squads must NOT see each other as enemies.
         std::vector<Squad> off{ Squad::Instantiate(t, Squad::NO_REGION, 0),
                                 Squad::Instantiate(t, Squad::NO_REGION, 1) };
-        auto offO = Doctrine::EvalTick(map, off, sheets, cards, rng, 5, 0);
+        auto offO = Doctrine::EvalTick(map, off, sheets, cards, rng, std::array<int,2>{5,5}, 0);
         bool garFired = false;
         for (const auto& e : offO.events)
             if (e.cardId == "card_garrison") garFired = true;
@@ -281,7 +282,7 @@ int main() {
         std::vector<SquadSheet> sheets{
             SquadSheet::Build(cards, {"card_push","card_push","card_push"}).value };
         Prng rng(13);
-        auto o = Doctrine::EvalTick(map, squads, sheets, cards, rng, 0, 0);
+        auto o = Doctrine::EvalTick(map, squads, sheets, cards, rng, std::array<int,2>{0,0}, 0);
         bool moveDelta = false;
         for (const auto& d : o.deltas)
             if (d.kind == PendingDelta::Kind::Move) moveDelta = true;
@@ -292,7 +293,7 @@ int main() {
         squads[0] = Squad::Instantiate(t, 1, 0);
         sheets = {SquadSheet::Build(cards,
             {"card_push","card_push","card_push"}).value};
-        auto o2 = Doctrine::EvalTick(map, squads, sheets, cards, rng, 0, 0);
+        auto o2 = Doctrine::EvalTick(map, squads, sheets, cards, rng, std::array<int,2>{0,0}, 0);
         moveDelta = false;
         for (const auto& d : o2.deltas)
             if (d.kind == PendingDelta::Kind::Move && d.region == 2)
@@ -305,7 +306,8 @@ int main() {
         Check(dl.ok(), "oob move card loads (loader can't see the map)");
         auto s3 = SquadSheet::Build(dl.value, {"oob","oob","oob"});
         std::vector<SquadSheet> sh3{ s3.value };
-        auto o3 = Doctrine::EvalTick(map, squads, sh3, dl.value, rng, 0, 0);
+        auto o3 = Doctrine::EvalTick(map, squads, sh3, dl.value, rng,
+                                     std::array<int,2>{0,0}, 0);
         moveDelta = false;
         for (const auto& d : o3.deltas)
             if (d.kind == PendingDelta::Kind::Move) moveDelta = true;

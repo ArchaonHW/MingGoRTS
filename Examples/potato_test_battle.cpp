@@ -164,7 +164,7 @@ int main() {
             sameLog = x.kind == y.kind && x.tick == y.tick &&
                       x.squadIndex == y.squadIndex &&
                       x.slotIndex == y.slotIndex && x.cardId == y.cardId &&
-                      x.aux == y.aux;
+                      x.aux == y.aux && x.param == y.param;
         }
         Check(sameLog, "same seed -> identical event log");
         // doctrine actually executed through the controller
@@ -181,9 +181,9 @@ int main() {
         bc.DeploySquad(tmpl, 1, 1);
         bc.SetSheet(0, SquadSheet::Build(cards,
             {"card_hold","card_hold","card_hold"}).value);
-        bc.SetCpPool(0);
+        bc.SetCpPool(0, 0);
         bc.RequestBeat(BattleBeat::Execution);
-        Check(bc.CpPool() == 0, "cpPool settable in Planning");
+        Check(bc.CpPool(0) == 0, "cpPool settable in Planning");
         Check(bc.Tick(), "tick with cp 0");
     }
 

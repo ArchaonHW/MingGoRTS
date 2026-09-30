@@ -70,6 +70,12 @@ Result<int> ReadInt(const JsonValue& obj, const char* key, int fallback,
 bool Squad::ApplyEvent(SquadEvent ev) {
     if (!CanTransition(state, ev)) return false;
     state = TargetOf(ev);
+    // Leaving the field (rout or destruction) cancels any in-flight
+    // move — every path into these states clears edge state here.
+    if (state == SquadState::Routing || state == SquadState::Destroyed) {
+        edgeTarget = NO_REGION;
+        edgeProgress = 0;
+    }
     return true;
 }
 
@@ -104,17 +110,11 @@ void Squad::ApplyHit(int hpLoss, int cohesionLoss) {
     if (cohesion > 100) cohesion = 100;
 
     if (hp == 0) {
-        if (ApplyEvent(SquadEvent::HpZero)) {
-            edgeTarget = NO_REGION;
-            edgeProgress = 0;
-        }
+        ApplyEvent(SquadEvent::HpZero);
         return;
     }
     if (cohesion < ROUT_THRESHOLD) {
-        if (ApplyEvent(SquadEvent::CohesionBreak)) {
-            edgeTarget = NO_REGION;
-            edgeProgress = 0;
-        }
+        ApplyEvent(SquadEvent::CohesionBreak);
     }
 }
 

@@ -1,8 +1,12 @@
 #pragma once
 
+#include "Gameplay/Command/Intervention.h"
 #include "Gameplay/Doctrine/Doctrine.h"
+#include "Gameplay/Result.h"
 #include "Gameplay/Sim/Sim.h"
 
+#include <array>
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <vector>
@@ -63,7 +67,17 @@ public:
     bool DeploySquad(const SquadTemplate& t, std::size_t regionIndex,
                      int side);
     bool SetSheet(std::size_t squadIndex, SquadSheet sheet);
-    bool SetCpPool(int cp); // content/harness hook; economy is Story 1.7
+    // Test/harness hook — the live economy (regen, cap) runs itself.
+    bool SetCpPool(int side, int cp);
+
+    // --- CP interventions (Execution only) ---
+    // Deduct-at-issue; the command applies at the start of the next tick
+    // (before doctrine eval). Rejections carry a reason and never deduct.
+    Result<bool> IssueRedirect(int side, int squadIndex,
+                               std::size_t region);   // 1 CP
+    Result<bool> IssueOverride(int side, int squadIndex,
+                               int slotIndex);        // 2 CP
+    Result<bool> IssueRetreat(int side, int squadIndex); // 3 CP
 
     // --- Execution tick ---
     // One deterministic tick: doctrine eval (snapshot semantics) ->
@@ -77,17 +91,23 @@ public:
     const std::vector<Squad>& Squads() const { return squads_; }
     const std::vector<SimEvent>& Events() const { return events_; }
     const BattleOutcome& Outcome() const { return outcome_; }
-    int CpPool() const { return cpPool_; }
+    int CpPool(int side) const {
+        assert(side == 0 || side == 1);
+        return cpPool_[side == 1 ? 1 : 0];
+    }
 
     // End-to-end determinism fingerprint: sim stream checksum folded
-    // with per-squad numeric state + beat. Strings are excluded (Squad
-    // is non-POD — hash field values, never object memory).
+    // with per-squad numeric state, beat, CP pools, and the pending
+    // command queue (committed-but-unapplied state). Strings are
+    // excluded (Squad is non-POD — hash field values, never object
+    // memory).
     std::uint64_t Checksum() const;
 
 private:
     int CountEffective(int side) const;
     void EmitBeatChanged(int tick, BattleBeat target);
     void CloseBattle(bool forced); // compute outcome + enter Aftermath
+    void ApplyInterventions(int tick);
 
     const BattleMap& map_;
     const DoctrineLibrary& cards_;
@@ -97,8 +117,10 @@ private:
     std::vector<SquadSheet> sheets_;     // index-aligned with squads_
     std::vector<int> routTimers_;        // index-aligned; Routing squads age out
     std::vector<SimEvent> events_;       // append-only battle log
+    std::vector<Intervention> pendingCommands_; // applied at next tick start
     BattleOutcome outcome_;
-    int cpPool_ = 3; // FR3: start 3 (regen/spend is Story 1.7)
+    std::array<int, 2> cpPool_ = {CP_START, CP_START};
+    int cpRegen_ = 0;
 };
 
 } // namespace Potato::Gameplay

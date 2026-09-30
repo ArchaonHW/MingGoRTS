@@ -4,6 +4,7 @@
 #include "Gameplay/Result.h"
 #include "Gameplay/Sim/Sim.h"
 
+#include <array>
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
@@ -64,6 +65,9 @@ struct DoctrineCard {
 struct CardSlot {
     std::size_t cardIndex = ~std::size_t{0}; // index into DoctrineLibrary
     int cooldownRemaining = 0;               // ticks until fireable
+    // CP override (Story 1.7): fire once bypassing trigger/condition;
+    // cleared on the slot's next visit whether or not it can act.
+    bool forceNext = false;
 };
 
 // 3–5 slotted cards per squad sheet.
@@ -80,12 +84,16 @@ struct SquadSheet {
 
 // Sim event — the recorded truth, append-only into the battle log.
 struct SimEvent {
-    enum class Kind : std::uint8_t { CardFired, BeatChanged };
+    enum class Kind : std::uint8_t { CardFired, BeatChanged, Intervention };
 
     Kind kind = Kind::CardFired;
     int tick = 0;
     int squadIndex = -1;
     int slotIndex = -1;
+    // Intervention: param = target region (Redirect) or slot index
+    // (Override); aux = InterventionKind ordinal (0=Redirect, 1=Override,
+    // 2=Retreat — wire-format stable).
+    int param = -1;
     // BeatChanged: new BattleBeat ordinal — wire-format stable
     // (Planning=0, Execution=1, Aftermath=2; recorder/replay depends on it).
     int aux = 0;
@@ -146,15 +154,16 @@ namespace Doctrine {
 // snapshot: squads' state at tick start; sheets are per-squad, aligned
 // by index with snapshot (asserted equal; a shorter sheets vector
 // silently skips trailing squads in release builds — don't do that).
-// cpPool is the shared CP pool both sides read (per-side pools land
-// with symmetric AI in Story 1.10). rng is reserved for future draws —
-// vocab v0 draws nothing, so draw-order determinism is structural.
+// cpPools is the per-side CP pool — cp_at_least reads the acting
+// squad's side (index 0 = player, 1 = enemy; out-of-range sides read 0).
+// rng is reserved for future draws — vocab v0 draws nothing, so
+// draw-order determinism is structural.
 EvalOutcome EvalTick(const BattleMap& map,
                      const std::vector<Squad>& snapshot,
                      std::vector<SquadSheet>& sheets,
                      const DoctrineLibrary& cards,
                      Prng& rng,
-                     int cpPool,
+                     const std::array<int, 2>& cpPools,
                      int tick);
 
 // Apply pending deltas to live squads — call AFTER EvalTick.

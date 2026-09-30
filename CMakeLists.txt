@@ -393,6 +393,12 @@ target_include_directories(potato_test_battle PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_battle PotatoGameplay)
 add_test(NAME potato_test_battle COMMAND potato_test_battle)
 
+# CP interventions 測試
+add_executable(potato_test_command Examples/potato_test_command.cpp)
+target_include_directories(potato_test_command PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_command PotatoGameplay)
+add_test(NAME potato_test_command COMMAND potato_test_command)
+
 if(WIN32)
     # Gameplay 層依賴方向守衛：禁 Rendering/GUI/Platform/GL 標頭
     add_test(NAME gameplay_dep_guard
