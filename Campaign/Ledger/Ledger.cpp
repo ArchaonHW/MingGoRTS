@@ -1,0 +1,195 @@
+#include "Campaign/Ledger/Ledger.h"
+
+#include <algorithm>
+#include <utility>
+
+namespace Potato::Campaign {
+namespace {
+
+using Gameplay::JsonValue;
+
+constexpr std::string_view kNames[kAccountCount] = {
+    "martial_merit", "popular_support", "mandate",
+    "army_prestige", "materiel",
+};
+
+JsonValue LegToJson(const Leg& l) {
+    JsonValue::Object o;
+    o.emplace("account", JsonValue::String(AccountName(l.account)));
+    o.emplace("amount", JsonValue::Int(l.amount));
+    return JsonValue::MakeObject(std::move(o));
+}
+
+// Strict leg parse: {"account": <known name>, "amount": <int>}.
+bool LegFromJson(const JsonValue& j, Leg& out) {
+    if (!j.IsObject() || !j["amount"].IsInt()) return false;
+    const std::string* name = j.FindString("account");
+    if (name == nullptr) return false;
+    Account a;
+    if (!AccountFromName(*name, a)) return false;
+    out = Leg{a, j["amount"].AsInt()};
+    return true;
+}
+
+// Shared memo/tag invariant used by Post and FromJson — the file is
+// untrusted; a load must not admit state the write path forbids.
+// Fold keys are set semantics: a duplicate tag would double-count in
+// any fold that counts occurrences.
+const char* ValidateMeta(const std::string& memo,
+                         const std::vector<std::string>& tags) {
+    if (memo.size() > Ledger::MAX_MEMO_LEN) return "memo too long";
+    if (tags.size() > Ledger::MAX_TAGS) return "too many tags";
+    for (const std::string& t : tags) {
+        if (t.empty() || t.size() > Ledger::MAX_TAG_LEN) {
+            return "bad tag length";
+        }
+    }
+    std::vector<std::string> sorted = tags;
+    std::sort(sorted.begin(), sorted.end());
+    if (std::adjacent_find(sorted.begin(), sorted.end()) !=
+        sorted.end()) {
+        return "duplicate tag";
+    }
+    return nullptr;
+}
+
+} // namespace
+
+const char* AccountName(Account a) {
+    const int i = static_cast<int>(a);
+    return (i >= 0 && i < kAccountCount) ? kNames[i].data() : "unknown";
+}
+
+bool AccountFromName(std::string_view name, Account& out) {
+    for (int i = 0; i < kAccountCount; ++i) {
+        if (name == kNames[i]) {
+            out = static_cast<Account>(i);
+            return true;
+        }
+    }
+    return false;
+}
+
+const char* ValidateLegs(const Leg& credit, const Leg& debit) {
+    const auto known = [](const Leg& l) {
+        return static_cast<int>(l.account) < kAccountCount;
+    };
+    if (!known(credit) || !known(debit)) {
+        return "leg names an unknown account";
+    }
+    if (credit.amount <= 0) return "credit amount must be > 0";
+    if (debit.amount <= 0) return "debit amount must be > 0";
+    if (credit.amount > Ledger::MAX_AMOUNT ||
+        debit.amount > Ledger::MAX_AMOUNT) {
+        return "amount exceeds MAX_AMOUNT";
+    }
+    if (credit.account == debit.account) {
+        return "credit and debit must be different accounts";
+    }
+    return nullptr;
+}
+
+Gameplay::Result<std::uint64_t> Ledger::Post(Posting p) {
+    if (const char* why = ValidateLegs(p.credit, p.debit)) {
+        return Gameplay::Fail<std::uint64_t>("unbalanced", why);
+    }
+    if (entries_.size() >= MAX_ENTRIES) {
+        return Gameplay::Fail<std::uint64_t>("posting",
+                                             "ledger at MAX_ENTRIES");
+    }
+    if (const char* why = ValidateMeta(p.memo, p.tags)) {
+        return Gameplay::Fail<std::uint64_t>("posting", why);
+    }
+    // Validate-then-append: the pair lands atomically or not at all.
+    LedgerEntry e;
+    e.seq = static_cast<std::uint64_t>(entries_.size());
+    e.credit = p.credit;
+    e.debit = p.debit;
+    e.memo = std::move(p.memo);
+    e.tags = std::move(p.tags);
+    entries_.push_back(std::move(e));
+    return Gameplay::Ok(entries_.back().seq);
+}
+
+std::int64_t Ledger::Balance(Account a) const {
+    std::int64_t sum = 0;
+    for (const LedgerEntry& e : entries_) {
+        if (e.credit.account == a) sum += e.credit.amount;
+        if (e.debit.account == a) sum -= e.debit.amount;
+    }
+    return sum;
+}
+
+Gameplay::Result<JsonValue> Ledger::ToJson() const {
+    JsonValue::Array arr;
+    arr.reserve(entries_.size());
+    for (const LedgerEntry& e : entries_) {
+        JsonValue::Array tags;
+        tags.reserve(e.tags.size());
+        for (const std::string& t : e.tags) {
+            tags.push_back(JsonValue::String(t));
+        }
+        JsonValue::Object o;
+        o.emplace("seq", JsonValue::Int(static_cast<std::int64_t>(e.seq)));
+        o.emplace("credit", LegToJson(e.credit));
+        o.emplace("debit", LegToJson(e.debit));
+        o.emplace("memo", JsonValue::String(e.memo));
+        o.emplace("tags", JsonValue::MakeArray(std::move(tags)));
+        arr.push_back(JsonValue::MakeObject(std::move(o)));
+    }
+    JsonValue::Object o;
+    o.emplace("schema", JsonValue::String(std::string(SCHEMA)));
+    o.emplace("entries", JsonValue::MakeArray(std::move(arr)));
+    return Gameplay::Ok(JsonValue::MakeObject(std::move(o)));
+}
+
+Gameplay::Result<Ledger> Ledger::FromJson(const JsonValue& doc) {
+    const std::string* schema = doc.FindString("schema");
+    if (schema == nullptr || *schema != SCHEMA) {
+        return Gameplay::Fail<Ledger>("schema",
+                                      "expected potato.ledger/1");
+    }
+    if (!doc["entries"].IsArray() ||
+        doc["entries"].Size() > MAX_ENTRIES) {
+        return Gameplay::Fail<Ledger>("schema",
+                                      "entries missing or oversized");
+    }
+    Ledger out;
+    std::uint64_t expectSeq = 0;
+    for (const JsonValue& j : doc["entries"].Items()) {
+        if (!j.IsObject() || !j["seq"].IsInt() ||
+            !j["memo"].IsString() || !j["tags"].IsArray()) {
+            return Gameplay::Fail<Ledger>("schema",
+                                          "mistyped entry field");
+        }
+        if (static_cast<std::uint64_t>(j["seq"].AsInt()) != expectSeq) {
+            return Gameplay::Fail<Ledger>(
+                "schema", "entry seq not contiguous from 0");
+        }
+        LedgerEntry e;
+        e.seq = expectSeq++;
+        e.memo = j["memo"].AsString();
+        if (!LegFromJson(j["credit"], e.credit) ||
+            !LegFromJson(j["debit"], e.debit)) {
+            return Gameplay::Fail<Ledger>("schema", "bad entry leg");
+        }
+        // Re-validate the invariant on load — the file is untrusted.
+        if (const char* why = ValidateLegs(e.credit, e.debit)) {
+            return Gameplay::Fail<Ledger>("unbalanced", why);
+        }
+        for (const JsonValue& t : j["tags"].Items()) {
+            if (!t.IsString()) {
+                return Gameplay::Fail<Ledger>("schema",
+                                              "non-string tag");
+            }
+            e.tags.push_back(t.AsString());
+        }
+        if (const char* why = ValidateMeta(e.memo, e.tags)) {
+            return Gameplay::Fail<Ledger>("schema", why);
+        }
+        out.entries_.push_back(std::move(e));
+    }
+    return Gameplay::Ok(std::move(out));
+}
+
+} // namespace Potato::Campaign

@@ -72,3 +72,10 @@
 - `Squad::ApplyHit` has no caller outside `potato_test_squad` — no doctrine action deals damage in E0, so `Destroyed`/`LedgerEvent::Casualty` postings are structurally emitted but unexercisable through the battle API. Lands when a combat/damage action arrives (doctrine vocab or Epic 4 governance-field events).
 - `potato.battle_record/1` gained `closeReason`/`stalemate` without a version bump — records are pre-release (generated+verified same-session; none persisted); bump the schema when durable records ship.
 - `EventFromJson` `aux` bound 0..5 is kind-generic (BeatChanged 0-2, Intervention 0-5, CloseReason 0-2) — permissive by design; the replay diff is the semantic gate. Tighten per-kind only if a hostile-record DoS path ever materializes.
+
+## Deferred from: code review of 2-1-five-account-double-entry-ledger (2026-10-03)
+
+- `potato.ledger/1` has no hash fields — adding the chain (Story 2.2) should bump to `potato.ledger/2`, since a /1 loader silently skips chain verification and trailing-entry truncation is undetectable. Unknown per-entry fields are also dropped on resave — relevant when 2.3 adds the `suspect` flag.
+- Dep guard is a textual tripwire: `-like` substring matching over-matches dir names ending `game/`/`gui/`/`rendering/` (none exist today), `#if 0` blocks still flag, macro-aliased `#include MACRO` evades it, and `.inl/.cc/.cxx/.ixx` extensions are unscanned. Sufficient as a cheap guard; upgrade to a real include-graph tool only if evasion matters.
+- `Ledger` is copyable — copies diverge intentionally (save snapshots). `Entries()` references invalidate on Post (documented on the accessor).
+- Engine `install(DIRECTORY …)` headers skip `Gameplay/` and `Campaign/` — pre-existing gap, flagged for completeness.

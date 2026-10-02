@@ -49,8 +49,8 @@ development_status:
   1-11-battlerecorder-replay-verifier: done
   1-12-win-evaluation: done
   epic-1-retrospective: optional
-  epic-2: backlog
-  2-1-five-account-double-entry-ledger: backlog
+  epic-2: in-progress
+  2-1-five-account-double-entry-ledger: done
   2-2-append-only-tamper-evident-chain: backlog
   2-3-forgery-suspicion-channels: backlog
   2-4-audit-aware-reports: backlog

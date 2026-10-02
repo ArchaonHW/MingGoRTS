@@ -434,6 +434,21 @@ add_executable(potato_verify Examples/potato_verify.cpp)
 target_include_directories(potato_verify PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_verify PotatoGameplay)
 
+# ==== Campaign 層 ====
+# Campaign：持久化層——headless、依賴方向 Gameplay <- Campaign（禁入
+# 清單同樣由 scripts/CheckGameplayDeps.ps1 檢查，外加 Game/）
+file(GLOB_RECURSE CAMPAIGN_SOURCES CONFIGURE_DEPENDS "Campaign/*.cpp")
+file(GLOB_RECURSE CAMPAIGN_HEADERS CONFIGURE_DEPENDS "Campaign/*.h")
+add_library(PotatoCampaign STATIC ${CAMPAIGN_SOURCES} ${CAMPAIGN_HEADERS})
+target_include_directories(PotatoCampaign PUBLIC ${CMAKE_SOURCE_DIR})
+target_link_libraries(PotatoCampaign PUBLIC PotatoGameplay)
+
+# Story 2.1 — five-account double-entry ledger
+add_executable(potato_test_ledger Examples/potato_test_ledger.cpp)
+target_include_directories(potato_test_ledger PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_ledger PotatoCampaign)
+add_test(NAME potato_test_ledger COMMAND potato_test_ledger)
+
 # CLI end-to-end: emit a sealed record, then verify it (exit-code check).
 add_test(NAME potato_record_emit
     COMMAND potato_test_record --emit ${CMAKE_BINARY_DIR}/verify_sample.json)
