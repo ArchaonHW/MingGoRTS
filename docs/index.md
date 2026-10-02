@@ -1,15 +1,34 @@
-# MingGoRTS 文檔索引
+﻿# MingGoRTS 文檔索引
 
 ```
 docs/
 ├── index.md          # 本索引
 ├── README.md         # 文檔導航
+├── requirements.md   # 核心專案需求規格書 ⭐ 新增
+├── design.md         # 核心專案技術設計文檔 ⭐ 新增
 ├── guides/           # 使用指南與建置說明
 ├── architecture/     # 架構設計與開發計劃
 ├── reports/          # 整合報告與稽核
 ├── research/         # 研究文檔
 └── archive/          # 歷史完成報告(已整合)
 ```
+
+## 📋 核心規格書
+
+- **[requirements.md](./requirements.md)** ⭐ — MingGoRTS 核心專案需求規格書 (46 項需求、460 條驗收標準)
+  - 遊戲核心機制 (Doctrine、戰鬥、量子霧霾、名冊、錄製、帳本、治理等)
+  - PotatoEngine 引擎架構 (核心、事件、資源、場景、渲染、物理等)
+  - AI 與機器學習 (Agent、神經網路、強化學習、NLP、LLM、RAG等)
+  - MingGoRTS IDE (核心架構、GUI、國際化、智能建議、模板系統)
+  - 非功能性需求 (效能、可測試性、安全性、可維護性、相容性、文檔)
+
+- **[design.md](./design.md)** ⭐ — MingGoRTS 核心專案技術設計文檔
+  - 系統架構設計 (分層架構、組件圖、執行緒模型)
+  - 核心模組設計 (PotatoEngine、Event System、Resource Manager、Serialization等)
+  - 戰鬥層設計 (BattleController、Doctrine、QuantumFog、BattleRecorder、Ledger等)
+  - 資料模型與JSON Schema
+  - API設計與資料流
+  - 效能設計與安全設計
 
 ## 📚 指南 (guides/)
 
@@ -47,4 +66,4 @@ docs/
 
 ---
 
-**🥔 MingGoRTS 文檔索引** — 最後更新:2026-09-16
+**🥔 MingGoRTS 文檔索引** — 最後更新:2026-10-02
