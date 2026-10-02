@@ -66,6 +66,8 @@ bool CampaignFlow::Validate(const CampaignState &s, std::string &error) const {
     for (size_t i = 0; i < s.progress.completed.size(); ++i)
         if (s.progress.completed[i] != all[i].id)
             return fail();
+    // 戰前：當前章尚未完成；戰後／終卷：當前章也必須已列入 completed。
+    // 此處檢查連續前綴，防止讀回存檔後跳章或重播已結算章節。
     size_t expected =
         static_cast<size_t>(c->number - 1) + (s.progress.stage == CampaignStage::Briefing ? 0 : 1);
     if (s.progress.completed.size() != expected)
@@ -99,6 +101,7 @@ bool CampaignFlow::Validate(const CampaignState &s, std::string &error) const {
         auto it = map.find(id);
         return it == map.end() ? std::string() : it->second;
     };
+    // 存檔中的 peace 標記也要重新檢查前兩章證據，不能只相信 UI 已鎖住選項。
     const bool peaceEligible = value(s.progress.choices, "duanqiao") == "mercy" &&
                                value(s.progress.outcomes, "duanqiao") == "victory" &&
                                value(s.progress.choices, "ash_ledger") == "rescue" &&
@@ -207,6 +210,8 @@ bool CampaignFlow::CompleteBattle(CampaignState &s, const BattleController &b, c
         error = "談判路徑應使用無戰結算";
         return false;
     }
+    // 本場名冊只監看仍存活的戰場物件；結算後合併成不帶指標的永久歷史。
+    // 必須先清除敗方的拾獲，再 Absorb，否則會把敵軍遺物誤加到我方庫存。
     CampaignState n = s;
     PostBattle pb;
     int winner = b.GetOutcome() == BattleOutcome::Victory  ? 0
@@ -245,6 +250,7 @@ bool CampaignFlow::CompleteBattle(CampaignState &s, const BattleController &b, c
     n.progress.cumulativeDead += report.TotalDead(0);
     n.progress.completed.push_back(c->id);
     n.progress.outcomes[c->id] = winner == 0 ? "victory" : winner == 1 ? "defeat" : "draw";
+    // 進入 Aftermath 是恰好一次結算的門檻；同章再次提交會在入口被拒絕。
     n.progress.stage = CampaignStage::Aftermath;
     n.progress.lastPeaceful = false;
     s = std::move(n);
@@ -266,6 +272,7 @@ bool CampaignFlow::CompletePeace(CampaignState &s, std::string &error) const {
     n.progress.lastPeaceful = true;
     n.progress.completed.push_back(c->id);
     n.progress.outcomes[c->id] = "peace";
+    // 進入 Aftermath 是恰好一次結算的門檻；同章再次提交會在入口被拒絕。
     n.progress.stage = CampaignStage::Aftermath;
     s = std::move(n);
     error.clear();
@@ -283,6 +290,8 @@ bool CampaignFlow::Advance(CampaignState &s, std::string &error) const {
     if (c->number == static_cast<int>(library.Chapters().size()))
         n.progress.stage = CampaignStage::Complete;
     else {
+        // number 從 1 起算，所以當前章 number 正好是下一章的 0 起算索引。
+        // 上面的末章判定必須先成立，避免最後一章越界。
         const auto &next = library.Chapters()[c->number];
         n.AdvanceChapter(next.arc, next.number, next.id);
         n.progress.stage = CampaignStage::Briefing;
@@ -314,6 +323,8 @@ bool CampaignFlow::Advance(CampaignState &s, std::string &error) const {
     return true;
 }
 void CampaignFlow::RegisterCampRoster(CampaignState &state) const {
+    // 臨時戰場僅用來沿用 Enroll 的身分擷取；不開戰，也不提供額外兵力。
+    // MergeHistory 會清除 watched 指標，因此 seed 析構後永久名冊仍然安全。
     BattleController seed(24, 16, 1);
     Roster additions;
     for (const auto &unit : state.Camp().GetUnits()) {

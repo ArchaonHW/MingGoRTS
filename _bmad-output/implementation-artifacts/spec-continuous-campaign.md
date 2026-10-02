@@ -94,7 +94,7 @@ Review patches: retain off-field wounded under new officers with original class/
 **Persistence and casualties**
 
 - Commit to memory only after a complete validated disk checkpoint.
-  [Checkpoint.h:7](../../Campaign/Checkpoint.h#L7)
+  [Checkpoint.h:17](../../Campaign/Checkpoint.h#L17)
 
 - Replace the previous save without deleting it first.
   [CampaignState.cpp:25](../../Campaign/CampaignState.cpp#L25)
@@ -106,7 +106,7 @@ Review patches: retain off-field wounded under new officers with original class/
 **Presentation and evidence**
 
 - Expose choices, refit, resume and a seven-chapter terminal ledger.
-  [CampaignShell.h:32](../../Examples/CampaignShell.h#L32)
+  [CampaignShell.h:35](../../Examples/CampaignShell.h#L35)
 
 - Verify both routes, corruption, casualties and failed settlement retries.
   [CampaignFlowTest.cpp:62](../../Examples/CampaignFlowTest.cpp#L62)

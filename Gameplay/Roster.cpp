@@ -99,6 +99,8 @@ JsonValue Roster::ToJson() const {
     return o;
 }
 
+// 永久名冊按既有身分合併，陣亡是不可逆狀態；合併後一律移除監看指標。
+// 戰鬥中只 Update 本場名冊，不能讓跨章歷史依賴上一場已銷毀的 Squad。
 void Roster::MergeHistory(const Roster &source) {
     for (const auto &e : source.entries) {
         bool found = false;

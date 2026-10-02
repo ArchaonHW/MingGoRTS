@@ -43,6 +43,8 @@ bool CampaignState::SaveToFile(const std::string &path) const {
     root.objectValue["god_stance"] = empty;
     root.objectValue["intel_ledger"] = empty;
 
+    // 暫存檔放在主檔旁，讓替換在同一檔案系統內進行；未寫完前保留舊主檔。
+    // flush 檢查輸出失敗，區塊結束先關閉檔案，再執行替換，避免 Windows 檔案鎖。
     const std::string tmp = path + ".tmp";
     {
         std::ofstream f(tmp, std::ios::trunc);
@@ -112,6 +114,8 @@ bool CampaignState::LoadFromFile(const std::string &path) {
         !JsonValidation::Strings(cj["fronts_taken"]))
         return false;
     newChapter.FromJson(cj);
+    // 沒有 campaign_progress 的舊聚合檔仍可供底層工具載入；遊戲入口另透過
+    // CampaignFlow::Validate 要求 initialized 與有效章節，不把舊檔誤當可繼續戰役。
     CampaignProgress newProgress;
     if (!root["campaign_progress"].IsNull() && !newProgress.FromJson(root["campaign_progress"]))
         return false;

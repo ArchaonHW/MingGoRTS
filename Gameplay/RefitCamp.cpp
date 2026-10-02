@@ -37,6 +37,8 @@ void RefitCamp::Absorb(const PostBattleReport &report, const Roster &roster, int
             if (c.eliminated) {
                 // 先前在營的傷兵沒有出戰，轉交新軍官；不復活陣亡隊長。
                 if (units[i].wounded > 0) {
+                    // 複製兵種、模板及紀念遺物，再換新接收軍官；只剩在營傷兵，
+                    // 沒有免費恢復這次全滅的部署兵力，也沒有復活原隊長。
                     VeteranUnit medical = units[i];
                     medical.members = 0;
                     medical.squadName = "傷員接收 · " + units[i].squadName;
@@ -87,6 +89,7 @@ bool RefitCamp::Recruit(const SquadTemplateLibrary &library, const std::string &
     loot -= tpl->cost;
     VeteranUnit u;
     u.squadName = tpl->name;
+    // 序號包含過去已陣亡的招募隊；只找目前 units 是否撞名不足以維持身分。
     ++recruitSerial;
     // 序號持久化，已陣亡的補充隊伍身分永不重用。
     if (recruitSerial > 1)
@@ -126,6 +129,7 @@ std::vector<Squad *> RefitCamp::Deploy(BattleController &battle, int team,
                                        const SquadTemplateLibrary *library) {
     std::vector<Squad *> out;
     for (size_t i = 0; i < units.size(); ++i) {
+        // 傷員接收隊可合法只有 wounded，醫治前不能生成零兵力戰場小隊。
         if (units[i].members <= 0)
             continue;
         Vector2 pos(0.0f, 0.0f);

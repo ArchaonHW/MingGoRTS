@@ -751,6 +751,8 @@ int main(int argc, char** argv) {
         std::fprintf(stderr, "%s\n", campaignError.c_str()); shutdownAll(); return 1;
     }
     Campaign::CampaignFlow flow(chapters);
+    // 玩家進度與自動驗證使用不同資料夾，測試新戰役不覆蓋正常存檔。
+    // 目前只存章節檢查點；戰鬥離開後從保存的部署前兵力與決策重新開始。
     const bool verification = visualCheck || campaignCheck;
     auto saveDir = std::filesystem::path(DemoAssets::Root()).parent_path() / (verification ? "verification-saves" : "saves");
     std::error_code saveError;
@@ -820,6 +822,8 @@ int main(int argc, char** argv) {
         const auto* chapter = flow.Current(campaign);
         const auto* chapterChoice = flow.SelectedChoice(campaign);
         if (!chapter || !chapterChoice || campaign.progress.stage != Campaign::CampaignStage::Briefing) { screen = ResumeCampaign(campaign); continue; }
+        // 首次終態只自動提交一次。保存失敗保留本場 battle/roster，
+        // 讓「重試保存結算」重用真實結果；下一章按鈕只在保存成功後啟用。
         bool settlementAttempted = false, settlementSaved = false;
         auto settleBattle = [&](const BattleController& b, const Roster& r) {
             settlementAttempted = true;
@@ -944,9 +948,9 @@ int main(int argc, char** argv) {
     const MapPin* southCamp  = map.FindPin("南岸敵營");
     Squad* rearGuard = nullptr;
     Squad* generalGuard = nullptr;
-    // Original identities and current manpower come from the persistent camp.
+    // 原軍身分與目前兵力只從持久營地部署；不依空營地重建滿編初始軍。
     auto deployPositions = chapter->friendlyDeployment;
-    // Extra recruits use unblocked cells within the friendly deployment zone.
+    // 招募隊超過章節預設點時，在我方部署區找額外可通行格，避免落在水中。
     for (int y = 1; deployPositions.size() < camp.GetUnits().size() && y < GH; ++y)
         for (int x = 2; deployPositions.size() < camp.GetUnits().size() && x < GW - 2; x += 2) {
             Vector2 p{float(x), float(y)};
@@ -1126,6 +1130,7 @@ int main(int argc, char** argv) {
     bool portraitCaptured = false;
     bool planningCaptured = false;
     bool inspectionCaptured = false;
+    // 開戰前先確認完整檢查點可保存；失敗便留在軍議，不開始無法接續的場次。
     auto beginBattle = [&]() {
         if (!CommitCampaign(campaign, flow, savePath, campaignError, [](auto&, auto&) { return true; })) return;
         deck.Commit(battle);
@@ -1392,8 +1397,8 @@ int main(int argc, char** argv) {
         }
 
         if (campaignCheck && planningPhase && visualFrame >= 10) beginBattle();
-        // Explicit verification fixture: exercise rendering, live casualties and settlement;
-        // headless mission tests verify the actual protection win/loss rules.
+        // 腳本驗證明確改變本場傷亡以檢查串關；naturalCheck 不走此分支，
+        // 改由正常教令與戰鬥模擬產生結果。保護成功／失敗另有無頭任務測試。
         if (campaignCheck && !naturalCheck && visualFrame == 80 && battle.GetPhase() == BattlePhase::Execution) {
             if (!allies.empty()) allies.front()->ApplyCasualties(2);
             for (auto* enemy : enemies) enemy->ApplyCasualties(enemy->GetMembers());

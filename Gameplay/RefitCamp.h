@@ -70,7 +70,8 @@ class RefitCamp {
 
     // ---- 戰後吸收（G-7 對接）----
     // report 中屬於 team 的隊：存活→members/wounded 記回、
-    // 被殲滅→移出常備軍（隊長已入冊）；report.relics → 庫存
+    // 被殲滅→移出原編制，舊傷兵交給新接收軍官（原隊長仍陣亡）；
+    // report.relics → 庫存
     void Absorb(const PostBattleReport &report, const Roster &roster, int team);
 
     // ---- 整補 ----

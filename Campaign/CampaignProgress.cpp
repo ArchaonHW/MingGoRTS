@@ -49,6 +49,8 @@ JsonValue CampaignProgress::ToJson() const {
     j.objectValue["lastReport"] = r;
     return j;
 }
+// 先檢查階段字串、整數範圍與損失拆分（lost = wounded + dead），
+// 再整份置換；部分欄位有效不代表整份進度可以使用。跨章節規則由 Flow 驗證。
 bool CampaignProgress::FromJson(const JsonValue &j) {
     if (!j.IsObject() || j["schema"].AsString() != "potato.campaign_progress/1" ||
         !j["initialized"].IsBool() || !j["initialized"].boolValue || !j["stage"].IsString() ||

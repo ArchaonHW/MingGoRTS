@@ -28,6 +28,7 @@ bool ChapterLibrary::LoadFromFile(const std::string &path, std::string &error) {
         root["schema"].AsString() != "potato.chapters/1" || !root["chapters"].IsArray() ||
         root["chapters"].Size() < 3)
         return fail();
+    // 先建立整包候選，途中任何章節出錯都不替換 chapters，避免只載入半卷。
     std::vector<ChapterDefinition> candidate;
     std::set<std::string> ids;
     for (const auto &j : root["chapters"].arrayValue) {
@@ -72,11 +73,13 @@ bool ChapterLibrary::LoadFromFile(const std::string &path, std::string &error) {
         }
         if (c.mapPath.rfind("assets/maps/", 0) != 0 || c.mapPath.find("..") != std::string::npos)
             return fail();
+        // path 已限制在資產地圖目錄；相對章節檔找 assets，從 system32 啟動也可用。
         const auto mapFile =
             std::filesystem::path(path).parent_path().parent_path() / c.mapPath.substr(7);
         Gameplay::BattleMap map;
         if (!map.LoadFromFile(mapFile.string()))
             return fail();
+        // 與實際戰場使用同一套地形灌入邏輯，檢查出生點不是阻擋格。
         Gameplay::FlowField field(map.GetGridWidth(), map.GetGridHeight(), map.GetCellSize());
         map.ApplyToField(field);
         auto pos = [&](const JsonValue &v, Vector2 &p) {
@@ -128,6 +131,7 @@ bool ChapterLibrary::LoadFromFile(const std::string &path, std::string &error) {
         }
         candidate.push_back(c);
     }
+    // 模板 ID 同樣只在啟動時載入；續玩時拒絕不存在的模板，避免退回預設能力。
     Gameplay::SquadTemplateLibrary templates;
     const auto assets = std::filesystem::path(path).parent_path().parent_path();
     templates.LoadDir((assets / "squads").string());

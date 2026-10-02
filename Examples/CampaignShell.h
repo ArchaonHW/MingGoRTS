@@ -19,6 +19,7 @@ static const char *CampaignOutcomeName(const std::string &value) {
     return "平手";
 }
 
+// 重開只根據持久階段導頁；不把上次停留的 UI 頁面當作已完成的戰果。
 static ShellScreen ResumeCampaign(const Potato::Campaign::CampaignState &state) {
     using Potato::Campaign::CampaignStage;
     if (state.progress.stage == CampaignStage::Complete)
@@ -28,6 +29,8 @@ static ShellScreen ResumeCampaign(const Potato::Campaign::CampaignState &state) 
     return ShellScreen::Story;
 }
 
+// 每次只繪製一幀並傳回欲切換的 ShellScreen。章節、字體、肖像已在外層載入，
+// 本頁不逐幀解碼資產；只有玩家執行決策／整補等操作時才透過 commit 寫檔。
 static ShellScreen
 CampaignFrame(GLFWwindow *window, OpenGLRenderer &renderer, ShellScreen screen,
               Campaign::CampaignState &state, const Campaign::ChapterLibrary &library,
@@ -131,6 +134,7 @@ CampaignFrame(GLFWwindow *window, OpenGLRenderer &renderer, ShellScreen screen,
         if (ImGui::BeginPopupModal("建立新戰役", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
             ImGui::TextUnformatted("將建立新的行軍帳。已有存檔會先備份為 campaign.previous.json。");
             if (ImGui::Button("確認建立")) {
+                // 建立新戰役是明確覆寫操作；備份失敗就停止，不犧牲舊存檔。
                 std::error_code ec;
                 if (std::filesystem::exists(savePath)) {
                     auto backup =
@@ -211,6 +215,7 @@ CampaignFrame(GLFWwindow *window, OpenGLRenderer &renderer, ShellScreen screen,
                     "保護後衛 %.0f "
                     "秒；若後衛已不在編，改保護最後一支生還部隊。保護對象全滅或潰逃即失敗。",
                     selected->holdSeconds);
+            // 可戰兵力與傷兵池不同；只有傷兵時先醫治或招募，不能進空戰場。
             const bool canDeploy =
                 std::any_of(state.Camp().GetUnits().begin(), state.Camp().GetUnits().end(),
                             [](const auto &u) { return u.members > 0; });

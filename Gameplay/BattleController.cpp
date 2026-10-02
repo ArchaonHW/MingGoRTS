@@ -799,6 +799,8 @@ void BattleController::ResolveCombat(float dt) {
     }
 }
 
+// 保護對象必須是本場我軍，且只能在部署期設定；先確認指標屬於本場才解參考。
+// seconds 使用遊戲時間：暫停不推進，倍速依既有 timeScale 作用。
 bool BattleController::SetProtectionObjective(Squad* watched, float seconds) {
     if (phase != BattlePhase::Deployment || !watched ||
         !std::isfinite(seconds) || seconds <= 0.0f) return false;
@@ -810,6 +812,7 @@ bool BattleController::SetProtectionObjective(Squad* watched, float seconds) {
     return true;
 }
 
+// 撤退是不可逆的終態轉換；已結束的勝利不能因第二次按鈕操作被改寫。
 bool BattleController::Withdraw() {
     if (phase != BattlePhase::Execution || outcome != BattleOutcome::Ongoing) return false;
     outcome = BattleOutcome::Defeat;
@@ -841,6 +844,8 @@ void BattleController::CheckOutcome() {
         } else {
             outcome = BattleOutcome::Victory;
         }
+    // 衛隊陣亡的既有規則優先；接著先判保護對象失敗，再判計時成功。
+    // 同一幀到時且保護對象全滅／潰逃，不能靠計時順序誤判勝利。
     } else if (protectedSquad && (protectedSquad->IsEliminated() || protectedSquad->IsRouting())) {
         outcome = BattleOutcome::Defeat;
     } else if (protectedSquad && alive[0] && elapsed >= protectionSeconds) {

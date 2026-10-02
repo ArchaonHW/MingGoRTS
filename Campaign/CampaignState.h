@@ -13,7 +13,8 @@
 // intel_ledger 由 E-5/E-6/E-11 後續填充（缺段載入不報錯）。
 //
 // 章節序由帳本管（AdvanceChapter 同步 ChapterState），
-// 存檔只發生在章節邊界——戰中不存檔（架構§Save/Load）。
+// 檢查點涵蓋戰前決策、整補、戰後結果與章節推進；不保存逐幀戰場。
+// 執行中關閉遊戲，重開從該場戰前檢查點接續，而非恢復關閉瞬間。
 
 #include "Campaign/ChapterState.h"
 #include "Gameplay/CampaignLedger.h"
@@ -28,6 +29,9 @@ namespace Potato {
 namespace Campaign {
 
 enum class CampaignStage { Briefing, Aftermath, Complete };
+// 持久進度與暫時的 ShellScreen 分開：主選單、軍議與 3D 畫面不另存為章節。
+// completed 必須是章節庫的連續前綴；choices/outcomes 以穩定 ID 而非顯示名稱索引。
+// lastReport 只保存最近一次結果，cumulativeDead 才是全卷永久陣亡合計。
 struct CampaignProgress {
     bool initialized = false;
     CampaignStage stage = CampaignStage::Briefing;
