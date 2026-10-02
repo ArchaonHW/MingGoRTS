@@ -4,6 +4,7 @@
 
 Potato Engine 是一個完全獨立的、現代化的 C++ 遊戲引擎，具備原生的 AI Agent 能力。**此版本已完全解除 Unreal Engine 5 依賴**，可以獨立運行和開發。
 
+運行指令: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\Xian\Desktop\MingGoRTS\Temp\Run-MingGoRTS-Visual.ps1"
 ---
 
 ## ✨ 主要特色
