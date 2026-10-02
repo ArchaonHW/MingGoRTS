@@ -45,7 +45,7 @@ development_status:
   1-7-cp-interventions: done
   1-8-quantumfog: done
   1-9-battleplan-arrows: done
-  1-10-symmetric-ai-opponent: backlog
+  1-10-symmetric-ai-opponent: done
   1-11-battlerecorder-replay-verifier: backlog
   1-12-win-evaluation: backlog
   epic-1-retrospective: optional

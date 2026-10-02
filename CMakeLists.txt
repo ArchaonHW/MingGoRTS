@@ -411,6 +411,12 @@ target_include_directories(potato_test_plan PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_plan PotatoGameplay)
 add_test(NAME potato_test_plan COMMAND potato_test_plan)
 
+# Symmetric AI 測試
+add_executable(potato_test_ai Examples/potato_test_ai.cpp)
+target_include_directories(potato_test_ai PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_ai PotatoGameplay)
+add_test(NAME potato_test_ai COMMAND potato_test_ai)
+
 if(WIN32)
     # Gameplay 層依賴方向守衛：禁 Rendering/GUI/Platform/GL 標頭
     add_test(NAME gameplay_dep_guard

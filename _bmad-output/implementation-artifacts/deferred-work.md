@@ -58,3 +58,11 @@
 - Replan on an arrowless squad creates and grants an arrow mid-Execution (deliberately kept — "replan = new plan" for CP). Re-check the contract when the symmetric AI opponent (1.10) starts issuing replans.
 - No `potato.balance/1` file exists on disk — `PlanConfig::FromJson` verified via inline JSON only (same precedent as `FogConfig`); wires in with the asset pipeline.
 - `PlanConfig` is a bare aggregate like `FogConfig` — hand-built configs bypass `FromJson` bounds (e.g. replanCost > CP_CAP).
+
+## Deferred from: code review of 1-10-symmetric-ai-opponent (2026-09-30)
+
+- Cloud-shaping is cunning-only: aggressive/defensive priors never touch fog. The AC mechanism is demonstrated on the prior that cares; a per-prior fog signature would be a design follow-up.
+- `BattleAI::Act` reads `.side` on enemy squad rows to locate its own squads (short-circuit; no other enemy field touched). Mechanical own-index iteration lands when roster indices are tracked — same deferral bucket as `Squads()` truth exposure.
+- `Plan` header claims "no mutation on failure" — held today only because all failure modes pre-validate; a future mid-loop `DeploySquad` gate would partially deploy. Latent.
+- Cunning probes scan in region-index order, not weakest-certainty-first (comment says weakest); v0 acceptable.
+- `BattleAI` ctor validates neither `side` nor `prior`; `Plan` gates bad sides and `Act` is benign (Issue* side-checks reject) — harden if AI objects are ever host-driven without Plan.
