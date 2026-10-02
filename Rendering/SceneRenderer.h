@@ -3,6 +3,7 @@
 #include "Core/CoreTypes.h"
 #include "MathUtils/Matrix4.h"
 #include "MathUtils/Vector3.h"
+#include "Rendering/RenderableComponent.h"
 #include <vector>
 
 namespace Potato {
@@ -23,6 +24,7 @@ struct RenderItem {
     SharedPtr<Shader> shader;
     SharedPtr<Texture> texture;
     Vector3 color = Vector3(1.0f, 1.0f, 1.0f);
+    SurfaceProfile surfaceProfile = SurfaceProfile::Neutral;
     Matrix4 worldMatrix;
 };
 

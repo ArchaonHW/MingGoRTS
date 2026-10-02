@@ -42,6 +42,8 @@ bool OpenGLRenderer::Initialize() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    // 使用既有品質設定；不支援多重取樣的裝置可退回一般 framebuffer。
+    glfwWindowHint(GLFW_SAMPLES, config.msaaSamples > 0 ? config.msaaSamples : 0);
     
     GLFWmonitor* monitor = config.window.fullscreen ? glfwGetPrimaryMonitor() : nullptr;
     windowHandle = glfwCreateWindow(
@@ -52,6 +54,11 @@ bool OpenGLRenderer::Initialize() {
         nullptr
     );
     
+    if (!windowHandle && config.msaaSamples > 0) {
+        glfwWindowHint(GLFW_SAMPLES, 0);
+        windowHandle = glfwCreateWindow(config.window.width, config.window.height,
+            config.window.title.c_str(), monitor, nullptr);
+    }
     if (!windowHandle) {
         LOG_ERROR("Failed to create GLFW window");
         ShutdownGLFW();
@@ -61,9 +68,7 @@ bool OpenGLRenderer::Initialize() {
     glfwMakeContextCurrent(static_cast<GLFWwindow*>(windowHandle));
     
     // 設置 VSync
-    if (config.window.vsync) {
-        glfwSwapInterval(1);
-    }
+    glfwSwapInterval(config.window.vsync ? 1 : 0);
     
     // 初始化 GLAD
     if (!InitializeGLAD()) {
@@ -257,6 +262,7 @@ bool OpenGLRenderer::InitializeGLAD() {
 }
 
 void OpenGLRenderer::SetupOpenGL() {
+    glEnable(GL_MULTISAMPLE);
     // 設置默認狀態
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
@@ -339,24 +345,33 @@ void Shader::Unbind() const {
     glUseProgram(0);
 }
 
+int Shader::UniformLocation(const std::string& name) {
+    if (!programID) return -1;
+    const auto found = uniformLocations.find(name);
+    if (found != uniformLocations.end()) return found->second;
+    const int location = glGetUniformLocation(programID, name.c_str());
+    uniformLocations.emplace(name, location);
+    return location;
+}
+
 void Shader::SetUniformInt(const std::string& name, int value) {
-    glUniform1i(glGetUniformLocation(programID, name.c_str()), value);
+    glUniform1i(UniformLocation(name), value);
 }
 
 void Shader::SetUniformFloat(const std::string& name, float value) {
-    glUniform1f(glGetUniformLocation(programID, name.c_str()), value);
+    glUniform1f(UniformLocation(name), value);
 }
 
 void Shader::SetUniformVec2(const std::string& name, const Vector2& value) {
-    glUniform2f(glGetUniformLocation(programID, name.c_str()), value.x, value.y);
+    glUniform2f(UniformLocation(name), value.x, value.y);
 }
 
 void Shader::SetUniformVec3(const std::string& name, const Vector3& value) {
-    glUniform3f(glGetUniformLocation(programID, name.c_str()), value.x, value.y, value.z);
+    glUniform3f(UniformLocation(name), value.x, value.y, value.z);
 }
 
 void Shader::SetUniformMat4(const std::string& name, const Matrix4& matrix) {
-    glUniformMatrix4fv(glGetUniformLocation(programID, name.c_str()), 1, GL_FALSE, matrix.m);
+    glUniformMatrix4fv(UniformLocation(name), 1, GL_FALSE, matrix.m);
 }
 
 bool Shader::CompileShader(uint32 type, const std::string& source, uint32& shaderID) {
@@ -379,6 +394,7 @@ bool Shader::CompileShader(uint32 type, const std::string& source, uint32& shade
 }
 
 bool Shader::LinkProgram(uint32 vertexID, uint32 fragmentID) {
+    uniformLocations.clear();
     programID = glCreateProgram();
     glAttachShader(programID, vertexID);
     glAttachShader(programID, fragmentID);

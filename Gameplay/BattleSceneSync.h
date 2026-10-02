@@ -2,6 +2,7 @@
 
 #include "Core/CoreTypes.h"
 #include "MathUtils/Vector3.h"
+#include "MathUtils/Vector2.h"
 
 #include <unordered_map>
 #include <vector>
@@ -44,6 +45,9 @@ public:
     // 設定共用單位 mesh(可為 nullptr 清除)
     void SetUnitMesh(SharedPtr<Mesh> mesh);
 
+    // 選用移動朝向：只旋轉模型子節點（模型正面為 +Z），不影響選取環與血條。
+    void SetMovementFacing(bool enabled);
+
     // ---- overlay(A-4):選取環 + 血條 ----
     // 三個 mesh 皆以「寬 1 單位、原點居中」製作,由 sync 負責版面:
     //   ring    — 平放環,選取時顯示於小隊腳下(y≈0.22,高過橋板/水面)
@@ -79,6 +83,9 @@ private:
         Squad* squad;
         SharedPtr<SceneNode> node;
         SharedPtr<RenderableComponent> renderable;
+        SharedPtr<SceneNode> meshNode;
+        Vector2 previousPosition;
+        float yaw = 0.0f;
         // overlay 子節點(SetOverlayMeshes 後建立,命名 "__sel_ring" 等)
         SharedPtr<SceneNode> ringNode;
         SharedPtr<SceneNode> barBgNode;
@@ -88,6 +95,7 @@ private:
 
     void CreateBinding(Squad* squad);
     void EnsureOverlay(Binding& b);
+    void ConfigureMovementFacing(Binding& b);
     SceneNode* EnsureFogNode(int entityId);
     static Vector3 TeamColor(int team);
 
@@ -105,6 +113,8 @@ private:
     float barY = 2.0f;
     float barWidth = 1.2f;
     float cellSize = 1.0f;
+    bool movementFacing = false;
+    float previousElapsed = 0.0f;
 };
 
 } // namespace Gameplay

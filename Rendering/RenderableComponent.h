@@ -10,6 +10,16 @@ class Mesh;
 class Shader;
 class Texture;
 
+// Optional surface treatment for shaders that understand uSurfaceProfile.
+// Neutral preserves the existing rendering behavior.
+enum class SurfaceProfile : int {
+    Neutral = 0,
+    Terrain = 1,
+    Water = 2,
+    Timber = 3,
+    Stone = 4
+};
+
 /**
  * 可渲染組件
  * 掛在 SceneNode 上，由 SceneRenderer 在視錐剔除後提交繪製
@@ -27,6 +37,7 @@ public:
 
     // 材質參數
     Vector3 color = Vector3(1.0f, 1.0f, 1.0f);
+    SurfaceProfile surfaceProfile = SurfaceProfile::Neutral;
     bool visible = true;
 
     // 本地空間包圍球半徑；SetRenderable 時寫回節點供 Frustum Culling 使用

@@ -12,6 +12,7 @@
 #include "Rendering/SceneRenderer.h"
 #include "Rendering/RenderableComponent.h"
 #include "Rendering/Camera.h"
+#include "Rendering/ImageCodec.h"
 #include "Scene/SceneNode.h"
 #include "Gameplay/BattleController.h"
 #include "Gameplay/BattleSceneSync.h"
@@ -35,6 +36,7 @@
 #include "MathUtils/Matrix4.h"
 #include "DemoAssets.h"
 #include "UITheme.h"
+#include "CharacterArt.h"
 
 #include <glad/glad.h>
 #ifndef GLFW_INCLUDE_NONE
@@ -56,6 +58,40 @@
 using namespace Potato;
 using namespace Potato::Gameplay;
 
+// 機率區域只在 demo 的透明 pass 繪製；高度高於橋板與水面。
+static constexpr float FOG_PATCH_Y = 0.28f;
+static const char* FOG_VERT = R"(
+#version 330 core
+layout(location=0) in vec3 aPos;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+out vec2 vPatch;
+out float vConfidence;
+void main() {
+    vec4 worldPos = model * vec4(aPos, 1.0);
+    worldPos.y = 0.28;
+    vPatch = aPos.xz / 0.45;
+    // BattleSceneSync 的既有縮放 s = 0.4 + 2p；不查詢敵軍真實位置。
+    vConfidence = clamp((length(model[0].xyz) - 0.4) / 2.0, 0.0, 1.0);
+    gl_Position = projection * view * worldPos;
+}
+)";
+static const char* FOG_FRAG = R"(
+#version 330 core
+in vec2 vPatch;
+in float vConfidence;
+uniform vec3 uColor;
+out vec4 FragColor;
+void main() {
+    float radius = length(vPatch);
+    float softness = 1.0 - smoothstep(0.15, 1.0, radius);
+    float alpha = softness * mix(0.20, 0.65, vConfidence);
+    if (alpha < 0.003) discard;
+    FragColor = vec4(uColor, alpha);
+}
+)";
+
 // ---- 簡易 lambert shader(uniform 名對齊 SceneRenderer::SubmitRenderList)----
 static const char* UNIT_VERT = R"(
 #version 330 core
@@ -65,27 +101,332 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 out vec3 vNormal;
+out vec3 vWorldPos;
 void main() {
+    vec4 worldPos = model * vec4(aPos, 1.0);
     vNormal = mat3(transpose(inverse(model))) * aNormal;
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    vWorldPos = worldPos.xyz;
+    gl_Position = projection * view * worldPos;
 }
 )";
 
 static const char* UNIT_FRAG = R"(
 #version 330 core
 in vec3 vNormal;
+in vec3 vWorldPos;
 uniform vec3 uColor;
 uniform vec3 uLightDir;
+uniform vec3 uCameraPos;
+uniform int uSurfaceProfile;
+uniform float uVisualTime;
+uniform vec2 uRiverRange;
 out vec4 FragColor;
+
+float hash21(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+}
+
+float valueNoise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    float a = hash21(i);
+    float b = hash21(i + vec2(1.0, 0.0));
+    float c = hash21(i + vec2(0.0, 1.0));
+    float d = hash21(i + vec2(1.0, 1.0));
+    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+}
+
 void main() {
     vec3 n = normalize(vNormal);
     float diff = max(dot(n, normalize(uLightDir)), 0.0);
-    vec3 col = uColor * (0.30 + 0.75 * diff);
+    float light = 0.30 + 0.75 * diff;
+    vec3 col = uColor * light;
+
+    if (uSurfaceProfile == 1) { // Terrain: restrained soil/grass variation.
+        float broad = valueNoise(vWorldPos.xz * 0.22);
+        float fine = valueNoise(vWorldPos.xz * 1.7);
+        float fineFootprint = max(fwidth(vWorldPos.x * 1.7), fwidth(vWorldPos.z * 1.7));
+        float fineWeight = 1.0 - smoothstep(0.25, 0.9, fineFootprint);
+        // 大面積草地色階與岸邊泥土，避免整塊地面只剩均勻綠色。
+        vec3 grassTint = mix(vec3(0.75, 0.86, 0.68), vec3(1.28, 1.19, 1.02), broad);
+        col *= grassTint * (1.0 + (fine - 0.5) * 0.16 * fineWeight);
+        float bankDistance = min(abs(vWorldPos.z - uRiverRange.x), abs(vWorldPos.z - uRiverRange.y));
+        float bank = (1.0 - smoothstep(0.08, 0.90, bankDistance + (fine - 0.5) * 0.25))
+                   * smoothstep(0.6, 0.95, n.y);
+        col = mix(col, vec3(0.25, 0.23, 0.16) * light, bank * 0.72);
+        float roughness = mix(0.82, 0.96, fine);
+        vec3 halfDir = normalize(normalize(uLightDir) + normalize(uCameraPos - vWorldPos));
+        float specular = pow(max(dot(n, halfDir), 0.0), mix(28.0, 8.0, roughness));
+        col += vec3(0.20, 0.24, 0.17) * specular * mix(0.05, 0.015, roughness);
+    } else if (uSurfaceProfile == 2) { // Water: cool depth and subtle world-space ripples.
+        // 沿河流動的細長波峰；不再相乘成大塊圓形光斑。
+        float phaseA = vWorldPos.z * 8.0 + sin(vWorldPos.x * 0.55 - uVisualTime * 0.45) * 0.7;
+        float phaseB = vWorldPos.z * 13.0 + sin(vWorldPos.x * 1.1 - uVisualTime * 0.3) * 0.7
+                     + vWorldPos.x * 0.3 - uVisualTime * 0.9;
+        float waveFootprint = max(fwidth(phaseA), fwidth(phaseB));
+        float waveWeight = 1.0 - smoothstep(0.35, 1.1, waveFootprint);
+        float ripple = 0.5 + 0.5 * sin(phaseA) * waveWeight;
+        float topFace = smoothstep(0.45, 0.92, n.y);
+        float bankDistance = min(abs(vWorldPos.z - uRiverRange.x), abs(vWorldPos.z - uRiverRange.y));
+        float shallow = 1.0 - smoothstep(0.10, 0.80, bankDistance);
+        col = mix(uColor * vec3(0.64, 0.86, 0.92), vec3(0.18, 0.36, 0.36), shallow * 0.5) * light;
+        col *= 0.96 + 0.06 * ripple;
+        float crest = smoothstep(0.86, 0.99, sin(phaseB)) * waveWeight * topFace;
+        float crestSegments = 0.5 + 0.5 * sin(vWorldPos.x * 2.1 + sin(vWorldPos.z * 2.0) - uVisualTime * 0.4);
+        crest *= smoothstep(0.25, 0.85, crestSegments);
+        col += vec3(0.020, 0.044, 0.055) * crest;
+        vec3 halfDir = normalize(normalize(uLightDir) + normalize(uCameraPos - vWorldPos));
+        float glint = pow(max(dot(n, halfDir), 0.0), 36.0) * topFace;
+        col += vec3(0.025, 0.055, 0.065) * glint;
+    } else if (uSurfaceProfile == 3) { // Timber: subtle seams and long grain.
+        float topFace = smoothstep(0.45, 0.92, n.y);
+        vec2 plankCell = vWorldPos.xz * vec2(1.0, 2.8);
+        vec2 plankFrac = fract(plankCell);
+        vec2 plankEdge = min(plankFrac, 1.0 - plankFrac);
+        float seamWidth = 0.025 + max(fwidth(plankCell.y), 0.001);
+        float seam = 1.0 - smoothstep(0.025, seamWidth, plankEdge.y);
+        float endCell = vWorldPos.x / 2.0 + floor(plankCell.y) * 0.5;
+        float endEdge = min(fract(endCell), 1.0 - fract(endCell));
+        float endSeam = 1.0 - smoothstep(0.008, 0.008 + max(fwidth(endCell), 0.008), endEdge);
+        seam = max(seam, endSeam);
+        float grainPhase = vWorldPos.x * 15.0 + valueNoise(vWorldPos.xz * 1.4) * 4.0;
+        float grainWeight = 1.0 - smoothstep(0.35, 1.1, fwidth(grainPhase));
+        float grain = 0.5 + 0.5 * sin(grainPhase) * grainWeight;
+        float boardTone = hash21(vec2(floor(endCell), floor(plankCell.y)));
+        col *= 0.93 + boardTone * 0.14 + (grain - 0.5) * 0.10 - seam * topFace * 0.25;
+    } else if (uSurfaceProfile == 4) { // Stone: cool mineral variation.
+        float mineral = valueNoise(vWorldPos.xz * 2.4 + vWorldPos.y * 0.7);
+        col *= 0.94 + mineral * 0.12;
+    }
+
     FragColor = vec4(col, 1.0);
 }
 )";
 
 // ---- 程序化 mesh ----
+
+// 士兵零件共用單一 mesh；texCoord.x 僅在專用 shader 表示材質類型。
+static const char* SOLDIER_VERT = R"(
+#version 330 core
+layout(location=0) in vec3 aPos;
+layout(location=1) in vec3 aNormal;
+layout(location=2) in vec2 aTexCoord;
+uniform mat4 model, view, projection;
+out vec3 vNormal;
+out vec3 vLocalPos;
+flat out int vPart;
+void main() {
+    vNormal = mat3(transpose(inverse(model))) * aNormal;
+    vLocalPos = aPos;
+    vPart = int(aTexCoord.x + 0.5);
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
+}
+)";
+static const char* SOLDIER_FRAG = R"(
+#version 330 core
+in vec3 vNormal;
+in vec3 vLocalPos;
+flat in int vPart;
+uniform vec3 uColor;
+out vec4 FragColor;
+void main() {
+    float moraleLight = clamp(max(max(uColor.r, uColor.g), uColor.b) / 0.9, 0.0, 1.0);
+    vec3 col = vec3(0.40, 0.42, 0.32);
+    if (vPart == 1) col = vec3(0.69, 0.49, 0.34);
+    if (vPart == 2) col = vec3(0.075, 0.079, 0.071);
+    if (vPart == 3) col = vec3(0.29, 0.19, 0.105);
+    if (vPart == 4) col = vec3(0.32, 0.35, 0.28);
+    if (vPart == 5) col = vec3(0.29, 0.29, 0.21);
+    if (vPart == 6) col = uColor / max(max(max(uColor.r, uColor.g), uColor.b), 0.001) * 0.78;
+    if (vPart == 7) col = vec3(0.13, 0.15, 0.15);
+    if (vPart == 8) col = vec3(0.56, 0.53, 0.46);
+    if (vPart == 9) col = vec3(0.36, 0.19, 0.14);
+    if (vPart == 0 || vPart == 4 || vPart == 5) {
+        float cloth = sin(vLocalPos.y * 31.0 + vLocalPos.x * 9.0) * sin(vLocalPos.z * 23.0);
+        col *= 0.98 + cloth * 0.025;
+    }
+    vec3 n = normalize(vNormal);
+    vec3 lightDir = normalize(vec3(-0.4, 1.0, 0.35));
+    float light = 0.40 + 0.60 * max(dot(n, lightDir), 0.0);
+    float sheen = pow(max(dot(n, normalize(lightDir + vec3(0.0, 0.55, 1.0))), 0.0), 24.0);
+    float spec = vPart == 7 ? 0.055 : (vPart == 2 ? 0.014 : 0.004);
+    FragColor = vec4((col * light + vec3(sheen * spec)) * moraleLight, 1.0);
+}
+)";
+
+static Mesh MakeSoldier(float cell) {
+    std::vector<Vertex> vertices;
+    std::vector<uint32> indices;
+    vertices.reserve(3400);
+    indices.reserve(12000);
+    auto vertex = [&](Vector3 p, Vector3 n, int part) {
+        Vertex v{};
+        v.position = p * cell;
+        v.normal = n.Normalized();
+        v.texCoord = Vector2(static_cast<float>(part), 0.0f);
+        vertices.push_back(v);
+    };
+    // 橢球梯度提供平滑法線；極點跳過退化三角形。
+    auto oval = [&](Vector3 center, Vector3 radius, int part, int seg = 12, int rings = 7) {
+        const uint32 base = static_cast<uint32>(vertices.size());
+        for (int r = 0; r <= rings; ++r) {
+            const float latitude = -1.5707963f + 3.1415927f * r / rings;
+            const float c = std::cos(latitude), s = std::sin(latitude);
+            for (int k = 0; k <= seg; ++k) {
+                const float angle = 6.2831853f * k / seg;
+                const Vector3 unit(c * std::cos(angle), s, c * std::sin(angle));
+                vertex(center + unit * radius, {unit.x/radius.x, unit.y/radius.y, unit.z/radius.z}, part);
+            }
+        }
+        for (int r = 0; r < rings; ++r) {
+            for (int k = 0; k < seg; ++k) {
+                const uint32 a = base + r * (seg + 1) + k, b = a + 1;
+                const uint32 c = a + seg + 1, d = c + 1;
+                if (r > 0) indices.insert(indices.end(), {a,c,b});
+                if (r < rings - 1) indices.insert(indices.end(), {b,c,d});
+            }
+        }
+    };
+    // 圓錐台沿兩端連線延伸，法線含錐度；關節以重疊橢球柔化輪廓。
+    auto tube = [&](Vector3 from, Vector3 to, float r0, float r1, int part, int seg = 10) {
+        const Vector3 delta = to - from;
+        const float length = delta.Length();
+        const Vector3 axis = delta / length;
+        const Vector3 reference = std::abs(axis.y) < 0.9f ? Vector3(0,1,0) : Vector3(1,0,0);
+        const Vector3 u = axis.Cross(reference).Normalized(), v = axis.Cross(u);
+        const uint32 base = static_cast<uint32>(vertices.size());
+        for (int row = 0; row < 2; ++row) {
+            for (int k = 0; k <= seg; ++k) {
+                const float angle = 6.2831853f * k / seg;
+                const Vector3 radial = u * std::cos(angle) + v * std::sin(angle);
+                vertex((row == 0 ? from : to) + radial * (row == 0 ? r0 : r1),
+                       radial - axis * ((r1-r0)/length), part);
+            }
+        }
+        for (int k = 0; k < seg; ++k) {
+            const uint32 a = base + k, b = a + 1, c = a + seg + 1, d = c + 1;
+            indices.insert(indices.end(), {a,b,c,b,d,c});
+        }
+        // 端面用各自法線，避免槍口、衣領的法線被側面插值。
+        for (int row = 0; row < 2; ++row) {
+            const Vector3 center = row == 0 ? from : to;
+            const Vector3 normal = row == 0 ? -axis : axis;
+            const uint32 cap = static_cast<uint32>(vertices.size());
+            vertex(center, normal, part);
+            for (int k = 0; k <= seg; ++k) {
+                const float angle = 6.2831853f * k / seg;
+                vertex(center + (u*std::cos(angle)+v*std::sin(angle))*(row == 0 ? r0 : r1), normal, part);
+            }
+            for (int k = 0; k < seg; ++k) {
+                if (row == 0) indices.insert(indices.end(), {cap,cap+k+2,cap+k+1});
+                else indices.insert(indices.end(), {cap,cap+k+1,cap+k+2});
+            }
+        }
+    };
+    auto box = [&](Vector3 center, Vector3 size, int part) {
+        const Vector3 h = size * 0.5f;
+        const Vector3 corners[8] = {
+            {-h.x,-h.y,-h.z}, {h.x,-h.y,-h.z}, {h.x,h.y,-h.z}, {-h.x,h.y,-h.z},
+            {-h.x,-h.y,h.z}, {h.x,-h.y,h.z}, {h.x,h.y,h.z}, {-h.x,h.y,h.z}};
+        const int faces[6][4] = {{4,5,6,7},{1,0,3,2},{5,1,2,6},{0,4,7,3},{7,6,2,3},{0,1,5,4}};
+        const Vector3 normals[6] = {{0,0,1},{0,0,-1},{1,0,0},{-1,0,0},{0,1,0},{0,-1,0}};
+        for (int f = 0; f < 6; ++f) {
+            const uint32 base = static_cast<uint32>(vertices.size());
+            for (int k = 0; k < 4; ++k) {
+                Vertex v{};
+                v.position = (center + corners[faces[f][k]]) * cell;
+                v.normal = normals[f];
+                v.texCoord = Vector2(static_cast<float>(part), 0.0f);
+                vertices.push_back(v);
+            }
+            indices.insert(indices.end(), {base,base+1,base+2,base,base+2,base+3});
+        }
+    };
+    // +Z 為正面；成人頭身比例、腳底 y=0，所有零件合併成共用 mesh。
+    for (float side : {-1.0f, 1.0f}) {
+        const Vector3 hip(side*0.105f,0.80f,0), knee(side*0.12f,0.47f,0.025f);
+        const Vector3 ankle(side*0.135f,0.14f,-0.015f);
+        tube(hip,knee,0.098f,0.073f,4);
+        oval(knee,{0.077f,0.081f,0.080f},4);
+        tube(knee,ankle,0.074f,0.053f,4);
+        oval({side*0.135f,0.075f,0.055f},{0.076f,0.075f,0.145f},2);
+        tube(ankle,{side*0.135f,0.25f,-0.005f},0.059f,0.064f,2);
+    }
+    oval({0,0.805f,0},{0.205f,0.13f,0.125f},4);
+    // 多圈橢圓制服：腰身窄、胸肩寬，避免方塊或球形軀幹。
+    const float torsoY[] = {0.79f,0.88f,1.04f,1.18f,1.235f};
+    const float torsoX[] = {0.174f,0.166f,0.205f,0.231f,0.165f};
+    const float torsoZ[] = {0.118f,0.113f,0.137f,0.124f,0.098f};
+    const uint32 torsoBase = static_cast<uint32>(vertices.size());
+    constexpr int torsoSeg = 16;
+    for (int r = 0; r < 5; ++r) {
+        const int lo = r == 0 ? 0 : r-1, hi = r == 4 ? 4 : r+1;
+        const float sx = (torsoX[hi]-torsoX[lo])/(torsoY[hi]-torsoY[lo]);
+        const float sz = (torsoZ[hi]-torsoZ[lo])/(torsoY[hi]-torsoY[lo]);
+        for (int k = 0; k <= torsoSeg; ++k) {
+            const float a = 6.2831853f*k/torsoSeg, c = std::cos(a), s = std::sin(a);
+            vertex({torsoX[r]*c,torsoY[r],torsoZ[r]*s},
+                   {c/torsoX[r],-sx*c*c/torsoX[r]-sz*s*s/torsoZ[r],s/torsoZ[r]},0);
+        }
+    }
+    for (int r = 0; r < 4; ++r) for (int k = 0; k < torsoSeg; ++k) {
+        const uint32 a = torsoBase+r*(torsoSeg+1)+k, b = a+1, c = a+torsoSeg+1, d = c+1;
+        indices.insert(indices.end(),{a,c,b,b,c,d});
+    }
+    oval({0,1.224f,0},{0.165f,0.028f,0.098f},0,12,6);
+    tube({0,1.21f,0},{0,1.345f,0},0.060f,0.063f,1);
+    oval({0,1.442f,0.012f},{0.103f,0.127f,0.096f},1,16,10);
+    oval({0,1.425f,0.111f},{0.026f,0.039f,0.028f},1,8,6);
+    for (float side : {-1.0f,1.0f}) {
+        oval({side*0.042f,1.467f,0.100f},{0.019f,0.009f,0.008f},8,8,6);
+        oval({side*0.042f,1.467f,0.107f},{0.005f,0.007f,0.003f},2,8,6);
+        oval({side*0.042f,1.485f,0.096f},{0.024f,0.004f,0.005f},3,8,6);
+    }
+    oval({0,1.393f,0.102f},{0.023f,0.004f,0.006f},9,8,6);
+    for (float side : {-1.0f,1.0f}) oval({side*0.103f,1.443f,0.002f},{0.020f,0.035f,0.022f},1,8,6);
+    oval({0,1.567f,0},{0.121f,0.078f,0.107f},4);
+    oval({0,1.532f,0.106f},{0.125f,0.015f,0.093f},4);
+    oval({0,1.555f,0.104f},{0.027f,0.024f,0.008f},6,8,6);
+    // 雙臂於胸前彎曲，左右手實際落在槍托握把與前護木。
+    const Vector3 shoulders[] = {{-0.231f,1.163f,0},{0.231f,1.163f,0}};
+    const Vector3 elbows[] = {{-0.273f,0.963f,0.144f},{0.278f,0.992f,0.137f}};
+    const Vector3 hands[] = {{-0.166f,1.067f,0.265f},{0.193f,1.121f,0.267f}};
+    for (int i = 0; i < 2; ++i) {
+        oval(shoulders[i],{0.078f,0.092f,0.085f},0);
+        tube(shoulders[i],elbows[i],0.077f,0.061f,0);
+        oval(elbows[i],{0.064f,0.064f,0.067f},0);
+        tube(elbows[i],hands[i],0.061f,0.044f,0);
+        oval(hands[i],{0.054f,0.046f,0.054f},1);
+        oval({shoulders[i].x*1.15f,1.17f,0.014f},{0.016f,0.041f,0.060f},6,8,6);
+    }
+    // 圓角背包、織帶、皮帶與小型彈藥袋；箱形僅用於裝備。
+    oval({0,1.013f,-0.205f},{0.168f,0.204f,0.089f},5);
+    for (float side : {-1.0f,1.0f}) {
+        tube({side*0.12f,1.22f,0.094f},{side*0.104f,0.868f,0.120f},0.017f,0.017f,5,6);
+        box({side*0.126f,0.87f,0.15f},{0.078f,0.107f,0.055f},5);
+        box({side*0.118f,0.929f,0.151f},{0.086f,0.019f,0.063f},5);
+    }
+    oval({0,0.847f,0},{0.19f,0.032f,0.126f},3);
+    box({0,0.847f,0.13f},{0.042f,0.040f,0.014f},7);
+    box({0.073f,1.146f,0.130f},{0.061f,0.038f,0.012f},6);
+    // 槍身斜橫於胸前，低多邊形圓管與木製槍托均具真實軸向。
+    const Vector3 stock(-0.325f,1.03f,0.264f), receiver(-0.092f,1.078f,0.264f);
+    const Vector3 foreEnd(0.272f,1.137f,0.264f), muzzle(0.48f,1.171f,0.264f);
+    tube(stock,receiver,0.045f,0.031f,3,10);
+    oval(stock,{0.040f,0.058f,0.032f},3,8,6);
+    tube(receiver,foreEnd,0.027f,0.022f,3,10);
+    tube(receiver,muzzle,0.016f,0.011f,7,10);
+    tube({-0.104f,1.062f,0.267f},{-0.145f,1.010f,0.267f},0.025f,0.023f,3,8);
+    box({-0.016f,1.039f,0.266f},{0.052f,0.068f,0.035f},7);
+    box({0.391f,1.173f,0.264f},{0.017f,0.037f,0.016f},7);
+    Mesh mesh;
+    mesh.SetVertices(vertices);
+    mesh.SetIndices(indices);
+    return mesh;
+}
 
 static Mesh MakeBox(float w, float h, float d) {
     Mesh m;
@@ -117,8 +458,27 @@ static Mesh MakeBox(float w, float h, float d) {
     return m;
 }
 
+// 平面直徑 0.9，既有候選機率縮放仍由 BattleSceneSync 提供。
+static Mesh MakeFogPatch() {
+    Mesh m;
+    std::vector<Vertex> verts(4);
+    const Vector3 positions[] = {
+        Vector3(-0.45f, 0, -0.45f), Vector3(0.45f, 0, -0.45f),
+        Vector3(0.45f, 0, 0.45f), Vector3(-0.45f, 0, 0.45f)
+    };
+    for (size_t i = 0; i < verts.size(); ++i) {
+        verts[i].position = positions[i];
+        verts[i].normal = Vector3(0, 1, 0);
+        verts[i].texCoord = Vector2(0, 0);
+    }
+    m.SetVertices(verts);
+    m.SetIndices({0, 2, 1, 0, 3, 2});
+    return m;
+}
+
 // 膠囊體:車削(profile = 下半球 + 圓柱 + 上半球)
-static Mesh MakeCapsule(float radius, float height, int seg = 12, int rings = 6) {
+static Mesh MakeCapsule(float radius, float height, int seg = 12, int rings = 6,
+                        bool centered = false) {
     Mesh m;
     float cylHalf = height * 0.5f - radius; // 圓柱半高
     if (cylHalf < 0.0f) cylHalf = 0.0f;
@@ -145,7 +505,7 @@ static Mesh MakeCapsule(float radius, float height, int seg = 12, int rings = 6)
             Vertex v;
             // 膠囊底部落在 y=0,直立在地面(squad 節點在 y=0)
             v.position = Vector3(profile[r].x * ca,
-                                 profile[r].y + height * 0.5f,
+                                 profile[r].y + (centered ? 0.0f : height * 0.5f),
                                  profile[r].x * sa);
             v.normal = Vector3(pNormal[r].x * ca, pNormal[r].y, pNormal[r].x * sa);
             v.texCoord = Vector2((float)s / seg, (float)r / (rows - 1));
@@ -193,12 +553,14 @@ static SharedPtr<SceneNode> AddStaticBox(SharedPtr<SceneNode> parent,
                                        SharedPtr<Mesh> mesh,
                                        const Vector3& pos,
                                        const Vector3& color,
-                                       const char* name, float boundR) {
+                                       const char* name, float boundR,
+                                       SurfaceProfile surfaceProfile = SurfaceProfile::Neutral) {
     auto node = MakeShared<SceneNode>(name);
     node->SetLocalPosition(pos);
     auto rc = MakeShared<RenderableComponent>();
     rc->mesh = mesh;
     rc->color = color;
+    rc->surfaceProfile = surfaceProfile;
     rc->boundingRadius = boundR;
     node->SetRenderable(rc);
     parent->AddChild(node);
@@ -214,7 +576,7 @@ static void ScrollCallback(GLFWwindow*, double, double yoff) { g_scroll += yoff;
 static int PickFogCloud(const QuantumFog& fog, const BattleController& battle,
                         const PickRay& ray, float cell) {
     Vector3 g;
-    if (!BattlePicker::IntersectGround(ray, 0.5f * cell, g)) return -1;
+    if (!BattlePicker::IntersectGround(ray, FOG_PATCH_Y, g)) return -1;
     int best = -1;
     float bestDist = 0.9f * cell;
     for (size_t id = 0; id < fog.EntityCount(); ++id) {
@@ -256,6 +618,7 @@ static bool WorldToScreen(const Camera& cam, const Vector3& w,
 
 // ---- U-1 遊戲殼：Title → Battle → (回 Title | 離開) ----
 enum class ShellScreen { Title, Battle, Quit };
+static bool CaptureFrame(const char* path, int width, int height);
 
 // 標題頁單幀：置中視窗 + 開戰/說明/設定/離開。
 // theme/uiScale 由設定頁就地修改；applied* 追蹤已套用的值。
@@ -263,7 +626,8 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
                               UITheme::Id& theme, float& uiScale,
                               ImFont* fontSans, ImFont* fontSerif,
                               UITheme::Id& appliedTheme, float& appliedScale,
-                              RefitCamp& camp, const SquadTemplateLibrary& campLibrary) {
+                              RefitCamp& camp, const SquadTemplateLibrary& campLibrary,
+                              Texture* portraits, bool* titleCaptured = nullptr) {
     renderer.PollEvents();
 
     int dw = 0, dh = 0, ww = 0, wh = 0;
@@ -297,27 +661,93 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
     ShellScreen next = ShellScreen::Title;
     static bool showHelp = false, showSettings = false;
 
-    ImGui::SetNextWindowPos(ImVec2(ww * 0.5f, wh * 0.46f), ImGuiCond_Always,
-                            ImVec2(0.5f, 0.5f));
-    ImGui::SetNextWindowSize(ImVec2(430, 0), ImGuiCond_Always);
+    const float margin = ww >= 1000 ? 48.0f : 22.0f;
+    const bool wide = ww >= 1000;
+    const ImU32 gold = IM_COL32(194, 173, 113, 255);
+    ImDrawList* backdrop = ImGui::GetBackgroundDrawList();
+    backdrop->AddRectFilledMultiColor(ImVec2(0, 0), ImVec2((float)ww, (float)wh),
+        IM_COL32(34, 39, 32, 255), IM_COL32(17, 22, 20, 255),
+        IM_COL32(12, 16, 15, 255), IM_COL32(25, 30, 26, 255));
+    backdrop->AddLine(ImVec2(margin, 70), ImVec2(ww - margin, 70),
+                      IM_COL32(194, 173, 113, 85));
+    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2((float)ww, (float)wh), ImGuiCond_Always);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(margin, 25));
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(12, 12));
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(14, 10));
+    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(236, 232, 216, 255));
+    ImGui::PushStyleColor(ImGuiCol_TextDisabled, IM_COL32(167, 174, 156, 255));
+    ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(48, 57, 45, 255));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, IM_COL32(75, 85, 59, 255));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, IM_COL32(92, 101, 69, 255));
     ImGui::Begin("##title", nullptr,
-                 ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove |
-                     ImGuiWindowFlags_AlwaysAutoResize |
+                 ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove |
                      ImGuiWindowFlags_NoBackground);
-
-    ImGui::PushFont(fontSerif, 34.0f);
-    const char* title = "斷 橋 攻 防 戰";
-    ImGui::SetCursorPosX((ImGui::GetWindowWidth() -
-                          ImGui::CalcTextSize(title).x) * 0.5f);
-    ImGui::TextUnformatted(title);
-    ImGui::PopFont();
-    ImGui::TextDisabled("寫下教令,然後看它自己打。");
-    ImGui::Separator();
-    ImGui::Spacing();
-
-    if (ImGui::Button("開 戰", ImVec2(-1, 34))) {
-        next = ShellScreen::Battle;
+    ImGui::TextColored(UITheme::C(0xc2ad71), "斷橋戰役   /   第一章");
+    if (wide) {
+        ImGui::SameLine(ImGui::GetWindowWidth() - margin - 200);
+        ImGui::TextDisabled("我軍 · 作戰準備");
     }
+    ImGui::Dummy(ImVec2(0, 32));
+
+    // 左側軍議入口與右側軍官陣容共用可捲動頁面，小視窗改為上下排列。
+    const float contentWidth = std::max(200.0f, ImGui::GetContentRegionAvail().x);
+    const float leftWidth = wide ? contentWidth * 0.34f : contentWidth;
+    ImGui::BeginGroup();
+    ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + leftWidth);
+    ImGui::TextDisabled("戰役檔案  /  001");
+    ImGui::PushFont(fontSerif, wide ? 54.0f : 38.0f);
+    ImGui::TextUnformatted("斷橋攻防戰");
+    ImGui::PopFont();
+    ImGui::TextColored(UITheme::C(0xc2ad71), "一道斷橋，決定整條戰線。");
+    ImGui::Dummy(ImVec2(0, 12));
+    ImGui::TextWrapped("敵軍正向渡口集結。召集軍官、部署小隊，\n在戰火抵達之前，寫下你的作戰教令。");
+    ImGui::Dummy(ImVec2(0, 16));
+    ImGui::TextDisabled("作戰目標");
+    ImGui::TextUnformatted("穩住橋頭防線\n掌握敵情，保全麾下兵力");
+    ImGui::Dummy(ImVec2(0, 16));
+    ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(171, 151, 91, 255));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, IM_COL32(200, 181, 120, 255));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, IM_COL32(151, 132, 74, 255));
+    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(23, 29, 24, 255));
+    if (ImGui::Button("進入戰前軍議", ImVec2(leftWidth, 56))) next = ShellScreen::Battle;
+    ImGui::PopStyleColor(4);
+    ImGui::TextDisabled("編排教令  /  部署兵力  /  下達作戰命令");
+    ImGui::PopTextWrapPos();
+    ImGui::EndGroup();
+
+    if (wide) ImGui::SameLine(0, 36);
+    else ImGui::Dummy(ImVec2(0, 12));
+    ImGui::BeginGroup();
+    const float galleryWidth = wide ? contentWidth - leftWidth - 36 : contentWidth;
+    ImGui::TextColored(UITheme::C(0xc2ad71), "參戰軍官");
+    ImGui::TextDisabled("各司其職，同守一線。");
+    const float gap = 10.0f;
+    const float cardWidth = (galleryWidth - gap * 2) / 3.0f;
+    const float portraitHeight = std::min(350.0f, cardWidth * 1.5f);
+    const char* roles[] = {"我軍指揮", "步兵軍官", "敵方指揮"};
+    const char* traits[] = {"守住防線", "協同作戰", "情報待查證"};
+    for (int i = 0; i < 3; ++i) {
+        if (i > 0) ImGui::SameLine(0, gap);
+        ImGui::BeginGroup();
+        const ImVec2 p = ImGui::GetCursorScreenPos();
+        const ImVec2 end(p.x + cardWidth, p.y + portraitHeight);
+        ImDrawList* draw = ImGui::GetWindowDrawList();
+        draw->AddRectFilled(p, end, IM_COL32(42, 48, 38, 255));
+        CharacterArt::DrawPortrait(draw, portraits, i, p, end);
+        draw->AddRectFilledMultiColor(ImVec2(p.x, p.y + portraitHeight * 0.55f), end,
+            IM_COL32(12, 17, 14, 0), IM_COL32(12, 17, 14, 0),
+            IM_COL32(12, 17, 14, 245), IM_COL32(12, 17, 14, 245));
+        draw->AddRect(p, end, i == 0 ? gold : IM_COL32(110, 118, 92, 170));
+        ImGui::Dummy(ImVec2(cardWidth, portraitHeight));
+        ImGui::TextColored(UITheme::C(0xc2ad71), "%s", roles[i]);
+        ImGui::TextDisabled("%s", traits[i]);
+        ImGui::EndGroup();
+    }
+    ImGui::EndGroup();
+    ImGui::Dummy(ImVec2(0, 24));
+    ImGui::Separator();
 
     // ---- G-9 整補營:跨場常備軍 + 戰利品帳(首戰後出現) ----
     if (!camp.GetUnits().empty()) {
@@ -378,14 +808,8 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
     if (ImGui::Button("離 開", ImVec2(-1, 0))) next = ShellScreen::Quit;
 
     ImGui::End();
-    ImGui::PopFont();
-
-    // CJK 直書標題（印章式，標題窗右側;DESIGN:直書僅限標題/印章）
-    ImGui::PushFont(fontSerif ? fontSerif : ImGui::GetFont(), 30.0f);
-    UITheme::VTextAt(ImGui::GetForegroundDrawList(),
-                     ImVec2(ww * 0.5f + 245.0f, wh * 0.28f),
-                     "斷橋攻防戰",
-                     ImGui::GetColorU32(ImGuiCol_Text));
+    ImGui::PopStyleColor(5);
+    ImGui::PopStyleVar(3);
     ImGui::PopFont();
 
     // 主題切換過場：新主題 clear color 全屏 scrim 淡出(~0.45s)。
@@ -401,11 +825,37 @@ static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    if (titleCaptured) *titleCaptured = CaptureFrame("presentation-title.png", dw, dh);
     renderer.SwapBuffers();
     return next;
 }
 
-int main() {
+// 直接擷取本程式的 framebuffer；僅供 --visual-check 驗證使用。
+static bool CaptureFrame(const char* path, int width, int height) {
+    if (width <= 0 || height <= 0) return false;
+    std::vector<uint8> pixels(static_cast<size_t>(width) * height * 4);
+    glReadBuffer(GL_BACK);
+    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+    const size_t rowBytes = static_cast<size_t>(width) * 4;
+    for (int y = 0; y < height / 2; ++y) {
+        auto top = pixels.begin() + static_cast<size_t>(y) * rowBytes;
+        auto bottom = pixels.begin() + static_cast<size_t>(height - 1 - y) * rowBytes;
+        std::swap_ranges(top, top + rowBytes, bottom);
+    }
+    std::string error;
+    if (!ImageCodec::WritePNGFile(path, width, height, pixels.data(), &error)) {
+        std::fprintf(stderr, "[visual-check] capture failed: %s\n", error.c_str());
+        return false;
+    }
+    return true;
+}
+
+int main(int argc, char** argv) {
+    bool visualCheck = false;
+    for (int i = 1; i < argc; ++i) {
+        if (std::string(argv[i]) == "--visual-check") visualCheck = true;
+    }
+    bool visualCheckPassed = !visualCheck;
     const int W = 1440, H = 810;
 
     OpenGLRenderer renderer;
@@ -417,9 +867,16 @@ int main() {
     renderer.SetConfig(rcfg);
     if (!renderer.Initialize()) {
         std::fprintf(stderr, "[SKIP] no display / renderer init failed\n");
-        return 0;
+        return visualCheck ? 1 : 0;
     }
     GLFWwindow* window = static_cast<GLFWwindow*>(renderer.GetWindowHandle());
+    if (visualCheck) {
+        GLint samples = 0;
+        glGetIntegerv(GL_SAMPLES, &samples);
+        std::printf("[visual-check] MSAA=%d GPU=%s\n", samples,
+                    reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+        std::fflush(stdout);
+    }
     glfwSetScrollCallback(window, ScrollCallback);
 
     // ImGui + U-1 字體自包含:assets/fonts/ 的 OFL Noto;缺檔退回內建字
@@ -460,6 +917,18 @@ int main() {
     }
     unitShader->Bind();
     unitShader->SetUniformVec3("uLightDir", Vector3(-0.4f, 1.0f, -0.35f));
+    auto soldierShader = MakeShared<Shader>();
+    if (!soldierShader->LoadFromSource(SOLDIER_VERT, SOLDIER_FRAG)) {
+        std::fprintf(stderr, "Soldier shader compile failed\n");
+        shutdownAll();
+        return 1;
+    }
+    auto fogShader = MakeShared<Shader>();
+    if (!fogShader->LoadFromSource(FOG_VERT, FOG_FRAG)) {
+        std::fprintf(stderr, "Fog shader compile failed\n");
+        shutdownAll();
+        return 1;
+    }
 
     // U-1 殼層外迴圈:Title ↔ Battle;整場戰鬥在內層 scope,
     // 出 scope 所有 stack 物件析構 = 乾淨重置(回主選單可再戰)
@@ -472,12 +941,28 @@ int main() {
     SquadTemplateLibrary campLibrary;
     campLibrary.LoadDir(DemoAssets::Resolve("squads"));
     campLibrary.LoadDir(DemoAssets::Resolve("templates"));
-    ShellScreen screen = ShellScreen::Title;
+    auto portraits = MakeShared<Texture>();
+    std::string portraitError;
+    if (!CharacterArt::LoadAtlas(*portraits, DemoAssets::Resolve("portraits/commanders-v1.png"), portraitError)) {
+        std::fprintf(stderr, "Character portrait atlas could not be loaded: %s\n", portraitError.c_str());
+        if (visualCheck) { shutdownAll(); return 1; }
+        portraits.reset();
+    }
+    if (visualCheck) {
+        bool titleCaptured = false;
+        for (int frame = 0; frame < 3; ++frame) {
+            TitleFrame(window, renderer, theme, uiScale, fontSans, fontSerif,
+                       appliedTheme, appliedScale, camp, campLibrary, portraits.get(),
+                       frame == 2 ? &titleCaptured : nullptr);
+        }
+        if (!titleCaptured) { shutdownAll(); return 2; }
+    }
+    ShellScreen screen = visualCheck ? ShellScreen::Battle : ShellScreen::Title;
     while (screen != ShellScreen::Quit && !renderer.ShouldClose()) {
         if (screen == ShellScreen::Title) {
             screen = TitleFrame(window, renderer, theme, uiScale,
                                 fontSans, fontSerif, appliedTheme,
-                                appliedScale, camp, campLibrary);
+                                appliedScale, camp, campLibrary, portraits.get());
             continue;
         }
         bool backToTitle = false;
@@ -503,6 +988,17 @@ int main() {
 
     BattleController battle(GW, GH, CELL);
     map.ApplyToField(battle.GetField());
+    float riverMin = FH + 1.0f, riverMax = -1.0f;
+    for (int y = 0; y < GH; ++y) {
+        for (int x = 0; x < GW; ++x) {
+            if (!battle.GetField().IsBlocked(x, y)) continue;
+            riverMin = std::min(riverMin, y * CELL);
+            riverMax = std::max(riverMax, (y + 1) * CELL);
+        }
+    }
+    unitShader->Bind();
+    unitShader->SetUniformVec2("uRiverRange", riverMax >= riverMin
+        ? Vector2(riverMin, riverMax) : Vector2(-10000.0f, -10000.0f));
     battle.SetEventCallback([&](const std::string& e) {
         eventLog.push_back(e);
         if (eventLog.size() > 8) eventLog.pop_front();
@@ -521,19 +1017,20 @@ int main() {
 
     auto groundMesh = MakeShared<Mesh>(MakeBox(1.0f, 0.3f, 1.0f));
     auto waterMesh  = MakeShared<Mesh>(MakeBox(CELL, 0.25f, CELL));
-    auto plankMesh  = MakeShared<Mesh>(MakeBox(CELL, 0.3f, CELL));
     auto pinMesh    = MakeShared<Mesh>(MakeBox(0.25f, 1.4f, 0.25f));
     auto propMesh   = MakeShared<Mesh>(MakeBox(0.7f, 0.7f, 0.7f));
-    auto capMesh    = MakeShared<Mesh>(MakeCapsule(0.35f * CELL, 1.6f * CELL));
+    auto capMesh    = MakeShared<Mesh>(MakeSoldier(CELL));
     auto ringMesh   = MakeShared<Mesh>(MakeRing(0.55f * CELL, 0.75f * CELL));
     // 血條直立(XY 面朝相機):平躺版在 63° 俯角下只剩 ~2px 不可讀
     auto barBgMesh  = MakeShared<Mesh>(MakeBox(1.0f, 0.16f, 0.03f));
     auto barFillMesh = MakeShared<Mesh>(MakeBox(0.96f, 0.11f, 0.04f));
-    auto cloudMesh  = MakeShared<Mesh>(MakeBox(0.7f, 0.7f, 0.7f)); // 機率雲標記
+    // 候選位置與機率縮放照舊，平面徑向透明度表達可能所在區域。
+    auto cloudMesh  = MakeShared<Mesh>(MakeFogPatch());
 
     auto groundNode = AddStaticBox(root, groundMesh,
                                    Vector3(FW / 2, -0.15f, FH / 2),
-                                   Vector3(0.16f, 0.22f, 0.15f), "ground", FW);
+                                   Vector3(0.16f, 0.22f, 0.15f), "ground", FW,
+                                   SurfaceProfile::Terrain);
     groundNode->SetLocalScale(Vector3(FW, 1, FH));
 
     // 河面:IsBlocked 的格子鋪水磚(渡口自動留空)
@@ -542,19 +1039,26 @@ int main() {
             if (battle.GetField().IsBlocked(x, y)) {
                 AddStaticBox(root, waterMesh,
                              Vector3((x + 0.5f) * CELL, -0.05f, (y + 0.5f) * CELL),
-                             Vector3(0.15f, 0.30f, 0.45f), "water", CELL);
+                             Vector3(0.15f, 0.30f, 0.45f), "water", CELL,
+                             SurfaceProfile::Water);
             }
         }
     }
     // 渡口鋪橋板
     for (const auto& ford : map.GetFords()) {
-        for (int y = 0; y < ford.rect.h; ++y) {
-            for (int x = 0; x < ford.rect.w; ++x) {
-                AddStaticBox(root, plankMesh,
-                             Vector3((ford.rect.x + x + 0.5f) * CELL, 0.02f,
-                                     (ford.rect.y + y + 0.5f) * CELL),
-                             Vector3(0.42f, 0.32f, 0.20f), "ford", CELL);
-            }
+        const float width = ford.rect.w * CELL, length = ford.rect.h * CELL;
+        const float cx = (ford.rect.x + ford.rect.w * 0.5f) * CELL;
+        const float cz = (ford.rect.y + ford.rect.h * 0.5f) * CELL;
+        auto deckMesh = MakeShared<Mesh>(MakeBox(width, 0.3f, length));
+        const float radius = std::sqrt(width * width + length * length);
+        AddStaticBox(root, deckMesh, Vector3(cx, 0.02f, cz),
+                     Vector3(0.42f, 0.32f, 0.20f), "ford", radius,
+                     SurfaceProfile::Timber);
+        auto beamMesh = MakeShared<Mesh>(MakeBox(0.10f, 0.12f, length));
+        for (float side : {-1.0f, 1.0f}) {
+            AddStaticBox(root, beamMesh, Vector3(cx + side * (width * 0.5f - 0.05f), 0.19f, cz),
+                         Vector3(0.30f, 0.22f, 0.13f), "ford_beam", radius,
+                         SurfaceProfile::Timber);
         }
     }
     // 圖釘標記
@@ -569,7 +1073,9 @@ int main() {
                                              : Vector3(0.45f, 0.42f, 0.40f);
         AddStaticBox(root, propMesh,
                      Vector3(it.pos.x * CELL, 0.35f, it.pos.y * CELL),
-                     c, "prop", CELL);
+                     c, "prop", CELL,
+                     it.type == "oil_slick" ? SurfaceProfile::Neutral
+                                            : SurfaceProfile::Stone);
     }
 
     // ---- 編成(同 DuanqiaoDemo):我 4 隊北岸 / 敵格洛克 4 隊南岸 ----
@@ -714,6 +1220,7 @@ int main() {
     BattleSceneSync sync;
     sync.Attach(battle, scene, CELL);
     sync.SetUnitMesh(capMesh);
+    sync.SetMovementFacing(true);
     sync.SetOverlayMeshes(ringMesh, barBgMesh, barFillMesh, 2.0f * CELL, 1.2f);
     sync.SetFog(&fog);
     sync.SetFogMarkerMesh(cloudMesh);
@@ -740,12 +1247,24 @@ int main() {
     cam.SetPerspective(50.0f * 3.14159265f / 180.0f, (float)W / H, 0.1f, 300.0f);
     Vector3 camTarget(FW / 2, 0.0f, FH / 2 - 2.0f);
     float camHeight = 26.0f, camBack = 13.0f;
+    Vector3 desiredCamTarget = camTarget;
+    float desiredCamHeight = camHeight;
 
     SceneRenderer sceneRenderer;
     sceneRenderer.SetDefaultShader(unitShader);
 
     Squad* selected = nullptr;
+    auto currentPortraitSquad = [&]() -> const Squad* {
+        if (selected && selected->GetTeam() == 0 && !selected->IsEliminated()) return selected;
+        if (generalGuard && !generalGuard->IsEliminated()) return generalGuard;
+        for (const auto& squad : battle.GetSquads()) {
+            if (squad->GetTeam() == 0 && !squad->IsEliminated()) return squad.get();
+        }
+        return nullptr;
+    };
     bool planningPhase = true;  // T-9:開戰前停在回合層編牌
+    bool inspectCharacter = false;
+    bool previousInspectKey = false;
     int curDeck = 0, curRule = -1; // 牌組 UI 選中態
     Squad* arrowDragSquad = nullptr; // G-5:拖曳中的箭頭起點小隊
     Vector2 arrowDragPos;            // G-5:拖曳目前落點(cell)
@@ -753,26 +1272,63 @@ int main() {
     float speedScale = 1.0f;
     bool prevL = false, prevR = false, prevSpace = false, prevEsc = false;
     double prevTime = glfwGetTime();
+    int lastFbWidth = W, lastFbHeight = H;
+    int visualFrame = 0;
+    const double visualStarted = prevTime;
+    std::vector<double> frameTimes;
+    bool executionCaptured = false;
+    bool portraitCaptured = false;
+    bool planningCaptured = false;
+    bool inspectionCaptured = false;
+    auto beginBattle = [&]() {
+        deck.Commit(battle);
+        plan.SetRallyPoint(battle.GetRallyPoint(0));
+        const int arrows = plan.Apply(battle, &res, 0);
+        battle.BeginExecution();
+        planningPhase = false;
+        eventLog.push_back(arrows > 0
+            ? "作戰計畫已下達——開戰(" + std::to_string(arrows) + " 支箭頭生效)"
+            : "作戰計畫已下達——開戰");
+    };
 
     std::printf("斷橋可玩 demo — 左鍵選取,右鍵下令(CP),Space 暫停\n");
 
     while (!renderer.ShouldClose() && !backToTitle) {
         renderer.PollEvents();
         double now = glfwGetTime();
-        float dt = (float)std::min(now - prevTime, 0.1);
+        if (visualCheck && now - visualStarted >= 90.0) {
+            std::printf("[visual-check] timeout after 90 seconds\n");
+            std::fflush(stdout);
+            backToTitle = true;
+            break;
+        }
+        const double frameSeconds = std::max(0.0, now - prevTime);
+        float dt = (float)std::min(frameSeconds, 0.1);
         prevTime = now;
+        ++visualFrame;
+        if (visualCheck && visualFrame == 80) inspectCharacter = true;
+        if (visualCheck && visualFrame > 30) frameTimes.push_back(frameSeconds * 1000.0);
 
         // framebuffer 用於 GL viewport;window size 用於 ImGui/游標(HiDPI 下兩者不同)
         int dw = W, dh = H, ww = W, wh = H;
         glfwGetFramebufferSize(window, &dw, &dh);
         glfwGetWindowSize(window, &ww, &wh);
+        if (dw <= 0 || dh <= 0) {
+            glfwWaitEventsTimeout(0.05);
+            prevTime = glfwGetTime();
+            continue;
+        }
         const float sx = (ww > 0) ? (float)dw / ww : 1.0f;
         const float sy = (wh > 0) ? (float)dh / wh : 1.0f;
         if (dw > 0 && dh > 0) {
             renderer.SetViewport(0, 0, dw, dh);
-            cam.SetViewport(0, 0, dw, dh);
-            cam.SetPerspective(50.0f * 3.14159265f / 180.0f,
-                               (float)dw / dh, 0.1f, 300.0f);
+            if (dw != lastFbWidth || dh != lastFbHeight) {
+                cam.SetViewport(0, 0, dw, dh);
+                cam.SetPerspective(50.0f * 3.14159265f / 180.0f,
+                                   (float)dw / dh, 0.1f, 300.0f);
+                lastFbWidth = dw;
+                lastFbHeight = dh;
+            }
         }
 
         // ---- 鍵盤 ----
@@ -782,27 +1338,50 @@ int main() {
         bool esc = glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS;
         if (esc && !prevEsc) { selected = nullptr; sync.SetSelectedSquad(nullptr); }
         prevEsc = esc;
+        const bool inspectKey = glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS;
+        if (inspectKey && !previousInspectKey && !io.WantTextInput) inspectCharacter = !inspectCharacter;
+        previousInspectKey = inspectKey;
         if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) speedScale = 0.5f;
         if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) speedScale = 1.0f;
         if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) speedScale = 2.0f;
 
         float pan = 12.0f * dt;
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camTarget.z -= pan;
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camTarget.z += pan;
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camTarget.x -= pan;
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camTarget.x += pan;
-        camTarget.x = std::max(0.0f, std::min(camTarget.x, FW));
-        camTarget.z = std::max(0.0f, std::min(camTarget.z, FH));
+        float panX = 0.0f, panZ = 0.0f;
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) panZ -= 1.0f;
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) panZ += 1.0f;
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) panX -= 1.0f;
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) panX += 1.0f;
+        const float panLength = std::sqrt(panX * panX + panZ * panZ);
+        if (panLength > 0.0f) {
+            desiredCamTarget.x += pan * panX / panLength;
+            desiredCamTarget.z += pan * panZ / panLength;
+        }
+        desiredCamTarget.x = std::clamp(desiredCamTarget.x, 0.0f, FW);
+        desiredCamTarget.z = std::clamp(desiredCamTarget.z, 0.0f, FH);
         // 滾輪在 ImGui 視窗上時不縮放相機
         if (!io.WantCaptureMouse) {
-            camHeight = std::max(10.0f,
-                         std::min(camHeight - (float)g_scroll * 2.0f, 45.0f));
+            desiredCamHeight = std::clamp(desiredCamHeight - (float)g_scroll * 2.0f, 4.0f, 45.0f);
         }
         g_scroll = 0.0;
+        // 指數平滑以秒為單位，30/60/120 FPS 下有一致的鏡頭反應。
+        const float cameraBlend = 1.0f - std::exp(-14.0f * dt);
+        camTarget = camTarget + (desiredCamTarget - camTarget) * cameraBlend;
+        camHeight += (desiredCamHeight - camHeight) * cameraBlend;
+        camBack = camHeight * 0.5f; // 保持俯角，滾輪可真正拉近人物細節。
         cam.SetPosition(Vector3(camTarget.x, camHeight, camTarget.z + camBack));
         cam.SetTarget(camTarget);
+        if (inspectCharacter) {
+            const Squad* focus = currentPortraitSquad();
+            if (focus && !focus->IsEliminated()) {
+                const Vector2 p = focus->GetPosition();
+                cam.SetPosition(Vector3(p.x * CELL + 1.7f * CELL, 1.65f * CELL,
+                                        p.y * CELL + 3.0f * CELL));
+                cam.SetTarget(Vector3(p.x * CELL, 0.85f * CELL, p.y * CELL));
+            } else inspectCharacter = false;
+        }
 
         battle.SetTimeScale(paused ? 0.0f : speedScale);
+        if (visualCheck && planningPhase && visualFrame >= 60) beginBattle();
 
         // ---- 圖釘位置同步(Planning 中可拖移,執行中固定顯示)----
         {
@@ -977,7 +1556,83 @@ int main() {
         renderer.Clear();
         renderer.EnableDepthTest(true);
         renderer.EnableCulling(false); // 手排頂點繞序不保證 CCW
-        sceneRenderer.Render(scene, cam);
+        unitShader->Bind();
+        unitShader->SetUniformFloat("uVisualTime", static_cast<float>(now));
+        auto renderItems = sceneRenderer.CollectRenderList(scene, cam);
+        std::vector<RenderItem> opaqueItems, fogItems, contactShadows;
+        opaqueItems.reserve(renderItems.size());
+        for (auto& item : renderItems) {
+            if (inspectCharacter && item.mesh == pinMesh) continue; // 近景略過遮住人物的戰術圖釘。
+            if (item.node && item.node->GetName().rfind("__fog_c", 0) == 0) {
+                item.shader = fogShader;
+                fogItems.push_back(item);
+            } else {
+                if (item.mesh == capMesh) {
+                    item.shader = soldierShader;
+                    RenderItem shadow = item;
+                    shadow.mesh = cloudMesh;
+                    shadow.shader = fogShader;
+                    shadow.color = Vector3(0.018f, 0.021f, 0.016f);
+                    contactShadows.push_back(shadow);
+                }
+                opaqueItems.push_back(item);
+            }
+        }
+        sceneRenderer.SubmitRenderList(opaqueItems, cam);
+        if (visualCheck && !portraitCaptured && visualFrame >= 45) {
+            // 真實場景的獨立近景驗證；不改正常操作的相機或遊戲規則。
+            for (const auto& squad : battle.GetSquads()) {
+                if (squad->GetTeam() != 0 || squad->IsEliminated()) continue;
+                const Vector2 p = squad->GetPosition();
+                Camera portrait = cam;
+                portrait.SetPosition(Vector3(p.x * CELL + 1.5f * CELL,
+                    1.65f * CELL, p.y * CELL + 2.6f * CELL));
+                portrait.SetTarget(Vector3(p.x * CELL, 0.85f * CELL, p.y * CELL));
+                auto closeItems = sceneRenderer.CollectRenderList(scene, portrait);
+                closeItems.erase(std::remove_if(closeItems.begin(), closeItems.end(),
+                    [](const RenderItem& item) {
+                        return item.node && item.node->GetName().rfind("__fog_c", 0) == 0;
+                    }), closeItems.end());
+                for (auto& item : closeItems) {
+                    if (item.mesh == capMesh) item.shader = soldierShader;
+                }
+                renderer.Clear();
+                sceneRenderer.SubmitRenderList(closeItems, portrait);
+                portraitCaptured = CaptureFrame("soldier-closeup.png", dw, dh);
+                if (!portraitCaptured) backToTitle = true;
+                renderer.Clear();
+                sceneRenderer.SubmitRenderList(opaqueItems, cam);
+                prevTime = glfwGetTime(); // 不把額外近景繪製/PNG 計入正常幀時間。
+                break;
+            }
+        }
+        if (!fogItems.empty() || !contactShadows.empty()) {
+            // 所有區域共用紫色與同一高度；交疊 alpha 不依候選提交順序。
+            const GLboolean hadBlend = glIsEnabled(GL_BLEND);
+            const GLboolean hadDepthTest = glIsEnabled(GL_DEPTH_TEST);
+            GLboolean hadDepthWrite;
+            GLint blendSrcRGB, blendDstRGB, blendSrcAlpha, blendDstAlpha;
+            GLint blendEquationRGB, blendEquationAlpha;
+            glGetBooleanv(GL_DEPTH_WRITEMASK, &hadDepthWrite);
+            glGetIntegerv(GL_BLEND_SRC_RGB, &blendSrcRGB);
+            glGetIntegerv(GL_BLEND_DST_RGB, &blendDstRGB);
+            glGetIntegerv(GL_BLEND_SRC_ALPHA, &blendSrcAlpha);
+            glGetIntegerv(GL_BLEND_DST_ALPHA, &blendDstAlpha);
+            glGetIntegerv(GL_BLEND_EQUATION_RGB, &blendEquationRGB);
+            glGetIntegerv(GL_BLEND_EQUATION_ALPHA, &blendEquationAlpha);
+            glEnable(GL_DEPTH_TEST);
+            glDepthMask(GL_FALSE);
+            glEnable(GL_BLEND);
+            glBlendEquation(GL_FUNC_ADD);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            sceneRenderer.SubmitRenderList(contactShadows, cam);
+            sceneRenderer.SubmitRenderList(fogItems, cam);
+            glBlendFuncSeparate(blendSrcRGB, blendDstRGB, blendSrcAlpha, blendDstAlpha);
+            glBlendEquationSeparate(blendEquationRGB, blendEquationAlpha);
+            if (!hadBlend) glDisable(GL_BLEND);
+            glDepthMask(hadDepthWrite);
+            if (!hadDepthTest) glDisable(GL_DEPTH_TEST);
+        }
 
         // ---- HUD ----
         ImGui_ImplOpenGL3_NewFrame();
@@ -1051,6 +1706,11 @@ int main() {
             UITheme::FixedField(tbuf, 88.0f * uiScale);
         }
         ImGui::Text("未揭露敵軍: %d / %d", hiddenFoes, (int)fog.EntityCount());
+        if (ImGui::CollapsingHeader("操作與敵情說明")) {
+        ImGui::TextColored(ImVec4(0.25f, 0.45f, 0.95f, 1), "藍色：我軍小隊");
+        ImGui::TextColored(ImVec4(0.95f, 0.30f, 0.25f, 1), "紅色：已揭露敵軍");
+        ImGui::TextColored(ImVec4(0.70f, 0.55f, 1.0f, 1), "紫色：敵軍可能所在區域");
+        ImGui::TextWrapped("紫色區域不是敵軍或建築數量；越濃代表該候選位置機率越高。");
         ImGui::Separator();
         if (selected) {
             ImGui::Text("選取: %s", selected->GetName().c_str());
@@ -1062,14 +1722,38 @@ int main() {
             ImGui::TextDisabled("未選取小隊(左鍵點選)");
         }
         ImGui::Separator();
-        ImGui::TextDisabled("左鍵選取 | 點雲探測(1情報) | Shift+點雲觀測(2情報)");
+        ImGui::TextDisabled("左鍵選取我軍 | 點紫色區域探測(1情報)");
+        ImGui::TextDisabled("Shift+點紫色區域觀測(2情報)，揭露敵軍");
         ImGui::TextDisabled("右鍵下令 | Space 暫停 | 1/2/3 倍速");
         ImGui::TextDisabled("WASD 平移 | 滾輪縮放 | Esc 取消選取");
         if (planningPhase) {
             ImGui::TextDisabled("Alt+左鍵=移目標點 | Alt+右鍵=移集結點");
             ImGui::TextDisabled("Ctrl+左鍵自小隊拖出=畫進攻箭頭");
         }
+        }
+        const float commandPanelBottom = ImGui::GetWindowPos().y + ImGui::GetWindowSize().y + 8.0f;
         ImGui::End();
+
+        // 肖像是角色資訊卡；兵力、士氣與命令皆來自目前小隊。
+        const Squad* portraitSquad = currentPortraitSquad();
+        const float portraitRoom = static_cast<float>(wh) - 202.0f - commandPanelBottom;
+        if (portraitSquad && portraitRoom >= 160.0f) {
+            const float cardHeight = std::min(portraitRoom, 430.0f);
+            ImGui::SetNextWindowPos(ImVec2(8, commandPanelBottom), ImGuiCond_Always);
+            ImGui::SetNextWindowSize(ImVec2(300, cardHeight), ImGuiCond_Always);
+            ImGui::Begin("軍官與小隊", nullptr, ImGuiWindowFlags_NoCollapse);
+            ImGui::TextColored(ImVec4(0.83f, 0.71f, 0.43f, 1), "%s", portraitSquad->GetName().c_str());
+            const float portraitSize = std::min(276.0f, std::max(60.0f, cardHeight - 145.0f));
+            CharacterArt::Portrait(portraits.get(), portraitSquad == generalGuard ? 0 : 1,
+                                   ImVec2(portraitSize, portraitSize));
+            ImGui::Text("兵力 %d / %d    士氣 %.0f%%", portraitSquad->GetMembers(),
+                        portraitSquad->GetMaxMembers(), portraitSquad->GetMorale() * 100.0f);
+            ImGui::TextDisabled("當前命令 · %s", OrderName(portraitSquad->GetOrder()));
+            if (ImGui::Button(inspectCharacter ? "返回戰場視角 (C)" : "近看戰場人物 (C)", ImVec2(-1, 0))) {
+                inspectCharacter = !inspectCharacter;
+            }
+            ImGui::End();
+        }
 
         // ---- N-2 敵將檔案:判詞是聽聞態,親衛雲揭露才回真值 ----
         {
@@ -1080,12 +1764,18 @@ int main() {
             if (const HearsayEntry* he = dossier.Find(glock.GetName())) {
                 ImGui::SetNextWindowPos(ImVec2(ww - 308.0f, 8),
                                         ImGuiCond_Always);
-                ImGui::SetNextWindowSize(ImVec2(300, 0), ImGuiCond_Always);
+                ImGui::SetNextWindowSize(ImVec2(300, 214), ImGuiCond_Always);
                 ImGui::Begin("敵將檔案", nullptr,
                              ImGuiWindowFlags_NoCollapse |
                                  ImGuiWindowFlags_AlwaysAutoResize);
                 ImGui::Text("%s %s", glock.GetName().c_str(),
                             glock.GetEpithet().c_str());
+                CharacterArt::Portrait(portraits.get(), 2, ImVec2(94, 94));
+                ImGui::SameLine();
+                ImGui::BeginGroup();
+                ImGui::TextColored(ImVec4(0.78f, 0.36f, 0.28f, 1), "敵方指揮官");
+                ImGui::TextDisabled(he->verified ? "情報已確認" : "情報待查證");
+                ImGui::EndGroup();
                 ImGui::TextWrapped("判詞:%s", he->verdict.c_str());
                 ImGui::Separator();
                 if (he->verified) {
@@ -1105,7 +1795,7 @@ int main() {
         }
 
         // ---- T-9 回合層:作戰計畫視窗(三欄:小隊/卡槽/編輯器)----
-        if (planningPhase) {
+        if (planningPhase && !inspectCharacter) {
             ImGui::SetNextWindowPos(ImVec2(ww * 0.5f - 330, 40),
                                     ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(660, 420), ImGuiCond_FirstUseEver);
@@ -1275,18 +1965,7 @@ int main() {
                 if (ImGui::Button("清除箭頭")) plan.ClearArrows();
             }
             if (ImGui::Button("開 戰", ImVec2(120, 32))) {
-                deck.Commit(battle);
-                // G-5:箭頭計畫在卡組之後套用——有箭頭的小隊
-                // doctrine/目標點以箭頭軸線為準,加成經 res 入帳
-                plan.SetRallyPoint(battle.GetRallyPoint(0));
-                const int arrows = plan.Apply(battle, &res, 0);
-                battle.BeginExecution();
-                planningPhase = false;
-                eventLog.push_back(
-                    arrows > 0
-                        ? "作戰計畫已下達——開戰(" +
-                              std::to_string(arrows) + " 支箭頭生效)"
-                        : "作戰計畫已下達——開戰");
+                beginBattle();
             }
             ImGui::SameLine();
             ImGui::TextDisabled("寫好劇本再開戰;CP 留給救火");
@@ -1295,9 +1974,9 @@ int main() {
 
         // ---- T-10 全軍狀態列:每隊兵力/士氣條 + CP 介入按鈕 ----
         if (!planningPhase) {
-            ImGui::SetNextWindowPos(ImVec2((float)ww - 272.0f, 8.0f),
+            ImGui::SetNextWindowPos(ImVec2((float)ww - 308.0f, 230.0f),
                                     ImGuiCond_Always);
-            ImGui::SetNextWindowSize(ImVec2(264, 0), ImGuiCond_Always);
+            ImGui::SetNextWindowSize(ImVec2(300, std::max(120.0f, static_cast<float>(wh) - 488.0f)), ImGuiCond_Always);
             ImGui::Begin("全軍", nullptr,
                          ImGuiWindowFlags_NoCollapse |
                              ImGuiWindowFlags_AlwaysAutoResize);
@@ -1438,7 +2117,7 @@ int main() {
                     UITheme::MarkerShape::FriendlySquare,
                     sq.get() == selected
                         ? IM_COL32(212, 162, 60, 255)   // myth gold
-                        : IM_COL32(156, 176, 108, 255), // friendly
+                        : IM_COL32(64, 115, 242, 255), // 我軍藍
                     2.0f);
             }
             // 敵軍:揭露=菱形,未揭露=候選格雲圓(逐候選,機率雲本體)
@@ -1449,19 +2128,20 @@ int main() {
                     UITheme::DrawMarker(
                         mdl, toMap(owner->GetPosition()), mr,
                         UITheme::MarkerShape::EnemyDiamond,
-                        IM_COL32(176, 74, 50, 255), 2.0f);
+                        IM_COL32(242, 77, 64, 255), 2.0f);
                 } else {
-                    const ImU32 ccol =
-                        ImGui::GetColorU32(UITheme::CloudColor(theme));
                     for (const auto& cand : fog.GetCloud((int)id)) {
+                        const int alpha = static_cast<int>(80.0 +
+                            160.0 * std::clamp(cand.second, 0.0, 1.0));
                         UITheme::DrawMarker(
                             mdl, toMap(cand.first), mr * 0.7f,
-                            UITheme::MarkerShape::CloudCircle, ccol);
+                            UITheme::MarkerShape::CloudCircle,
+                            IM_COL32(179, 140, 255, alpha));
                     }
                 }
             }
             // 圖例(形狀+文字雙編碼)
-            ImGui::TextDisabled("■我軍  ◆敵軍  ●敵情雲");
+            ImGui::TextDisabled("■我軍  ◆敵軍  ●疑似敵情");
             ImGui::End();
         }
 
@@ -1576,6 +2256,38 @@ int main() {
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+        if (visualCheck) {
+            if (!inspectionCaptured && visualFrame >= 100) {
+                inspectionCaptured = CaptureFrame("visual-inspection.png", dw, dh);
+                inspectCharacter = false;
+                if (!inspectionCaptured) backToTitle = true;
+                prevTime = glfwGetTime();
+            }
+            if (!planningCaptured && planningPhase && visualFrame >= 45) {
+                planningCaptured = CaptureFrame("visual-planning.png", dw, dh);
+                if (!planningCaptured) backToTitle = true;
+                prevTime = glfwGetTime();
+            }
+            if (visualFrame >= 120 && !executionCaptured) {
+                executionCaptured = CaptureFrame("visual-execution.png", dw, dh);
+                if (!executionCaptured) backToTitle = true;
+                prevTime = glfwGetTime(); // PNG 寫檔時間不計入幀時間。
+            }
+            const bool finished = battle.GetOutcome() != BattleOutcome::Ongoing;
+            if (finished || backToTitle || now - visualStarted >= 90.0) {
+                visualCheckPassed = finished && executionCaptured && portraitCaptured && planningCaptured && inspectionCaptured;
+                if (finished) visualCheckPassed = CaptureFrame("visual-result.png", dw, dh) && visualCheckPassed;
+                double sum = 0.0;
+                for (double ms : frameTimes) sum += ms;
+                std::sort(frameTimes.begin(), frameTimes.end());
+                const double mean = frameTimes.empty() ? 0.0 : sum / frameTimes.size();
+                const double p95 = frameTimes.empty() ? 0.0 : frameTimes[static_cast<size_t>((frameTimes.size() - 1) * 0.95)];
+                std::printf("[visual-check] frames=%zu mean=%.2fms p95=%.2fms FPS=%.1f outcome=%d\n",
+                    frameTimes.size(), mean, p95, mean > 0.0 ? 1000.0 / mean : 0.0, static_cast<int>(battle.GetOutcome()));
+                std::fflush(stdout);
+                backToTitle = true;
+            }
+        }
         renderer.SwapBuffers();
     }
 
@@ -1598,7 +2310,7 @@ int main() {
     battle.BindFog(nullptr); // fog 是 local,先於 battle 解構——解綁防懸空
 
         } // ---- 戰鬥場次 scope 結束:battle/fog/scene 全數析構 ----
-        screen = renderer.ShouldClose() ? ShellScreen::Quit
+        screen = (renderer.ShouldClose() || visualCheck) ? ShellScreen::Quit
                                         : ShellScreen::Title;
     }
 
@@ -1606,5 +2318,5 @@ int main() {
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
     renderer.Shutdown();
-    return 0;
+    return visualCheckPassed ? 0 : 2;
 }

@@ -27,6 +27,7 @@ std::vector<RenderItem> SceneRenderer::CollectRenderList(SceneGraph& scene, cons
         item.shader = rc->shader;
         item.texture = rc->texture;
         item.color = rc->color;
+        item.surfaceProfile = rc->surfaceProfile;
         item.worldMatrix = node->GetWorldMatrix();
         items.push_back(item);
     }
@@ -57,10 +58,12 @@ RenderStats SceneRenderer::SubmitRenderList(const std::vector<RenderItem>& items
             shader->Bind();
             shader->SetUniformMat4("view", view);
             shader->SetUniformMat4("projection", proj);
+            shader->SetUniformVec3("uCameraPos", camera.GetPosition());
             boundShader = shader;
         }
         shader->SetUniformMat4("model", item.worldMatrix);
         shader->SetUniformVec3("uColor", item.color);
+        shader->SetUniformInt("uSurfaceProfile", static_cast<int>(item.surfaceProfile));
         if (item.texture) {
             item.texture->Bind(0);
             shader->SetUniformInt("texture1", 0);

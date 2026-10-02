@@ -9,6 +9,7 @@
 #include "Rendering/RenderableComponent.h"
 
 #include <algorithm>
+#include <cmath>
 #include <string>
 #include <unordered_set>
 
@@ -29,6 +30,7 @@ void BattleSceneSync::Attach(BattleController& battle, SceneGraph& sceneGraph,
     Detach();
     scene = &sceneGraph;
     cellSize = cell;
+    previousElapsed = battle.GetElapsed();
 
     parentNode = MakeShared<SceneNode>("__battle_units");
     if (scene->GetRootNode()) {
@@ -51,7 +53,37 @@ void BattleSceneSync::CreateBinding(Squad* squad) {
     node->SetRenderable(rc);
     parentNode->AddChild(node);
     bindings.push_back({squad, node, rc});
+    bindings.back().previousPosition = squad->GetPosition();
+    ConfigureMovementFacing(bindings.back());
     EnsureOverlay(bindings.back());
+}
+
+void BattleSceneSync::ConfigureMovementFacing(Binding& b) {
+    if (movementFacing && !b.meshNode) {
+        b.meshNode = MakeShared<SceneNode>("__unit_mesh");
+        // 根保留包圍球組件，模型資源仍由原 renderable 持有。
+        b.node->SetRenderable(MakeShared<RenderableComponent>());
+        b.node->AddChild(b.meshNode);
+        b.meshNode->SetRenderable(b.renderable);
+        b.meshNode->SetLocalRotation(
+            Quaternion::FromAxisAngle(Vector3(0.0f, 1.0f, 0.0f), b.yaw));
+    } else if (!movementFacing && b.meshNode) {
+        b.meshNode->SetRenderable(nullptr);
+        b.node->RemoveChild(b.meshNode.get());
+        b.meshNode.reset();
+        b.node->SetRenderable(b.renderable);
+    }
+}
+
+void BattleSceneSync::SetMovementFacing(bool enabled) {
+    if (movementFacing == enabled) return;
+    movementFacing = enabled;
+    for (auto& b : bindings) {
+        b.previousPosition = b.squad->GetPosition();
+        ConfigureMovementFacing(b);
+        EnsureOverlay(b);
+        if (!movementFacing) b.node->SetBoundingRadius(b.renderable->boundingRadius);
+    }
 }
 
 void BattleSceneSync::EnsureOverlay(Binding& b) {
@@ -116,10 +148,22 @@ void BattleSceneSync::EnsureOverlay(Binding& b) {
         }
         b.renderable->boundingRadius = 0.6f * cellSize;
     }
+    if (movementFacing) {
+        // 腳底原點到頭頂 1.6 格，另含武器與橫向寬度的保守餘裕。
+        const float modelRadius = 1.9f * cellSize;
+        const float subtreeRadius = std::max(modelRadius, b.renderable->boundingRadius);
+        b.renderable->boundingRadius = modelRadius;
+        b.meshNode->SetBoundingRadius(modelRadius);
+        b.node->GetRenderable()->boundingRadius = subtreeRadius;
+        b.node->SetBoundingRadius(subtreeRadius);
+    }
 }
 
 void BattleSceneSync::Sync(BattleController& battle) {
     if (!parentNode) return;
+    const float elapsed = battle.GetElapsed();
+    const float dt = std::max(0.0f, elapsed - previousElapsed);
+    previousElapsed = elapsed;
 
     // 補掛 Attach 之後才建立的 squad
     {
@@ -134,6 +178,22 @@ void BattleSceneSync::Sync(BattleController& battle) {
 
     for (auto& b : bindings) {
         Squad* squad = b.squad;
+        const Vector2& p = squad->GetPosition();
+        if (movementFacing) {
+            const float dx = p.x - b.previousPosition.x;
+            const float dz = p.y - b.previousPosition.y;
+            if (dx * dx + dz * dz > 1e-8f && dt > 0.0f) {
+                const float target = std::atan2(dx, dz);
+                // atan2(sin,cos) 將差值包回 [-pi,pi]，跨界仍走最短轉角。
+                const float delta = std::atan2(std::sin(target - b.yaw),
+                                              std::cos(target - b.yaw));
+                b.yaw += delta * (1.0f - std::exp(-10.0f * dt));
+                b.meshNode->SetLocalRotation(
+                    Quaternion::FromAxisAngle(Vector3(0.0f, 1.0f, 0.0f), b.yaw));
+            }
+        }
+        // 未揭露與全滅小隊也記住本幀位置，揭露時不把隱藏期間位移當成新轉向。
+        b.previousPosition = p;
 
         // Q-1 敵情霧:未揭露的 bound squad 藏真身(overlay 為子節點一併隱藏)
         if (fog) {
@@ -153,7 +213,6 @@ void BattleSceneSync::Sync(BattleController& battle) {
             continue;
         }
 
-        const Vector2& p = squad->GetPosition();
         b.node->SetLocalPosition(Vector3(p.x * cellSize, 0.0f, p.y * cellSize));
 
         // 士氣映射亮度:潰逃半暗,滿士氣全亮

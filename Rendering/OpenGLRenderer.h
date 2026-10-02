@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <unordered_map>
 
 namespace Potato {
 
@@ -110,6 +111,9 @@ public:
     
 private:
     uint32 programID;
+    // 包含 -1（未宣告的 uniform）；每次重新 link 時清除。
+    std::unordered_map<std::string, int> uniformLocations;
+    int UniformLocation(const std::string& name);
     bool CompileShader(uint32 type, const std::string& source, uint32& shaderID);
     bool LinkProgram(uint32 vertexID, uint32 fragmentID);
 };

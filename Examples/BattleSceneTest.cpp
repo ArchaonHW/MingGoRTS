@@ -238,6 +238,90 @@ int main() {
     sync.Detach();
     Check(sync.BindingCount() == 0, "Detach 清空綁定");
 
+    // [15] 選用朝向：模型平滑旋轉，根、選取環與血條維持世界方向。
+    BattleController facingBattle(40, 40, CELL);
+    Squad* walker = facingBattle.CreateSquad("朝向測試", 0, Vector2(10, 10), 10);
+    facingBattle.CreateSquad("遠方敵軍", 1, Vector2(35, 35), 10);
+    facingBattle.BeginExecution();
+    BattleSceneSync facingSync;
+    SceneGraph facingScene;
+    auto soldierMesh = MakeShared<Mesh>();
+    facingSync.SetUnitMesh(soldierMesh);
+    facingSync.SetMovementFacing(true);
+    facingSync.SetOverlayMeshes(MakeShared<Mesh>(), MakeShared<Mesh>(), MakeShared<Mesh>());
+    facingSync.Attach(facingBattle, facingScene, CELL);
+    facingSync.SetSelectedSquad(walker);
+    facingSync.Sync(facingBattle);
+    SceneNode* walkerRoot = facingSync.GetNodeFor(walker);
+    SceneNode* walkerMesh = findChild(walkerRoot, "__unit_mesh");
+    SceneNode* walkerRing = findChild(walkerRoot, "__sel_ring");
+    SceneNode* walkerBar = findChild(walkerRoot, "__hp_bg");
+    Check(walkerMesh && walkerMesh->GetRenderable()->mesh == soldierMesh &&
+          !walkerRoot->GetRenderable()->mesh, "模型獨立子節點，根不重複繪製");
+    walker->IssueOrder(SquadOrder::MoveTo, Vector2(30, 10));
+    facingBattle.Update(0.1f);
+    facingSync.Sync(facingBattle);
+    const Vector3 forward = walkerMesh->GetLocalRotation() * Vector3(0, 0, 1);
+    const float expectedYaw = 1.5707963268f * (1.0f - std::exp(-1.0f));
+    Check(std::fabs(std::atan2(forward.x, forward.z) - expectedYaw) < 1e-4f,
+          "往 +X 移動以戰鬥時間指數平滑轉向");
+    Check(std::fabs(walkerRoot->GetLocalRotation().w - 1.0f) < 1e-6f &&
+          std::fabs(walkerRing->GetWorldRotation().w - 1.0f) < 1e-6f &&
+          std::fabs(walkerBar->GetWorldRotation().w - 1.0f) < 1e-6f,
+          "轉向不影響根、選取環與血條");
+    walker->IssueOrder(SquadOrder::Hold, walker->GetPosition());
+    facingBattle.Update(0.2f);
+    facingSync.Sync(facingBattle);
+    Check((walkerMesh->GetLocalRotation() * Vector3(0, 0, 1) - forward).Length() < 1e-6f,
+          "停止移動保留最後朝向");
+    // 先朝接近 +pi，再跨到 -pi：應繼續面向 -Z，不能繞長路回 +Z。
+    const Vector2 turnStart = walker->GetPosition();
+    walker->IssueOrder(SquadOrder::MoveTo,
+                       Vector2(turnStart.x + 0.2f, turnStart.y - 10.0f));
+    for (int i = 0; i < 10; ++i) {
+        facingBattle.Update(0.1f);
+        facingSync.Sync(facingBattle);
+    }
+    const Vector2 crossingStart = walker->GetPosition();
+    walker->IssueOrder(SquadOrder::MoveTo,
+                       Vector2(crossingStart.x - 0.2f, crossingStart.y - 10.0f));
+    facingBattle.Update(0.1f);
+    facingSync.Sync(facingBattle);
+    const Vector3 crossedForward = walkerMesh->GetLocalRotation() * Vector3(0, 0, 1);
+    Check(crossedForward.z < -0.99f, "跨越正負 pi 時沿最短轉角旋轉");
+    facingSync.SetOverlayMeshes(nullptr, nullptr, nullptr);
+    Check(walkerRoot->GetBoundingRadius() >= 1.6f * CELL &&
+          walkerMesh->GetBoundingRadius() >= 1.6f * CELL,
+          "拆掉血條仍保留完整士兵高度包圍球");
+    auto replacementMesh = MakeShared<Mesh>();
+    facingSync.SetUnitMesh(replacementMesh);
+    Check(walkerMesh->GetRenderable()->mesh == replacementMesh,
+          "開啟朝向後仍可更換共用 mesh");
+
+    // [16] 隱藏時持續追蹤位置；停止後揭露不以舊位置重新轉向。
+    QuantumFog facingFog(30.0f, 1);
+    const int facingId = facingFog.AddEntity("朝向測試", 0,
+                                            {Vector2(10, 10), Vector2(12, 10)});
+    facingBattle.BindFog(&facingFog);
+    facingBattle.BindFogSquad(walker, facingId);
+    facingSync.SetFog(&facingFog);
+    walker->IssueOrder(SquadOrder::MoveTo, Vector2(10, 30));
+    facingBattle.Update(0.1f);
+    facingSync.Sync(facingBattle);
+    const Quaternion hiddenRotation = walkerMesh->GetLocalRotation();
+    Check(!walkerRoot->IsActive(), "未揭露小隊隱藏");
+    walker->IssueOrder(SquadOrder::Hold, walker->GetPosition());
+    facingBattle.Update(0.2f);
+    facingFog.Reveal(facingId, walker->GetPosition());
+    facingSync.Sync(facingBattle);
+    Check(walkerRoot->IsActive() &&
+          std::fabs(walkerMesh->GetLocalRotation().Dot(hiddenRotation) - 1.0f) < 1e-5f,
+          "隱藏時更新位置，揭露已停止小隊不跳轉");
+    facingSync.SetMovementFacing(false);
+    Check(!findChild(walkerRoot, "__unit_mesh") &&
+          walkerRoot->GetRenderable()->mesh == replacementMesh,
+          "關閉朝向回復根 mesh，無重複模型");
+
     printf("\n=== 結果: %d PASS, %d FAIL ===\n", g_pass, g_fail);
     return g_fail == 0 ? 0 : 1;
 }
