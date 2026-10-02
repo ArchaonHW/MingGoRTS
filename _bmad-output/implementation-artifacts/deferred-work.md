@@ -51,3 +51,10 @@
 - Truth boundary is discipline-enforced: `CheckGameplayDeps.ps1` bans Rendering/GUI includes but not `Gameplay/Squad` in `Gameplay/Fog`, nor doctrine truth-scans. Extend the guard when Campaign/Game layers appear.
 - `BattleController::Squads()` exposes full enemy truth — fine pre-UI; presentation must consume `Fog(side)` for enemy rendering.
 - `FogConfig` is a bare aggregate: out-of-range hand-built configs bypass `FromJson` validation (negative decayPerMinute drifts the accumulator).
+
+## Deferred from: code review of 1-9-battleplan-arrows (2026-09-30)
+
+- Replan `SimEvent` records only `param=path.size()` — the full path payload is lost when `pendingCommands_` clears at apply. Every other command is self-describing in the log; events-driven replay cannot reissue a Replan. Story 1.11 (BattleRecorder) needs command-input recording or a path side-channel anyway — resolve there.
+- Replan on an arrowless squad creates and grants an arrow mid-Execution (deliberately kept — "replan = new plan" for CP). Re-check the contract when the symmetric AI opponent (1.10) starts issuing replans.
+- No `potato.balance/1` file exists on disk — `PlanConfig::FromJson` verified via inline JSON only (same precedent as `FogConfig`); wires in with the asset pipeline.
+- `PlanConfig` is a bare aggregate like `FogConfig` — hand-built configs bypass `FromJson` bounds (e.g. replanCost > CP_CAP).

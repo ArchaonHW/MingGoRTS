@@ -5,6 +5,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <vector>
 
 namespace Potato::Gameplay {
 
@@ -14,13 +15,15 @@ constexpr int CP_CAP = 5;
 constexpr int CP_REGEN_TICKS = 60 * TICK_RATE_HZ;
 
 // Mid-Execution player/AI commands. Costs: redirect 1, override 2,
-// retreat 3, probe 0 (budgeted separately), entangle 2. Queued at
-// issue, applied at next tick start (well inside the ~3 s resolution
-// budget). Wire-format ordinals are append-only.
+// retreat 3, probe 0 (budgeted separately), entangle 2, replan 2
+// (live value from PlanConfig). Queued at issue, applied at next tick
+// start (well inside the ~3 s resolution budget). Wire-format
+// ordinals are append-only.
 enum class InterventionKind : std::uint8_t {
     Redirect = 0, Override, Retreat,
     Probe,     // fog op: region intel +probe_gain (no collapse)
     Entangle,  // fog op: link two clouds to share fate
+    Replan,    // plan op: rewrite a squad's arrow mid-execution
 };
 
 // Probes are limited per battle (GDD: ~2-3), not by CP.
@@ -33,20 +36,25 @@ constexpr int CostOf(InterventionKind k) {
         case InterventionKind::Retreat:  return 3;
         case InterventionKind::Probe:    return 0;
         case InterventionKind::Entangle: return 2;
+        case InterventionKind::Replan:   return 2; // default; live cost
+                                                 // comes from PlanConfig
     }
     return 0; // unreachable — all enumerators handled
 }
 
 // target: region index (Redirect, Probe) or slot index (Override) or
-// cloud id B (Entangle — squadIndex field carries cloud id A); unused
-// for Retreat. issueTick is recorded for replay/ordering metadata —
-// the apply step doesn't re-read it (queue order is canonical).
+// cloud id B (Entangle — squadIndex field carries cloud id A) or
+// path length (Replan); unused for Retreat. `path` is Replan's
+// payload (empty for the rest).
+// issueTick is recorded for replay/ordering metadata — the apply step
+// doesn't re-read it (queue order is canonical).
 struct Intervention {
     int side = 0;
     InterventionKind kind = InterventionKind::Redirect;
     int squadIndex = -1;
     int target = -1;
     int issueTick = 0;
+    std::vector<std::size_t> path;
 };
 
 } // namespace Potato::Gameplay

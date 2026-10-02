@@ -93,8 +93,10 @@ struct SimEvent {
     int slotIndex = -1;
     // Intervention: param = target region (Redirect, Probe) or slot
     // index (Override) or cloud id B (Entangle — squadIndex carries
-    // cloud id A); aux = InterventionKind ordinal (0=Redirect,
-    // 1=Override, 2=Retreat, 3=Probe, 4=Entangle — wire-format stable).
+    // cloud id A) or path length (Replan — the path itself lives in
+    // the queued Intervention, which the checksum folds); aux =
+    // InterventionKind ordinal (0=Redirect, 1=Override, 2=Retreat,
+    // 3=Probe, 4=Entangle, 5=Replan — wire-format stable).
     int param = -1;
     // BeatChanged: new BattleBeat ordinal — wire-format stable
     // (Planning=0, Execution=1, Aftermath=2; recorder/replay depends on it).

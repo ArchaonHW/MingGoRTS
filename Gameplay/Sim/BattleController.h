@@ -3,6 +3,7 @@
 #include "Gameplay/Command/Intervention.h"
 #include "Gameplay/Doctrine/Doctrine.h"
 #include "Gameplay/Fog/QuantumFog.h"
+#include "Gameplay/Plan/BattlePlan.h"
 #include "Gameplay/Result.h"
 #include "Gameplay/Sim/Sim.h"
 
@@ -52,7 +53,8 @@ class BattleController {
 public:
     BattleController(std::uint64_t seed, const BattleMap& map,
                      const DoctrineLibrary& cards,
-                     const FogConfig& fogConfig = FogConfig{});
+                     const FogConfig& fogConfig = FogConfig{},
+                     const PlanConfig& planConfig = PlanConfig{});
     ~BattleController();
     // Copy-constructible (tests snapshot whole controllers); copies share
     // the borrowed map_/cards_ refs. Assignment deleted — refs can't reseat.
@@ -84,12 +86,23 @@ public:
     // no CP); entangle links two of this side's clouds to share fate.
     Result<bool> IssueProbe(int side, std::size_t region);   // 0 CP, 3/battle
     Result<bool> IssueEntangle(int side, int cloudIdA, int cloudIdB); // 2 CP
+    // Replan: rewrite a squad's arrow mid-execution; bonus recomputes
+    // from CURRENT certainty at apply time. Costs planConfig.replanCost.
+    Result<bool> IssueReplan(int side, int squadIndex,
+                             std::vector<std::size_t> path);
 
     // Planning-only intel hook (briefing/tests): overwrite a cloud's
     // believed region + certainty in `fogSide`'s view for `squadIndex`
     // (which must be hostile to fogSide — own squads aren't clouds).
     bool SetCloudIntel(int fogSide, int squadIndex,
                        int region, int certainty);
+
+    // --- BattlePlan (Planning only) ---
+    // Draw an arrow: `path` starts at the squad's current region,
+    // adjacent pairs; replaces any existing arrow for that squad.
+    bool DrawArrow(int side, int squadIndex,
+                   const std::vector<std::size_t>& path);
+    const PlanArrow& ArrowOf(std::size_t squadIndex) const;
 
     // --- Execution tick ---
     // One deterministic tick: doctrine eval (snapshot semantics) ->
@@ -129,6 +142,10 @@ private:
     // (collapse enemy clouds sharing/adjoining a friendly region,
     // entangled partners collapse to their own truth), then decay.
     void SyncFog();
+    // Execution-start plan bonuses: attack += attack*mean/100 (capped).
+    void ApplyPlanBonuses();
+    // Arrow march step: on-path Holding squads advance one leg.
+    void MarchArrows();
 
     const BattleMap& map_;
     const DoctrineLibrary& cards_;
@@ -149,6 +166,8 @@ private:
     std::array<QuantumFog, 2> fog_;
     std::array<std::vector<int>, 2> cloudOf_;
     std::array<int, 2> probeBudget_ = {PROBE_BUDGET, PROBE_BUDGET};
+    PlanConfig planConfig_;
+    std::vector<PlanArrow> arrows_; // index-aligned; active==false=none
 };
 
 } // namespace Potato::Gameplay
