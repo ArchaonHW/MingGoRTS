@@ -4,6 +4,12 @@
 cmake_minimum_required(VERSION 3.15)
 project(PotatoEngine VERSION 1.0.0 LANGUAGES C CXX)
 
+# Optional local wrapper for transient Windows manifest file locks.
+set(POTATO_MANIFEST_TOOL "" CACHE FILEPATH "Optional MSVC manifest tool wrapper")
+if(MSVC AND POTATO_MANIFEST_TOOL)
+    set(CMAKE_MT "${POTATO_MANIFEST_TOOL}")
+endif()
+
 # 設置 C++ 標準
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -395,6 +401,9 @@ target_link_libraries(Gameplay PUBLIC PotatoEngine Quantum)
 # 分層：PotatoEngine ← Gameplay ← Campaign，Campaign 不回流 Gameplay
 add_library(Campaign STATIC
     Campaign/CampaignState.cpp
+    Campaign/CampaignProgress.cpp
+    Campaign/ChapterLibrary.cpp
+    Campaign/CampaignFlow.cpp
 )
 target_include_directories(Campaign PUBLIC ${CMAKE_SOURCE_DIR})
 target_link_libraries(Campaign PUBLIC Gameplay)
@@ -725,6 +734,14 @@ target_include_directories(ChapterConventionsTest PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(ChapterConventionsTest Gameplay)
 
 # E-7 戰役框架 facade 無頭測試（roundtrip/壞檔拒絕/原子寫）
+add_executable(CampaignFlowTest Examples/CampaignFlowTest.cpp)
+target_include_directories(CampaignFlowTest PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(CampaignFlowTest Campaign)
+target_compile_definitions(CampaignFlowTest PRIVATE POTATO_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+
+add_executable(CampaignMissionTest Examples/CampaignMissionTest.cpp)
+target_link_libraries(CampaignMissionTest Gameplay)
+
 add_executable(CampaignStateTest Examples/CampaignStateTest.cpp)
 target_include_directories(CampaignStateTest PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(CampaignStateTest Campaign)
@@ -911,6 +928,8 @@ set(POTATO_TESTS
     CampaignLedgerTest
     GeneralDossierTest
     CampaignStateTest
+    CampaignFlowTest
+    CampaignMissionTest
     SynthDataDemo
     MythLogTest
     ChapterConventionsTest

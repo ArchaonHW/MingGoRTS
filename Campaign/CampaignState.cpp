@@ -3,6 +3,11 @@
 #include "Campaign/JsonWriter.h"
 #include "Logging/Logger.h"
 
+#include "Serialization/JsonValidation.h"
+#ifdef _WIN32
+#define NOMINMAX
+#include <windows.h>
+#endif
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -10,19 +15,20 @@
 namespace Potato {
 namespace Campaign {
 
-void CampaignState::AdvanceChapter(int arc, int ch,
-                                   const std::string& chapterId) {
+void CampaignState::AdvanceChapter(int arc, int ch, const std::string &chapterId) {
     chapter.arc = arc;
     chapter.chapter = ch;
     chapter.chapterId = chapterId;
     ledger.AdvanceChapter(ch);
 }
 
-bool CampaignState::SaveToFile(const std::string& path) const {
+bool CampaignState::SaveToFile(const std::string &path) const {
     JsonValue root;
     root.type = JsonValue::Type::Object;
     root.objectValue["schema"] = JsonValue::String("potato.campaign/1");
     root.objectValue["chapter"] = chapter.ToJson();
+    if (progress.initialized)
+        root.objectValue["campaign_progress"] = progress.ToJson();
     root.objectValue["refit_camp"] = camp.ToJson();
     root.objectValue["roster"] = roster.ToJson();
     // 帳本自持字串式序列化：parse 回 JsonValue 嵌入聚合文件
@@ -45,29 +51,35 @@ bool CampaignState::SaveToFile(const std::string& path) const {
             return false;
         }
         f << WriteJson(root);
+        f.flush();
         if (!f.good()) {
             POTATO_LOG_ERROR("CampaignState: 寫入暫存檔失敗 " + tmp);
             return false;
         }
     }
-    // tmp+rename 原子替換；Windows rename 不覆蓋，先移除目標
+    // 失敗時保留上一份存檔；Windows 原生替換不先刪舊檔。
+#ifdef _WIN32
+    const auto src = std::filesystem::path(tmp).wstring();
+    const auto dst = std::filesystem::path(path).wstring();
+    if (!MoveFileExW(src.c_str(), dst.c_str(),
+                     MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)) {
+        std::error_code ignored;
+        std::filesystem::remove(tmp, ignored);
+        return false;
+    }
+#else
     std::error_code ec;
     std::filesystem::rename(tmp, path, ec);
     if (ec) {
-        std::error_code ec2;
-        std::filesystem::remove(path, ec2);
-        ec.clear();
-        std::filesystem::rename(tmp, path, ec);
-        if (ec) {
-            std::filesystem::remove(tmp, ec2);
-            POTATO_LOG_ERROR("CampaignState: 原子替換失敗 " + path);
-            return false;
-        }
+        std::error_code ignored;
+        std::filesystem::remove(tmp, ignored);
+        return false;
     }
+#endif
     return true;
 }
 
-bool CampaignState::LoadFromFile(const std::string& path) {
+bool CampaignState::LoadFromFile(const std::string &path) {
     std::ifstream f(path);
     if (!f) {
         return false;
@@ -85,22 +97,32 @@ bool CampaignState::LoadFromFile(const std::string& path) {
     Gameplay::Roster newRoster;
     Gameplay::CampaignLedger newLedger;
     ChapterState newChapter;
-    if (!newCamp.FromJson(root["refit_camp"]) ||
-        !newRoster.FromJson(root["roster"])) {
+    if (!newCamp.FromJson(root["refit_camp"]) || !newRoster.FromJson(root["roster"])) {
         POTATO_LOG_ERROR("CampaignState: 子文件損毀，拒絕載入 " + path);
         return false;
     }
-    const JsonValue& lj = root["campaign_ledger"];
+    const JsonValue &lj = root["campaign_ledger"];
     if (!lj.IsNull() && !newLedger.FromJson(WriteJson(lj))) {
         POTATO_LOG_ERROR("CampaignState: 帳本段損毀，拒絕載入 " + path);
         return false;
     }
-    newChapter.FromJson(root["chapter"]);
+    const auto &cj = root["chapter"];
+    if (!cj.IsObject() || !JsonValidation::Integer(cj["arc"], 0, 3) ||
+        !JsonValidation::Integer(cj["chapter"], 0, 10000) || !cj["chapter_id"].IsString() ||
+        !JsonValidation::Strings(cj["fronts_taken"]))
+        return false;
+    newChapter.FromJson(cj);
+    CampaignProgress newProgress;
+    if (!root["campaign_progress"].IsNull() && !newProgress.FromJson(root["campaign_progress"]))
+        return false;
+    if (!lj.IsNull() && newLedger.Chapter() != newChapter.chapter)
+        return false;
     // governance/god_stance/intel_ledger：缺段容忍，內容暫不解析
     camp = newCamp;
     roster = newRoster;
     ledger = newLedger;
     chapter = newChapter;
+    progress = std::move(newProgress);
     return true;
 }
 

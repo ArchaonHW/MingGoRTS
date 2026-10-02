@@ -799,6 +799,25 @@ void BattleController::ResolveCombat(float dt) {
     }
 }
 
+bool BattleController::SetProtectionObjective(Squad* watched, float seconds) {
+    if (phase != BattlePhase::Deployment || !watched ||
+        !std::isfinite(seconds) || seconds <= 0.0f) return false;
+    bool owned = false;
+    for (const auto& s : squads) if (s.get() == watched) owned = true;
+    if (!owned || watched->GetTeam() != 0) return false;
+    protectedSquad = watched;
+    protectionSeconds = seconds;
+    return true;
+}
+
+bool BattleController::Withdraw() {
+    if (phase != BattlePhase::Execution || outcome != BattleOutcome::Ongoing) return false;
+    outcome = BattleOutcome::Defeat;
+    phase = BattlePhase::Resolution;
+    Emit("撤退：本章記為失利，生還兵力延續");
+    return true;
+}
+
 void BattleController::CheckOutcome() {
     bool alive[2] = {false, false};
     bool generalSlain[2] = {false, false};
@@ -822,6 +841,10 @@ void BattleController::CheckOutcome() {
         } else {
             outcome = BattleOutcome::Victory;
         }
+    } else if (protectedSquad && (protectedSquad->IsEliminated() || protectedSquad->IsRouting())) {
+        outcome = BattleOutcome::Defeat;
+    } else if (protectedSquad && alive[0] && elapsed >= protectionSeconds) {
+        outcome = BattleOutcome::Victory;
     } else if (!alive[0] && !alive[1]) {
         outcome = BattleOutcome::Draw;
     } else if (!alive[1]) {

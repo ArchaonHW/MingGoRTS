@@ -2,8 +2,11 @@
 #include "BattleController.h"
 #include "PostBattle.h"
 #include "Roster.h"
-#include "SquadTemplate.h"
 #include "Serialization/JsonParser.h"
+#include "Serialization/JsonValidation.h"
+#include "Serialization/JsonWriter.h"
+#include "SquadTemplate.h"
+#include <set>
 
 #include <fstream>
 #include <sstream>
@@ -11,8 +14,8 @@
 namespace Potato {
 namespace Gameplay {
 
-const VeteranUnit* RefitCamp::FindUnit(const std::string& squadName) const {
-    for (const auto& u : units) {
+const VeteranUnit *RefitCamp::FindUnit(const std::string &squadName) const {
+    for (const auto &u : units) {
         if (u.squadName == squadName) {
             return &u;
         }
@@ -20,10 +23,10 @@ const VeteranUnit* RefitCamp::FindUnit(const std::string& squadName) const {
     return nullptr;
 }
 
-void RefitCamp::Absorb(const PostBattleReport& report,
-                       const Roster& roster, int team) {
+void RefitCamp::Absorb(const PostBattleReport &report, const Roster &roster, int team) {
     (void)roster; // 隊長生死由 roster 記錄；此處只管編制
-    for (const auto& c : report.casualties) {
+    std::vector<VeteranUnit> recovering;
+    for (const auto &c : report.casualties) {
         if (c.team != team) {
             continue;
         }
@@ -32,7 +35,15 @@ void RefitCamp::Absorb(const PostBattleReport& report,
                 continue;
             }
             if (c.eliminated) {
-                // 全滅 → 移出常備軍（傷兵也救不回來）
+                // 先前在營的傷兵沒有出戰，轉交新軍官；不復活陣亡隊長。
+                if (units[i].wounded > 0) {
+                    VeteranUnit medical = units[i];
+                    medical.members = 0;
+                    medical.squadName = "傷員接收 · " + units[i].squadName;
+                    medical.captainName = "接收軍官 · " + units[i].captainName;
+                    medical.wounded = medical.maxMembers = units[i].wounded;
+                    recovering.push_back(std::move(medical));
+                }
                 units.erase(units.begin() + i);
             } else {
                 // lost 從部署兵力起算（squad.maxMembers=部署值），
@@ -46,7 +57,9 @@ void RefitCamp::Absorb(const PostBattleReport& report,
             break;
         }
     }
-    for (const auto& r : report.relics) {
+    for (const auto &medical : recovering)
+        units.push_back(medical);
+    for (const auto &r : report.relics) {
         inventory.push_back(r);
     }
 }
@@ -54,9 +67,8 @@ void RefitCamp::Absorb(const PostBattleReport& report,
 int RefitCamp::HealWounded(int maxSpend) {
     int budget = maxSpend < loot ? maxSpend : loot;
     int healed = 0;
-    for (auto& u : units) {
-        while (u.wounded > 0 && budget > 0 &&
-               u.members < u.maxMembers) {
+    for (auto &u : units) {
+        while (u.wounded > 0 && budget > 0 && u.members < u.maxMembers) {
             --u.wounded;
             ++u.members;
             --budget;
@@ -67,15 +79,23 @@ int RefitCamp::HealWounded(int maxSpend) {
     return healed;
 }
 
-bool RefitCamp::Recruit(const SquadTemplateLibrary& library,
-                        const std::string& templateId) {
-    const SquadTemplate* tpl = library.Find(templateId);
-    if (!tpl || tpl->cost > loot) {
+bool RefitCamp::Recruit(const SquadTemplateLibrary &library, const std::string &templateId) {
+    const SquadTemplate *tpl = library.Find(templateId);
+    if (!tpl || tpl->cost > loot || recruitSerial >= 900000) {
         return false;
     }
     loot -= tpl->cost;
     VeteranUnit u;
     u.squadName = tpl->name;
+    ++recruitSerial;
+    // 序號持久化，已陣亡的補充隊伍身分永不重用。
+    if (recruitSerial > 1)
+        u.squadName = tpl->name + " · " + std::to_string(recruitSerial);
+    while (FindUnit(u.squadName)) {
+        ++recruitSerial;
+        u.squadName = tpl->name + " · " + std::to_string(recruitSerial);
+    }
+    u.captainName = "補充軍官 · " + std::to_string(recruitSerial);
     u.templateId = tpl->id;
     u.unitClass = tpl->unitClass;
     u.members = tpl->members;
@@ -85,11 +105,10 @@ bool RefitCamp::Recruit(const SquadTemplateLibrary& library,
     return true;
 }
 
-bool RefitCamp::AssignRelic(const std::string& squadName,
-                            const std::string& relic) {
+bool RefitCamp::AssignRelic(const std::string &squadName, const std::string &relic) {
     for (size_t i = 0; i < inventory.size(); ++i) {
         if (inventory[i] == relic) {
-            for (auto& u : units) {
+            for (auto &u : units) {
                 if (u.squadName == squadName) {
                     u.relics.push_back(relic);
                     inventory.erase(inventory.begin() + i);
@@ -102,12 +121,13 @@ bool RefitCamp::AssignRelic(const std::string& squadName,
     return false;
 }
 
-std::vector<Squad*> RefitCamp::Deploy(
-    BattleController& battle, int team,
-    const std::vector<Vector2>& positions,
-    const SquadTemplateLibrary* library) {
-    std::vector<Squad*> out;
+std::vector<Squad *> RefitCamp::Deploy(BattleController &battle, int team,
+                                       const std::vector<Vector2> &positions,
+                                       const SquadTemplateLibrary *library) {
+    std::vector<Squad *> out;
     for (size_t i = 0; i < units.size(); ++i) {
+        if (units[i].members <= 0)
+            continue;
         Vector2 pos(0.0f, 0.0f);
         if (!positions.empty()) {
             size_t pi = i < positions.size() ? i : positions.size() - 1;
@@ -116,14 +136,12 @@ std::vector<Squad*> RefitCamp::Deploy(
                 pos.y += static_cast<float>(i - positions.size() + 1);
             }
         }
-        Squad* s = battle.CreateSquad(units[i].squadName, team, pos,
-                                      units[i].members);
+        Squad *s = battle.CreateSquad(units[i].squadName, team, pos, units[i].members);
         if (s) {
             // 招募單位回補模板 stats（G-6）：speed/engage_range/
             // damage/stamina 全由模板 stamped；查無模板就只給預設
             if (library && !units[i].templateId.empty()) {
-                if (const SquadTemplate* tpl =
-                        library->Find(units[i].templateId)) {
+                if (const SquadTemplate *tpl = library->Find(units[i].templateId)) {
                     tpl->ApplyStats(s);
                 }
             }
@@ -135,7 +153,7 @@ std::vector<Squad*> RefitCamp::Deploy(
     return out;
 }
 
-static std::string JsonEscape(const std::string& s) {
+static std::string JsonEscape(const std::string &s) {
     std::string out;
     out.reserve(s.size() + 2);
     for (char c : s) {
@@ -147,38 +165,12 @@ static std::string JsonEscape(const std::string& s) {
     return out;
 }
 
-bool RefitCamp::SaveToFile(const std::string& path) const {
-    std::ostringstream ss;
-    ss << "{\"schema\":\"potato.refit_camp/1\",\"loot\":" << loot
-       << ",\"inventory\":[";
-    for (size_t i = 0; i < inventory.size(); ++i) {
-        ss << "\"" << JsonEscape(inventory[i]) << "\""
-           << (i + 1 < inventory.size() ? "," : "");
-    }
-    ss << "],\"units\":[";
-    for (size_t i = 0; i < units.size(); ++i) {
-        const auto& u = units[i];
-        ss << "{\"squad_name\":\"" << JsonEscape(u.squadName)
-           << "\",\"template_id\":\"" << JsonEscape(u.templateId)
-           << "\",\"unit_class\":\"" << UnitClassName(u.unitClass)
-           << "\",\"members\":" << u.members
-           << ",\"wounded\":" << u.wounded
-           << ",\"max_members\":" << u.maxMembers
-           << ",\"captain\":\"" << JsonEscape(u.captainName)
-           << "\",\"relics\":[";
-        for (size_t j = 0; j < u.relics.size(); ++j) {
-            ss << "\"" << JsonEscape(u.relics[j]) << "\""
-               << (j + 1 < u.relics.size() ? "," : "");
-        }
-        ss << "]}" << (i + 1 < units.size() ? "," : "");
-    }
-    ss << "]}";
+bool RefitCamp::SaveToFile(const std::string &path) const {
     std::ofstream f(path);
-    if (!f) {
+    if (!f)
         return false;
-    }
-    f << ss.str();
-    return true;
+    f << JsonSerialization::WriteJson(ToJson());
+    return f.good();
 }
 
 JsonValue RefitCamp::ToJson() const {
@@ -186,28 +178,28 @@ JsonValue RefitCamp::ToJson() const {
     o.type = JsonValue::Type::Object;
     o.objectValue["schema"] = JsonValue::String("potato.refit_camp/1");
     o.objectValue["loot"] = JsonValue::Number(loot);
+    o.objectValue["recruit_serial"] = JsonValue::Number(recruitSerial);
     JsonValue inv;
     inv.type = JsonValue::Type::Array;
-    for (const auto& r : inventory) {
+    for (const auto &r : inventory) {
         inv.arrayValue.push_back(JsonValue::String(r));
     }
     o.objectValue["inventory"] = inv;
     JsonValue us;
     us.type = JsonValue::Type::Array;
-    for (const auto& u : units) {
+    for (const auto &u : units) {
         JsonValue ju;
         ju.type = JsonValue::Type::Object;
         ju.objectValue["squad_name"] = JsonValue::String(u.squadName);
         ju.objectValue["template_id"] = JsonValue::String(u.templateId);
-        ju.objectValue["unit_class"] =
-            JsonValue::String(UnitClassName(u.unitClass));
+        ju.objectValue["unit_class"] = JsonValue::String(UnitClassName(u.unitClass));
         ju.objectValue["members"] = JsonValue::Number(u.members);
         ju.objectValue["wounded"] = JsonValue::Number(u.wounded);
         ju.objectValue["max_members"] = JsonValue::Number(u.maxMembers);
         ju.objectValue["captain"] = JsonValue::String(u.captainName);
         JsonValue rs;
         rs.type = JsonValue::Type::Array;
-        for (const auto& r : u.relics) {
+        for (const auto &r : u.relics) {
             rs.arrayValue.push_back(JsonValue::String(r));
         }
         ju.objectValue["relics"] = rs;
@@ -217,34 +209,54 @@ JsonValue RefitCamp::ToJson() const {
     return o;
 }
 
-bool RefitCamp::FromJson(const JsonValue& root) {
-    if (root["schema"].AsString() != "potato.refit_camp/1") {
+bool RefitCamp::FromJson(const JsonValue &root) {
+    if (!root.IsObject() || root["schema"].AsString() != "potato.refit_camp/1" ||
+        !JsonValidation::Integer(root["loot"]) || !JsonValidation::Strings(root["inventory"]) ||
+        !root["units"].IsArray())
         return false;
+    if (!root["recruit_serial"].IsNull() &&
+        !JsonValidation::Integer(root["recruit_serial"], 0, 900000))
+        return false;
+    int nextSerial = root["recruit_serial"].AsInt();
+    std::vector<VeteranUnit> next;
+    std::set<std::string> names;
+    for (const auto &u : root["units"].AsArray()) {
+        for (auto key : {"squad_name", "template_id", "unit_class", "captain"})
+            if (!u[key].IsString())
+                return false;
+        if (u["squad_name"].stringValue.empty() ||
+            !names.insert(u["squad_name"].stringValue).second ||
+            !JsonValidation::Integer(u["members"], 0, 10000) ||
+            !JsonValidation::Integer(u["wounded"], 0, 10000) ||
+            !JsonValidation::Integer(u["max_members"], 1, 10000) ||
+            u["members"].AsInt() + u["wounded"].AsInt() > u["max_members"].AsInt() ||
+            !JsonValidation::Strings(u["relics"]))
+            return false;
+        const auto cls = u["unit_class"].stringValue;
+        if (cls != "infantry" && cls != "cavalry" && cls != "archer")
+            return false;
+        VeteranUnit v;
+        v.squadName = u["squad_name"].stringValue;
+        v.templateId = u["template_id"].stringValue;
+        v.unitClass = UnitClassFromString(cls);
+        v.members = u["members"].AsInt();
+        v.wounded = u["wounded"].AsInt();
+        v.maxMembers = u["max_members"].AsInt();
+        v.captainName = u["captain"].stringValue;
+        for (const auto &r : u["relics"].AsArray())
+            v.relics.push_back(r.stringValue);
+        next.push_back(v);
     }
-    loot = root["loot"].AsInt(0);
+    recruitSerial = nextSerial;
+    loot = root["loot"].AsInt();
+    units = std::move(next);
     inventory.clear();
-    for (const auto& r : root["inventory"].AsArray()) {
-        inventory.push_back(r.AsString());
-    }
-    units.clear();
-    for (const auto& u : root["units"].AsArray()) {
-        VeteranUnit vu;
-        vu.squadName = u["squad_name"].AsString();
-        vu.templateId = u["template_id"].AsString();
-        vu.unitClass = UnitClassFromString(u["unit_class"].AsString());
-        vu.members = u["members"].AsInt(0);
-        vu.wounded = u["wounded"].AsInt(0);
-        vu.maxMembers = u["max_members"].AsInt(0);
-        vu.captainName = u["captain"].AsString();
-        for (const auto& r : u["relics"].AsArray()) {
-            vu.relics.push_back(r.AsString());
-        }
-        units.push_back(vu);
-    }
+    for (const auto &r : root["inventory"].AsArray())
+        inventory.push_back(r.stringValue);
     return true;
 }
 
-bool RefitCamp::LoadFromFile(const std::string& path) {
+bool RefitCamp::LoadFromFile(const std::string &path) {
     std::ifstream f(path);
     if (!f) {
         return false;

@@ -125,6 +125,10 @@ public:
 
     // 部署完畢 → 進入即時執行（不再能改 doctrine）
     bool BeginExecution();
+    // Campaign protection mission. The watched squad must belong to this battle.
+    bool SetProtectionObjective(Squad* watched, float seconds);
+    // Explicit withdrawal; terminal outcomes cannot be overwritten.
+    bool Withdraw();
 
     // ---- 即時階段 ----
     // timeScale：0 = 暫停（指令階段）、0.25 = 子彈時間、1 = 正常
@@ -209,6 +213,8 @@ private:
     float timeScale;
     float doctrineTimer;      // doctrine 評估節流
     float elapsed;
+    Squad* protectedSquad = nullptr;
+    float protectionSeconds = 0.0f;
     float moraleExecThreshold = 0.0f; // 0 = 關閉
     float moraleExecRate = 1.0f;
     float routShockRadius = 0.0f;     // G-1：<=0 關閉

@@ -1,0 +1,691 @@
+{
+  "schema": "potato.chapters/1",
+  "chapters": [
+    {
+      "id": "duanqiao",
+      "number": 1,
+      "arc": 0,
+      "title": "斷橋初筆",
+      "opening": "村祠裡的神像流下血淚，狐影從煙中送來一句警告：「神也怕人寫下的命令。」你帶著空白行軍帳抵達斷橋。格洛克的前鋒占住南岸，渡口後面是還沒撤走的村民。\n\n軍官問你，這一仗要追到哪裡。你可以留一條退路，也可以把勝利寫成殲滅的數字；不論如何，活著的人都要帶著這一頁繼續走。",
+      "objectiveText": "擊潰敵軍，保存生還部隊。",
+      "victoryText": "你把勝利與代價一同寫入帳本，活著的人繼續前進。",
+      "defeatText": "戰線失守。死者不會回來；倖存者帶著這次挫敗繼續前進。",
+      "closingHook": "焦土中找到一冊殲滅帳。後衛正護送傷員撤離，追擊命令卻已送到。",
+      "mapPath": "assets/maps/duanqiao.json",
+      "enemyGeneralName": "格洛克親衛長",
+      "enemyPersonality": "侵略",
+      "enemySpeed": 1.45,
+      "enemyRange": 1.4,
+      "enemyDamage": 0.018,
+      "tint": [
+        0.24,
+        0.3,
+        0.2
+      ],
+      "friendlyDeployment": [
+        [
+          12,
+          2
+        ],
+        [
+          9,
+          3
+        ],
+        [
+          15,
+          3
+        ],
+        [
+          12,
+          4
+        ],
+        [
+          12,
+          1
+        ]
+      ],
+      "enemies": [
+        {
+          "name": "斷橋初筆前鋒",
+          "members": 18,
+          "position": [
+            12,
+            10.5
+          ]
+        },
+        {
+          "name": "斷橋初筆右翼",
+          "members": 12,
+          "position": [
+            17,
+            12
+          ]
+        },
+        {
+          "name": "斷橋初筆後衛",
+          "members": 9,
+          "position": [
+            7,
+            13
+          ]
+        },
+        {
+          "name": "斷橋初筆親衛",
+          "members": 8,
+          "position": [
+            12,
+            14
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "id": "mercy",
+          "label": "接受投降",
+          "description": "允許敗軍退出。第三章談判需要本章獲勝並選擇此路。",
+          "cost": 0,
+          "supply": 0,
+          "reward": 0,
+          "holdSeconds": 0
+        },
+        {
+          "id": "pursue",
+          "label": "追擊殘軍",
+          "description": "殲滅戰勝利額外取得 4 補給；失去第三章無戰條件。",
+          "cost": 0,
+          "supply": 0,
+          "reward": 4,
+          "holdSeconds": 0
+        }
+      ]
+    },
+    {
+      "id": "ash_ledger",
+      "number": 2,
+      "arc": 0,
+      "title": "殲滅的筆跡",
+      "opening": "斷橋的硝煙尚未散盡，一冊沾血的帳本從焦土中送來。對手把一支全滅縱隊寫成整齊的擊殺數，沒有姓名，也沒有傷員。\n\n後衛正在護送傷員通過林間渡口，追兵從南岸逼近。追上帳冊的主人能取得更多軍糧；留下來掩護，則可能讓關城裡的人相信，你的承諾不只是一句軍令。",
+      "objectiveText": "守護後衛至限時結束，或擊潰敵軍。",
+      "victoryText": "你把勝利與代價一同寫入帳本，活著的人繼續前進。",
+      "defeatText": "戰線失守。死者不會回來；倖存者帶著這次挫敗繼續前進。",
+      "closingHook": "守關將領讀過你的戰報。昨日留下的人命，今日可能成為不用開槍的籌碼。",
+      "mapPath": "assets/maps/ash_ledger.json",
+      "enemyGeneralName": "帳冊軍師",
+      "enemyPersonality": "狡詐",
+      "enemySpeed": 1.49,
+      "enemyRange": 1.4,
+      "enemyDamage": 0.019,
+      "tint": [
+        0.31,
+        0.25,
+        0.18
+      ],
+      "friendlyDeployment": [
+        [
+          12,
+          2
+        ],
+        [
+          9,
+          3
+        ],
+        [
+          15,
+          3
+        ],
+        [
+          12,
+          4
+        ],
+        [
+          12,
+          1
+        ]
+      ],
+      "enemies": [
+        {
+          "name": "殲滅的筆跡前鋒",
+          "members": 19,
+          "position": [
+            12,
+            10.5
+          ]
+        },
+        {
+          "name": "殲滅的筆跡右翼",
+          "members": 13,
+          "position": [
+            17,
+            12
+          ]
+        },
+        {
+          "name": "殲滅的筆跡後衛",
+          "members": 10,
+          "position": [
+            7,
+            13
+          ]
+        },
+        {
+          "name": "殲滅的筆跡親衛",
+          "members": 9,
+          "position": [
+            12,
+            14
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "id": "rescue",
+          "label": "掩護傷員",
+          "description": "守住後衛 35 秒，保護成功視為勝利；花費 2 補給安排運輸。",
+          "cost": 2,
+          "supply": 0,
+          "reward": 0,
+          "holdSeconds": 35
+        },
+        {
+          "id": "pursue",
+          "label": "追擊帳冊主人",
+          "description": "擊潰全部敵軍；勝利額外取得 6 補給，放棄無戰條件。",
+          "cost": 0,
+          "supply": 0,
+          "reward": 6,
+          "holdSeconds": 0
+        }
+      ]
+    },
+    {
+      "id": "peace_gate",
+      "number": 3,
+      "arc": 0,
+      "title": "初次無戰",
+      "opening": "關城守將把兩份文書放在案上：一份是斷橋敗軍帶回的口述，一份是傷員護送隊的名冊。城門外已列起弓手，城門內卻有人在等你的回信。\n\n若先前的行動讓信用站得住，便可以用名字與承諾換取通行；若那兩頁沒有留下信任，就得親自承擔強攻的代價。史官這次問的是：能走過的門，是否一定要打破？",
+      "objectiveText": "依先前的決策談判或強攻關口。",
+      "victoryText": "你把勝利與代價一同寫入帳本，活著的人繼續前進。",
+      "defeatText": "戰線失守。死者不會回來；倖存者帶著這次挫敗繼續前進。",
+      "closingHook": "鄉民把亡者的姓名寫在神壇。軍隊要渡河，也必須回答他們的控訴。",
+      "mapPath": "assets/maps/peace_gate.json",
+      "enemyGeneralName": "關守沈衡",
+      "enemyPersonality": "審慎",
+      "enemySpeed": 1.53,
+      "enemyRange": 1.4,
+      "enemyDamage": 0.019999999999999997,
+      "tint": [
+        0.22,
+        0.3,
+        0.26
+      ],
+      "friendlyDeployment": [
+        [
+          12,
+          2
+        ],
+        [
+          9,
+          3
+        ],
+        [
+          15,
+          3
+        ],
+        [
+          12,
+          4
+        ],
+        [
+          12,
+          1
+        ]
+      ],
+      "enemies": [
+        {
+          "name": "初次無戰前鋒",
+          "members": 20,
+          "position": [
+            12,
+            10.5
+          ]
+        },
+        {
+          "name": "初次無戰右翼",
+          "members": 14,
+          "position": [
+            17,
+            12
+          ]
+        },
+        {
+          "name": "初次無戰後衛",
+          "members": 11,
+          "position": [
+            7,
+            13
+          ]
+        },
+        {
+          "name": "初次無戰親衛",
+          "members": 10,
+          "position": [
+            12,
+            14
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "id": "negotiate",
+          "label": "以往日信用談判",
+          "description": "第一章接受投降並獲勝、第二章救援獲勝才可無戰通關。",
+          "cost": 0,
+          "supply": 0,
+          "reward": 0,
+          "holdSeconds": 0
+        },
+        {
+          "id": "attack",
+          "label": "強攻關口",
+          "description": "進入戰鬥，勝利額外取得 3 補給。",
+          "cost": 0,
+          "supply": 0,
+          "reward": 3,
+          "holdSeconds": 0
+        }
+      ]
+    },
+    {
+      "id": "weeping_shrine",
+      "number": 4,
+      "arc": 0,
+      "title": "神像流淚",
+      "opening": "早先示警的村祠已被戰火吞沒。流淚的神像立在斷牆間，護送隊帶著避難者沿河撤離。廟祝說，神不求勝利，只求有人守完最後一段路。\n\n修葺與護送需要軍糧；強行徵糧能立刻補足帳面，卻要清除前方的敵軍。你提筆時，仍能聽見神壇後面孩子的咳聲。",
+      "objectiveText": "守護後衛至限時結束，或擊潰敵軍。",
+      "victoryText": "你把勝利與代價一同寫入帳本，活著的人繼續前進。",
+      "defeatText": "戰線失守。死者不會回來；倖存者帶著這次挫敗繼續前進。",
+      "closingHook": "北伐聯軍各有旗號。借道與軍糧不會憑空出現，你需要選擇合作的代價。",
+      "mapPath": "assets/maps/weeping_shrine.json",
+      "enemyGeneralName": "神壇守將",
+      "enemyPersonality": "審慎",
+      "enemySpeed": 1.5699999999999998,
+      "enemyRange": 1.4,
+      "enemyDamage": 0.020999999999999998,
+      "tint": [
+        0.26,
+        0.24,
+        0.32
+      ],
+      "friendlyDeployment": [
+        [
+          12,
+          2
+        ],
+        [
+          9,
+          3
+        ],
+        [
+          15,
+          3
+        ],
+        [
+          12,
+          4
+        ],
+        [
+          12,
+          1
+        ]
+      ],
+      "enemies": [
+        {
+          "name": "神壇的眼淚前鋒",
+          "members": 21,
+          "position": [
+            12,
+            10.5
+          ]
+        },
+        {
+          "name": "神壇的眼淚右翼",
+          "members": 15,
+          "position": [
+            17,
+            12
+          ]
+        },
+        {
+          "name": "神壇的眼淚後衛",
+          "members": 12,
+          "position": [
+            7,
+            13
+          ]
+        },
+        {
+          "name": "神壇的眼淚親衛",
+          "members": 11,
+          "position": [
+            12,
+            14
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "id": "pacify",
+          "label": "安撫神壇",
+          "description": "支付 3 補給修葺與護送；保護後衛 45 秒可通關。",
+          "cost": 3,
+          "supply": 0,
+          "reward": 0,
+          "holdSeconds": 45
+        },
+        {
+          "id": "seize",
+          "label": "強行徵糧",
+          "description": "即刻取得 4 補給，但需要擊潰敵軍才能通關。",
+          "cost": 0,
+          "supply": 4,
+          "reward": 0,
+          "holdSeconds": 0
+        }
+      ]
+    },
+    {
+      "id": "coalition",
+      "number": 5,
+      "arc": 1,
+      "title": "同盟誓約",
+      "opening": "北行的各軍在營火前交換教令與旗號。今天替你守住側翼的人，明天也可能讀懂你的習慣。盟軍索要一筆共同軍糧，承諾讓糧道上的關卡為你開放。\n\n你可以為盟約分擔代價，也可以獨自突破。同盟的名字將留在帳上，下一次有人背誓時，這筆記錄不會消失。",
+      "objectiveText": "擊潰敵軍，保存生還部隊。",
+      "victoryText": "你把勝利與代價一同寫入帳本，活著的人繼續前進。",
+      "defeatText": "戰線失守。死者不會回來；倖存者帶著這次挫敗繼續前進。",
+      "closingHook": "盟友撤下約定的旗幟。有人要連夜追責，有人要保住仍願意同行的隊伍。",
+      "mapPath": "assets/maps/coalition.json",
+      "enemyGeneralName": "聯軍督軍",
+      "enemyPersonality": "侵略",
+      "enemySpeed": 1.6099999999999999,
+      "enemyRange": 1.4,
+      "enemyDamage": 0.022,
+      "tint": [
+        0.28,
+        0.3,
+        0.21
+      ],
+      "friendlyDeployment": [
+        [
+          12,
+          2
+        ],
+        [
+          9,
+          3
+        ],
+        [
+          15,
+          3
+        ],
+        [
+          12,
+          4
+        ],
+        [
+          12,
+          1
+        ]
+      ],
+      "enemies": [
+        {
+          "name": "合縱的軍議前鋒",
+          "members": 22,
+          "position": [
+            12,
+            10.5
+          ]
+        },
+        {
+          "name": "合縱的軍議右翼",
+          "members": 16,
+          "position": [
+            17,
+            12
+          ]
+        },
+        {
+          "name": "合縱的軍議後衛",
+          "members": 13,
+          "position": [
+            7,
+            13
+          ]
+        },
+        {
+          "name": "合縱的軍議親衛",
+          "members": 12,
+          "position": [
+            12,
+            14
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "id": "alliance",
+          "label": "共擔軍糧",
+          "description": "支付 4 補給建立盟約，戰後留下合作記錄。",
+          "cost": 4,
+          "supply": 0,
+          "reward": 0,
+          "holdSeconds": 0
+        },
+        {
+          "id": "independent",
+          "label": "獨自突破",
+          "description": "不支付盟約費，勝利額外獲得 3 補給。",
+          "cost": 0,
+          "supply": 0,
+          "reward": 3,
+          "holdSeconds": 0
+        }
+      ]
+    },
+    {
+      "id": "broken_oath",
+      "number": 6,
+      "arc": 1,
+      "title": "叛將之筆",
+      "opening": "糧道被截，熟悉的旗號出現在敵陣。背誓的將領把自己的退路交給陌生的贊助者，卻把同盟的士卒留在橋頭。\n\n你可以付出補給，先安置仍願意合作的人；也可以追責背誓者，用勝利補足失去的糧秣。對手的帳本又翻開一頁：他在等你證明，仁慈到底能走多遠。",
+      "objectiveText": "擊潰敵軍，保存生還部隊。",
+      "victoryText": "你把勝利與代價一同寫入帳本，活著的人繼續前進。",
+      "defeatText": "戰線失守。死者不會回來；倖存者帶著這次挫敗繼續前進。",
+      "closingHook": "渡口傳言把你稱為神話。你可以記下每個人的名字，也可以只留下勝者的故事。",
+      "mapPath": "assets/maps/broken_oath.json",
+      "enemyGeneralName": "背誓將領",
+      "enemyPersonality": "狡詐",
+      "enemySpeed": 1.65,
+      "enemyRange": 1.4,
+      "enemyDamage": 0.023,
+      "tint": [
+        0.2,
+        0.24,
+        0.3
+      ],
+      "friendlyDeployment": [
+        [
+          12,
+          2
+        ],
+        [
+          9,
+          3
+        ],
+        [
+          15,
+          3
+        ],
+        [
+          12,
+          4
+        ],
+        [
+          12,
+          1
+        ]
+      ],
+      "enemies": [
+        {
+          "name": "背誓之夜前鋒",
+          "members": 23,
+          "position": [
+            12,
+            10.5
+          ]
+        },
+        {
+          "name": "背誓之夜右翼",
+          "members": 17,
+          "position": [
+            17,
+            12
+          ]
+        },
+        {
+          "name": "背誓之夜後衛",
+          "members": 14,
+          "position": [
+            7,
+            13
+          ]
+        },
+        {
+          "name": "背誓之夜親衛",
+          "members": 13,
+          "position": [
+            12,
+            14
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "id": "reconcile",
+          "label": "保住盟軍",
+          "description": "支付 3 補給安置盟軍，帳本記下和解。",
+          "cost": 3,
+          "supply": 0,
+          "reward": 0,
+          "holdSeconds": 0
+        },
+        {
+          "id": "punish",
+          "label": "追責背誓者",
+          "description": "勝利額外取得 5 補給，帳本記下追責。",
+          "cost": 0,
+          "supply": 0,
+          "reward": 5,
+          "holdSeconds": 0
+        }
+      ]
+    },
+    {
+      "id": "myth_crossing",
+      "number": 7,
+      "arc": 1,
+      "title": "神話改寫",
+      "opening": "夜裡的渡口浮起陌生的燈火。有人說陣亡者回來為你引路，也有人說，只要把死者寫成神兵，軍心就不會再問他們的名字。\n\n你走到這一卷的最後一場戰役。逐一記名需要代價，鑄成傳奇則能換來補給與喝采。戰場仍由生還者承擔；這一頁將決定你用什麼聲音記住他們。",
+      "objectiveText": "擊潰敵軍，保存生還部隊。",
+      "victoryText": "你把勝利與代價一同寫入帳本，活著的人繼續前進。",
+      "defeatText": "戰線失守。死者不會回來；倖存者帶著這次挫敗繼續前進。",
+      "closingHook": "帳本闔上。你留下的名字，決定了後人如何理解這場勝利。",
+      "mapPath": "assets/maps/myth_crossing.json",
+      "enemyGeneralName": "渡口史官",
+      "enemyPersonality": "審慎",
+      "enemySpeed": 1.69,
+      "enemyRange": 1.4,
+      "enemyDamage": 0.024,
+      "tint": [
+        0.3,
+        0.27,
+        0.2
+      ],
+      "friendlyDeployment": [
+        [
+          12,
+          2
+        ],
+        [
+          9,
+          3
+        ],
+        [
+          15,
+          3
+        ],
+        [
+          12,
+          4
+        ],
+        [
+          12,
+          1
+        ]
+      ],
+      "enemies": [
+        {
+          "name": "神話渡口前鋒",
+          "members": 24,
+          "position": [
+            12,
+            10.5
+          ]
+        },
+        {
+          "name": "神話渡口右翼",
+          "members": 18,
+          "position": [
+            17,
+            12
+          ]
+        },
+        {
+          "name": "神話渡口後衛",
+          "members": 15,
+          "position": [
+            7,
+            13
+          ]
+        },
+        {
+          "name": "神話渡口親衛",
+          "members": 14,
+          "position": [
+            12,
+            14
+          ]
+        }
+      ],
+      "choices": [
+        {
+          "id": "remember",
+          "label": "逐一記名",
+          "description": "支付 2 補給整理完整名冊，終章留下每個名字。",
+          "cost": 2,
+          "supply": 0,
+          "reward": 0,
+          "holdSeconds": 0
+        },
+        {
+          "id": "legend",
+          "label": "鑄成神話",
+          "description": "勝利額外取得 4 補給，終章留下傳奇敘事。",
+          "cost": 0,
+          "supply": 0,
+          "reward": 4,
+          "holdSeconds": 0
+        }
+      ]
+    }
+  ]
+}

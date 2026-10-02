@@ -27,6 +27,7 @@
 #include "Gameplay/Roster.h"
 #include "Gameplay/PostBattle.h"
 #include "Campaign/CampaignState.h"
+#include "Campaign/CampaignFlow.h"
 #include "Gameplay/HistorianReport.h"
 #include "Gameplay/GeneralDossier.h"
 #include "Gameplay/RefitCamp.h"
@@ -617,218 +618,10 @@ static bool WorldToScreen(const Camera& cam, const Vector3& w,
 }
 
 // ---- U-1 遊戲殼：Title → Battle → (回 Title | 離開) ----
-enum class ShellScreen { Title, Battle, Quit };
+enum class ShellScreen { Title, Story, Aftermath, Complete, Battle, Quit };
 static bool CaptureFrame(const char* path, int width, int height);
 
-// 標題頁單幀：置中視窗 + 開戰/說明/設定/離開。
-// theme/uiScale 由設定頁就地修改；applied* 追蹤已套用的值。
-static ShellScreen TitleFrame(GLFWwindow* window, OpenGLRenderer& renderer,
-                              UITheme::Id& theme, float& uiScale,
-                              ImFont* fontSans, ImFont* fontSerif,
-                              UITheme::Id& appliedTheme, float& appliedScale,
-                              RefitCamp& camp, const SquadTemplateLibrary& campLibrary,
-                              Texture* portraits, bool* titleCaptured = nullptr) {
-    renderer.PollEvents();
-
-    int dw = 0, dh = 0, ww = 0, wh = 0;
-    glfwGetFramebufferSize(window, &dw, &dh);
-    glfwGetWindowSize(window, &ww, &wh);
-    if (dw > 0 && dh > 0) renderer.SetViewport(0, 0, dw, dh);
-    const ImVec4 cc = UITheme::ClearColor(theme);
-    renderer.SetClearColor(Vector3(cc.x, cc.y, cc.z));
-    renderer.Clear(); // 不清屏會顯示未初始化後備緩衝(背景亂碼)
-
-    ImGuiIO& io = ImGui::GetIO();
-    static float themeFade = 0.0f;
-    if (appliedTheme != theme) {
-        UITheme::Apply(ImGui::GetStyle(), theme);
-        appliedTheme = theme;
-        themeFade = 1.0f; // 換主題 → 全屏 scrim 淡出過場(DESIGN 主題切換規範)
-    }
-    if (uiScale != appliedScale) {
-        ImGui::GetStyle().ScaleAllSizes(uiScale / appliedScale);
-        appliedScale = uiScale;
-    }
-    io.FontGlobalScale = uiScale;
-
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-    // 紙本三主題走 serif、戰術面板走 sans（DESIGN §Typography）
-    ImGui::PushFont(theme != UITheme::Id::TacticalSim ? fontSerif : fontSans,
-                    18.0f);
-
-    ShellScreen next = ShellScreen::Title;
-    static bool showHelp = false, showSettings = false;
-
-    const float margin = ww >= 1000 ? 48.0f : 22.0f;
-    const bool wide = ww >= 1000;
-    const ImU32 gold = IM_COL32(194, 173, 113, 255);
-    ImDrawList* backdrop = ImGui::GetBackgroundDrawList();
-    backdrop->AddRectFilledMultiColor(ImVec2(0, 0), ImVec2((float)ww, (float)wh),
-        IM_COL32(34, 39, 32, 255), IM_COL32(17, 22, 20, 255),
-        IM_COL32(12, 16, 15, 255), IM_COL32(25, 30, 26, 255));
-    backdrop->AddLine(ImVec2(margin, 70), ImVec2(ww - margin, 70),
-                      IM_COL32(194, 173, 113, 85));
-    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2((float)ww, (float)wh), ImGuiCond_Always);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(margin, 25));
-    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(12, 12));
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(14, 10));
-    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(236, 232, 216, 255));
-    ImGui::PushStyleColor(ImGuiCol_TextDisabled, IM_COL32(167, 174, 156, 255));
-    ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(48, 57, 45, 255));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, IM_COL32(75, 85, 59, 255));
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, IM_COL32(92, 101, 69, 255));
-    ImGui::Begin("##title", nullptr,
-                 ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove |
-                     ImGuiWindowFlags_NoBackground);
-    ImGui::TextColored(UITheme::C(0xc2ad71), "斷橋戰役   /   第一章");
-    if (wide) {
-        ImGui::SameLine(ImGui::GetWindowWidth() - margin - 200);
-        ImGui::TextDisabled("我軍 · 作戰準備");
-    }
-    ImGui::Dummy(ImVec2(0, 32));
-
-    // 左側軍議入口與右側軍官陣容共用可捲動頁面，小視窗改為上下排列。
-    const float contentWidth = std::max(200.0f, ImGui::GetContentRegionAvail().x);
-    const float leftWidth = wide ? contentWidth * 0.34f : contentWidth;
-    ImGui::BeginGroup();
-    ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + leftWidth);
-    ImGui::TextDisabled("戰役檔案  /  001");
-    ImGui::PushFont(fontSerif, wide ? 54.0f : 38.0f);
-    ImGui::TextUnformatted("斷橋攻防戰");
-    ImGui::PopFont();
-    ImGui::TextColored(UITheme::C(0xc2ad71), "一道斷橋，決定整條戰線。");
-    ImGui::Dummy(ImVec2(0, 12));
-    ImGui::TextWrapped("敵軍正向渡口集結。召集軍官、部署小隊，\n在戰火抵達之前，寫下你的作戰教令。");
-    ImGui::Dummy(ImVec2(0, 16));
-    ImGui::TextDisabled("作戰目標");
-    ImGui::TextUnformatted("穩住橋頭防線\n掌握敵情，保全麾下兵力");
-    ImGui::Dummy(ImVec2(0, 16));
-    ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(171, 151, 91, 255));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, IM_COL32(200, 181, 120, 255));
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, IM_COL32(151, 132, 74, 255));
-    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(23, 29, 24, 255));
-    if (ImGui::Button("進入戰前軍議", ImVec2(leftWidth, 56))) next = ShellScreen::Battle;
-    ImGui::PopStyleColor(4);
-    ImGui::TextDisabled("編排教令  /  部署兵力  /  下達作戰命令");
-    ImGui::PopTextWrapPos();
-    ImGui::EndGroup();
-
-    if (wide) ImGui::SameLine(0, 36);
-    else ImGui::Dummy(ImVec2(0, 12));
-    ImGui::BeginGroup();
-    const float galleryWidth = wide ? contentWidth - leftWidth - 36 : contentWidth;
-    ImGui::TextColored(UITheme::C(0xc2ad71), "參戰軍官");
-    ImGui::TextDisabled("各司其職，同守一線。");
-    const float gap = 10.0f;
-    const float cardWidth = (galleryWidth - gap * 2) / 3.0f;
-    const float portraitHeight = std::min(350.0f, cardWidth * 1.5f);
-    const char* roles[] = {"我軍指揮", "步兵軍官", "敵方指揮"};
-    const char* traits[] = {"守住防線", "協同作戰", "情報待查證"};
-    for (int i = 0; i < 3; ++i) {
-        if (i > 0) ImGui::SameLine(0, gap);
-        ImGui::BeginGroup();
-        const ImVec2 p = ImGui::GetCursorScreenPos();
-        const ImVec2 end(p.x + cardWidth, p.y + portraitHeight);
-        ImDrawList* draw = ImGui::GetWindowDrawList();
-        draw->AddRectFilled(p, end, IM_COL32(42, 48, 38, 255));
-        CharacterArt::DrawPortrait(draw, portraits, i, p, end);
-        draw->AddRectFilledMultiColor(ImVec2(p.x, p.y + portraitHeight * 0.55f), end,
-            IM_COL32(12, 17, 14, 0), IM_COL32(12, 17, 14, 0),
-            IM_COL32(12, 17, 14, 245), IM_COL32(12, 17, 14, 245));
-        draw->AddRect(p, end, i == 0 ? gold : IM_COL32(110, 118, 92, 170));
-        ImGui::Dummy(ImVec2(cardWidth, portraitHeight));
-        ImGui::TextColored(UITheme::C(0xc2ad71), "%s", roles[i]);
-        ImGui::TextDisabled("%s", traits[i]);
-        ImGui::EndGroup();
-    }
-    ImGui::EndGroup();
-    ImGui::Dummy(ImVec2(0, 24));
-    ImGui::Separator();
-
-    // ---- G-9 整補營:跨場常備軍 + 戰利品帳(首戰後出現) ----
-    if (!camp.GetUnits().empty()) {
-        ImGui::Spacing();
-        ImGui::Separator();
-        ImGui::TextDisabled("整補營 · 戰利品 %d", camp.GetLoot());
-        int totalWounded = 0;
-        for (const auto& u : camp.GetUnits()) {
-            totalWounded += u.wounded;
-            if (u.wounded > 0) {
-                ImGui::Text("  %s 兵力 %d/%d 傷 %d", u.squadName.c_str(),
-                            u.members, u.maxMembers, u.wounded);
-            } else {
-                ImGui::Text("  %s 兵力 %d/%d", u.squadName.c_str(),
-                            u.members, u.maxMembers);
-            }
-        }
-        if (totalWounded > 0) {
-            if (ImGui::Button("醫治傷兵(1點=1人)", ImVec2(-1, 0))) {
-                camp.HealWounded(camp.GetLoot());
-            }
-        }
-        const auto sorted = campLibrary.SortedByCost();
-        if (!sorted.empty()) {
-            const SquadTemplate* cheapest = sorted.front();
-            char rlabel[96];
-            std::snprintf(rlabel, sizeof(rlabel), "招募 %s(%d 戰利品)",
-                          cheapest->name.c_str(), cheapest->cost);
-            const bool canAfford = camp.GetLoot() >= cheapest->cost;
-            if (!canAfford) ImGui::BeginDisabled();
-            if (ImGui::Button(rlabel, ImVec2(-1, 0))) {
-                camp.Recruit(campLibrary, cheapest->id);
-            }
-            if (!canAfford) ImGui::EndDisabled();
-        }
-    }
-
-    if (ImGui::Button("操作說明", ImVec2(-1, 0))) showHelp = !showHelp;
-    if (showHelp) {
-        ImGui::PushTextWrapPos();
-        ImGui::TextUnformatted(
-            "規劃:編排教條卡(觸發→動作),Alt+拖移圖釘,"
-            "Ctrl+自小隊拖出進攻箭頭,開戰。\n"
-            "執行:左鍵選隊,右鍵下令耗 CP;點雲探測(1情報),"
-            "Shift+點雲觀測(2情報);接觸 3 格內免費揭露。\n"
-            "Space 暫停,WASD 平移,滾輪升降,Esc 取消選取。");
-        ImGui::PopTextWrapPos();
-    }
-    if (ImGui::Button("設 定", ImVec2(-1, 0))) showSettings = !showSettings;
-    if (showSettings) {
-        int t = (int)theme;
-        if (ImGui::Combo("主題", &t,
-                         "現代軍事\0泥濘沙盤\0軍電作戰室\0水墨史卷\0")) {
-            theme = (UITheme::Id)t;
-        }
-        ImGui::SliderFloat("介面縮放", &uiScale, 1.0f, 1.5f, "%.2fx");
-    }
-    if (ImGui::Button("離 開", ImVec2(-1, 0))) next = ShellScreen::Quit;
-
-    ImGui::End();
-    ImGui::PopStyleColor(5);
-    ImGui::PopStyleVar(3);
-    ImGui::PopFont();
-
-    // 主題切換過場：新主題 clear color 全屏 scrim 淡出(~0.45s)。
-    // 無 RTT/FBO 下的合法 crossfade——遮的是 3D 背景,UI 本身已
-    // 即時換色(視覺上等同淡入)
-    if (themeFade > 0.0f) {
-        themeFade = std::max(0.0f, themeFade - io.DeltaTime / 0.45f);
-        const ImVec4 fc = UITheme::ClearColor(theme);
-        ImGui::GetForegroundDrawList()->AddRectFilled(
-            ImVec2(0, 0), ImVec2((float)ww, (float)wh),
-            ImGui::GetColorU32(ImVec4(fc.x, fc.y, fc.z, themeFade)));
-    }
-
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    if (titleCaptured) *titleCaptured = CaptureFrame("presentation-title.png", dw, dh);
-    renderer.SwapBuffers();
-    return next;
-}
+#include "CampaignShell.h"
 
 // 直接擷取本程式的 framebuffer；僅供 --visual-check 驗證使用。
 static bool CaptureFrame(const char* path, int width, int height) {
@@ -852,8 +645,12 @@ static bool CaptureFrame(const char* path, int width, int height) {
 
 int main(int argc, char** argv) {
     bool visualCheck = false;
+    bool campaignCheck = false, combatCheck = false, naturalCheck = false;
     for (int i = 1; i < argc; ++i) {
         if (std::string(argv[i]) == "--visual-check") visualCheck = true;
+        if (std::string(argv[i]) == "--campaign-natural-check") { campaignCheck = true; naturalCheck = true; }
+        if (std::string(argv[i]) == "--campaign-check") campaignCheck = true;
+        if (std::string(argv[i]) == "--campaign-combat-check") { campaignCheck = true; combatCheck = true; }
     }
     bool visualCheckPassed = !visualCheck;
     const int W = 1440, H = 810;
@@ -862,7 +659,7 @@ int main(int argc, char** argv) {
     RendererConfig rcfg;
     rcfg.window.width = W;
     rcfg.window.height = H;
-    rcfg.window.title = "MingGoRTS - 斷橋攻防戰";
+    rcfg.window.title = "MingGoRTS - 七章戰役史卷";
     rcfg.window.vsync = true;
     renderer.SetConfig(rcfg);
     if (!renderer.Initialize()) {
@@ -897,8 +694,8 @@ int main(int argc, char** argv) {
 
     // U-1 殼層狀態:主題/UI 縮放在標題頁設定頁修改
     UITheme::Id theme = UITheme::Id::TacticalSim;
-    UITheme::Id appliedTheme = theme;
-    float uiScale = 1.0f, appliedScale = 1.0f;
+
+    float uiScale = 1.0f;
     UITheme::Apply(ImGui::GetStyle(), theme);
 
     // ImGui/renderer 已初始化後的失敗路徑都要走這個清理
@@ -948,23 +745,87 @@ int main(int argc, char** argv) {
         if (visualCheck) { shutdownAll(); return 1; }
         portraits.reset();
     }
-    if (visualCheck) {
-        bool titleCaptured = false;
-        for (int frame = 0; frame < 3; ++frame) {
-            TitleFrame(window, renderer, theme, uiScale, fontSans, fontSerif,
-                       appliedTheme, appliedScale, camp, campLibrary, portraits.get(),
-                       frame == 2 ? &titleCaptured : nullptr);
-        }
-        if (!titleCaptured) { shutdownAll(); return 2; }
+    Campaign::ChapterLibrary chapters;
+    std::string campaignError;
+    if (!chapters.LoadFromFile(DemoAssets::Resolve("campaign/chapters.json"), campaignError)) {
+        std::fprintf(stderr, "%s\n", campaignError.c_str()); shutdownAll(); return 1;
     }
-    ShellScreen screen = visualCheck ? ShellScreen::Battle : ShellScreen::Title;
+    Campaign::CampaignFlow flow(chapters);
+    const bool verification = visualCheck || campaignCheck;
+    auto saveDir = std::filesystem::path(DemoAssets::Root()).parent_path() / (verification ? "verification-saves" : "saves");
+    std::error_code saveError;
+    std::filesystem::create_directories(saveDir, saveError);
+    if (saveError) { std::fprintf(stderr, "Cannot create save directory\n"); shutdownAll(); return 1; }
+    const std::string savePath = (saveDir / (combatCheck ? "campaign-combat.json" : "campaign.json")).string();
+    if (verification) {
+        if (!CommitCampaign(campaign, flow, savePath, campaignError,
+                [&](auto& s, auto& e) { return flow.StartNew(s, e); })) { shutdownAll(); return 2; }
+        if (visualCheck && !CommitCampaign(campaign, flow, savePath, campaignError,
+                [&](auto& s, auto& e) { return flow.Choose(s, "mercy", e); })) { shutdownAll(); return 2; }
+    } else if (std::filesystem::exists(savePath)) {
+        Campaign::CampaignState loaded;
+        if (loaded.LoadFromFile(savePath) && flow.Validate(loaded, campaignError)) campaign = std::move(loaded);
+        else campaignError = "現有存檔無法驗證，未覆寫。可先備份檔案，再建立新戰役。";
+    }
+    if (visualCheck) CampaignFrame(window, renderer, ShellScreen::Title, campaign, chapters, flow,
+        campLibrary, savePath, campaignError, portraits.get(), fontSans, fontSerif, theme, uiScale, "presentation-title.png");
+    ShellScreen screen = visualCheck ? ShellScreen::Battle : campaignCheck ? ShellScreen::Story : ShellScreen::Title;
+    int shellFrames = 0;
+    const double campaignStarted = glfwGetTime();
     while (screen != ShellScreen::Quit && !renderer.ShouldClose()) {
-        if (screen == ShellScreen::Title) {
-            screen = TitleFrame(window, renderer, theme, uiScale,
-                                fontSans, fontSerif, appliedTheme,
-                                appliedScale, camp, campLibrary, portraits.get());
+        if (campaignCheck && glfwGetTime() - campaignStarted > (naturalCheck ? 600 : 180)) { campaignError = "Campaign verification timeout"; break; }
+        if (screen != ShellScreen::Battle) {
+            const auto previous = screen;
+            if (campaignCheck && campaign.chapter.chapter == 4) glfwSetWindowSize(window, 960, 640);
+            if (campaignCheck && campaign.chapter.chapter == 7) glfwSetWindowSize(window, 1440, 810);
+            std::string screenshot;
+            if (campaignCheck && shellFrames == 2) screenshot = "campaign-" + std::to_string(campaign.chapter.chapter) + "-" +
+                (screen == ShellScreen::Story ? "briefing" : screen == ShellScreen::Aftermath ? "aftermath" : "complete") + (combatCheck ? "-combat" : "") + ".png";
+            screen = CampaignFrame(window, renderer, screen, campaign, chapters, flow, campLibrary,
+                savePath, campaignError, portraits.get(), fontSans, fontSerif, theme, uiScale, screenshot.empty() ? nullptr : screenshot.c_str());
+            ++shellFrames;
+            if (campaignCheck && shellFrames >= 5) {
+                if (screen == ShellScreen::Story) {
+                    const auto* c = flow.Current(campaign);
+                    if (naturalCheck && !CommitCampaign(campaign, flow, savePath, campaignError, [](auto& s, auto&) { s.Camp().HealWounded(s.Camp().GetLoot()); return true; })) break;
+                    if (!flow.SelectedChoice(campaign)) {
+                        std::string choice = c->choices.front().id;
+                        if (c->number == 1) choice = combatCheck ? "pursue" : "mercy";
+                        if (c->number == 2) choice = combatCheck ? "pursue" : "rescue";
+                        if (c->number == 3) choice = combatCheck ? "attack" : "negotiate";
+                        if (!CommitCampaign(campaign, flow, savePath, campaignError,
+                            [&](auto& s, auto& e) { return flow.Choose(s, choice, e); })) break;
+                        shellFrames = 0;
+                    } else if (flow.SelectedChoice(campaign)->id == "negotiate") {
+                        if (!CommitCampaign(campaign, flow, savePath, campaignError,
+                            [&](auto& s, auto& e) { return flow.CompletePeace(s, e); })) break;
+                        screen = ShellScreen::Aftermath;
+                    } else screen = ShellScreen::Battle;
+                } else if (screen == ShellScreen::Aftermath) {
+                    Campaign::CampaignState restored;
+                    if (!restored.LoadFromFile(savePath) || !flow.Validate(restored, campaignError)) break;
+                    campaign = std::move(restored);
+                    if (!CommitCampaign(campaign, flow, savePath, campaignError,
+                        [&](auto& s, auto& e) { return flow.Advance(s, e); })) break;
+                    screen = ResumeCampaign(campaign);
+                    std::printf("[campaign-check] reload/advance: chapter=%d completed=%zu dead=%d\n", campaign.chapter.chapter, campaign.progress.completed.size(), campaign.progress.cumulativeDead);
+                } else if (screen == ShellScreen::Complete) {
+                    std::printf("[campaign-check] PASS: seven chapters; route=%s (%s battle outcomes)\n", combatCheck ? "combat" : "peace", naturalCheck ? "natural" : "scripted");
+                    break;
+                }
+            }
+            if (screen != previous) shellFrames = 0;
             continue;
         }
+        const auto* chapter = flow.Current(campaign);
+        const auto* chapterChoice = flow.SelectedChoice(campaign);
+        if (!chapter || !chapterChoice || campaign.progress.stage != Campaign::CampaignStage::Briefing) { screen = ResumeCampaign(campaign); continue; }
+        bool settlementAttempted = false, settlementSaved = false;
+        auto settleBattle = [&](const BattleController& b, const Roster& r) {
+            settlementAttempted = true;
+            settlementSaved = CommitCampaign(campaign, flow, savePath, campaignError,
+                [&](auto& s, auto& e) { return flow.CompleteBattle(s, b, r, e); });
+        };
         bool backToTitle = false;
         { // ---- 戰鬥場次 scope 開始(內部維持原縮排以保 diff 最小) ----
         // 戰後結算狀態:每場重建——宣告成 static 會跨場殘留上一場的報告
@@ -974,7 +835,7 @@ int main(int argc, char** argv) {
 
     // ---- 地圖 ----
     BattleMap map;
-    if (!map.LoadFromFile(DemoAssets::Resolve("maps/duanqiao.json").c_str())) {
+    if (!map.LoadFromFile(DemoAssets::Resolve(chapter->mapPath.substr(7)).c_str())) {
         std::fprintf(stderr, "cannot load assets/maps/duanqiao.json\n");
         shutdownAll();
         return 1;
@@ -1029,7 +890,7 @@ int main(int argc, char** argv) {
 
     auto groundNode = AddStaticBox(root, groundMesh,
                                    Vector3(FW / 2, -0.15f, FH / 2),
-                                   Vector3(0.16f, 0.22f, 0.15f), "ground", FW,
+                                   Vector3(chapter->tint[0], chapter->tint[1], chapter->tint[2]), "ground", FW,
                                    SurfaceProfile::Terrain);
     groundNode->SetLocalScale(Vector3(FW, 1, FH));
 
@@ -1083,67 +944,52 @@ int main(int argc, char** argv) {
     const MapPin* southCamp  = map.FindPin("南岸敵營");
     Squad* rearGuard = nullptr;
     Squad* generalGuard = nullptr;
-    if (camp.GetUnits().empty()) {
-        // 首戰：預設編制入伍，進整補營當常備軍
-        battle.CreateSquad("前鋒", 0, Vector2(8.0f, 3.0f),  30);
-        battle.CreateSquad("中軍", 0, Vector2(12.0f, 2.5f), 30);
-        battle.CreateSquad("左翼", 0, Vector2(16.0f, 3.0f), 25);
-        rearGuard = battle.CreateSquad("後衛", 0, Vector2(12.0f, 4.5f), 15);
-        // G-8 將軍親臨：衛隊全滅即敗（潰逃不算），技能走 CP
-        generalGuard = battle.CreateSquad("將軍衛隊", 0, Vector2(12.0f, 1.0f), 10);
-        generalGuard->SetGeneralGuard(true);
-        for (const auto& sq : battle.GetSquads()) {
-            if (sq->GetTeam() != 0) continue;
-            VeteranUnit vu;
-            vu.squadName = sq->GetName();
-            vu.unitClass = sq->GetUnitClass();
-            vu.members = sq->GetMembers();
-            vu.maxMembers = sq->GetMaxMembers();
-            camp.EnrollUnit(vu);
+    // Original identities and current manpower come from the persistent camp.
+    auto deployPositions = chapter->friendlyDeployment;
+    // Extra recruits use unblocked cells within the friendly deployment zone.
+    for (int y = 1; deployPositions.size() < camp.GetUnits().size() && y < GH; ++y)
+        for (int x = 2; deployPositions.size() < camp.GetUnits().size() && x < GW - 2; x += 2) {
+            Vector2 p{float(x), float(y)};
+            if (map.IsInDeployZone(0, p) && !battle.GetField().IsBlocked(x, y) &&
+                std::none_of(deployPositions.begin(), deployPositions.end(), [&](const auto& v) { return (v - p).Length() < 1; })) deployPositions.push_back(p);
         }
-    } else {
-        // G-9：整補營跨場重建——兵力/傷兵狀態從上一場延續
-        const std::vector<Vector2> deployPos = {
-            Vector2(8.0f, 3.0f), Vector2(12.0f, 2.5f), Vector2(16.0f, 3.0f),
-            Vector2(12.0f, 4.5f), Vector2(12.0f, 1.0f),
-        };
-        // 傳 campLibrary 讓招募單位回補模板 stats（速度/火力/疲勞）
-        for (Squad* s : camp.Deploy(battle, 0, deployPos, &campLibrary)) {
-            if (s->GetName() == "後衛") rearGuard = s;
-            if (s->GetName() == "將軍衛隊") {
-                s->SetGeneralGuard(true);
-                generalGuard = s;
-            }
-        }
+    auto allies = camp.Deploy(battle, 0, deployPositions, &campLibrary);
+    for (auto* squad : allies) {
+        if (squad->GetName() == "後衛") rearGuard = squad;
+        if (squad->GetName() == "將軍衛隊") { squad->SetGeneralGuard(true); generalGuard = squad; }
+        const auto* veteran = camp.FindUnit(squad->GetName());
+        roster.Enroll(squad, veteran->captainName, "captain", veteran->relics.empty() ? "" : veteran->relics.front());
     }
-    Squad* e0 = battle.CreateSquad("格洛克親衛", 1, Vector2(12.0f, 12.0f), 35);
-    Squad* e1 = battle.CreateSquad("蠻兵隊",     1, Vector2(9.0f, 12.5f),  25);
-    Squad* e2 = battle.CreateSquad("掠奪隊",     1, Vector2(15.0f, 12.5f), 25);
-    Squad* e3 = battle.CreateSquad("守橋隊",     1, Vector2(12.0f, 10.5f), 20);
+    if (!rearGuard && !allies.empty()) rearGuard = allies.back();
+    if (chapterChoice->holdSeconds > 0 && !battle.SetProtectionObjective(rearGuard, chapterChoice->holdSeconds)) {
+        std::fprintf(stderr, "Cannot configure protection mission\n"); shutdownAll(); return 2;
+    }
+    std::vector<Squad*> enemies;
+    for (const auto& deployment : chapter->enemies) {
+        auto* squad = battle.CreateSquad(deployment.name, 1, deployment.position, deployment.members);
+        squad->SetSpeed(chapter->enemySpeed);
+        squad->SetEngageRange(chapter->enemyRange);
+        squad->SetDamagePerMember(chapter->enemyDamage);
+        roster.Enroll(squad, enemies.empty() ? chapter->enemyGeneralName : chapter->title + " · " + deployment.name, "captain");
+        enemies.push_back(squad);
+    }
+    Squad* e0 = enemies[0]; Squad* e1 = enemies[1]; Squad* e2 = enemies[2];
     if (southCamp)  battle.SetObjective(0, southCamp->pos);
     if (northRally) battle.SetObjective(1, northRally->pos);
     if (northRally) battle.SetRallyPoint(0, northRally->pos);
     if (southCamp)  battle.SetRallyPoint(1, southCamp->pos);
 
-    // T-8 名冊:兩軍具名隊長入冊(陣亡=戰後哀悼/戰果清單素材)
-    {
-        const char* capNames0[] = {"周鐵槍", "陳守拙", "林燕翼", "石敢當"};
-        const char* relics0[] = {"斷刃", "舊旗", "竹哨", "平安符"};
-        const char* capNames1[] = {"格洛克", "血手布魯", "獨眼斯卡", "老槐"};
-        int i0 = 0, i1 = 0;
-        for (const auto& sq : battle.GetSquads()) {
-            if (sq->GetTeam() == 0 && i0 < 4) {
-                roster.Enroll(sq.get(), capNames0[i0], "captain",
-                              relics0[i0]);
-                ++i0;
-            } else if (sq->GetTeam() == 1 && i1 < 4) {
-                roster.Enroll(sq.get(), capNames1[i1], "captain");
-                ++i1;
-            }
-        }
-    }
-
-    EnemyGeneral glock = EnemyGeneral::MakeGlock();
+    JsonValue card; card.type = JsonValue::Type::Object;
+    card.objectValue["schema"] = JsonValue::String("potato.character_card/1");
+    card.objectValue["name"] = JsonValue::String(chapter->enemyGeneralName);
+    card.objectValue["epithet"] = JsonValue::String(chapter->title);
+    JsonValue personality; personality.type = JsonValue::Type::Object;
+    personality.objectValue["aggression"] = JsonValue::Number(chapter->enemyPersonality == "侵略" ? 90 : 40);
+    personality.objectValue["discipline"] = JsonValue::Number(chapter->enemyPersonality == "審慎" ? 80 : 40);
+    personality.objectValue["cunning"] = JsonValue::Number(chapter->enemyPersonality == "狡詐" ? 85 : 20);
+    card.objectValue["personality"] = personality;
+    EnemyGeneral glock;
+    if (!glock.LoadFromString(JsonSerialization::WriteJson(card))) { shutdownAll(); return 1; }
     glock.ApplyTo(battle, 1);
     // N-2:開局只聽聞不真相——已驗證的檔案跨場保留
     if (!dossier.Find(glock.GetName())) {
@@ -1166,7 +1012,7 @@ int main(int argc, char** argv) {
     QuantumFog fog(/*intelDuration=*/25.0f, /*observe=*/2, /*probe=*/1);
     fog.BindResources(&res);
     battle.BindFog(&fog);
-    for (Squad* es : {e0, e1, e2, e3}) {
+    for (Squad* es : enemies) {
         // 雲心朝敵軍進攻方向偏移 1.5 格:不洩漏真實位置,
         // 靠偵查/觀測才能確定敵人在哪
         Vector2 center = es->GetPosition();
@@ -1212,7 +1058,7 @@ int main(int argc, char** argv) {
             d.rules.push_back({DoctrineTrigger::EnemyInRange,
                                DoctrineAction::AttackNearest, 3.0f, 10});
             d.rules.push_back({DoctrineTrigger::Always,
-                               DoctrineAction::Scout, 0.0f, 90});
+                               chapterChoice->holdSeconds > 0 ? DoctrineAction::HoldPosition : DoctrineAction::Scout, 0.0f, 90});
         }
     }
 
@@ -1281,6 +1127,7 @@ int main(int argc, char** argv) {
     bool planningCaptured = false;
     bool inspectionCaptured = false;
     auto beginBattle = [&]() {
+        if (!CommitCampaign(campaign, flow, savePath, campaignError, [](auto&, auto&) { return true; })) return;
         deck.Commit(battle);
         plan.SetRallyPoint(battle.GetRallyPoint(0));
         const int arrows = plan.Apply(battle, &res, 0);
@@ -1307,7 +1154,7 @@ int main(int argc, char** argv) {
         prevTime = now;
         ++visualFrame;
         if (visualCheck && visualFrame == 80) inspectCharacter = true;
-        if (visualCheck && visualFrame > 30) frameTimes.push_back(frameSeconds * 1000.0);
+        if ((visualCheck || campaignCheck) && visualFrame > 30) frameTimes.push_back(frameSeconds * 1000.0);
 
         // framebuffer 用於 GL viewport;window size 用於 ImGui/游標(HiDPI 下兩者不同)
         int dw = W, dh = H, ww = W, wh = H;
@@ -1544,8 +1391,17 @@ int main(int argc, char** argv) {
             sync.SetSelectedSquad(nullptr);
         }
 
+        if (campaignCheck && planningPhase && visualFrame >= 10) beginBattle();
+        // Explicit verification fixture: exercise rendering, live casualties and settlement;
+        // headless mission tests verify the actual protection win/loss rules.
+        if (campaignCheck && !naturalCheck && visualFrame == 80 && battle.GetPhase() == BattlePhase::Execution) {
+            if (!allies.empty()) allies.front()->ApplyCasualties(2);
+            for (auto* enemy : enemies) enemy->ApplyCasualties(enemy->GetMembers());
+        }
         battle.Update(dt);
         roster.Update(battle); // T-8:殲滅偵測→記陣亡
+        if (battle.GetOutcome() != BattleOutcome::Ongoing && !settlementAttempted) settleBattle(battle, roster);
+        if (campaignCheck && settlementSaved && visualFrame >= 90) backToTitle = true;
         sync.Sync(battle);
 
         // ---- 渲染 ----
@@ -1683,12 +1539,23 @@ int main(int argc, char** argv) {
 
         ImGui::SetNextWindowPos(ImVec2(8, 8), ImGuiCond_Always);
         ImGui::SetNextWindowSize(ImVec2(300, 0), ImGuiCond_Always);
-        ImGui::Begin("斷橋指揮", nullptr,
+        ImGui::Begin("戰役指揮", nullptr,
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
         ImGui::Text("階段: %s%s",
                     battle.GetPhase() == BattlePhase::Execution ? "執行" :
                     battle.GetPhase() == BattlePhase::Deployment ? "部署" : "結算",
                     paused ? "(暫停)" : "");
+        ImGui::Text("第 %d 章 · %s", chapter->number, chapter->title.c_str());
+        ImGui::TextWrapped("決策：%s", chapterChoice->label.c_str());
+        if (chapterChoice->holdSeconds > 0) ImGui::TextWrapped("保護 %s：%.0f / %.0f 秒", rearGuard->GetName().c_str(), battle.GetElapsed(), chapterChoice->holdSeconds);
+        if (!campaignError.empty()) ImGui::TextWrapped("%s", campaignError.c_str());
+        if (battle.GetPhase() == BattlePhase::Execution && ImGui::Button("撤退 · 記為失利")) ImGui::OpenPopup("確認撤退");
+        if (ImGui::BeginPopupModal("確認撤退", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+            ImGui::TextUnformatted("本章記為失利，已發生的傷亡會延續。");
+            if (ImGui::Button("確認撤退")) { battle.Withdraw(); ImGui::CloseCurrentPopup(); }
+            ImGui::SameLine(); if (ImGui::Button("繼續作戰")) ImGui::CloseCurrentPopup();
+            ImGui::EndPopup();
+        }
         int hiddenFoes = 0;
         for (size_t id = 0; id < fog.EntityCount(); ++id) {
             const Squad* owner = battle.GetFogSquad((int)id);
@@ -2170,7 +2037,7 @@ int main(int argc, char** argv) {
                 endedAt = (float)now;
                 // N-1:史官體戰報改由片段組裝器產出(含省略計數)
                 HistorianInput hin;
-                hin.battleName = "斷橋之役";
+                hin.battleName = chapter->title;
                 hin.outcome = battle.GetOutcome();
                 hin.elapsedSec = battle.GetElapsed();
                 hin.recorder = &recorder;
@@ -2246,9 +2113,13 @@ int main(int argc, char** argv) {
             if (lastIdx >= 0) ImGui::SetScrollHereY(1.0f);
             ImGui::EndChild();
             ImGui::Separator();
-            if (ImGui::Button("返回主選單", ImVec2(150, 30))) {
-                backToTitle = true;
+            if (!settlementSaved) {
+                ImGui::TextWrapped("%s", campaignError.c_str());
+                if (ImGui::Button("重試保存結算")) settleBattle(battle, roster);
             }
+            ImGui::BeginDisabled(!settlementSaved);
+            if (ImGui::Button("查看戰後行軍帳", ImVec2(200, 36))) backToTitle = true;
+            ImGui::EndDisabled();
             ImGui::End();
         }
 
@@ -2291,32 +2162,26 @@ int main(int argc, char** argv) {
         renderer.SwapBuffers();
     }
 
-    // G-9 戰後收口:戰鬥有結果才結算——傷亡/戰利品/遺物轉存整補營
-    if (battle.GetOutcome() != BattleOutcome::Ongoing) {
-        const bool iWon = battle.GetOutcome() == BattleOutcome::Victory;
-        const int winnerTeam = iWon ? 0
-            : battle.GetOutcome() == BattleOutcome::Defeat ? 1 : -1;
-        PostBattle postBattle;
-        PostBattleReport report = postBattle.Settle(battle, roster, winnerTeam);
-        // 戰利品與遺物是勝者的拾獲;敗北/平手我軍不入帳
-        if (!iWon) {
-            report.lootPoints = 0;
-            report.relics.clear();
-        }
-        camp.DepositLoot(report.lootPoints);
-        camp.Absorb(report, roster, 0);
+    if (battle.GetOutcome() != BattleOutcome::Ongoing && !settlementAttempted) {
+        roster.Update(battle); settleBattle(battle, roster);
     }
-
+    if (campaignCheck && !frameTimes.empty()) {
+        double sum=0; for(double ms:frameTimes) sum+=ms;
+        std::sort(frameTimes.begin(),frameTimes.end());
+        std::printf("[campaign-performance] chapter=%d frames=%zu mean=%.2fms p95=%.2fms FPS=%.1f\n",
+            chapter->number,frameTimes.size(),sum/frameTimes.size(),frameTimes[size_t((frameTimes.size()-1)*.95)],1000.0/(sum/frameTimes.size()));
+    }
     battle.BindFog(nullptr); // fog 是 local,先於 battle 解構——解綁防懸空
 
         } // ---- 戰鬥場次 scope 結束:battle/fog/scene 全數析構 ----
-        screen = (renderer.ShouldClose() || visualCheck) ? ShellScreen::Quit
-                                        : ShellScreen::Title;
+        screen = (renderer.ShouldClose() || visualCheck) ? ShellScreen::Quit : settlementSaved ? ShellScreen::Aftermath : ShellScreen::Story;
+        shellFrames = 0;
     }
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
     renderer.Shutdown();
+    if (campaignCheck && (campaign.progress.stage != Campaign::CampaignStage::Complete || !campaignError.empty())) return 2;
     return visualCheckPassed ? 0 : 2;
 }

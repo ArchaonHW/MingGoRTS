@@ -20,34 +20,49 @@
 #include "Gameplay/RefitCamp.h"
 #include "Gameplay/Roster.h"
 
+#include "Gameplay/PostBattle.h"
+#include <map>
 #include <string>
 
 namespace Potato {
 namespace Campaign {
 
+enum class CampaignStage { Briefing, Aftermath, Complete };
+struct CampaignProgress {
+    bool initialized = false;
+    CampaignStage stage = CampaignStage::Briefing;
+    std::vector<std::string> completed;
+    std::map<std::string, std::string> choices, outcomes;
+    Gameplay::PostBattleReport lastReport;
+    int cumulativeDead = 0;
+    bool lastPeaceful = false;
+    JsonValue ToJson() const;
+    bool FromJson(const JsonValue &);
+};
 class CampaignState {
-public:
+  public:
     // ---- 子系統掛載 ----
-    Gameplay::RefitCamp& Camp() { return camp; }
-    const Gameplay::RefitCamp& Camp() const { return camp; }
-    Gameplay::Roster& NamedRoster() { return roster; }
-    const Gameplay::Roster& NamedRoster() const { return roster; }
+    Gameplay::RefitCamp &Camp() { return camp; }
+    const Gameplay::RefitCamp &Camp() const { return camp; }
+    Gameplay::Roster &NamedRoster() { return roster; }
+    const Gameplay::Roster &NamedRoster() const { return roster; }
     // N-4 帳本：敵將處置記錄 + 稱號軌跡 + 章節序
-    Gameplay::CampaignLedger& Ledger() { return ledger; }
-    const Gameplay::CampaignLedger& Ledger() const { return ledger; }
+    Gameplay::CampaignLedger &Ledger() { return ledger; }
+    const Gameplay::CampaignLedger &Ledger() const { return ledger; }
 
     // 弧/章節id/已收服戰線（章節序由帳本管，AdvanceChapter 同步）
     ChapterState chapter;
+    CampaignProgress progress;
 
     // 章節邊界推進：同步帳本章節序與 ChapterState
-    void AdvanceChapter(int arc, int ch, const std::string& chapterId);
+    void AdvanceChapter(int arc, int ch, const std::string &chapterId);
 
     // ---- 存檔：potato.campaign/1，tmp+rename 原子寫 ----
-    bool SaveToFile(const std::string& path) const;
+    bool SaveToFile(const std::string &path) const;
     // 壞檔/異版：回 false 且不更動現況（先驗證再置換）
-    bool LoadFromFile(const std::string& path);
+    bool LoadFromFile(const std::string &path);
 
-private:
+  private:
     Gameplay::RefitCamp camp;
     Gameplay::Roster roster;
     Gameplay::CampaignLedger ledger;

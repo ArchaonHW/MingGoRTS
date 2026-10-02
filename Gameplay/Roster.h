@@ -49,6 +49,7 @@ public:
 
     const std::vector<RosterEntry>& GetEntries() const { return entries; }
     size_t DeadCount() const;
+    void MergeHistory(const Roster& source);
     size_t AliveCount() const { return entries.size() - DeadCount(); }
 
     // 存/讀 JSON（potato.roster/1）；ToJson/FromJson 供
