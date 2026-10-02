@@ -42,7 +42,7 @@
 
 - Deployed squads share their template's `id` — two infantry from one template collide on battle-scoped identity. Events key on `squadIndex` so nothing corrupts; battle-scoped instance naming belongs to the roster/naming work (Epic B/C).
 - `cpPool` has no upper cap (`SetCpPool` clamps negatives only) — CP economy (regen +1/60s, cap 5, intervention costs) is Story 1.7's job.
-- Manual `RequestBeat(Aftermath)` mid-Execution is the concede path; `BattleOutcome::forced` distinguishes it from a wipe draw. Sub-story: whether "concede" should still produce a winner by objective score is Story 1.12 win-evaluation territory.
+- ~~Manual `RequestBeat(Aftermath)` mid-Execution is the concede path; `BattleOutcome::forced` distinguishes it from a wipe draw. Sub-story: whether "concede" should still produce a winner by objective score is Story 1.12 win-evaluation territory.~~ **Resolved in 1.12**: `CloseReason{Wipe,Concede,Stalemate}` distinguishes all three close modes; a conceded battle reports the field truthfully — `winnerSide` reflects effective counts even on concede (battle reports; campaign decides).
 - `ROUT_TICKS` (2 s) is a v0 constant — rout-off-field pacing may want per-terrain or card-driven variance later.
 
 ## Deferred from: code review of 1-8-quantumfog (2026-09-30)
@@ -66,3 +66,9 @@
 - `Plan` header claims "no mutation on failure" — held today only because all failure modes pre-validate; a future mid-loop `DeploySquad` gate would partially deploy. Latent.
 - Cunning probes scan in region-index order, not weakest-certainty-first (comment says weakest); v0 acceptable.
 - `BattleAI` ctor validates neither `side` nor `prior`; `Plan` gates bad sides and `Act` is benign (Issue* side-checks reject) — harden if AI objects are ever host-driven without Plan.
+
+## Deferred from: code review of 1-12-win-evaluation (2026-10-02)
+
+- `Squad::ApplyHit` has no caller outside `potato_test_squad` — no doctrine action deals damage in E0, so `Destroyed`/`LedgerEvent::Casualty` postings are structurally emitted but unexercisable through the battle API. Lands when a combat/damage action arrives (doctrine vocab or Epic 4 governance-field events).
+- `potato.battle_record/1` gained `closeReason`/`stalemate` without a version bump — records are pre-release (generated+verified same-session; none persisted); bump the schema when durable records ship.
+- `EventFromJson` `aux` bound 0..5 is kind-generic (BeatChanged 0-2, Intervention 0-5, CloseReason 0-2) — permissive by design; the replay diff is the semantic gate. Tighten per-kind only if a hostile-record DoS path ever materializes.

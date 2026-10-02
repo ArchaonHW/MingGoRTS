@@ -2,6 +2,7 @@
 
 #include "Gameplay/Command/Intervention.h"
 #include "Gameplay/Doctrine/Doctrine.h"
+#include "Gameplay/Eval/WinEval.h"
 #include "Gameplay/Fog/QuantumFog.h"
 #include "Gameplay/Plan/BattlePlan.h"
 #include "Gameplay/Result.h"
@@ -28,17 +29,9 @@ constexpr bool CanTransition(BattleBeat a, BattleBeat b) {
            (a == BattleBeat::Execution && b == BattleBeat::Aftermath);
 }
 
-// Emitted once when Execution -> Aftermath closes the battle.
-// `forced` distinguishes a manual RequestBeat(Aftermath) concede
-// (both sides intact, winnerSide == -1) from a mutual wipe draw.
-struct BattleOutcome {
-    int winnerSide = -1;            // -1 = draw or forced end, see `forced`
-    bool forced = false;            // true if closed by RequestBeat, not a wipe
-    std::uint64_t elapsedTicks = 0; // ticks actually executed
-    int effective[2] = {0, 0};      // includes Routing (still on-field)
-    int routed[2] = {0, 0};
-    int destroyed[2] = {0, 0};
-};
+// The Aftermath verdict (`BattleResult`, `CloseReason`, `EvalConfig`)
+// lives in Gameplay/Eval/WinEval.h — the battle reports the result;
+// Epic 2's ledger posts the emitted ledger-event list verbatim.
 
 // Ticks a Routing squad needs to leave the field (2 s at 20 Hz).
 constexpr int ROUT_TICKS = 2 * TICK_RATE_HZ;
@@ -54,7 +47,8 @@ public:
     BattleController(std::uint64_t seed, const BattleMap& map,
                      const DoctrineLibrary& cards,
                      const FogConfig& fogConfig = FogConfig{},
-                     const PlanConfig& planConfig = PlanConfig{});
+                     const PlanConfig& planConfig = PlanConfig{},
+                     const EvalConfig& evalConfig = EvalConfig{});
     ~BattleController();
     // Copy-constructible (tests snapshot whole controllers); copies share
     // the borrowed map_/cards_ refs. Assignment deleted — refs can't reseat.
@@ -115,7 +109,7 @@ public:
     const Sim& GetSim() const { return sim_; }
     const std::vector<Squad>& Squads() const { return squads_; }
     const std::vector<SimEvent>& Events() const { return events_; }
-    const BattleOutcome& Outcome() const { return outcome_; }
+    const BattleResult& Outcome() const { return result_; }
     int CpPool(int side) const {
         assert(side == 0 || side == 1);
         return cpPool_[side == 1 ? 1 : 0];
@@ -136,7 +130,9 @@ public:
 private:
     int CountEffective(int side) const;
     void EmitBeatChanged(int tick, BattleBeat target);
-    void CloseBattle(bool forced); // compute outcome + enter Aftermath
+    // stampTick = the tick index the close belongs to (producing tick
+    // inside Tick(), current TickCount when conceded between ticks).
+    void CloseBattle(CloseReason reason, int stampTick);
     void ApplyInterventions(int tick);
     // Per-tick fog maintenance: prune off-field clouds, auto-observe
     // (collapse enemy clouds sharing/adjoining a friendly region,
@@ -156,7 +152,7 @@ private:
     std::vector<int> routTimers_;        // index-aligned; Routing squads age out
     std::vector<SimEvent> events_;       // append-only battle log
     std::vector<Intervention> pendingCommands_; // applied at next tick start
-    BattleOutcome outcome_;
+    BattleResult result_;
     std::array<int, 2> cpPool_ = {CP_START, CP_START};
     int cpRegen_ = 0;
     // QuantumFog: per-observing-side belief views. cloudOf_[s][i] =
@@ -167,6 +163,7 @@ private:
     std::array<std::vector<int>, 2> cloudOf_;
     std::array<int, 2> probeBudget_ = {PROBE_BUDGET, PROBE_BUDGET};
     PlanConfig planConfig_;
+    EvalConfig evalConfig_;
     std::vector<PlanArrow> arrows_; // index-aligned; active==false=none
 };
 

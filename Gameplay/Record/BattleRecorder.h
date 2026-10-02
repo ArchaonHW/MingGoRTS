@@ -28,7 +28,11 @@ struct SquadTemplate;
 // stream already carries them (side + payload since Story 1.11).
 class BattleRecorder {
 public:
-    static constexpr int TOOL_VERSION = 1;
+    // v2: win evaluation added required `closeReason`/`stalemate`
+    // payload fields and the ResultDeclared event kind. Records
+    // stamped by v1 tools fail strict field validation — format
+    // revisions ride this axis, not the potato.battle_record schema.
+    static constexpr int TOOL_VERSION = 2;
     static constexpr std::string_view SCHEMA = "potato.battle_record/1";
 
     // Embedded content makes the record self-contained — the verifier
@@ -38,9 +42,12 @@ public:
     // true) — a rejected op in the record can never verify.
     void Bind(std::uint64_t seed, const JsonValue& mapDoc,
               const JsonValue& cardsDoc);
-    void BindBalance(const JsonValue& doc); // optional; defaults replay
-    // Records stamped by older tools verify with a downgrade warning —
-    // test hook until a v2 exists.
+    // Optional — but part of the replay contract: fog/plan/eval config
+    // ride this doc. A battle run under non-default config without a
+    // bound balance doc produces a record that cannot verify.
+    void BindBalance(const JsonValue& doc);
+    // Records stamped by older tools verify with a downgrade warning
+    // when their shape is still current-format compatible.
     void SetToolVersion(int v) { toolVersion_ = v; }
 
     // Planning inputs — mirror the controller calls, in call order.
@@ -86,7 +93,9 @@ private:
     int endTick_ = 0;
     int endBeat_ = 0;
     int winner_ = -1;
+    int closeReason_ = 0;
     bool forced_ = false;
+    bool stalemate_ = false;
 };
 
 // SimEvent <-> JSON — shared between recorder emit and verifier parse.

@@ -42,7 +42,7 @@ bool EventFromJson(const JsonValue& j, SimEvent& e) {
         return false;
     }
     const std::int64_t kind = j["kind"].AsInt();
-    if (kind < 0 || kind > 2) return false; // CardFired..Intervention
+    if (kind < 0 || kind > 3) return false; // CardFired..ResultDeclared
     // Every field must fit int32 — silent narrowing would let a forged
     // value verify as a different number than the wire claimed.
     const auto fitInt = [&](const char* key, std::int64_t lo,
@@ -61,7 +61,11 @@ bool EventFromJson(const JsonValue& j, SimEvent& e) {
     if (!fitInt("squad", -1, I32MAX, parsed.squadIndex)) return false;
     if (!fitInt("slot", -1, I32MAX, parsed.slotIndex)) return false;
     if (!fitInt("param", -2147483648, I32MAX, parsed.param)) return false;
-    if (!fitInt("aux", 0, 5, parsed.aux)) return false;   // InterventionKind
+    // aux multiplexes by kind: BattleBeat ordinal (BeatChanged),
+    // InterventionKind ordinal (Intervention), CloseReason ordinal
+    // (ResultDeclared). 0..5 covers all three domains; the replay
+    // diff catches any kind-inconsistent value.
+    if (!fitInt("aux", 0, 5, parsed.aux)) return false;
     if (!fitInt("side", -1, 1, parsed.side)) return false;
     for (const JsonValue& r : j["path"].Items()) {
         if (!r.IsInt() || r.AsInt() < 0 || r.AsInt() > I32MAX) return false;
@@ -161,7 +165,9 @@ void BattleRecorder::Seal(const BattleController& bc) {
     endTick_ = static_cast<int>(bc.GetSim().TickCount());
     endBeat_ = static_cast<int>(bc.Beat());
     winner_ = bc.Outcome().winnerSide;
+    closeReason_ = static_cast<int>(bc.Outcome().closeReason);
     forced_ = bc.Outcome().forced;
+    stalemate_ = bc.Outcome().stalemate;
     sealed_ = true;
 }
 
@@ -201,7 +207,9 @@ JsonValue BattleRecorder::PayloadJson() const {
         o.emplace("endTick", JsonValue::Int(endTick_));
         o.emplace("endBeat", JsonValue::Int(endBeat_));
         o.emplace("winner", JsonValue::Int(winner_));
+        o.emplace("closeReason", JsonValue::Int(closeReason_));
         o.emplace("forced", JsonValue::Bool(forced_));
+        o.emplace("stalemate", JsonValue::Bool(stalemate_));
     }
     return JsonValue::MakeObject(std::move(o));
 }

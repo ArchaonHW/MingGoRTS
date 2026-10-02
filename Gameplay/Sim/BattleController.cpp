@@ -28,10 +28,11 @@ std::uint64_t RegionKey(std::size_t r) {
 BattleController::BattleController(std::uint64_t seed, const BattleMap& map,
                                    const DoctrineLibrary& cards,
                                    const FogConfig& fogConfig,
-                                   const PlanConfig& planConfig)
+                                   const PlanConfig& planConfig,
+                                   const EvalConfig& evalConfig)
     : map_(map), cards_(cards), sim_(seed),
       fog_{QuantumFog(map, fogConfig), QuantumFog(map, fogConfig)},
-      planConfig_(planConfig) {}
+      planConfig_(planConfig), evalConfig_(evalConfig) {}
 
 BattleController::~BattleController() = default;
 BattleController::BattleController(const BattleController&) = default;
@@ -47,14 +48,22 @@ bool BattleController::RequestBeat(BattleBeat target) {
     // P->E fires before any tick (0); the auto-close path inside Tick()
     // stamps the producing tick via EmitBeatChanged directly.
     beat_ = target;
-    EmitBeatChanged(static_cast<int>(sim_.TickCount()), target);
+    // BeatChanged is emitted by CloseBattle for the Aftermath
+    // transition so BeatChanged -> ResultDeclared adjacency is
+    // structural, not caller discipline.
+    if (target != BattleBeat::Aftermath) {
+        EmitBeatChanged(static_cast<int>(sim_.TickCount()), target);
+    }
     if (target == BattleBeat::Execution) {
         // Deployment footprint IS initial intel: run one observation
         // pass before bonuses so arrows over covered ground score.
         SyncFog();
         ApplyPlanBonuses();
     }
-    if (target == BattleBeat::Aftermath) CloseBattle(true);
+    if (target == BattleBeat::Aftermath) {
+        CloseBattle(CloseReason::Concede,
+                    static_cast<int>(sim_.TickCount()));
+    }
     return true;
 }
 
@@ -575,11 +584,16 @@ bool BattleController::Tick() {
     sim_.Tick();
     // 6) a wiped side closes the battle — same tick, after all commits;
     //    BeatChanged is stamped with the producing tick's index so every
-    //    event of the closing tick shares one tick value.
+    //    event of the closing tick shares one tick value. The stalemate
+    //    timer is the same mechanism with a different verdict.
     if (CountEffective(0) == 0 || CountEffective(1) == 0) {
         beat_ = BattleBeat::Aftermath;
-        EmitBeatChanged(tick, BattleBeat::Aftermath);
-        CloseBattle(false);
+        CloseBattle(CloseReason::Wipe, tick);
+    } else if (evalConfig_.stalemateTicks > 0 &&
+               sim_.TickCount() >= static_cast<std::uint64_t>(
+                                       evalConfig_.stalemateTicks)) {
+        beat_ = BattleBeat::Aftermath;
+        CloseBattle(CloseReason::Stalemate, tick);
     }
     return true;
 }
@@ -657,23 +671,51 @@ int BattleController::CountEffective(int side) const {
     return n;
 }
 
-void BattleController::CloseBattle(bool forced) {
+void BattleController::CloseBattle(CloseReason reason, int stampTick) {
     pendingCommands_.clear(); // after Aftermath nothing ever applies
-    outcome_.forced = forced;
-    outcome_.elapsedTicks = sim_.TickCount();
+    result_ = BattleResult{};
+    EmitBeatChanged(stampTick, BattleBeat::Aftermath); // always adjacent
+    result_.closeReason = reason;
+    result_.forced = (reason == CloseReason::Concede);
+    result_.stalemate = (reason == CloseReason::Stalemate);
+    result_.elapsedTicks = sim_.TickCount();
     for (int side = 0; side < 2; ++side) {
         for (const Squad& s : squads_) {
             if (s.side != side) continue;
             switch (s.state) {
-                case SquadState::Routed:    ++outcome_.routed[side]; break;
-                case SquadState::Destroyed: ++outcome_.destroyed[side]; break;
-                default:                    ++outcome_.effective[side]; break;
+                case SquadState::Routed:    ++result_.routed[side]; break;
+                case SquadState::Destroyed: ++result_.destroyed[side]; break;
+                default:                    ++result_.effective[side]; break;
             }
         }
     }
-    const int eff0 = outcome_.effective[0], eff1 = outcome_.effective[1];
-    outcome_.winnerSide = (eff0 > 0 && eff1 == 0) ? 0
-                        : (eff1 > 0 && eff0 == 0) ? 1 : -1;
+    const int eff0 = result_.effective[0], eff1 = result_.effective[1];
+    result_.winnerSide = (eff0 > 0 && eff1 == 0) ? 0
+                       : (eff1 > 0 && eff0 == 0) ? 1 : -1;
+    // Draw evaluation never picks a winner — the campaign layer decides
+    // defeat conversion; the battle only reports the verdict + data.
+    // Ledger postings, canonical squad order; verdict entry last.
+    for (std::size_t i = 0; i < squads_.size(); ++i) {
+        const Squad& s = squads_[i];
+        if (s.state == SquadState::Destroyed) {
+            result_.ledger.push_back({LedgerEvent::Type::Casualty,
+                                      s.side, static_cast<int>(i), s.id});
+        } else if (s.state == SquadState::Routed) {
+            result_.ledger.push_back({LedgerEvent::Type::Rout, s.side,
+                                      static_cast<int>(i), s.id});
+        }
+    }
+    result_.ledger.push_back(
+        {result_.winnerSide >= 0 ? LedgerEvent::Type::Victory
+                                 : LedgerEvent::Type::Draw,
+         result_.winnerSide, -1, {}});
+    // Self-describing journal: the verdict is itself an event, so a
+    // record's event stream carries the verdict alongside the inputs
+    // that produced it (the checksum seals sim state, not the result).
+    events_.push_back({SimEvent::Kind::ResultDeclared,
+                       stampTick, -1, -1,
+                       result_.winnerSide, static_cast<int>(reason),
+                       -1, {}, {}});
 }
 
 std::uint64_t BattleController::Checksum() const {

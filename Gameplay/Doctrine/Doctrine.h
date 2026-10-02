@@ -85,7 +85,15 @@ struct SquadSheet {
 
 // Sim event — the recorded truth, append-only into the battle log.
 struct SimEvent {
-    enum class Kind : std::uint8_t { CardFired, BeatChanged, Intervention };
+    enum class Kind : std::uint8_t {
+        CardFired,
+        BeatChanged,
+        Intervention,
+        // Emitted once at close after the final BeatChanged:
+        // param = winnerSide (-1 draw), aux = CloseReason ordinal
+        // (0=Wipe, 1=Concede, 2=Stalemate — wire-format stable).
+        ResultDeclared,
+    };
 
     Kind kind = Kind::CardFired;
     int tick = 0;

@@ -118,6 +118,31 @@ std::string RunAndRecordWipe(BattleRecorder& rec) {
     return doc.ok() ? doc.value.Emit() : std::string{};
 }
 
+// Stalemate battle: EvalConfig baked into a bound balance doc — the
+// verifier must reconstruct the timer from the record to replay it.
+std::string RunAndRecordStalemate(BattleRecorder& rec, bool bindBalance) {
+    auto md = JsonValue::Parse(MAP_DOC).value;
+    auto cd = JsonValue::Parse(CARDS_DOC).value;
+    const char* BAL =
+        R"({"schema":"potato.balance/1","eval":{"stalemate_ticks":10}})";
+    auto bd = JsonValue::Parse(BAL).value;
+    BattleMap map = BattleMap::FromJson(md).value;
+    DoctrineLibrary cards = DoctrineLibrary::FromJson(cd).value;
+    EvalConfig cfg = EvalConfig::FromJson(bd).value;
+
+    BattleController bc(11, map, cards, FogConfig{}, PlanConfig{}, cfg);
+    rec.Bind(11, md, cd);
+    if (bindBalance) rec.BindBalance(bd);
+    SquadTemplate a = Mk("alpha", 200, 15), b = Mk("bravo", 200, 15);
+    bc.DeploySquad(a, 0, 0); rec.RecordDeploy(a, 0, 0);
+    bc.DeploySquad(b, 3, 1); rec.RecordDeploy(b, 3, 1);
+    bc.RequestBeat(BattleBeat::Execution);
+    while (bc.Tick()) {} // stalemate fires at tick 10
+    rec.Seal(bc);
+    auto doc = rec.ToJson();
+    return doc.ok() ? doc.value.Emit() : std::string{};
+}
+
 // Recompute the integrity root over a (tampered) payload so the record
 // passes the byte-level seal — forcing the verifier onto the semantic
 // replay path. NOTE: ComputeRoot is public FNV — edit detection only.
@@ -203,6 +228,31 @@ int main(int argc, char** argv) {
               "wipe record is not forced");
     }
 
+    // --- Stalemate record: embedded eval config drives replay ---
+    {
+        BattleRecorder srec;
+        const std::string stext = RunAndRecordStalemate(srec, true);
+        auto sdoc = JsonValue::Parse(stext);
+        Check(sdoc.ok(), "stalemate record emitted");
+        auto r = sdoc.ok() ? Replay::Verify(sdoc.value)
+                           : Fail<VerifyResult>("t", "parse");
+        Check(r.ok() && r.value.ok,
+              "stalemate record verifies (eval cfg embedded)");
+        Check(sdoc.ok() && sdoc.value["stalemate"].AsBool() &&
+                  sdoc.value["closeReason"].AsInt() ==
+                      static_cast<int>(CloseReason::Stalemate),
+              "stalemate record fields");
+        // Same battle without the balance doc cannot verify — the
+        // default 6-minute timer never fires inside endTick.
+        BattleRecorder urec;
+        const std::string utext = RunAndRecordStalemate(urec, false);
+        auto udoc = JsonValue::Parse(utext);
+        auto r2 = udoc.ok() ? Replay::Verify(udoc.value)
+                            : Fail<VerifyResult>("t", "parse");
+        Check(r2.ok() && !r2.value.ok,
+              "missing eval config -> replay diverges, rejected");
+    }
+
     // --- Tamper matrix: byte-level edits trip the root ---
     {
         JsonValue::Object t = doc.value.Members();
@@ -243,7 +293,7 @@ int main(int argc, char** argv) {
     {
         JsonValue::Object t = doc.value.Members();
         JsonValue::Array ev = t["events"].Items();
-        if (!ev.empty()) ev.pop_back(); // drop the closing BeatChanged
+        if (!ev.empty()) ev.pop_back(); // drop the closing ResultDeclared
         t["events"] = JsonValue::MakeArray(std::move(ev));
         auto r = Replay::Verify(Reseal(JsonValue::MakeObject(std::move(t))));
         Check(r.ok() && !r.value.ok, "truncated stream -> reject");

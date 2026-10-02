@@ -423,6 +423,12 @@ target_include_directories(potato_test_record PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_record PotatoGameplay)
 add_test(NAME potato_test_record COMMAND potato_test_record)
 
+# Story 1.12 — win evaluation (BattleResult, stalemate draw)
+add_executable(potato_test_eval Examples/potato_test_eval.cpp)
+target_include_directories(potato_test_eval PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_eval PotatoGameplay)
+add_test(NAME potato_test_eval COMMAND potato_test_eval)
+
 # Replay-verifier CLI: potato_verify <record.json> -> VERIFY OK/FAIL
 add_executable(potato_verify Examples/potato_verify.cpp)
 target_include_directories(potato_verify PRIVATE ${CMAKE_SOURCE_DIR})

@@ -1,5 +1,6 @@
 #include "Gameplay/Record/ReplayVerifier.h"
 
+#include "Gameplay/Eval/WinEval.h"
 #include "Gameplay/Fog/QuantumFog.h"
 #include "Gameplay/Json/Json.h"
 #include "Gameplay/Map/BattleMap.h"
@@ -124,7 +125,7 @@ Result<bool> TemplateFromJson(const JsonValue& j, SquadTemplate& t) {
 Result<VerifyResult> Verify(const JsonValue& doc) {
     if (!doc.IsObject()) return Reject("record root is not an object");
 
-    // 1) Schema gate — only v1 exists; anything else is unsupported.
+    // 1) Schema gate — the /1 family is versioned by toolVersion.
     const std::string* schema = doc.FindString("schema");
     if (schema == nullptr) return Reject("missing schema");
     if (*schema != std::string(BattleRecorder::SCHEMA)) {
@@ -135,8 +136,9 @@ Result<VerifyResult> Verify(const JsonValue& doc) {
     if (!doc["seed"].IsInt() || !doc["toolVersion"].IsInt() ||
         !doc["inputs"].IsArray() || !doc["events"].IsArray() ||
         !doc["endTick"].IsInt() || !doc["endBeat"].IsInt() ||
-        !doc["winner"].IsInt() || !doc["checksum"].IsInt() ||
-        !doc["forced"].IsBool()) {
+        !doc["winner"].IsInt() || !doc["closeReason"].IsInt() ||
+        !doc["checksum"].IsInt() || !doc["forced"].IsBool() ||
+        !doc["stalemate"].IsBool()) {
         return Reject("missing or mistyped record field");
     }
     // Size caps — a forged record can't make verification unbounded in
@@ -175,18 +177,21 @@ Result<VerifyResult> Verify(const JsonValue& doc) {
     }
     FogConfig fogCfg;
     PlanConfig planCfg;
+    EvalConfig evalCfg;
     if (doc.Has("balance")) {
         auto fc = FogConfig::FromJson(doc["balance"]);
         auto pc = PlanConfig::FromJson(doc["balance"]);
-        if (!fc.ok() || !pc.ok()) {
+        auto ec = EvalConfig::FromJson(doc["balance"]);
+        if (!fc.ok() || !pc.ok() || !ec.ok()) {
             return Reject("embedded balance doc rejected");
         }
         fogCfg = fc.value;
         planCfg = pc.value;
+        evalCfg = ec.value;
     }
     const auto seed = doc["seed"].AsInt();
     BattleController bc(static_cast<std::uint64_t>(seed), map.value,
-                        cards.value, fogCfg, planCfg);
+                        cards.value, fogCfg, planCfg, evalCfg);
 
     // 4) Planning inputs — replay the op stream in order.
     for (const JsonValue& op : doc["inputs"].Items()) {
@@ -353,9 +358,10 @@ Result<VerifyResult> Verify(const JsonValue& doc) {
         static_cast<std::uint64_t>(doc["checksum"].AsInt())) {
         return Reject("checksum mismatch");
     }
-    const BattleOutcome& o = bc.Outcome();
+    const BattleResult& o = bc.Outcome();
     if (o.winnerSide != doc["winner"].AsInt(-2) ||
-        o.forced != forced ||
+        o.forced != forced || o.stalemate != doc["stalemate"].AsBool() ||
+        static_cast<int>(o.closeReason) != doc["closeReason"].AsInt(-1) ||
         static_cast<std::int64_t>(o.elapsedTicks) != endTick) {
         return Reject("outcome mismatch");
     }
