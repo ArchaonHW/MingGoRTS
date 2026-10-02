@@ -399,6 +399,12 @@ target_include_directories(potato_test_command PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_command PotatoGameplay)
 add_test(NAME potato_test_command COMMAND potato_test_command)
 
+# QuantumFog 測試
+add_executable(potato_test_fog Examples/potato_test_fog.cpp)
+target_include_directories(potato_test_fog PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_fog PotatoGameplay)
+add_test(NAME potato_test_fog COMMAND potato_test_fog)
+
 if(WIN32)
     # Gameplay 層依賴方向守衛：禁 Rendering/GUI/Platform/GL 標頭
     add_test(NAME gameplay_dep_guard

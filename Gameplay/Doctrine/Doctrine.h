@@ -15,6 +15,7 @@
 namespace Potato::Gameplay {
 
 class BattleMap;
+class QuantumFog;
 struct Squad;
 
 // Data-driven doctrine cards — the player's authorship surface.
@@ -90,9 +91,10 @@ struct SimEvent {
     int tick = 0;
     int squadIndex = -1;
     int slotIndex = -1;
-    // Intervention: param = target region (Redirect) or slot index
-    // (Override); aux = InterventionKind ordinal (0=Redirect, 1=Override,
-    // 2=Retreat — wire-format stable).
+    // Intervention: param = target region (Redirect, Probe) or slot
+    // index (Override) or cloud id B (Entangle — squadIndex carries
+    // cloud id A); aux = InterventionKind ordinal (0=Redirect,
+    // 1=Override, 2=Retreat, 3=Probe, 4=Entangle — wire-format stable).
     int param = -1;
     // BeatChanged: new BattleBeat ordinal — wire-format stable
     // (Planning=0, Execution=1, Aftermath=2; recorder/replay depends on it).
@@ -147,8 +149,7 @@ private:
 // Cooldowns live on the (mutable) sheets and tick once per occupied
 // slot per EvalTick — even for squads that can't act.
 // Routing/Routed/Destroyed squads evaluate nothing. Enemy-detection
-// triggers currently read true snapshot state — the QuantumFog
-// certainty seam lands in Story 1.8 and rewires these two kinds.
+// triggers read the acting side's QuantumFog belief — never truth.
 namespace Doctrine {
 
 // snapshot: squads' state at tick start; sheets are per-squad, aligned
@@ -156,6 +157,9 @@ namespace Doctrine {
 // silently skips trailing squads in release builds — don't do that).
 // cpPools is the per-side CP pool — cp_at_least reads the acting
 // squad's side (index 0 = player, 1 = enemy; out-of-range sides read 0).
+// fog is the per-side QuantumFog view — enemy_in_region/enemy_adjacent
+// read the ACTING side's belief (VisibleAt), never true positions
+// (the truth boundary — Story 1.8 closes the deferred seam).
 // rng is reserved for future draws — vocab v0 draws nothing, so
 // draw-order determinism is structural.
 EvalOutcome EvalTick(const BattleMap& map,
@@ -164,6 +168,7 @@ EvalOutcome EvalTick(const BattleMap& map,
                      const DoctrineLibrary& cards,
                      Prng& rng,
                      const std::array<int, 2>& cpPools,
+                     const std::array<QuantumFog, 2>& fog,
                      int tick);
 
 // Apply pending deltas to live squads — call AFTER EvalTick.

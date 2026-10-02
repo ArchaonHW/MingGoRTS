@@ -1,5 +1,6 @@
 #include "Gameplay/Doctrine/Doctrine.h"
 
+#include "Gameplay/Fog/QuantumFog.h"
 #include "Gameplay/Json/Json.h"
 #include "Gameplay/Map/BattleMap.h"
 #include "Gameplay/Squad/Squad.h"
@@ -109,21 +110,22 @@ Result<bool> ReadClause(const JsonValue& obj, const char* key,
     return Ok(true);
 }
 
-bool AnyEnemy(const std::vector<Squad>& snapshot, int side,
-              std::size_t region) {
-    if (region == Squad::NO_REGION) return false; // off-field squads co-locate
-    for (const Squad& s : snapshot) {
-        if (s.side != side && s.IsEffective() && s.regionIndex == region)
-            return true;
-    }
-    return false;
+// Enemy-detection reads the ACTING SIDE's fog — belief, not truth
+// (truth boundary: this file must never scan hostile squads for these
+// triggers). A stale cloud can fire a card where no enemy stands, and
+// a decayed/misplaced cloud hides a real one — that is the mechanic.
+int FogIndex(int side) { return side == 1 ? 1 : 0; }
+
+bool EnemyVisibleInRegion(const QuantumFog& fog, std::size_t region) {
+    if (region == Squad::NO_REGION) return false; // off-field co-locate
+    return fog.VisibleAt(region) > 0;
 }
 
-bool AnyEnemyAdjacent(const BattleMap& map, const std::vector<Squad>& snapshot,
-                      int side, std::size_t region) {
+bool EnemyVisibleAdjacent(const BattleMap& map, const QuantumFog& fog,
+                          std::size_t region) {
     if (region >= map.RegionCount()) return false;
     for (std::size_t n : map.Neighbors(region)) {
-        if (AnyEnemy(snapshot, side, n)) return true;
+        if (fog.VisibleAt(n) > 0) return true;
     }
     return false;
 }
@@ -266,6 +268,7 @@ EvalOutcome EvalTick(const BattleMap& map,
                      const DoctrineLibrary& cards,
                      Prng& rng,
                      const std::array<int, 2>& cpPools,
+                     const std::array<QuantumFog, 2>& fog,
                      int tick) {
     (void)rng; // reserved for future draws — canonical order contract holds
     assert(sheets.size() == snapshot.size()); // sheets align by squad index
@@ -299,11 +302,13 @@ EvalOutcome EvalTick(const BattleMap& map,
                     fired = sq.cohesion < card.triggerParam;
                     break;
                 case TriggerKind::EnemyInRegion:
-                    fired = AnyEnemy(snapshot, sq.side, sq.regionIndex);
+                    fired = EnemyVisibleInRegion(fog[FogIndex(sq.side)],
+                                                 sq.regionIndex);
                     break;
                 case TriggerKind::EnemyAdjacent:
-                    fired = AnyEnemyAdjacent(map, snapshot, sq.side,
-                                             sq.regionIndex);
+                    fired = EnemyVisibleAdjacent(map,
+                                                 fog[FogIndex(sq.side)],
+                                                 sq.regionIndex);
                     break;
             }
             if (!fired) continue;

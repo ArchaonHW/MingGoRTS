@@ -44,3 +44,10 @@
 - `cpPool` has no upper cap (`SetCpPool` clamps negatives only) — CP economy (regen +1/60s, cap 5, intervention costs) is Story 1.7's job.
 - Manual `RequestBeat(Aftermath)` mid-Execution is the concede path; `BattleOutcome::forced` distinguishes it from a wipe draw. Sub-story: whether "concede" should still produce a winner by objective score is Story 1.12 win-evaluation territory.
 - `ROUT_TICKS` (2 s) is a v0 constant — rout-off-field pacing may want per-terrain or card-driven variance later.
+
+## Deferred from: code review of 1-8-quantumfog (2026-09-30)
+
+- No `potato.balance/1` file exists on disk — `FogConfig::FromJson` verified via inline JSON only; content loading wires in when the asset pipeline story lands.
+- Truth boundary is discipline-enforced: `CheckGameplayDeps.ps1` bans Rendering/GUI includes but not `Gameplay/Squad` in `Gameplay/Fog`, nor doctrine truth-scans. Extend the guard when Campaign/Game layers appear.
+- `BattleController::Squads()` exposes full enemy truth — fine pre-UI; presentation must consume `Fog(side)` for enemy rendering.
+- `FogConfig` is a bare aggregate: out-of-range hand-built configs bypass `FromJson` validation (negative decayPerMinute drifts the accumulator).

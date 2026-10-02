@@ -2,6 +2,7 @@
 
 #include "Gameplay/Command/Intervention.h"
 #include "Gameplay/Doctrine/Doctrine.h"
+#include "Gameplay/Fog/QuantumFog.h"
 #include "Gameplay/Result.h"
 #include "Gameplay/Sim/Sim.h"
 
@@ -50,7 +51,8 @@ constexpr int ROUT_TICKS = 2 * TICK_RATE_HZ;
 class BattleController {
 public:
     BattleController(std::uint64_t seed, const BattleMap& map,
-                     const DoctrineLibrary& cards);
+                     const DoctrineLibrary& cards,
+                     const FogConfig& fogConfig = FogConfig{});
     ~BattleController();
     // Copy-constructible (tests snapshot whole controllers); copies share
     // the borrowed map_/cards_ refs. Assignment deleted — refs can't reseat.
@@ -78,6 +80,16 @@ public:
     Result<bool> IssueOverride(int side, int squadIndex,
                                int slotIndex);        // 2 CP
     Result<bool> IssueRetreat(int side, int squadIndex); // 3 CP
+    // Fog ops: probe raises a region's certainty field (budgeted,
+    // no CP); entangle links two of this side's clouds to share fate.
+    Result<bool> IssueProbe(int side, std::size_t region);   // 0 CP, 3/battle
+    Result<bool> IssueEntangle(int side, int cloudIdA, int cloudIdB); // 2 CP
+
+    // Planning-only intel hook (briefing/tests): overwrite a cloud's
+    // believed region + certainty in `fogSide`'s view for `squadIndex`
+    // (which must be hostile to fogSide — own squads aren't clouds).
+    bool SetCloudIntel(int fogSide, int squadIndex,
+                       int region, int certainty);
 
     // --- Execution tick ---
     // One deterministic tick: doctrine eval (snapshot semantics) ->
@@ -95,6 +107,11 @@ public:
         assert(side == 0 || side == 1);
         return cpPool_[side == 1 ? 1 : 0];
     }
+    // Belief views (UI/doctrine/intel debugging) — never truth.
+    const QuantumFog& Fog(int side) const {
+        assert(side == 0 || side == 1);
+        return fog_[side == 1 ? 1 : 0];
+    }
 
     // End-to-end determinism fingerprint: sim stream checksum folded
     // with per-squad numeric state, beat, CP pools, and the pending
@@ -108,6 +125,10 @@ private:
     void EmitBeatChanged(int tick, BattleBeat target);
     void CloseBattle(bool forced); // compute outcome + enter Aftermath
     void ApplyInterventions(int tick);
+    // Per-tick fog maintenance: prune off-field clouds, auto-observe
+    // (collapse enemy clouds sharing/adjoining a friendly region,
+    // entangled partners collapse to their own truth), then decay.
+    void SyncFog();
 
     const BattleMap& map_;
     const DoctrineLibrary& cards_;
@@ -121,6 +142,13 @@ private:
     BattleOutcome outcome_;
     std::array<int, 2> cpPool_ = {CP_START, CP_START};
     int cpRegen_ = 0;
+    // QuantumFog: per-observing-side belief views. cloudOf_[s][i] =
+    // side-s fog's cloud id tracking squad i (-1 = none: own squads,
+    // removed). The truth<->cloud mapping lives HERE (Sim) — the fog
+    // itself is belief-only.
+    std::array<QuantumFog, 2> fog_;
+    std::array<std::vector<int>, 2> cloudOf_;
+    std::array<int, 2> probeBudget_ = {PROBE_BUDGET, PROBE_BUDGET};
 };
 
 } // namespace Potato::Gameplay
