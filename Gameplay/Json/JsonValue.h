@@ -61,6 +61,13 @@ public:
 
     const std::string* FindString(std::string_view key) const;
 
+    // Canonical serializer (Story 1.11): whitespace-free, object keys in
+    // std::less<> map order, ints exact, reals via %.17g, strings
+    // JSON-escaped. Byte-stable for a given DOM — Emit after Parse is a
+    // canonical form, so records hash deterministically.
+    std::string Emit() const;
+    void EmitTo(std::string& out) const;
+
 private:
     static const JsonValue& NullSingleton();
     static const std::string& EmptyString();

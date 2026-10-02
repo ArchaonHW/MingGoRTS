@@ -243,7 +243,7 @@ JsonValue JsonValue::MakeArray(Array v) { JsonValue j; j.type_ = Type::Array; j.
 JsonValue JsonValue::MakeObject(Object v) { JsonValue j; j.type_ = Type::Object; j.object_ = std::move(v); return j; }
 
 Result<JsonValue> JsonValue::Parse(std::string_view text) {
-    Parser p{ text };
+    Parser p{ text, 0, {} };
     JsonValue out;
     if (!p.ParseValue(out, 1)) return Fail<JsonValue>("parse", p.err);
     p.SkipWs();
@@ -303,6 +303,109 @@ const std::string* JsonValue::FindString(std::string_view key) const {
     if (type_ != Type::Object) return nullptr;
     auto it = object_.find(key);
     return (it != object_.end() && it->second.IsString()) ? &it->second.string_ : nullptr;
+}
+
+namespace {
+
+void EmitStringTo(const std::string& s, std::string& out) {
+    static const char hex[] = "0123456789abcdef";
+    out += '"';
+    for (const unsigned char c : s) {
+        switch (c) {
+            case '"':  out += "\\\""; break;
+            case '\\': out += "\\\\"; break;
+            case '\b': out += "\\b";  break;
+            case '\f': out += "\\f";  break;
+            case '\n': out += "\\n";  break;
+            case '\r': out += "\\r";  break;
+            case '\t': out += "\\t";  break;
+            default:
+                if (c < 0x20) {
+                    out += "\\u00";
+                    out += hex[(c >> 4) & 0xF];
+                    out += hex[c & 0xF];
+                } else {
+                    out += static_cast<char>(c); // UTF-8 passthrough
+                }
+        }
+    }
+    out += '"';
+}
+
+} // namespace
+
+std::string JsonValue::Emit() const {
+    std::string out;
+    EmitTo(out);
+    return out;
+}
+
+void JsonValue::EmitTo(std::string& out) const {
+    switch (type_) {
+        case Type::Null:   out += "null";                    break;
+        case Type::Bool:   out += bool_ ? "true" : "false";  break;
+        case Type::Int: {
+            // int64 min is the only value whose negation overflows —
+            // render digit-wise to stay portable and UB-free.
+            if (int_ == std::numeric_limits<std::int64_t>::min()) {
+                out += "-9223372036854775808";
+                break;
+            }
+            std::uint64_t mag = int_ < 0
+                ? static_cast<std::uint64_t>(-int_)
+                : static_cast<std::uint64_t>(int_);
+            char buf[20];
+            int n = 0;
+            do { buf[n++] = static_cast<char>('0' + mag % 10); mag /= 10; }
+            while (mag != 0);
+            if (int_ < 0) out += '-';
+            while (n > 0) out += buf[--n];
+            break;
+        }
+        case Type::Real: {
+            // std::to_chars: shortest round-trip, locale-independent.
+            // JSON cannot represent non-finite values — emit `null`
+            // (documented lossy; the parser would reject nan/inf anyway).
+            if (!std::isfinite(real_)) {
+                out += "null";
+                break;
+            }
+            char buf[32];
+            const auto res = std::to_chars(buf, buf + sizeof(buf), real_);
+            if (res.ec != std::errc()) {
+                out += "0.0"; // unreachable in practice
+                break;
+            }
+            out.append(buf, static_cast<std::size_t>(res.ptr - buf));
+            // Keep the type stable through parse∘emit: an integral-looking
+            // emission ("2", "1e3") would re-parse as Type::Int.
+            bool typeMarker = false;
+            for (const char* p = buf; p != res.ptr; ++p) {
+                if (*p == '.' || *p == 'e' || *p == 'E') { typeMarker = true; break; }
+            }
+            if (!typeMarker) out += ".0";
+            break;
+        }
+        case Type::String: EmitStringTo(string_, out); break;
+        case Type::Array:
+            out += '[';
+            for (std::size_t i = 0; i < array_.size(); ++i) {
+                if (i) out += ',';
+                array_[i].EmitTo(out);
+            }
+            out += ']';
+            break;
+        case Type::Object:
+            out += '{';
+            for (auto it = object_.begin(); it != object_.end(); ++it) {
+                if (it != object_.begin()) out += ',';
+                EmitStringTo(it->first, out);
+                out += ':';
+                it->second.EmitTo(out);
+            }
+            out += '}';
+            break;
+    }
 }
 
 const JsonValue& JsonValue::NullSingleton() {

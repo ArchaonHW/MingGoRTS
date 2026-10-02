@@ -390,7 +390,8 @@ EvalOutcome EvalTick(const BattleMap& map,
             slot.cooldownRemaining = card.cooldownTicks;
             out.events.push_back({SimEvent::Kind::CardFired, tick,
                                   static_cast<int>(si),
-                                  static_cast<int>(sl), -1, 0, card.id});
+                                  static_cast<int>(sl), -1, 0,
+                                  snapshot[si].side, {}, card.id});
         }
     }
     return out;

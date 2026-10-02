@@ -101,6 +101,14 @@ struct SimEvent {
     // BeatChanged: new BattleBeat ordinal — wire-format stable
     // (Planning=0, Execution=1, Aftermath=2; recorder/replay depends on it).
     int aux = 0;
+    // Issuing side for Intervention events (CardFired stamps the acting
+    // squad's side); -1 where side-less. Replay needs this to re-issue
+    // commands — squadIndex alone can't carry it (Probe uses -1,
+    // Entangle repurpose it as a cloud id).
+    int side = -1;
+    // Replan path payload — completes the command journal so a recorded
+    // Intervention event fully re-drives IssueReplan (Story 1.9 deferral).
+    std::vector<std::size_t> path;
     std::string cardId;
 };
 

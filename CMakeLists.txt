@@ -417,6 +417,24 @@ target_include_directories(potato_test_ai PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_ai PotatoGameplay)
 add_test(NAME potato_test_ai COMMAND potato_test_ai)
 
+# BattleRecorder / replay verifier 測試
+add_executable(potato_test_record Examples/potato_test_record.cpp)
+target_include_directories(potato_test_record PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_record PotatoGameplay)
+add_test(NAME potato_test_record COMMAND potato_test_record)
+
+# Replay-verifier CLI: potato_verify <record.json> -> VERIFY OK/FAIL
+add_executable(potato_verify Examples/potato_verify.cpp)
+target_include_directories(potato_verify PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_verify PotatoGameplay)
+
+# CLI end-to-end: emit a sealed record, then verify it (exit-code check).
+add_test(NAME potato_record_emit
+    COMMAND potato_test_record --emit ${CMAKE_BINARY_DIR}/verify_sample.json)
+add_test(NAME potato_verify_cli
+    COMMAND potato_verify ${CMAKE_BINARY_DIR}/verify_sample.json)
+set_tests_properties(potato_verify_cli PROPERTIES DEPENDS potato_record_emit)
+
 if(WIN32)
     # Gameplay 層依賴方向守衛：禁 Rendering/GUI/Platform/GL 標頭
     add_test(NAME gameplay_dep_guard

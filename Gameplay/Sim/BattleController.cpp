@@ -38,7 +38,7 @@ BattleController::BattleController(const BattleController&) = default;
 
 void BattleController::EmitBeatChanged(int tick, BattleBeat target) {
     events_.push_back({SimEvent::Kind::BeatChanged, tick, -1, -1, -1,
-                       static_cast<int>(target), {}});
+                       static_cast<int>(target), -1, {}, {}});
 }
 
 bool BattleController::RequestBeat(BattleBeat target) {
@@ -169,10 +169,11 @@ Result<bool> BattleController::IssueRedirect(int side, int squadIndex,
     cpPool_[side] -= CostOf(InterventionKind::Redirect);
     const int tick = static_cast<int>(sim_.TickCount());
     pendingCommands_.push_back({side, InterventionKind::Redirect,
-                                squadIndex, static_cast<int>(region), tick});
+                                squadIndex, static_cast<int>(region), tick, {}});
     events_.push_back({SimEvent::Kind::Intervention, tick, squadIndex, -1,
                        static_cast<int>(region),
-                       static_cast<int>(InterventionKind::Redirect), {}});
+                       static_cast<int>(InterventionKind::Redirect),
+                       side, {}, {}});
     return Ok(true);
 }
 
@@ -189,10 +190,11 @@ Result<bool> BattleController::IssueOverride(int side, int squadIndex,
     cpPool_[side] -= CostOf(InterventionKind::Override);
     const int tick = static_cast<int>(sim_.TickCount());
     pendingCommands_.push_back({side, InterventionKind::Override,
-                                squadIndex, slotIndex, tick});
+                                squadIndex, slotIndex, tick, {}});
     events_.push_back({SimEvent::Kind::Intervention, tick, squadIndex, -1,
                        slotIndex,
-                       static_cast<int>(InterventionKind::Override), {}});
+                       static_cast<int>(InterventionKind::Override),
+                       side, {}, {}});
     return Ok(true);
 }
 
@@ -204,10 +206,11 @@ Result<bool> BattleController::IssueRetreat(int side, int squadIndex) {
     cpPool_[side] -= CostOf(InterventionKind::Retreat);
     const int tick = static_cast<int>(sim_.TickCount());
     pendingCommands_.push_back({side, InterventionKind::Retreat,
-                                squadIndex, -1, tick});
+                                squadIndex, -1, tick, {}});
     events_.push_back({SimEvent::Kind::Intervention, tick, squadIndex, -1,
                        -1,
-                       static_cast<int>(InterventionKind::Retreat), {}});
+                       static_cast<int>(InterventionKind::Retreat),
+                       side, {}, {}});
     return Ok(true);
 }
 
@@ -227,10 +230,11 @@ Result<bool> BattleController::IssueProbe(int side, std::size_t region) {
     --probeBudget_[side];
     const int tick = static_cast<int>(sim_.TickCount());
     pendingCommands_.push_back({side, InterventionKind::Probe, -1,
-                                static_cast<int>(region), tick});
+                                static_cast<int>(region), tick, {}});
     events_.push_back({SimEvent::Kind::Intervention, tick, -1, -1,
                        static_cast<int>(region),
-                       static_cast<int>(InterventionKind::Probe), {}});
+                       static_cast<int>(InterventionKind::Probe),
+                       side, {}, {}});
     return Ok(true);
 }
 
@@ -269,10 +273,11 @@ Result<bool> BattleController::IssueEntangle(int side, int cloudIdA,
     // squadIndex field carries cloud A's id (see Intervention comment);
     // the event mirrors the same layout so the log records both ids.
     pendingCommands_.push_back({side, InterventionKind::Entangle,
-                                cloudIdA, cloudIdB, tick});
+                                cloudIdA, cloudIdB, tick, {}});
     events_.push_back({SimEvent::Kind::Intervention, tick, cloudIdA, -1,
                        cloudIdB,
-                       static_cast<int>(InterventionKind::Entangle), {}});
+                       static_cast<int>(InterventionKind::Entangle),
+                       side, {}, {}});
     return Ok(true);
 }
 
@@ -402,9 +407,13 @@ Result<bool> BattleController::IssueReplan(int side, int squadIndex,
                                 squadIndex,
                                 static_cast<int>(path.size()), tick,
                                 std::move(path)});
+    // `path` moved into the queued command; the event copies it back —
+    // the recorded stream must carry the full payload for replay (1.9
+    // deferral closed: path, not just length).
     events_.push_back({SimEvent::Kind::Intervention, tick, squadIndex, -1,
                        static_cast<int>(pendingCommands_.back().path.size()),
-                       static_cast<int>(InterventionKind::Replan), {}});
+                       static_cast<int>(InterventionKind::Replan),
+                       side, pendingCommands_.back().path, {}});
     return Ok(true);
 }
 
