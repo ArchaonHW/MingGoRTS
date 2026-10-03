@@ -20,6 +20,32 @@ JsonValue LegToJson(const Leg& l) {
     return JsonValue::MakeObject(std::move(o));
 }
 
+// The content object the entry hash commits to — the SAME fields the
+// wire format emits (sans hash/prevHash), in canonical Emit order.
+JsonValue EntryContentJson(const LedgerEntry& e) {
+    JsonValue::Array tags;
+    tags.reserve(e.tags.size());
+    for (const std::string& t : e.tags) {
+        tags.push_back(JsonValue::String(t));
+    }
+    JsonValue::Object o;
+    o.emplace("seq", JsonValue::Int(static_cast<std::int64_t>(e.seq)));
+    o.emplace("credit", LegToJson(e.credit));
+    o.emplace("debit", LegToJson(e.debit));
+    o.emplace("memo", JsonValue::String(e.memo));
+    o.emplace("tags", JsonValue::MakeArray(std::move(tags)));
+    return JsonValue::MakeObject(std::move(o));
+}
+
+// FNV-1a — same constants as the battle record integrity root.
+std::uint64_t Fnv1a(const std::string& bytes, std::uint64_t h) {
+    for (unsigned char c : bytes) {
+        h ^= c;
+        h *= 1099511628211ull;
+    }
+    return h;
+}
+
 // Strict leg parse: {"account": <known name>, "amount": <int>}.
 bool LegFromJson(const JsonValue& j, Leg& out) {
     if (!j.IsObject() || !j["amount"].IsInt()) return false;
@@ -107,8 +133,57 @@ Gameplay::Result<std::uint64_t> Ledger::Post(Posting p) {
     e.debit = p.debit;
     e.memo = std::move(p.memo);
     e.tags = std::move(p.tags);
+    e.prevHash = Tip();
+    e.hash = EntryHash(e);
     entries_.push_back(std::move(e));
     return Gameplay::Ok(entries_.back().seq);
+}
+
+const char* Ledger::Verify() const {
+    for (std::size_t i = 0; i < entries_.size(); ++i) {
+        const LedgerEntry& e = entries_[i];
+        if (e.seq != static_cast<std::uint64_t>(i)) {
+            return "entry seq not contiguous";
+        }
+        const std::uint64_t expect =
+            (i == 0) ? kGenesisHash : entries_[i - 1].hash;
+        if (e.prevHash != expect) return "chain link broken";
+        if (e.hash != EntryHash(e)) return "entry hash mismatch";
+        // Full replay, not just chain integrity: a write path that
+        // bypasses Post still can't produce a verifying chain.
+        if (const char* why = ValidateLegs(e.credit, e.debit)) {
+            return why;
+        }
+        if (const char* why = ValidateMeta(e.memo, e.tags)) {
+            return why;
+        }
+    }
+    return nullptr;
+}
+
+std::uint64_t Ledger::SealHash(std::uint64_t count,
+                               std::uint64_t tip) {
+    std::uint64_t h = kGenesisHash;
+    for (int i = 0; i < 8; ++i) {
+        h ^= static_cast<std::uint8_t>(count >> (i * 8));
+        h *= 1099511628211ull;
+    }
+    for (int i = 0; i < 8; ++i) {
+        h ^= static_cast<std::uint8_t>(tip >> (i * 8));
+        h *= 1099511628211ull;
+    }
+    return h;
+}
+
+std::uint64_t Ledger::EntryHash(const LedgerEntry& e) {
+    // prevHash binds the entry to its position in history; the
+    // canonical content emit binds the bytes the chain attests.
+    std::uint64_t h = kGenesisHash;
+    for (int i = 0; i < 8; ++i) {
+        h ^= static_cast<std::uint8_t>(e.prevHash >> (i * 8));
+        h *= 1099511628211ull;
+    }
+    return Fnv1a(EntryContentJson(e).Emit(), h);
 }
 
 std::int64_t Ledger::Balance(Account a) const {
@@ -124,22 +199,21 @@ Gameplay::Result<JsonValue> Ledger::ToJson() const {
     JsonValue::Array arr;
     arr.reserve(entries_.size());
     for (const LedgerEntry& e : entries_) {
-        JsonValue::Array tags;
-        tags.reserve(e.tags.size());
-        for (const std::string& t : e.tags) {
-            tags.push_back(JsonValue::String(t));
-        }
-        JsonValue::Object o;
-        o.emplace("seq", JsonValue::Int(static_cast<std::int64_t>(e.seq)));
-        o.emplace("credit", LegToJson(e.credit));
-        o.emplace("debit", LegToJson(e.debit));
-        o.emplace("memo", JsonValue::String(e.memo));
-        o.emplace("tags", JsonValue::MakeArray(std::move(tags)));
+        JsonValue::Object o = EntryContentJson(e).Members();
+        o.emplace("prevHash",
+                  JsonValue::Int(static_cast<std::int64_t>(e.prevHash)));
+        o.emplace("hash",
+                  JsonValue::Int(static_cast<std::int64_t>(e.hash)));
         arr.push_back(JsonValue::MakeObject(std::move(o)));
     }
     JsonValue::Object o;
     o.emplace("schema", JsonValue::String(std::string(SCHEMA)));
     o.emplace("entries", JsonValue::MakeArray(std::move(arr)));
+    // The stored seal catches non-recomputing mutation, truncation,
+    // and append-tampering alike: it commits to count AND tip. A
+    // determined attacker can always recompute — that is the
+    // documented boundary (external anchoring = Story 2.5).
+    o.emplace("seal", JsonValue::Int(static_cast<std::int64_t>(Seal())));
     return Gameplay::Ok(JsonValue::MakeObject(std::move(o)));
 }
 
@@ -147,7 +221,10 @@ Gameplay::Result<Ledger> Ledger::FromJson(const JsonValue& doc) {
     const std::string* schema = doc.FindString("schema");
     if (schema == nullptr || *schema != SCHEMA) {
         return Gameplay::Fail<Ledger>("schema",
-                                      "expected potato.ledger/1");
+                                      "expected potato.ledger/2");
+    }
+    if (!doc["seal"].IsInt()) {
+        return Gameplay::Fail<Ledger>("schema", "missing chain seal");
     }
     if (!doc["entries"].IsArray() ||
         doc["entries"].Size() > MAX_ENTRIES) {
@@ -158,7 +235,8 @@ Gameplay::Result<Ledger> Ledger::FromJson(const JsonValue& doc) {
     std::uint64_t expectSeq = 0;
     for (const JsonValue& j : doc["entries"].Items()) {
         if (!j.IsObject() || !j["seq"].IsInt() ||
-            !j["memo"].IsString() || !j["tags"].IsArray()) {
+            !j["memo"].IsString() || !j["tags"].IsArray() ||
+            !j["prevHash"].IsInt() || !j["hash"].IsInt()) {
             return Gameplay::Fail<Ledger>("schema",
                                           "mistyped entry field");
         }
@@ -187,7 +265,19 @@ Gameplay::Result<Ledger> Ledger::FromJson(const JsonValue& doc) {
         if (const char* why = ValidateMeta(e.memo, e.tags)) {
             return Gameplay::Fail<Ledger>("schema", why);
         }
+        e.prevHash = static_cast<std::uint64_t>(j["prevHash"].AsInt());
+        e.hash = static_cast<std::uint64_t>(j["hash"].AsInt());
         out.entries_.push_back(std::move(e));
+    }
+    // The file is untrusted: replay the chain before accepting. A
+    // mutated entry fails verification; load is rejected, not warned.
+    if (const char* why = out.Verify()) {
+        return Gameplay::Fail<Ledger>("chain", why);
+    }
+    // Seal check: commits to the entry count too, so truncation needs
+    // at least a recompute (same class as a wholesale rehash).
+    if (static_cast<std::uint64_t>(doc["seal"].AsInt()) != out.Seal()) {
+        return Gameplay::Fail<Ledger>("chain", "seal mismatch");
     }
     return Gameplay::Ok(std::move(out));
 }

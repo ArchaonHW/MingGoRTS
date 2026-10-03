@@ -122,7 +122,7 @@ int main() {
               "balances fold across entries");
     }
 
-    // --- potato.ledger/1 round-trip ---
+    // --- potato.ledger/2 round-trip ---
     {
         Ledger l;
         l.Post(BurnVillage());
@@ -137,7 +137,7 @@ int main() {
                   doc.value.FindString("schema") != nullptr &&
                   *doc.value.FindString("schema") ==
                       std::string(Ledger::SCHEMA),
-              "ToJson emits potato.ledger/1");
+              "ToJson emits potato.ledger/2");
         auto back = Ledger::FromJson(doc.value);
         Check(back.ok() && back.value.Size() == 2 &&
                   back.value.Balance(Account::Materiel) == 40 &&
@@ -164,49 +164,137 @@ int main() {
               "emit->parse->load lossless");
     }
 
+    // --- AC (2.2): chain formation ---
+    {
+        Ledger l;
+        l.Post(BurnVillage());
+        Posting p = BurnVillage();
+        p.credit = {Account::Mandate, 3};
+        p.debit = {Account::ArmyPrestige, 9};
+        l.Post(p);
+        const auto& es = l.Entries();
+        Check(es[0].prevHash == Ledger::kGenesisHash,
+              "entry 0 chains to genesis");
+        Check(es[1].prevHash == es[0].hash && es[1].hash != es[0].hash,
+              "entry 1 links to entry 0's hash");
+        Check(l.Tip() == es[1].hash, "Tip() is the last entry hash");
+        Check(Ledger{}.Tip() == Ledger::kGenesisHash,
+              "empty chain tip is genesis");
+        Check(l.Verify() == nullptr, "honest chain verifies clean");
+    }
+
+    // --- AC (2.2): mutated history fails verify; load rejected ---
+    {
+        Ledger l;
+        l.Post(BurnVillage());
+        Posting p = BurnVillage();
+        p.credit = {Account::Mandate, 3};
+        p.debit = {Account::ArmyPrestige, 9};
+        l.Post(p);
+        const JsonValue doc = l.ToJson().value;
+
+        const auto mutateEntry = [&doc](std::size_t idx,
+                                        const char* key,
+                                        JsonValue v) {
+            JsonValue::Object o = doc.Members();
+            JsonValue::Array arr = o["entries"].Items();
+            JsonValue::Object e = arr[idx].Members();
+            e[key] = std::move(v);
+            arr[idx] = JsonValue::MakeObject(std::move(e));
+            o["entries"] = JsonValue::MakeArray(std::move(arr));
+            return JsonValue::MakeObject(std::move(o));
+        };
+        Check(!Ledger::FromJson(mutateEntry(
+                  0, "memo", JsonValue::String("altered"))).ok(),
+              "mutated memo -> hash mismatch -> reject");
+        Check(!Ledger::FromJson(mutateEntry(
+                  0, "hash", JsonValue::Int(42))).ok(),
+              "forged stored hash -> reject");
+        Check(!Ledger::FromJson(mutateEntry(
+                  1, "prevHash", JsonValue::Int(42))).ok(),
+              "relinked prevHash -> chain break -> reject");
+
+        // Truncate the tail but keep the stored seal.
+        {
+            JsonValue::Object o = doc.Members();
+            JsonValue::Array arr = o["entries"].Items();
+            arr.pop_back();
+            o["entries"] = JsonValue::MakeArray(std::move(arr));
+            Check(!Ledger::FromJson(JsonValue::MakeObject(std::move(o)))
+                       .ok(),
+                  "truncated tail -> seal mismatch -> reject");
+        }
+        // Honest round-trip still verifies.
+        auto back = Ledger::FromJson(doc);
+        Check(back.ok() && back.value.Verify() == nullptr &&
+                  back.value.Entries()[1].hash == l.Entries()[1].hash,
+              "round-trip preserves + verifies chain");
+    }
+
     // --- FromJson hard gates ---
     {
-        auto bad = JsonValue::Parse(R"({"schema":"potato.ledger/2"})");
-        Check(bad.ok() && !Ledger::FromJson(bad.value).ok(), "bad version rejected");
-        bad = JsonValue::Parse(R"({"schema":"potato.ledger/1"})");
-        Check(bad.ok() && !Ledger::FromJson(bad.value).ok(), "missing entries rejected");
-        bad = JsonValue::Parse(
-            R"({"schema":"potato.ledger/1","entries":[{"seq":0,
-              "credit":{"account":"materiel","amount":10},
-              "debit":{"account":"materiel","amount":4},
-              "memo":"x","tags":[]}]})");
+        auto bad = JsonValue::Parse(R"({"schema":"potato.ledger/1"})");
         Check(bad.ok() && !Ledger::FromJson(bad.value).ok(),
-              "unbalanced persisted entry rejected");
-        bad = JsonValue::Parse(
-            R"({"schema":"potato.ledger/1","entries":[{"seq":0,
-              "credit":{"account":"gold","amount":10},
-              "debit":{"account":"materiel","amount":4},
-              "memo":"x","tags":[]}]})");
+              "old version rejected");
+        bad = JsonValue::Parse(R"({"schema":"potato.ledger/3"})");
         Check(bad.ok() && !Ledger::FromJson(bad.value).ok(),
-              "unknown account name rejected");
+              "bad version rejected");
         bad = JsonValue::Parse(
-            R"({"schema":"potato.ledger/1","entries":[{"seq":1,
-              "credit":{"account":"materiel","amount":10},
-              "debit":{"account":"mandate","amount":4},
-              "memo":"x","tags":[]}]})");
+            R"({"schema":"potato.ledger/2","seal":0})");
         Check(bad.ok() && !Ledger::FromJson(bad.value).ok(),
-              "non-contiguous seq rejected");
+              "missing entries rejected");
+        bad = JsonValue::Parse(
+            R"({"schema":"potato.ledger/2","entries":[]})");
+        Check(bad.ok() && !Ledger::FromJson(bad.value).ok(),
+              "missing seal rejected");
         bad = JsonValue::Parse(R"([1,2,3])");
         Check(bad.ok() && !Ledger::FromJson(bad.value).ok(),
               "non-object root rejected");
-        bad = JsonValue::Parse(
-            R"({"schema":"potato.ledger/1","entries":[{"seq":0,
-              "credit":{"account":"materiel","amount":2000000000000},
-              "debit":{"account":"mandate","amount":4},
-              "memo":"x","tags":[]}]})");
-        Check(bad.ok() && !Ledger::FromJson(bad.value).ok(),
+
+        // Structural gates on a real /2 doc — mutate fields that fail
+        // before the chain check runs.
+        Ledger l;
+        l.Post(BurnVillage());
+        const JsonValue doc = l.ToJson().value;
+        const auto mutateEntry = [&doc](const char* key, JsonValue v) {
+            JsonValue::Object o = doc.Members();
+            JsonValue::Array arr = o["entries"].Items();
+            JsonValue::Object e = arr[0].Members();
+            e[key] = std::move(v);
+            arr[0] = JsonValue::MakeObject(std::move(e));
+            o["entries"] = JsonValue::MakeArray(std::move(arr));
+            return JsonValue::MakeObject(std::move(o));
+        };
+        Check(!Ledger::FromJson(mutateEntry("seq", JsonValue::Int(1)))
+                   .ok(),
+              "non-contiguous seq rejected");
+        const auto mutateCredit = [&doc](const char* key, JsonValue v) {
+            JsonValue::Object o = doc.Members();
+            JsonValue::Array arr = o["entries"].Items();
+            JsonValue::Object e = arr[0].Members();
+            JsonValue::Object leg = e["credit"].Members();
+            leg[key] = std::move(v);
+            e["credit"] = JsonValue::MakeObject(std::move(leg));
+            arr[0] = JsonValue::MakeObject(std::move(e));
+            o["entries"] = JsonValue::MakeArray(std::move(arr));
+            return JsonValue::MakeObject(std::move(o));
+        };
+        Check(!Ledger::FromJson(mutateCredit("amount", JsonValue::Int(0)))
+                   .ok(),
+              "unbalanced persisted entry rejected");
+        Check(!Ledger::FromJson(mutateCredit(
+                  "account", JsonValue::String("gold")))
+                   .ok(),
+              "unknown account name rejected");
+        Check(!Ledger::FromJson(mutateCredit(
+                  "amount", JsonValue::Int(2000000000000LL)))
+                   .ok(),
               "persisted over-cap amount rejected");
-        bad = JsonValue::Parse(
-            R"({"schema":"potato.ledger/1","entries":[{"seq":0,
-              "credit":{"account":"materiel","amount":10},
-              "debit":{"account":"mandate","amount":4},
-              "memo":"x","tags":["a","a"]}]})");
-        Check(bad.ok() && !Ledger::FromJson(bad.value).ok(),
+        Check(!Ledger::FromJson(mutateEntry(
+                  "tags", JsonValue::MakeArray(
+                              {JsonValue::String("a"),
+                               JsonValue::String("a")})))
+                   .ok(),
               "persisted duplicate tag rejected");
     }
 
@@ -225,6 +313,108 @@ int main() {
               "cjk/pinyin variants not silently accepted");
     }
 
+    // --- threat model: recompute is the boundary (2.5 anchors) ---
+    {
+        Ledger l;
+        l.Post(BurnVillage());
+        Posting p = BurnVillage();
+        p.credit = {Account::Mandate, 3};
+        p.debit = {Account::ArmyPrestige, 9};
+        l.Post(p);
+        const JsonValue doc = l.ToJson().value;
+
+        // Truncate + recompute seal: LOADS. The seal is unkeyed —
+        // documented boundary; Story 2.5 anchors the tip externally.
+        {
+            JsonValue::Object o = doc.Members();
+            JsonValue::Array arr = o["entries"].Items();
+            arr.pop_back();
+            const std::uint64_t h0 = static_cast<std::uint64_t>(
+                arr[0]["hash"].AsInt());
+            o["entries"] = JsonValue::MakeArray(std::move(arr));
+            o["seal"] = JsonValue::Int(static_cast<std::int64_t>(
+                Ledger::SealHash(1, h0)));
+            Check(Ledger::FromJson(JsonValue::MakeObject(std::move(o)))
+                      .ok(),
+                  "truncate+reseal loads (recompute-class boundary)");
+        }
+        // Rehashed rewrite: mutate memo, then recompute the WHOLE
+        // chain (every downstream prevHash+hash) and the seal ->
+        // LOADS. Same boundary: the seal is unkeyed.
+        {
+            LedgerEntry e0 = l.Entries()[0];
+            e0.memo = "rewritten";
+            e0.hash = Ledger::EntryHash(e0);
+            LedgerEntry e1 = l.Entries()[1];
+            e1.prevHash = e0.hash;
+            e1.hash = Ledger::EntryHash(e1);
+            JsonValue::Object o = doc.Members();
+            JsonValue::Array arr = o["entries"].Items();
+            JsonValue::Object f0 = arr[0].Members();
+            f0["memo"] = JsonValue::String("rewritten");
+            f0["hash"] =
+                JsonValue::Int(static_cast<std::int64_t>(e0.hash));
+            arr[0] = JsonValue::MakeObject(std::move(f0));
+            JsonValue::Object f1 = arr[1].Members();
+            f1["prevHash"] =
+                JsonValue::Int(static_cast<std::int64_t>(e1.prevHash));
+            f1["hash"] =
+                JsonValue::Int(static_cast<std::int64_t>(e1.hash));
+            arr[1] = JsonValue::MakeObject(std::move(f1));
+            o["entries"] = JsonValue::MakeArray(std::move(arr));
+            o["seal"] = JsonValue::Int(static_cast<std::int64_t>(
+                Ledger::SealHash(2, e1.hash)));
+            Check(Ledger::FromJson(JsonValue::MakeObject(std::move(o)))
+                      .ok(),
+                  "rehashed rewrite loads (anchoring is story 2.5)");
+        }
+        // Mistyped chain fields rejected at the IsInt gates.
+        const auto mutE = [&doc](const char* key, JsonValue v) {
+            JsonValue::Object o = doc.Members();
+            JsonValue::Array arr = o["entries"].Items();
+            JsonValue::Object e = arr[0].Members();
+            e[key] = std::move(v);
+            arr[0] = JsonValue::MakeObject(std::move(e));
+            o["entries"] = JsonValue::MakeArray(std::move(arr));
+            return JsonValue::MakeObject(std::move(o));
+        };
+        Check(!Ledger::FromJson(mutE("hash",
+                  JsonValue::String("x"))).ok(),
+              "string hash rejected");
+        Check(!Ledger::FromJson(mutE("prevHash",
+                  JsonValue::Real(1.5))).ok(),
+              "real prevHash rejected");
+        {
+            JsonValue::Object o = doc.Members();
+            o["seal"] = JsonValue::Bool(true);
+            Check(!Ledger::FromJson(JsonValue::MakeObject(std::move(o)))
+                       .ok(),
+                  "bool seal rejected");
+        }
+        // Entry 0's prevHash must be genesis — 0 is not a synonym.
+        Check(!Ledger::FromJson(mutE("prevHash",
+                  JsonValue::Int(0))).ok(),
+              "prevHash 0 != genesis -> reject");
+
+        // Empty ledger round-trips; seal commits to count+genesis.
+        {
+            const JsonValue empty = Ledger{}.ToJson().value;
+            auto back = Ledger::FromJson(empty);
+            Check(back.ok() &&
+                      back.value.Tip() == Ledger::kGenesisHash,
+                  "empty ledger round-trips with genesis seal");
+        }
+        // Post on a loaded ledger continues the chain.
+        {
+            auto back = Ledger::FromJson(doc);
+            Check(back.ok() &&
+                      back.value.Post(BurnVillage()).ok() &&
+                      back.value.Entries()[2].prevHash ==
+                          l.Entries()[1].hash &&
+                      back.value.Verify() == nullptr,
+                  "post-on-load continues chain");
+        }
+    }
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
                          : "LEDGER TESTS PASS\n",
                 failures);
