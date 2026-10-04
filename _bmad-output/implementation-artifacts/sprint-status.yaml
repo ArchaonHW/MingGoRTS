@@ -59,7 +59,7 @@ development_status:
   epic-3: in-progress
   3-1-campaignstate-facade: done
   3-2-atomic-save-system: done
-  3-3-chapterlibrary: backlog
+  3-3-chapterlibrary: done
   3-4-chapter-shell-progression: backlog
   3-5-persistent-roster: backlog
   3-6-refitcamp: backlog

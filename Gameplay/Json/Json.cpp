@@ -21,7 +21,12 @@ Result<JsonValue> Load(std::string_view path, std::string_view expectedSchema) {
 
     std::error_code ec;
     const auto size = std::filesystem::file_size(fsPath, ec);
-    if (!ec && size > MAX_FILE_BYTES) {
+    // A failed stat is an io failure too — and bypassing it would
+    // skip the size cap entirely.
+    if (ec) {
+        return Fail<JsonValue>("io", "cannot stat file: " + std::string(path));
+    }
+    if (size > MAX_FILE_BYTES) {
         return Fail<JsonValue>("io", "file exceeds 64 MiB cap: " + std::string(path));
     }
 

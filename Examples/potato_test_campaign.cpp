@@ -1,5 +1,6 @@
 // Story 3.1 — CampaignState facade: potato.campaign/1 round-trip.
 // Story 3.2 — SaveSystem: atomic tmp->rename saves, gated loads.
+#include "Campaign/Chapters/ChapterLibrary.h"
 #include "Campaign/Save/SaveSystem.h"
 #include "Campaign/State/CampaignState.h"
 #include "Gameplay/Json/JsonValue.h"
@@ -17,6 +18,7 @@ using Potato::Campaign::Leg;
 using Potato::Campaign::Account;
 using Potato::Campaign::RosterEntry;
 using Potato::Campaign::SaveSystem;
+using Potato::Campaign::ChapterLibrary;
 
 static int failures = 0;
 static void Check(bool cond, const char* name) {
@@ -311,6 +313,110 @@ int main() {
         }
 
         fs::remove_all(dir);
+    }
+
+    // ===== Story 3.3 — ChapterLibrary =====
+    {
+        namespace fs = std::filesystem;
+        const fs::path cdir =
+            fs::temp_directory_path() / "potato_test_chapters";
+        fs::remove_all(cdir);
+        fs::create_directories(cdir);
+        const auto write = [&cdir](const char* name,
+                                   const std::string& text) {
+            std::ofstream f(cdir / name,
+                            std::ios::binary | std::ios::trunc);
+            f << text;
+        };
+        const auto write_s = [](const fs::path& d,
+                                const char* name,
+                                const std::string& text) {
+            std::ofstream f(d / name,
+                            std::ios::binary | std::ios::trunc);
+            f << text;
+        };
+        const auto chapter = [](const char* id, int idx,
+                                bool combat = true) {
+            return std::string(
+                       "{\"schema\":\"potato.chapter/1\","
+                       "\"id\":\"") +
+                   id + "\",\"index\":" + std::to_string(idx) +
+                   ",\"title\":\"t\",\"map\":\"m.json\",\"combat\":" +
+                   (combat ? "true" : "false") + "}";
+        };
+
+        write("02_second.json", chapter("ch_b", 1));
+        write("01_first.json", chapter("ch_a", 0));
+        write("03_talk.json", chapter("ch_c", 2, false));
+        write("bad_schema.json",
+              "{\"schema\":\"potato.chapter/2\",\"id\":\"x\"}");
+        write("bad_field.json",
+              "{\"schema\":\"potato.chapter/1\",\"id\":\"y\"}");
+        write("dup_id.json", chapter("ch_a", 3));
+        write("dup_index.json", chapter("ch_d", 0));
+        write("not_json.txt",
+              "{\"schema\":\"potato.chapter/1\"}"); // skipped ext
+
+        ChapterLibrary lib;
+        const auto res = ChapterLibrary::Load(cdir, lib);
+        Check(res.ok, "library load succeeds");
+        Check(lib.Size() == 3, "valid chapters registered");
+        Check(res.rejected.size() == 4,
+              "bad schema/field/dup-id/dup-index each rejected");
+
+        // Registered in index order regardless of filename.
+        Check(lib.Chapters()[0].id == "ch_a" &&
+                  lib.Chapters()[1].id == "ch_b" &&
+                  lib.Chapters()[2].id == "ch_c",
+              "library ordered by index");
+        Check(lib.Find("ch_b") != nullptr &&
+                  lib.Find("nope") == nullptr,
+              "Find by id works");
+        Check(lib.AtIndex(2) != nullptr &&
+                  !lib.AtIndex(2)->combat &&
+                  lib.AtIndex(5) == nullptr,
+              "AtIndex + zero-combat flag");
+
+        // Empty readable dir -> empty library, ok.
+        {
+            const fs::path empty =
+                fs::temp_directory_path() / "potato_test_empty_ch";
+            fs::remove_all(empty);
+            fs::create_directories(empty);
+            ChapterLibrary e;
+            const auto r = ChapterLibrary::Load(empty, e);
+            Check(r.ok && e.Size() == 0,
+                  "empty dir yields empty library");
+            fs::remove_all(empty);
+        }
+
+        // Missing dir -> io failure.
+        {
+            ChapterLibrary x;
+            const auto r = ChapterLibrary::Load(
+                cdir / "does_not_exist", x);
+            Check(!r.ok && r.error == "io",
+                  "unreadable dir fails the load");
+        }
+
+        // Sparse indexes: legal; chapter space is [0, MaxIndex()+1).
+        {
+            const fs::path sdir =
+                fs::temp_directory_path() / "potato_test_sparse_ch";
+            fs::remove_all(sdir);
+            fs::create_directories(sdir);
+            write_s(sdir, "a.json", chapter("s_a", 0));
+            write_s(sdir, "b.json", chapter("s_b", 5));
+            ChapterLibrary sl;
+            const auto r = ChapterLibrary::Load(sdir, sl);
+            Check(r.ok && sl.Size() == 2 && sl.MaxIndex() == 5 &&
+                      sl.AtIndex(3) == nullptr &&
+                      sl.AtIndex(5)->id == "s_b",
+                  "sparse indexes: gap is dead space, not error");
+            fs::remove_all(sdir);
+        }
+
+        fs::remove_all(cdir);
     }
 
     std::printf(failures ? "CAMPAIGN TESTS FAILED: %d\n"
