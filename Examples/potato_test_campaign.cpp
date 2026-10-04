@@ -1,8 +1,12 @@
 // Story 3.1 — CampaignState facade: potato.campaign/1 round-trip.
+// Story 3.2 — SaveSystem: atomic tmp->rename saves, gated loads.
+#include "Campaign/Save/SaveSystem.h"
 #include "Campaign/State/CampaignState.h"
 #include "Gameplay/Json/JsonValue.h"
 
 #include <cstdio>
+#include <filesystem>
+#include <fstream>
 
 using namespace Potato;
 using Potato::Gameplay::JsonValue;
@@ -12,6 +16,7 @@ using Potato::Campaign::Posting;
 using Potato::Campaign::Leg;
 using Potato::Campaign::Account;
 using Potato::Campaign::RosterEntry;
+using Potato::Campaign::SaveSystem;
 
 static int failures = 0;
 static void Check(bool cond, const char* name) {
@@ -215,6 +220,97 @@ int main() {
         done.GetChapter().resolved = {true, true};
         Check(CampaignState::FromJson(done.ToJson().value).ok(),
               "campaign-complete sentinel round-trips");
+    }
+
+    // ===== Story 3.2 — SaveSystem =====
+    {
+        namespace fs = std::filesystem;
+        const fs::path dir =
+            fs::temp_directory_path() / "potato_test_saves";
+        fs::remove_all(dir); // clean slate
+        SaveSystem saves(dir);
+
+        // Save -> load round-trip through real files.
+        {
+            const CampaignState st = SampleState();
+            const auto w = saves.Save(0, st);
+            Check(w.ok() && fs::exists(w.value),
+                  "save writes the slot file");
+            auto back = saves.Load(0);
+            Check(back.ok() &&
+                      back.value.GetRoster()[0].name ==
+                          "右翼第三隊" &&
+                      back.value.GetLedger().Size() == 2 &&
+                      back.value.GetLedger().Verify() == nullptr,
+                  "save->load round-trips full state");
+            Check(saves.ListSlots() == std::vector<int>{0},
+                  "ListSlots reports written slot");
+        }
+
+        // Overwrite: second save replaces.
+        {
+            CampaignState st;
+            st.GetChapter().current = 1;
+            st.GetChapter().unlocked = {true, true};
+            st.GetChapter().resolved = {true, false};
+            Check(saves.Save(0, st).ok(), "overwrite save writes");
+            auto back = saves.Load(0);
+            Check(back.ok() &&
+                      back.value.GetChapter().current == 1 &&
+                      back.value.GetRoster().empty(),
+                  "overwrite replaces prior save");
+        }
+
+        // Crash simulation: a stale .tmp must not shadow the
+        // committed .json.
+        {
+            const fs::path tmp = SaveSystem::TmpPath(dir, 0);
+            std::ofstream junk(tmp, std::ios::binary | std::ios::trunc);
+            junk << "{\"schema\":\"potato.campaign/1\",\"chapte";
+            junk.close();
+            auto back = saves.Load(0);
+            Check(back.ok() && back.value.GetChapter().current == 1,
+                  "stale .tmp never shadows committed save");
+            fs::remove(tmp);
+        }
+
+        // Corrupt committed file -> typed reject; next Load still
+        // fails (nothing mutated) but a later good Save works.
+        {
+            const fs::path dst = SaveSystem::SlotPath(dir, 1);
+            std::ofstream bad(dst,
+                              std::ios::binary | std::ios::trunc);
+            bad << "{\"schema\":\"potato.campaign/99\"}";
+            bad.close();
+            auto r = saves.Load(1);
+            Check(!r.ok() && r.error == "schema" && !r.reason.empty(),
+                  "bad schema rejected with reason class");
+            auto r2 = saves.Load(1);
+            Check(!r2.ok(), "rejected file stays rejected");
+        }
+
+        // Malformed committed .json -> "parse" class rejection.
+        {
+            const fs::path dst = SaveSystem::SlotPath(dir, 2);
+            std::ofstream bad(dst,
+                              std::ios::binary | std::ios::trunc);
+            bad << "{\"schema\":\"potato.campaign/1\",\"chapter\":";
+            bad.close();
+            const auto r = saves.Load(2);
+            Check(!r.ok() && r.error == "parse",
+                  "torn committed file rejected as parse error");
+        }
+
+        // Missing file + slot bounds.
+        {
+            Check(!saves.Load(5).ok(), "missing slot rejected");
+            Check(!saves.Save(-1, SampleState()).ok() &&
+                      !saves.Load(-1).ok() &&
+                      !saves.Save(8, SampleState()).ok(),
+                  "slot bounds enforced before I/O");
+        }
+
+        fs::remove_all(dir);
     }
 
     std::printf(failures ? "CAMPAIGN TESTS FAILED: %d\n"
