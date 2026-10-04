@@ -34,6 +34,11 @@ JsonValue EntryContentJson(const LedgerEntry& e) {
     o.emplace("debit", LegToJson(e.debit));
     o.emplace("memo", JsonValue::String(e.memo));
     o.emplace("tags", JsonValue::MakeArray(std::move(tags)));
+    // Provenance is hash-covered: the "forged" mark can't be
+    // stripped without a recompute-class rewrite. `suspect` is NOT
+    // here — flagging is post-hoc judgment, not entry content.
+    o.emplace("provenance",
+              JsonValue::String(ProvenanceName(e.provenance)));
     return JsonValue::MakeObject(std::move(o));
 }
 
@@ -96,6 +101,28 @@ bool AccountFromName(std::string_view name, Account& out) {
     return false;
 }
 
+const char* ProvenanceName(Provenance p) {
+    switch (p) {
+    case Provenance::Honest:
+        return "honest";
+    case Provenance::Forged:
+        return "forged";
+    }
+    return "unknown";
+}
+
+bool ProvenanceFromName(std::string_view name, Provenance& out) {
+    if (name == "honest") {
+        out = Provenance::Honest;
+        return true;
+    }
+    if (name == "forged") {
+        out = Provenance::Forged;
+        return true;
+    }
+    return false;
+}
+
 const char* ValidateLegs(const Leg& credit, const Leg& debit) {
     const auto known = [](const Leg& l) {
         return static_cast<int>(l.account) < kAccountCount;
@@ -116,6 +143,15 @@ const char* ValidateLegs(const Leg& credit, const Leg& debit) {
 }
 
 Gameplay::Result<std::uint64_t> Ledger::Post(Posting p) {
+    return Append(std::move(p), Provenance::Honest);
+}
+
+Gameplay::Result<std::uint64_t> Ledger::Forge(Posting p) {
+    return Append(std::move(p), Provenance::Forged);
+}
+
+Gameplay::Result<std::uint64_t> Ledger::Append(Posting p,
+                                               Provenance provenance) {
     if (const char* why = ValidateLegs(p.credit, p.debit)) {
         return Gameplay::Fail<std::uint64_t>("unbalanced", why);
     }
@@ -127,16 +163,33 @@ Gameplay::Result<std::uint64_t> Ledger::Post(Posting p) {
         return Gameplay::Fail<std::uint64_t>("posting", why);
     }
     // Validate-then-append: the pair lands atomically or not at all.
+    // Forged entries take the same path — a forgery pretends to be
+    // valid bookkeeping; its mark lives in provenance, not structure.
     LedgerEntry e;
     e.seq = static_cast<std::uint64_t>(entries_.size());
     e.credit = p.credit;
     e.debit = p.debit;
     e.memo = std::move(p.memo);
     e.tags = std::move(p.tags);
+    e.provenance = provenance;
     e.prevHash = Tip();
     e.hash = EntryHash(e);
     entries_.push_back(std::move(e));
     return Gameplay::Ok(entries_.back().seq);
+}
+
+bool Ledger::SetSuspect(std::uint64_t seq, bool suspect) {
+    if (seq >= entries_.size()) return false;
+    entries_[static_cast<std::size_t>(seq)].suspect = suspect;
+    return true;
+}
+
+std::vector<std::uint64_t> Ledger::SuspectEntries() const {
+    std::vector<std::uint64_t> out;
+    for (const LedgerEntry& e : entries_) {
+        if (e.suspect) out.push_back(e.seq);
+    }
+    return out;
 }
 
 const char* Ledger::Verify() const {
@@ -200,6 +253,7 @@ Gameplay::Result<JsonValue> Ledger::ToJson() const {
     arr.reserve(entries_.size());
     for (const LedgerEntry& e : entries_) {
         JsonValue::Object o = EntryContentJson(e).Members();
+        o.emplace("suspect", JsonValue::Bool(e.suspect));
         o.emplace("prevHash",
                   JsonValue::Int(static_cast<std::int64_t>(e.prevHash)));
         o.emplace("hash",
@@ -221,7 +275,7 @@ Gameplay::Result<Ledger> Ledger::FromJson(const JsonValue& doc) {
     const std::string* schema = doc.FindString("schema");
     if (schema == nullptr || *schema != SCHEMA) {
         return Gameplay::Fail<Ledger>("schema",
-                                      "expected potato.ledger/2");
+                                      "expected potato.ledger/3");
     }
     if (!doc["seal"].IsInt()) {
         return Gameplay::Fail<Ledger>("schema", "missing chain seal");
@@ -236,6 +290,7 @@ Gameplay::Result<Ledger> Ledger::FromJson(const JsonValue& doc) {
     for (const JsonValue& j : doc["entries"].Items()) {
         if (!j.IsObject() || !j["seq"].IsInt() ||
             !j["memo"].IsString() || !j["tags"].IsArray() ||
+            !j["provenance"].IsString() || !j["suspect"].IsBool() ||
             !j["prevHash"].IsInt() || !j["hash"].IsInt()) {
             return Gameplay::Fail<Ledger>("schema",
                                           "mistyped entry field");
@@ -265,6 +320,12 @@ Gameplay::Result<Ledger> Ledger::FromJson(const JsonValue& doc) {
         if (const char* why = ValidateMeta(e.memo, e.tags)) {
             return Gameplay::Fail<Ledger>("schema", why);
         }
+        if (!ProvenanceFromName(j["provenance"].AsString(),
+                                e.provenance)) {
+            return Gameplay::Fail<Ledger>("schema",
+                                          "unknown provenance");
+        }
+        e.suspect = j["suspect"].AsBool();
         e.prevHash = static_cast<std::uint64_t>(j["prevHash"].AsInt());
         e.hash = static_cast<std::uint64_t>(j["hash"].AsInt());
         out.entries_.push_back(std::move(e));

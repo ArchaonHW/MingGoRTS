@@ -52,7 +52,7 @@ development_status:
   epic-2: in-progress
   2-1-five-account-double-entry-ledger: done
   2-2-append-only-tamper-evident-chain: done
-  2-3-forgery-suspicion-channels: backlog
+  2-3-forgery-suspicion-channels: done
   2-4-audit-aware-reports: backlog
   2-5-replay-ledger-cross-check: backlog
   epic-2-retrospective: optional

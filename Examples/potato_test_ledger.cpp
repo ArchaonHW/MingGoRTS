@@ -122,7 +122,7 @@ int main() {
               "balances fold across entries");
     }
 
-    // --- potato.ledger/2 round-trip ---
+    // --- potato.ledger/3 round-trip ---
     {
         Ledger l;
         l.Post(BurnVillage());
@@ -137,7 +137,7 @@ int main() {
                   doc.value.FindString("schema") != nullptr &&
                   *doc.value.FindString("schema") ==
                       std::string(Ledger::SCHEMA),
-              "ToJson emits potato.ledger/2");
+              "ToJson emits potato.ledger/3");
         auto back = Ledger::FromJson(doc.value);
         Check(back.ok() && back.value.Size() == 2 &&
                   back.value.Balance(Account::Materiel) == 40 &&
@@ -236,15 +236,18 @@ int main() {
         auto bad = JsonValue::Parse(R"({"schema":"potato.ledger/1"})");
         Check(bad.ok() && !Ledger::FromJson(bad.value).ok(),
               "old version rejected");
-        bad = JsonValue::Parse(R"({"schema":"potato.ledger/3"})");
+        bad = JsonValue::Parse(R"({"schema":"potato.ledger/2"})");
+        Check(bad.ok() && !Ledger::FromJson(bad.value).ok(),
+              "/2 rejected (no provenance semantics)");
+        bad = JsonValue::Parse(R"({"schema":"potato.ledger/4"})");
         Check(bad.ok() && !Ledger::FromJson(bad.value).ok(),
               "bad version rejected");
         bad = JsonValue::Parse(
-            R"({"schema":"potato.ledger/2","seal":0})");
+            R"({"schema":"potato.ledger/3","seal":0})");
         Check(bad.ok() && !Ledger::FromJson(bad.value).ok(),
               "missing entries rejected");
         bad = JsonValue::Parse(
-            R"({"schema":"potato.ledger/2","entries":[]})");
+            R"({"schema":"potato.ledger/3","entries":[]})");
         Check(bad.ok() && !Ledger::FromJson(bad.value).ok(),
               "missing seal rejected");
         bad = JsonValue::Parse(R"([1,2,3])");
@@ -413,6 +416,168 @@ int main() {
                           l.Entries()[1].hash &&
                       back.value.Verify() == nullptr,
                   "post-on-load continues chain");
+        }
+    }
+    // --- AC (2.3): forgery channel + suspect flags ---
+    {
+        Ledger l;
+        l.Post(BurnVillage());
+        const auto fr = l.Forge(BurnVillage());
+        Check(fr.ok() && fr.value == 1 &&
+                  l.Entries()[1].provenance == Provenance::Forged &&
+                  l.Entries()[0].provenance == Provenance::Honest,
+              "forge marks provenance");
+        Check(l.Verify() == nullptr,
+              "forged entry chain-verifies (kept, not corrupt)");
+        Check(l.Entries()[1].prevHash == l.Entries()[0].hash,
+              "forged entry links through the chain");
+        // Forge validates like Post — a forgery pretends to be
+        // valid bookkeeping.
+        {
+            Posting bad = BurnVillage();
+            bad.debit = bad.credit;
+            Check(!l.Forge(bad).ok() && l.Size() == 2,
+                  "forge enforces the same balance invariant");
+        }
+        // Forged entries still fold — kept data, not hidden.
+        Check(l.Balance(Account::Materiel) == 80,
+              "forged entries fold into balances");
+
+        // Suspect flag is a mutable judgment overlay.
+        Check(!l.Entries()[1].suspect, "suspect defaults false");
+        Check(l.SetSuspect(1), "set suspect on forged entry");
+        Check(!l.SetSuspect(999), "set suspect out of range");
+        Check(l.SuspectEntries().size() == 1 &&
+                  l.SuspectEntries()[0] == 1,
+              "SuspectEntries lists flagged seqs");
+        Check(l.Verify() == nullptr,
+              "flag write never breaks the chain");
+
+        // Provenance + suspect both persist.
+        auto back = Ledger::FromJson(l.ToJson().value);
+        Check(back.ok() &&
+                  back.value.Entries()[1].provenance ==
+                      Provenance::Forged &&
+                  back.value.Entries()[1].suspect &&
+                  back.value.SuspectEntries().size() == 1,
+              "provenance + suspect round-trip");
+
+        // Flipping provenance in the file is a content mutation —
+        // the stored hash no longer matches.
+        {
+            const JsonValue doc = l.ToJson().value;
+            JsonValue::Object o = doc.Members();
+            JsonValue::Array arr = o["entries"].Items();
+            JsonValue::Object e = arr[1].Members();
+            e["provenance"] = JsonValue::String("honest");
+            arr[1] = JsonValue::MakeObject(std::move(e));
+            o["entries"] = JsonValue::MakeArray(std::move(arr));
+            Check(!Ledger::FromJson(JsonValue::MakeObject(
+                                       std::move(o)))
+                       .ok(),
+                  "stripped forged mark -> hash mismatch -> reject");
+        }
+        // Flipping the suspect flag in the file is hash-transparent:
+        // the doc LOADS with the tampered flag — judgment metadata
+        // is not a claim (documented surface).
+        {
+            const JsonValue doc = l.ToJson().value;
+            JsonValue::Object o = doc.Members();
+            JsonValue::Array arr = o["entries"].Items();
+            JsonValue::Object e = arr[1].Members();
+            e["suspect"] = JsonValue::Bool(false);
+            arr[1] = JsonValue::MakeObject(std::move(e));
+            o["entries"] = JsonValue::MakeArray(std::move(arr));
+            auto t = Ledger::FromJson(JsonValue::MakeObject(
+                std::move(o)));
+            Check(t.ok() && !t.value.Entries()[1].suspect,
+                  "suspect flag is hash-transparent (loads)");
+        }
+        // Strict typing on the new fields.
+        const auto mutField = [&l](const char* key, JsonValue v) {
+            const JsonValue doc = l.ToJson().value;
+            JsonValue::Object o = doc.Members();
+            JsonValue::Array arr = o["entries"].Items();
+            JsonValue::Object e = arr[0].Members();
+            e.erase(key);
+            if (!v.IsNull()) e[key] = std::move(v);
+            arr[0] = JsonValue::MakeObject(std::move(e));
+            o["entries"] = JsonValue::MakeArray(std::move(arr));
+            return JsonValue::MakeObject(std::move(o));
+        };
+        Check(!Ledger::FromJson(mutField("provenance",
+                  JsonValue{})).ok(),
+              "missing provenance rejected");
+        Check(!Ledger::FromJson(mutField("provenance",
+                  JsonValue::Int(1))).ok(),
+              "int provenance rejected");
+        Check(!Ledger::FromJson(mutField("provenance",
+                  JsonValue::String("planted"))).ok(),
+              "unknown provenance rejected");
+        Check(!Ledger::FromJson(mutField("suspect",
+                  JsonValue::Int(1))).ok(),
+              "int suspect rejected");
+    }
+    // --- 2.3 edge probes (review additions) ---
+    {
+        // Forge on an empty ledger: first link is genesis.
+        Ledger l;
+        const auto fr = l.Forge(BurnVillage());
+        Check(fr.ok() && l.Entries()[0].prevHash ==
+                  Ledger::kGenesisHash &&
+                  l.Entries()[0].provenance == Provenance::Forged,
+              "forge on empty ledger chains to genesis");
+        // An all-forged chain verifies and round-trips.
+        l.Forge(BurnVillage());
+        Check(l.Verify() == nullptr, "all-forged chain verifies");
+        auto back = Ledger::FromJson(l.ToJson().value);
+        Check(back.ok() &&
+                  back.value.Entries()[0].provenance ==
+                      Provenance::Forged &&
+                  back.value.Entries()[1].provenance ==
+                      Provenance::Forged,
+              "all-forged chain round-trips");
+
+        // Suspect on an honest entry: set, clear, persist both ways.
+        Check(l.SetSuspect(0) && l.Entries()[0].suspect,
+              "honest entry can be flagged (suspicious auditor)");
+        Check(l.SetSuspect(0, false) && !l.Entries()[0].suspect,
+              "suspect flag clears");
+        l.SetSuspect(0);
+        back = Ledger::FromJson(l.ToJson().value);
+        Check(back.ok() && back.value.Entries()[0].suspect &&
+                  back.value.Entries()[0].provenance ==
+                      Provenance::Forged,
+              "flagged entry round-trips with provenance");
+
+        // Case-variant / whitespace provenance rejected.
+        const auto mutProv = [&l](const char* s) {
+            const JsonValue doc = l.ToJson().value;
+            JsonValue::Object o = doc.Members();
+            JsonValue::Array arr = o["entries"].Items();
+            JsonValue::Object e = arr[0].Members();
+            e["provenance"] = JsonValue::String(s);
+            arr[0] = JsonValue::MakeObject(std::move(e));
+            o["entries"] = JsonValue::MakeArray(std::move(arr));
+            return JsonValue::MakeObject(std::move(o));
+        };
+        Check(!Ledger::FromJson(mutProv("Forged")).ok(),
+              "wrong-case provenance rejected");
+        Check(!Ledger::FromJson(mutProv("forged ")).ok(),
+              "trailing-space provenance rejected");
+        // Missing suspect field rejected (strict typing).
+        {
+            const JsonValue doc = l.ToJson().value;
+            JsonValue::Object o = doc.Members();
+            JsonValue::Array arr = o["entries"].Items();
+            JsonValue::Object e = arr[0].Members();
+            e.erase("suspect");
+            arr[0] = JsonValue::MakeObject(std::move(e));
+            o["entries"] = JsonValue::MakeArray(std::move(arr));
+            Check(!Ledger::FromJson(JsonValue::MakeObject(
+                                       std::move(o)))
+                       .ok(),
+                  "missing suspect rejected");
         }
     }
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
