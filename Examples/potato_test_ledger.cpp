@@ -1,6 +1,8 @@
+#include "Campaign/Ledger/CrossCheck.h"
 #include "Campaign/Ledger/HistorianReport.h"
 #include "Campaign/Ledger/Ledger.h"
 #include "Gameplay/Json/JsonValue.h"
+#include "Gameplay/Record/BattleRecorder.h"
 
 #include <cstdio>
 #include <string>
@@ -646,6 +648,252 @@ int main() {
         Check(r.RenderText().find("tip: ") != std::string::npos &&
                   r.RenderText().find("seal: ") != std::string::npos,
               "render carries tip + seal");
+    }
+    // --- AC (2.5): replay-ledger cross-check ---
+    {
+        using Potato::Gameplay::BattleRecorder;
+
+        // A minimal but real record doc: payload + integrity.root.
+        const auto makeRecord = [](std::int64_t seed) {
+            JsonValue::Object p;
+            p["schema"] =
+                JsonValue::String("potato.battle_record/1");
+            p["seed"] = JsonValue::Int(seed);
+            const std::uint64_t root = BattleRecorder::ComputeRoot(
+                JsonValue::MakeObject(p));
+            JsonValue::Object o = std::move(p);
+            JsonValue::Object in;
+            in["root"] =
+                JsonValue::Int(static_cast<std::int64_t>(root));
+            o["integrity"] = JsonValue::MakeObject(std::move(in));
+            return std::pair{JsonValue::MakeObject(std::move(o)),
+                             root};
+        };
+
+        // Tag convention round-trips.
+        std::uint64_t parsed = 0;
+        Check(ParseRecordRootTag(RecordRootTag(0xdeadbeef01ULL),
+                                 parsed) &&
+                  parsed == 0xdeadbeef01ULL,
+              "record_root tag round-trips");
+        Check(!ParseRecordRootTag("record_root:xyz", parsed) &&
+                  !ParseRecordRootTag("record_:00", parsed),
+              "malformed anchor tags ignored");
+
+        // Clean pair: anchor tag binds the record's real root.
+        Ledger l;
+        const auto [docA, rootA] = makeRecord(42);
+        {
+            Posting p = BurnVillage();
+            p.tags.push_back(RecordRootTag(rootA));
+            l.Post(p);
+        }
+        const CrossCheckResult rc = CrossCheckRecord(l, docA);
+        Check(rc.verdict == CrossVerdict::Clean && rc.anchors == 1 &&
+                  rc.flagged == 0,
+              "consistent pair verifies clean");
+
+        // Tampered record: payload edited post-seal -> recomputed
+        // root diverges from the anchor's stored root.
+        {
+            const auto [docB, rootB] = makeRecord(43);
+            JsonValue::Object o = docB.Members();
+            o["seed"] = JsonValue::Int(999); // tamper after seal
+            const JsonValue tampered =
+                JsonValue::MakeObject(std::move(o));
+            Posting p = BurnVillage();
+            p.tags.push_back(RecordRootTag(rootB));
+            l.Post(p); // seq 1 anchors docB's true root
+            const CrossCheckResult rm = CrossCheckRecord(l, tampered);
+            Check(rm.verdict == CrossVerdict::RecordInconsistent &&
+                      rm.flagged == 1 &&
+                      l.Entries()[1].suspect,
+                  "mismatch flags the covering entry suspect");
+            Check(l.SuspectEntries().size() == 1,
+                  "suspect flag persists after cross-check");
+        }
+
+        // Record uncovered by any anchor: absence, not mismatch.
+        {
+            const auto [docC, rootC] = makeRecord(7);
+            const CrossCheckResult rn = CrossCheckRecord(l, docC);
+            Check(rn.verdict == CrossVerdict::NoAnchor &&
+                      rn.anchors == 0,
+                  "uncovered record -> NoAnchor");
+        }
+        // Malformed record doc: no integrity root.
+        {
+            JsonValue::Object o;
+            o["schema"] =
+                JsonValue::String("potato.battle_record/1");
+            const CrossCheckResult rb =
+                CrossCheckRecord(l, JsonValue::MakeObject(
+                                        std::move(o)));
+            Check(rb.verdict == CrossVerdict::BadRecord,
+                  "missing integrity -> BadRecord");
+        }
+        // An anchor claiming a root this record neither declares
+        // nor produces belongs to a different record — skipped.
+        {
+            Ledger l2;
+            const auto [docD, rootD] = makeRecord(11);
+            Posting p1 = BurnVillage();
+            p1.tags.push_back(RecordRootTag(rootD));
+            l2.Post(p1); // seq 0: this record's anchor
+            Posting p2 = BurnVillage();
+            p2.tags.push_back(RecordRootTag(rootD + 1));
+            l2.Post(p2); // seq 1: some other record's anchor
+            const CrossCheckResult rd = CrossCheckRecord(l2, docD);
+            Check(rd.verdict == CrossVerdict::Clean &&
+                      rd.anchors == 1 && rd.flagged == 0 &&
+                      !l2.Entries()[1].suspect,
+                  "foreign-record anchor is skipped");
+        }
+        // Tampered payload: BOTH anchors claiming the declared root
+        // now disagree with what the bytes produce — both flagged.
+        {
+            Ledger l3;
+            const auto [docE, rootE] = makeRecord(13);
+            Posting p1 = BurnVillage();
+            p1.tags.push_back(RecordRootTag(rootE));
+            l3.Post(p1);
+            Posting p2 = BurnVillage();
+            p2.tags.push_back(RecordRootTag(rootE));
+            l3.Post(p2); // second covering entry for same record
+            JsonValue::Object o = docE.Members();
+            o["seed"] = JsonValue::Int(77); // tamper post-seal
+            const JsonValue tampered =
+                JsonValue::MakeObject(std::move(o));
+            const CrossCheckResult re =
+                CrossCheckRecord(l3, tampered);
+            Check(re.verdict == CrossVerdict::RecordInconsistent &&
+                      re.anchors == 2 && re.flagged == 2 &&
+                      l3.Entries()[0].suspect &&
+                      l3.Entries()[1].suspect,
+                  "every diverging anchor flagged");
+        }
+    }
+    // --- 2.5 review additions ---
+    {
+        using Potato::Gameplay::BattleRecorder;
+        const auto makeRecord = [](std::int64_t seed) {
+            JsonValue::Object p;
+            p["schema"] =
+                JsonValue::String("potato.battle_record/1");
+            p["seed"] = JsonValue::Int(seed);
+            const std::uint64_t root = BattleRecorder::ComputeRoot(
+                JsonValue::MakeObject(p));
+            JsonValue::Object o = std::move(p);
+            JsonValue::Object in;
+            in["root"] =
+                JsonValue::Int(static_cast<std::int64_t>(root));
+            o["integrity"] = JsonValue::MakeObject(std::move(in));
+            return std::pair{JsonValue::MakeObject(std::move(o)),
+                             root};
+        };
+
+        // integrity.root tampered, payload intact: the anchor is
+        // relevant via stored==recomputed; record fails its own
+        // seal -> RecordInconsistent, anchor flagged.
+        {
+            Ledger l;
+            const auto [doc, root] = makeRecord(21);
+            Posting p = BurnVillage();
+            p.tags.push_back(RecordRootTag(root));
+            l.Post(p);
+            JsonValue::Object o = doc.Members();
+            JsonValue::Object in = o["integrity"].Members();
+            in["root"] = JsonValue::Int(12345); // corrupt the seal
+            o["integrity"] = JsonValue::MakeObject(std::move(in));
+            const CrossCheckResult rr =
+                CrossCheckRecord(l, JsonValue::MakeObject(
+                                        std::move(o)));
+            Check(rr.verdict == CrossVerdict::RecordInconsistent &&
+                      rr.declaredRoot == 12345 &&
+                      rr.recomputedRoot == root &&
+                      rr.anchors == 1 && rr.flagged == 1 &&
+                      l.Entries()[0].suspect,
+                  "corrupt seal -> RecordInconsistent + flag");
+        }
+        // Self-inconsistent record with NO matching anchor: the
+        // broken seal must still surface (not NoAnchor).
+        {
+            Ledger l;
+            const auto [doc, root] = makeRecord(31);
+            JsonValue::Object o = doc.Members();
+            o["seed"] = JsonValue::Int(99);
+            const CrossCheckResult rn =
+                CrossCheckRecord(l, JsonValue::MakeObject(
+                                        std::move(o)));
+            Check(rn.verdict ==
+                      CrossVerdict::RecordInconsistent &&
+                      rn.anchors == 0 && rn.flagged == 0,
+                  "broken-seal record is never NoAnchor");
+        }
+        // Boundary pin: payload+root BOTH honestly recomputed after
+        // tamper -> indistinguishable from an uncovered record ->
+        // NoAnchor. OrphanAnchors() finds the orphaned claim.
+        {
+            Ledger l;
+            const auto [doc, root] = makeRecord(41);
+            Posting p = BurnVillage();
+            p.tags.push_back(RecordRootTag(root));
+            l.Post(p);
+            JsonValue::Object o = doc.Members();
+            o["seed"] = JsonValue::Int(55); // tamper payload
+            o.erase("integrity"); // reseal over payload alone
+            // attacker honestly reseals:
+            JsonValue::Object in;
+            in["root"] = JsonValue::Int(static_cast<std::int64_t>(
+                BattleRecorder::ComputeRoot(
+                    JsonValue::MakeObject(o))));
+            o["integrity"] = JsonValue::MakeObject(std::move(in));
+            const JsonValue resigned =
+                JsonValue::MakeObject(std::move(o));
+            const CrossCheckResult ro =
+                CrossCheckRecord(l, resigned);
+            Check(ro.verdict == CrossVerdict::NoAnchor,
+                  "resealed tamper reads as uncovered (boundary)");
+            const auto orphans =
+                OrphanAnchors(l, {ro.recomputedRoot});
+            Check(orphans.size() == 1 && orphans[0] == 0,
+                  "orphan anchor surfaces the orphaned claim");
+            Check(OrphanAnchors(l, {root}).empty(),
+                  "presented root clears its anchor");
+        }
+        // Forged anchors still cover (claim accuracy is what the
+        // chain attests) — but the count is exposed.
+        {
+            Ledger l;
+            const auto [doc, root] = makeRecord(51);
+            Posting p = BurnVillage();
+            p.tags.push_back(RecordRootTag(root));
+            l.Forge(p);
+            const CrossCheckResult rf = CrossCheckRecord(l, doc);
+            Check(rf.verdict == CrossVerdict::Clean &&
+                      rf.forgedAnchors == 1,
+                  "forged anchor covers, counted");
+        }
+        // Idempotency: second check flags nothing new.
+        {
+            Ledger l;
+            const auto [doc, root] = makeRecord(61);
+            Posting p = BurnVillage();
+            p.tags.push_back(RecordRootTag(root));
+            l.Post(p);
+            JsonValue::Object o = doc.Members();
+            o["seed"] = JsonValue::Int(1);
+            const JsonValue t = JsonValue::MakeObject(std::move(o));
+            CrossCheckRecord(l, t);
+            const CrossCheckResult r2 = CrossCheckRecord(l, t);
+            Check(r2.flagged == 0 && l.Entries()[0].suspect,
+                  "repeat check does not reflag");
+        }
+        // Uppercase tag is not canonical.
+        std::uint64_t tmp = 0;
+        Check(!ParseRecordRootTag("record_root:DEADBEEF00000000",
+                                  tmp),
+              "uppercase anchor tag rejected");
     }
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
                          : "LEDGER TESTS PASS\n",
