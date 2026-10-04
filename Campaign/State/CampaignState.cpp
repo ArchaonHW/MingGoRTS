@@ -43,8 +43,10 @@ const char* ValidateChapter(const JsonValue& j,
     const std::int64_t cur = j["current"].AsInt();
     const auto& un = j["unlocked"].Items();
     const auto& res = j["resolved"].Items();
+    // `current <= MAX_CHAPTERS` is legal: the campaign-complete
+    // sentinel is current==size() and a full space is 64 deep.
     if (cur < 0 ||
-        static_cast<std::uint64_t>(cur) >= CampaignState::MAX_CHAPTERS) {
+        static_cast<std::uint64_t>(cur) > CampaignState::MAX_CHAPTERS) {
         return "chapter.current out of range";
     }
     if (un.size() > CampaignState::MAX_CHAPTERS ||

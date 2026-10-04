@@ -1,6 +1,7 @@
 // Story 3.1 — CampaignState facade: potato.campaign/1 round-trip.
 // Story 3.2 — SaveSystem: atomic tmp->rename saves, gated loads.
 #include "Campaign/Chapters/ChapterLibrary.h"
+#include "Campaign/Chapters/Progression.h"
 #include "Campaign/Save/SaveSystem.h"
 #include "Campaign/State/CampaignState.h"
 #include "Gameplay/Json/JsonValue.h"
@@ -417,6 +418,166 @@ int main() {
         }
 
         fs::remove_all(cdir);
+    }
+
+    // ===== Story 3.4 — Chapter progression =====
+    {
+        namespace fs = std::filesystem;
+        const fs::path pdir =
+            fs::temp_directory_path() / "potato_test_prog_ch";
+        fs::remove_all(pdir);
+        fs::create_directories(pdir);
+        const auto wch = [](const fs::path& dir, const char* name,
+                            const std::string& text) {
+            std::ofstream f(dir / name,
+                            std::ios::binary | std::ios::trunc);
+            f << text;
+        };
+        const auto chapter = [](const char* id, int idx) {
+            return std::string(
+                       "{\"schema\":\"potato.chapter/1\","
+                       "\"id\":\"") +
+                   id + "\",\"index\":" + std::to_string(idx) +
+                   ",\"title\":\"t\",\"map\":\"m.json\",\"combat\":true}";
+        };
+
+        // Dense run: chapters at 0,1,2.
+        wch(pdir, "a.json", chapter("p0", 0));
+        wch(pdir, "b.json", chapter("p1", 1));
+        wch(pdir, "c.json", chapter("p2", 2));
+        ChapterLibrary lib;
+        Check(ChapterLibrary::Load(pdir, lib).ok,
+              "progression library loads");
+
+        CampaignState st;
+        st.GetLedger().Post(Burn());
+        st.GetRoster().push_back(
+            RosterEntry{"敢死隊", 0, 0, false});
+        Check(InitializeProgress(st, lib).ok(),
+              "InitializeProgress succeeds");
+        const auto& cp0 = st.GetChapter();
+        Check(cp0.current == 0 && cp0.unlocked.size() == 3 &&
+                  cp0.unlocked[0] && !cp0.unlocked[1],
+              "init: first chapter current+unlocked");
+
+        // Advance: resolve ch0 -> unlock ch1.
+        Check(ResolveAndAdvance(st, lib).ok(),
+              "resolve advances");
+        Check(st.GetChapter().resolved[0] &&
+                  st.GetChapter().current == 1 &&
+                  st.GetChapter().unlocked[1],
+              "next chapter unlocked, prior resolved");
+
+        // Carry-forward: roster+ledger are the same state.
+        Check(st.GetRoster().size() == 1 &&
+                  st.GetLedger().Size() == 1,
+              "roster+ledger carry forward untouched");
+
+        // To the end: complete sentinel = space (3).
+        Check(ResolveAndAdvance(st, lib).ok() &&
+                  ResolveAndAdvance(st, lib).ok(),
+              "final chapters resolve");
+        Check(st.GetChapter().current == 3,
+              "completion sentinel reached");
+        Check(!ResolveAndAdvance(st, lib).ok(),
+              "advancing a complete campaign rejected");
+        Check(st.GetChapter().resolved == std::vector<bool>(
+                                              {true, true, true}),
+              "all chapters marked resolved");
+
+        // Complete campaign state round-trips (3.1 sentinel fix).
+        Check(CampaignState::FromJson(st.ToJson().value).ok(),
+              "completed campaign round-trips");
+
+        // Sparse library {0,5}: vectors size 6, dead slots stay
+        // locked.
+        {
+            const fs::path sdir = fs::temp_directory_path() /
+                                  "potato_test_prog_sparse";
+            fs::remove_all(sdir);
+            fs::create_directories(sdir);
+            wch(sdir, "a.json", chapter("s0", 0));
+            wch(sdir, "b.json", chapter("s5", 5));
+            ChapterLibrary sl;
+            Check(ChapterLibrary::Load(sdir, sl).ok,
+                  "sparse progression library loads");
+            CampaignState ss;
+            Check(InitializeProgress(ss, sl).ok() &&
+                      ss.GetChapter().unlocked.size() == 6 &&
+                      ss.GetChapter().current == 0,
+                  "sparse init sizes to chapter space");
+            Check(ResolveAndAdvance(ss, sl).ok() &&
+                      ss.GetChapter().current == 5 &&
+                      !ss.GetChapter().unlocked[3] &&
+                      ss.GetChapter().unlocked[5],
+                  "sparse advance skips dead slots");
+            fs::remove_all(sdir);
+        }
+
+        // Uninitialized progress vectors can't advance.
+        {
+            CampaignState bad;
+            Check(!ResolveAndAdvance(bad, lib).ok(),
+                  "uninitialized progress rejected");
+        }
+
+        // Re-init refuses to wipe an in-progress campaign.
+        {
+            CampaignState mid;
+            InitializeProgress(mid, lib);
+            ResolveAndAdvance(mid, lib);
+            Check(!InitializeProgress(mid, lib).ok(),
+                  "re-init on live progress rejected");
+        }
+
+        // Dead-slot current: sparse lib {0,5}, vectors sized 6,
+        // current=3 (dead) -> rejected. And a chapter that was
+        // never unlocked can't resolve.
+        {
+            const fs::path sdir = fs::temp_directory_path() /
+                                  "potato_test_prog_dead";
+            fs::remove_all(sdir);
+            fs::create_directories(sdir);
+            wch(sdir, "a.json", chapter("d0", 0));
+            wch(sdir, "b.json", chapter("d5", 5));
+            ChapterLibrary dl;
+            ChapterLibrary::Load(sdir, dl);
+            CampaignState ds;
+            InitializeProgress(ds, dl);
+            ds.GetChapter().current = 3; // dead slot
+            Check(!ResolveAndAdvance(ds, dl).ok(),
+                  "dead-slot current rejected");
+            ds.GetChapter().current = 5;
+            ds.GetChapter().unlocked[5] = false;
+            Check(!ResolveAndAdvance(ds, dl).ok(),
+                  "locked chapter cannot resolve");
+            fs::remove_all(sdir);
+        }
+
+        // Empty library can't init.
+        {
+            ChapterLibrary el;
+            CampaignState es;
+            Check(!InitializeProgress(es, el).ok(),
+                  "empty library init rejected");
+        }
+
+        // 64-deep boundary: the complete sentinel at
+        // current==MAX_CHAPTERS round-trips; 65 rejects.
+        {
+            CampaignState full;
+            full.GetChapter().unlocked.assign(64, true);
+            full.GetChapter().resolved.assign(64, true);
+            full.GetChapter().current = 64;
+            Check(CampaignState::FromJson(full.ToJson().value).ok(),
+                  "64-deep complete sentinel round-trips");
+            full.GetChapter().current = 65;
+            Check(!CampaignState::FromJson(full.ToJson().value)
+                       .ok(),
+                  "current beyond MAX_CHAPTERS rejected");
+        }
+
+        fs::remove_all(pdir);
     }
 
     std::printf(failures ? "CAMPAIGN TESTS FAILED: %d\n"

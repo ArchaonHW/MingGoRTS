@@ -80,3 +80,7 @@
 - Dep guard is a textual tripwire: `-like` substring matching over-matches dir names ending `game/`/`gui/`/`rendering/` (none exist today), `#if 0` blocks still flag, macro-aliased `#include MACRO` evades it, and `.inl/.cc/.cxx/.ixx` extensions are unscanned. Sufficient as a cheap guard; upgrade to a real include-graph tool only if evasion matters.
 - `Ledger` is copyable — copies diverge intentionally (save snapshots). `Entries()` references invalidate on Post (documented on the accessor).
 - Engine `install(DIRECTORY …)` headers skip `Gameplay/` and `Campaign/` — pre-existing gap, flagged for completeness.
+
+## Deferred from: code review of 3-4-chapter-shell-progression (2026-10-03)
+
+- `ChapterState` — architecture lists a per-chapter runtime object under `Campaign/State`, but no Epic 3 story creates one. Mid-chapter data with no home today: the presented record-root set for `OrphanAnchors` reverse scans, fog priors carried into a chapter, per-chapter lock/phase state (a phase state would also close the resolve-spam hole — progression currently lets a caller resolve chapters back-to-back without playing them). Land with Epic 6 (intel/fog priors) or when the first per-chapter runtime field appears.
