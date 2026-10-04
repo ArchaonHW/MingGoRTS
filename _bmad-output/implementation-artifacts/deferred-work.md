@@ -95,3 +95,8 @@
 
 - `Plunder` is intentionally ungated — the -`民心` leg IS the cost. But nothing rate-limits it per chapter/visit; a per-visit plunder allowance belongs to the chapter shell's phase state (`ChapterState`, deferred from 3.4).
 - `Balance(Materiel)` is spendable-truth: forged entries fund refits identically to honest income (documented 2.3 contract — suspicion is data, not exclusion). If a 'clean funds only' refit rule is ever wanted it needs a provenance-filtered balance fold.
+
+## Deferred from: code review of 3-7-rivaldeck-learning (2026-10-03)
+
+- `RivalBook` is a standalone `potato.rivals/1` doc — not yet embedded in `potato.campaign/1` nor wired into a save slot. Decide embed-vs-sibling-file when the save format next bumps.
+- No production call site: the CardFired->trigger-histogram fold (reading the recorded battle to feed `RecordChapter`) and counter-deck->SquadSheet injection belong to the chapter-shell integration seam (`ChapterState`/Epic E). The AC is demonstrated as API+test.

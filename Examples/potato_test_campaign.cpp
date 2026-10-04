@@ -2,6 +2,7 @@
 // Story 3.2 — SaveSystem: atomic tmp->rename saves, gated loads.
 #include "Campaign/Chapters/ChapterLibrary.h"
 #include "Campaign/Chapters/Progression.h"
+#include "Campaign/Rivals/RivalDeck.h"
 #include "Campaign/Roster/RefitCamp.h"
 #include "Campaign/Roster/Roster.h"
 #include "Campaign/Save/SaveSystem.h"
@@ -30,6 +31,10 @@ using Potato::Campaign::Deploy;
 using Potato::Campaign::Heal;
 using Potato::Campaign::Recruit;
 using Potato::Campaign::Plunder;
+using Potato::Campaign::RivalBook;
+using Potato::Campaign::RivalPrior;
+using Potato::Campaign::TriggerHistogram;
+using Potato::Campaign::kTriggerKindCount;
 
 static int failures = 0;
 static void Check(bool cond, const char* name) {
@@ -978,6 +983,277 @@ int main() {
                       back.value.GetLedger().Balance(
                           Account::Materiel) == 80,
                   "refit state round-trips");
+        }
+    }
+
+    // --- Story 3.7: RivalDeck learning ---
+    {
+        using Potato::Gameplay::DoctrineLibrary;
+        using Potato::Gameplay::TriggerKind;
+
+        // Counter library: every counter.<trigger> resolvable
+        // except counter.cohesion_below (content gap).
+        const auto cdoc = JsonValue::Parse(R"json({"schema":"potato.doctrine_cards/1","cards":[
+            {"id":"counter.always","name":"c","trigger":{"type":"always"},"action":{"type":"hold"}},
+            {"id":"counter.enemy_in_region","name":"c","trigger":{"type":"always"},"action":{"type":"hold"}},
+            {"id":"counter.enemy_adjacent","name":"c","trigger":{"type":"always"},"action":{"type":"hold"}}
+        ]})json");
+        const auto clib =
+            DoctrineLibrary::FromJson(cdoc.value);
+        Check(clib.ok() && clib.value.Count() == 3,
+              "counter library loads");
+
+        // Below three chapters the hearsay hasn't formed.
+        {
+            RivalBook book;
+            TriggerHistogram u{};
+            u[static_cast<size_t>(TriggerKind::Always)] = 9;
+            book.RecordChapter("nemesis", RivalPrior::Cunning,
+                               u);
+            book.RecordChapter("nemesis", RivalPrior::Cunning,
+                               u);
+            Check(book.PrepareCounterDeck("nemesis",
+                                          clib.value, 5)
+                      .empty(),
+                  "two chapters: no counter-deck yet");
+        }
+
+        // Three chapters: counters biased by usage order.
+        {
+            RivalBook book;
+            TriggerHistogram ch{};
+            ch[static_cast<size_t>(
+                TriggerKind::EnemyInRegion)] = 5;
+            ch[static_cast<size_t>(TriggerKind::Always)] = 2;
+            book.RecordChapter("nemesis", RivalPrior::Cunning,
+                               ch);
+            book.RecordChapter("nemesis", RivalPrior::Cunning,
+                               ch);
+            // Third chapter shifts the habit — adjacent spikes.
+            TriggerHistogram ch3{};
+            ch3[static_cast<size_t>(
+                TriggerKind::EnemyAdjacent)] = 7;
+            book.RecordChapter("nemesis", RivalPrior::Cunning,
+                               ch3);
+
+            const auto deck = book.PrepareCounterDeck(
+                "nemesis", clib.value, 5);
+            // Totals: region 10 > adjacent 7 > always 4 >
+            // cohesion 0 (unobserved + unresolvable anyway).
+            Check(deck.size() == 3 &&
+                      deck[0] == "counter.enemy_in_region" &&
+                      deck[1] == "counter.enemy_adjacent" &&
+                      deck[2] == "counter.always",
+                  "counter-deck biased by usage");
+
+            // Depth cap is the difficulty dial.
+            Check(book.PrepareCounterDeck("nemesis",
+                                          clib.value, 1)
+                          .size() == 1,
+                  "depth caps counter-deck");
+            Check(book.PrepareCounterDeck("nemesis",
+                                          clib.value, 0)
+                      .empty(),
+                  "depth zero yields empty deck");
+
+            // Unknown rival -> empty.
+            Check(book.PrepareCounterDeck("stranger",
+                                          clib.value, 5)
+                      .empty(),
+                  "unknown rival yields empty deck");
+        }
+
+        // Round-trip + validation rejects.
+        {
+            RivalBook book;
+            TriggerHistogram u{};
+            u[static_cast<size_t>(TriggerKind::Always)] = 3;
+            u[static_cast<size_t>(
+                TriggerKind::CohesionBelow)] = 1;
+            book.RecordChapter("wolf", RivalPrior::Defensive,
+                               u);
+            book.RecordChapter("wolf", RivalPrior::Defensive,
+                               u);
+            book.RecordChapter("wolf", RivalPrior::Defensive,
+                               u);
+            const auto doc = book.ToJson();
+            const auto back =
+                doc.ok()
+                    ? RivalBook::FromJson(doc.value)
+                    : Gameplay::Result<RivalBook>{};
+            Check(back.ok() &&
+                      back.value.Find("wolf") != nullptr &&
+                      back.value.Find("wolf")
+                              ->chaptersObserved == 3,
+                  "rival book round-trips");
+
+            // Schema + field validation. Histogram is a
+            // name-keyed object — missing keys read as 0,
+            // mistyped values reject, unknown keys tolerated.
+            const std::string K_T =
+                R"json({"always":0,"cohesion_below":0,"enemy_in_region":0,"enemy_adjacent":0})json";
+            const auto parseDoc = [](const std::string& s) {
+                return JsonValue::Parse(s).value;
+            };
+            Check(!RivalBook::FromJson(parseDoc(
+                       R"({"schema":"potato.rivals/9","generals":[]})"))
+                       .ok(),
+                  "bad schema rejected");
+            Check(!RivalBook::FromJson(parseDoc(
+                       R"({"schema":"potato.rivals/1","generals":[{"id":"x","prior":"nope","observed":0,"triggers":)" +
+                       K_T + "}]}"))
+                       .ok(),
+                  "unknown prior rejected");
+            Check(!RivalBook::FromJson(parseDoc(
+                       R"({"schema":"potato.rivals/1","generals":[{"id":"x","prior":"cunning","observed":0,"triggers":[0,0,0]}]})"))
+                       .ok(),
+                  "array histogram rejected");
+            Check(!RivalBook::FromJson(parseDoc(
+                       R"({"schema":"potato.rivals/1","generals":[{"id":"x","prior":"cunning","observed":-1,"triggers":)" +
+                       K_T + "}]}"))
+                       .ok(),
+                  "negative observed rejected");
+            Check(!RivalBook::FromJson(parseDoc(
+                       R"({"schema":"potato.rivals/1","generals":[{"id":"x","prior":"cunning","observed":0,"triggers":)" +
+                       K_T + "},{" +
+                       R"("id":"x","prior":"cunning","observed":0,"triggers":)" +
+                       K_T + "}]}"))
+                       .ok(),
+                  "duplicate rival rejected");
+            Check(!RivalBook::FromJson(parseDoc(
+                       R"({"schema":"potato.rivals/1","generals":[{"id":"x","prior":"cunning","observed":0,"triggers":{"always":"yes"}}]})"))
+                       .ok(),
+                  "mistyped histogram value rejected");
+            Check(!RivalBook::FromJson(parseDoc(
+                       R"({"schema":"potato.rivals/1","generals":[{"id":"x","prior":"cunning","observed":0,"triggers":{"always":-1}}]})"))
+                       .ok(),
+                  "negative usage in file rejected");
+            // Missing keys read as zero — forward-compat.
+            Check(RivalBook::FromJson(parseDoc(
+                       R"({"schema":"potato.rivals/1","generals":[{"id":"x","prior":"cunning","observed":1,"triggers":{"always":5}}]})"))
+                       .ok(),
+                  "sparse histogram loads as zeros");
+        }
+
+        // Deterministic ties + positive-usage unresolvable skip.
+        {
+            RivalBook book;
+            TriggerHistogram u{};
+            // Equal counts on region+adjacent -> ordinal order;
+            // cohesion_below observed but unresolvable in lib.
+            u[static_cast<size_t>(
+                TriggerKind::EnemyInRegion)] = 4;
+            u[static_cast<size_t>(
+                TriggerKind::EnemyAdjacent)] = 4;
+            u[static_cast<size_t>(
+                TriggerKind::CohesionBelow)] = 9;
+            for (int i = 0; i < 3; ++i) {
+                book.RecordChapter("tie", RivalPrior::Aggressive,
+                                   u);
+            }
+            const auto deck = book.PrepareCounterDeck(
+                "tie", clib.value, 9);
+            // cohesion_below highest usage but unresolvable ->
+            // skipped; the tied pair orders by ordinal
+            // (EnemyInRegion=2 before EnemyAdjacent=3).
+            Check(deck.size() == 2 &&
+                      deck[0] == "counter.enemy_in_region" &&
+                      deck[1] == "counter.enemy_adjacent",
+                  "tie breaks by ordinal; unresolvable skipped");
+        }
+
+        // All-zero histogram at observed>=3 -> empty deck.
+        {
+            RivalBook book;
+            TriggerHistogram z{};
+            for (int i = 0; i < 3; ++i) {
+                book.RecordChapter("quiet", RivalPrior::Cunning,
+                                   z);
+            }
+            Check(book.PrepareCounterDeck("quiet", clib.value,
+                                          5)
+                      .empty(),
+                  "observed-but-silent rival: empty deck");
+        }
+
+        // Cumulative overflow on an existing dossier rejects
+        // atomically — no partial accumulation, no fake chapter.
+        {
+            RivalBook book;
+            TriggerHistogram big{};
+            big[static_cast<size_t>(TriggerKind::Always)] =
+                RivalBook::MAX_COUNT;
+            Check(book.RecordChapter("v", RivalPrior::Cunning,
+                                     big)
+                      .ok(),
+                  "max-count single chapter accepted");
+            const auto* dv = book.Find("v");
+            Check(dv && dv->chaptersObserved == 1 &&
+                      dv->triggers[0] == RivalBook::MAX_COUNT,
+                  "at-bound histogram stored");
+            Check(!book.RecordChapter("v",
+                                      RivalPrior::Aggressive,
+                                      big)
+                       .ok() &&
+                      book.Find("v")->chaptersObserved == 1,
+                  "cumulative overflow rejects, no bump");
+            // Sticky prior: first sighting wins.
+            Check(book.Find("v")->prior == RivalPrior::Cunning,
+                  "prior sticky on re-observe");
+        }
+
+        // MAX_RIVALS boundary: 64th ok, 65th new rejects,
+        // existing rival still updates at a full book.
+        {
+            RivalBook book;
+            TriggerHistogram u{};
+            for (int i = 0; i < (int)RivalBook::MAX_RIVALS;
+                 ++i) {
+                book.RecordChapter("r" + std::to_string(i),
+                                   RivalPrior::Aggressive, u);
+            }
+            Check(book.Count() == RivalBook::MAX_RIVALS &&
+                      !book.RecordChapter("r_x",
+                                          RivalPrior::Aggressive,
+                                          u)
+                           .ok(),
+                  "rival book cap rejects 65th");
+            Check(book.RecordChapter("r0",
+                                     RivalPrior::Defensive, u)
+                      .ok() &&
+                      book.Find("r0")->chaptersObserved == 2,
+                  "existing rival updates at full book");
+        }
+
+        // RecordChapter returns the dossier's index.
+        {
+            RivalBook book;
+            TriggerHistogram u{};
+            const auto i0 = book.RecordChapter(
+                "a", RivalPrior::Aggressive, u);
+            const auto i1 = book.RecordChapter(
+                "b", RivalPrior::Aggressive, u);
+            Check(i0.ok() && i1.ok() && i0.value == 0 &&
+                      i1.value == 1 &&
+                      book.Dossiers()[i0.value].id == "a",
+                  "RecordChapter returns index");
+        }
+
+        // Bad RecordChapter inputs reject without mutation.
+        {
+            RivalBook b2;
+            TriggerHistogram u{};
+            TriggerHistogram bad{};
+            bad[0] = -1;
+            Check(!b2.RecordChapter("x", RivalPrior::Aggressive,
+                                    bad)
+                       .ok() &&
+                      b2.Count() == 0,
+                  "negative usage rejected, no dossier");
+            Check(!b2.RecordChapter("", RivalPrior::Aggressive,
+                                    u)
+                       .ok(),
+                  "empty rival id rejected");
         }
     }
 
