@@ -449,6 +449,12 @@ target_include_directories(potato_test_ledger PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_ledger PotatoCampaign)
 add_test(NAME potato_test_ledger COMMAND potato_test_ledger)
 
+# Story 3.1 — CampaignState facade (potato.campaign/1)
+add_executable(potato_test_campaign Examples/potato_test_campaign.cpp)
+target_include_directories(potato_test_campaign PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_campaign PotatoCampaign)
+add_test(NAME potato_test_campaign COMMAND potato_test_campaign)
+
 # CLI end-to-end: emit a sealed record, then verify it (exit-code check).
 add_test(NAME potato_record_emit
     COMMAND potato_test_record --emit ${CMAKE_BINARY_DIR}/verify_sample.json)
