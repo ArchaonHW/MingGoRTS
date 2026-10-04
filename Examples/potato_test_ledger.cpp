@@ -1,3 +1,4 @@
+#include "Campaign/Ledger/HistorianReport.h"
 #include "Campaign/Ledger/Ledger.h"
 #include "Gameplay/Json/JsonValue.h"
 
@@ -579,6 +580,72 @@ int main() {
                        .ok(),
                   "missing suspect rejected");
         }
+    }
+    // --- AC (2.4): audit-aware report ---
+    {
+        Ledger l;
+        l.Post(BurnVillage());  // seq 0: honest
+        l.Forge(BurnVillage()); // seq 1: forged
+        l.Post(BurnVillage());  // seq 2: honest
+        l.SetSuspect(2);        // seq 2: flagged
+
+        const HistorianReport r = RenderHistorianReport(l);
+        Check(r.audit.entries == 3 && r.audit.forged == 1 &&
+                  r.audit.suspect == 1,
+              "audit segment folds counts");
+        Check(r.audit.chainOk && r.audit.tip == l.Tip() &&
+                  r.audit.seal == l.Seal(),
+              "audit carries chain state");
+        Check(r.omissions == 2 && r.includedSeqs.size() == 1 &&
+                  r.includedSeqs[0] == 0,
+              "forged + suspect omitted, confessedly counted");
+
+        OmissionPolicy p;
+        p.omitSuspect = false;
+        const HistorianReport rp = RenderHistorianReport(l, p);
+        Check(rp.omissions == 1 && rp.includedSeqs.size() == 2,
+              "policy: suspect narrated, forged still hidden");
+        p.omitForged = false;
+        const HistorianReport ra = RenderHistorianReport(l, p);
+        Check(ra.omissions == 0 && ra.includedSeqs.size() == 3,
+              "policy: nothing omitted confesses zero");
+
+        Check(r.RenderText().find("\xE6\x9C\xAC\xE5\xA0\x81\xE5\x91\x8A\xE7\x9C\x81\xE7\x95\xA5 2 \xE9\xA0\x85") !=
+                  std::string::npos,
+              "confession line carries the count");
+        const HistorianReport re = RenderHistorianReport(Ledger{});
+        Check(re.omissions == 0 &&
+                  re.RenderText().find("\xE6\x9C\xAC\xE5\xA0\x81\xE5\x91\x8A\xE7\x9C\x81\xE7\x95\xA5 0 \xE9\xA0\x85") !=
+                      std::string::npos,
+              "empty ledger still confesses");
+        Check(re.audit.chainOk && re.audit.breakReason == nullptr,
+              "empty chain state is honest");
+
+        // Overlap: forged AND suspect — omitted once, counted in both.
+        l.SetSuspect(1);
+        const HistorianReport ro = RenderHistorianReport(l);
+        Check(ro.omissions == 2 && ro.audit.forged == 1 &&
+                  ro.audit.suspect == 2,
+              "overlap entry omitted once, counted in both audits");
+        // Narrate-all policy: confession zero, audit counts persist.
+        const HistorianReport rn =
+            RenderHistorianReport(l, {false, false});
+        Check(rn.omissions == 0 && rn.audit.forged == 1 &&
+                  rn.audit.suspect == 2 && rn.includedSeqs.size() == 3,
+              "narrate-all keeps audit counts");
+        // Partial policy: forged narrated, suspect still hidden.
+        const HistorianReport rg =
+            RenderHistorianReport(l, {false, true});
+        Check(rg.omissions == 2 && rg.includedSeqs.size() == 1 &&
+                  rg.includedSeqs[0] == 0,
+              "forged-narrated policy hides only suspect");
+        // Exact included seqs under default policy.
+        Check(r.includedSeqs.size() == 1 && r.includedSeqs[0] == 0,
+              "default policy narrates only clean entries");
+        // tip/seal present in the text render.
+        Check(r.RenderText().find("tip: ") != std::string::npos &&
+                  r.RenderText().find("seal: ") != std::string::npos,
+              "render carries tip + seal");
     }
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
                          : "LEDGER TESTS PASS\n",
