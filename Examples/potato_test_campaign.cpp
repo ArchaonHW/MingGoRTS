@@ -2,6 +2,7 @@
 // Story 3.2 — SaveSystem: atomic tmp->rename saves, gated loads.
 #include "Campaign/Chapters/ChapterLibrary.h"
 #include "Campaign/Chapters/Progression.h"
+#include "Campaign/Roster/Roster.h"
 #include "Campaign/Save/SaveSystem.h"
 #include "Campaign/State/CampaignState.h"
 #include "Gameplay/Json/JsonValue.h"
@@ -20,6 +21,9 @@ using Potato::Campaign::Account;
 using Potato::Campaign::RosterEntry;
 using Potato::Campaign::SaveSystem;
 using Potato::Campaign::ChapterLibrary;
+using Potato::Campaign::AftermathRow;
+using Potato::Campaign::ApplyAftermath;
+using Potato::Campaign::Enlist;
 
 static int failures = 0;
 static void Check(bool cond, const char* name) {
@@ -578,6 +582,205 @@ int main() {
         }
 
         fs::remove_all(pdir);
+    }
+
+    // --- Story 3.5: persistent roster ---
+    {
+        // Enlist is the roster's write path.
+        {
+            CampaignState st;
+            const auto i0 = Enlist(st, "alpha");
+            Check(i0.ok() && i0.value == 0, "enlist returns index");
+            Check(st.GetRoster().size() == 1 &&
+                      !st.GetRoster()[0].dead,
+                  "enlist appends live entry");
+            Check(!Enlist(st, "alpha").ok(),
+                  "duplicate enlist rejected");
+            Check(!Enlist(st, "").ok(),
+                  "empty name rejected");
+            Check(!Enlist(st, std::string(
+                              CampaignState::MAX_NAME_LEN + 1,
+                              'x'))
+                       .ok(),
+                  "oversize name rejected");
+            Check(st.GetRoster().size() == 1,
+                  "rejected enlists did not mutate");
+        }
+
+        // Aftermath: dead stays dead, survivors gain veterancy.
+        {
+            CampaignState st;
+            Enlist(st, "vanguard");
+            Enlist(st, "rearguard");
+            const auto r = ApplyAftermath(
+                st, {{"vanguard", 12, false},
+                     {"rearguard", 30, true}});
+            Check(r.ok() && r.value.rows == 2 &&
+                      r.value.buried == 1 &&
+                      r.value.veterans == 1,
+                  "aftermath applies");
+            const auto& e0 = st.GetRoster()[0];
+            const auto& e1 = st.GetRoster()[1];
+            Check(e0.veterancy == 1 && e0.casualties == 12 &&
+                      !e0.dead,
+                  "survivor gains veterancy");
+            Check(e1.dead && e1.casualties == 30,
+                  "wiped squad persists as dead");
+
+            // Dead stays dead — a second aftermath on a dead
+            // squad is a forged report, rejected atomically.
+            const auto r2 = ApplyAftermath(
+                st, {{"vanguard", 5, false},
+                     {"rearguard", 1, false}});
+            Check(!r2.ok() &&
+                      st.GetRoster()[0].casualties == 12,
+                  "dead-squad row rejects whole aftermath");
+
+            // Second battle for the survivor stacks veterancy.
+            ApplyAftermath(st, std::vector<AftermathRow>{{"vanguard", 3, false}});
+            Check(st.GetRoster()[0].veterancy == 2 &&
+                      st.GetRoster()[0].casualties == 15,
+                  "survivor stacks veterancy");
+        }
+
+        // Atomicity: any bad row rejects the whole report.
+        {
+            CampaignState st;
+            Enlist(st, "a");
+            Enlist(st, "b");
+            Check(!ApplyAftermath(st, std::vector<AftermathRow>{{"a", 1, false},
+                                       {"ghost", 1, false}})
+                       .ok(),
+                  "unknown name rejected");
+            Check(!ApplyAftermath(st, std::vector<AftermathRow>{{"a", 1, false},
+                                       {"a", 2, false}})
+                       .ok(),
+                  "duplicate row rejected");
+            Check(!ApplyAftermath(st, std::vector<AftermathRow>{{"a", -1, false}}).ok(),
+                  "negative casualties rejected");
+            Check(!ApplyAftermath(
+                       st, {{"a",
+                             CampaignState::MAX_ROSTER_COUNT + 1,
+                             false}})
+                       .ok(),
+                  "unbounded casualties rejected");
+            Check(st.GetRoster()[0].casualties == 0 &&
+                      st.GetRoster()[0].veterancy == 0,
+                  "rejected aftermath left no trace");
+            Check(ApplyAftermath(st, {}).ok(),
+                  "empty aftermath is a no-op");
+        }
+
+        // Round-trip: aftermath state survives the wire, and
+        // aftermath applies on a FromJson-loaded roster.
+        {
+            CampaignState st;
+            Enlist(st, "\xE5\x8F\xB3\xE7\xBF\xBC"); // 右翼
+            ApplyAftermath(st, std::vector<AftermathRow>{{"\xE5\x8F\xB3\xE7\xBF\xBC", 7,
+                                 true}});
+            const auto doc = st.ToJson();
+            const auto back =
+                doc.ok() ? CampaignState::FromJson(doc.value)
+                         : Gameplay::Result<CampaignState>{};
+            Check(back.ok() && back.value.GetRoster()[0].dead &&
+                      back.value.GetRoster()[0].casualties == 7,
+                  "aftermath state round-trips");
+
+            // Loaded state continues to take aftermath.
+            CampaignState st2;
+            Enlist(st2, "f");
+            st2 = CampaignState::FromJson(st2.ToJson().value)
+                      .value;
+            const std::vector<AftermathRow> rows{
+                {"f", 2, false}};
+            Check(ApplyAftermath(st2, rows).ok() &&
+                      st2.GetRoster()[0].veterancy == 1,
+                  "aftermath on loaded roster");
+        }
+
+        // Boundaries + the mutable-accessor trust boundary.
+        {
+            CampaignState st;
+            // Name exactly at MAX_NAME_LEN is legal.
+            Check(Enlist(st, std::string(
+                               CampaignState::MAX_NAME_LEN, 'n'))
+                       .ok(),
+                  "name at MAX_NAME_LEN accepted");
+            // Roster fills at 256; 257th rejected.
+            while (st.GetRoster().size() <
+                   CampaignState::MAX_ROSTER) {
+                Enlist(st, "s" +
+                               std::to_string(
+                                   st.GetRoster().size()));
+            }
+            Check(st.GetRoster().size() ==
+                          CampaignState::MAX_ROSTER &&
+                      !Enlist(st, "overflow").ok(),
+                  "roster full rejected");
+            // Oversized report rejected before per-row checks.
+            Check(!ApplyAftermath(
+                       st, std::vector<AftermathRow>(
+                               st.GetRoster().size() + 1))
+                       .ok(),
+                  "oversized report rejected");
+        }
+
+        {
+            CampaignState st;
+            Enlist(st, "cap");
+            // casualties at exactly MAX is legal.
+            Check(ApplyAftermath(
+                       st, {{"cap",
+                             CampaignState::MAX_ROSTER_COUNT,
+                             false}})
+                       .ok(),
+                  "casualties at bound accepted");
+            // One more pushes over the bound -> whole report
+            // rejected.
+            const std::vector<AftermathRow> over{
+                {"cap", 1, false}};
+            Check(!ApplyAftermath(st, over).ok() &&
+                      st.GetRoster()[0].casualties ==
+                          CampaignState::MAX_ROSTER_COUNT,
+                  "cumulative overflow rejected atomically");
+        }
+
+        {
+            CampaignState st;
+            Enlist(st, "vet");
+            // Live-state bypass: write veterancy at the bound via
+            // the mutable accessor (as a corrupt runtime could),
+            // then aftermath must refuse the survivor path — but
+            // a wipe still lands (wiped rows skip veterancy).
+            st.GetRoster()[0].veterancy =
+                CampaignState::MAX_ROSTER_COUNT;
+            const std::vector<AftermathRow> surv{
+                {"vet", 0, false}};
+            const std::vector<AftermathRow> wipe{
+                {"vet", 0, true}};
+            Check(!ApplyAftermath(st, surv).ok(),
+                  "veterancy-bound survivor rejected");
+            Check(ApplyAftermath(st, wipe).ok() &&
+                      st.GetRoster()[0].dead,
+                  "wiped row bypasses veterancy check");
+        }
+
+        // Corrupted live roster (bypassed setters) can no longer
+        // poison a save: ToJson re-validates at the boundary.
+        {
+            CampaignState st;
+            st.GetRoster().push_back(
+                RosterEntry{"x", 0, 0, false});
+            st.GetRoster().push_back(
+                RosterEntry{"x", 0, 0, false}); // dup name
+            Check(!st.ToJson().ok(),
+                  "ToJson rejects bypassed-invalid roster");
+            CampaignState st2;
+            st2.GetRoster().push_back(
+                RosterEntry{"y", -1, 0, false}); // bad counter
+            Check(!st2.ToJson().ok(),
+                  "ToJson rejects bypassed-negative counter");
+        }
     }
 
     std::printf(failures ? "CAMPAIGN TESTS FAILED: %d\n"

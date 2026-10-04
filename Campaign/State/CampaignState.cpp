@@ -122,10 +122,22 @@ Result<JsonValue> CampaignState::ToJson() const {
     if (!led.ok()) {
         return led; // propagate the ledger's failure
     }
+    // GetRoster() hands out a mutable vector&, so live state CAN
+    // bypass Enlist/ApplyAftermath's invariants. Re-validate the
+    // emitted roster at the trust boundary — a save that
+    // FromJson would reject must not be writable.
+    JsonValue rosterJson = RosterToJson(roster_);
+    {
+        std::vector<RosterEntry> scratch;
+        if (const char* why = ValidateRoster(rosterJson,
+                                             scratch)) {
+            return Gameplay::Fail<JsonValue>("roster", why);
+        }
+    }
     JsonValue::Object o;
     o["schema"] = JsonValue::String(std::string(SCHEMA));
     o["chapter"] = ChapterToJson(chapter_);
-    o["roster"] = RosterToJson(roster_);
+    o["roster"] = std::move(rosterJson);
     o["ledger"] = std::move(led.value);
     return Gameplay::Ok(JsonValue::MakeObject(std::move(o)));
 }

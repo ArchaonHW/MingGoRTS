@@ -84,3 +84,9 @@
 ## Deferred from: code review of 3-4-chapter-shell-progression (2026-10-03)
 
 - `ChapterState` — architecture lists a per-chapter runtime object under `Campaign/State`, but no Epic 3 story creates one. Mid-chapter data with no home today: the presented record-root set for `OrphanAnchors` reverse scans, fog priors carried into a chapter, per-chapter lock/phase state (a phase state would also close the resolve-spam hole — progression currently lets a caller resolve chapters back-to-back without playing them). Land with Epic 6 (intel/fog priors) or when the first per-chapter runtime field appears.
+
+## Deferred from: code review of 3-5-persistent-roster (2026-10-03)
+
+- `scars` as a distinct roster field has no producer or consumer yet — veterancy/casualties/dead are the persisting numbers the narrative layer reads. Add when RefitCamp wounds or governance produce them (schema bump).
+- Dead entries are permanent memorials: corpses hold roster slots and names are never reused (no disband path). Long campaigns can exhaust `MAX_ROSTER` — intended weight of permanent loss; revisit only if recruitment pressure demands it.
+- `GetRoster()` hands out a mutable `vector&` — the legit write paths (`Enlist`/`ApplyAftermath`) enforce wire invariants, but direct mutation can bypass them. `ToJson` re-validates the emitted roster so the seam can't produce an unloadable save; a const-only accessor remains the stronger fix if the seam ever bites.
