@@ -36,6 +36,12 @@ struct AftermathResult {
     int veterans = 0; // squads that survived (veterancy++)
 };
 
+// Shared enlistability predicate — nullptr means the name can be
+// enlisted. Used by Enlist AND by RefitCamp::Recruit's pre-post
+// gate, so a paid recruit can't strand on a missed invariant.
+const char* CanEnlist(const CampaignState& state,
+                      const std::string& name);
+
 // Adds a named squad. Fails on: empty/oversize name, duplicate
 // name, roster full. Returns the new entry's index.
 Gameplay::Result<int> Enlist(CampaignState& state,

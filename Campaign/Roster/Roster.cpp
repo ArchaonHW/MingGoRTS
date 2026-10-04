@@ -21,19 +21,27 @@ Gameplay::Result<int> FindRoster(const CampaignState& state,
 
 } // namespace
 
-Gameplay::Result<int> Enlist(CampaignState& state,
-                             const std::string& name) {
+const char* CanEnlist(const CampaignState& state,
+                      const std::string& name) {
     if (name.empty() ||
         name.size() > CampaignState::MAX_NAME_LEN) {
-        return Gameplay::Fail<int>("roster", "bad name");
+        return "bad name";
     }
-    auto& roster = state.GetRoster();
-    if (roster.size() >= CampaignState::MAX_ROSTER) {
-        return Gameplay::Fail<int>("roster", "roster full");
+    if (state.GetRoster().size() >= CampaignState::MAX_ROSTER) {
+        return "roster full";
     }
     if (FindRoster(state, name).ok()) {
-        return Gameplay::Fail<int>("roster", "duplicate name");
+        return "duplicate name";
     }
+    return nullptr;
+}
+
+Gameplay::Result<int> Enlist(CampaignState& state,
+                             const std::string& name) {
+    if (const char* why = CanEnlist(state, name)) {
+        return Gameplay::Fail<int>("roster", why);
+    }
+    auto& roster = state.GetRoster();
     roster.push_back(RosterEntry{name, 0, 0, false});
     return Gameplay::Ok(static_cast<int>(roster.size() - 1));
 }

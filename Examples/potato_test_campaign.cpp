@@ -2,6 +2,7 @@
 // Story 3.2 — SaveSystem: atomic tmp->rename saves, gated loads.
 #include "Campaign/Chapters/ChapterLibrary.h"
 #include "Campaign/Chapters/Progression.h"
+#include "Campaign/Roster/RefitCamp.h"
 #include "Campaign/Roster/Roster.h"
 #include "Campaign/Save/SaveSystem.h"
 #include "Campaign/State/CampaignState.h"
@@ -24,6 +25,11 @@ using Potato::Campaign::ChapterLibrary;
 using Potato::Campaign::AftermathRow;
 using Potato::Campaign::ApplyAftermath;
 using Potato::Campaign::Enlist;
+using Potato::Campaign::BandCosts;
+using Potato::Campaign::Deploy;
+using Potato::Campaign::Heal;
+using Potato::Campaign::Recruit;
+using Potato::Campaign::Plunder;
 
 static int failures = 0;
 static void Check(bool cond, const char* name) {
@@ -780,6 +786,198 @@ int main() {
                 RosterEntry{"y", -1, 0, false}); // bad counter
             Check(!st2.ToJson().ok(),
                   "ToJson rejects bypassed-negative counter");
+        }
+    }
+
+    // --- Story 3.6: RefitCamp ---
+    {
+        // Band table pins (GDD economy tempo).
+        {
+            const auto e = BandCosts(1);
+            const auto m = BandCosts(5);
+            const auto l = BandCosts(10);
+            Check(e.heal == 20 && e.recruit == 40 &&
+                      e.plunderGain == 30 && e.plunderCost == 10,
+                  "early band costs");
+            Check(m.heal == 30 && m.recruit == 60 &&
+                      m.plunderGain == 45 && m.plunderCost == 15,
+                  "mid band costs");
+            Check(l.heal == 40 && l.recruit == 80 &&
+                      l.plunderGain == 60 && l.plunderCost == 20,
+                  "late band costs");
+            Check(BandCosts(-1).heal == 40 &&
+                      BandCosts(99).heal == 40,
+                  "band index clamps");
+            Check(BandCosts(2).heal == 20 &&
+                      BandCosts(3).heal == 30 &&
+                      BandCosts(7).heal == 30 &&
+                      BandCosts(8).heal == 40,
+                  "band edges partition correctly");
+        }
+
+        // Funded refit: deploy/heal/recruit/plunder all land.
+        {
+            CampaignState st;
+            Enlist(st, "iron");
+            ApplyAftermath(st, {{"iron", 25, false}});
+            Posting grant;
+            grant.credit = {Account::Materiel, 100};
+            grant.debit = {Account::Mandate, 100};
+            grant.memo = "war chest";
+            st.GetLedger().Post(grant);
+            const std::int64_t mat0 =
+                st.GetLedger().Balance(Account::Materiel);
+            const std::int64_t prest0 =
+                st.GetLedger().Balance(Account::ArmyPrestige);
+            const auto entries0 = st.GetLedger().Size();
+
+            const auto dep = Deploy(st, "iron");
+            Check(dep.ok() && dep.value == 0,
+                  "deploy validates live squad");
+            Check(Heal(st, "iron", 1).ok() &&
+                      st.GetRoster()[0].casualties == 0,
+                  "heal clears casualties");
+            Check(st.GetLedger().Balance(Account::Materiel) ==
+                          mat0 - 20 &&
+                      st.GetLedger().Balance(
+                          Account::ArmyPrestige) == prest0 + 20,
+                  "heal posts debit/credit pair");
+
+            Check(Recruit(st, "fresh", 1).ok() &&
+                      st.GetRoster().size() == 2,
+                  "recruit enlists");
+            Check(st.GetLedger().Balance(Account::Materiel) ==
+                          mat0 - 20 - 40,
+                  "recruit posts cost");
+
+            Check(Plunder(st, 1).ok() &&
+                      st.GetLedger().Balance(Account::Materiel) ==
+                          mat0 - 60 + 30 &&
+                      st.GetLedger().Balance(
+                          Account::PopularSupport) == -10,
+                  "plunder posts asymmetric pair");
+            Check(st.GetLedger().Entries().back().tags ==
+                          std::vector<std::string>{"plunder"},
+                  "plunder carries fold tag");
+            Check(st.GetLedger().Size() == entries0 + 3,
+                  "refit appends three postings");
+        }
+
+        // Overspend: rejected with skip reason, nothing mutates.
+        {
+            CampaignState st;
+            Enlist(st, "poor");
+            ApplyAftermath(st, {{"poor", 9, false}});
+            const auto size0 = st.GetLedger().Size();
+            const auto r = Heal(st, "poor", 1);
+            Check(!r.ok() &&
+                      r.reason.find("insufficient") !=
+                          std::string::npos,
+                  "overspend rejected with skip reason");
+            Check(st.GetLedger().Size() == size0 &&
+                      st.GetRoster()[0].casualties == 9,
+                  "overspend leaves ledger+roster untouched");
+        }
+
+        // Skips that aren't overspend.
+        {
+            CampaignState st;
+            Enlist(st, "dead");
+            ApplyAftermath(st, {{"dead", 5, true}});
+            Posting g;
+            g.credit = {Account::Materiel, 500};
+            g.debit = {Account::Mandate, 500};
+            st.GetLedger().Post(g);
+            Check(!Deploy(st, "dead").ok(),
+                  "dead squad cannot deploy");
+            Check(!Heal(st, "dead", 1).ok() &&
+                      st.GetRoster()[0].dead,
+                  "dead squad cannot heal");
+            Check(!Heal(st, "ghost", 1).ok(),
+                  "heal unknown squad rejected");
+            Check(!Deploy(st, "ghost").ok(),
+                  "deploy unknown squad rejected");
+            Enlist(st, "fit");
+            Check(!Heal(st, "fit", 1).ok(),
+                  "full-strength heal skipped");
+            Check(!Recruit(st, "dead", 1).ok(),
+                  "recruit dup name rejected");
+            Check(!Recruit(st, "", 1).ok(),
+                  "recruit empty name rejected");
+            Check(!Recruit(st,
+                           std::string(
+                               CampaignState::MAX_NAME_LEN + 1,
+                               'x'),
+                           1)
+                       .ok(),
+                  "recruit oversize name rejected");
+            Check(st.GetLedger().Size() == 1,
+                  "rejected refits post nothing");
+        }
+
+        // Afford boundary: exactly cost is enough, cost-1 is not.
+        {
+            CampaignState st;
+            Enlist(st, "edge");
+            ApplyAftermath(st, {{"edge", 4, false}});
+            Posting g;
+            g.credit = {Account::Materiel, 20}; // == early heal
+            g.debit = {Account::Mandate, 20};
+            st.GetLedger().Post(g);
+            Check(Heal(st, "edge", 0).ok() &&
+                      st.GetLedger().Balance(
+                          Account::Materiel) == 0,
+                  "afford at exact boundary");
+            ApplyAftermath(st, {{"edge", 2, false}});
+            Check(!Heal(st, "edge", 0).ok(),
+                  "one short of cost rejected");
+
+            // Recruit at roster-full posts nothing.
+            CampaignState full;
+            Posting gf;
+            gf.credit = {Account::Materiel, 9999};
+            gf.debit = {Account::Mandate, 9999};
+            full.GetLedger().Post(gf);
+            while (full.GetRoster().size() <
+                   CampaignState::MAX_ROSTER) {
+                Enlist(full, "r" +
+                                 std::to_string(
+                                     full.GetRoster().size()));
+            }
+            const auto sz = full.GetLedger().Size();
+            Check(!Recruit(full, "one-more", 0).ok() &&
+                      full.GetLedger().Size() == sz,
+                  "roster-full recruit posts nothing");
+        }
+
+        // Plunder works at deficit (negative balances are legal).
+        {
+            CampaignState st;
+            Check(Plunder(st, 9).ok() &&
+                      st.GetLedger().Balance(
+                          Account::Materiel) == 60 &&
+                      st.GetLedger().Balance(
+                          Account::PopularSupport) == -20,
+                  "plunder at zero/deficit posts");
+        }
+
+        // Refit state round-trips through the save wire.
+        {
+            CampaignState st;
+            Enlist(st, "v");
+            ApplyAftermath(st, {{"v", 8, false}});
+            Posting g;
+            g.credit = {Account::Materiel, 100};
+            g.debit = {Account::Mandate, 100};
+            st.GetLedger().Post(g);
+            Heal(st, "v", 0);
+            const auto back =
+                CampaignState::FromJson(st.ToJson().value);
+            Check(back.ok() &&
+                      back.value.GetRoster()[0].casualties == 0 &&
+                      back.value.GetLedger().Balance(
+                          Account::Materiel) == 80,
+                  "refit state round-trips");
         }
     }
 

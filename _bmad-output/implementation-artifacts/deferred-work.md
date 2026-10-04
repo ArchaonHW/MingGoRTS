@@ -90,3 +90,8 @@
 - `scars` as a distinct roster field has no producer or consumer yet — veterancy/casualties/dead are the persisting numbers the narrative layer reads. Add when RefitCamp wounds or governance produce them (schema bump).
 - Dead entries are permanent memorials: corpses hold roster slots and names are never reused (no disband path). Long campaigns can exhaust `MAX_ROSTER` — intended weight of permanent loss; revisit only if recruitment pressure demands it.
 - `GetRoster()` hands out a mutable `vector&` — the legit write paths (`Enlist`/`ApplyAftermath`) enforce wire invariants, but direct mutation can bypass them. `ToJson` re-validates the emitted roster so the seam can't produce an unloadable save; a const-only accessor remains the stronger fix if the seam ever bites.
+
+## Deferred from: code review of 3-6-refitcamp (2026-10-03)
+
+- `Plunder` is intentionally ungated — the -`民心` leg IS the cost. But nothing rate-limits it per chapter/visit; a per-visit plunder allowance belongs to the chapter shell's phase state (`ChapterState`, deferred from 3.4).
+- `Balance(Materiel)` is spendable-truth: forged entries fund refits identically to honest income (documented 2.3 contract — suspicion is data, not exclusion). If a 'clean funds only' refit rule is ever wanted it needs a provenance-filtered balance fold.
