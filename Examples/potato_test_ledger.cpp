@@ -2,6 +2,7 @@
 #include "Campaign/Ledger/CrossCheck.h"
 #include "Campaign/Myth/GodStance.h"
 #include "Campaign/Narrative/BattleReport.h"
+#include "Campaign/Narrative/Conventions.h"
 #include "Campaign/Myth/Mandate.h"
 #include "Campaign/Myth/MythActions.h"
 #include "Campaign/Myth/MythLog.h"
@@ -1820,6 +1821,122 @@ int main() {
                       rm2.find("陰氣所鍾") == std::string::npos,
                   "6.1: pacification never misreads as portent");
         }
+    }
+
+    // --- Story 6.2: ChapterConventions — 敕命/評斷/懸念 ---
+    {
+        auto doc = JsonValue::Parse(R"({
+            "schema":"potato.narrative/1",
+            "chapters":{
+                "ch1":{
+                    "frontispiece":"爾帥師討逆，毋縱毋暴。",
+                    "judgment":{"clean":"敵雖悍，師出有律。",
+                                "corrupt":"暴行在冊，雖勝猶辱。"},
+                    "cliffhanger":{"blessed":"天命在我，東風將起。",
+                                   "barren":"府庫已竭，來日大難。"}},
+                "ch2":{
+                    "judgment":"敵不可測，慎之。",
+                    "cliffhanger":{"default":"烽煙未熄"}}}})");
+        Check(doc.ok(), "6.2: narrative doc parses");
+        auto convR = ChapterConventions::FromJson(doc.value);
+        Check(convR.ok() && convR.value.Size() == 2,
+              "6.2: conventions load per-chapter");
+        const ChapterConventions& conv = convR.value;
+
+        // Open frame: content frontispiece under the commission
+        // header; unknown chapter still gets a generic mandate.
+        const std::string open1 = RenderChapterOpen(conv, "ch1");
+        Check(open1.find("敕命·ch1") != std::string::npos &&
+                  open1.find("毋縱毋暴") != std::string::npos,
+              "6.2: frontispiece renders under commission header");
+        Check(RenderChapterOpen(conv, "chX").find("毋怠") !=
+                  std::string::npos,
+              "6.2: unknown chapter still renders a mandate");
+
+        // Close frame: judgment keys on corruption, cliffhanger on
+        // mandate balance.
+        Ledger clean; // corruption 0 -> Clean; mandate 0 -> Barren
+        const std::string closeClean =
+            RenderChapterClose(conv, "ch1", clean);
+        Check(closeClean.find("敵雖悍") != std::string::npos,
+              "6.2: clean ledger reads the clean judgment");
+        Check(closeClean.find("府庫已竭") != std::string::npos,
+              "6.2: empty mandate reads the barren cliffhanger");
+        Check(closeClean.find("且聽下回分解") != std::string::npos,
+              "6.2: storyteller hook always closes the chapter");
+
+        Ledger dirty;
+        {
+            Posting p;
+            p.credit = {Account::MartialMerit, 1};
+            p.debit = {Account::Materiel, 1};
+            p.memo = "atrocity";
+            p.tags = {"corruption:+50"};
+            dirty.Post(p);
+        }
+        Check(LedgerMood(dirty) == FrameMood::Corrupt &&
+                  RenderChapterClose(conv, "ch1", dirty)
+                          .find("暴行在冊") != std::string::npos,
+              "6.2: corruption ratchet picks the corrupt verdict");
+        Ledger rich;
+        {
+            Posting p;
+            p.credit = {Account::Mandate, 40};
+            p.debit = {Account::Materiel, 40};
+            p.memo = "shrine tithes";
+            rich.Post(p);
+        }
+        Check(LedgerOmen(rich) == FrameOmen::Blessed &&
+                  RenderChapterClose(conv, "ch1", rich)
+                          .find("東風將起") != std::string::npos,
+              "6.2: mandate surplus picks the blessed hook");
+
+        // Bare-string variant shorthand acts as the "default" key.
+        Check(RenderChapterClose(conv, "ch2", clean)
+                      .find("敵不可測") != std::string::npos,
+              "6.2: string shorthand serves every mood");
+        // Missing key falls back: ch1 has no "tainted" judgment —
+        // requested -> default -> first entry (map order).
+        {
+            Ledger tainted;
+            Posting p;
+            p.credit = {Account::MartialMerit, 1};
+            p.debit = {Account::Materiel, 1};
+            p.memo = "rough justice";
+            p.tags = {"corruption:+20"};
+            tainted.Post(p);
+            Check(LedgerMood(tainted) == FrameMood::Tainted &&
+                      RenderChapterClose(conv, "ch1", tainted)
+                              .find("敵雖悍") != std::string::npos,
+                  "6.2: missing mood key falls back deterministically");
+        }
+        // Schema gates: bad version and non-doc reject clean.
+        {
+            auto bad = JsonValue::Parse(
+                R"({"schema":"potato.narrative/2","chapters":{}})");
+            Check(bad.ok() &&
+                      !ChapterConventions::FromJson(bad.value).ok(),
+                  "6.2: wrong schema version rejected");
+            auto shape = JsonValue::Parse(
+                R"({"schema":"potato.narrative/1","chapters":[]})");
+            Check(shape.ok() &&
+                      !ChapterConventions::FromJson(shape.value)
+                           .ok(),
+                  "6.2: bad chapters shape rejected");
+        }
+        // Canonical round-trip: Emit -> Parse -> FromJson stable.
+        {
+            const std::string emit = conv.ToJson().Emit();
+            auto re = JsonValue::Parse(emit);
+            auto conv2 = ChapterConventions::FromJson(re.value);
+            Check(re.ok() && conv2.ok() &&
+                      conv2.value.Size() == conv.Size() &&
+                      conv2.value.ToJson().Emit() == emit,
+                  "6.2: ToJson round-trip is canonical");
+        }
+        // Same ledger -> same frame (deterministic render).
+        Check(RenderChapterClose(conv, "ch1", clean) == closeClean,
+              "6.2: close frame deterministic");
     }
 
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
