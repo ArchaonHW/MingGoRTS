@@ -26,6 +26,10 @@ namespace Potato::Campaign {
 // post nothing. MythActionInvoked is deliberately not a deed: its
 // ledger entry is the SpendMandate posting written at action time
 // (5.3/5.4) — booking it again here would double-count the cost.
+// MythInvasion (5.5) is the one exemption to the side-gate: a
+// visitation lands on the player's chronicle whether the god's host
+// marched for us (blessing — bills 天命, 神助要還) or against us
+// (terror — 民心 empties, ranks stiffen).
 //
 // Leg pricing is the architecture's example economics — asymmetric
 // costs are the design: burning banks 物資 against 民心, execution

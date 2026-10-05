@@ -42,13 +42,14 @@ bool EventFromJson(const JsonValue& j, SimEvent& e) {
         return false;
     }
     const std::int64_t kind = j["kind"].AsInt();
-    // CardFired..MythActionInvoked — ordinals are append-only, so the
+    // CardFired..MythInvasion — ordinals are append-only, so the
     // last enumerator IS the bound (v3 added governance 4-7 and
     // SquadExecuted 8; v4 adds InfiltrationChanged 9 and
-    // ShrineCaptured 10; v5 adds MythActionInvoked 11).
+    // ShrineCaptured 10; v5 adds MythActionInvoked 11; v6 adds
+    // MythInvasion 12).
     if (kind < 0 ||
         kind > static_cast<std::int64_t>(
-                   SimEvent::Kind::MythActionInvoked)) {
+                   SimEvent::Kind::MythInvasion)) {
         return false;
     }
     // Every field must fit int32 — silent narrowing would let a forged
@@ -74,7 +75,8 @@ bool EventFromJson(const JsonValue& j, SimEvent& e) {
     // myth kinds ride 7-9), MythActionKind ordinal
     // (MythActionInvoked, 0..2), CloseReason ordinal
     // (ResultDeclared, 0..2), convoy index (governance kinds,
-    // 0..3), InfiltrationLevel (InfiltrationChanged, 0..3).
+    // 0..3), InfiltrationLevel (InfiltrationChanged, 0..3),
+    // invasion form (MythInvasion, 0..2).
     // Replan's path length rides param, not aux. 9 is the max
     // legitimate value; the replay diff catches any
     // kind-inconsistent value anyway.

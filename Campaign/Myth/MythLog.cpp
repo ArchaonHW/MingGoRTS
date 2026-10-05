@@ -1,5 +1,7 @@
 #include "Campaign/Myth/MythLog.h"
 
+#include "Gameplay/Doctrine/Doctrine.h" // SimEvent
+
 namespace Potato::Campaign {
 
 Gameplay::Result<std::uint64_t> MythLog::Record(std::string_view action,
@@ -86,6 +88,24 @@ Gameplay::Result<MythLog> MythLog::FromJson(
         if (!r.ok()) return Fail<MythLog>("schema", r.reason);
     }
     return Gameplay::Ok(std::move(out));
+}
+
+Gameplay::Result<std::size_t>
+LogMythEvents(MythLog& log,
+              std::span<const Gameplay::SimEvent> events) {
+    std::size_t appended = 0;
+    for (const Gameplay::SimEvent& e : events) {
+        if (e.kind != Gameplay::SimEvent::Kind::MythInvasion) {
+            continue; // MythActionInvoked is already logged at
+                      // purchase — never double-book the chronicle.
+        }
+        auto r = log.Record("invasion", "神罰", e.side, e.param, -1);
+        if (!r.ok()) {
+            return Gameplay::Fail<std::size_t>("mythlog", r.reason);
+        }
+        ++appended;
+    }
+    return Gameplay::Ok(appended);
 }
 
 } // namespace Potato::Campaign

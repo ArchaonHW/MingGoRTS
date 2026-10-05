@@ -580,7 +580,7 @@ int main() {
         bool allOk = true;
         for (int k = static_cast<int>(SimEvent::Kind::VillageOccupied);
              k <= static_cast<int>(
-                     SimEvent::Kind::MythActionInvoked); ++k) {
+                     SimEvent::Kind::MythInvasion); ++k) {
             SimEvent e;
             e.kind = static_cast<SimEvent::Kind>(k);
             e.tick = 42; e.squadIndex = 3; e.slotIndex = -1;
@@ -592,13 +592,13 @@ int main() {
                      back.squadIndex != e.squadIndex ||
                      back.tick != e.tick) allOk = false;
         }
-        Check(allOk, "event kinds 4-11 round-trip on the wire");
+        Check(allOk, "event kinds 4-12 round-trip on the wire");
         auto bad = JsonValue::Parse(
-            R"({"kind":12,"tick":0,"squad":-1,"slot":-1,"param":-1,)"
+            R"({"kind":13,"tick":0,"squad":-1,"slot":-1,"param":-1,)"
             R"("aux":0,"side":-1,"path":[],"card":""})");
         SimEvent sink;
         Check(bad.ok() && !EventFromJson(bad.value, sink),
-              "event kind 12 rejected on the wire");
+              "event kind 13 rejected on the wire");
         // aux gate: MythGhostArmy(9) is the max legitimate
         // Intervention ordinal; aux=10+ is wire-garbage and must
         // reject.

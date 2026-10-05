@@ -109,11 +109,29 @@ const char* GodStanceName(GodStance stance);
 // ground takes as long as holding a village.
 constexpr int SHRINE_DEDICATION_TICKS = 4 * TICK_RATE_HZ;
 
+// Invasion cadence (Story 5.5): while a shrine region sits at
+// InfiltrationLevel::Invaded, its deity's counterattack checks every
+// 8 s. The first fire is immediate on reaching 3 — `invasionTick`
+// starts one full period in the past.
+constexpr int INVASION_PERIOD_TICKS = 8 * TICK_RATE_HZ;
+
+// Ghost garrison sentinel: ghosts_ holds -1 = none, 0/1 = a side's
+// spirit host (Story 5.4 RaiseGhostArmy and 5.5 pushback), and
+// GHOST_WILD = a deity's unaligned haunting — it contests EVERY
+// claim, so a seeded-Invaded shrine cannot be dedicated until the
+// haunting subsides (level < 3 clears it — pacify is the counter).
+constexpr std::int8_t GHOST_WILD = 2;
+
 struct ShrineTrack {
     std::size_t region = 0;
     int claimant = -1;  // this tick's exclusive-presence side (0/1)
     int dwell = 0;      // consecutive ticks for claimant (saturating)
     int owner = -1;     // latched allegiance (-1 = unconsecrated)
+    // Last tick this shrine's invasion fired — starts one full
+    // period in the past so the first check at level 3 fires
+    // immediately (a region already Invaded at carry-in counterattacks
+    // on the first Execution tick, not 8 s late).
+    int invasionTick = -INVASION_PERIOD_TICKS;
     // Deity disposition toward each side — capture sets +1/-1 and
     // the god REMEMBERS: stance persists even after the latch is
     // released (unconsecrated ground still reads its last offense —
@@ -150,14 +168,17 @@ public:
     std::optional<SimEvent> Apply(std::size_t region,
                                   MythEventKind kind, int tick);
 
-    // End-of-tick myth-layer scan (Story 5.2): shrine
+    // End-of-tick myth-layer scan (Stories 5.2 + 5.5): shrine
     // dwell/latch/capture on post-move truth — the same
     // exclusive-presence discipline villages use, including
     // departure-region semantics (a squad mid-march still claims
     // its departure node until the edge completes). Burning a
     // village on the same region does NOT release the shrine —
     // ash holds no village, but the god's jurisdiction is ground,
-    // not buildings. Events come back in map order.
+    // not buildings. While a shrine region sits at Invaded the deity
+    // counterattacks on an INVASION_PERIOD_TICKS cadence — ghosts
+    // rise against the exclusive occupier's banner, or GHOST_WILD
+    // when nobody/contested holds it. Events come back in map order.
     std::vector<SimEvent> Tick(const std::vector<Squad>& squads,
                                int tick);
 
@@ -188,8 +209,8 @@ public:
     InfiltrationLevel LevelAt(std::size_t region) const;
     std::size_t RegionCount() const { return levels_.size(); }
     const std::vector<std::uint8_t>& Levels() const { return levels_; }
-    // Region-indexed ghost garrisons (-1 / 0 / 1) — folded into the
-    // controller checksum like everything else here.
+    // Region-indexed ghost garrisons (-1 / 0 / 1 / GHOST_WILD) —
+    // folded into the controller checksum like everything else here.
     const std::vector<std::int8_t>& Ghosts() const { return ghosts_; }
 
     // Shrine surface — map order; `ShrineAt` is nullptr for

@@ -9,6 +9,7 @@
 #include "Gameplay/Json/JsonValue.h"
 #include "Gameplay/Record/BattleRecorder.h"
 
+#include <algorithm>
 #include <cstdio>
 #include <string>
 #include <vector>
@@ -1448,6 +1449,109 @@ int main() {
             R"("region":0,"squad":-1}]})");
         Check(gap.ok() && !MythLog::FromJson(gap.value).ok(),
               "5.4: seq gaps rejected");
+    }
+
+    // --- Story 5.5: MythInvasion books as visitation (both legs
+    //     reach the player's chronicle regardless of banner) ---
+    {
+        using Potato::Gameplay::SimEvent;
+        const auto inv = [&](int side) {
+            SimEvent e;
+            e.kind = SimEvent::Kind::MythInvasion;
+            e.side = side;
+            e.param = 1;
+            e.aux = side == -1 ? 1 : 0;
+            return e;
+        };
+        const auto has = [](const LedgerEntry& e,
+                            std::string_view tag) {
+            return std::find(e.tags.begin(), e.tags.end(), tag) !=
+                   e.tags.end();
+        };
+        // Blessing: the god's host marched for us — bills 天命.
+        {
+            Ledger l;
+            const SimEvent evs[1] = {inv(0)};
+            auto r = BookDeeds(l, 0, evs);
+            Check(r.ok() && r.value == 1,
+                  "5.5: own-banner invasion posts");
+            const LedgerEntry& e0 = l.Entries()[0];
+            Check(e0.credit.account == Account::ArmyPrestige &&
+                      e0.credit.amount == 5 &&
+                      e0.debit.account == Account::Mandate &&
+                      e0.debit.amount == 5,
+                  "5.5: divine aid bills mandate");
+            Check(has(e0, Ledger::TAG_MYTH) && has(e0, "invasion") &&
+                      has(e0, "region:1"),
+                  "5.5: visitation carries myth + region tags");
+        }
+        // Terror: an enemy-bannered host still lands on our
+        // chronicle — visitations bypass the deeds side-gate.
+        {
+            Ledger l;
+            const SimEvent evs[1] = {inv(1)};
+            auto r = BookDeeds(l, 0, evs);
+            Check(r.ok() && r.value == 1,
+                  "5.5: enemy-banner invasion still posts");
+            const LedgerEntry& e0 = l.Entries()[0];
+            Check(e0.credit.account == Account::ArmyPrestige &&
+                      e0.credit.amount == 2 &&
+                      e0.debit.account == Account::PopularSupport &&
+                      e0.debit.amount == 4,
+                  "5.5: terror stiffens ranks, empties hearts");
+        }
+        // Wild haunting (side -1) books the same terror leg.
+        {
+            Ledger l;
+            const SimEvent evs[1] = {inv(-1)};
+            auto r = BookDeeds(l, 0, evs);
+            Check(r.ok() && r.value == 1 &&
+                      l.Entries()[0].debit.account ==
+                          Account::PopularSupport,
+                  "5.5: wild haunting books terror");
+        }
+        // And the side-gate still holds for real deeds — an
+        // enemy's arson was never ours to book.
+        {
+            Ledger l;
+            std::vector<SimEvent> evs;
+            SimEvent d;
+            d.kind = SimEvent::Kind::VillageBurned;
+            d.side = 1;
+            evs.push_back(d);
+            evs.push_back(inv(1));
+            auto r = BookDeeds(l, 0, evs);
+            Check(r.ok() && r.value == 1 &&
+                      l.Entries()[0].memo ==
+                          std::string("spirit host terror"),
+                  "5.5: enemy arson skipped, visitation booked");
+        }
+    }
+
+    // --- Story 5.5: LogMythEvents folds invasions by name ---
+    {
+        using Potato::Gameplay::SimEvent;
+        MythLog log;
+        std::vector<SimEvent> evs;
+        SimEvent inv;
+        inv.kind = SimEvent::Kind::MythInvasion;
+        inv.side = 1;
+        inv.param = 1;
+        evs.push_back(inv);
+        // A purchased action is already in the log — the fold must
+        // not double-book it.
+        SimEvent act;
+        act.kind = SimEvent::Kind::MythActionInvoked;
+        act.side = 0;
+        act.param = 1;
+        evs.push_back(act);
+        auto r = LogMythEvents(log, evs);
+        Check(r.ok() && r.value == 1 && log.Size() == 1,
+              "5.5: only invasions fold into the log");
+        Check(log.Entries()[0].action == std::string("invasion") &&
+                  log.Entries()[0].region == 1 &&
+                  log.Entries()[0].side == 1,
+              "5.5: invasion logged by name, region, banner");
     }
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
                          : "LEDGER TESTS PASS\n",

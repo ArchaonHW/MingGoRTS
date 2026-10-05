@@ -125,6 +125,14 @@ struct SimEvent {
         // aux = MythActionKind ordinal (0..2), param = region,
         // squadIndex = target squad (possession) or -1, side = caster.
         MythActionInvoked,
+        // Deity counterattack (Epic 5.5): a shrine region at
+        // InfiltrationLevel::Invaded pushes back on an
+        // INVASION_PERIOD_TICKS cadence. param = region; aux = form
+        // (0 = pushback rise for the occupier's enemy, 1 = wild
+        // haunting contesting all claims, 2 = sustain beat); side =
+        // the ghost host's banner (-1 for wild); squadIndex = -1 —
+        // the myth layer is side-less as an actor.
+        MythInvasion,
     };
 
     Kind kind = Kind::CardFired;

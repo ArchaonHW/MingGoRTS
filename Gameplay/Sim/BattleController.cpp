@@ -1163,6 +1163,10 @@ std::uint64_t BattleController::Checksum() const {
                         static_cast<std::uint8_t>(s.stance[0])));
         h = Fold(h, static_cast<std::uint64_t>(
                         static_cast<std::uint8_t>(s.stance[1])));
+        // The invasion cadence timer is sim state — two runs
+        // differing only in when the deity last struck must diverge.
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(s.invasionTick)));
     }
     // Ghost garrisons are sim state — 陰兵守土 is fingerprinted.
     for (std::int8_t g : myth_.Ghosts()) {

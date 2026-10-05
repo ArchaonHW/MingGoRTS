@@ -13,6 +13,8 @@
 
 namespace Potato::Campaign {
 
+class MythLog;
+
 // What one battle's settlement produced. `resolution` is the
 // ledger-sealed verdict; `nextChapter` is the chapter now in play
 // (or the campaign-complete sentinel). There is deliberately no
@@ -22,6 +24,7 @@ struct ChapterSettlement {
     ChapterResolution resolution = ChapterResolution::Defeat;
     AftermathResult roster;      // rows applied / buried / veterans
     std::size_t deedsPosted = 0; // ledger entries BookDeeds wrote
+    std::size_t mythLogged = 0;  // MythLog entries the fold appended
     int nextChapter = 0;         // chapter index now in play
 };
 
@@ -55,11 +58,16 @@ struct ChapterSettlement {
 // anchored in the ledger rejects before any mutation, so an
 // ambiguous-failure retry can't double-bury the roster or seal a
 // second verdict into the next chapter.
+// `mythLog` is optional (Story 5.5): when non-null the invasion
+// events in `deeds` are folded into the MythLog alongside the deeds
+// posting — the visitation books into ledger AND chronicle in one
+// settlement. Capacity is preflighted like the ledger's.
 Gameplay::Result<ChapterSettlement> ResolveAftermath(
     CampaignState& state, const ChapterLibrary& lib, bool battleWon,
     int playerSide,
     std::span<const Gameplay::SimEvent> deeds,
     const std::vector<AftermathRow>& casualties,
-    std::uint64_t recordRoot);
+    std::uint64_t recordRoot,
+    MythLog* mythLog = nullptr);
 
 } // namespace Potato::Campaign

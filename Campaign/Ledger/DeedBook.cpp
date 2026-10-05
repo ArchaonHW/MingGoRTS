@@ -18,7 +18,9 @@ std::string RegionTag(int region) {
 }
 
 // deed -> posting legs; returns false for non-deed kinds.
-bool DeedPosting(const SimEvent& e, Posting& p) {
+// `playerSide` is only consulted by MythInvasion — a visitation's
+// legs depend on whose banner the god's host carried.
+bool DeedPosting(const SimEvent& e, Posting& p, int playerSide) {
     switch (e.kind) {
         case SimEvent::Kind::VillageOccupied:
             p = {{Account::PopularSupport, 10}, {Account::Materiel, 5},
@@ -47,6 +49,26 @@ bool DeedPosting(const SimEvent& e, Posting& p) {
                  "dedicated shrine",
                  {std::string(Ledger::TAG_MYTH), RegionTag(e.param),
                   "order:+2"}};
+            return true;
+        case SimEvent::Kind::MythInvasion:
+            // A visitation, not a deed — it books regardless of whose
+            // banner the host carried (the loop's side-gate is
+            // bypassed for this kind). Blessing: the god's army
+            // marches for us and bills the debt to 天命 — 神助要還.
+            // Terror: an enemy/wild host empties hearts and stiffens
+            // ranks.
+            if (e.side == playerSide) {
+                p = {{Account::ArmyPrestige, 5}, {Account::Mandate, 5},
+                     "the god's host marches for us",
+                     {std::string(Ledger::TAG_MYTH), RegionTag(e.param),
+                      "invasion"}};
+            } else {
+                p = {{Account::ArmyPrestige, 2},
+                     {Account::PopularSupport, 4},
+                     "spirit host terror",
+                     {std::string(Ledger::TAG_MYTH), RegionTag(e.param),
+                      "invasion"}};
+            }
             return true;
         case SimEvent::Kind::SquadExecuted:
             // "victim:" names the murdered squad — every other kind's
@@ -77,9 +99,14 @@ BookDeeds(Ledger& ledger, int playerSide,
     for (const SimEvent& e : events) {
         // Only the player's deeds book into the player's ledger —
         // an enemy arsonist gains nothing from our 物資 account.
-        if (e.side != playerSide) continue;
+        // MythInvasion is exempt: a visitation lands on the player's
+        // chronicle whether the god marched for us or against us.
+        if (e.kind != SimEvent::Kind::MythInvasion &&
+            e.side != playerSide) {
+            continue;
+        }
         Posting p;
-        if (!DeedPosting(e, p)) continue;
+        if (!DeedPosting(e, p, playerSide)) continue;
         auto r = ledger.Post(std::move(p));
         // A rejected deed aborts the fold. Entries already posted
         // STAY posted — the chain is append-only history, not a

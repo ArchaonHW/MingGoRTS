@@ -234,13 +234,66 @@ std::vector<SimEvent>
 MythField::Tick(const std::vector<Squad>& squads, int tick) {
     std::vector<SimEvent> out;
     for (ShrineTrack& s : shrines_) {
+        const bool invaded =
+            s.region < levels_.size() &&
+            levels_[s.region] ==
+                static_cast<std::uint8_t>(InfiltrationLevel::Invaded);
+        // ghosts_ is region-indexed like levels_ — a shrine's region
+        // is always in bounds (Init builds both from the same map).
+        std::int8_t& ghost = ghosts_[s.region];
+        // A wild haunting subsides the moment the land drops below
+        // Invaded — pacify is the counter-play that reopens a
+        // seeded-3 shrine to dedication. Side-bannered garrisons
+        // are contracted spirit hosts; they do NOT dissipate.
+        if (!invaded && ghost == GHOST_WILD) ghost = -1;
+        // --- Invasion (Story 5.5): the deity pushes back on a
+        // cadence while its ground sits overrun. The pushback side
+        // is read off FLESH presence only — the rising host is what
+        // this tick blends in, so it can't claim for itself.
+        if (invaded && tick - s.invasionTick >= INVASION_PERIOD_TICKS) {
+            s.invasionTick = tick;
+            int aux;
+            int side;
+            if (ghost == -1) {
+                const int flesh = ExclusiveSide(squads, s.region);
+                if (flesh == 0 || flesh == 1) {
+                    // The god refuses the occupier — the host rises
+                    // for the OTHER banner (aux 0 = pushback rise).
+                    ghost = static_cast<std::int8_t>(1 - flesh);
+                    aux = 0;
+                    side = ghost;
+                } else {
+                    // Empty or contested ground gets the unaligned
+                    // haunting (aux 1 = wild) — no banner may claim
+                    // sacred ground while the god is at open war.
+                    ghost = GHOST_WILD;
+                    aux = 1;
+                    side = -1;
+                }
+            } else {
+                // A host already stands — aux 2 = sustain beat (the
+                // siege continues; the audit trail wants the pulse,
+                // not silence between changes).
+                aux = 2;
+                side = ghost == GHOST_WILD ? -1 : ghost;
+            }
+            SimEvent e;
+            e.kind = SimEvent::Kind::MythInvasion;
+            e.tick = tick;
+            e.param = static_cast<int>(s.region);
+            e.aux = aux;
+            e.side = side;
+            out.push_back(e);
+        }
         int claimant = ExclusiveSide(squads, s.region);
         // Ghost garrisons are myth-layer presence: ghosts alone hold
         // a shrine's ground for their side; flesh and spirit of
-        // different banners contest it.
-        const int ghost =
-            s.region < ghosts_.size() ? ghosts_[s.region] : -1;
-        if (ghost >= 0) {
+        // different banners contest it. GHOST_WILD contests ALL —
+        // the gate below already reads 2 as no-claim, but wild
+        // presence must also deny a flesh claimant.
+        if (ghost == GHOST_WILD) {
+            claimant = -1;
+        } else if (ghost >= 0) {
             claimant = (claimant == -1) ? ghost
                      : (claimant == ghost) ? claimant
                                            : -1; // contested

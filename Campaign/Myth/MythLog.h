@@ -5,9 +5,12 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
+
+namespace Potato::Gameplay { struct SimEvent; }
 
 namespace Potato::Campaign {
 
@@ -61,5 +64,16 @@ public:
 private:
     std::vector<MythLogEntry> entries_;
 };
+
+// Fold a battle's event stream into the log (Story 5.5): emits a
+// chronicle entry for every MythInvasion ("神罰" — the god's own
+// move enters the record by name, same as a purchased action).
+// MythActionInvoked is deliberately skipped — PerformMythAction
+// already logged it at purchase; re-logging here would double-book
+// the chronicle. Returns entries appended (append-only contract:
+// a failure mid-fold leaves prior entries standing).
+Gameplay::Result<std::size_t>
+LogMythEvents(MythLog& log,
+              std::span<const Gameplay::SimEvent> events);
 
 } // namespace Potato::Campaign

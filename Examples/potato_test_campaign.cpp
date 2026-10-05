@@ -5,6 +5,7 @@
 #include "Campaign/Chapters/Progression.h"
 #include "Campaign/Governance/Accumulators.h"
 #include "Campaign/Governance/Victory.h"
+#include "Campaign/Myth/MythLog.h"
 #include "Campaign/Rivals/RivalDeck.h"
 #include "Campaign/Roster/RefitCamp.h"
 #include "Campaign/Roster/Roster.h"
@@ -1571,6 +1572,40 @@ int main() {
                       !st.GetRoster()[0].dead &&
                       !st.GetChapter().resolved[0],
                   "4.5: bad report rejects whole settlement");
+        }
+
+        // 5.5: a settlement carrying a MythInvasion event books the
+        // visitation into ledger AND MythLog in one call.
+        {
+            CampaignState st = ready();
+            Potato::Campaign::MythLog log;
+            std::vector<SimEvent> deeds;
+            SimEvent inv;
+            inv.kind = SimEvent::Kind::MythInvasion;
+            inv.side = 1; // the god's host marched against us
+            inv.param = 1;
+            inv.aux = 0;
+            deeds.push_back(inv);
+            SimEvent act; // already logged at purchase — not refolded
+            act.kind = SimEvent::Kind::MythActionInvoked;
+            act.side = 0;
+            act.param = 1;
+            deeds.push_back(act);
+            const auto r =
+                ResolveAftermath(st, alib, false, 0, deeds,
+                                 {AftermathRow{"乙隊", 2, false}},
+                                 0x1CADE7, &log);
+            Check(r.ok() && r.value.deedsPosted == 1 &&
+                      r.value.mythLogged == 1 &&
+                      log.Size() == 1 &&
+                      log.Entries()[0].action ==
+                          std::string("invasion"),
+                  "5.5: settlement books visitation to ledger + log");
+            const Potato::Campaign::LedgerEntry& e0 =
+                st.GetLedger().Entries()[0];
+            Check(e0.debit.account == Account::PopularSupport &&
+                      e0.debit.amount == 4,
+                  "5.5: enemy-banner visitation bills 民心");
         }
 
         // Preflight pins: invalid side and uninitialized progress

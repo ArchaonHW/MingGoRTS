@@ -755,6 +755,158 @@ int main() {
         }
     }
 
+    // ================= Story 5.5: invasion events =================
+
+    // --- Occupied level-3 shrine: the god pushes back on the
+    //     occupier's banner, immediately on arrival at 3 ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 1, 0); // holds the shrine
+        bc.DeploySquad(Mk("foe"), 3, 1);  // parked
+        Check(bc.SeedInfiltration(1, 3), "seeded r1 to Invaded");
+        bc.RequestBeat(BattleBeat::Execution);
+        bc.Tick(); // invasionTick starts a full period in the past
+        const SimEvent* inv =
+            FindKind(bc.Events(), SimEvent::Kind::MythInvasion);
+        Check(inv && inv->param == 1 && inv->aux == 0 &&
+                  inv->side == 1 && inv->squadIndex == -1,
+              "pushback host rises for the occupier's enemy");
+        Check(bc.Myth().GhostAt(1) == 1, "ghost garrison stands");
+        // The rising host contests this very tick — the occupier's
+        // dwell can never begin while the god's banner opposes him.
+        for (int i = 0; i < SHRINE_DEDICATION_TICKS + 4; ++i) {
+            bc.Tick();
+        }
+        Check(CountKind(bc.Events(), SimEvent::Kind::ShrineCaptured) ==
+                  0,
+              "invaded shrine never dedicates under pushback");
+        Check(bc.Myth().ShrineAt(1)->owner == -1,
+              "allegiance stays unlatched");
+    }
+
+    // --- Empty/contested ground: wild haunting denies every claim ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 0, 0); // adjacent, not on it
+        bc.DeploySquad(Mk("foe"), 3, 1);
+        Check(bc.SeedInfiltration(1, 3), "seeded r1 to Invaded");
+        bc.RequestBeat(BattleBeat::Execution);
+        bc.Tick();
+        const SimEvent* inv =
+            FindKind(bc.Events(), SimEvent::Kind::MythInvasion);
+        Check(inv && inv->aux == 1 && inv->side == -1,
+              "unheld invaded shrine goes wild");
+        Check(bc.Myth().GhostAt(1) == GHOST_WILD,
+              "wild garrison marker set");
+        // No banner can garrison a wild haunting — the myth layer
+        // itself holds the ground.
+        auto g = bc.IssueGhostArmy(0, 1);
+        Check(!g.ok() || !g.value,
+              "cannot raise ghosts onto a wild haunting");
+    }
+
+    // --- Cadence: sustain beats every INVASION_PERIOD_TICKS ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 0, 0);
+        bc.DeploySquad(Mk("foe"), 3, 1);
+        bc.SeedInfiltration(1, 3);
+        bc.RequestBeat(BattleBeat::Execution);
+        for (int i = 0; i < INVASION_PERIOD_TICKS + 2; ++i) {
+            bc.Tick();
+        }
+        const SimEvent* second = FindKind(
+            bc.Events(), SimEvent::Kind::MythInvasion, 1);
+        Check(CountKind(bc.Events(), SimEvent::Kind::MythInvasion) ==
+                  2,
+              "first fire then one cadence sustain");
+        Check(second && second->aux == 2 && second->side == -1 &&
+                  second->tick == INVASION_PERIOD_TICKS,
+              "sustain beat carries the standing host's banner");
+    }
+
+    // --- Level-2 shrines never invade ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 1, 0);
+        bc.DeploySquad(Mk("foe"), 3, 1);
+        bc.SeedInfiltration(1, 2); // Haunted, not Invaded
+        bc.RequestBeat(BattleBeat::Execution);
+        for (int i = 0; i < INVASION_PERIOD_TICKS + 4; ++i) {
+            bc.Tick();
+        }
+        Check(CountKind(bc.Events(), SimEvent::Kind::MythInvasion) ==
+                  0,
+              "haunted (not invaded) shrine stays quiet");
+    }
+
+    // --- The counter-play loop: pacify subsides the wild haunting,
+    //     dedication reopens ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 1, 0); // on the shrine
+        bc.DeploySquad(Mk("foe"), 3, 1);
+        bc.SeedInfiltration(1, 3);
+        bc.RequestBeat(BattleBeat::Execution);
+        bc.Tick(); // pushback host (aux 0, side 1) rises
+        Check(bc.Myth().GhostAt(1) == 1,
+              "pushback host present before pacify");
+        // Pacify drops the level 3->2 — but a SIDE-bannered host is
+        // contracted, not wild: it does not dissipate.
+        auto p = bc.IssueMythPacify(0, 1);
+        Check(p.ok() && p.value, "pacify issued against invasion");
+        bc.Tick();
+        Check(bc.Myth().LevelAt(1) == IL::Haunted, "level backed off");
+        Check(bc.Myth().GhostAt(1) == 1,
+              "bannered host does not dissipate on pacify");
+    }
+
+    // --- Wild haunting subsides the tick the level drops ---
+    {
+        MythField f;
+        f.Init(fx.map);
+        Check(f.Seed(1, IL::Invaded), "field seeded to 3");
+        std::vector<Squad> squads; // empty ground
+        auto evs = f.Tick(squads, 0);
+        Check(evs.size() == 1 &&
+                  evs[0].kind == SimEvent::Kind::MythInvasion &&
+                  evs[0].aux == 1,
+              "wild haunting fires on empty invaded shrine");
+        Check(f.GhostAt(1) == GHOST_WILD, "wild marker stands");
+        f.Apply(1, MK::Pacification, 1); // -> Haunted
+        f.Tick(squads, 1);
+        Check(f.GhostAt(1) == -1,
+              "wild haunting subsides below Invaded");
+    }
+
+    // --- e2e: a sealed record carrying MythInvasion verifies ---
+    {
+        BattleRecorder rec;
+        BattleController bc(6, fx.map, fx.cards);
+        rec.Bind(6, fx.md, fx.cd);
+        SquadTemplate a = Mk("ally"), f = Mk("foe");
+        bc.DeploySquad(a, 1, 0); rec.RecordDeploy(a, 1, 0);
+        bc.DeploySquad(f, 3, 1); rec.RecordDeploy(f, 3, 1);
+        Check(bc.SeedInfiltration(1, 3), "seeded r1");
+        rec.RecordMythSeed(1, 3);
+        bc.RequestBeat(BattleBeat::Execution);
+        for (int i = 0; i < INVASION_PERIOD_TICKS + 4; ++i) {
+            bc.Tick();
+        }
+        Check(CountKind(bc.Events(), SimEvent::Kind::MythInvasion) >=
+                  2,
+              "record: rise + sustain sealed");
+        bc.RequestBeat(BattleBeat::Aftermath);
+        rec.Seal(bc);
+        auto doc = rec.ToJson();
+        Check(doc.ok(), "invasion record sealed");
+        if (doc.ok()) {
+            auto r = Replay::Verify(doc.value);
+            Check(r.ok() && r.value.ok,
+                  "MythInvasion record replays bit-exact");
+        }
+    }
+
     std::printf("%s (%d failures)\n",
                 failures == 0 ? "ALL PASS" : "FAILURES", failures);
     return failures == 0 ? 0 : 1;

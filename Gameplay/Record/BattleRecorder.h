@@ -42,7 +42,9 @@ public:
     // v5: Story 5.4 — MythActionInvoked (11) + InterventionKind
     // aux ordinals 7-9 (MythPacify/MythPossession/MythGhostArmy).
     // Older tools reject kind > 10 / aux > 6.
-    static constexpr int TOOL_VERSION = 5;
+    // v6: Story 5.5 — MythInvasion (12) for the level-3 deity
+    // counterattack cadence. Older tools reject kind > 11.
+    static constexpr int TOOL_VERSION = 6;
     static constexpr std::string_view SCHEMA = "potato.battle_record/1";
 
     // Embedded content makes the record self-contained — the verifier
@@ -58,9 +60,10 @@ public:
     void BindBalance(const JsonValue& doc);
     // Records stamped by older tools are flagged `downgrade` on
     // verify — but only verifiable when the checksum algorithm is
-    // unchanged (v4 folded MythField in; v5 adds ghosts/possession —
-    // so a genuine v4-or-earlier seal can't re-verify; the flag means
-    // "older stamp", not "guaranteed replayable").
+    // unchanged (v4 folded MythField in; v5 adds ghosts/possession;
+    // v6 adds the invasion cadence tick — so a genuine v5-or-earlier
+    // seal can't re-verify; the flag means "older stamp", not
+    // "guaranteed replayable").
     void SetToolVersion(int v) { toolVersion_ = v; }
 
     // Planning inputs — mirror the controller calls, in call order.
