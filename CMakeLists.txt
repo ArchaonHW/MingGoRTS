@@ -468,6 +468,12 @@ target_include_directories(potato_test_myth PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_myth PotatoCampaign)
 add_test(NAME potato_test_myth COMMAND potato_test_myth)
 
+# Story 10.1 — Bencao codex entry registry (potato.bencao/1)
+add_executable(potato_test_bencao Examples/potato_test_bencao.cpp)
+target_include_directories(potato_test_bencao PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_bencao PotatoCampaign)
+add_test(NAME potato_test_bencao COMMAND potato_test_bencao)
+
 # CLI end-to-end: emit a sealed record, then verify it (exit-code check).
 add_test(NAME potato_record_emit
     COMMAND potato_test_record --emit ${CMAKE_BINARY_DIR}/verify_sample.json)
