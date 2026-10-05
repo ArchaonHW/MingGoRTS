@@ -1,7 +1,7 @@
 # Story 6.1 — HistorianReport Renderer
 
 > Epic 6 — Narrative Systems (C) · Battle events → 史官體 prose ·
-> **Status: in-progress**
+> **Status: done**
 
 ## Story (from epics.md)
 
@@ -32,7 +32,8 @@ design pins the voice: impersonal, third-person, omits numbers
 
 ```cpp
 std::string RenderBattleReport(
-    std::span<const Gameplay::SimEvent> events, int historianSide);
+    std::span<const Gameplay::SimEvent> events, int historianSide,
+    std::span<const std::uint8_t> seedLevels = {});
 ```
 
 - **EllipticalCount(n)** — the numeral ban: 0 → omitted (the
@@ -52,10 +53,25 @@ std::string RenderBattleReport(
   Concede 請降 / Stalemate 相持而解; winner side → 王師奏捷 /
   王師敗績 / 兩軍罷兵.
 
+`seedLevels` (carry-in `MythField::Levels()`) seeds the direction
+baseline: `InfiltrationChanged` carries only the NEW level, so
+without it a pacification of seeded haunted ground misreads as a
+fresh incursion — the chronicle would lie. (Review fix.)
+
 ## Implementation Tasks
 
-- [ ] `Campaign/Narrative/BattleReport.{h,cpp}` — fold + render
-- [ ] Tests: elliptical bands, clause-pool determinism, omission
-      confession always present, side attribution, close lines
-- [ ] Review (three passes)
-- [ ] Story → done, sprint-status sync, commit
+- [x] `Campaign/Narrative/BattleReport.{h,cpp}` — fold + render
+- [x] Tests: elliptical bands, clause-pool determinism, omission
+      confession always present, side attribution, close lines,
+      infiltration direction w/ carry-in baseline
+- [x] Review (three passes) — incursion/pacify direction bug caught
+      and fixed via seedLevels; sustain heartbeats → confession;
+      myth-verb journal noise silent
+- [x] Story → done, sprint-status sync, commit
+
+## Validation
+
+- `potato_test_ledger` — bands, clause parity, digit ban, omission
+  count, side attribution, all four close lines, lacuna,
+  seed-baseline direction pins
+- ctest 19/19 + dep_guard
