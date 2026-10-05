@@ -1,6 +1,7 @@
 #include "Campaign/Governance/Accumulators.h"
 #include "Campaign/Ledger/CrossCheck.h"
 #include "Campaign/Myth/GodStance.h"
+#include "Campaign/Narrative/BattleReport.h"
 #include "Campaign/Myth/Mandate.h"
 #include "Campaign/Myth/MythActions.h"
 #include "Campaign/Myth/MythLog.h"
@@ -1678,6 +1679,149 @@ int main() {
                       std::string_view::npos,
               "5.7: shrine mood text variants readable");
     }
+    // --- Story 6.1: HistorianReport renderer — 史官體 prose ---
+    {
+        using SE = Potato::Gameplay::SimEvent;
+        // Elliptical ladder — the register's only permitted
+        // "numbers".
+        Check(EllipticalCount(0).empty() &&
+                  EllipticalCount(1) == "一二" &&
+                  EllipticalCount(2) == "一二" &&
+                  EllipticalCount(3) == "數" &&
+                  EllipticalCount(9) == "數" &&
+                  EllipticalCount(10) == "數十" &&
+                  EllipticalCount(49) == "數十" &&
+                  EllipticalCount(50) == "百餘" &&
+                  EllipticalCount(199) == "百餘" &&
+                  EllipticalCount(200) == "不可勝計",
+              "6.1: elliptical count bands");
+
+        auto ev = [](SE::Kind k, int side = -1, int aux = 0,
+                     int param = -1) {
+            SE e;
+            e.kind = k;
+            e.side = side;
+            e.aux = aux;
+            e.param = param;
+            return e;
+        };
+        std::vector<SE> evs;
+        evs.push_back(ev(SE::Kind::BeatChanged));
+        for (int i = 0; i < 5; ++i)
+            evs.push_back(ev(SE::Kind::VillageOccupied, 0));
+        for (int i = 0; i < 12; ++i)
+            evs.push_back(ev(SE::Kind::VillageBurned, 1));
+        evs.push_back(ev(SE::Kind::SquadExecuted, 0));
+        evs.push_back(ev(SE::Kind::MythActionInvoked, 0, 2));
+        evs.push_back(ev(SE::Kind::MythInvasion, -1, 0));
+        evs.push_back(ev(SE::Kind::MythInvasion, -1, 2)); // sustain
+        evs.push_back(ev(SE::Kind::CardFired, 0));
+        // Myth-kind intervention issues are journal noise — the
+        // apply event narrates the deed; they must NOT double-count
+        // or inflate omissions.
+        evs.push_back(ev(SE::Kind::Intervention, 0, 7));
+        evs.push_back(ev(SE::Kind::Intervention, 0, 3)); // Probe
+        evs.push_back(ev(SE::Kind::ResultDeclared, -1, 0, 0));
+
+        const std::string rep = RenderBattleReport(evs, 0);
+        Check(rep.find("史官曰") != std::string::npos,
+              "6.1: historian register opens");
+        Check(rep.find("邑落來歸者數") != std::string::npos ||
+                  rep.find("聚落款附者數") != std::string::npos,
+              "6.1: our occupations render with elliptical count");
+        Check(rep.find("焚聚落數十") != std::string::npos ||
+                  rep.find("廬舍為墟者數十") != std::string::npos,
+              "6.1: enemy burns attributed, count elliptical");
+        Check(rep.find("降卒不赦，誅者一二") != std::string::npos ||
+                  rep.find("俘而弗納，斬者一二") != std::string::npos,
+              "6.1: executions narrated as our deed");
+        Check(rep.find("發陰兵一二") != std::string::npos ||
+                  rep.find("夜召無形之師一二") != std::string::npos,
+              "6.1: ghost army invocation narrated");
+        Check(rep.find("神罰降者一二") != std::string::npos ||
+                  rep.find("降殃者一二") != std::string::npos,
+              "6.1: invasion renders as portent");
+        Check(rep.find("敵軍盡墨，王師奏捷") != std::string::npos,
+              "6.1: wipe victory close line");
+        // Omission confession: CardFired + BeatChanged + sustain
+        // beat = 3 confessed (myth verb issue is silent, not
+        // confessed — its apply narrated the deed).
+        Check(rep.find("本報告省略 3 項") != std::string::npos,
+              "6.1: omission confession always prints with count");
+        // No Arabic tallies outside the confession — the register
+        // banishes digits from the prose body.
+        {
+            std::string body = rep.substr(0, rep.find("本報告省略"));
+            bool digit = false;
+            for (char c : body) {
+                if (c >= '0' && c <= '9') {
+                    digit = true;
+                    break;
+                }
+            }
+            Check(!digit,
+                  "6.1: prose body carries no Arabic numerals");
+        }
+        // Determinism + clause-pool parity: same list renders
+        // identically; a parity-shifted count picks the other
+        // clause.
+        Check(RenderBattleReport(evs, 0) == rep,
+              "6.1: render deterministic");
+        {
+            std::vector<SE> evs2 = evs;
+            evs2.push_back(ev(SE::Kind::VillageOccupied, 0)); // 6
+            const std::string rep2 = RenderBattleReport(evs2, 0);
+            Check(rep2 != rep &&
+                      rep2.find("本報告省略 3 項") !=
+                          std::string::npos,
+                  "6.1: count parity flips clause variant");
+        }
+        // Concede/draw/stalemate close lines.
+        {
+            std::vector<SE> c;
+            c.push_back(ev(SE::Kind::ResultDeclared, -1, 1, 0));
+            Check(RenderBattleReport(c, 0).find("敵酋請降") !=
+                      std::string::npos,
+                  "6.1: concede close for our win");
+            c.back().param = 1;
+            Check(RenderBattleReport(c, 0).find("王師請降") !=
+                      std::string::npos,
+                  "6.1: concede close for our loss");
+            c.back().param = -1;
+            c.back().aux = 2;
+            Check(RenderBattleReport(c, 0).find("各罷兵去") !=
+                      std::string::npos,
+                  "6.1: stalemate draw close");
+            c.clear();
+            Check(RenderBattleReport(c, 0).find("記闕如") !=
+                      std::string::npos,
+                  "6.1: missing verdict confesses a lacuna");
+        }
+        // Infiltration direction: aux carries the NEW level — a
+        // drop narrates 禳解, a rise narrates portent. Seeded
+        // ground needs the carry-in baseline to read truthfully.
+        {
+            std::vector<SE> m;
+            m.push_back(ev(SE::Kind::InfiltrationChanged, -1, 1,
+                           3)); // r3: 0→1 rise
+            const std::string rm =
+                RenderBattleReport(m, 0);
+            Check(rm.find("妖氛") != std::string::npos ||
+                      rm.find("陰氣所鍾") != std::string::npos,
+                  "6.1: rising infiltration narrates as portent");
+            // Same event on seeded-level-3 ground is a PACIFY drop.
+            std::vector<std::uint8_t> seed = {0, 0, 0, 3};
+            const std::string rm2 = RenderBattleReport(m, 0, seed);
+            Check(rm2.find("禳解") != std::string::npos ||
+                      rm2.find("厲氣漸平") != std::string::npos,
+                  "6.1: carry-in baseline reads the drop as "
+                  "pacification");
+            Check(rm2.find("妖氛") == std::string::npos &&
+                      rm2.find("陰氣所鍾") == std::string::npos,
+                  "6.1: pacification never misreads as portent");
+        }
+    }
+
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
                          : "LEDGER TESTS PASS\n",
                 failures);
