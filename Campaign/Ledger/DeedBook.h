@@ -19,6 +19,8 @@ namespace Potato::Campaign {
 // Scope: only deeds committed by `playerSide` post to this ledger —
 // it is the player's domain chronicle; enemy deeds are the enemy's
 // ledger problem (and survive in the battle record regardless).
+// Myth deeds ride the same bridge (5.3): ShrineCaptured credits 天命
+// — the earn leg of the gods' economy.
 // Event kinds that aren't deeds (CardFired, BeatChanged, ...) are
 // skipped silently; deed events stamped -1 or for the other side
 // post nothing.

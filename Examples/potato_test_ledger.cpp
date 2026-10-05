@@ -1,5 +1,6 @@
 #include "Campaign/Governance/Accumulators.h"
 #include "Campaign/Ledger/CrossCheck.h"
+#include "Campaign/Myth/Mandate.h"
 #include "Campaign/Ledger/DeedBook.h"
 #include "Campaign/Ledger/HistorianReport.h"
 #include "Campaign/Ledger/Ledger.h"
@@ -1255,6 +1256,97 @@ int main() {
         Check(ut.find("fake?forged:0") != std::string::npos &&
                   ut.find("\nforged:0") == std::string::npos,
               "4.4: unknown kind sanitized, no line injection");
+    }
+    // --- AC (5.3): shrine dedication credits 天命 ---
+    {
+        using Potato::Gameplay::SimEvent;
+        Ledger l;
+        std::vector<SimEvent> evs;
+        const auto ev = [&](SimEvent::Kind k, int side, int param) {
+            SimEvent e;
+            e.kind = k;
+            e.side = side;
+            e.param = param;
+            evs.push_back(e);
+        };
+        ev(SimEvent::Kind::ShrineCaptured, 0, 1); // player shrine
+        ev(SimEvent::Kind::ShrineCaptured, 1, 2); // enemy shrine
+        const auto n = BookDeeds(l, 0, evs);
+        Check(n.ok() && n.value == 1 && l.Size() == 1,
+              "5.3: player shrine capture posts once");
+        const LedgerEntry& d = l.Entries()[0];
+        Check(d.credit.account == Account::Mandate &&
+                  d.credit.amount == 10 &&
+                  d.debit.account == Account::Materiel &&
+                  d.debit.amount == 5,
+              "5.3: dedication books +天命10 / -物資5");
+        Check(d.tags.size() == 3 && d.tags[0] == "myth" &&
+                  d.tags[1] == "region:1" && d.tags[2] == "order:+2",
+              "5.3: dedication tagged myth + region + order axis");
+        Check(l.Balance(Account::Mandate) == 10,
+              "5.3: 天命 balance folds the dedication");
+        Check(l.Verify() == nullptr,
+              "5.3: myth deed entry chains clean");
+    }
+    // --- AC (5.3): myth actions debit 天命; insufficiency rejects ---
+    {
+        Ledger l;
+        const auto spend = [&](std::int64_t cost) {
+            Posting p;
+            p.credit = {Account::PopularSupport, 5}; // awe sink
+            p.debit = {Account::Mandate, cost};
+            p.memo = "pacify shrine";
+            p.tags = {std::string(Ledger::TAG_MYTH)};
+            return SpendMandate(l, p);
+        };
+        Check(!spend(15).ok(),
+              "5.3: empty purse cannot buy a myth action");
+        Check(l.Size() == 0, "5.3: rejected spend posts nothing");
+        // Fund the purse via a dedication deed.
+        using Potato::Gameplay::SimEvent;
+        SimEvent cap;
+        cap.kind = SimEvent::Kind::ShrineCaptured;
+        cap.side = 0;
+        cap.param = 1;
+        const SimEvent evs[1] = {cap};
+        Check(BookDeeds(l, 0, evs).ok(), "5.3: dedication funds purse");
+        Check(!spend(15).ok(), "5.3: cost above balance rejected");
+        Check(l.Size() == 1, "5.3: rejected spend still posts nothing");
+        Check(spend(10).ok(),
+              "5.3: exact-balance spend lands (boundary)");
+        Check(l.Balance(Account::Mandate) == 0 &&
+                  l.Balance(Account::PopularSupport) == 5,
+              "5.3: spend drains 天命 into the awe sink");
+        Check(!spend(1).ok(),
+              "5.3: drained purse rejects the next action");
+        // Gate hygiene.
+        Posting wrong;
+        wrong.credit = {Account::Materiel, 1};
+        wrong.debit = {Account::Materiel, 1}; // not Mandate
+        Check(!SpendMandate(l, wrong).ok(),
+              "5.3: non-天命 debit rejected at the gate");
+        Check(l.Size() == 2, "5.3: gate rejection posts nothing");
+        const auto zero = [&](std::int64_t cost) {
+            Posting p;
+            p.credit = {Account::Materiel, 1};
+            p.debit = {Account::Mandate, cost};
+            return SpendMandate(l, p);
+        };
+        Check(!zero(0).ok() && !zero(-5).ok(),
+              "5.3: non-positive cost rejected before posting");
+        // Forged grants spend for real — suspicion is an audit
+        // overlay, not a balance correction (2.3 contract).
+        Posting grant;
+        grant.credit = {Account::Mandate, 10};
+        grant.debit = {Account::Materiel, 1};
+        grant.memo = "miraculous endowment";
+        Check(l.Forge(grant).ok(), "5.3: forged grant posts");
+        Check(l.Balance(Account::Mandate) == 10,
+              "5.3: forged 天命 folds into spendable funds");
+        Check(spend(10).ok(),
+              "5.3: forged mandate really does spend");
+        Check(l.Verify() == nullptr,
+              "5.3: forged-funded chain still verifies");
     }
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
                          : "LEDGER TESTS PASS\n",

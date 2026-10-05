@@ -39,6 +39,15 @@ bool DeedPosting(const SimEvent& e, Posting& p) {
                  "raided convoy",
                  {"raid", RegionTag(e.param), "order:-3"}};
             return true;
+        case SimEvent::Kind::ShrineCaptured:
+            // Dedication earns 天命; the debit leg is 物資 — offerings
+            // consume materiel. Story 5.4's "pacify shrine" action is
+            // a different verb (a spend); this is the earn side.
+            p = {{Account::Mandate, 10}, {Account::Materiel, 5},
+                 "dedicated shrine",
+                 {std::string(Ledger::TAG_MYTH), RegionTag(e.param),
+                  "order:+2"}};
+            return true;
         case SimEvent::Kind::SquadExecuted:
             // "victim:" names the murdered squad — every other kind's
             // squadIndex is the perpetrator; conflating them would

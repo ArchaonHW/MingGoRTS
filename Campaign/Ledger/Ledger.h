@@ -95,6 +95,10 @@ public:
     // (compare CrossCheck's record_root: discipline). Producers and
     // folders share these spellings; anything else is just a label.
     static constexpr std::string_view TAG_ATROCITY = "atrocity";
+    // Myth-layer fold key (Story 5.3): every 天命 book-keeping entry —
+    // dedication credit or myth-action spend — carries "myth" so the
+    // fold can total the gods' economy separately.
+    static constexpr std::string_view TAG_MYTH = "myth";
     // Chapter-resolution seal (Story 4.4): a chapter-end posting
     // carries `resolution:<kind>` + `chapter:<idx>` so the historian
     // folds the verdict out of the same truth as everything else.
