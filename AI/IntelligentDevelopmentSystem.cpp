@@ -3,6 +3,7 @@
  */
 
 #include "IntelligentDevelopmentSystem.h"
+#include <cstring>
 #include <iostream>
 #include <sstream>
 #include <chrono>
