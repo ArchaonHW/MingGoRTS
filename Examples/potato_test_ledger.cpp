@@ -3,6 +3,7 @@
 #include "Campaign/Myth/GodStance.h"
 #include "Campaign/Narrative/BattleReport.h"
 #include "Campaign/Narrative/Conventions.h"
+#include "Campaign/Narrative/Dossier.h"
 #include "Campaign/Myth/Mandate.h"
 #include "Campaign/Myth/MythActions.h"
 #include "Campaign/Myth/MythLog.h"
@@ -1937,6 +1938,64 @@ int main() {
         // Same ledger -> same frame (deterministic render).
         Check(RenderChapterClose(conv, "ch1", clean) == closeClean,
               "6.2: close frame deterministic");
+    }
+
+    // --- Story 6.3: GeneralDossier — hearsay render + revision ---
+    {
+        GeneralDossier g;
+        g.id = "thefox";
+        g.prior = RivalPrior::Cunning;
+        g.chaptersObserved = 5;
+        g.triggers[2] = 4; // EnemyInRegion dominant
+        g.triggers[0] = 1;
+
+        const std::string r = RenderDossier(g);
+        Check(r.find("聞冊·thefox") != std::string::npos,
+              "6.3: dossier names its subject");
+        // Three claims -> all three rotating hearsay markers.
+        Check(r.find("據聞") != std::string::npos &&
+                  r.find("或曰") != std::string::npos &&
+                  r.find("傳言") != std::string::npos,
+              "6.3: every statement carries a hearsay marker");
+        Check(r.find("詭譎") != std::string::npos,
+              "6.3: prior renders as temperament rumor");
+        Check(r.find("見敵入境必應") != std::string::npos,
+              "6.3: dominant trigger renders as habit hearsay");
+        Check(r.find("屢聞") != std::string::npos &&
+                  r.find("風聞未確") == std::string::npos,
+              "6.3: seasoned dossier carries the established tier");
+        // No omniscient stats — digits never reach the page.
+        {
+            bool digit = false;
+            for (char c : r) {
+                if (c >= '0' && c <= '9') digit = true;
+            }
+            Check(!digit, "6.3: no omniscient numbers render");
+        }
+        // Thin dossier — one sighting reads as uncertain rumor.
+        GeneralDossier thin;
+        thin.id = "newname";
+        thin.chaptersObserved = 1;
+        const std::string rt = RenderDossier(thin);
+        Check(rt.find("風聞未確") != std::string::npos &&
+                  rt.find("屢聞") == std::string::npos &&
+                  rt.find("其名始聞") != std::string::npos,
+              "6.3: thin dossier marked uncertain");
+        // Unseen dossier — the name alone, nothing asserted.
+        GeneralDossier unseen;
+        unseen.id = "ghost";
+        Check(DossierClaims(unseen).size() == 1 &&
+                  RenderDossier(unseen).find("僅聞其名") !=
+                      std::string::npos,
+              "6.3: unseen rival renders only the name");
+        // Revision seam — proven-wrong claims confess inline.
+        const ClaimKind wrong[] = {ClaimKind::Temperament};
+        const std::string rr = RenderDossier(g, wrong);
+        Check(rr.find("然近事駁之") != std::string::npos &&
+                  rr.find("詭譎") != std::string::npos,
+              "6.3: proven-wrong claim annotated, not erased");
+        Check(RenderDossier(g) == r,
+              "6.3: render deterministic");
     }
 
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
