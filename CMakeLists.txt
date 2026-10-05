@@ -474,6 +474,12 @@ target_include_directories(potato_test_bencao PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_bencao PotatoCampaign)
 add_test(NAME potato_test_bencao COMMAND potato_test_bencao)
 
+# Story 11.1 — mint-claim schema + outbox (potato.mintclaim/1)
+add_executable(potato_test_mintclaim Examples/potato_test_mintclaim.cpp)
+target_include_directories(potato_test_mintclaim PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_mintclaim PotatoCampaign)
+add_test(NAME potato_test_mintclaim COMMAND potato_test_mintclaim)
+
 # CLI end-to-end: emit a sealed record, then verify it (exit-code check).
 add_test(NAME potato_record_emit
     COMMAND potato_test_record --emit ${CMAKE_BINARY_DIR}/verify_sample.json)
