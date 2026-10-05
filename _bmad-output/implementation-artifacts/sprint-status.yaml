@@ -1,0 +1,116 @@
+# generated: 2026-09-29
+# last_updated: 2026-09-29
+# project: MingGoRTS
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+generated: '2026-09-29'
+last_updated: '2026-09-29'
+project: MingGoRTS
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  epic-1: in-progress
+  1-1-gameplay-module-skeleton: done
+  1-2-jsonvalue-dom-parser-schema-guard: done
+  1-3-battlemap-model: done
+  1-4-squad-model: done
+  1-5-doctrine-interpreter: done
+  1-6-battlecontroller-three-beat-loop: done
+  1-7-cp-interventions: done
+  1-8-quantumfog: done
+  1-9-battleplan-arrows: done
+  1-10-symmetric-ai-opponent: done
+  1-11-battlerecorder-replay-verifier: done
+  1-12-win-evaluation: backlog
+  epic-1-retrospective: optional
+  epic-2: backlog
+  2-1-five-account-double-entry-ledger: backlog
+  2-2-append-only-tamper-evident-chain: backlog
+  2-3-forgery-suspicion-channels: backlog
+  2-4-audit-aware-reports: backlog
+  2-5-replay-ledger-cross-check: backlog
+  epic-2-retrospective: optional
+  epic-3: backlog
+  3-1-campaignstate-facade: backlog
+  3-2-atomic-save-system: backlog
+  3-3-chapterlibrary: backlog
+  3-4-chapter-shell-progression: backlog
+  3-5-persistent-roster: backlog
+  3-6-refitcamp: backlog
+  3-7-rivaldeck-learning: backlog
+  epic-3-retrospective: optional
+  epic-4: backlog
+  4-1-governancefield-battle-events: backlog
+  4-2-atrocity-auto-detection: backlog
+  4-3-governance-accumulators: backlog
+  4-4-governance-victory-path: backlog
+  4-5-defeat-conversion: backlog
+  epic-4-retrospective: optional
+  epic-5: backlog
+  5-1-myth-infiltration-state-machine: backlog
+  5-2-shrine-entities: backlog
+  5-3-mandate-currency: backlog
+  5-4-myth-actions: backlog
+  5-5-invasion-events: backlog
+  5-6-mythlog: backlog
+  5-7-godstance: backlog
+  epic-5-retrospective: optional
+  epic-6: backlog
+  6-1-historianreport-renderer: backlog
+  6-2-chapterconventions: backlog
+  6-3-generaldossier: backlog
+  6-4-intelledger: backlog
+  6-5-narrativepack: backlog
+  6-6-scribe-marginalia: backlog
+  6-7-document-variant-rendering: backlog
+  6-8-audit-spread-judgment-of-the-brush: backlog
+  6-9-endingpage-four-voices: backlog
+  epic-6-retrospective: optional
+  epic-7: backlog
+  7-1-negotiation-system: backlog
+  7-2-deterrence: backlog
+  7-3-subversion-defection-triggers: backlog
+  7-4-rival-defection-arcs: backlog
+  7-5-designated-zero-combat-chapters: backlog
+  epic-7-retrospective: optional
+  epic-8: backlog
+  8-1-spriteatlas-map-rendering: backlog
+  8-2-hud-doctrine-ui-cp-bar: backlog
+  8-3-cjk-text-pipeline: backlog
+  8-4-audio: backlog
+  8-5-chapter-frontispieces: backlog
+  epic-8-retrospective: optional
+  epic-9: backlog
+  9-1-doctrine-card-pool-expansion: backlog
+  9-2-squadtemplate-budgeted-builds: backlog
+  9-3-deck-plundering: backlog
+  9-4-enemy-general-editor: backlog
+  9-5-sandbox-mode: backlog
+  9-6-tutorial-chapter: backlog
+  epic-9-retrospective: optional

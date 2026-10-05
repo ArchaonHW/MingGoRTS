@@ -29,7 +29,7 @@
 
 # CMake build outputs
 build/
-build-mingw/
+build-*/
 CMakeFiles/
 CMakeCache.txt
 CMakeScripts/

@@ -429,12 +429,12 @@ std::vector<Suggestion> IntelligentSuggestionSystem::DetectBugs(const std::strin
     // Banned C API（與 CI unsafe-api-scan 同清單）——word boundary 防 sscanf
     // 之類前綴誤報；static 快取 regex 編譯結果
     static const std::vector<std::pair<std::regex, std::string>> bannedApis = {
-        {std::regex("\\bgets\\s*\\("),    "gets() is unbounded — use fgets"},
-        {std::regex("\\bstrcpy\\s*\\("),  "strcpy() can overflow — use strncpy or memcpy with bounds"},
-        {std::regex("\\bstrcat\\s*\\("),  "strcat() can overflow — use strncat"},
-        {std::regex("\\bsprintf\\s*\\("), "sprintf() can overflow — use snprintf"},
-        {std::regex("\\bvsprintf\\s*\\("),"vsprintf() can overflow — use vsnprintf"},
-        {std::regex("\\bscanf\\s*\\("),   "scanf() is unbounded — prefer stream input"},
+        {std::regex("\\bgets\\s*\\("),    "gets() is unbounded — use fgets"},          // UNSAFE_FN_FIXTURE
+        {std::regex("\\bstrcpy\\s*\\("),  "strcpy() can overflow — use strncpy or memcpy with bounds"}, // UNSAFE_FN_FIXTURE
+        {std::regex("\\bstrcat\\s*\\("),  "strcat() can overflow — use strncat"},      // UNSAFE_FN_FIXTURE
+        {std::regex("\\bsprintf\\s*\\("), "sprintf() can overflow — use snprintf"},    // UNSAFE_FN_FIXTURE
+        {std::regex("\\bvsprintf\\s*\\("),"vsprintf() can overflow — use vsnprintf"},  // UNSAFE_FN_FIXTURE
+        {std::regex("\\bscanf\\s*\\("),   "scanf() is unbounded — prefer stream input"}, // UNSAFE_FN_FIXTURE
     };
     for (const auto& entry : bannedApis) {
         std::sregex_iterator it(code.begin(), code.end(), entry.first), end;

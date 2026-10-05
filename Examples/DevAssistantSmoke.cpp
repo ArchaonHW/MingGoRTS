@@ -426,7 +426,7 @@ int main() {
         Check(!reduceFound, "identifier-heavy code does not inflate complexity");
 
         // banned API：strcpy 命中 VeryHigh BugFix；sscanf 不誤報
-        auto bugs = sys.DetectBugs("void f(){ char b[8]; strcpy(b, \"x\"); }\n");
+        auto bugs = sys.DetectBugs("void f(){ char b[8]; strcpy(b, \"x\"); }\n"); // UNSAFE_FN_FIXTURE
         bool bannedHit = false;
         for (const auto& s : bugs)
             if (s.title == "Unsafe C API") bannedHit = true;
@@ -442,7 +442,7 @@ int main() {
         for (int i = 0; i < 9; ++i)
             sys.LearnFromFeedback("bug_fix_reject" + std::to_string(i), false);
         auto filtered = sys.GenerateSuggestions(
-            "void f(){ char b[8]; strcpy(b, \"x\"); }\n", "f.cpp", 1, 1);
+            "void f(){ char b[8]; strcpy(b, \"x\"); }\n", "f.cpp", 1, 1); // UNSAFE_FN_FIXTURE
         bool bugSurvived = false;
         for (const auto& s : filtered)
             if (s.type == SuggestionType::BugFix) bugSurvived = true;

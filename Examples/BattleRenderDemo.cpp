@@ -17,6 +17,13 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cstdio>
+
+// _popen/_pclose 是 MSVC 命名;POSIX 上對應 popen/pclose
+#if !defined(_WIN32)
+#define _popen  popen
+#define _pclose pclose
+#endif
 
 using namespace Potato;
 using namespace Potato::Gameplay;

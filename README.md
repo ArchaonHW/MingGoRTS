@@ -1,596 +1,124 @@
-# 🥔 Potato Engine
+# MingGoRTS（民國史詩 RTS）
 
-**完全獨立的 C++ 遊戲引擎與 AI Agent 平台**
+**回合制 RPG × 即時戰略的 hybrid 戰術遊戲，執行於自研 PotatoEngine（C++20）**
 
-Potato Engine 是一個完全獨立的、現代化的 C++ 遊戲引擎，具備原生的 AI Agent 能力。**此版本已完全解除 Unreal Engine 5 依賴**，可以獨立運行和開發。
+玩家在戰鬥中不點選單位——而是**書寫**單位。每場戰鬥前編排 doctrine 卡
+（trigger → condition → action）、部署具名小隊，然後看雙方腳本即時執行，
+僅以稀少的指揮點（CP）在計畫崩潰時介入數秒。
 
----
+戰役圍繞兩個哲學軸：
 
-## ✨ 主要特色
+- **至聖者無戰**——不戰而屈人之兵：倒戈優於殲滅、嚇阻優於接戰，
+  指定章節可完全不戰而勝。
+- **治平者無勝**——軍事勝利不是目的，治理才是：民心／秩序是
+  跨戰鬥的持久軸，戰場敗北仍可轉化為治理勝利。
 
-### 🎮 完全獨立
-- **不依賴 UE5**: 完全移除 Unreal Engine 5 依賴
-- **純 C++ 實現**: 使用現代 C++17/20 標準
-- **自包含建置**: 使用 CMake 建置系統
-- **跨平台**: 支持 Windows、Linux、macOS
-
-### 🤖 AI Agent 系統
-- **多代理架構**: 支持多種 AI 代理類型（開發、設計、分析、測試、調試、研究）
-- **任務分配**: 智能任務分配和執行
-- **決策制定**: 基於上下文的 AI 決策和群體決策
-- **學習系統**: 支持機器學習和適應
-- **性能監控**: 實時代理性能和任務監控
-
-### 🎨 圖形介面 (GUI)
-- **多功能面板**: 儀表板、代理管理器、任務查看器、控制台、設置、統計、代碼編輯器、資產瀏覽器
-- **實時監控**: 系統狀態、代理活動、任務進度
-- **主題系統**: 深色、淺色、馬鈴薯、自訂主題
-- **可自訂佈局**: 靈活的面板佈局和設置
-
-### 🎨 高性能渲染
-- **多圖形 API**: 支持 OpenGL、DirectX、Vulkan
-- **現代渲染管線**: PBR、光線追蹤、DLSS 支持
-- **優化算法**: GPU 加速、多線程渲染
-- **可擴展**: 易於添加新的渲染特性
-
-### ⚙️ 完整的遊戲引擎功能
-- **物理引擎**: 剛體模擬、碰撞檢測
-- **音訊系統**: 3D 音訊、空間音訊
-- **輸入系統**: 鍵盤、鼠標、手柄、觸控
-- **資源管理**: 紋理、模型、著色器、音效
-- **GUI 系統**: Dear ImGui 整合
-- **ECS 架構**: 實體組件系統
-- **序列化**: 高效的數據序列化
+每場戰鬥跑在同一張地圖的兩個層面上：**歷史層**（縱隊、渡口、糧道、
+電報線）與**神話層**（土地神、狐仙、戰神附體、怨靈鬼軍）。神話行為
+是民心軸的主要放大器——安撫神社直接轉化為下一場戰鬥的治理資本。
 
 ---
 
-## 📁 項目結構
+## 架構分層（規劃）
 
 ```
-PotatoEngine/
-├── Core/                  # 核心系統
-│   ├── PotatoEngine.h/cpp # 引擎核心
-│   └── CoreTypes.h        # 核心型別
-├── Rendering/             # 渲染系統
-├── Physics/               # 物理系統
-├── Audio/                 # 音訊系統
-├── Input/                 # 輸入系統
-├── Resources/             # 資源管理
-├── ECS/                   # 實體組件系統
-├── GameObject/            # 遊戲對象
-├── Events/                # 事件系統
-├── FileSystem/            # 文件系統
-├── Logging/               # 日誌系統
-├── Math/                  # 數學庫
-├── Memory/                # 內存管理
-├── Platform/              # 平台抽象
-├── Scene/                 # 場景管理
-├── Serialization/         # 序列化
-├── Time/                  # 時間管理
-├── AI/                    # AI Agent 系統
-│   ├── AIAgentSystem.h/cpp # AI 代理系統
-│   └── (代理類型實現)
-├── GUI/                   # 圖形介面系統
-│   ├── AgentGUI.h/cpp      # GUI 系統
-│   └── (面板實現)
-├── Examples/              # 示例程序
-│   └── AIAgentGUIExample.cpp # AI Agent GUI 整合示例
-├── docs/                  # 文檔
-│   ├── guides/            # 使用指南與建置說明
-│   ├── architecture/      # 架構設計與開發計劃
-│   ├── reports/           # 整合報告與稽核
-│   ├── research/          # 研究文檔
-│   └── archive/           # 歷史完成報告
-├── CMakeLists.txt         # CMake 建置文件
-└── README.md              # 項目說明
+PotatoEngine  ←  Gameplay   ←  Campaign   ←  Game（外殼）
+（引擎）          （單場戰鬥）   （跨章節持久）  （呈現）
+```
+
+依賴方向單向：引擎不依賴玩法層；玩法層不依賴戰役層；
+`Gameplay` 全部 headless 可測（無 OpenGL context 需求）。
+
+> 遊戲層為 greenfield——`Gameplay/`、`Campaign/`、`Game/`、`assets/`
+> 尚未建立，由 Epic 1 Story 1.1 起實作。詳見
+> `_bmad-output/game-architecture.md`。
+
+### 目錄
+
+```
+MingGoRTS/
+├── Core/ Rendering/ Physics/ Audio/ Input/   # PotatoEngine 子系統
+├── Resources/ ECS/ GameObject/ Events/
+├── FileSystem/ Logging/ MathUtils/ Memory/
+├── Platform/ Scene/ Serialization/ Time/ Security/
+├── AI/                  # AI Agent / 強化學習（DQN）/ 神經網路
+├── GUI/                 # ImGui 介面系統
+├── MingGoRTS_IDE/       # 整合開發環境（智能建議含專案規範護欄）
+├── Examples/            # 可執行 demo／測試（各自獨立 target）
+├── external/            # vendored 第三方（勿改既有內容）
+├── _bmad-output/        # 規劃產物（GDD/架構/敘事/epics/sprint 狀態）
+└── docs/                # 引擎指南、架構、研究文件
 ```
 
 ---
 
-## 🚀 快速開始
+## 建置與測試
 
-### 環境要求
+### 需求
 
-- **編譯器**: 
-  - Windows: MSVC 2019+ 或 MinGW
-  - Linux: GCC 7+ 或 Clang 5+
-  - macOS: Clang 5+
-- **CMake**: 3.15 或更高版本
-- **依賴庫**:
-  - OpenGL 3.3+
-  - GLFW 3.3+
-  - GLAD
-  - Dear ImGui
-  - Bullet Physics (可選)
-  - OpenAL (可選)
+- CMake ≥ 3.15、C++20 編譯器
+- Windows：MSVC（VS Developer Prompt）或 MinGW
+- Linux：g++
+- OpenGL 3.3+；GLFW 由 FetchContent 自動拉取
+- **不需要** vcpkg／Bullet／OpenAL——第三方僅 `external/` vendored
 
-### 安裝依賴
+### Windows
 
-#### Windows (使用 vcpkg)
-```bash
-vcpkg install glfw3 glad opengl glad openal-soft bullet3 imgui
+```bat
+BuildEngine.bat          :: 一鍵建置入口（VS 2022，Release；需 VS Developer Prompt）
 ```
 
-#### Linux (Ubuntu/Debian)
-```bash
-sudo apt-get install build-essential cmake
-sudo apt-get install libglfw3-dev libgl1-mesa-dev
-sudo apt-get install libopenal-dev libbullet-dev
-```
-
-#### macOS (使用 Homebrew)
-```bash
-brew install cmake glfw openal-soft bullet
-```
-
-### 建置步驟
+或手動：
 
 ```bash
-# 克隆項目
-git clone https://github.com/PotatoEngine/PotatoEngine.git
-cd PotatoEngine
-
-# 創建建置目錄
-mkdir build && cd build
-
-# 配置 CMake
-cmake ..
-
-# 建置
-cmake --build . --config Release
-
-# 運行示例
-cd bin
-./SimpleExample
+cmake -B build -S . -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Release
 ```
 
-### Windows 建置
+MinGW：
 
 ```bash
-# 使用 Visual Studio
-cmake -G "Visual Studio 16 2019" ..
-cmake --build . --config Release
-
-# 或使用 MinGW
-cmake -G "MinGW Makefiles" ..
-cmake --build .
+cmake -B build-mingw -S . -G "MinGW Makefiles"
+cmake --build build-mingw
 ```
 
----
+### 測試約定
 
-## 💻 使用示例
-
-### 基本初始化
-
-```cpp
-#include "Core/PotatoEngine.h"
-
-using namespace Potato;
-
-int main() {
-    // 獲取引擎實例
-    PotatoEngine& engine = PotatoEngine::GetInstance();
-    
-    // 配置引擎
-    EngineConfig config;
-    config.windowWidth = 1920;
-    config.windowHeight = 1080;
-    config.windowTitle = "My Potato Game";
-    config.enablePhysics = true;
-    config.enableAudio = true;
-    config.enableGUI = true;
-    config.enableAI = true;
-    
-    // 初始化引擎
-    if (!engine.Initialize(config)) {
-        return -1;
-    }
-    
-    // 設置更新回調
-    engine.SetUpdateCallback([](float deltaTime) {
-        // 遊戲邏輯更新
-    });
-    
-    // 運行主循環
-    engine.RunMainLoop();
-    
-    // 關閉引擎
-    engine.Shutdown();
-    
-    return 0;
-}
-```
-
-### 使用 AI Agent
-
-```cpp
-#include "AI/AIAgentSystem.h"
-
-// 創建 AI 系統
-auto aiSystem = std::make_unique<Potato::AI::AIAgentSystem>();
-aiSystem->Initialize();
-
-// 創建代理
-auto manager = aiSystem->GetAgentManager();
-Potato::AI::AgentDesc desc;
-desc.name = "CodeMaster";
-desc.type = Potato::AI::AgentType::Developer;
-desc.autonomous = true;
-desc.performanceRating = 0.9f;
-
-Potato::AI::AIAgent* agent = manager->CreateAgent(desc);
-
-// 分配任務
-Potato::AI::AgentTask task;
-task.id = "task_001";
-task.description = "Generate player controller";
-task.category = "Code Generation";
-task.priority = Potato::AI::TaskPriority::High;
-
-manager->AssignTaskToAgent("CodeMaster", task);
-
-// 更新系統
-aiSystem->Update(deltaTime);
-```
-
-### 使用 GUI 系統
-
-```cpp
-#include "GUI/AgentGUI.h"
-
-// 創建 GUI 系統
-auto guiSystem = std::make_unique<Potato::GUI::AgentGUISystem>();
-guiSystem->Initialize();
-
-// 連接 AI 系統
-guiSystem->SetAgentSystem(aiSystem.get());
-
-// 設置主題
-guiSystem->SetTheme(Potato::GUI::GUITheme::Dark);
-
-// 更新和渲染
-guiSystem->Update(deltaTime);
-guiSystem->Render();
-```
-
-### AI Agent GUI 整合示例
-
-```cpp
-#include "AI/AIAgentSystem.h"
-#include "GUI/AgentGUI.h"
-
-// 初始化系統
-auto aiSystem = std::make_unique<Potato::AI::AIAgentSystem>();
-auto guiSystem = std::make_unique<Potato::GUI::AgentGUISystem>();
-
-aiSystem->Initialize();
-guiSystem->Initialize();
-
-// 連接系統
-guiSystem->SetAgentSystem(aiSystem.get());
-
-// 主循環
-while (running) {
-    float deltaTime = GetDeltaTime();
-    
-    aiSystem->Update(deltaTime);
-    guiSystem->Update(deltaTime);
-    guiSystem->Render();
-}
-```
-
-詳細使用指南請參考：[AI Agent GUI 指南](docs/guides/AI_AGENT_GUI_GUIDE.md)
-
-### 使用資源管理器
-
-```cpp
-#include "Resources/PotatoResourceManager.h"
-
-// 加載紋理
-Texture* texture = engine.GetResourceManager()->LoadTexture("textures/player.png");
-
-// 加載著色器
-Shader* shader = engine.GetResourceManager()->LoadShader(
-    "shaders/vertex.glsl",
-    "shaders/fragment.glsl"
-);
-
-// 使用著色器
-shader->Bind();
-shader->SetUniformMat4("modelMatrix", modelMatrix);
-shader->SetUniformVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-```
+- 目前**無統一測試入口**（無 CTest）——`Examples/` 下的測試程式是
+  獨立可執行 target，逐一建置執行
+- 遊戲層測試採 `potato_test_<name>` 命名（`POTATO_TESTS` CMake
+  option 為規劃項，尚未落地）；玩法測試一律 headless——不得依賴
+  GL context
 
 ---
 
-## 📚 核心系統
+## 開發規範（詳見 AGENTS.md）
 
-### 核心系統 (Core)
-- **PotatoEngine**: 引擎核心
-- **CoreTypes**: 核心型別定義
+- 不直接推 `main`/`develop`——一律走 PR，Conventional Commits
+- 不修改 `external/` 既有內容；新第三方僅以「新增子目錄＋README」引入
+- 不引第三方 JSON 庫；遊戲層 JSON 走自建 `JsonValue`（`Gameplay/Json/`，
+  Epic 1.2）；檔案 schema 版本化 `potato.<name>/<ver>`
+- 禁用 C 函式 `gets|strcpy|strcat|sprintf|vsprintf|scanf`；
+  用 `strncpy`/`snprintf` 等安全替代
+- 本地驗證需 MSVC **與** MinGW 雙過；MinGW 專用連結用
+  `if(WIN32 AND NOT MSVC)` 守衛
+- 存檔寫入一律 tmp＋rename 原子路徑；壞 schema/版本 → 拒絕不動現況
+- 模擬層決定性：固定 20 Hz、整數/定點、單一 seeded PRNG；
+  `Gameplay/` 無 Rendering/GUI 依賴；tick 路徑無檔案 I/O
 
-### 渲染系統 (Rendering)
-- **PotatoRenderer**: 渲染器接口
-- **PotatoOpenGL**: OpenGL 實現
-- **PotatoDirectX**: DirectX 實現 (開發中)
-- **PotatoVulkan**: Vulkan 實現 (開發中)
+## 文件索引
 
-### 物理系統 (Physics)
-- **PotatoPhysics**: 物理引擎核心
-- **RigidBody**: 剛體模擬
-- **CollisionShape**: 碰撞形狀
-- **支持**: 盒、球、膠囊、圓柱
-
-### 音訊系統 (Audio)
-- **PotatoAudio**: 音訊引擎
-- **Sound**: 音效播放
-- **Music**: 音樂播放
-- **3D 音訊**: 空間音訊支持
-
-### 輸入系統 (Input)
-- **PotatoInput**: 輸入管理
-- **鍵盤**: 完整鍵盤支持
-- **鼠標**: 按鈕、位置、滾動
-- **手柄**: 多手柄支持
-
-### 資源管理 (Resources)
-- **PotatoResourceManager**: 資源管理器
-- **Texture**: 紋理管理
-- **Model**: 模型管理
-- **Shader**: 著色器管理
-- **引用計數**: 自動資源管理
-
-### ECS 系統 (ECS)
-- **Entity**: 實體
-- **Component**: 組件
-- **System**: 系統
-- **World**: 世界管理
-
-### 遊戲對象 (GameObject)
-- **GameObject**: 遊戲對象基類
-- **Transform**: 變換組件
-- **Component**: 組件系統
-
-### 事件系統 (Events)
-- **EventBus**: 事件總線
-- **Event**: 事件基類
-- **EventHandler**: 事件處理器
-
-### 文件系統 (FileSystem)
-- **FileSystem**: 文件系統抽象
-- **File**: 文件操作
-- **Path**: 路徑處理
-
-### 日誌系統 (Logging)
-- **Logger**: 日誌記錄器
-- **LogLevel**: 日誌級別
-- **LogSink**: 日誌輸出
-
-### 數學庫 (Math)
-- **Vector**: 向量運算
-- **Matrix**: 矩陣運算
-- **Quaternion**: 四元數
-- **Math**: 數學函數
-
-### 內存管理 (Memory)
-- **Allocator**: 分配器
-- **Pool**: 對象池
-- **SmartPtr**: 智能指針
-
-### 平台抽象 (Platform)
-- **Platform**: 平台接口
-- **Window**: 窗口管理
-- **Thread**: 線程管理
-
-### 場景管理 (Scene)
-- **Scene**: 場景
-- **SceneManager**: 場景管理器
-- **Node**: 場景節點
-
-### 序列化 (Serialization)
-- **Serializer**: 序列化器
-- **Deserializer**: 反序列化器
-- **Format**: 格式支持 (JSON, Binary)
-
-### 時間管理 (Time)
-- **Time**: 時間管理
-- **Timer**: 計時器
-- **Clock**: 時鐘
-
-### AI 系統 (AI)
-- **AIAgentSystem**: AI 代理系統核心
-- **AIAgent**: AI 代理基類
-- **DeveloperAgent**: 開發代理（代碼生成和優化）
-- **DesignerAgent**: 設計代理（創意和設計任務）
-- **AnalystAgent**: 分析代理（數據分析和優化）
-- **AIAgentManager**: 代理管理器
-- **任務系統**: 任務分配和執行
-- **決策系統**: AI 決策制定和群體決策
-- **學習系統**: 機器學習支持
-
-### GUI 系統 (GUI)
-- **AgentGUISystem**: GUI 系統核心
-- **GUIManager**: GUI 管理器
-- **DashboardPanel**: 儀表板面板
-- **AgentManagerPanel**: 代理管理器面板
-- **TaskViewerPanel**: 任務查看器面板
-- **ConsolePanel**: 控制台面板
-- **SettingsPanel**: 設置面板
-- **StatisticsPanel**: 統計面板
-- **CodeEditorPanel**: 代碼編輯器面板
-- **AssetBrowserPanel**: 資產瀏覽器面板
+- [GDD](_bmad-output/planning-artifacts/gdds/gdd-MingGoRTS-2026-09-29/gdd.md)——完整遊戲設計
+- [技術架構](_bmad-output/game-architecture.md)——分層、橫切面、實作模式
+- [敘事設計](_bmad-output/narrative-design.md)——章回結構、四聲部結局、雙層世界
+- [Epics & Stories](_bmad-output/planning-artifacts/epics.md)——9 epics / 61 stories
+- [Sprint 狀態](_bmad-output/implementation-artifacts/sprint-status.yaml)——實作追蹤
+- [實作就緒報告](_bmad-output/planning-artifacts/implementation-readiness-report-2026-09-29.md)
+- [docs/](docs/index.md)——引擎指南、架構、研究報告
 
 ---
 
-## 🔧 配置選項
+**MingGoRTS — 以筆代兵，以治為勝**
 
-### 引擎配置
-```cpp
-struct EngineConfig {
-    int windowWidth = 1920;
-    int windowHeight = 1080;
-    std::string windowTitle = "Potato Engine";
-    bool enableVSync = true;
-    bool enableFullscreen = false;
-    int targetFPS = 60;
-    bool enablePhysics = true;
-    bool enableAudio = true;
-    bool enableGUI = true;
-    bool enableAI = true;
-    std::string assetPath = "./assets";
-};
-```
-
-### 渲染配置
-```cpp
-struct RenderConfig {
-    RendererType type = RendererType::OpenGL;
-    int windowWidth = 1920;
-    int windowHeight = 1080;
-    bool enableVSync = true;
-    glm::vec4 clearColor = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
-};
-```
-
-### 物理配置
-```cpp
-struct PhysicsConfig {
-    glm::vec3 gravity = glm::vec3(0.0f, -9.8f, 0.0f);
-    int maxSolverIterations = 10;
-    float fixedTimeStep = 1.0f / 60.0f;
-    bool enableDebugDraw = false;
-};
-```
-
----
-
-## 📊 性能目標
-
-- **啟動時間**: <5 秒
-- **內存使用**: <500MB (基礎系統)
-- **FPS**: 60+ FPS (中等場景)
-- **加載時間**: <2 秒 (小型場景)
-- **代理響應**: <50ms
-
----
-
-## 🛠️ 開發狀態
-
-### 已完成 ✅
-- [x] 核心引擎框架
-- [x] OpenGL 渲染器
-- [x] 物理系統框架
-- [x] 音訊系統框架
-- [x] 輸入系統
-- [x] 資源管理系統
-- [x] AI Agent 系統（含多種代理類型）
-- [x] GUI 圖形介面系統（含8個專業面板）
-- [x] AI Agent 與 GUI 整合
-- [x] ECS 架構
-- [x] 事件系統
-- [x] 文件系統
-- [x] 日誌系統
-- [x] 數學庫
-- [x] 內存管理
-- [x] 平台抽象
-- [x] 場景管理
-- [x] 序列化
-- [x] 時間管理
-- [x] CMake 建置系統
-
-### 開發中 🚧
-- [ ] DirectX 渲染器
-- [ ] Vulkan 渲染器
-- [ ] Bullet Physics 完整整合
-- [ ] OpenAL 完整整合
-- [ ] 模型加載器
-- [ ] 動畫系統
-- [ ] 粒子系統
-- [ ] 編輯器應用
-
-### 規劃中 📋
-- [ ] 網絡多人遊戲
-- [ ] 物理材質系統
-- [ ] 高級著色器
-- [ ] 性能分析器
-- [ ] 調試器
-- [ ] 移動平台支持
-
----
-
-## 🤝 貢獻
-
-歡迎貢獻！請遵循以下步驟：
-
-1. Fork 項目
-2. 創建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 開啟 Pull Request
-
----
-
-## 📄 許可證
-
-MIT License
-
----
-
-## 📞 聯繫方式
-
-- **項目主頁**: https://github.com/PotatoEngine/PotatoEngine
-- **問題報告**: https://github.com/PotatoEngine/PotatoEngine/issues
-- **文檔**: https://docs.potatoengine.com
-
-## 📚 相關文檔
-
-- [文檔索引](docs/index.md) - 完整文檔目錄
-- [AI Agent GUI 指南](docs/guides/AI_AGENT_GUI_GUIDE.md) - AI 代理和圖形介面使用指南
-- [整合完成報告](docs/reports/CONSOLIDATED_COMPLETION_REPORT.md) - 開發歷程彙總
-- [量子開發研究](docs/research/QUANTUM_DEVELOPMENT_RESEARCH.md) - 量子計算研究報告
-
----
-
-## 🙏 致謝
-
-感謝以下開源項目：
-
-- [GLFW](https://www.glfw.org/) - 窗口和輸入管理
-- [GLAD](https://github.com/Dav1dde/glad) - OpenGL 加載器
-- [Dear ImGui](https://github.com/ocornut/imgui) - 即時 GUI
-- [Bullet Physics](https://pybullet.org/) - 物理引擎
-- [OpenAL](https://www.openal.org/) - 音訊 API
-- [stb](https://github.com/nothings/stb) - 圖像加載
-
----
-
-## 🎯 未來路線
-
-### 短期目標 (3-6 個月)
-- 完成 DirectX 和 Vulkan 渲染器
-- 完整整合 Bullet Physics
-- 完整整合 OpenAL
-- 添加模型加載器
-- 實現編輯器應用
-
-### 中期目標 (6-12 個月)
-- 實現動畫系統
-- 實現粒子系統
-- 添加網絡支持
-- 實現性能分析器
-- 添加移動平台支持
-
-### 長期目標 (1-2 年)
-- 完整的編輯器套件
-- 可視化腳本系統
-- 高級 AI 特性
-- 雲端渲染支持
-- VR/AR 支持
-
----
-
-**🥔 Potato Engine - 完全獨立的遊戲引擎**
-
-*版本: 1.0.0*  
-*狀態: 活躍開發中*  
-*完全解除 UE5 依賴*
+*狀態：規劃完成 · GDD／架構／敘事／epics（61 stories）就緒 ·
+實作就緒評估 READY · 待啟動 Epic 1（Battle Core）*

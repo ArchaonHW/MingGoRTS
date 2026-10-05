@@ -38,7 +38,7 @@ int main() {
             "#include <cstring>\n"
             "void f() {\n"
             "    char b[8];\n"
-            "    strcpy(b, \"x\");\n"
+            "    strcpy(b, \"x\");\n" // UNSAFE_FN_FIXTURE
             "}\n";
         auto sug = sys.GenerateSuggestions(code, "t.cpp", 1, 1);
         const Suggestion* s = FindTitle(sug, "Unsafe C API");
@@ -52,7 +52,7 @@ int main() {
         const std::string code =
             "void f() {\n"
             "    char a[4], b[4];\n"
-            "    strcpy(a, \"x\"); strcpy(b, \"y\"); strcat(a, b);\n"
+            "    strcpy(a, \"x\"); strcpy(b, \"y\"); strcat(a, b);\n" // UNSAFE_FN_FIXTURE
             "}\n";
         auto sug = sys.GenerateSuggestions(code, "t.cpp", 1, 1);
         const Suggestion* s = FindTitle(sug, "Unsafe C API");
@@ -63,7 +63,7 @@ int main() {
     // [3] VeryHigh 不被權重洗回 High
     std::printf("[3] 信心 enum 保留\n");
     {
-        const std::string code = "void f(){ char b[4]; strcpy(b,\"x\"); }\n";
+        const std::string code = "void f(){ char b[4]; strcpy(b,\"x\"); }\n"; // UNSAFE_FN_FIXTURE
         auto sug = sys.GenerateSuggestions(code, "t.cpp", 1, 1);
         const Suggestion* s = FindTitle(sug, "Unsafe C API");
         Check(s && s->confidence == ConfidenceLevel::VeryHigh,
