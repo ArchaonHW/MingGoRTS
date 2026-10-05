@@ -143,6 +143,30 @@ std::string RunAndRecordStalemate(BattleRecorder& rec, bool bindBalance) {
     return doc.ok() ? doc.value.Emit() : std::string{};
 }
 
+// Governance record: a convoy marches into a raider's camp — the
+// "convoy" planning op + ConvoyRaided event (kind 7, the new
+// governance vocabulary) must replay bit-exact.
+std::string RunAndRecordConvoy(BattleRecorder& rec) {
+    auto md = JsonValue::Parse(MAP_DOC).value;
+    auto cd = JsonValue::Parse(CARDS_DOC).value;
+    BattleMap map = BattleMap::FromJson(md).value;
+    DoctrineLibrary cards = DoctrineLibrary::FromJson(cd).value;
+
+    BattleController bc(5, map, cards);
+    rec.Bind(5, md, cd);
+    SquadTemplate a = Mk("ally", 200, 15), f = Mk("raider", 200, 15);
+    bc.DeploySquad(a, 0, 0); rec.RecordDeploy(a, 0, 0);
+    bc.DeploySquad(f, 1, 1); rec.RecordDeploy(f, 1, 1);
+    bc.SpawnConvoy(0, {0, 1, 2});
+    rec.RecordConvoy(0, {0, 1, 2});
+    bc.RequestBeat(BattleBeat::Execution);
+    for (int i = 0; i < 70 && bc.Tick(); ++i) {} // raided at r1
+    bc.RequestBeat(BattleBeat::Aftermath);
+    rec.Seal(bc);
+    auto doc = rec.ToJson();
+    return doc.ok() ? doc.value.Emit() : std::string{};
+}
+
 // Recompute the integrity root over a (tampered) payload so the record
 // passes the byte-level seal — forcing the verifier onto the semantic
 // replay path. NOTE: ComputeRoot is public FNV — edit detection only.
@@ -251,6 +275,27 @@ int main(int argc, char** argv) {
                             : Fail<VerifyResult>("t", "parse");
         Check(r2.ok() && !r2.value.ok,
               "missing eval config -> replay diverges, rejected");
+    }
+
+    // --- Governance record: convoy op + raid event verify ---
+    {
+        BattleRecorder crec;
+        const std::string ctext = RunAndRecordConvoy(crec);
+        auto cdoc = JsonValue::Parse(ctext);
+        Check(cdoc.ok(), "convoy record emitted");
+        if (cdoc.ok()) {
+            bool sawRaid = false;
+            for (const JsonValue& e : cdoc.value["events"].Items()) {
+                if (e["kind"].AsInt() ==
+                    static_cast<std::int64_t>(SimEvent::Kind::ConvoyRaided)) {
+                    sawRaid = true;
+                }
+            }
+            Check(sawRaid, "convoy record carries a ConvoyRaided event");
+            auto r = Replay::Verify(cdoc.value);
+            Check(r.ok() && r.value.ok,
+                  "convoy record verifies (op + new event kind)");
+        }
     }
 
     // --- Tamper matrix: byte-level edits trip the root ---

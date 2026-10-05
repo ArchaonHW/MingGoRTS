@@ -32,7 +32,9 @@ BattleController::BattleController(std::uint64_t seed, const BattleMap& map,
                                    const EvalConfig& evalConfig)
     : map_(map), cards_(cards), sim_(seed),
       fog_{QuantumFog(map, fogConfig), QuantumFog(map, fogConfig)},
-      planConfig_(planConfig), evalConfig_(evalConfig) {}
+      planConfig_(planConfig), evalConfig_(evalConfig) {
+    field_.Init(map);
+}
 
 BattleController::~BattleController() = default;
 BattleController::BattleController(const BattleController&) = default;
@@ -374,6 +376,12 @@ const PlanArrow& BattleController::ArrowOf(std::size_t squadIndex) const {
     return squadIndex < arrows_.size() ? arrows_[squadIndex] : EMPTY;
 }
 
+bool BattleController::SpawnConvoy(int side,
+                                   std::vector<std::size_t> path) {
+    if (beat_ != BattleBeat::Planning) return false;
+    return field_.SpawnConvoy(side, std::move(path));
+}
+
 void BattleController::ApplyPlanBonuses() {
     for (std::size_t i = 0; i < squads_.size(); ++i) {
         PlanArrow& a = arrows_[i];
@@ -562,8 +570,24 @@ bool BattleController::Tick() {
     // 1) doctrine eval on tick-start state (EvalTick is const on squads_)
     EvalOutcome out = Doctrine::EvalTick(map_, squads_, sheets_, cards_,
                                          sim_.Rng(), cpPool_, fog_, tick);
-    // 2) commit pending deltas post-eval
-    Doctrine::ApplyDeltas(squads_, out.deltas);
+    // 2) commit pending deltas post-eval — IN LIST ORDER. Burn deltas
+    //    route to the GovernanceField (a Move earlier in the list can
+    //    preempt the arson); squad mutators go through ApplyDeltas.
+    std::vector<SimEvent> burnEvents;
+    for (const PendingDelta& d : out.deltas) {
+        if (d.kind == PendingDelta::Kind::Burn) {
+            if (d.squadIndex >= 0 &&
+                static_cast<std::size_t>(d.squadIndex) < squads_.size()) {
+                auto ev = field_.TryBurn(
+                    static_cast<std::size_t>(d.squadIndex),
+                    squads_[static_cast<std::size_t>(d.squadIndex)], tick);
+                if (ev.has_value()) burnEvents.push_back(*ev);
+            }
+        } else {
+            Doctrine::ApplyDeltas(squads_,
+                                  std::span<const PendingDelta>(&d, 1));
+        }
+    }
     // 2.5) plan arrows: on-path Holding squads advance one leg
     MarchArrows();
     // 3) squads advance edge traversal; Routing squads age off-field
@@ -578,8 +602,14 @@ bool BattleController::Tick() {
             routTimers_[i] = 0;
         }
     }
-    // 4) append this tick's events to the battle log
+    // 3.5) governance scan on post-move truth: village dwell/latch,
+    //      convoy march -> raid -> arrival.
+    std::vector<SimEvent> govEvents = field_.Tick(squads_, tick);
+    // 4) append this tick's events to the battle log (doctrine ->
+    //    burn -> governance — canonical emission order)
     for (const SimEvent& e : out.events) events_.push_back(e);
+    for (const SimEvent& e : burnEvents) events_.push_back(e);
+    for (const SimEvent& e : govEvents) events_.push_back(e);
     // 5) sim housekeeping: tick counter + stream draw + stream checksum
     sim_.Tick();
     // 6) a wiped side closes the battle — same tick, after all commits;
@@ -797,6 +827,29 @@ std::uint64_t BattleController::Checksum() const {
                         static_cast<std::uint32_t>(fog_[0].CertaintyAt(r))));
         h = Fold(h, static_cast<std::uint64_t>(
                         static_cast<std::uint32_t>(fog_[1].CertaintyAt(r))));
+    }
+    // GovernanceField: village tracks + convoys are sim state too.
+    h = Fold(h, static_cast<std::uint64_t>(field_.Villages().size()));
+    for (const VillageTrack& v : field_.Villages()) {
+        h = Fold(h, RegionKey(v.region));
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(v.claimant)));
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(v.dwell)));
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(v.occupier)));
+        h = Fold(h, static_cast<std::uint64_t>(v.burned));
+    }
+    h = Fold(h, static_cast<std::uint64_t>(field_.Convoys().size()));
+    for (const Convoy& c : field_.Convoys()) {
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(c.side)));
+        h = Fold(h, static_cast<std::uint64_t>(c.cursor));
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(c.legProgress)));
+        h = Fold(h, static_cast<std::uint64_t>(c.active));
+        h = Fold(h, static_cast<std::uint64_t>(c.path.size()));
+        for (std::size_t r : c.path) h = Fold(h, RegionKey(r));
     }
     return h;
 }

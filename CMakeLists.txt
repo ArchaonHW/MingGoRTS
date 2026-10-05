@@ -429,6 +429,12 @@ target_include_directories(potato_test_eval PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_eval PotatoGameplay)
 add_test(NAME potato_test_eval COMMAND potato_test_eval)
 
+# Story 4.1 — GovernanceField battle events
+add_executable(potato_test_governance Examples/potato_test_governance.cpp)
+target_include_directories(potato_test_governance PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_governance PotatoGameplay)
+add_test(NAME potato_test_governance COMMAND potato_test_governance)
+
 # Replay-verifier CLI: potato_verify <record.json> -> VERIFY OK/FAIL
 add_executable(potato_verify Examples/potato_verify.cpp)
 target_include_directories(potato_verify PRIVATE ${CMAKE_SOURCE_DIR})

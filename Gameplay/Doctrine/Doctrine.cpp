@@ -43,6 +43,9 @@ constexpr TokenDef ACTION_TOKENS[] = {
     // are checked against the BattleMap at eval time (cards are map-agnostic).
     {"move", static_cast<int>(ActionKind::Move), true, 0, 2147483647ll},
     {"retreat", static_cast<int>(ActionKind::Retreat), false, 0, 0},
+    // burn: the authored atrocity — no param; the target is always
+    // the village the firing squad stands on.
+    {"burn", static_cast<int>(ActionKind::Burn), false, 0, 0},
 };
 constexpr TokenDef MODIFIER_TOKENS[] = {
     {"none", static_cast<int>(ModifierKind::None), false, 0, 0},
@@ -376,6 +379,18 @@ EvalOutcome EvalTick(const BattleMap& map,
                     }
                     break;
                 }
+                case ActionKind::Burn:
+                    // Only emit on village ground — a burn card on open
+                    // field is a no-op; the GovernanceField re-validates
+                    // at apply (post-delta state, burned flag).
+                    if (sq.regionIndex < map.RegionCount() &&
+                        (map.RegionAt(sq.regionIndex).strategic &
+                         STRATEGIC_VILLAGE) != 0) {
+                        out.deltas.push_back({PendingDelta::Kind::Burn,
+                                              static_cast<int>(si), 0,
+                                              Squad::NO_REGION});
+                    }
+                    break;
             }
             switch (card.modifier) {
                 case ModifierKind::None: break;
@@ -398,7 +413,7 @@ EvalOutcome EvalTick(const BattleMap& map,
 }
 
 void ApplyDeltas(std::vector<Squad>& squads,
-                 const std::vector<PendingDelta>& deltas) {
+                 std::span<const PendingDelta> deltas) {
     for (const PendingDelta& d : deltas) {
         if (d.squadIndex < 0 ||
             static_cast<std::size_t>(d.squadIndex) >= squads.size()) continue;
@@ -418,6 +433,8 @@ void ApplyDeltas(std::vector<Squad>& squads,
                     : (sum > 2147483647ll ? 2147483647 : static_cast<int>(sum));
                 break;
             }
+            case PendingDelta::Kind::Burn:
+                break; // village state — the GovernanceField owns it
         }
     }
 }

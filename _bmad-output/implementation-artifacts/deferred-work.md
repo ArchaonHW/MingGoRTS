@@ -100,3 +100,8 @@
 
 - `RivalBook` is a standalone `potato.rivals/1` doc — not yet embedded in `potato.campaign/1` nor wired into a save slot. Decide embed-vs-sibling-file when the save format next bumps.
 - No production call site: the CardFired->trigger-histogram fold (reading the recorded battle to feed `RecordChapter`) and counter-deck->SquadSheet injection belong to the chapter-shell integration seam (`ChapterState`/Epic E). The AC is demonstrated as API+test.
+
+## Deferred from: code review of 4-1-governancefield-battle-events (2026-10-04)
+
+- A convoy still in flight when the battle closes emits no terminal event — silence = unsettled; the ledger fold (4.3) and chapter shell decide whether an unresolved convoy counts for anything. Also: convoys don't hold a battle open (wipe detection counts squads only) — deliberate for now.
+- `ConvoyArrived.squadIndex` records destination-presence, not route escort; if accounting needs per-leg escort credit, add an escorted-legs counter to `Convoy` and carry it on the event.

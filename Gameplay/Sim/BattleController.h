@@ -4,6 +4,7 @@
 #include "Gameplay/Doctrine/Doctrine.h"
 #include "Gameplay/Eval/WinEval.h"
 #include "Gameplay/Fog/QuantumFog.h"
+#include "Gameplay/Governance/GovernanceField.h"
 #include "Gameplay/Plan/BattlePlan.h"
 #include "Gameplay/Result.h"
 #include "Gameplay/Sim/Sim.h"
@@ -98,6 +99,13 @@ public:
                    const std::vector<std::size_t>& path);
     const PlanArrow& ArrowOf(std::size_t squadIndex) const;
 
+    // --- GovernanceField (Planning only) ---
+    // Spawn a noncombatant convoy on a fixed route. Path rules match
+    // DrawArrow's (in-bounds, adjacent, no revisits, len >= 2); the
+    // convoy's march/raid/arrival emits during Execution ticks.
+    bool SpawnConvoy(int side, std::vector<std::size_t> path);
+    const GovernanceField& Field() const { return field_; }
+
     // --- Execution tick ---
     // One deterministic tick: doctrine eval (snapshot semantics) ->
     // apply pending deltas -> squads advance edge traversal -> append
@@ -165,6 +173,7 @@ private:
     PlanConfig planConfig_;
     EvalConfig evalConfig_;
     std::vector<PlanArrow> arrows_; // index-aligned; active==false=none
+    GovernanceField field_; // village tracks + convoys (Epic 4)
 };
 
 } // namespace Potato::Gameplay

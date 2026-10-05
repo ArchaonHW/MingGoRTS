@@ -8,6 +8,7 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -41,6 +42,8 @@ enum class ActionKind : std::uint8_t {
     Brace,           // param: cohesion restored
     Move,            // param: region index (pending move order)
     Retreat,         // move to lowest-index neighbor (map-edge proxy)
+    Burn,            // torch the village the squad stands on
+                     // (GovernanceField gates at apply)
 };
 
 enum class ModifierKind : std::uint8_t {
@@ -93,6 +96,14 @@ struct SimEvent {
         // param = winnerSide (-1 draw), aux = CloseReason ordinal
         // (0=Wipe, 1=Concede, 2=Stalemate — wire-format stable).
         ResultDeclared,
+        // GovernanceField deeds (Epic 4) — truth-layer outcomes
+        // emitted post-movement, destined for ledger posting.
+        // param = region in all four; side = the perpetrator.
+        VillageOccupied, // squadIndex = occupier witness
+        VillageBurned,   // squadIndex = the arsonist
+        ConvoyArrived,   // aux = convoy index; squadIndex = escort
+                         // of record at destination (-1 unescorted)
+        ConvoyRaided,    // aux = convoy index; squadIndex = raider
     };
 
     Kind kind = Kind::CardFired;
@@ -123,7 +134,11 @@ struct SimEvent {
 // Pending write from an action/modifier — applied AFTER all slots eval
 // (snapshot isolation: same-tick writes are never visible to triggers).
 struct PendingDelta {
-    enum class Kind : std::uint8_t { Cohesion, Move, Attack };
+    // Burn mutates no squad — it targets the village the squad
+    // stands on. ApplyDeltas skips it; the controller routes it to
+    // the GovernanceField (ordered with the rest, so a Move delta
+    // earlier in the list can preempt the arson).
+    enum class Kind : std::uint8_t { Cohesion, Move, Attack, Burn };
 
     Kind kind = Kind::Cohesion;
     int squadIndex = -1;
@@ -190,9 +205,12 @@ EvalOutcome EvalTick(const BattleMap& map,
                      int tick);
 
 // Apply pending deltas to live squads — call AFTER EvalTick.
-// Terminal squads (Routed/Destroyed) ignore deltas.
+// Terminal squads (Routed/Destroyed) ignore deltas. Burn deltas
+// are skipped here — they belong to the GovernanceField; callers
+// preserving interleaved ordering dispatch per-delta via
+// std::span<const PendingDelta>(&d, 1).
 void ApplyDeltas(std::vector<Squad>& squads,
-                 const std::vector<PendingDelta>& deltas);
+                 std::span<const PendingDelta> deltas);
 
 } // namespace Doctrine
 

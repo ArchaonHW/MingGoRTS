@@ -42,7 +42,9 @@ bool EventFromJson(const JsonValue& j, SimEvent& e) {
         return false;
     }
     const std::int64_t kind = j["kind"].AsInt();
-    if (kind < 0 || kind > 3) return false; // CardFired..ResultDeclared
+    // CardFired..ConvoyRaided — ordinals are append-only (v3 added
+    // the four governance kinds 4-7; bump the bound with the enum).
+    if (kind < 0 || kind > 7) return false;
     // Every field must fit int32 — silent narrowing would let a forged
     // value verify as a different number than the wire claimed.
     const auto fitInt = [&](const char* key, std::int64_t lo,
@@ -152,6 +154,16 @@ void BattleRecorder::RecordCpPool(int side, int cp) {
     JsonValue::Object op;
     op.emplace("cp", JsonValue::Int(cp));
     op.emplace("op", JsonValue::String("cp"));
+    op.emplace("side", JsonValue::Int(side));
+    inputs_.push_back(JsonValue::MakeObject(std::move(op)));
+}
+
+void BattleRecorder::RecordConvoy(
+    int side, const std::vector<std::size_t>& path) {
+    if (sealed_) return;
+    JsonValue::Object op;
+    op.emplace("op", JsonValue::String("convoy"));
+    op.emplace("path", PathJson(path));
     op.emplace("side", JsonValue::Int(side));
     inputs_.push_back(JsonValue::MakeObject(std::move(op)));
 }

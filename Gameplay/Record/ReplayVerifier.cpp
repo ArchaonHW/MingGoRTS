@@ -264,6 +264,22 @@ Result<VerifyResult> Verify(const JsonValue& doc) {
             if (!bc.SetCpPool(side, cp)) {
                 return Reject("recorded cp op rejected on replay");
             }
+        } else if (*name == "convoy") {
+            int side;
+            if (!FitInt(op, "side", 0, 1, side) ||
+                !op["path"].IsArray()) {
+                return Reject("malformed convoy op");
+            }
+            std::vector<std::size_t> path;
+            for (const JsonValue& r : op["path"].Items()) {
+                if (!r.IsInt() || r.AsInt() < 0 || r.AsInt() > I32MAX) {
+                    return Reject("malformed convoy path element");
+                }
+                path.push_back(static_cast<std::size_t>(r.AsInt()));
+            }
+            if (!bc.SpawnConvoy(side, std::move(path))) {
+                return Reject("recorded convoy rejected on replay");
+            }
         } else {
             return Reject("unknown input op: " + *name);
         }

@@ -32,7 +32,9 @@ public:
     // payload fields and the ResultDeclared event kind. Records
     // stamped by v1 tools fail strict field validation — format
     // revisions ride this axis, not the potato.battle_record schema.
-    static constexpr int TOOL_VERSION = 2;
+    // v3: GovernanceField — four new SimEvent kinds (ordinals 4-7)
+    // and the "convoy" planning op. Older tools reject kind > 3.
+    static constexpr int TOOL_VERSION = 3;
     static constexpr std::string_view SCHEMA = "potato.battle_record/1";
 
     // Embedded content makes the record self-contained — the verifier
@@ -63,6 +65,8 @@ public:
     void RecordIntel(int fogSide, int squadIndex, int region,
                      int certainty);
     void RecordCpPool(int side, int cp);
+    // Argument order mirrors BattleController::SpawnConvoy(side, path).
+    void RecordConvoy(int side, const std::vector<std::size_t>& path);
 
     // Captures bc's event stream + checksum + outcome and computes the
     // integrity root. Records are completed battles only: Seal no-ops
