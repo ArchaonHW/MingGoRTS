@@ -4,6 +4,8 @@
 #include "Campaign/State/CampaignState.h"
 #include "Gameplay/Result.h"
 
+#include <string_view>
+
 namespace Potato::Campaign {
 
 // Chapter shell & progression (Story 3.4): binds the
@@ -33,5 +35,15 @@ Gameplay::Result<int> InitializeProgress(
 // library's chapter space.
 Gameplay::Result<int> ResolveAndAdvance(
     CampaignState& state, const ChapterLibrary& lib);
+
+// The same gates ResolveAndAdvance enforces, exported as a pure
+// predicate. ConcludeChapter (Story 4.4) preflights with it so a
+// ledger seal only lands when the advance cannot fail — the gate
+// list is shared, not mirrored, so the two can never drift.
+// Returns nullptr when the current chapter can close, else a
+// static reason; `error` receives the gate's error class.
+const char* CanResolveChapter(const CampaignState& state,
+                              const ChapterLibrary& lib,
+                              std::string_view& error);
 
 } // namespace Potato::Campaign

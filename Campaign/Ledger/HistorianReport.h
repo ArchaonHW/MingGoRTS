@@ -33,13 +33,27 @@ struct OmissionPolicy {
     bool omitSuspect = true; // flagged entries are under question
 };
 
+// A sealed chapter verdict (Story 4.4), folded from entries carrying
+// BOTH `resolution:<kind>` and `chapter:<idx>` tags. Forged/suspect
+// entries fold too — a contested verdict still gets read out
+// (suspicion is data) — but the flags ride the note so the render
+// can annotate doubt per line, not just in the global audit counts.
+struct ResolutionNote {
+    std::int64_t chapter = -1;
+    std::string kind; // the resolution: payload, e.g. "governance_victory"
+    bool forged = false;  // provenance == Forged
+    bool suspect = false; // flag overlay set
+};
+
 // The rendered chapter chronicle's ledger section. `includedSeqs`
 // are the entries the historian narrates; `omissions` is the
 // confession counter — 本報告省略 N 項 (epics.md literal).
+// `resolutions` is the sealed-verdict list in seq order.
 struct HistorianReport {
     AuditSegment audit;
     std::vector<std::uint64_t> includedSeqs; // ascending seq order
     std::size_t omissions = 0;
+    std::vector<ResolutionNote> resolutions;
 
     // Deterministic integer-only text render (tooling/tests). The
     // confession line is the AC's literal marker; layout/styling is

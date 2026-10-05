@@ -2,6 +2,8 @@
 // Story 3.2 — SaveSystem: atomic tmp->rename saves, gated loads.
 #include "Campaign/Chapters/ChapterLibrary.h"
 #include "Campaign/Chapters/Progression.h"
+#include "Campaign/Governance/Accumulators.h"
+#include "Campaign/Governance/Victory.h"
 #include "Campaign/Rivals/RivalDeck.h"
 #include "Campaign/Roster/RefitCamp.h"
 #include "Campaign/Roster/Roster.h"
@@ -1255,6 +1257,182 @@ int main() {
                        .ok(),
                   "empty rival id rejected");
         }
+    }
+
+    // ===== Story 4.4 — Governance Victory Path =====
+    {
+        namespace fs = std::filesystem;
+        const fs::path vdir =
+            fs::temp_directory_path() / "potato_test_victory_ch";
+        fs::remove_all(vdir);
+        fs::create_directories(vdir);
+        const auto wch = [&vdir](const char* name, const char* id,
+                                 int idx) {
+            std::ofstream f(vdir / name,
+                            std::ios::binary | std::ios::trunc);
+            f << "{\"schema\":\"potato.chapter/1\",\"id\":\"" << id
+              << "\",\"index\":" << idx
+              << ",\"title\":\"t\",\"map\":\"m.json\","
+                 "\"combat\":true}";
+        };
+        wch("a.json", "v0", 0);
+        wch("b.json", "v1", 1);
+        wch("c.json", "v2", 2);
+        ChapterLibrary vlib;
+        Check(ChapterLibrary::Load(vdir, vlib).ok,
+              "4.4: library loads");
+
+        const auto ready = [&vlib]() {
+            CampaignState st;
+            InitializeProgress(st, vlib);
+            return st;
+        };
+        const auto fund = [](CampaignState& st, std::int64_t ps,
+                             std::int64_t ord) {
+            Posting p;
+            p.credit = {Account::PopularSupport, ps};
+            p.debit = {Account::Materiel, ps};
+            p.memo = "rule";
+            if (ord != 0) {
+                p.tags = {"order:" + std::to_string(ord)};
+            }
+            return st.GetLedger().Post(p).ok();
+        };
+
+        using Potato::Campaign::ChapterResolution;
+        using Potato::Campaign::ConcludeChapter;
+        using Potato::Campaign::FoldGovernance;
+        using Potato::Campaign::IsGovernanceVictory;
+        using Potato::Campaign::ResolutionName;
+
+        // Threshold predicate: both axes at bound win; one short fails.
+        {
+            CampaignState st = ready();
+            Check(fund(st, 70, 60), "4.4: threshold funding posts");
+            const auto a = FoldGovernance(st.GetLedger());
+            Check(IsGovernanceVictory(a),
+                  "4.4: 70/60 exactly meets thresholds");
+            Check(ResolutionName(ChapterResolution::GovernanceVictory) ==
+                          std::string("governance_victory") &&
+                      ResolutionName(ChapterResolution::BattleVictory) ==
+                          std::string("battle_victory") &&
+                      ResolutionName(ChapterResolution::Defeat) ==
+                          std::string("defeat"),
+                  "4.4: resolution names are canonical");
+        }
+        // Thresholds override upward too: won field + met
+        // thresholds still reads governance.
+        {
+            CampaignState st = ready();
+            fund(st, 90, 90);
+            const auto r = ConcludeChapter(st, vlib, true);
+            Check(r.ok() &&
+                      r.value == ChapterResolution::GovernanceVictory,
+                  "4.4: won battle + thresholds = governance victory");
+        }
+        {
+            CampaignState st = ready();
+            fund(st, 69, 60);
+            Check(!IsGovernanceVictory(FoldGovernance(st.GetLedger())),
+                  "4.4: 民心 69 short");
+            CampaignState s2 = ready();
+            fund(s2, 70, 59);
+            Check(!IsGovernanceVictory(FoldGovernance(s2.GetLedger())),
+                  "4.4: 秩序 59 short");
+        }
+
+        // The AC's core: thresholds met at chapter end resolve as
+        // governance victory — even when the field was lost.
+        {
+            CampaignState st = ready();
+            fund(st, 75, 80);
+            const auto r = ConcludeChapter(st, vlib, false);
+            Check(r.ok() &&
+                      r.value == ChapterResolution::GovernanceVictory,
+                  "4.4: lost battle + thresholds = governance victory");
+            const auto& cp = st.GetChapter();
+            Check(cp.resolved[0] && cp.current == 1 && cp.unlocked[1],
+                  "4.4: chapter sealed-resolved, progression advanced");
+            // The verdict is IN the ledger — seal entry carries both
+            // tags and the Mandate/民心 token pair.
+            const auto& e = st.GetLedger().Entries().back();
+            bool hasRes = false, hasCh = false;
+            for (const auto& t : e.tags) {
+                hasRes |= t == "resolution:governance_victory";
+                hasCh |= t == "chapter:0";
+            }
+            Check(hasRes && hasCh,
+                  "4.4: seal entry carries resolution+chapter tags");
+            Check(e.credit.account == Account::Mandate &&
+                      e.debit.account == Account::PopularSupport,
+                  "4.4: governance seal books 民心->天命");
+            Check(st.GetLedger().Verify() == nullptr,
+                  "4.4: sealed chain still verifies");
+            // Seal is real bookkeeping: 民心 dropped the token grain.
+            Check(st.GetLedger().Balance(Account::PopularSupport) == 74,
+                  "4.4: seal moves exactly one grain");
+        }
+
+        // Field won, thresholds unmet -> plain battle victory.
+        {
+            CampaignState st = ready();
+            fund(st, 10, 10);
+            const auto r = ConcludeChapter(st, vlib, true);
+            Check(r.ok() &&
+                      r.value == ChapterResolution::BattleVictory,
+                  "4.4: won field without thresholds = battle victory");
+            const auto& e = st.GetLedger().Entries().back();
+            Check(e.credit.account == Account::ArmyPrestige &&
+                      e.debit.account == Account::Materiel,
+                  "4.4: battle seal books 物資->軍威");
+        }
+
+        // Field lost, thresholds unmet -> defeat (4.5 converts).
+        {
+            CampaignState st = ready();
+            fund(st, 10, 10);
+            const auto r = ConcludeChapter(st, vlib, false);
+            Check(r.ok() && r.value == ChapterResolution::Defeat,
+                  "4.4: lost field without thresholds = defeat");
+            const auto& e = st.GetLedger().Entries().back();
+            Check(e.credit.account == Account::Materiel &&
+                      e.debit.account == Account::ArmyPrestige,
+                  "4.4: defeat seal books 軍威->物資 salvage");
+        }
+
+        // Fail-closed: nothing posts when the chapter can't close.
+        {
+            CampaignState st; // never initialized
+            fund(st, 90, 90);
+            const auto n = st.GetLedger().Size();
+            const auto r = ConcludeChapter(st, vlib, true);
+            Check(!r.ok() && st.GetLedger().Size() == n,
+                  "4.4: uninitialized state rejects, no seal posted");
+        }
+
+        // Two chapters closed then sealed-verify still holds; final
+        // chapter resolves to the campaign-complete sentinel.
+        {
+            CampaignState st = ready();
+            Check(ConcludeChapter(st, vlib, true).ok() &&
+                      ConcludeChapter(st, vlib, true).ok() &&
+                      ConcludeChapter(st, vlib, true).ok(),
+                  "4.4: three chapters conclude");
+            Check(st.GetChapter().current == 3,
+                  "4.4: campaign-complete sentinel reached");
+            const auto r2 = ConcludeChapter(st, vlib, true);
+            Check(!r2.ok() && r2.error == "campaign",
+                  "4.4: complete campaign refuses, campaign class");
+            std::size_t seals = 0;
+            for (const auto& e : st.GetLedger().Entries()) {
+                for (const auto& t : e.tags) {
+                    if (t.rfind("resolution:", 0) == 0) ++seals;
+                }
+            }
+            Check(seals == 3, "4.4: one seal per closed chapter");
+        }
+
+        fs::remove_all(vdir);
     }
 
     std::printf(failures ? "CAMPAIGN TESTS FAILED: %d\n"

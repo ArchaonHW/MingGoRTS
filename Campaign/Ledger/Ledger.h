@@ -95,6 +95,11 @@ public:
     // (compare CrossCheck's record_root: discipline). Producers and
     // folders share these spellings; anything else is just a label.
     static constexpr std::string_view TAG_ATROCITY = "atrocity";
+    // Chapter-resolution seal (Story 4.4): a chapter-end posting
+    // carries `resolution:<kind>` + `chapter:<idx>` so the historian
+    // folds the verdict out of the same truth as everything else.
+    static constexpr std::string_view TAG_RESOLUTION = "resolution:";
+    static constexpr std::string_view TAG_CHAPTER = "chapter:";
     static constexpr std::size_t MAX_MEMO_LEN = 256;
     // Per-leg amount cap. With MAX_ENTRIES worst-case entries the
     // Balance fold stays ~1e18 — far inside int64.

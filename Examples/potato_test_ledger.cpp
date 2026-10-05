@@ -615,12 +615,12 @@ int main() {
         Check(ra.omissions == 0 && ra.includedSeqs.size() == 3,
               "policy: nothing omitted confesses zero");
 
-        Check(r.RenderText().find("\xE6\x9C\xAC\xE5\xA0\x81\xE5\x91\x8A\xE7\x9C\x81\xE7\x95\xA5 2 \xE9\xA0\x85") !=
+        Check(r.RenderText().find("\xE6\x9C\xAC\xE5\xA0\xB1\xE5\x91\x8A\xE7\x9C\x81\xE7\x95\xA5 2 \xE9\xA0\x85") !=
                   std::string::npos,
               "confession line carries the count");
         const HistorianReport re = RenderHistorianReport(Ledger{});
         Check(re.omissions == 0 &&
-                  re.RenderText().find("\xE6\x9C\xAC\xE5\xA0\x81\xE5\x91\x8A\xE7\x9C\x81\xE7\x95\xA5 0 \xE9\xA0\x85") !=
+                  re.RenderText().find("\xE6\x9C\xAC\xE5\xA0\xB1\xE5\x91\x8A\xE7\x9C\x81\xE7\x95\xA5 0 \xE9\xA0\x85") !=
                       std::string::npos,
               "empty ledger still confesses");
         Check(re.audit.chainOk && re.audit.breakReason == nullptr,
@@ -1144,6 +1144,117 @@ int main() {
         Check(a3.popularSupport == 0 && a3.order == 0 &&
                   a3.corruption == 0,
               "empty ledger folds zeros");
+    }
+    // --- AC (4.4): resolution seals fold into the report,
+    // rendered in chronicle voice ---
+    {
+        Ledger l;
+        const auto seal = [&](const char* kind, int ch) {
+            Posting p;
+            p.credit = {Account::Mandate, 1};
+            p.debit = {Account::PopularSupport, 1};
+            p.memo = "chapter resolved";
+            p.tags = {std::string("resolution:") + kind,
+                      "chapter:" + std::to_string(ch)};
+            return l.Post(p).ok();
+        };
+        Check(seal("governance_victory", 0), "gov seal posts");
+        Check(seal("battle_victory", 1), "battle seal posts");
+        Check(seal("defeat", 2), "defeat seal posts");
+        // A forged verdict is read out too — suspicion is data.
+        Posting fp;
+        fp.credit = {Account::Mandate, 1};
+        fp.debit = {Account::PopularSupport, 1};
+        fp.memo = "enemy hand";
+        fp.tags = {"resolution:governance_victory", "chapter:3"};
+        Check(l.Forge(fp).ok(), "forged verdict posts");
+        // Lone tags fold nothing — both halves required.
+        Posting lp;
+        lp.credit = {Account::Mandate, 1};
+        lp.debit = {Account::PopularSupport, 1};
+        lp.memo = "orphan";
+        lp.tags = {"resolution:phantom"};
+        Check(l.Post(lp).ok(), "lone resolution tag posts");
+        Posting lc;
+        lc.credit = {Account::Mandate, 1};
+        lc.debit = {Account::PopularSupport, 1};
+        lc.memo = "orphan2";
+        lc.tags = {"chapter:9"};
+        Check(l.Post(lc).ok(), "lone chapter tag posts");
+
+        const HistorianReport r = RenderHistorianReport(l);
+        Check(r.resolutions.size() == 4,
+              "4.4: four paired seals fold (forged included)");
+        Check(r.resolutions[0].chapter == 0 &&
+                  r.resolutions[0].kind == "governance_victory",
+              "4.4: first resolution note parsed");
+        const std::string text = r.RenderText();
+        Check(text.find("resolution chapter 0: governance victory") !=
+                  std::string::npos &&
+                  text.find("\xE4\xBB\xA5\xE6\xB2\xBB\xE7\x82\xBA"
+                            "\xE5\x8B\x9D") != std::string::npos,
+              "4.4: governance line renders in chronicle voice");
+        Check(text.find("resolution chapter 1: battle victory") !=
+                  std::string::npos,
+              "4.4: battle victory line distinct");
+        Check(text.find("resolution chapter 2: defeat") !=
+                      std::string::npos &&
+                  text.find("rout") == std::string::npos,
+              "4.4: defeat line; no battle-rout language");
+        Check(text.find("phantom") == std::string::npos &&
+                  text.find("chapter 9") == std::string::npos,
+              "4.4: orphan tags never render");
+        // Forged verdict confessed via the audit counter AND
+        // annotated on its own line — doubt is attributable.
+        Check(r.audit.forged == 1,
+              "4.4: forged verdict counted in audit");
+        Check(r.resolutions[3].forged && !r.resolutions[0].forged,
+              "4.4: provenance rides the note");
+        Check(text.find("resolution chapter 3: governance victory "
+                        "\xE2\x80\x94") != std::string::npos &&
+                  text.find("(forged)") != std::string::npos,
+              "4.4: forged verdict annotated per line");
+        // Suspect flag likewise annotates.
+        Check(l.SetSuspect(1), "suspect flag set");
+        const std::string t2 = RenderHistorianReport(l).RenderText();
+        Check(t2.find("battle victory \xE2\x80\x94") !=
+                      std::string::npos &&
+                  t2.find("(suspect)") != std::string::npos,
+              "4.4: suspect verdict annotated per line");
+
+        // Malformed chapter payloads never pair into a verdict.
+        Ledger bad;
+        const auto badseal = [&](const char* res,
+                                 const char* ch) {
+            Posting p;
+            p.credit = {Account::Mandate, 1};
+            p.debit = {Account::PopularSupport, 1};
+            p.memo = "x";
+            p.tags = {std::string("resolution:") + res,
+                      std::string("chapter:") + ch};
+            return bad.Post(p).ok();
+        };
+        Check(badseal("defeat", "3x"), "alnum chapter posts");
+        Check(badseal("defeat", "-1"), "signed chapter posts");
+        Check(badseal("defeat", ""), "empty chapter posts");
+        Check(badseal("defeat", "99999999999"), "11-digit posts");
+        Check(badseal("", "4"), "empty resolution posts");
+        Check(RenderHistorianReport(bad).resolutions.empty(),
+              "4.4: malformed pairs fold nothing");
+
+        // Unknown payloads render sanitized — control bytes can't
+        // inject fake report lines.
+        Ledger un;
+        Posting up;
+        up.credit = {Account::Mandate, 1};
+        up.debit = {Account::PopularSupport, 1};
+        up.memo = "x";
+        up.tags = {"resolution:fake\nforged:0", "chapter:5"};
+        Check(un.Post(up).ok(), "newline payload posts (tag-level)");
+        const std::string ut = RenderHistorianReport(un).RenderText();
+        Check(ut.find("fake?forged:0") != std::string::npos &&
+                  ut.find("\nforged:0") == std::string::npos,
+              "4.4: unknown kind sanitized, no line injection");
     }
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
                          : "LEDGER TESTS PASS\n",
