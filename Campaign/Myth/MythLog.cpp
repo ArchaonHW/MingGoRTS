@@ -108,4 +108,66 @@ LogMythEvents(MythLog& log,
     return Gameplay::Ok(appended);
 }
 
+namespace {
+
+// Folk place-name: regions are clerk's coordinates; the people
+// name ground differently.
+std::string FolkPlace(int region) {
+    if (region < 0) return "某處";
+    return "第" + std::to_string(region) + "里";
+}
+
+// One folk line per entry — hearsay-framed, variant chosen by seq
+// parity (deterministic; the text layer draws no PRNG).
+std::string FolkLine(const MythLogEntry& e) {
+    const std::string place = FolkPlace(e.region);
+    const bool alt = (e.seq % 2) == 1;
+    if (e.action == "pacify_shrine") {
+        return alt ? "聽說" + place + "的廟又肯收香火了。"
+                   : "據說" + place + "的神明息了怒。";
+    }
+    if (e.action == "invoke_possession") {
+        return alt ? "聽說有兵卒眼裡冒出金光，說話的不是本人。"
+                   : "有人發誓看見" + place +
+                         "的兵被神明附了身。";
+    }
+    if (e.action == "ghost_army") {
+        // Licensed exaggeration: the sim knows one garrison; the
+        // folk telling always says thousands. Contradiction is the
+        // register's privilege — nobody corrects a rumor.
+        return alt ? "聽說" + place +
+                         "夜裡有陰兵過境——數以千計，雞犬不敢吠。"
+                   : "據說" + place +
+                         "駐著一支看不見的軍隊，數以千計。";
+    }
+    if (e.action == "invasion") {
+        // Licensed misattribution: whichever banner the host truly
+        // carried, the folk claim the god's host marched for their
+        // side. The ledger records the banner; rumor records the
+        // wish — neither is marked wrong.
+        return alt ? "聽說" + place +
+                         "的老槐樹流了血淚，神明是真動怒了。"
+                   : "據說" + place +
+                         "遭了神罰——街坊都說神兵是幫咱們的。";
+    }
+    // Unknown actions still enter folklore — the register outlives
+    // the catalog.
+    return "據說" + place + "出了怪事，人說是「" + e.name + "」。";
+}
+
+} // namespace
+
+std::string RenderMythLog(const MythLog& log) {
+    std::string out = "—— 市井傳聞 ——\n";
+    if (log.Entries().empty()) {
+        out += "市井無傳聞。\n";
+        return out;
+    }
+    for (const MythLogEntry& e : log.Entries()) {
+        out += FolkLine(e);
+        out += '\n';
+    }
+    return out;
+}
+
 } // namespace Potato::Campaign

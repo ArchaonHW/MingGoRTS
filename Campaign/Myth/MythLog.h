@@ -76,4 +76,13 @@ Gameplay::Result<std::size_t>
 LogMythEvents(MythLog& log,
               std::span<const Gameplay::SimEvent> events);
 
+// Render the log in the folk register (Story 5.6 — narrative's
+// "the people talking: rumors, not records"). Every line opens
+// with a hearsay marker and none of it is falsifiable by design:
+// the folk telling embellishes (ghost hosts are always 數以千計)
+// and misattributes (the god's host always marched for "our"
+// side) — the register's licensed contradiction. The ledger never
+// corrects rumor; rumor never cites the ledger.
+std::string RenderMythLog(const MythLog& log);
+
 } // namespace Potato::Campaign

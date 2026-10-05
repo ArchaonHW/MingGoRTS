@@ -1553,6 +1553,68 @@ int main() {
                   log.Entries()[0].side == 1,
               "5.5: invasion logged by name, region, banner");
     }
+
+    // --- Story 5.6: folk-register render — hearsay framing,
+    //     licensed exaggeration, contradiction without correction ---
+    {
+        MythLog log;
+        // Entry order pins which seq-variant each action renders.
+        Check(log.Record("invasion", "神罰", 1, 1, -1).ok() &&
+                  log.Record("ghost_army", "陰兵", 0, 1, -1).ok() &&
+                  log.Record("pacify_shrine", "安撫", 0, 1, -1).ok() &&
+                  log.Record("invoke_possession", "降神", 0, 2, 3)
+                      .ok() &&
+                  log.Record("invoke_possession", "降神", 0, 2, 4)
+                      .ok(),
+              "5.6: five entries recorded");
+        const std::string folk = RenderMythLog(log);
+        // Register check: hearsay markers throughout; no clerk's
+        // voice (HistorianReport never says 據說/聽說/有人發誓).
+        Check(folk.find("市井傳聞") != std::string::npos &&
+                  folk.find("據說") != std::string::npos &&
+                  folk.find("聽說") != std::string::npos &&
+                  folk.find("有人發誓") != std::string::npos,
+              "5.6: folk register markers present");
+        // Licensed exaggeration: the ghost host was ONE garrison —
+        // the folk telling claims thousands. The ledger knows
+        // better; nobody is marked wrong.
+        Check(folk.find("數以千計") != std::string::npos,
+              "5.6: folk exaggerates the host to thousands");
+        // Licensed misattribution: the invasion's host carried the
+        // ENEMY banner (side 1) — the folk still claim it for us.
+        Check(folk.find("幫咱們") != std::string::npos,
+              "5.6: folk misattribute the god's host to home side");
+        // Determinism: same log, same telling (seq-keyed variants).
+        Check(RenderMythLog(log) == folk,
+              "5.6: render is deterministic");
+        // Distinct from the clerk's register: a HistorianReport
+        // never speaks hearsay.
+        {
+            Ledger l;
+            Posting p;
+            p.credit = {Account::Materiel, 10};
+            p.debit = {Account::PopularSupport, 5};
+            p.memo = "test";
+            l.Post(p);
+            const std::string report =
+                Potato::Campaign::RenderHistorianReport(l)
+                    .RenderText();
+            Check(report.find("據說") == std::string::npos &&
+                      report.find("聽說") == std::string::npos,
+                  "5.6: official register carries no hearsay");
+        }
+        // Unknown actions still enter folklore.
+        MythLog odd;
+        odd.Record("omen_bird", "異鳥", -1, -1, -1);
+        const std::string stray = RenderMythLog(odd);
+        Check(stray.find("異鳥") != std::string::npos &&
+                  stray.find("怪事") != std::string::npos,
+              "5.6: unknown action renders generic folk line");
+        // Empty log — even silence is folk-flavored.
+        Check(RenderMythLog(MythLog()).find("無傳聞") !=
+                  std::string::npos,
+              "5.6: empty log renders folk silence");
+    }
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
                          : "LEDGER TESTS PASS\n",
                 failures);
