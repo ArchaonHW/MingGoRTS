@@ -104,6 +104,23 @@ bool MythEventKindFromInt(std::int64_t v, MythEventKind& out) {
     return true;
 }
 
+const char* MythActionKindName(MythActionKind kind) {
+    switch (kind) {
+    case MythActionKind::PacifyShrine:     return "pacify_shrine";
+    case MythActionKind::InvokePossession: return "invoke_possession";
+    case MythActionKind::RaiseGhostArmy:   return "ghost_army";
+    }
+    return "unknown";
+}
+
+bool MythActionKindFromInt(std::int64_t v, MythActionKind& out) {
+    if (v < 0 || v >= static_cast<std::int64_t>(kMythActionKindCount)) {
+        return false;
+    }
+    out = static_cast<MythActionKind>(v);
+    return true;
+}
+
 const char* GodStanceName(GodStance stance) {
     switch (stance) {
     case GodStance::Wrathful:  return "wrathful";
@@ -115,6 +132,7 @@ const char* GodStanceName(GodStance stance) {
 
 void MythField::Init(const BattleMap& map) {
     levels_.assign(map.RegionCount(), 0);
+    ghosts_.assign(map.RegionCount(), -1);
     shrines_.clear();
     for (std::size_t r = 0; r < map.RegionCount(); ++r) {
         if (map.RegionAt(r).myth & MYTH_SHRINE) {
@@ -167,11 +185,66 @@ InfiltrationLevel MythField::LevelAt(std::size_t region) const {
     return static_cast<InfiltrationLevel>(levels_[region]);
 }
 
+std::optional<std::vector<SimEvent>>
+MythField::PacifyRegion(std::size_t region, int tick) {
+    if (region >= levels_.size()) return std::nullopt;
+    // Pre-state: quiet land holding no allegiance has nothing to
+    // pacify — nullopt, the caller rejects (journal no-op rule).
+    const ShrineTrack* shrine = ShrineAt(region);
+    const bool releasable = shrine != nullptr && shrine->owner >= 0;
+    const bool infiltrated =
+        levels_[region] !=
+        static_cast<std::uint8_t>(InfiltrationLevel::None);
+    if (!releasable && !infiltrated) return std::nullopt;
+    std::vector<SimEvent> out;
+    if (auto ev = Apply(region, MythEventKind::Pacification, tick)) {
+        out.push_back(*ev);
+    }
+    // A pacified god withdraws his allegiance — the latch frees but
+    // the stance memory stays (the god remembers; 5.2 contract).
+    // The release itself emits no event: MythActionInvoked covers
+    // the act; `out` only carries the infiltration transition.
+    if (ShrineTrack* s = ShrineAtMut(region)) {
+        s->owner = -1;
+        s->dwell = 0;
+    }
+    return out; // engaged even when empty — release alone is a change
+}
+
+bool MythField::RaiseGhost(std::size_t region, int side) {
+    if (region >= levels_.size() || (side != 0 && side != 1)) {
+        return false;
+    }
+    // The veil must be thin — spirits don't rise on quiet land.
+    if (levels_[region] ==
+        static_cast<std::uint8_t>(InfiltrationLevel::None)) {
+        return false;
+    }
+    if (ghosts_[region] != -1) return false; // one garrison holds it
+    ghosts_[region] = static_cast<std::int8_t>(side);
+    return true;
+}
+
+int MythField::GhostAt(std::size_t region) const {
+    if (region >= ghosts_.size()) return -1;
+    return ghosts_[region];
+}
+
 std::vector<SimEvent>
 MythField::Tick(const std::vector<Squad>& squads, int tick) {
     std::vector<SimEvent> out;
     for (ShrineTrack& s : shrines_) {
         int claimant = ExclusiveSide(squads, s.region);
+        // Ghost garrisons are myth-layer presence: ghosts alone hold
+        // a shrine's ground for their side; flesh and spirit of
+        // different banners contest it.
+        const int ghost =
+            s.region < ghosts_.size() ? ghosts_[s.region] : -1;
+        if (ghost >= 0) {
+            claimant = (claimant == -1) ? ghost
+                     : (claimant == ghost) ? claimant
+                                           : -1; // contested
+        }
         // claimant is a raw squad.side — gate to the two-side domain
         // before it can index stance[] (Squads are publicly mutable;
         // a stray side must read as no-claim, never UB).
@@ -212,6 +285,13 @@ MythField::Tick(const std::vector<Squad>& squads, int tick) {
 
 const ShrineTrack* MythField::ShrineAt(std::size_t region) const {
     for (const ShrineTrack& s : shrines_) {
+        if (s.region == region) return &s;
+    }
+    return nullptr;
+}
+
+ShrineTrack* MythField::ShrineAtMut(std::size_t region) {
+    for (ShrineTrack& s : shrines_) {
         if (s.region == region) return &s;
     }
     return nullptr;

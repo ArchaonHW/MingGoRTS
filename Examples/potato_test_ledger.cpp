@@ -1,6 +1,8 @@
 #include "Campaign/Governance/Accumulators.h"
 #include "Campaign/Ledger/CrossCheck.h"
 #include "Campaign/Myth/Mandate.h"
+#include "Campaign/Myth/MythActions.h"
+#include "Campaign/Myth/MythLog.h"
 #include "Campaign/Ledger/DeedBook.h"
 #include "Campaign/Ledger/HistorianReport.h"
 #include "Campaign/Ledger/Ledger.h"
@@ -1347,6 +1349,105 @@ int main() {
               "5.3: forged mandate really does spend");
         Check(l.Verify() == nullptr,
               "5.3: forged-funded chain still verifies");
+    }
+    // --- AC (5.4): catalog prices, SpendMandate pays, log by name ---
+    {
+        Check(MythActionDefs().size() ==
+                  Potato::Gameplay::kMythActionKindCount,
+              "5.4: catalog covers every myth action kind");
+        const MythActionDef* pac =
+            FindMythAction(Potato::Gameplay::MythActionKind::PacifyShrine);
+        Check(pac && pac->cost == 15 &&
+                  pac->sink == Account::PopularSupport &&
+                  pac->sinkAmount == 10 && !pac->needsSquad,
+              "5.4: pacify priced 15 天命 -> +10 民心");
+        const MythActionDef* pos =
+            FindMythAction(Potato::Gameplay::MythActionKind::InvokePossession);
+        Check(pos && pos->cost == 20 && pos->needsSquad,
+              "5.4: possession priced 20, squad target");
+        Ledger l;
+        MythLog log;
+        using Potato::Gameplay::MythActionKind;
+        // Insufficient funds: nothing posts, nothing logs.
+        auto r0 = PerformMythAction(l, log, MythActionKind::PacifyShrine,
+                                    0, 1, -1);
+        Check(!r0.ok() && l.Size() == 0 && log.Size() == 0,
+              "5.4: poor purse rejects; no post, no entry");
+        // Fund via TWO dedication deeds (each +10; pacify costs 15).
+        using Potato::Gameplay::SimEvent;
+        SimEvent cap;
+        cap.kind = SimEvent::Kind::ShrineCaptured;
+        cap.side = 0;
+        cap.param = 1;
+        SimEvent cap2 = cap;
+        cap2.param = 2;
+        const SimEvent evs[2] = {cap, cap2};
+        Check(BookDeeds(l, 0, evs).ok() && l.Balance(Account::Mandate) == 20,
+              "5.4: dedications fund the purse");
+        // Wrong target shapes and sides reject before spending.
+        Check(!PerformMythAction(l, log, MythActionKind::InvokePossession,
+                                 0, 1, -1).ok(),
+              "5.4: possession without a squad rejected");
+        Check(!PerformMythAction(l, log, MythActionKind::PacifyShrine,
+                                 0, 1, 3).ok(),
+              "5.4: pacify with a squad target rejected");
+        Check(!PerformMythAction(l, log, MythActionKind::PacifyShrine,
+                                 2, 1, -1).ok(),
+              "5.4: bad side rejected");
+        Check(l.Size() == 2 && log.Size() == 0,
+              "5.4: rejections never post");
+        // Funded action: posts legs, enters the log by name.
+        auto r1 = PerformMythAction(l, log, MythActionKind::PacifyShrine,
+                                    0, 2, -1);
+        Check(r1.ok(), "5.4: funded pacify performs");
+        const LedgerEntry& spent = l.Entries()[2];
+        Check(spent.debit.account == Account::Mandate &&
+                  spent.debit.amount == 15 &&
+                  spent.credit.account == Account::PopularSupport &&
+                  spent.credit.amount == 10,
+              "5.4: spend books -天命15 / +民心10");
+        Check(spent.tags.size() == 3 && spent.tags[0] == "myth" &&
+                  spent.tags[1] == "action:pacify_shrine" &&
+                  spent.tags[2] == "region:2",
+              "5.4: spend carries myth+action+region tags");
+        Check(log.Size() == 1 && log.Entries()[0].action ==
+                                     "pacify_shrine" &&
+                  log.Entries()[0].region == 2,
+              "5.4: act enters the MythLog by name");
+        // 天命 now 5 — a 25-cost ghost army can't be afforded.
+        auto r2 = PerformMythAction(l, log,
+                                    MythActionKind::RaiseGhostArmy,
+                                    0, 2, -1);
+        Check(!r2.ok() && l.Size() == 3 && log.Size() == 1,
+              "5.4: drained purse blocks the next act");
+        Check(l.Verify() == nullptr, "5.4: chain still verifies");
+    }
+    // --- AC (5.4): MythLog persists, by name ---
+    {
+        MythLog log;
+        Check(log.Record("ghost_army", "陰兵", 0, 1, -1).ok(),
+              "5.4: record an entry");
+        Check(log.Record("invoke_possession", "降神", 1, 2, 3).ok(),
+              "5.4: second entry");
+        auto doc = log.ToJson();
+        Check(doc.ok(), "5.4: log serializes");
+        auto back = MythLog::FromJson(doc.value);
+        Check(back.ok() && back.value.Size() == 2 &&
+                  back.value.Entries()[1].name ==
+                      std::string("降神") &&
+                  back.value.Entries()[1].squad == 3,
+              "5.4: round-trip preserves names + targets");
+        auto bad = Potato::Gameplay::JsonValue::Parse(
+            R"({"schema":"potato.mythlog/0","entries":[]})");
+        Check(bad.ok() && !MythLog::FromJson(bad.value).ok(),
+              "5.4: wrong schema rejected");
+        // Non-contiguous seq is rejected — the log is append-ordered.
+        auto gap = Potato::Gameplay::JsonValue::Parse(
+            R"({"schema":"potato.mythlog/1","entries":[)"
+            R"({"seq":1,"action":"x","name":"y","side":0,)"
+            R"("region":0,"squad":-1}]})");
+        Check(gap.ok() && !MythLog::FromJson(gap.value).ok(),
+              "5.4: seq gaps rejected");
     }
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
                          : "LEDGER TESTS PASS\n",

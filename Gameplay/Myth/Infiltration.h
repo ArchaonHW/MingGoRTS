@@ -52,6 +52,21 @@ enum class MythEventKind : std::uint8_t {
 constexpr std::size_t kInfiltrationLevelCount = 4;
 constexpr std::size_t kMythEventKindCount = 2;
 
+// The myth-action vocabulary (Story 5.4) — the campaign catalog
+// (Campaign/Myth/MythActions) prices each kind in 天命; the sim
+// carries the effect. Wire ordinals are append-only.
+enum class MythActionKind : std::uint8_t {
+    PacifyShrine = 0,     // 安撫 — back the infiltration off, release
+                        // the shrine's allegiance
+    InvokePossession = 1, // 降神 — a war-god rides one own squad
+    RaiseGhostArmy = 2,   // 陰兵 — a spirit garrison holds the myth
+                          // layer of one region
+};
+constexpr std::size_t kMythActionKindCount = 3;
+
+const char* MythActionKindName(MythActionKind kind);
+bool MythActionKindFromInt(std::int64_t v, MythActionKind& out);
+
 // THE TABLE (spec):
 //                  Incursion   Pacification
 //   0 None            1            0
@@ -146,9 +161,36 @@ public:
     std::vector<SimEvent> Tick(const std::vector<Squad>& squads,
                                int tick);
 
+    // --- Myth actions (Story 5.4) ---
+    // Pacify: a Pacification step through the table AND release of
+    // the shrine's allegiance latch (a pacified god withdraws his
+    // favor — stance memory persists per 5.2, only `owner` clears).
+    // Deliberate: release doesn't evict presence — if the occupier
+    // keeps standing, the shrine re-dwells and re-dedicates, so a
+    // "pacify-and-hold" loop is a slow 天命->民心 conversion channel
+    // (15 spent / +10 back per recapture +10 民心), not a freebie.
+    // Returns nullopt when nothing would change (level 0 AND no
+    // owned shrine): an action that does nothing is not journaled.
+    std::optional<std::vector<SimEvent>> PacifyRegion(
+        std::size_t region, int tick);
+
+    // Raise a ghost garrison on `region` for `side`. The veil must
+    // be thin — requires infiltration >= Whispered — and a region
+    // holds one garrison (ghosts do not stack; enemy garrisons must
+    // be dealt with by the myth layer, Story 5.5+). Ghosts count as
+    // myth-layer presence for shrine claims — they CAN dedicate a
+    // shrine — but never touch the historical layer (villages).
+    bool RaiseGhost(std::size_t region, int side);
+
+    // Which side's ghost garrison holds `region` (-1 = none).
+    int GhostAt(std::size_t region) const;
+
     InfiltrationLevel LevelAt(std::size_t region) const;
     std::size_t RegionCount() const { return levels_.size(); }
     const std::vector<std::uint8_t>& Levels() const { return levels_; }
+    // Region-indexed ghost garrisons (-1 / 0 / 1) — folded into the
+    // controller checksum like everything else here.
+    const std::vector<std::int8_t>& Ghosts() const { return ghosts_; }
 
     // Shrine surface — map order; `ShrineAt` is nullptr for
     // non-shrine regions. `StanceAt` is Neutral for missing entries.
@@ -161,8 +203,11 @@ public:
     GodStance StanceAt(std::size_t region, int side) const;
 
 private:
+    ShrineTrack* ShrineAtMut(std::size_t region);
+
     std::vector<std::uint8_t> levels_;   // region-indexed, 0..3
     std::vector<ShrineTrack> shrines_;   // MYTH_SHRINE regions, map order
+    std::vector<std::int8_t> ghosts_;    // region-indexed, -1/0/1
 };
 
 } // namespace Potato::Gameplay

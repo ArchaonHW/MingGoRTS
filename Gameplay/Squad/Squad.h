@@ -118,6 +118,11 @@ struct Squad {
     int edgeProgress = 0; // ticks elapsed on current edge
 
     SquadState state = SquadState::Holding;
+    // War-god possession (Epic 5.4): a one-shot myth blessing —
+    // InvokePossession sets it and grants attack+2/cohesion+25;
+    // a squad hosts a god only once per battle. Battle-scope: not
+    // persisted to the roster.
+    bool possessed = false;
 
     bool IsEffective() const {
         return state != SquadState::Routed && state != SquadState::Destroyed;

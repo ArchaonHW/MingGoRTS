@@ -93,6 +93,17 @@ public:
     // the atrocity posting is the price. On apply the victim goes
     // Routing -> Destroyed and a SquadExecuted deed event records it.
     Result<bool> IssueExecute(int side, int squadIndex);   // 0 CP
+    // Myth actions (Epic 5.4) — 0 CP: paid in 天命 through the
+    // campaign ledger (Campaign/Myth/Mandate.h) before the host
+    // issues the verb; the record carries the deed and unpaid
+    // miracles are an audit finding downstream, not a sim error.
+    // Pacify backs infiltration off a region and releases the
+    // shrine's latch; possession blesses an OWN effective squad
+    // (once per battle per squad); ghost army raises a spirit
+    // garrison on a region where infiltration >= Whispered.
+    Result<bool> IssueMythPacify(int side, std::size_t region);
+    Result<bool> IssueMythPossession(int side, int squadIndex);
+    Result<bool> IssueGhostArmy(int side, std::size_t region);
 
     // Planning-only intel hook (briefing/tests): overwrite a cloud's
     // believed region + certainty in `fogSide`'s view for `squadIndex`
@@ -124,8 +135,8 @@ public:
     // Apply a myth-layer event through the transition table
     // (journaled as "myth"). Emits InfiltrationChanged when the level
     // actually moves; a saturating no-op REJECTS (journaling only
-    // accepts state-changing calls). Mid-Execution myth drivers
-    // (myth actions) are Story 5.4 — Planning-phase input only.
+    // accepts state-changing calls). Planning-phase input only —
+    // mid-Execution myth drivers are the IssueMyth* verbs (5.4).
     bool ApplyMythEvent(std::size_t region, MythEventKind kind);
     const MythField& Myth() const { return myth_; }
 
@@ -161,6 +172,10 @@ public:
 private:
     int CountEffective(int side) const;
     void EmitBeatChanged(int tick, BattleBeat target);
+    // Shared gate for the IssueMyth* verbs: Execution + side domain
+    // + one queued act per (kind, target).
+    Result<bool> CheckMythVerb(int side, InterventionKind kind,
+                               int key) const;
     // stampTick = the tick index the close belongs to (producing tick
     // inside Tick(), current TickCount when conceded between ticks).
     void CloseBattle(CloseReason reason, int stampTick);

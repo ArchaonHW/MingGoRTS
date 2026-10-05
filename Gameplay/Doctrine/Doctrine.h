@@ -120,6 +120,11 @@ struct SimEvent {
         // that side. param = region, squadIndex = witness, side =
         // new owner, aux unused (0).
         ShrineCaptured,
+        // Myth action applied (Epic 5.4): emitted when a queued
+        // MythPacify/MythPossession/MythGhostArmy intervention lands.
+        // aux = MythActionKind ordinal (0..2), param = region,
+        // squadIndex = target squad (possession) or -1, side = caster.
+        MythActionInvoked,
     };
 
     Kind kind = Kind::CardFired;
@@ -130,9 +135,12 @@ struct SimEvent {
     // index (Override) or cloud id B (Entangle — squadIndex carries
     // cloud id A) or path length (Replan — the path itself lives in
     // the queued Intervention, which the checksum folds) or the
-    // victim's region (Execute — squadIndex carries the victim); aux =
-    // InterventionKind ordinal (0=Redirect, 1=Override, 2=Retreat,
-    // 3=Probe, 4=Entangle, 5=Replan, 6=Execute — wire-format stable).
+    // victim's region (Execute — squadIndex carries the victim);
+    // MythPacify/MythGhostArmy: param = target region; MythPossession:
+    // param = the squad's region at issue (journal/checksum only —
+    // apply re-derives). aux = InterventionKind ordinal (0=Redirect,
+    // 1=Override, 2=Retreat, 3=Probe, 4=Entangle, 5=Replan, 6=Execute,
+    // 7=MythPacify, 8=MythPossession, 9=MythGhostArmy — wire stable).
     int param = -1;
     // BeatChanged: new BattleBeat ordinal — wire-format stable
     // (Planning=0, Execution=1, Aftermath=2; recorder/replay depends on it).

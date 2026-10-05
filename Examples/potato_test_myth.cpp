@@ -577,6 +577,184 @@ int main() {
         }
     }
 
+    // ================= Story 5.4: myth actions =================
+
+    // --- Issue gates: beat, domain, target, dedup ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 0, 0);
+        bc.DeploySquad(Mk("foe"), 3, 1);
+        // Planning-phase rejection.
+        Check(!bc.IssueMythPacify(0, 2).ok(),
+              "pacify rejected in Planning");
+        bc.RequestBeat(BattleBeat::Execution);
+        Check(!bc.IssueMythPacify(2, 2).ok(), "bad side rejected");
+        Check(!bc.IssueMythPacify(0, 99).ok(), "OOB region rejected");
+        Check(!bc.IssueMythPacify(0, 2).ok(),
+              "quiet unconsecrated ground has nothing to pacify");
+        Check(!bc.IssueGhostArmy(0, 2).ok(),
+              "ghosts need thin veil (level>=1)");
+        Check(!bc.IssueMythPossession(0, 1).ok(),
+              "a god rides only its own host");
+        Check(!bc.IssueMythPossession(0, 9).ok(),
+              "OOB squad rejected");
+        Check(bc.IssueMythPossession(0, 0).ok(),
+              "possession issues on own squad");
+        Check(!bc.IssueMythPossession(0, 0).ok(),
+              "target already marked (dedup)");
+        Check(bc.IssueMythPacify(0, 2).ok() == false, "still quiet");
+        // Seed mid-Execution is NOT a verb — infiltration must be
+        // seeded in Planning; re-check in the pacify-apply block.
+    }
+
+    // --- Pacify: apply emits MythActionInvoked + InfiltrationChanged ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 0, 0);
+        bc.DeploySquad(Mk("foe"), 3, 1);
+        Check(bc.SeedInfiltration(2, 2), "haunted region seeded");
+        bc.RequestBeat(BattleBeat::Execution);
+        Check(bc.IssueMythPacify(0, 2).ok(), "pacify issued");
+        Check(!bc.IssueMythPacify(0, 2).ok(),
+              "region already marked (dedup)");
+        const auto& evs = bc.Events();
+        Check(FindKind(evs, SimEvent::Kind::Intervention) != nullptr,
+              "pacify journal entry at issue");
+        bc.Tick();
+        const SimEvent* act =
+            FindKind(bc.Events(), SimEvent::Kind::MythActionInvoked);
+        Check(act && act->aux ==
+                        static_cast<int>(MythActionKind::PacifyShrine) &&
+                  act->param == 2 && act->side == 0 &&
+                  act->squadIndex == -1,
+              "MythActionInvoked carries kind+region+caster");
+        const SimEvent* lvl =
+            FindKind(bc.Events(), SimEvent::Kind::InfiltrationChanged);
+        Check(lvl && lvl->param == 2 && lvl->aux == 1,
+              "pacification stepped 2 -> 1");
+        Check(bc.Myth().LevelAt(2) == IL::Whispered, "level folded");
+    }
+
+    // --- Pacify releases the shrine's latch; the god remembers ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 1, 0);
+        bc.DeploySquad(Mk("foe"), 3, 1);
+        bc.RequestBeat(BattleBeat::Execution);
+        for (int i = 0; i < SHRINE_DEDICATION_TICKS; ++i) bc.Tick();
+        Check(bc.Myth().ShrineAt(1)->owner == 0, "captured");
+        Check(bc.IssueMythPacify(0, 1).ok(),
+              "pacify on consecrated quiet ground issues");
+        bc.Tick();
+        Check(bc.Myth().ShrineAt(1)->owner == -1,
+              "pacify releases the god's allegiance");
+        Check(bc.Myth().StanceAt(1, 0) == GodStance::Favorable,
+              "the god still remembers the dedication");
+    }
+
+    // --- Possession: flag + buff + event ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 0, 0);
+        bc.DeploySquad(Mk("foe"), 3, 1);
+        bc.RequestBeat(BattleBeat::Execution);
+        Check(bc.IssueMythPossession(0, 0).ok(), "possession issued");
+        bc.Tick();
+        const Squad& host = bc.Squads()[0];
+        Check(host.possessed, "war-god rides the host");
+        Check(host.attack == 12, "possession sharpens attack +2");
+        Check(host.cohesion == 100, "cohesion held (already max)");
+        const SimEvent* act =
+            FindKind(bc.Events(), SimEvent::Kind::MythActionInvoked);
+        Check(act && act->aux ==
+                        static_cast<int>(
+                            MythActionKind::InvokePossession) &&
+                  act->squadIndex == 0 && act->side == 0 &&
+                  act->param == 0,
+              "possession event: aux kind + squad + region");
+        // Once per battle per squad.
+        Check(!bc.IssueMythPossession(0, 0).ok(),
+              "one god per host");
+    }
+
+    // --- Ghost army: myth-layer garrison dedicates shrines,
+    //     never villages ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 0, 0);
+        bc.DeploySquad(Mk("foe"), 3, 1);
+        Check(bc.SeedInfiltration(1, 1), "whispered veil at r1");
+        bc.RequestBeat(BattleBeat::Execution);
+        Check(bc.IssueGhostArmy(1, 1).ok(), "ghost army rises for side 1");
+        bc.Tick();
+        Check(bc.Myth().GhostAt(1) == 1, "garrison holds the region");
+        const SimEvent* act =
+            FindKind(bc.Events(), SimEvent::Kind::MythActionInvoked);
+        Check(act && act->aux ==
+                        static_cast<int>(
+                            MythActionKind::RaiseGhostArmy) &&
+                  act->param == 1 && act->side == 1,
+              "ghost army event fields");
+        for (int i = 0; i < SHRINE_DEDICATION_TICKS + 2; ++i) bc.Tick();
+        const SimEvent* cap =
+            FindKind(bc.Events(), SimEvent::Kind::ShrineCaptured);
+        Check(cap && cap->side == 1 && cap->squadIndex == -1,
+              "ghosts alone dedicate the shrine");
+        Check(bc.Myth().ShrineAt(1)->owner == 1,
+              "shrine latched to the ghost banner");
+        Check(CountKind(bc.Events(), SimEvent::Kind::VillageOccupied) ==
+                  0,
+              "ghosts never hold the historical layer");
+        Check(bc.Myth().StanceAt(1, 1) == GodStance::Favorable,
+              "god favors the spirit host");
+    }
+
+    // --- Ghost + enemy flesh contest the shrine ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 1, 0); // flesh on the shrine
+        bc.DeploySquad(Mk("foe"), 3, 1);
+        Check(bc.SeedInfiltration(1, 1), "veil thin");
+        bc.RequestBeat(BattleBeat::Execution);
+        Check(bc.IssueGhostArmy(1, 1).ok(), "ghosts raised");
+        for (int i = 0; i < SHRINE_DEDICATION_TICKS + 2; ++i) bc.Tick();
+        Check(CountKind(bc.Events(), SimEvent::Kind::ShrineCaptured) ==
+                  0,
+              "spirit vs flesh contests the shrine");
+        Check(bc.Myth().ShrineAt(1)->owner == -1, "no latch");
+    }
+
+    // --- Record -> replay: myth actions ride the command journal ---
+    {
+        BattleRecorder rec;
+        BattleController bc(6, fx.map, fx.cards);
+        rec.Bind(6, fx.md, fx.cd);
+        SquadTemplate a = Mk("ally"), f = Mk("foe");
+        bc.DeploySquad(a, 0, 0); rec.RecordDeploy(a, 0, 0);
+        bc.DeploySquad(f, 3, 1); rec.RecordDeploy(f, 3, 1);
+        Check(bc.SeedInfiltration(1, 1), "seed r1 whispered");
+        rec.RecordMythSeed(1, 1);
+        Check(bc.SeedInfiltration(2, 2), "seed r2 haunted");
+        rec.RecordMythSeed(2, 2);
+        bc.RequestBeat(BattleBeat::Execution);
+        Check(bc.IssueMythPossession(0, 0).ok(), "possess ally");
+        Check(bc.IssueGhostArmy(0, 1).ok(), "ghosts to r1");
+        Check(bc.IssueMythPacify(0, 2).ok(), "pacify r2");
+        for (int i = 0; i < SHRINE_DEDICATION_TICKS + 5; ++i) bc.Tick();
+        Check(CountKind(bc.Events(),
+                        SimEvent::Kind::MythActionInvoked) == 3,
+              "three acts invoked");
+        bc.RequestBeat(BattleBeat::Aftermath);
+        rec.Seal(bc);
+        auto doc = rec.ToJson();
+        Check(doc.ok(), "myth-action record sealed");
+        if (doc.ok()) {
+            auto r = Replay::Verify(doc.value);
+            Check(r.ok() && r.value.ok,
+                  "myth actions replay bit-exact");
+        }
+    }
+
     std::printf("%s (%d failures)\n",
                 failures == 0 ? "ALL PASS" : "FAILURES", failures);
     return failures == 0 ? 0 : 1;

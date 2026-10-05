@@ -39,7 +39,10 @@ public:
     // v4: Epic 5 — InfiltrationChanged (9) + the "mythseed"/"myth"
     // planning ops (5.1), and ShrineCaptured (10) for shrine
     // allegiance flips (5.2). Older tools reject kind > 8.
-    static constexpr int TOOL_VERSION = 4;
+    // v5: Story 5.4 — MythActionInvoked (11) + InterventionKind
+    // aux ordinals 7-9 (MythPacify/MythPossession/MythGhostArmy).
+    // Older tools reject kind > 10 / aux > 6.
+    static constexpr int TOOL_VERSION = 5;
     static constexpr std::string_view SCHEMA = "potato.battle_record/1";
 
     // Embedded content makes the record self-contained — the verifier
@@ -55,9 +58,9 @@ public:
     void BindBalance(const JsonValue& doc);
     // Records stamped by older tools are flagged `downgrade` on
     // verify — but only verifiable when the checksum algorithm is
-    // unchanged (v4 folded MythField into it, so a genuine v3 seal
-    // can't re-verify; the flag means "older stamp", not
-    // "guaranteed replayable").
+    // unchanged (v4 folded MythField in; v5 adds ghosts/possession —
+    // so a genuine v4-or-earlier seal can't re-verify; the flag means
+    // "older stamp", not "guaranteed replayable").
     void SetToolVersion(int v) { toolVersion_ = v; }
 
     // Planning inputs — mirror the controller calls, in call order.

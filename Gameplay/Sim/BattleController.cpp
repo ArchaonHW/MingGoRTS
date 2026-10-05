@@ -516,6 +516,112 @@ Result<bool> BattleController::IssueExecute(int side, int squadIndex) {
     return Ok(true);
 }
 
+// Shared preamble for the myth-action verbs: Execution gate, side
+// domain, pending-queue dedup by (kind, key) — the same target may
+// be marked only once (journal contract: no stacked acts).
+Result<bool> BattleController::CheckMythVerb(
+    int side, InterventionKind kind, int key) const {
+    if (beat_ != BattleBeat::Execution) {
+        return Fail<bool>("myth", "myth actions only during Execution");
+    }
+    if (side != 0 && side != 1) {
+        return Fail<bool>("myth", "side must be 0 or 1");
+    }
+    for (const Intervention& c : pendingCommands_) {
+        if (c.kind == kind &&
+            (kind == InterventionKind::MythPossession
+                 ? c.squadIndex == key
+                 : c.target == key)) {
+            return Fail<bool>("myth", "target already marked");
+        }
+    }
+    return Ok(true);
+}
+
+Result<bool> BattleController::IssueMythPacify(int side,
+                                               std::size_t region) {
+    auto chk = CheckMythVerb(side, InterventionKind::MythPacify,
+                             static_cast<int>(region));
+    if (!chk.ok()) return chk;
+    if (region >= myth_.RegionCount()) {
+        return Fail<bool>("myth", "region out of bounds");
+    }
+    // Nothing to pacify on quiet unconsecrated ground — rejected
+    // pre-queue so a no-op can never ride the journal.
+    const bool infiltrated =
+        myth_.LevelAt(region) != InfiltrationLevel::None;
+    const ShrineTrack* sh = myth_.ShrineAt(region);
+    const bool consecrated = sh != nullptr && sh->owner >= 0;
+    if (!infiltrated && !consecrated) {
+        return Fail<bool>("myth", "nothing to pacify here");
+    }
+    const int tick = static_cast<int>(sim_.TickCount());
+    pendingCommands_.push_back({side, InterventionKind::MythPacify, -1,
+                                static_cast<int>(region), tick, {}});
+    events_.push_back({SimEvent::Kind::Intervention, tick, -1, -1,
+                       static_cast<int>(region),
+                       static_cast<int>(InterventionKind::MythPacify),
+                       side, {}, {}});
+    return Ok(true);
+}
+
+Result<bool> BattleController::IssueMythPossession(int side,
+                                                   int squadIndex) {
+    auto chk = CheckMythVerb(side, InterventionKind::MythPossession,
+                             squadIndex);
+    if (!chk.ok()) return chk;
+    if (squadIndex < 0 ||
+        static_cast<std::size_t>(squadIndex) >= squads_.size()) {
+        return Fail<bool>("myth", "invalid squad index");
+    }
+    const Squad& sq = squads_[static_cast<std::size_t>(squadIndex)];
+    if (sq.side != side) {
+        return Fail<bool>("myth", "a god rides only its own host");
+    }
+    if (!sq.IsEffective() || sq.state == SquadState::Routing) {
+        return Fail<bool>("myth", "the host must still stand");
+    }
+    if (sq.possessed) {
+        return Fail<bool>("myth", "already possessed");
+    }
+    const int tick = static_cast<int>(sim_.TickCount());
+    pendingCommands_.push_back({side, InterventionKind::MythPossession,
+                                squadIndex,
+                                static_cast<int>(sq.regionIndex), tick,
+                                {}});
+    events_.push_back({SimEvent::Kind::Intervention, tick, squadIndex, -1,
+                       static_cast<int>(sq.regionIndex),
+                       static_cast<int>(InterventionKind::MythPossession),
+                       side, {}, {}});
+    return Ok(true);
+}
+
+Result<bool> BattleController::IssueGhostArmy(int side,
+                                              std::size_t region) {
+    auto chk = CheckMythVerb(side, InterventionKind::MythGhostArmy,
+                             static_cast<int>(region));
+    if (!chk.ok()) return chk;
+    if (region >= myth_.RegionCount()) {
+        return Fail<bool>("myth", "region out of bounds");
+    }
+    // The veil must be thin — ghosts don't rise on quiet land; and
+    // a region holds one garrison (RaiseGhost re-checks at apply).
+    if (myth_.LevelAt(region) == InfiltrationLevel::None) {
+        return Fail<bool>("myth", "the land is too quiet to rise");
+    }
+    if (myth_.GhostAt(region) != -1) {
+        return Fail<bool>("myth", "spirits already hold this ground");
+    }
+    const int tick = static_cast<int>(sim_.TickCount());
+    pendingCommands_.push_back({side, InterventionKind::MythGhostArmy,
+                                -1, static_cast<int>(region), tick, {}});
+    events_.push_back({SimEvent::Kind::Intervention, tick, -1, -1,
+                       static_cast<int>(region),
+                       static_cast<int>(InterventionKind::MythGhostArmy),
+                       side, {}, {}});
+    return Ok(true);
+}
+
 void BattleController::MarchArrows() {
     for (std::size_t i = 0; i < squads_.size(); ++i) {
         PlanArrow& a = arrows_[i];
@@ -579,6 +685,71 @@ void BattleController::ApplyInterventions(int tick) {
                          cmd.squadIndex, -1,
                          static_cast<int>(vic.regionIndex), 0, side,
                          {}, {}});
+                }
+            }
+            continue;
+        }
+        // Myth actions address regions or own squads — handle before
+        // the squad guard (pacify/ghost have no squad). Apply-time
+        // re-validation keeps replay honest: conditions may have
+        // shifted between issue and apply (a queued Retreat can pull
+        // the refuser; a prior pacify can drain the level).
+        if (cmd.kind == InterventionKind::MythPacify) {
+            if (cmd.target >= 0) {
+                auto evs = myth_.PacifyRegion(
+                    static_cast<std::size_t>(cmd.target), tick);
+                if (evs.has_value()) {
+                    events_.push_back({SimEvent::Kind::MythActionInvoked,
+                                       tick, -1, -1, cmd.target,
+                                       static_cast<int>(
+                                           MythActionKind::PacifyShrine),
+                                       side, {}, {}});
+                    for (const SimEvent& e : *evs) {
+                        events_.push_back(e);
+                    }
+                }
+            }
+            continue;
+        }
+        if (cmd.kind == InterventionKind::MythGhostArmy) {
+            if (cmd.target >= 0 &&
+                myth_.RaiseGhost(static_cast<std::size_t>(cmd.target),
+                                 side)) {
+                events_.push_back({SimEvent::Kind::MythActionInvoked,
+                                   tick, -1, -1, cmd.target,
+                                   static_cast<int>(
+                                       MythActionKind::RaiseGhostArmy),
+                                   side, {}, {}});
+            }
+            continue;
+        }
+        if (cmd.kind == InterventionKind::MythPossession) {
+            // Own effective non-routing squad — re-gated at apply;
+            // a host that broke between issue and apply releases
+            // the god unspent (mercy by absence, same rule as
+            // Execute's refuser check).
+            if (cmd.squadIndex >= 0 &&
+                static_cast<std::size_t>(cmd.squadIndex) <
+                    squads_.size()) {
+                Squad& host =
+                    squads_[static_cast<std::size_t>(cmd.squadIndex)];
+                if (host.side == side && host.IsEffective() &&
+                    host.state != SquadState::Routing &&
+                    !host.possessed) {
+                    host.possessed = true;
+                    // The war-god's blessing: sharper, steadier —
+                    // saturating adds (fields are int; clamped).
+                    host.attack = host.attack >= INT_MAX - 2
+                                      ? INT_MAX
+                                      : host.attack + 2;
+                    host.RestoreCohesion(25);
+                    events_.push_back({SimEvent::Kind::MythActionInvoked,
+                                       tick, cmd.squadIndex, -1,
+                                       static_cast<int>(host.regionIndex),
+                                       static_cast<int>(
+                                           MythActionKind::
+                                               InvokePossession),
+                                       side, {}, {}});
                 }
             }
             continue;
@@ -659,8 +830,11 @@ void BattleController::ApplyInterventions(int tick) {
             case InterventionKind::Probe:
             case InterventionKind::Entangle:
             case InterventionKind::Execute:
-                break; // handled above — fog ops + Execute skip the
-                       // squad guard
+            case InterventionKind::MythPacify:
+            case InterventionKind::MythPossession:
+            case InterventionKind::MythGhostArmy:
+                break; // handled above — fog/myth ops + Execute skip
+                       // the squad guard
         }
     }
     pendingCommands_.clear();
@@ -882,6 +1056,7 @@ std::uint64_t BattleController::Checksum() const {
         h = Fold(h, static_cast<std::uint64_t>(s.cohesion));
         h = Fold(h, static_cast<std::uint64_t>(s.side));
         h = Fold(h, static_cast<std::uint64_t>(s.state));
+        h = Fold(h, static_cast<std::uint64_t>(s.possessed));
         h = Fold(h, RegionKey(s.regionIndex));
         h = Fold(h, RegionKey(s.edgeTarget));
         h = Fold(h, static_cast<std::uint64_t>(s.edgeProgress));
@@ -988,6 +1163,11 @@ std::uint64_t BattleController::Checksum() const {
                         static_cast<std::uint8_t>(s.stance[0])));
         h = Fold(h, static_cast<std::uint64_t>(
                         static_cast<std::uint8_t>(s.stance[1])));
+    }
+    // Ghost garrisons are sim state — 陰兵守土 is fingerprinted.
+    for (std::int8_t g : myth_.Ghosts()) {
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint8_t>(g)));
     }
     return h;
 }

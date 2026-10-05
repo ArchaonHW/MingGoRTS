@@ -23,7 +23,9 @@ namespace Potato::Campaign {
 // — the earn leg of the gods' economy.
 // Event kinds that aren't deeds (CardFired, BeatChanged, ...) are
 // skipped silently; deed events stamped -1 or for the other side
-// post nothing.
+// post nothing. MythActionInvoked is deliberately not a deed: its
+// ledger entry is the SpendMandate posting written at action time
+// (5.3/5.4) — booking it again here would double-count the cost.
 //
 // Leg pricing is the architecture's example economics — asymmetric
 // costs are the design: burning banks 物資 against 民心, execution

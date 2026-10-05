@@ -26,6 +26,14 @@ enum class InterventionKind : std::uint8_t {
     Entangle,  // fog op: link two clouds to share fate
     Replan,    // plan op: rewrite a squad's arrow mid-execution
     Execute,   // refuse a routing enemy's surrender (Epic 4)
+    // Myth actions (Epic 5.4) — 0 CP: they are paid in 天命 through
+    // the campaign ledger (SpendMandate) BEFORE the verb is issued;
+    // an unpaid act shows in the record as an audit finding, not a
+    // sim rejection — the same rule Execute set for cruelty.
+    MythPacify,     // target = region; backs infiltration off and
+                    // releases the shrine's allegiance latch
+    MythPossession, // squadIndex = own squad to possess
+    MythGhostArmy,  // target = region; raises a spirit garrison
 };
 
 // Probes are limited per battle (GDD: ~2-3), not by CP.
@@ -41,6 +49,9 @@ constexpr int CostOf(InterventionKind k) {
         case InterventionKind::Replan:   return 2; // default; live cost
                                                  // comes from PlanConfig
         case InterventionKind::Execute:  return 0;
+        case InterventionKind::MythPacify:
+        case InterventionKind::MythPossession:
+        case InterventionKind::MythGhostArmy: return 0; // paid in 天命
     }
     return 0; // unreachable — all enumerators handled
 }

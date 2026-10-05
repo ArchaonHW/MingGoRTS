@@ -78,6 +78,17 @@ bool ReIssue(BattleController& bc, const SimEvent& e) {
         case InterventionKind::Execute:
             r = bc.IssueExecute(e.side, e.squadIndex);
             break;
+        case InterventionKind::MythPacify:
+            r = bc.IssueMythPacify(e.side,
+                                   static_cast<std::size_t>(e.param));
+            break;
+        case InterventionKind::MythPossession:
+            r = bc.IssueMythPossession(e.side, e.squadIndex);
+            break;
+        case InterventionKind::MythGhostArmy:
+            r = bc.IssueGhostArmy(e.side,
+                                  static_cast<std::size_t>(e.param));
+            break;
     }
     return r.ok() && r.value;
 }
