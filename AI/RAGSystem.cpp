@@ -5,6 +5,7 @@
 #include "RAGSystem.h"
 #include <iostream>
 #include <sstream>
+#include <cstring>
 #include <algorithm>
 #include <cmath>
 #include <regex>

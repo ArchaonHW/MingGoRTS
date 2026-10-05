@@ -287,6 +287,7 @@ public:
     void OptimizeCodeWithAI();
     void ReviewCodeWithAI();
     void ShowDevelopmentAssistant();
+    void RenderDevelopmentAssistant();
     
     // File System
     std::vector<std::string> ScanDirectory(const std::string& path);
@@ -357,12 +358,6 @@ private:
     void DetectSyntaxErrors();
     void DetectStyleIssues();
     void DetectPotentialBugs();
-    std::vector<std::string> GetCppKeywords();
-    std::vector<std::string> GetStandardLibraryFunctions();
-    
-    // Autocomplete helpers
-    std::vector<std::string> GetSuggestionsForContext(const std::string& context);
-    bool ShouldShowAutocomplete();
 };
 
 } // namespace MingGoRTSIDE

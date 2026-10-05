@@ -218,6 +218,7 @@ public:
     void ResetStats();
     
 private:
+    friend class DevelopmentAssistant;
     ILLMClient* llmClient;
     AIAgentManager* agentManager;
     RAGSystem* ragSystem;
