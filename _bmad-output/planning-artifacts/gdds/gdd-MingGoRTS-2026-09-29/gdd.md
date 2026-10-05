@@ -130,6 +130,7 @@ Numeric values are initial balance targets, to be tuned in playtesting.
 - **Battle-scope resources** — CP (intervention budget); intel/probes (QuantumFog sharpening, ~2–3 probes per battle [ASSUMPTION]).
 - **Campaign-scope spending** — 物資 funds refit/recruit; 天命 funds myth actions; 民心/秩序 gate governance victories.
 - **Scarcity as design** — CP cap 5 forces triage; the 墮落 ratchet makes atrocity a one-way debt that can never be repaid, only outrun.
+- **Mint-claim outbox** — chapter settlements and rare achievements emit `potato.mintclaim/1` files at the aftermath boundary, gated by replay verification; an external relayer turns verified claims into testnet tokens and NFT collectibles (章回箋 / 本草圖鑑 / 名將檔案). Testnet only — technology showcase, zero real-world value.
 
 **Economy tempo** (initial targets per chapter band [ASSUMPTION]):
 
@@ -292,6 +293,8 @@ v1.0 explicitly excludes:
 - Commercial/Steam release — personal project.
 - Player-facing modding tools beyond the internal content pipeline (Epic G tools are developer-facing).
 
+v1.0 remains single-player and non-commercial. A testnet-only blockchain provenance layer (Epic MT) is included as a technology showcase: mint claims leave the game as versioned files and an external tool anchors them to a test network. No real-money value, no multiplayer, no in-engine networking.
+
 ---
 
 ## Assumptions and Dependencies
@@ -308,6 +311,7 @@ Itemized assumptions pending confirmation or playtest:
 8. Rout threshold: unit cohesion < 20%.
 9. Governance victory: 民心 ≥ 70 and 秩序 ≥ 60 at chapter end.
 10. Unit matrix stats and economy-tempo numbers are balance targets.
+11. Testnet anchoring (Sepolia or local Anvil) via external relayer; dev-wallet key from environment, never committed.
 11. 60 FPS @1080p on GTX 1050-class hardware.
 12. Pixel sprites + ink frontispieces blend.
 13. Engine (PotatoEngine) and MingGoRTS IDE exist and build; the game layer is greenfield.

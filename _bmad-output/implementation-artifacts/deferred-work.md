@@ -132,6 +132,15 @@
 - `ChapterDef` has no terrain field — terrain-kind unlock triggers must read the `map` ref's `potato.map/1` terrain flags at chapter settle, or `potato.chapter/2` adds an explicit `codexTerrain` hint. Decide in Story 10.2. **(Resolved in 10.2: `TerrainFlagsOf(BattleMap)` reads the map's `TERRAIN_*` flags; the caller loads `ChapterDef.map` at settle time — no `potato.chapter` bump needed.)**
 - Codex persistence: embed the unlocked set + pending 補鈔 queue in `potato.campaign` (schema bump) vs. sibling `potato.bencao_state/1` — same open seam as RivalBook (deferred from 3.7). Decide in Story 10.2; AC requires lossless round-trip either way. **(Resolved in 10.2: sibling `potato.bencao_state/1` shipped — `potato.campaign` untouched.)**
 - `ResolveBencaoUnlocks` has no production call site (10.2) — the chapter shell (or Game-layer settle pass) must assemble `CodexSignals`, including loading the chapter map for `TerrainFlagsOf`. Same deferral class as `BookDeeds`/`RivalBook` (deferred from 3.7, 4.2).
+- `DeliverBuchao` has no production call site (10.3) — same deferral class as above; the document-stream caller lands with the Game shell.
+- Marginalia plumbing shipped scoped-to-codex (10.3): `BuchaoPage::suspect` flag + `BuchaoStore` — Story 6.6's AC says 10.3 "reuses" its plumbing but 6.6 was still backlog; the minimal store was built inside 10.3 (decided 2026-10-05). 6.6 may later generalize/unify; bencao pages keep their own store.
 - OQ-B2 (poisoned/forged bencao page) — Story 10.3 reserves the suspect-flag plumbing but ships no poisoned entry; decision pending, see `bencao-worldview.md` §9.
 - OQ-B3 (本草體 English rendering) — `potato.bencao/1` carries a `lang` block with zh-TW required; `en` deferred.
 - OQ-B5 (人部 entry count 0/1/3) — Story 10.6 gates human-derived entries on this decision.
+
+## Deferred from: code review of 10-2-bencao-unlock-engine (2026-10-05)
+
+- `MAX_ENTRIES` overflow in `BencaoLibrary::Load` has no test fixture — writing 1025 fixture files is too heavy for the current Check style; the failure mode is a loud wholesale rejection, not silent corruption.
+- `BencaoLibrary::Load` has no bound on candidate-file count or `rejected` vector size — systemic pattern shared with `ChapterLibrary::Load`; a hostile content dir could grow both unboundedly (each .json costs up to the shared 64 MiB read/parse budget). Loader-class hardening, not introduced by Epic 10.
+- `CodexSignals::roster` is dead API until a veterancy/casualty-keyed unlock kind lands (scars deferral); DeedBook deed-kind reads are likewise unexpressed in the six kinds; the settled-chapter identity for `CodexSignals` comes from the settle caller, which today is unbuilt — all extend the existing wiring-seam deferral.
+- `BencaoCodex::FromJson` doesn't reconcile persisted ids against the loaded library — ids for content entries that no longer exist silently persist. A `Reconcile(lib)` prune/flag is a design choice for 10.3+.

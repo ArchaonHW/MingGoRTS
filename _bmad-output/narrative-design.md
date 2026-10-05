@@ -389,6 +389,16 @@ different owners.
 
 **Key events:** Myth Knocks, Confluence; where GodStance lives.
 
+#### The Archive Seal（史館印鑑）
+
+**Description:** The mint layer in-fiction — replay-verified victories
+receive a seal; seals may be struck into keepsake plates (藏書票) of the
+chronicle's documents: frontispieces, materia-medica entries, general
+dossiers.
+
+**Narrative significance:** The only part of the chronicle that claims
+to be witnessed outside its own pages.
+
 ## Dialogue Framework
 
 ### Dialogue Style

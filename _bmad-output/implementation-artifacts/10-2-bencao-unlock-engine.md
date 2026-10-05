@@ -195,3 +195,24 @@ hearsay precedes codex confirmation.
   fires/silences correctly, null-signal tolerance, idempotent
   re-run, pending FIFO drain, state round-trip, bad schema reject.
 - `ctest` green incl. `gameplay_dep_guard`.
+
+### Review Findings
+
+Reviewed 10.1+10.2 (4 layers, 2026-10-05):
+
+- [ ] [Review][Decision] Pending carries no trigger provenance — pending stores bare ids; 10.3's 批註 needs which trigger/ledger-entry/chapter fired. Extend `potato.bencao_state/1` to `{id, kind, detail}` now, bump schema in 10.3, or re-derive at delivery (ambiguous)?
+- [ ] [Review][Decision] Dead-param validation breadth — `unlockParam` accepts strings that can never resolve. Terrain vocab is closed (7 flag ids), but tightening `myth_state`/`governance`/`chapter_close` bounds changes the authoring contract: validate against producer vocab or document it?
+- [ ] [Review][Patch] FromJson: enforce union bound `unlocked+pending ≤ MAX_ENTRIES` and per-id non-empty/≤`MAX_ID_LEN` — a crafted save can hold 2× bound and junk ids [BencaoCodex.cpp ReadIds/FromJson]
+- [ ] [Review][Patch] Test fixtures: `lang` reject+accept, `aliases`/`origin` both directions, `unlock` int out-of-range, missing `unlock`/each required field, `governance` bare-tag path, uppercase `.JSON`, malformed `bencao_state` docs [potato_test_bencao.cpp]
+- [ ] [Review][Patch] `lang` doc overstates code — header says "must assert zh-tw: true"; code only rejects explicit `false`. Fix comments to match intent [Bencao.h:75-77, Bencao.cpp:181-182]
+- [ ] [Review][Patch] Annotation guard misses CJK spellings — add `"批註"`/`"批注"` to the reserved-key reject [Bencao.cpp:138-140]
+- [ ] [Review][Patch] Terrain `unlockParam` bound to the 7 emitted flag ids + use `Ledger::TAG_RESOLUTION` constant for the seal prefix [Bencao.cpp, BencaoCodex.cpp:46-50]
+- [ ] [Review][Patch] Precompute ledger-tag set + `FoldGovernance` once per resolve — per-entry rescans/folds are needlessly quadratic at ledger scale [BencaoCodex.cpp Triggered]
+- [ ] [Review][Patch] Wording drift: `ResolveBencaoUnlocks` returns "newly triggered" (pending) not "unlocked"; wire comment `unlocked` order = delivery order; note `chapterId` is a caller-scoped view [BencaoCodex.h]
+- [ ] [Review][Patch] Missing direct includes — `<utility>` (`std::pair`/`std::move`) in BencaoCodex.cpp, `<utility>`/`<system_error>` in Bencao.cpp, `<string>` in test
+- [x] [Review][Defer] `MAX_ENTRIES` overflow fixture — 1025 fixture files too heavy for this Check style; failure mode is loud wholesale rejection
+- [x] [Review][Defer] Unbounded `files`/`rejected` vectors in Load — systemic pattern shared with ChapterLibrary; hostile-dir resource bound is a loader-class issue, not introduced here
+- [x] [Review][Defer] `CodexSignals::roster` dead pointer / no veterancy kind / DeedBook unread / settled-chapter-id seam — extends the recorded scars + wiring deferrals; veterancy producer lands with RefitCamp
+- [x] [Review][Defer] Persisted ids not reconciled against library — unknown ids silently persist; a `Reconcile(lib)` prune is a design choice for 10.3+
+
+Rejected: `Json::Load` schema error code (false — verified returns `"schema"`); `TakePending` negative→size_t underflow (low — size_t contract); unchecked Find/indexing in tests (low — suite convention); "null signals" vs `chapter_close` firing (false — documented + pinned exception); `unlockInt` default −1 vs spec's 0 (rejected — fix edits spec; −1 is the semantic sentinel); `< 0` vs `== -1` (low — equivalent post-validation); FromJson non-array `Items()` silently empty (false — `IsArray` guards precede; fixture gap covered above).

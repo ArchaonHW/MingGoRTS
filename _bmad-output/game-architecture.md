@@ -38,7 +38,7 @@ This architecture document is being created through the GDS Architecture Workflo
 **Platform:** PC (Windows MSVC/MinGW, Linux) — custom PotatoEngine (C++20, OpenGL 3.3+)
 **Genre:** Strategy (medium complexity; hybrid RPG persistence + card composition)
 **Project Level:** Solo dev, high system complexity / low asset complexity
-**Networking:** None — strictly single-player
+**Networking:** None in-engine — strictly single-player; optional external relayer reads versioned-JSON claim files (process boundary, never in-engine)
 
 ### Core Systems
 
@@ -143,6 +143,7 @@ _Version column omitted — every choice below is in-repo/in-house; no external 
 | D-ARCH-6 | Replay model | Event sourcing: seed + deployment + doctrine + CP event stream; replay re-runs sim | small files, hash-rooted integrity, tamper-evident — the audit IS the replay |
 | D-ARCH-7 | QuantumFog model | Region certainty field + probability-cloud entities | per-node certainty gradient for map intel; superposed cloud objects for enemy positions; collapse/probe/decay/entangle as sim ops |
 | D-ARCH-8 | Campaign save | Versioned JSON on SerializationManager slots + `potato.<name>/<ver>` header + tmp→rename atomic write | readable, auditable, rejects bad schema without mutating state |
+| D-ARCH-9 | Chain boundary | External relayer over versioned-JSON outbox — `Campaign/Chain/` writes `potato.mintclaim/1` claims at the aftermath boundary; `Tools/MintRelayer/` does all web3 work | engine has no networking; file boundary preserves headless sim, determinism, and the zero-I/O tick path; matches the C#/.NET tooling precedent |
 
 ### Simulation Kernel
 

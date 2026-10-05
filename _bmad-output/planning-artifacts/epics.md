@@ -37,6 +37,7 @@ FR18: Presentation — pixel sprite atlas (units/terrain/myth), HUD (doctrine UI
 FR19: Content & tools — card pool expansion+balance, SquadTemplate budgeted builds with skip reasons, deck plundering, developer-facing enemy editor, sandbox mode, tutorial chapter.
 FR20: Versioned content pipeline — all game data as `potato.<name>/<ver>` JSON via game-layer JsonValue DOM parser; boot-time registries.
 FR21: Bencao codex — `potato.bencao/1` entries with six-field 本草體 anatomy (正名/釋名/集解/性味歸經/主治/批註) across 8 categories; campaign-layer unlock engine resolving trigger keys from ledger/terrain/myth state; 補鈔 delivery into the document stream; Scribe marginalia binding; HistorianReport/MythLog clause-pool citations of unlocked entries; frontispiece disclaimer; all 性味/主治 claims source-verified; collection layer only — zero sim/tick involvement, no stat effects. Design authority: `_bmad-output/bencao-worldview.md`.
+FR22: Chain provenance & mint claims — Merkle root over the ledger hash chain; replay-gated `potato.mintclaim/1` outbox written at the aftermath boundary only; external relayer anchors the root and mints a testnet token; token burns mint NFT collectibles of campaign artifacts (frontispiece 冊頁, Bencao codex entries, general dossiers). Testnet only; zero real-world value; engine remains network-free — the chain boundary is versioned-JSON files to an external process. Design authority: `_bmad-output/forge/metaverse-currency/forged-idea.md`, `_bmad-output/planning-artifacts/sprint-change-proposal-2026-10-05.md`.
 
 ### NonFunctional Requirements
 
@@ -90,6 +91,7 @@ N/A — no UX design document exists; F-epic will carry UI requirements.
 | FR19 | G | Content & tools |
 | FR20 | E0 | Versioned JSON pipeline & JsonValue |
 | FR21 | BC | Bencao codex (collection layer) |
+| FR22 | MT | Mint claims, Merkle anchor, relayer, NFT collectibles |
 
 ## Epic List
 
@@ -133,7 +135,94 @@ Content breadth and developer tooling: card pool expansion, squad templates, dec
 The desk's second book: a collection-layer materia medica codex whose entries — sourced with full fidelity from the real materia-medica tradition — unlock as documents from the player's own campaign history. Educational payload carried by the game's document fiction; no stat effects.
 **FRs covered:** FR21
 
-**Execution sequence:** E0 → L → B → A → D → C → E → F → G (F and G may partially parallel once E0 lands). BC lands once C's document machinery (6.5–6.7) exists; 10.1–10.2 may run alongside C, and 10.5 content authoring can parallel F/G.
+### Epic 11: MT — 鑄鏈存證 (Mint & Anchor)
+The chronicle gains a public seal: replay-verified victories mint a testnet token, and the token mints NFT keepsakes of the campaign's own documents. A pure showcase of blockchain primitives — the game emits versioned-JSON claims and an external relayer does all web3 work; the engine never touches a network.
+**FRs covered:** FR22
+
+### Story 11.1: MintClaim Schema & Outbox
+
+As a developer,
+I want `potato.mintclaim/1` claim documents — content-bound to the ledger seal and the battle record root — written atomically into an outbox directory,
+So that an external process can pick up mintable events without the engine ever touching a network.
+
+**Acceptance Criteria:**
+
+**Given** a settled chapter's anchors (record_root, ledger count+tip),
+**When** a claim is emitted,
+**Then** the `potato.mintclaim/1` doc binds {kind, chapter, record_root, ledger_count, ledger_tip, payload} and commits to `<outbox>/<id>.json` via tmp→rename
+**And** a malformed or bad-schema claim file rejects on read without disturbing the outbox
+**And** claim ids are deterministic — re-emitting the same settlement produces the same file (idempotent, matching ResolveAftermath's record_root idempotency).
+
+### Story 11.2: Ledger Merkle Root
+
+As a system,
+I want a deterministic Merkle root folded over the ledger hash chain and the pending claim set,
+So that one small constant anchors the whole history on-chain.
+
+**Acceptance Criteria:**
+
+**Given** a ledger chain and a claim set,
+**When** the root computes,
+**Then** leaves are ordered canonically (entry seq, then claim id) and the result is a fixed-width digest reproducible bit-exact across MSVC/MinGW
+**And** the root changes iff covered content changes — same hash discipline as the record integrity root.
+
+### Story 11.3: Replay-Gated Claim Emission
+
+As a system,
+I want claims emitted only when the battle record verifies clean and the ledger anchors it,
+So that the relayer never sees a claim the chronicle can't prove.
+
+**Acceptance Criteria:**
+
+**Given** ResolveAftermath completing with a recordRoot,
+**When** the record cross-checks clean against the ledger (CrossCheckRecord Clean),
+**Then** a chapter-settlement claim emits into the outbox
+**And** an inconsistent or unanchored record emits nothing (the failure confessed, not minted)
+**And** achievement trigger keys (zero-combat resolution, forgery bust, four-voice ending) emit achievement claims through the same outbox.
+
+### Story 11.4: External Relayer Tool
+
+As a developer,
+I want a standalone relayer (`Tools/MintRelayer/`, C#/.NET per the tooling precedent) that scans the outbox, verifies each claim against the ledger file, and submits transactions,
+So that all web3 work lives outside the game binary.
+
+**Acceptance Criteria:**
+
+**Given** an outbox dir and the campaign ledger file,
+**When** the relayer runs,
+**Then** it re-validates every claim (schema, seal consistency, `record_root:` anchor present in the chain) before submitting — the file is untrusted
+**And** invalid claims are skipped with a written reason, never aborting the batch
+**And** the dev-wallet key comes from an environment variable or local config — never committed.
+
+### Story 11.5: Testnet Anchor & Token Contract
+
+As a developer,
+I want an anchor store + ERC-20 token deployed on a test network (Sepolia or local Anvil) with the relayer submitting mint calls,
+So that verified play produces real on-chain artifacts.
+
+**Acceptance Criteria:**
+
+**Given** a verified claim batch,
+**When** the relayer submits,
+**Then** the Merkle root lands in the anchor store and tokens mint to the player wallet
+**And** re-submitting an identical root/claim is idempotent (on-chain dedupe or client-side skip)
+**And** the entire path is demonstrable on a local Anvil/Hardhat chain without Sepolia access.
+
+### Story 11.6: NFT Collectible Minting
+
+As a player,
+I want to spend minted tokens striking keepsake plates (藏書票) — chapter frontispieces, bencao entries, general dossiers — as NFTs,
+So that the campaign's own documents become things I hold on-chain.
+
+**Acceptance Criteria:**
+
+**Given** token balance and a chosen campaign artifact,
+**When** the burn+mint resolves,
+**Then** an ERC-721 mints carrying a `potato.collectible/1` versioned metadata descriptor (artifact kind + source id + campaign seal)
+**And** collectible kinds map to existing artifacts — frontispiece (Epic 8), bencao entry (Epic 10), dossier (Epic 6) — with placeholder art valid until those epics land
+**And** the mint is gated on the artifact existing in the player's own campaign record — you can only seal what your chronicle wrote.
+
+**Execution sequence:** E0 → L → B → A → D → C → E → F → G → MT (F and G may partially parallel once E0 lands). BC lands once C's document machinery (6.5–6.7) exists; 10.1–10.2 may run alongside C, and 10.5 content authoring can parallel F/G. MT's hard dependencies (1.11 BattleRecorder, 2.2 hash chain, 3.2 atomic save) are all done; it may run in parallel with any epic and uses Epic 8/10 artifacts as NFT payloads when available.
 
 ---
 
