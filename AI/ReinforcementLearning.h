@@ -180,6 +180,8 @@ private:
     };
     std::vector<TrajectoryStep> trajectory;
     
+    std::mt19937 rng;
+    
     std::vector<float> ComputeReturns();
     std::vector<float> GetActionProbabilities(const State& state);
 };
@@ -210,6 +212,8 @@ private:
     float actorLearningRate;
     float criticLearningRate;
     float discountFactor;
+    
+    std::mt19937 rng;
     
     std::vector<float> GetActionProbabilities(const State& state);
     float GetValue(const State& state);
@@ -242,6 +246,16 @@ private:
 };
 
 /**
+ * Result of an environment step
+ */
+struct StepResult {
+    State nextState;
+    float reward;
+    bool done;
+    std::string info;
+};
+
+/**
  * Environment interface for RL
  */
 class RLEnvironment {
@@ -252,12 +266,7 @@ public:
     virtual State Reset() = 0;
     
     // Step environment
-    virtual struct StepResult {
-        State nextState;
-        float reward;
-        bool done;
-        std::string info;
-    } Step(const Action& action) = 0;
+    virtual StepResult Step(const Action& action) = 0;
     
     // Get action space
     virtual std::vector<Action> GetActionSpace() const = 0;
@@ -290,6 +299,7 @@ private:
     std::pair<int, int> goal;
     std::vector<std::pair<int, int>> obstacles;
     std::pair<int, int> currentPosition;
+    std::vector<Action> actions;
     
     bool IsObstacle(int x, int y) const;
     bool IsGoal(int x, int y) const;

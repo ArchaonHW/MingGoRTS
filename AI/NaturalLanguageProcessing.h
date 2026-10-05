@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <memory>
 #include <functional>
 
@@ -148,7 +149,7 @@ public:
     std::vector<std::string> SplitSentences(const std::string& text);
     
     // Word normalization
-    std::string Normalize(const std::string& word);
+    std::string Normalize(const std::string& word) const;
     
     // Stop word detection
     bool IsStopWord(const std::string& word) const;
@@ -157,7 +158,7 @@ public:
     void AddStopWord(const std::string& word);
     
 private:
-    std::unordered_map<std::string, bool> stopWords;
+    std::unordered_set<std::string> stopWords;
     TokenType ClassifyToken(const std::string& text);
 };
 

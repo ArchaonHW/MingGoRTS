@@ -122,6 +122,41 @@ public:
     VertexArray();
     ~VertexArray();
     
+    // GL 物件所有權唯一:禁止拷貝(拷貝會讓 dtor 刪掉共享的 VAO/VBO),
+    // 提供 move 語義轉移 id
+    VertexArray(const VertexArray&) = delete;
+    VertexArray& operator=(const VertexArray&) = delete;
+    VertexArray(VertexArray&& o) noexcept
+        : buffersUploaded(o.buffersUploaded),
+          pendingVertexData(std::move(o.pendingVertexData)),
+          pendingIndexData(std::move(o.pendingIndexData)),
+          pendingAttribs(std::move(o.pendingAttribs)),
+          pendingVertexUsage(o.pendingVertexUsage),
+          pendingIndexUsage(o.pendingIndexUsage),
+          vao(o.vao), vbo(o.vbo), ebo(o.ebo),
+          vertexCount(o.vertexCount), indexCount(o.indexCount) {
+        o.vao = o.vbo = o.ebo = 0;
+        o.vertexCount = o.indexCount = 0;
+        o.buffersUploaded = false;
+    }
+    VertexArray& operator=(VertexArray&& o) noexcept {
+        if (this != &o) {
+            ReleaseGLObjects();
+            vao = o.vao; vbo = o.vbo; ebo = o.ebo;
+            vertexCount = o.vertexCount; indexCount = o.indexCount;
+            buffersUploaded = o.buffersUploaded;
+            pendingVertexData = std::move(o.pendingVertexData);
+            pendingIndexData = std::move(o.pendingIndexData);
+            pendingAttribs = std::move(o.pendingAttribs);
+            pendingVertexUsage = o.pendingVertexUsage;
+            pendingIndexUsage = o.pendingIndexUsage;
+            o.vao = o.vbo = o.ebo = 0;
+            o.vertexCount = o.indexCount = 0;
+            o.buffersUploaded = false;
+        }
+        return *this;
+    }
+    
     void Bind() const;
     void Unbind() const;
     
@@ -130,14 +165,37 @@ public:
     
     void SetVertexAttribute(uint32 index, int size, int stride, size_t offset);
     
+    // 唯讀取得 GL id——不觸發建立/重放（避免 getter 更動 GL 綁定狀態）；
+    // 需要「確保已建立」請走 Bind()/IsUploaded()
     uint32 GetVAO() const { return vao; }
     uint32 GetVBO() const { return vbo; }
     uint32 GetEBO() const { return ebo; }
+    // headless 建構後是否已真正把資料上傳到 GPU
+    bool IsUploaded() const { return buffersUploaded; }
     
 private:
-    uint32 vao;
-    uint32 vbo;
-    uint32 ebo;
+    // 惰性建立 GL 物件：GL context 可能尚未初始化就建構 Mesh/Model；
+    // headless 期間收到的 buffer/attribute 先暫存，EnsureCreated 時重放上傳
+    void EnsureCreated() const;
+    // 只釋放 GL 物件 id（move-assign 用）；不動暫存資料與成員生命週期
+    void ReleaseGLObjects();
+
+    struct PendingAttrib {
+        uint32 index;
+        int size;
+        int stride;
+        size_t offset;
+    };
+    mutable bool buffersUploaded = false;
+    mutable std::vector<unsigned char> pendingVertexData;
+    mutable std::vector<uint32> pendingIndexData;
+    mutable std::vector<PendingAttrib> pendingAttribs;
+    mutable uint32 pendingVertexUsage = 0;
+    mutable uint32 pendingIndexUsage = 0;
+
+    mutable uint32 vao;
+    mutable uint32 vbo;
+    mutable uint32 ebo;
     uint32 vertexCount;
     uint32 indexCount;
 };
@@ -160,6 +218,11 @@ class Mesh {
 public:
     Mesh();
     ~Mesh();
+    
+    Mesh(const Mesh&) = delete;
+    Mesh& operator=(const Mesh&) = delete;
+    Mesh(Mesh&&) = default;
+    Mesh& operator=(Mesh&&) = default;
     
     void SetVertices(const std::vector<Vertex>& vertices);
     void SetIndices(const std::vector<uint32>& indices);
@@ -185,7 +248,29 @@ class Texture {
 public:
     Texture();
     ~Texture();
-    
+
+    // GL id 所有權唯一：禁止拷貝（避免共享 id 被二次 glDeleteTextures）
+    Texture(const Texture&) = delete;
+    Texture& operator=(const Texture&) = delete;
+    Texture(Texture&& o) noexcept
+        : textureID(o.textureID), width(o.width), height(o.height),
+          channels(o.channels),
+          pendingPixels(std::move(o.pendingPixels)),
+          pendingPath(std::move(o.pendingPath)) {
+        o.textureID = 0; o.width = o.height = o.channels = 0;
+    }
+    Texture& operator=(Texture&& o) noexcept {
+        if (this != &o) {
+            this->~Texture();
+            textureID = o.textureID; width = o.width;
+            height = o.height; channels = o.channels;
+            pendingPixels = std::move(o.pendingPixels);
+            pendingPath = std::move(o.pendingPath);
+            o.textureID = 0; o.width = o.height = o.channels = 0;
+        }
+        return *this;
+    }
+
     bool LoadFromFile(const std::string& path);
     bool LoadFromMemory(const unsigned char* data, int width, int height, int channels);
     
@@ -195,15 +280,20 @@ public:
     void SetWrapMode(WrapMode mode);
     void SetFilterMode(FilterMode mode);
     
-    uint32 GetTextureID() const { return textureID; }
+    uint32 GetTextureID() const { EnsureUploaded(); return textureID; }
     int GetWidth() const { return width; }
     int GetHeight() const { return height; }
-    
+
 private:
-    uint32 textureID;
+    // GL context 未就緒時暫存像素，首次 Bind 才上傳
+    void EnsureUploaded() const;
+
+    mutable uint32 textureID;
     int width;
     int height;
     int channels;
+    mutable std::vector<unsigned char> pendingPixels;
+    mutable std::string pendingPath; // headless LoadFromFile 暫存路徑
 };
 
 } // namespace Potato
