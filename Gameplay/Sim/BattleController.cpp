@@ -1,0 +1,762 @@
+#include "Gameplay/Sim/BattleController.h"
+
+#include "Gameplay/Map/BattleMap.h"
+#include "Gameplay/Squad/Squad.h"
+
+#include <climits>
+#include <utility>
+
+namespace Potato::Gameplay {
+
+namespace {
+
+// Numeric fold — deterministic mix of a 64-bit value into an accumulator.
+std::uint64_t Fold(std::uint64_t acc, std::uint64_t v) {
+    acc ^= v + 0x9E3779B97F4A7C15ull + (acc << 6) + (acc >> 2);
+    return acc;
+}
+
+// Normalize width-dependent sentinels (NO_REGION is ~size_t{0}) so the
+// checksum is identical on 32- and 64-bit targets.
+std::uint64_t RegionKey(std::size_t r) {
+    return r == Squad::NO_REGION ? ~std::uint64_t{0}
+                                 : static_cast<std::uint64_t>(r);
+}
+
+} // namespace
+
+BattleController::BattleController(std::uint64_t seed, const BattleMap& map,
+                                   const DoctrineLibrary& cards,
+                                   const FogConfig& fogConfig,
+                                   const PlanConfig& planConfig)
+    : map_(map), cards_(cards), sim_(seed),
+      fog_{QuantumFog(map, fogConfig), QuantumFog(map, fogConfig)},
+      planConfig_(planConfig) {}
+
+BattleController::~BattleController() = default;
+BattleController::BattleController(const BattleController&) = default;
+
+void BattleController::EmitBeatChanged(int tick, BattleBeat target) {
+    events_.push_back({SimEvent::Kind::BeatChanged, tick, -1, -1, -1,
+                       static_cast<int>(target), -1, {}, {}});
+}
+
+bool BattleController::RequestBeat(BattleBeat target) {
+    if (!CanTransition(beat_, target)) return false;
+    // BeatChanged.tick = index of the tick the transition followed:
+    // P->E fires before any tick (0); the auto-close path inside Tick()
+    // stamps the producing tick via EmitBeatChanged directly.
+    beat_ = target;
+    EmitBeatChanged(static_cast<int>(sim_.TickCount()), target);
+    if (target == BattleBeat::Execution) {
+        // Deployment footprint IS initial intel: run one observation
+        // pass before bonuses so arrows over covered ground score.
+        SyncFog();
+        ApplyPlanBonuses();
+    }
+    if (target == BattleBeat::Aftermath) CloseBattle(true);
+    return true;
+}
+
+bool BattleController::DeploySquad(const SquadTemplate& t,
+                                   std::size_t regionIndex, int side) {
+    if (beat_ != BattleBeat::Planning) return false;
+    if (regionIndex >= map_.RegionCount()) return false; // incl. NO_REGION
+    if (side != 0 && side != 1) return false;            // invisible faction
+    squads_.push_back(Squad::Instantiate(t, regionIndex, side));
+    sheets_.push_back(SquadSheet{}); // empty sheet = no doctrine
+    routTimers_.push_back(0);
+    // Intel: the opposing side's fog gains a cloud for this squad at
+    // initial certainty; own fog tracks nothing (own truth is visible).
+    cloudOf_[side].push_back(-1);
+    const int enemyFog = 1 - side;
+    cloudOf_[enemyFog].push_back(
+        fog_[enemyFog].AddCloud(static_cast<int>(regionIndex),
+                                fog_[enemyFog].Config().initialIntel));
+    arrows_.push_back(PlanArrow{});
+    return true;
+}
+
+bool BattleController::SetSheet(std::size_t squadIndex, SquadSheet sheet) {
+    if (beat_ != BattleBeat::Planning) return false;
+    if (squadIndex >= squads_.size()) return false;
+    sheets_[squadIndex] = std::move(sheet);
+    return true;
+}
+
+bool BattleController::SetCpPool(int side, int cp) {
+    if (beat_ != BattleBeat::Planning) return false;
+    if (side != 0 && side != 1) return false;
+    cpPool_[side] = cp < 0 ? 0 : (cp > CP_CAP ? CP_CAP : cp);
+    return true;
+}
+
+// --- CP interventions ------------------------------------------------
+
+namespace {
+
+Result<bool> CheckCommand(const BattleBeat beat, const int side,
+                          const std::vector<Squad>& squads,
+                          const std::vector<Intervention>& pending,
+                          const int squadIndex, const int kindCost,
+                          const int cpPool) {
+    if (beat != BattleBeat::Execution) {
+        return Fail<bool>("command", "interventions only during Execution");
+    }
+    if (side != 0 && side != 1) {
+        return Fail<bool>("command", "side must be 0 or 1");
+    }
+    if (cpPool < kindCost) {
+        return Fail<bool>("command", "insufficient CP");
+    }
+    if (squadIndex < 0 ||
+        static_cast<std::size_t>(squadIndex) >= squads.size()) {
+        return Fail<bool>("command", "invalid squad index");
+    }
+    const Squad& sq = squads[static_cast<std::size_t>(squadIndex)];
+    if (sq.side != side) {
+        return Fail<bool>("command", "cannot command the other side");
+    }
+    if (!sq.IsEffective()) {
+        return Fail<bool>("command", "squad is off-field");
+    }
+    // Routing is "effective" (still on-field) but accepts no commands —
+    // otherwise the CP is spent on a guaranteed apply-time no-op.
+    if (sq.state == SquadState::Routing) {
+        return Fail<bool>("command", "squad is routing off-field");
+    }
+    // One pending command per squad — a second would be a paid no-op
+    // at apply (e.g. IssueMove is Holding-gated, forceNext is a bool).
+    // Fog ops skip the check: Entangle repurposes squadIndex as a
+    // cloud id (dense 0..n-1 — would falsely collide with squad
+    // indices); Probe stores -1 anyway.
+    for (const Intervention& c : pending) {
+        if (c.kind == InterventionKind::Probe ||
+            c.kind == InterventionKind::Entangle) continue;
+        if (c.squadIndex == squadIndex) {
+            return Fail<bool>("command",
+                              "squad already has a pending command");
+        }
+    }
+    return Ok(true);
+}
+
+} // namespace
+
+Result<bool> BattleController::IssueRedirect(int side, int squadIndex,
+                                             std::size_t region) {
+    auto chk = CheckCommand(beat_, side, squads_, pendingCommands_,
+                            squadIndex, CostOf(InterventionKind::Redirect),
+                            cpPool_[side == 1 ? 1 : 0]);
+    if (!chk.ok()) return chk;
+    const Squad& sq = squads_[static_cast<std::size_t>(squadIndex)];
+    if (sq.state != SquadState::Holding) {
+        return Fail<bool>("command", "squad is not Holding");
+    }
+    if (region >= map_.RegionCount()) {
+        return Fail<bool>("command", "target region out of bounds");
+    }
+    if (sq.regionIndex >= map_.RegionCount()) {
+        return Fail<bool>("command", "squad region out of bounds");
+    }
+    bool adjacent = false;
+    for (std::size_t n : map_.Neighbors(sq.regionIndex)) {
+        if (n == region) { adjacent = true; break; }
+    }
+    if (!adjacent) {
+        return Fail<bool>("command", "target not adjacent to squad");
+    }
+    cpPool_[side] -= CostOf(InterventionKind::Redirect);
+    const int tick = static_cast<int>(sim_.TickCount());
+    pendingCommands_.push_back({side, InterventionKind::Redirect,
+                                squadIndex, static_cast<int>(region), tick, {}});
+    events_.push_back({SimEvent::Kind::Intervention, tick, squadIndex, -1,
+                       static_cast<int>(region),
+                       static_cast<int>(InterventionKind::Redirect),
+                       side, {}, {}});
+    return Ok(true);
+}
+
+Result<bool> BattleController::IssueOverride(int side, int squadIndex,
+                                             int slotIndex) {
+    auto chk = CheckCommand(beat_, side, squads_, pendingCommands_,
+                            squadIndex, CostOf(InterventionKind::Override),
+                            cpPool_[side == 1 ? 1 : 0]);
+    if (!chk.ok()) return chk;
+    if (slotIndex < 0 || static_cast<std::size_t>(slotIndex) >=
+            sheets_[static_cast<std::size_t>(squadIndex)].slots.size()) {
+        return Fail<bool>("command", "invalid slot index");
+    }
+    cpPool_[side] -= CostOf(InterventionKind::Override);
+    const int tick = static_cast<int>(sim_.TickCount());
+    pendingCommands_.push_back({side, InterventionKind::Override,
+                                squadIndex, slotIndex, tick, {}});
+    events_.push_back({SimEvent::Kind::Intervention, tick, squadIndex, -1,
+                       slotIndex,
+                       static_cast<int>(InterventionKind::Override),
+                       side, {}, {}});
+    return Ok(true);
+}
+
+Result<bool> BattleController::IssueRetreat(int side, int squadIndex) {
+    auto chk = CheckCommand(beat_, side, squads_, pendingCommands_,
+                            squadIndex, CostOf(InterventionKind::Retreat),
+                            cpPool_[side == 1 ? 1 : 0]);
+    if (!chk.ok()) return chk;
+    cpPool_[side] -= CostOf(InterventionKind::Retreat);
+    const int tick = static_cast<int>(sim_.TickCount());
+    pendingCommands_.push_back({side, InterventionKind::Retreat,
+                                squadIndex, -1, tick, {}});
+    events_.push_back({SimEvent::Kind::Intervention, tick, squadIndex, -1,
+                       -1,
+                       static_cast<int>(InterventionKind::Retreat),
+                       side, {}, {}});
+    return Ok(true);
+}
+
+Result<bool> BattleController::IssueProbe(int side, std::size_t region) {
+    if (beat_ != BattleBeat::Execution) {
+        return Fail<bool>("command", "interventions only during Execution");
+    }
+    if (side != 0 && side != 1) {
+        return Fail<bool>("command", "side must be 0 or 1");
+    }
+    if (region >= map_.RegionCount()) {
+        return Fail<bool>("command", "target region out of bounds");
+    }
+    if (probeBudget_[side] <= 0) {
+        return Fail<bool>("command", "probe budget exhausted");
+    }
+    --probeBudget_[side];
+    const int tick = static_cast<int>(sim_.TickCount());
+    pendingCommands_.push_back({side, InterventionKind::Probe, -1,
+                                static_cast<int>(region), tick, {}});
+    events_.push_back({SimEvent::Kind::Intervention, tick, -1, -1,
+                       static_cast<int>(region),
+                       static_cast<int>(InterventionKind::Probe),
+                       side, {}, {}});
+    return Ok(true);
+}
+
+Result<bool> BattleController::IssueEntangle(int side, int cloudIdA,
+                                             int cloudIdB) {
+    if (beat_ != BattleBeat::Execution) {
+        return Fail<bool>("command", "interventions only during Execution");
+    }
+    if (side != 0 && side != 1) {
+        return Fail<bool>("command", "side must be 0 or 1");
+    }
+    if (cpPool_[side] < CostOf(InterventionKind::Entangle)) {
+        return Fail<bool>("command", "insufficient CP");
+    }
+    if (cloudIdA == cloudIdB || !fog_[side].HasCloud(cloudIdA) ||
+        !fog_[side].HasCloud(cloudIdB)) {
+        return Fail<bool>("command", "invalid cloud pair");
+    }
+    // Clouds of already-off-field squads are a paid no-op (pruned at
+    // the next SyncFog) — check the truth map first.
+    const auto liveCloud = [&](int cid) {
+        for (std::size_t i = 0; i < cloudOf_[side].size(); ++i) {
+            if (cloudOf_[side][i] == cid) return squads_[i].IsEffective();
+        }
+        return false;
+    };
+    if (!liveCloud(cloudIdA) || !liveCloud(cloudIdB)) {
+        return Fail<bool>("command", "cloud target is off-field");
+    }
+    if (fog_[side].EntangledWith(cloudIdA) >= 0 ||
+        fog_[side].EntangledWith(cloudIdB) >= 0) {
+        return Fail<bool>("command", "cloud already entangled");
+    }
+    cpPool_[side] -= CostOf(InterventionKind::Entangle);
+    const int tick = static_cast<int>(sim_.TickCount());
+    // squadIndex field carries cloud A's id (see Intervention comment);
+    // the event mirrors the same layout so the log records both ids.
+    pendingCommands_.push_back({side, InterventionKind::Entangle,
+                                cloudIdA, cloudIdB, tick, {}});
+    events_.push_back({SimEvent::Kind::Intervention, tick, cloudIdA, -1,
+                       cloudIdB,
+                       static_cast<int>(InterventionKind::Entangle),
+                       side, {}, {}});
+    return Ok(true);
+}
+
+bool BattleController::SetCloudIntel(int fogSide, int squadIndex,
+                                     int region, int certainty) {
+    if (beat_ != BattleBeat::Planning) return false;
+    if (fogSide != 0 && fogSide != 1) return false;
+    if (squadIndex < 0 ||
+        static_cast<std::size_t>(squadIndex) >= squads_.size()) {
+        return false;
+    }
+    if (region < 0 || static_cast<std::size_t>(region) >= map_.RegionCount()) {
+        return false;
+    }
+    const int cid = cloudOf_[fogSide][static_cast<std::size_t>(squadIndex)];
+    if (cid < 0) return false; // can't brief about your own squads
+    fog_[fogSide].SetCloudBelief(cid, region, certainty);
+    return true;
+}
+
+// --- BattlePlan ------------------------------------------------------------
+
+namespace {
+
+// Validate a drawn path shape: in-bounds, pairwise-adjacent, and no
+// region revisits (cycles would let authors inflate MeanCertainty and
+// make cursor-seek ambiguous — also bounds length to RegionCount).
+bool ValidPathShape(const BattleMap& map,
+                    const std::vector<std::size_t>& path) {
+    if (path.empty() || path.size() > map.RegionCount()) return false;
+    for (std::size_t i = 0; i < path.size(); ++i) {
+        if (path[i] >= map.RegionCount()) return false;
+        for (std::size_t j = i + 1; j < path.size(); ++j) {
+            if (path[i] == path[j]) return false; // revisit
+        }
+        if (i + 1 >= path.size()) break;
+        bool adjacent = false;
+        for (std::size_t n : map.Neighbors(path[i])) {
+            if (n == path[i + 1]) { adjacent = true; break; }
+        }
+        if (!adjacent) return false;
+    }
+    return true;
+}
+
+// Where the squad will next be stationary: mid-transit that's the
+// edge destination, otherwise its current region.
+std::size_t AnchorRegion(const Squad& sq) {
+    return sq.state == SquadState::Moving ? sq.edgeTarget
+                                          : sq.regionIndex;
+}
+
+// Find `region` in `path`; returns index or path.size().
+std::size_t SeekPath(const std::vector<std::size_t>& path,
+                     std::size_t region) {
+    for (std::size_t i = 0; i < path.size(); ++i) {
+        if (path[i] == region) return i;
+    }
+    return path.size();
+}
+
+} // namespace
+
+bool BattleController::DrawArrow(int side, int squadIndex,
+                                 const std::vector<std::size_t>& path) {
+    if (beat_ != BattleBeat::Planning) return false;
+    if (squadIndex < 0 ||
+        static_cast<std::size_t>(squadIndex) >= squads_.size()) return false;
+    const Squad& sq = squads_[static_cast<std::size_t>(squadIndex)];
+    if (sq.side != side) return false;
+    // Planning squads stand still: anchor is the current region and the
+    // arrow must start there (path >= 2 nodes to mean anything).
+    if (path.size() < 2 || !ValidPathShape(map_, path) ||
+        path[0] != sq.regionIndex) return false;
+    PlanArrow& a = arrows_[static_cast<std::size_t>(squadIndex)];
+    a.active = true;
+    a.path = path;
+    a.cursor = 0;
+    a.bonusApplied = 0;
+    return true;
+}
+
+const PlanArrow& BattleController::ArrowOf(std::size_t squadIndex) const {
+    static const PlanArrow EMPTY{};
+    return squadIndex < arrows_.size() ? arrows_[squadIndex] : EMPTY;
+}
+
+void BattleController::ApplyPlanBonuses() {
+    for (std::size_t i = 0; i < squads_.size(); ++i) {
+        PlanArrow& a = arrows_[i];
+        if (!a.active) continue;
+        Squad& sq = squads_[i];
+        // Squads already streaming off-field never march — no bonus.
+        if (sq.state == SquadState::Routing) continue;
+        const int mean = MeanCertainty(fog_[sq.side], a.path);
+        const int bonus = mean < planConfig_.bonusPercentCap
+                              ? mean : planConfig_.bonusPercentCap;
+        // int64 intermediate — attack is clamped to INT_MAX by doctrine
+        // deltas, so attack*bonus can overflow int32 (UB in tick path).
+        std::int64_t grant = static_cast<std::int64_t>(sq.attack) *
+                                 bonus / 100;
+        std::int64_t next = static_cast<std::int64_t>(sq.attack) + grant;
+        if (next > INT_MAX) next = INT_MAX;
+        a.bonusApplied = static_cast<int>(next - sq.attack);
+        sq.attack = static_cast<int>(next);
+    }
+}
+
+Result<bool> BattleController::IssueReplan(int side, int squadIndex,
+                                           std::vector<std::size_t> path) {
+    auto chk = CheckCommand(beat_, side, squads_, pendingCommands_,
+                            squadIndex, planConfig_.replanCost,
+                            cpPool_[side == 1 ? 1 : 0]);
+    if (!chk.ok()) return chk;
+    // Issue-time path validation: the path must be a valid chain AND
+    // contain the squad's anchor (edgeTarget mid-transit, else the
+    // current region) — an arrow that never visits where the squad is
+    // going can only stall.
+    const Squad& sq = squads_[static_cast<std::size_t>(squadIndex)];
+    if (!ValidPathShape(map_, path) ||
+        SeekPath(path, AnchorRegion(sq)) == path.size()) {
+        return Fail<bool>("command", "invalid replan path");
+    }
+    cpPool_[side] -= planConfig_.replanCost;
+    const int tick = static_cast<int>(sim_.TickCount());
+    pendingCommands_.push_back({side, InterventionKind::Replan,
+                                squadIndex,
+                                static_cast<int>(path.size()), tick,
+                                std::move(path)});
+    // `path` moved into the queued command; the event copies it back —
+    // the recorded stream must carry the full payload for replay (1.9
+    // deferral closed: path, not just length).
+    events_.push_back({SimEvent::Kind::Intervention, tick, squadIndex, -1,
+                       static_cast<int>(pendingCommands_.back().path.size()),
+                       static_cast<int>(InterventionKind::Replan),
+                       side, pendingCommands_.back().path, {}});
+    return Ok(true);
+}
+
+void BattleController::MarchArrows() {
+    for (std::size_t i = 0; i < squads_.size(); ++i) {
+        PlanArrow& a = arrows_[i];
+        if (!a.active) continue;
+        Squad& sq = squads_[i];
+        if (sq.state != SquadState::Holding) continue;
+        // Cursor resync: if the squad is standing on the path but not at
+        // the cursor (e.g. a redirect landed it ahead), seek its region
+        // and continue from there. Off-path squads stall the arrow
+        // until replanned.
+        if (a.cursor >= a.path.size() ||
+            sq.regionIndex != a.path[a.cursor]) {
+            a.cursor = SeekPath(a.path, sq.regionIndex);
+            if (a.cursor == a.path.size()) continue; // off-path: stall
+        }
+        if (a.cursor + 1 >= a.path.size()) continue; // path complete
+        if (sq.IssueMove(a.path[a.cursor + 1])) ++a.cursor;
+    }
+}
+
+void BattleController::ApplyInterventions(int tick) {
+    (void)tick; // applied at tick start; issueTick already recorded
+    for (const Intervention& cmd : pendingCommands_) {
+        const int side = (cmd.side == 1) ? 1 : 0;
+        // Fog ops don't address squads — handle before the squad guard
+        // (Entangle repurposes squadIndex as cloud id A).
+        if (cmd.kind == InterventionKind::Probe) {
+            if (cmd.target >= 0) {
+                fog_[side].Probe(static_cast<std::size_t>(cmd.target));
+            }
+            continue;
+        }
+        if (cmd.kind == InterventionKind::Entangle) {
+            fog_[side].Entangle(cmd.squadIndex, cmd.target);
+            continue;
+        }
+        if (cmd.squadIndex < 0 ||
+            static_cast<std::size_t>(cmd.squadIndex) >= squads_.size())
+            continue;
+        Squad& sq = squads_[static_cast<std::size_t>(cmd.squadIndex)];
+        // Routing accepts no commands either — a squad that broke
+        // between issue and apply skips silently (CP already spent).
+        if (!sq.IsEffective() || sq.state == SquadState::Routing) continue;
+        switch (cmd.kind) {
+            case InterventionKind::Redirect: {
+                // Re-validate adjacency at apply — issue-time approval
+                // stays valid only while the squad hasn't moved (the
+                // pending-command guard allows one per squad, but keep
+                // the gate for future command kinds that relocate).
+                bool adjacent = false;
+                const std::size_t target =
+                    static_cast<std::size_t>(cmd.target);
+                if (sq.regionIndex < map_.RegionCount() &&
+                    target < map_.RegionCount()) {
+                    for (std::size_t n : map_.Neighbors(sq.regionIndex)) {
+                        if (n == target) { adjacent = true; break; }
+                    }
+                }
+                if (adjacent) sq.IssueMove(target);
+                break;
+            }
+            case InterventionKind::Override:
+                if (cmd.target >= 0 && static_cast<std::size_t>(cmd.target) <
+                        sheets_[static_cast<std::size_t>(cmd.squadIndex)]
+                            .slots.size()) {
+                    sheets_[static_cast<std::size_t>(cmd.squadIndex)]
+                        .slots[static_cast<std::size_t>(cmd.target)]
+                        .forceNext = true;
+                }
+                break;
+            case InterventionKind::Retreat:
+                // -> Routing; ApplyEvent clears in-flight edge state.
+                sq.ApplyEvent(SquadEvent::CohesionBreak);
+                break;
+            case InterventionKind::Replan: {
+                // Re-validate at apply: path shape plus the squad's
+                // anchor must appear in the path — cursor seeks it, so
+                // a squad mid-leg continues from where it will stand
+                // (issue-time approval stays valid in the synchronous
+                // API; this guards future async/replay paths).
+                PlanArrow& a = arrows_[static_cast<std::size_t>(
+                    cmd.squadIndex)];
+                const std::size_t anchor =
+                    SeekPath(cmd.path, AnchorRegion(sq));
+                if (!ValidPathShape(map_, cmd.path) ||
+                    anchor == cmd.path.size()) break;
+                // Reverse the old grant (clamped — doctrine deltas may
+                // have cut attack below the recorded bonus).
+                if (a.bonusApplied > sq.attack) {
+                    sq.attack = 0;
+                } else {
+                    sq.attack -= a.bonusApplied;
+                }
+                a.active = true;
+                a.path = cmd.path;
+                a.cursor = anchor;
+                // Real-time scaling: bonus = current certainty mean.
+                const int mean = MeanCertainty(fog_[side], a.path);
+                const int bonus = mean < planConfig_.bonusPercentCap
+                                      ? mean : planConfig_.bonusPercentCap;
+                std::int64_t grant = static_cast<std::int64_t>(sq.attack) *
+                                         bonus / 100;
+                std::int64_t next =
+                    static_cast<std::int64_t>(sq.attack) + grant;
+                if (next > INT_MAX) next = INT_MAX;
+                a.bonusApplied = static_cast<int>(next - sq.attack);
+                sq.attack = static_cast<int>(next);
+                break;
+            }
+            case InterventionKind::Probe:
+            case InterventionKind::Entangle:
+                break; // handled above — fog ops skip the squad guard
+        }
+    }
+    pendingCommands_.clear();
+}
+
+bool BattleController::Tick() {
+    if (beat_ != BattleBeat::Execution) return false;
+
+    const int tick = static_cast<int>(sim_.TickCount());
+    // 0) queued interventions apply at tick start (part of snapshot state)
+    ApplyInterventions(tick);
+    // 0.5) fog sync: prune dead clouds, auto-observe, decay — doctrine
+    // reads this tick's belief, not truth.
+    SyncFog();
+    // CP regen: +1 per 60 s to each side, capped
+    if (++cpRegen_ >= CP_REGEN_TICKS) {
+        cpRegen_ = 0;
+        for (int side = 0; side < 2; ++side) {
+            if (cpPool_[side] < CP_CAP) ++cpPool_[side];
+        }
+    }
+    // 1) doctrine eval on tick-start state (EvalTick is const on squads_)
+    EvalOutcome out = Doctrine::EvalTick(map_, squads_, sheets_, cards_,
+                                         sim_.Rng(), cpPool_, fog_, tick);
+    // 2) commit pending deltas post-eval
+    Doctrine::ApplyDeltas(squads_, out.deltas);
+    // 2.5) plan arrows: on-path Holding squads advance one leg
+    MarchArrows();
+    // 3) squads advance edge traversal; Routing squads age off-field
+    for (std::size_t i = 0; i < squads_.size(); ++i) {
+        Squad& s = squads_[i];
+        s.TickMove();
+        if (s.state == SquadState::Routing) {
+            if (++routTimers_[i] >= ROUT_TICKS) {
+                s.ApplyEvent(SquadEvent::RetreatComplete); // -> Routed
+            }
+        } else {
+            routTimers_[i] = 0;
+        }
+    }
+    // 4) append this tick's events to the battle log
+    for (const SimEvent& e : out.events) events_.push_back(e);
+    // 5) sim housekeeping: tick counter + stream draw + stream checksum
+    sim_.Tick();
+    // 6) a wiped side closes the battle — same tick, after all commits;
+    //    BeatChanged is stamped with the producing tick's index so every
+    //    event of the closing tick shares one tick value.
+    if (CountEffective(0) == 0 || CountEffective(1) == 0) {
+        beat_ = BattleBeat::Aftermath;
+        EmitBeatChanged(tick, BattleBeat::Aftermath);
+        CloseBattle(false);
+    }
+    return true;
+}
+
+void BattleController::SyncFog() {
+    // Regions a side can actually see this tick: every effective,
+    // non-routing squad's own region plus its neighbors.
+    std::array<std::vector<std::size_t>, 2> seen;
+    for (int s = 0; s < 2; ++s) {
+        for (const Squad& o : squads_) {
+            if (o.side != s || !o.IsEffective() ||
+                o.state == SquadState::Routing ||
+                o.regionIndex >= map_.RegionCount()) continue; // covers
+                // NO_REGION too — assert-only guards aren't enough here
+            seen[s].push_back(o.regionIndex);
+            for (std::size_t n : map_.Neighbors(o.regionIndex)) {
+                seen[s].push_back(n);
+            }
+        }
+    }
+    const auto visible = [&seen](int s, std::size_t r) {
+        for (std::size_t x : seen[s]) if (x == r) return true;
+        return false;
+    };
+
+    for (int s = 0; s < 2; ++s) {
+        // 1) Prune clouds of squads that left the field.
+        for (std::size_t i = 0; i < squads_.size(); ++i) {
+            int& cid = cloudOf_[s][i];
+            if (cid >= 0 && !squads_[i].IsEffective()) {
+                fog_[s].RemoveCloud(cid);
+                cid = -1;
+            }
+        }
+    }
+    // 2) Decay ~10/min first — then observe/collapse, so a freshly
+    //    observed value lands at 100 post-decay (decay-after-collapse
+    //    would make detect_threshold=100 permanently blind).
+    // 3) Observe: physically-seen regions get full field certainty.
+    // 4) Auto-observe: tracked enemy squads standing in a visible
+    //    region collapse to truth; entangled partners resolve too
+    //    (each to its OWN truth — shared fate, separate entities).
+    for (int s = 0; s < 2; ++s) {
+        fog_[s].TickDecay();
+        for (std::size_t r : seen[s]) fog_[s].Observe(r);
+        for (std::size_t i = 0; i < squads_.size(); ++i) {
+            const Squad& e = squads_[i];
+            const int cid = cloudOf_[s][i];
+            if (cid < 0 || !e.IsEffective() ||
+                e.regionIndex == Squad::NO_REGION) continue;
+            if (!visible(s, e.regionIndex)) continue;
+            // Mid-transit squads report their departure region —
+            // regionIndex only updates on edge completion (Squad).
+            fog_[s].Collapse(cid, static_cast<int>(e.regionIndex));
+            const int partner = fog_[s].EntangledWith(cid);
+            if (partner < 0 || !fog_[s].HasCloud(partner)) continue;
+            for (std::size_t j = 0; j < squads_.size(); ++j) {
+                if (cloudOf_[s][j] == partner && squads_[j].IsEffective() &&
+                    squads_[j].regionIndex != Squad::NO_REGION) {
+                    fog_[s].Collapse(
+                        partner,
+                        static_cast<int>(squads_[j].regionIndex));
+                    break;
+                }
+            }
+        }
+    }
+}
+
+int BattleController::CountEffective(int side) const {
+    int n = 0;
+    for (const Squad& s : squads_) {
+        if (s.side == side && s.IsEffective()) ++n;
+    }
+    return n;
+}
+
+void BattleController::CloseBattle(bool forced) {
+    pendingCommands_.clear(); // after Aftermath nothing ever applies
+    outcome_.forced = forced;
+    outcome_.elapsedTicks = sim_.TickCount();
+    for (int side = 0; side < 2; ++side) {
+        for (const Squad& s : squads_) {
+            if (s.side != side) continue;
+            switch (s.state) {
+                case SquadState::Routed:    ++outcome_.routed[side]; break;
+                case SquadState::Destroyed: ++outcome_.destroyed[side]; break;
+                default:                    ++outcome_.effective[side]; break;
+            }
+        }
+    }
+    const int eff0 = outcome_.effective[0], eff1 = outcome_.effective[1];
+    outcome_.winnerSide = (eff0 > 0 && eff1 == 0) ? 0
+                        : (eff1 > 0 && eff0 == 0) ? 1 : -1;
+}
+
+std::uint64_t BattleController::Checksum() const {
+    std::uint64_t h = sim_.Checksum();
+    h = Fold(h, sim_.TickCount());
+    h = Fold(h, static_cast<std::uint64_t>(beat_));
+    h = Fold(h, static_cast<std::uint64_t>(cpPool_[0]));
+    h = Fold(h, static_cast<std::uint64_t>(cpPool_[1]));
+    h = Fold(h, static_cast<std::uint64_t>(squads_.size()));
+    for (std::size_t i = 0; i < squads_.size(); ++i) {
+        const Squad& s = squads_[i];
+        h = Fold(h, static_cast<std::uint64_t>(s.maxHp));
+        h = Fold(h, static_cast<std::uint64_t>(s.hp));
+        h = Fold(h, static_cast<std::uint64_t>(s.attack));
+        h = Fold(h, static_cast<std::uint64_t>(s.speedMilli));
+        h = Fold(h, static_cast<std::uint64_t>(s.cohesion));
+        h = Fold(h, static_cast<std::uint64_t>(s.side));
+        h = Fold(h, static_cast<std::uint64_t>(s.state));
+        h = Fold(h, RegionKey(s.regionIndex));
+        h = Fold(h, RegionKey(s.edgeTarget));
+        h = Fold(h, static_cast<std::uint64_t>(s.edgeProgress));
+        h = Fold(h, static_cast<std::uint64_t>(routTimers_[i]));
+        for (const CardSlot& slot : sheets_[i].slots) {
+            h = Fold(h, static_cast<std::uint64_t>(slot.cardIndex));
+            h = Fold(h, static_cast<std::uint64_t>(slot.cooldownRemaining));
+            h = Fold(h, static_cast<std::uint64_t>(slot.forceNext));
+        }
+    }
+    // Committed-but-unapplied commands are sim state too — two
+    // controllers with different queued orders must fingerprint apart.
+    h = Fold(h, static_cast<std::uint64_t>(pendingCommands_.size()));
+    for (const Intervention& c : pendingCommands_) {
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(c.side)));
+        h = Fold(h, static_cast<std::uint64_t>(c.kind));
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(c.squadIndex)));
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(c.target)));
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(c.issueTick)));
+        h = Fold(h, static_cast<std::uint64_t>(c.path.size()));
+        for (std::size_t r : c.path) {
+            h = Fold(h, RegionKey(r));
+        }
+    }
+    // Plan arrows (battle state).
+    for (const PlanArrow& a : arrows_) {
+        h = Fold(h, static_cast<std::uint64_t>(a.active));
+        h = Fold(h, static_cast<std::uint64_t>(a.cursor));
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(a.bonusApplied)));
+        h = Fold(h, static_cast<std::uint64_t>(a.path.size()));
+        for (std::size_t r : a.path) h = Fold(h, RegionKey(r));
+    }
+    // Fog state: region fields + cloud beliefs + the truth<->cloud map
+    // + probe budgets (decayAccum is derived from TickCount — skipped).
+    for (int s = 0; s < 2; ++s) {
+        for (const CloudEntity& c : fog_[s].Clouds()) {
+            h = Fold(h, static_cast<std::uint64_t>(
+                            static_cast<std::uint32_t>(c.id)));
+            h = Fold(h, static_cast<std::uint64_t>(
+                            static_cast<std::uint32_t>(c.believedRegion)));
+            h = Fold(h, static_cast<std::uint64_t>(
+                            static_cast<std::uint32_t>(c.certainty)));
+            h = Fold(h, static_cast<std::uint64_t>(
+                            static_cast<std::uint32_t>(c.entangledWith)));
+        }
+        for (int cid : cloudOf_[s]) {
+            h = Fold(h, static_cast<std::uint64_t>(
+                            static_cast<std::uint32_t>(cid)));
+        }
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(probeBudget_[s])));
+    }
+    // Region certainty fields — same length on both fogs.
+    for (std::size_t r = 0; r < map_.RegionCount(); ++r) {
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(fog_[0].CertaintyAt(r))));
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(fog_[1].CertaintyAt(r))));
+    }
+    return h;
+}
+
+} // namespace Potato::Gameplay

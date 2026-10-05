@@ -1,0 +1,13 @@
+# GDS workflow status — MingGoRTS
+# Updated by gds-create-epics-and-stories completion, 2026-09-29
+
+create-gdd: _bmad-output/planning-artifacts/gdds/gdd-MingGoRTS-2026-09-29/gdd.md
+create-architecture: _bmad-output/game-architecture.md
+create-narrative: _bmad-output/narrative-design.md
+create-epics-and-stories: _bmad-output/planning-artifacts/epics.md
+check-implementation-readiness: _bmad-output/planning-artifacts/implementation-readiness-report-2026-09-29.md
+sprint-planning: _bmad-output/implementation-artifacts/sprint-status.yaml
+project-context: AGENTS.md
+readme-cleanup: README.md
+# superseded draft: _bmad-output/planning-artifacts/gdds/gdd-MingGoRTS-2026-09-29/epics.md
+# next: gds-create-story (Story 1.1) / gds-ux (optional, before Epic 8)
