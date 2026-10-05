@@ -2,8 +2,47 @@
 
 #include "Gameplay/Doctrine/Doctrine.h" // SimEvent
 #include "Gameplay/Map/BattleMap.h"
+#include "Gameplay/Squad/Squad.h"
 
 namespace Potato::Gameplay {
+
+namespace {
+
+// Same exclusive-presence discipline GovernanceField uses (the
+// field owns its invariant — replicated deliberately, not shared):
+// the side with >= 1 effective non-Routing squad at `region`, -1
+// when empty or contested.
+int ExclusiveSide(const std::vector<Squad>& squads,
+                  std::size_t region) {
+    int side = -1;
+    for (const Squad& s : squads) {
+        if (!s.IsEffective() || s.state == SquadState::Routing ||
+            s.regionIndex != region) continue;
+        if (side == -1) {
+            side = s.side;
+        } else if (side != s.side) {
+            return -1; // contested
+        }
+    }
+    return side;
+}
+
+// First effective non-Routing squad of `side` at `region`, or -1 —
+// the canonical witness (lowest squad index, deterministic).
+int FirstAt(const std::vector<Squad>& squads, int side,
+            std::size_t region) {
+    for (std::size_t i = 0; i < squads.size(); ++i) {
+        const Squad& s = squads[i];
+        if (s.side == side && s.IsEffective() &&
+            s.state != SquadState::Routing &&
+            s.regionIndex == region) {
+            return static_cast<int>(i);
+        }
+    }
+    return -1;
+}
+
+} // namespace
 
 static_assert(static_cast<int>(InfiltrationLevel::Invaded) + 1 ==
                   static_cast<int>(kInfiltrationLevelCount),
@@ -65,8 +104,25 @@ bool MythEventKindFromInt(std::int64_t v, MythEventKind& out) {
     return true;
 }
 
+const char* GodStanceName(GodStance stance) {
+    switch (stance) {
+    case GodStance::Wrathful:  return "wrathful";
+    case GodStance::Neutral:   return "neutral";
+    case GodStance::Favorable: return "favorable";
+    }
+    return "unknown";
+}
+
 void MythField::Init(const BattleMap& map) {
     levels_.assign(map.RegionCount(), 0);
+    shrines_.clear();
+    for (std::size_t r = 0; r < map.RegionCount(); ++r) {
+        if (map.RegionAt(r).myth & MYTH_SHRINE) {
+            ShrineTrack t;
+            t.region = r;
+            shrines_.push_back(t);
+        }
+    }
 }
 
 bool MythField::Seed(std::size_t region, InfiltrationLevel level) {
@@ -109,6 +165,63 @@ std::optional<SimEvent> MythField::Apply(std::size_t region,
 InfiltrationLevel MythField::LevelAt(std::size_t region) const {
     if (region >= levels_.size()) return InfiltrationLevel::None;
     return static_cast<InfiltrationLevel>(levels_[region]);
+}
+
+std::vector<SimEvent>
+MythField::Tick(const std::vector<Squad>& squads, int tick) {
+    std::vector<SimEvent> out;
+    for (ShrineTrack& s : shrines_) {
+        int claimant = ExclusiveSide(squads, s.region);
+        // claimant is a raw squad.side — gate to the two-side domain
+        // before it can index stance[] (Squads are publicly mutable;
+        // a stray side must read as no-claim, never UB).
+        if (claimant != 0 && claimant != 1) claimant = -1;
+        if (claimant != s.claimant) {
+            s.claimant = claimant;
+            s.dwell = 0;
+        }
+        // Saturating — see the village dwell rationale; nothing
+        // reads past the threshold and the counter can't overflow.
+        if (s.claimant >= 0 && s.dwell < SHRINE_DEDICATION_TICKS) {
+            ++s.dwell;
+        }
+        // Losing exclusive control frees the latch — recapture
+        // re-dwells and re-emits (every dedication is a recorded
+        // event; ledger pricing lands in DeedBook at Story 5.3).
+        if (s.owner >= 0 && s.owner != s.claimant) {
+            s.owner = -1;
+        }
+        if (s.owner < 0 && s.claimant >= 0 &&
+            s.dwell >= SHRINE_DEDICATION_TICKS) {
+            s.owner = s.claimant;
+            // The god's mood flips with the ground: favorable to
+            // the dedicatee, wrathful toward the despoiler.
+            s.stance[s.owner] = 1;
+            s.stance[1 - s.owner] = -1;
+            SimEvent e;
+            e.kind = SimEvent::Kind::ShrineCaptured;
+            e.tick = tick;
+            e.squadIndex = FirstAt(squads, s.owner, s.region);
+            e.param = static_cast<int>(s.region);
+            e.side = s.owner;
+            out.push_back(e);
+        }
+    }
+    return out;
+}
+
+const ShrineTrack* MythField::ShrineAt(std::size_t region) const {
+    for (const ShrineTrack& s : shrines_) {
+        if (s.region == region) return &s;
+    }
+    return nullptr;
+}
+
+GodStance MythField::StanceAt(std::size_t region, int side) const {
+    if (side != 0 && side != 1) return GodStance::Neutral;
+    const ShrineTrack* s = ShrineAt(region);
+    if (!s) return GodStance::Neutral;
+    return static_cast<GodStance>(s->stance[side]);
 }
 
 } // namespace Potato::Gameplay

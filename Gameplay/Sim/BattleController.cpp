@@ -720,11 +720,14 @@ bool BattleController::Tick() {
     // 3.5) governance scan on post-move truth: village dwell/latch,
     //      convoy march -> raid -> arrival.
     std::vector<SimEvent> govEvents = field_.Tick(squads_, tick);
+    // 3.6) myth scan: shrine dedication dwell/latch -> capture.
+    std::vector<SimEvent> mythEvents = myth_.Tick(squads_, tick);
     // 4) append this tick's events to the battle log (doctrine ->
-    //    burn -> governance — canonical emission order)
+    //    burn -> governance -> myth — canonical emission order)
     for (const SimEvent& e : out.events) events_.push_back(e);
     for (const SimEvent& e : burnEvents) events_.push_back(e);
     for (const SimEvent& e : govEvents) events_.push_back(e);
+    for (const SimEvent& e : mythEvents) events_.push_back(e);
     // 5) sim housekeeping: tick counter + stream draw + stream checksum
     sim_.Tick();
     // 6) a wiped side closes the battle — same tick, after all commits;
@@ -970,6 +973,21 @@ std::uint64_t BattleController::Checksum() const {
     h = Fold(h, static_cast<std::uint64_t>(myth_.RegionCount()));
     for (std::uint8_t l : myth_.Levels()) {
         h = Fold(h, static_cast<std::uint64_t>(l));
+    }
+    // Shrine tracks: region, latch state, deity stance — all folded.
+    h = Fold(h, static_cast<std::uint64_t>(myth_.Shrines().size()));
+    for (const ShrineTrack& s : myth_.Shrines()) {
+        h = Fold(h, RegionKey(s.region));
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(s.claimant)));
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(s.dwell)));
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint32_t>(s.owner)));
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint8_t>(s.stance[0])));
+        h = Fold(h, static_cast<std::uint64_t>(
+                        static_cast<std::uint8_t>(s.stance[1])));
     }
     return h;
 }

@@ -27,10 +27,14 @@ void Check(bool cond, const char* name) {
 using namespace Potato::Gameplay;
 using Potato::Campaign::MythState;
 
-// Line map: r0 - r1 - r2 - r3
+// Line map: r0 - r1(shrine + village) - r2 - r3 — r1 carries both
+// layers' marks so burn/shrine asymmetry is exercisable.
 const char* MAP_DOC = R"json({
     "schema": "potato.map/1", "id": "m", "name": "Line",
-    "regions": [{"id": "r0"}, {"id": "r1"}, {"id": "r2"}, {"id": "r3"}],
+    "regions": [{"id": "r0"},
+                {"id": "r1", "strategic": ["village"],
+                 "myth": ["shrine"]},
+                {"id": "r2"}, {"id": "r3"}],
     "edges": [["r0", "r1"], ["r1", "r2"], ["r2", "r3"]]
 })json";
 
@@ -42,7 +46,9 @@ const char* CARDS_DOC = R"json({
         {"id": "card_wait", "cooldown": 5,
          "trigger": {"type": "always"}, "action": {"type": "hold"}},
         {"id": "card_rest", "cooldown": 5,
-         "trigger": {"type": "always"}, "action": {"type": "hold"}}
+         "trigger": {"type": "always"}, "action": {"type": "hold"}},
+        {"id": "scorch", "cooldown": 5,
+         "trigger": {"type": "always"}, "action": {"type": "burn"}}
     ]
 })json";
 
@@ -382,6 +388,193 @@ int main() {
         cm = Potato::Campaign::CommitMyth(full, "ch_new", quiet);
         Check(cm.ok() && cm.value == 0,
               "all-quiet commit needs no chapter slot");
+    }
+
+    // === Story 5.2 — Shrine Entities ===
+
+    // --- Shrine capture: dwell latch, allegiance flip, stance ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 1, 0); // on the shrine
+        bc.DeploySquad(Mk("foe"), 3, 1); // parked
+        Check(bc.Myth().ShrineAt(1) != nullptr &&
+                  bc.Myth().ShrineAt(2) == nullptr,
+              "shrine indexed by region");
+        Check(bc.Myth().StanceAt(1, 0) == GodStance::Neutral &&
+                  bc.Myth().StanceAt(1, 1) == GodStance::Neutral,
+              "fresh shrine is neutral to both sides");
+        bc.RequestBeat(BattleBeat::Execution);
+        for (int i = 0; i < SHRINE_DEDICATION_TICKS - 1; ++i) {
+            bc.Tick();
+        }
+        Check(CountKind(bc.Events(), SimEvent::Kind::ShrineCaptured) ==
+                  0,
+              "no capture before dedication completes");
+        bc.Tick(); // the dedicating tick
+        const SimEvent* ev =
+            FindKind(bc.Events(), SimEvent::Kind::ShrineCaptured);
+        Check(ev && ev->param == 1 && ev->side == 0 &&
+                  ev->squadIndex == 0,
+              "capture carries region + new owner + witness");
+        Check(bc.Myth().ShrineAt(1)->owner == 0,
+              "allegiance latched to side 0");
+        Check(bc.Myth().StanceAt(1, 0) == GodStance::Favorable &&
+                  bc.Myth().StanceAt(1, 1) == GodStance::Wrathful,
+              "deity favors dedicatee, wrathful to the other");
+    }
+
+    // --- Contested shrine never dedicates ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 1, 0);
+        bc.DeploySquad(Mk("foe"), 1, 1); // shares the shrine
+        bc.RequestBeat(BattleBeat::Execution);
+        for (int i = 0; i < 2 * SHRINE_DEDICATION_TICKS; ++i) {
+            bc.Tick();
+        }
+        Check(CountKind(bc.Events(), SimEvent::Kind::ShrineCaptured) ==
+                  0,
+              "contested shrine never captures");
+        Check(bc.Myth().ShrineAt(1)->owner == -1,
+              "unconsecrated stays unconsecrated");
+    }
+
+    // --- Recapture: loss frees the latch, new owner flips stance ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 1, 0);
+        bc.DeploySquad(Mk("foe"), 0, 1); // adjacent, can walk in
+        bc.RequestBeat(BattleBeat::Execution);
+        for (int i = 0; i < SHRINE_DEDICATION_TICKS; ++i) bc.Tick();
+        Check(bc.Myth().ShrineAt(1)->owner == 0, "side 0 holds it");
+        // Enemy walks in (adjacent r0 -> r1): contested frees latch.
+        auto r = bc.IssueRedirect(1, 1, 1);
+        Check(r.ok() && r.value, "contestor redirect issued");
+        for (int i = 0; i < 20 + SHRINE_DEDICATION_TICKS; ++i) {
+            bc.Tick();
+        }
+        Check(bc.Myth().ShrineAt(1)->owner == -1,
+              "contested shrine releases the latch");
+        // Ally walks out: enemy dedicates alone -> recapture.
+        r = bc.IssueRedirect(0, 0, 2);
+        Check(r.ok() && r.value, "ally withdraw issued");
+        for (int i = 0; i < 20 + SHRINE_DEDICATION_TICKS + 2; ++i) {
+            bc.Tick();
+        }
+        Check(CountKind(bc.Events(), SimEvent::Kind::ShrineCaptured) ==
+                  2,
+              "recapture re-dwells and re-emits");
+        Check(bc.Myth().ShrineAt(1)->owner == 1 &&
+                  bc.Myth().StanceAt(1, 1) == GodStance::Favorable &&
+                  bc.Myth().StanceAt(1, 0) == GodStance::Wrathful,
+              "recapture flips allegiance and both stances");
+    }
+
+    // --- Shrine state folds into the checksum (real divergence) ---
+    {
+        BattleController a(1, fx.map, fx.cards);
+        BattleController b(1, fx.map, fx.cards);
+        a.DeploySquad(Mk("ally"), 1, 0); // on the shrine
+        b.DeploySquad(Mk("ally"), 0, 0); // parked OFF it
+        for (BattleController* p : {&a, &b}) {
+            p->DeploySquad(Mk("foe"), 3, 1);
+            p->RequestBeat(BattleBeat::Execution);
+        }
+        for (int i = 0; i < SHRINE_DEDICATION_TICKS + 2; ++i) {
+            a.Tick();
+            b.Tick();
+        }
+        Check(a.Checksum() != b.Checksum(),
+              "captured vs uncaptured shrine diverges the checksum");
+        Check(CountKind(a.Events(), SimEvent::Kind::ShrineCaptured) ==
+                  1,
+              "shrine capture in deterministic run");
+        Check(CountKind(b.Events(), SimEvent::Kind::ShrineCaptured) ==
+                  0,
+              "diverged run never dedicates");
+    }
+
+    // --- The god remembers: stance survives latch release ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 1, 0);
+        bc.DeploySquad(Mk("foe"), 0, 1);
+        bc.RequestBeat(BattleBeat::Execution);
+        for (int i = 0; i < SHRINE_DEDICATION_TICKS; ++i) bc.Tick();
+        Check(bc.Myth().ShrineAt(1)->owner == 0, "captured");
+        auto r = bc.IssueRedirect(0, 0, 0); // ally vacates to r0
+        Check(r.ok() && r.value, "vacate issued");
+        for (int i = 0; i < 30; ++i) bc.Tick(); // ally left, contested
+        Check(bc.Myth().ShrineAt(1)->owner == -1,
+              "latch released on loss of control");
+        Check(bc.Myth().StanceAt(1, 0) == GodStance::Favorable &&
+                  bc.Myth().StanceAt(1, 1) == GodStance::Wrathful,
+              "stance persists on unconsecrated ground");
+    }
+
+    // --- Ash holds no village; the god still takes dedication ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 0, 0); // parked off r1
+        bc.DeploySquad(Mk("foe"), 1, 1);  // holds village+shrine r1
+        bc.SetSheet(1, SquadSheet::Build(
+            fx.cards, {"scorch", "card_idle", "card_wait"}).value);
+        bc.RequestBeat(BattleBeat::Execution);
+        bc.Tick(); // burn applies at delta-commit
+        Check(CountKind(bc.Events(), SimEvent::Kind::VillageBurned) ==
+                  1,
+              "village on r1 burned");
+        for (int i = 0; i < SHRINE_DEDICATION_TICKS + 2; ++i) {
+            bc.Tick();
+        }
+        Check(CountKind(bc.Events(), SimEvent::Kind::VillageOccupied) ==
+                  0,
+              "burned village never occupies");
+        const SimEvent* cap =
+            FindKind(bc.Events(), SimEvent::Kind::ShrineCaptured);
+        Check(cap && cap->side == 1,
+              "shrine on burned ground still dedicates");
+    }
+
+    // --- side-outside-{0,1} squad can never index stance[] (gate) ---
+    {
+        MythField f;
+        f.Init(fx.map);
+        std::vector<Squad> squads;
+        Squad q = Squad::Instantiate(Mk("ghost"), 1, 2); // side 2!
+        squads.push_back(q);
+        for (int i = 0; i < SHRINE_DEDICATION_TICKS + 2; ++i) {
+            Check(f.Tick(squads, i).empty(),
+                  "side-2 presence claims nothing");
+        }
+        Check(f.ShrineAt(1)->owner == -1,
+              "non-domain side cannot capture");
+    }
+
+    // --- Record -> replay: a sealed ShrineCaptured verifies ---
+    {
+        BattleRecorder rec;
+        BattleController bc(6, fx.map, fx.cards);
+        rec.Bind(6, fx.md, fx.cd);
+        SquadTemplate a = Mk("ally"), f = Mk("foe");
+        bc.DeploySquad(a, 1, 0); rec.RecordDeploy(a, 1, 0); // shrine
+        bc.DeploySquad(f, 3, 1); rec.RecordDeploy(f, 3, 1);
+        bc.RequestBeat(BattleBeat::Execution);
+        for (int i = 0; i < SHRINE_DEDICATION_TICKS + 5; ++i) {
+            bc.Tick();
+        }
+        Check(CountKind(bc.Events(), SimEvent::Kind::ShrineCaptured) ==
+                  1,
+              "record: capture event sealed");
+        bc.RequestBeat(BattleBeat::Aftermath);
+        rec.Seal(bc);
+        auto doc = rec.ToJson();
+        Check(doc.ok(), "capture record sealed");
+        if (doc.ok()) {
+            auto r = Replay::Verify(doc.value);
+            Check(r.ok() && r.value.ok,
+                  "ShrineCaptured record replays bit-exact");
+        }
     }
 
     std::printf("%s (%d failures)\n",

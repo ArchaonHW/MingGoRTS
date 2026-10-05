@@ -42,12 +42,13 @@ bool EventFromJson(const JsonValue& j, SimEvent& e) {
         return false;
     }
     const std::int64_t kind = j["kind"].AsInt();
-    // CardFired..InfiltrationChanged — ordinals are append-only, so
-    // the last enumerator IS the bound (v3 added governance 4-7 and
-    // SquadExecuted 8, v4 added InfiltrationChanged 9).
+    // CardFired..ShrineCaptured — ordinals are append-only, so the
+    // last enumerator IS the bound (v3 added governance 4-7 and
+    // SquadExecuted 8; v4 adds InfiltrationChanged 9 and
+    // ShrineCaptured 10 — same tool version, same epic stage).
     if (kind < 0 ||
         kind > static_cast<std::int64_t>(
-                   SimEvent::Kind::InfiltrationChanged)) {
+                   SimEvent::Kind::ShrineCaptured)) {
         return false;
     }
     // Every field must fit int32 — silent narrowing would let a forged

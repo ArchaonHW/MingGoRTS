@@ -115,6 +115,11 @@ struct SimEvent {
         // aux = new InfiltrationLevel ordinal (0..3); squadIndex and
         // side = -1 — the myth layer is side-less.
         InfiltrationChanged,
+        // Shrine allegiance flip (Epic 5.2): a shrine region held by
+        // exclusive presence for SHRINE_DEDICATION_TICKS latches to
+        // that side. param = region, squadIndex = witness, side =
+        // new owner, aux unused (0).
+        ShrineCaptured,
     };
 
     Kind kind = Kind::CardFired;

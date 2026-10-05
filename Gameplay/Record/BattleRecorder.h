@@ -36,9 +36,9 @@ public:
     // and the "convoy" planning op; 4.2's Execute intervention +
     // SquadExecuted deed share this version. Older tools reject
     // kind > 3.
-    // v4: Epic 5.1 — InfiltrationChanged (ordinal 9) plus the
-    // "mythseed"/"myth" planning ops that journal infiltration
-    // carry-in and table-driven applies. Older tools reject kind > 8.
+    // v4: Epic 5 — InfiltrationChanged (9) + the "mythseed"/"myth"
+    // planning ops (5.1), and ShrineCaptured (10) for shrine
+    // allegiance flips (5.2). Older tools reject kind > 8.
     static constexpr int TOOL_VERSION = 4;
     static constexpr std::string_view SCHEMA = "potato.battle_record/1";
 
