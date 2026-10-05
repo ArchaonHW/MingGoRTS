@@ -125,3 +125,12 @@
 - Journal-contract asymmetry: `myth`/`mythseed` ops now reject no-ops (accepted call = observable state change), but the older `cp`/`intel`/`sheet`/`convoy` ops can still be forged as state no-ops into a root-consistent record — pre-existing class, would need per-op change-detection to close.
 - Verifier doesn't cross-check `toolVersion` against max-declared SimEvent kind — a v1-stamped record with kind-9 events verifies if self-consistent (fabrication is equivalent; note only).
 - `BattleMap::MAX_REGIONS` (1024) was introduced for the myth cap + verifier resource bound; `MythState::MAX_REGIONS_PER_CHAPTER` aliases it — keep in lockstep.
+
+## Deferred from: Epic 10 (Bencao Codex) planning (2026-10-05)
+
+- `RosterEntry` has no `scars` field (deferred from 3.5) — the 續斷/骨碎補 unlock triggers in `bencao-worldview.md` §4 key on veterancy/casualties thresholds until scars land via a roster schema bump.
+- `ChapterDef` has no terrain field — terrain-kind unlock triggers must read the `map` ref's `potato.map/1` terrain flags at chapter settle, or `potato.chapter/2` adds an explicit `codexTerrain` hint. Decide in Story 10.2.
+- Codex persistence: embed the unlocked set + pending 補鈔 queue in `potato.campaign` (schema bump) vs. sibling `potato.bencao_state/1` — same open seam as RivalBook (deferred from 3.7). Decide in Story 10.2; AC requires lossless round-trip either way.
+- OQ-B2 (poisoned/forged bencao page) — Story 10.3 reserves the suspect-flag plumbing but ships no poisoned entry; decision pending, see `bencao-worldview.md` §9.
+- OQ-B3 (本草體 English rendering) — `potato.bencao/1` carries a `lang` block with zh-TW required; `en` deferred.
+- OQ-B5 (人部 entry count 0/1/3) — Story 10.6 gates human-derived entries on this decision.

@@ -1,5 +1,7 @@
 #include "Campaign/Rivals/RivalDeck.h"
 
+#include "Campaign/Narrative/IntelLedger.h" // DistortionFor
+
 #include <algorithm>
 #include <unordered_set>
 
@@ -112,12 +114,20 @@ Gameplay::Result<int> RivalBook::RecordChapter(
 std::vector<std::string> RivalBook::PrepareCounterDeck(
     std::string_view id,
     const Gameplay::DoctrineLibrary& counters,
-    int depth) const {
+    int depth, const IntelLedger* intel) const {
     std::vector<std::string> deck;
     const GeneralDossier* d = Find(id);
     if (!d || depth <= 0 ||
         d->chaptersObserved < MIN_CHAPTERS_TO_LEARN) {
         return deck;
+    }
+    // Story 6.4: the rival's own intel quality caps its counter
+    // precision — every resolved-false claim it believed erodes
+    // the deck proportionally (integer math, deterministic).
+    if (intel != nullptr) {
+        const int distortion = intel->DistortionFor(d->id);
+        depth = depth * (100 - distortion) / 100;
+        if (depth <= 0) return deck;
     }
     // Rank triggers by usage desc, ties by ordinal —
     // deterministic under replay and across toolchains.

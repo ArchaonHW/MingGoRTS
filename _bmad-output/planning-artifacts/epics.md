@@ -36,6 +36,7 @@ FR17: Document-voice systems — Scribe marginalia (authenticity-flagged), rival
 FR18: Presentation — pixel sprite atlas (units/terrain/myth), HUD (doctrine UI, CP bar, density scaling), CJK text pipeline, chapter frontispieces (冊頁), audio (direction deferred OQ-1).
 FR19: Content & tools — card pool expansion+balance, SquadTemplate budgeted builds with skip reasons, deck plundering, developer-facing enemy editor, sandbox mode, tutorial chapter.
 FR20: Versioned content pipeline — all game data as `potato.<name>/<ver>` JSON via game-layer JsonValue DOM parser; boot-time registries.
+FR21: Bencao codex — `potato.bencao/1` entries with six-field 本草體 anatomy (正名/釋名/集解/性味歸經/主治/批註) across 8 categories; campaign-layer unlock engine resolving trigger keys from ledger/terrain/myth state; 補鈔 delivery into the document stream; Scribe marginalia binding; HistorianReport/MythLog clause-pool citations of unlocked entries; frontispiece disclaimer; all 性味/主治 claims source-verified; collection layer only — zero sim/tick involvement, no stat effects. Design authority: `_bmad-output/bencao-worldview.md`.
 
 ### NonFunctional Requirements
 
@@ -88,6 +89,7 @@ N/A — no UX design document exists; F-epic will carry UI requirements.
 | FR18 | F | Presentation |
 | FR19 | G | Content & tools |
 | FR20 | E0 | Versioned JSON pipeline & JsonValue |
+| FR21 | BC | Bencao codex (collection layer) |
 
 ## Epic List
 
@@ -127,7 +129,11 @@ The game becomes visible and audible: sprite atlas, HUD, CJK pipeline, frontispi
 Content breadth and developer tooling: card pool expansion, squad templates, deck plundering, enemy editor, sandbox, tutorial chapter.
 **FRs covered:** FR19
 
-**Execution sequence:** E0 → L → B → A → D → C → E → F → G (F and G may partially parallel once E0 lands).
+### Epic 10: BC — Bencao Codex（本草書中書）
+The desk's second book: a collection-layer materia medica codex whose entries — sourced with full fidelity from the real materia-medica tradition — unlock as documents from the player's own campaign history. Educational payload carried by the game's document fiction; no stat effects.
+**FRs covered:** FR21
+
+**Execution sequence:** E0 → L → B → A → D → C → E → F → G (F and G may partially parallel once E0 lands). BC lands once C's document machinery (6.5–6.7) exists; 10.1–10.2 may run alongside C, and 10.5 content authoring can parallel F/G.
 
 ---
 
@@ -895,6 +901,20 @@ So that each 回 feels like a page in an album.
 **Then** its frontispiece accompanies the 題詞
 **And** ending folios get their own 冊頁 treatment.
 
+### Story 8.6: Bencao Codex UI Chrome
+
+As a player,
+I want the codex presented as the desk's second book — page chrome, category browsing, sealed 補鈔 slots — in the codex home decided at OQ-B1 (default: a second tab beside the ledger; RefitCamp desk as the alternative),
+So that reading it feels like handling a book, not a wiki.
+
+**Acceptance Criteria:**
+
+**Given** the headless render path from Story 10.4,
+**When** the codex screen draws in-shell,
+**Then** it reuses the 8.3 CJK pipeline and the ledger's document-page chrome, distinct in palette/texture so the two books are visually tellable at a glance
+**And** locked entries render as sealed slots under their 類 title (no hover-spoilers of factual fields)
+**And** the OQ-B1 home decision is recorded in the story file — if RefitCamp desk is chosen, the codex lives in the between-chapter scene instead.
+
 ---
 
 ## Epic 9: G — Content & Tools
@@ -978,3 +998,94 @@ So that I learn to write by writing.
 **When** Ch.1 plays,
 **Then** doctrine composition, execution watching, and CP triage are each exercised with in-fiction framing (the commission page)
 **And** no out-of-fiction tutorial UI appears.
+
+---
+
+## Epic 10: BC — Bencao Codex（本草書中書）
+
+The desk's second book: a collection-layer codex of materia medica whose entries unlock as documents from the player's own campaign deeds. Educational by trust — the bencao is the one text in the fiction that never lies. Design authority: `_bmad-output/bencao-worldview.md`. Collection layer only: no stats, no consumables, no victory gating, zero sim involvement.
+
+### Story 10.1: Bencao Entry Schema & Registry
+
+As a developer,
+I want `potato.bencao/1` versioned entry files loaded into a boot-time registry with the six-field anatomy and 8-category taxonomy,
+So that herb content is data, not code.
+
+**Acceptance Criteria:**
+
+**Given** `potato.bencao/1` files in `assets/bencao/`,
+**When** the campaign boots,
+**Then** entries register read-only with required fields validated (正名, 類, 性味歸經, 主治 present; 釋名/集解 optional; 批註 slots are runtime-bound, never authored)
+**And** each entry carries its own `unlock` trigger manifest in-file (terrain kind, ledger-event tag, governance event, myth state, 墮落 threshold, or chapter-close) plus a `source` citation field (卷/條) for the verification record
+**And** a bad schema/version rejects that file without failing the library
+**And** entry fields carry no executable semantics — codex content never reaches the sim.
+
+### Story 10.2: Bencao Unlock Engine
+
+As a player,
+I want codex pages to unlock from what my campaign actually did — terrain fought over, deeds booked, shrines pacified — so the book grows out of my history,
+So that the collection is a record of play, not a checklist.
+
+**Acceptance Criteria:**
+
+**Given** a per-entry trigger manifest (worldview §4),
+**When** campaign-layer state settles at chapter end,
+**Then** the engine resolves matching entries deterministically in a fixed evaluation order — reading ledger entry tags (`atrocity`, `resolution:*`, `chapter:*`), DeedBook deeds, MythState infiltration, RosterEntry veterancy/casualties (the `scars` field does not exist yet; 續斷/骨碎補 key on veterancy thresholds until it lands), and chapter-map terrain via the `ChapterDef.map` ref's `potato.map/1` flags
+**And** the unlocked set plus the pending 補鈔 queue persist in campaign state — embedded in `potato.campaign` via schema bump or as sibling `potato.bencao_state/1` (decided at implementation; same seam as RivalBook), round-tripping losslessly
+**And** all reads are read-only against ledger/roster/myth — no tick-path calls, no writes outside the codex store.
+
+### Story 10.3: 補鈔 Delivery & Marginalia Binding
+
+As a player,
+I want unlocked entries to arrive as 「補鈔」 pages in the post-battle document stream, each later bound with a Scribe 批註 tying the herb to the event that unlocked it,
+So that reference becomes memory.
+
+**Acceptance Criteria:**
+
+**Given** an unlock set at chapter close,
+**When** the document stream renders,
+**Then** new entries appear as 補鈔 pages (bounded per chapter, remainder queued) and each 批註 composes from the triggering event's context via clause pools
+**And** the marginalia path reuses Story 6.6's authenticity-flag plumbing — a forged-looking 批註 can be flagged suspect (OQ-B2 poisoned-entry beat remains out of scope pending decision)
+**And** 批註 never asserts efficacy beyond the 【主治】 field it annotates.
+
+### Story 10.4: Bencao Codex Renderer
+
+As a player,
+I want the codex to render as a book — frontispiece disclaimer, category browsing, six-field entry pages in 本草體 —
+So that it reads as the desk's second book, not a menu.
+
+**Acceptance Criteria:**
+
+**Given** the registry plus the unlocked set,
+**When** the codex screen renders,
+**Then** the 序頁 disclaimer (worldview §4) always precedes browsing and locked entries show as sealed 補鈔-pending slots under their 類 title
+**And** the text-layout path is headless-testable on the HistorianReport precedent, with page chrome landing on the F-epic UI.
+
+### Story 10.5: Document-Stream Integration
+
+As a player,
+I want the game's other voices to notice the book I'm reading — the HistorianReport citing materia in passing (「傷者敷以三七之屬」) and MythLog rumors preceding their catalog verification (「或云某山有靈芝」),
+So that the codex is woven into the chronicle, not bolted beside it.
+
+**Acceptance Criteria:**
+
+**Given** the unlocked set and a resolved chapter,
+**When** HistorianReport and MythLog render,
+**Then** clause pools may cite only already-unlocked entries (a sealed entry is never named) and citations are deterministic for the same inputs
+**And** MythLog hearsay clauses for shrine/myth events reference entries the events will later unlock — rumor precedes catalog, never the reverse
+**And** no citation field alters report content semantics — they are color clauses riding existing render paths, removable without breaking the report.
+
+### Story 10.6: Bencao Launch Content Set
+
+As a writer,
+I want the launch catalog (~30 entries, worldview §5.3) authored and source-verified — every 性味歸經/主治 field checked against the source compendium and every [V] flag resolved,
+So that the educational layer is trustworthy.
+
+**Acceptance Criteria:**
+
+**Given** the launch table in `bencao-worldview.md` §5.3,
+**When** content ships,
+**Then** each entry's factual fields carry a verification record (source 卷/條 cited in the `source` field; a registry test asserts the field is present and non-empty — correctness is human review, not code) and the six anchor entries (甘草/三七/附子/靈芝/龍骨/罌粟) ship with full 批註 clause pools
+**And** no 主治 asserts beyond the source text — fictionalization is confined to 批註 and 集解's hearsay mood
+**And** entries carry a `lang` block with zh-TW required; `en` deferred pending OQ-B3 (本草體 translation strategy)
+**And** 人部 entries ship only per the OQ-B5 decision (0/1/3), each Scribe-flagged in-fiction.

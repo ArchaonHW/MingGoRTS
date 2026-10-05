@@ -85,7 +85,7 @@ development_status:
   6-1-historianreport-renderer: done
   6-2-chapterconventions: done
   6-3-generaldossier: done
-  6-4-intelledger: backlog
+  6-4-intelledger: done
   6-5-narrativepack: backlog
   6-6-scribe-marginalia: backlog
   6-7-document-variant-rendering: backlog
@@ -105,6 +105,7 @@ development_status:
   8-3-cjk-text-pipeline: backlog
   8-4-audio: backlog
   8-5-chapter-frontispieces: backlog
+  8-6-bencao-codex-ui-chrome: backlog
   epic-8-retrospective: optional
   epic-9: backlog
   9-1-doctrine-card-pool-expansion: backlog
@@ -114,3 +115,11 @@ development_status:
   9-5-sandbox-mode: backlog
   9-6-tutorial-chapter: backlog
   epic-9-retrospective: optional
+  epic-10: backlog
+  10-1-bencao-entry-schema-registry: backlog
+  10-2-bencao-unlock-engine: backlog
+  10-3-buchao-delivery-marginalia: backlog
+  10-4-bencao-codex-renderer: backlog
+  10-5-document-stream-integration: backlog
+  10-6-bencao-launch-content-set: backlog
+  epic-10-retrospective: optional

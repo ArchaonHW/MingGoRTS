@@ -9,5 +9,6 @@ check-implementation-readiness: _bmad-output/planning-artifacts/implementation-r
 sprint-planning: _bmad-output/implementation-artifacts/sprint-status.yaml
 project-context: AGENTS.md
 readme-cleanup: README.md
+bencao-worldview: _bmad-output/bencao-worldview.md
 # superseded draft: _bmad-output/planning-artifacts/gdds/gdd-MingGoRTS-2026-09-29/epics.md
 # next: gds-create-story (Story 1.1) / gds-ux (optional, before Epic 8)

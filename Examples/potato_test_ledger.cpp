@@ -4,6 +4,7 @@
 #include "Campaign/Narrative/BattleReport.h"
 #include "Campaign/Narrative/Conventions.h"
 #include "Campaign/Narrative/Dossier.h"
+#include "Campaign/Narrative/IntelLedger.h"
 #include "Campaign/Myth/Mandate.h"
 #include "Campaign/Myth/MythActions.h"
 #include "Campaign/Myth/MythLog.h"
@@ -1996,6 +1997,97 @@ int main() {
               "6.3: proven-wrong claim annotated, not erased");
         Check(RenderDossier(g) == r,
               "6.3: render deterministic");
+    }
+
+    // --- Story 6.4: IntelLedger — claim/verdict + feeds ---
+    {
+        IntelLedger il;
+        auto s1 = il.Record("thefox", IntelKind::RivalTemperament,
+                            "據聞其人持重", 1);
+        auto s2 = il.Record("thefox", IntelKind::RivalHabit,
+                            "其斥候謂我軍怯戰", 1);
+        auto s3 = il.Record("ford-e3", IntelKind::TerrainIntel,
+                            "東道可渡", 1);
+        Check(s1.ok() && s2.ok() && s3.ok() && s1.value == 1 &&
+                  s2.value == 2 && s3.value == 3,
+              "6.4: claims record with dense seqs");
+        Check(!il.Record("", IntelKind::TerrainIntel, "x", 1).ok(),
+              "6.4: empty subject rejected");
+        // Verdict lifecycle — Unresolved -> True|False, terminal.
+        Check(il.Resolve(1, IntelVerdict::False).ok(),
+              "6.4: claim resolves false");
+        Check(!il.Resolve(1, IntelVerdict::True).ok() &&
+                  !il.Resolve(1, IntelVerdict::Unresolved).ok() &&
+                  !il.Resolve(99, IntelVerdict::True).ok(),
+              "6.4: verdicts are terminal, bad seqs fail");
+        Check(il.Resolve(2, IntelVerdict::True).ok(),
+              "6.4: second claim resolves true");
+        // Distortion — resolved-false share; unresolved is
+        // uncertain, not discredited.
+        Check(il.DistortionFor("thefox") == 50,
+              "6.4: distortion = false share of resolved");
+        Check(il.DistortionFor("ford-e3") == 0 &&
+                  il.DistortionFor("nobody") == 0,
+              "6.4: unresolved/unknown subjects have no "
+              "distortion");
+        // The dossier seam — false rival claims annotate.
+        const auto pw = il.ProvenWrongFor("thefox");
+        Check(pw.size() == 1 && pw[0] == ClaimKind::Temperament,
+              "6.4: false verdict maps to dossier revision");
+        // Pending — briefing-time intel still unresolved.
+        Check(il.PendingFor("ford-e3").size() == 1 &&
+                  il.PendingFor("thefox").empty(),
+              "6.4: pending claims listed per subject");
+        // RivalDeck feed — distortion erodes counter depth.
+        {
+            auto cdoc = JsonValue::Parse(
+                R"({"cards":[
+                    {"id":"counter.always","name":"c",
+                     "trigger":{"type":"always"},
+                     "action":{"type":"hold"}},
+                    {"id":"counter.enemy_in_region","name":"c",
+                     "trigger":{"type":"always"},
+                     "action":{"type":"hold"}},
+                    {"id":"counter.enemy_adjacent","name":"c",
+                     "trigger":{"type":"always"},
+                     "action":{"type":"hold"}}]})");
+            Check(cdoc.ok(), "6.4: counter library parses");
+            auto clib = Potato::Gameplay::DoctrineLibrary::
+                FromJson(cdoc.value);
+            RivalBook book;
+            TriggerHistogram h{};
+            h[0] = 1;
+            h[1] = 2;
+            h[2] = 5;
+            for (int i = 0; i < 3; ++i) {
+                book.RecordChapter("thefox", RivalPrior::Cunning, h);
+            }
+            const auto full = book.PrepareCounterDeck(
+                "thefox", clib.value, 3);
+            const auto eroded = book.PrepareCounterDeck(
+                "thefox", clib.value, 3, &il);
+            Check(full.size() > eroded.size() &&
+                      eroded.size() ==
+                          static_cast<std::size_t>(3 * 50 / 100),
+                  "6.4: distorted intel shallows the counter deck");
+        }
+        // Persist — potato.intel/1 round-trip keeps verdicts.
+        {
+            const std::string emit = il.ToJson().Emit();
+            auto re = JsonValue::Parse(emit);
+            auto il2 = IntelLedger::FromJson(re.value);
+            Check(re.ok() && il2.ok() &&
+                      il2.value.Size() == 3 &&
+                      il2.value.Entry(1)->verdict ==
+                          IntelVerdict::False &&
+                      il2.value.DistortionFor("thefox") == 50,
+                  "6.4: persist round-trip keeps verdicts");
+            auto bad = JsonValue::Parse(
+                R"({"schema":"potato.intel/2","entries":[]})");
+            Check(bad.ok() &&
+                      !IntelLedger::FromJson(bad.value).ok(),
+                  "6.4: wrong schema rejected");
+        }
     }
 
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"

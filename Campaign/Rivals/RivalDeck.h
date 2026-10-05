@@ -13,6 +13,8 @@
 
 namespace Potato::Campaign {
 
+class IntelLedger; // Narrative/IntelLedger.h — distortion feed
+
 // RivalDeck learning (Story 3.7): cross-chapter hearsay about
 // the player's habitual triggers, driving counter-decks.
 //
@@ -91,10 +93,14 @@ public:
     // ordinal; deterministic). Only ids resolving in `counters`
     // are emitted: counter-cards are content (Epic 9), this
     // emits intent.
+    //
+    // `intel` (Story 6.4): the rival's proven-wrong rate on its
+    // intel about us erodes counter depth — a rival whose
+    // briefing was false counters shallower.
     std::vector<std::string> PrepareCounterDeck(
         std::string_view id,
         const Gameplay::DoctrineLibrary& counters,
-        int depth) const;
+        int depth, const IntelLedger* intel = nullptr) const;
 
     Gameplay::Result<Gameplay::JsonValue> ToJson() const;
     static Gameplay::Result<RivalBook> FromJson(
