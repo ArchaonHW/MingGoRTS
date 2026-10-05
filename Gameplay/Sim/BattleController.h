@@ -5,6 +5,7 @@
 #include "Gameplay/Eval/WinEval.h"
 #include "Gameplay/Fog/QuantumFog.h"
 #include "Gameplay/Governance/GovernanceField.h"
+#include "Gameplay/Myth/Infiltration.h"
 #include "Gameplay/Plan/BattlePlan.h"
 #include "Gameplay/Result.h"
 #include "Gameplay/Sim/Sim.h"
@@ -113,6 +114,21 @@ public:
     bool SpawnConvoy(int side, std::vector<std::size_t> path);
     const GovernanceField& Field() const { return field_; }
 
+    // --- MythField (Planning only) ---
+    // Seed a region's infiltration level carried in from campaign
+    // state (journaled as "mythseed") — an initial condition, not a
+    // transition, so it emits no event. `level` is the raw int; the
+    // InfiltrationLevel wire gate validates 0..3. Rejected when the
+    // write would change nothing — journaled ops must move state.
+    bool SeedInfiltration(std::size_t region, int level);
+    // Apply a myth-layer event through the transition table
+    // (journaled as "myth"). Emits InfiltrationChanged when the level
+    // actually moves; a saturating no-op REJECTS (journaling only
+    // accepts state-changing calls). Mid-Execution myth drivers
+    // (myth actions) are Story 5.4 — Planning-phase input only.
+    bool ApplyMythEvent(std::size_t region, MythEventKind kind);
+    const MythField& Myth() const { return myth_; }
+
     // --- Execution tick ---
     // One deterministic tick: doctrine eval (snapshot semantics) ->
     // apply pending deltas -> squads advance edge traversal -> append
@@ -181,6 +197,7 @@ private:
     EvalConfig evalConfig_;
     std::vector<PlanArrow> arrows_; // index-aligned; active==false=none
     GovernanceField field_; // village tracks + convoys (Epic 4)
+    MythField myth_;        // per-region infiltration 0-3 (Epic 5)
 };
 
 } // namespace Potato::Gameplay

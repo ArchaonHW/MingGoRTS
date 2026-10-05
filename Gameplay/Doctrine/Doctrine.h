@@ -110,6 +110,11 @@ struct SimEvent {
         // Execute intervention applies to a still-Routing victim.
         // param = region, squadIndex = victim, side = refuser.
         SquadExecuted,
+        // Myth-layer infiltration transition (Epic 5.1): emitted when
+        // a myth event changes a region's level. param = region,
+        // aux = new InfiltrationLevel ordinal (0..3); squadIndex and
+        // side = -1 — the myth layer is side-less.
+        InfiltrationChanged,
     };
 
     Kind kind = Kind::CardFired;

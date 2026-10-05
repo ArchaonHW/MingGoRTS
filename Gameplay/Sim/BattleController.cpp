@@ -34,6 +34,7 @@ BattleController::BattleController(std::uint64_t seed, const BattleMap& map,
       fog_{QuantumFog(map, fogConfig), QuantumFog(map, fogConfig)},
       planConfig_(planConfig), evalConfig_(evalConfig) {
     field_.Init(map);
+    myth_.Init(map);
 }
 
 BattleController::~BattleController() = default;
@@ -380,6 +381,27 @@ bool BattleController::SpawnConvoy(int side,
                                    std::vector<std::size_t> path) {
     if (beat_ != BattleBeat::Planning) return false;
     return field_.SpawnConvoy(side, std::move(path));
+}
+
+bool BattleController::SeedInfiltration(std::size_t region,
+                                        int level) {
+    if (beat_ != BattleBeat::Planning) return false;
+    InfiltrationLevel l;
+    if (!InfiltrationLevelFromInt(level, l)) return false;
+    return myth_.Seed(region, l);
+}
+
+bool BattleController::ApplyMythEvent(std::size_t region,
+                                      MythEventKind kind) {
+    if (beat_ != BattleBeat::Planning) return false;
+    // Tick 0 — Planning precedes the tick counter's domain. A
+    // saturating no-op (or invalid input) rejects like any other
+    // failed verb: journaled ops must have an observable effect, so
+    // a forged no-op can never ride a valid record.
+    auto ev = myth_.Apply(region, kind, 0);
+    if (!ev) return false;
+    events_.push_back(*ev);
+    return true;
 }
 
 void BattleController::ApplyPlanBonuses() {
@@ -943,6 +965,11 @@ std::uint64_t BattleController::Checksum() const {
         h = Fold(h, static_cast<std::uint64_t>(c.active));
         h = Fold(h, static_cast<std::uint64_t>(c.path.size()));
         for (std::size_t r : c.path) h = Fold(h, RegionKey(r));
+    }
+    // MythField: per-region infiltration levels are sim state.
+    h = Fold(h, static_cast<std::uint64_t>(myth_.RegionCount()));
+    for (std::uint8_t l : myth_.Levels()) {
+        h = Fold(h, static_cast<std::uint64_t>(l));
     }
     return h;
 }

@@ -4,6 +4,7 @@
 #include "Gameplay/Fog/QuantumFog.h"
 #include "Gameplay/Json/Json.h"
 #include "Gameplay/Map/BattleMap.h"
+#include "Gameplay/Myth/Infiltration.h"
 #include "Gameplay/Plan/BattlePlan.h"
 #include "Gameplay/Record/BattleRecorder.h"
 #include "Gameplay/Sim/BattleController.h"
@@ -282,6 +283,32 @@ Result<VerifyResult> Verify(const JsonValue& doc) {
             }
             if (!bc.SpawnConvoy(side, std::move(path))) {
                 return Reject("recorded convoy rejected on replay");
+            }
+        } else if (*name == "mythseed") {
+            int region, level;
+            if (!FitInt(op, "region", 0, I32MAX, region) ||
+                !FitInt(op, "level", 0,
+                        static_cast<int>(kInfiltrationLevelCount) - 1,
+                        level)) {
+                return Reject("malformed mythseed op");
+            }
+            if (!bc.SeedInfiltration(
+                    static_cast<std::size_t>(region), level)) {
+                return Reject("recorded mythseed rejected on replay");
+            }
+        } else if (*name == "myth") {
+            int region, kind;
+            if (!FitInt(op, "region", 0, I32MAX, region) ||
+                !FitInt(op, "kind", 0,
+                        static_cast<int>(kMythEventKindCount) - 1,
+                        kind)) {
+                return Reject("malformed myth op");
+            }
+            MythEventKind mk;
+            if (!MythEventKindFromInt(kind, mk) ||
+                !bc.ApplyMythEvent(static_cast<std::size_t>(region),
+                                   mk)) {
+                return Reject("recorded myth rejected on replay");
             }
         } else {
             return Reject("unknown input op: " + *name);

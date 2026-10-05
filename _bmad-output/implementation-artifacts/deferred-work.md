@@ -117,4 +117,11 @@
 ## Deferred from: code review of 4-5-defeat-conversion (2026-10-05)
 
 - Every ResolveAftermath call spends the chapter — single-battle chapters only. A mid-chapter non-sealing variant (ApplyAftermath + BookDeeds without ConcludeChapter) or an explicit chapterFinal flag belongs to whichever story introduces multi-battle chapters.
-- ecord_root: dedup is a linear tag scan per settlement — fine at ledger scale today; if settlement frequency ever matters, index anchors.
+- `record_root:` dedup is a linear tag scan per settlement — fine at ledger scale today; if settlement frequency ever matters, index anchors.
+
+## Deferred from: code review of 5-1-myth-infiltration-state-machine (2026-10-05)
+
+- `ApplyMythEvent`/`SeedInfiltration` are Planning-phase verbs only — mid-Execution myth drivers (myth actions: pacify shrine, invoke possession, ghost armies) belong to Story 5.4, which owns its own journal mechanism (pending command or doctrine action).
+- Journal-contract asymmetry: `myth`/`mythseed` ops now reject no-ops (accepted call = observable state change), but the older `cp`/`intel`/`sheet`/`convoy` ops can still be forged as state no-ops into a root-consistent record — pre-existing class, would need per-op change-detection to close.
+- Verifier doesn't cross-check `toolVersion` against max-declared SimEvent kind — a v1-stamped record with kind-9 events verifies if self-consistent (fabrication is equivalent; note only).
+- `BattleMap::MAX_REGIONS` (1024) was introduced for the myth cap + verifier resource bound; `MythState::MAX_REGIONS_PER_CHAPTER` aliases it — keep in lockstep.

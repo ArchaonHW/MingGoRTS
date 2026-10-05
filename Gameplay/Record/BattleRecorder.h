@@ -36,7 +36,10 @@ public:
     // and the "convoy" planning op; 4.2's Execute intervention +
     // SquadExecuted deed share this version. Older tools reject
     // kind > 3.
-    static constexpr int TOOL_VERSION = 3;
+    // v4: Epic 5.1 — InfiltrationChanged (ordinal 9) plus the
+    // "mythseed"/"myth" planning ops that journal infiltration
+    // carry-in and table-driven applies. Older tools reject kind > 8.
+    static constexpr int TOOL_VERSION = 4;
     static constexpr std::string_view SCHEMA = "potato.battle_record/1";
 
     // Embedded content makes the record self-contained — the verifier
@@ -50,8 +53,11 @@ public:
     // ride this doc. A battle run under non-default config without a
     // bound balance doc produces a record that cannot verify.
     void BindBalance(const JsonValue& doc);
-    // Records stamped by older tools verify with a downgrade warning
-    // when their shape is still current-format compatible.
+    // Records stamped by older tools are flagged `downgrade` on
+    // verify — but only verifiable when the checksum algorithm is
+    // unchanged (v4 folded MythField into it, so a genuine v3 seal
+    // can't re-verify; the flag means "older stamp", not
+    // "guaranteed replayable").
     void SetToolVersion(int v) { toolVersion_ = v; }
 
     // Planning inputs — mirror the controller calls, in call order.
@@ -69,6 +75,11 @@ public:
     void RecordCpPool(int side, int cp);
     // Argument order mirrors BattleController::SpawnConvoy(side, path).
     void RecordConvoy(int side, const std::vector<std::size_t>& path);
+    // Myth layer (Epic 5.1) — mirror SeedInfiltration /
+    // ApplyMythEvent: "mythseed" carries the persisted level in;
+    // "myth" journals a table-driven apply.
+    void RecordMythSeed(std::size_t region, int level);
+    void RecordMyth(std::size_t region, int kind);
 
     // Captures bc's event stream + checksum + outcome and computes the
     // integrity root. Records are completed battles only: Seal no-ops

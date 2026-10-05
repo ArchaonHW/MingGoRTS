@@ -42,10 +42,14 @@ bool EventFromJson(const JsonValue& j, SimEvent& e) {
         return false;
     }
     const std::int64_t kind = j["kind"].AsInt();
-    // CardFired..SquadExecuted — ordinals are append-only (v3 added
-    // the four governance kinds 4-7 and SquadExecuted 8; bump the
-    // bound with the enum).
-    if (kind < 0 || kind > 8) return false;
+    // CardFired..InfiltrationChanged — ordinals are append-only, so
+    // the last enumerator IS the bound (v3 added governance 4-7 and
+    // SquadExecuted 8, v4 added InfiltrationChanged 9).
+    if (kind < 0 ||
+        kind > static_cast<std::int64_t>(
+                   SimEvent::Kind::InfiltrationChanged)) {
+        return false;
+    }
     // Every field must fit int32 — silent narrowing would let a forged
     // value verify as a different number than the wire claimed.
     const auto fitInt = [&](const char* key, std::int64_t lo,
@@ -168,6 +172,24 @@ void BattleRecorder::RecordConvoy(
     op.emplace("op", JsonValue::String("convoy"));
     op.emplace("path", PathJson(path));
     op.emplace("side", JsonValue::Int(side));
+    inputs_.push_back(JsonValue::MakeObject(std::move(op)));
+}
+
+void BattleRecorder::RecordMythSeed(std::size_t region, int level) {
+    if (sealed_) return;
+    JsonValue::Object op;
+    op.emplace("level", JsonValue::Int(level));
+    op.emplace("op", JsonValue::String("mythseed"));
+    op.emplace("region", JsonValue::Int(static_cast<std::int64_t>(region)));
+    inputs_.push_back(JsonValue::MakeObject(std::move(op)));
+}
+
+void BattleRecorder::RecordMyth(std::size_t region, int kind) {
+    if (sealed_) return;
+    JsonValue::Object op;
+    op.emplace("kind", JsonValue::Int(kind));
+    op.emplace("op", JsonValue::String("myth"));
+    op.emplace("region", JsonValue::Int(static_cast<std::int64_t>(region)));
     inputs_.push_back(JsonValue::MakeObject(std::move(op)));
 }
 

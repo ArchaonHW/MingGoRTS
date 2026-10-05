@@ -461,6 +461,13 @@ target_include_directories(potato_test_campaign PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_campaign PotatoCampaign)
 add_test(NAME potato_test_campaign COMMAND potato_test_campaign)
 
+# Story 5.1 — myth infiltration state machine (Gameplay MythField +
+# Campaign MythState persistence)
+add_executable(potato_test_myth Examples/potato_test_myth.cpp)
+target_include_directories(potato_test_myth PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_myth PotatoCampaign)
+add_test(NAME potato_test_myth COMMAND potato_test_myth)
+
 # CLI end-to-end: emit a sealed record, then verify it (exit-code check).
 add_test(NAME potato_record_emit
     COMMAND potato_test_record --emit ${CMAKE_BINARY_DIR}/verify_sample.json)

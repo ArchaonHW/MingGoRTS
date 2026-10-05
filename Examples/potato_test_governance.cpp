@@ -579,7 +579,8 @@ int main() {
     {
         bool allOk = true;
         for (int k = static_cast<int>(SimEvent::Kind::VillageOccupied);
-             k <= static_cast<int>(SimEvent::Kind::SquadExecuted); ++k) {
+             k <= static_cast<int>(
+                     SimEvent::Kind::InfiltrationChanged); ++k) {
             SimEvent e;
             e.kind = static_cast<SimEvent::Kind>(k);
             e.tick = 42; e.squadIndex = 3; e.slotIndex = -1;
@@ -591,13 +592,13 @@ int main() {
                      back.squadIndex != e.squadIndex ||
                      back.tick != e.tick) allOk = false;
         }
-        Check(allOk, "governance event kinds 4-8 round-trip on wire");
+        Check(allOk, "event kinds 4-9 round-trip on the wire");
         auto bad = JsonValue::Parse(
-            R"({"kind":9,"tick":0,"squad":-1,"slot":-1,"param":-1,)"
+            R"({"kind":10,"tick":0,"squad":-1,"slot":-1,"param":-1,)"
             R"("aux":0,"side":-1,"path":[],"card":""})");
         SimEvent sink;
         Check(bad.ok() && !EventFromJson(bad.value, sink),
-              "event kind 9 rejected on the wire");
+              "event kind 10 rejected on the wire");
         // aux gate: Execute(6) is the max legitimate Intervention
         // ordinal; aux=7+ is wire-garbage and must reject.
         auto badAux = JsonValue::Parse(

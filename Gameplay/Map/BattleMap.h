@@ -70,6 +70,11 @@ inline bool IsStrategicPoint(const Region& r) {
 class BattleMap {
 public:
     static constexpr std::size_t NO_REGION = ~std::size_t{0};
+    // Hard cap on regions per battle map. Per-region sim state
+    // (fog certainty, village tracks, MythField levels, checksum
+    // folds) scales with this, and Campaign::MythState persists at
+    // most this many regions per chapter — keep the two in lockstep.
+    static constexpr std::size_t MAX_REGIONS = 1024;
 
     // potato.map/1 file → gated load → validation.
     static Result<BattleMap> Load(std::string_view path);

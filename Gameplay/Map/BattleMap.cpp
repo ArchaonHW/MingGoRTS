@@ -113,6 +113,9 @@ Result<BattleMap> BattleMap::FromJson(const JsonValue& root) {
     if (!regions.IsArray() || regions.Items().empty()) {
         return Fail<BattleMap>("map", "'regions' must be a non-empty array");
     }
+    if (regions.Items().size() > MAX_REGIONS) {
+        return Fail<BattleMap>("map", "region count exceeds MAX_REGIONS");
+    }
 
     std::map<std::string, std::size_t, std::less<>> indexOf;
     for (const JsonValue& jr : regions.Items()) {

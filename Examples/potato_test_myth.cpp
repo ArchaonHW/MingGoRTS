@@ -1,0 +1,390 @@
+// Story 5.1 — Myth infiltration state machine tests: the transition
+// table, the battle-scope MythField (checksum + journaled ops +
+// InfiltrationChanged events), and potato.myth/1 persistence.
+
+#include "Campaign/Myth/MythState.h"
+#include "Gameplay/Doctrine/Doctrine.h"
+#include "Gameplay/Json/JsonValue.h"
+#include "Gameplay/Map/BattleMap.h"
+#include "Gameplay/Myth/Infiltration.h"
+#include "Gameplay/Record/BattleRecorder.h"
+#include "Gameplay/Record/ReplayVerifier.h"
+#include "Gameplay/Sim/BattleController.h"
+#include "Gameplay/Squad/Squad.h"
+
+#include <cstdio>
+#include <string>
+#include <vector>
+
+namespace {
+
+int failures = 0;
+void Check(bool cond, const char* name) {
+    std::printf("[%s] %s\n", cond ? "PASS" : "FAIL", name);
+    if (!cond) ++failures;
+}
+
+using namespace Potato::Gameplay;
+using Potato::Campaign::MythState;
+
+// Line map: r0 - r1 - r2 - r3
+const char* MAP_DOC = R"json({
+    "schema": "potato.map/1", "id": "m", "name": "Line",
+    "regions": [{"id": "r0"}, {"id": "r1"}, {"id": "r2"}, {"id": "r3"}],
+    "edges": [["r0", "r1"], ["r1", "r2"], ["r2", "r3"]]
+})json";
+
+const char* CARDS_DOC = R"json({
+    "schema": "potato.doctrine_cards/1",
+    "cards": [
+        {"id": "card_idle", "cooldown": 5,
+         "trigger": {"type": "always"}, "action": {"type": "hold"}},
+        {"id": "card_wait", "cooldown": 5,
+         "trigger": {"type": "always"}, "action": {"type": "hold"}},
+        {"id": "card_rest", "cooldown": 5,
+         "trigger": {"type": "always"}, "action": {"type": "hold"}}
+    ]
+})json";
+
+struct Fx {
+    BattleMap map;
+    DoctrineLibrary cards;
+    JsonValue md, cd;
+    Fx() {
+        md = JsonValue::Parse(MAP_DOC).value;
+        cd = JsonValue::Parse(CARDS_DOC).value;
+        map = BattleMap::FromJson(md).value;
+        cards = DoctrineLibrary::FromJson(cd).value;
+    }
+};
+
+SquadTemplate Mk(const char* id) {
+    SquadTemplate t; t.id = id; t.name = id; t.hp = 200;
+    t.attack = 10; t.speed = Speed::VeryFast; t.cohesion = 100;
+    return t;
+}
+
+int CountKind(const std::vector<SimEvent>& evs, SimEvent::Kind k) {
+    int n = 0;
+    for (const SimEvent& e : evs) if (e.kind == k) ++n;
+    return n;
+}
+
+const SimEvent* FindKind(const std::vector<SimEvent>& evs,
+                        SimEvent::Kind k, int nth = 0) {
+    for (const SimEvent& e : evs) {
+        if (e.kind == k && nth-- == 0) return &e;
+    }
+    return nullptr;
+}
+
+} // namespace
+
+int main() {
+    Fx fx;
+    using IL = InfiltrationLevel;
+    using MK = MythEventKind;
+
+    // --- The table IS the spec: exhaustive 4 x 2 ---
+    {
+        Check(Transition(IL::None, MK::Incursion) == IL::Whispered,
+              "table: 0 incursion -> 1");
+        Check(Transition(IL::Whispered, MK::Incursion) == IL::Haunted,
+              "table: 1 incursion -> 2");
+        Check(Transition(IL::Haunted, MK::Incursion) == IL::Invaded,
+              "table: 2 incursion -> 3");
+        Check(Transition(IL::Invaded, MK::Incursion) == IL::Invaded,
+              "table: 3 incursion saturates");
+        Check(Transition(IL::None, MK::Pacification) == IL::None,
+              "table: 0 pacification saturates");
+        Check(Transition(IL::Whispered, MK::Pacification) == IL::None,
+              "table: 1 pacification -> 0");
+        Check(Transition(IL::Haunted, MK::Pacification) ==
+                  IL::Whispered,
+              "table: 2 pacification -> 1");
+        Check(Transition(IL::Invaded, MK::Pacification) ==
+                  IL::Haunted,
+              "table: 3 pacification -> 2");
+    }
+
+    // --- Wire gates bound the domains ---
+    {
+        IL l;
+        Check(InfiltrationLevelFromInt(0, l) && l == IL::None,
+              "level 0 parses");
+        Check(InfiltrationLevelFromInt(3, l) && l == IL::Invaded,
+              "level 3 parses");
+        Check(!InfiltrationLevelFromInt(-1, l), "level -1 rejected");
+        Check(!InfiltrationLevelFromInt(4, l), "level 4 rejected");
+        MK k;
+        Check(MythEventKindFromInt(0, k) && k == MK::Incursion,
+              "kind 0 parses");
+        Check(!MythEventKindFromInt(2, k), "kind 2 rejected");
+        Check(std::string(InfiltrationLevelName(IL::Haunted)) ==
+                  "haunted",
+              "level names exist");
+    }
+
+    // --- MythField standalone ---
+    {
+        MythField f;
+        f.Init(fx.map);
+        Check(f.RegionCount() == 4, "field sizes to the map");
+        Check(f.LevelAt(1) == IL::None, "fresh field is quiet");
+        auto ev = f.Apply(1, MK::Incursion, 7);
+        Check(ev.has_value(), "apply emits on transition");
+        Check(ev && ev->kind == SimEvent::Kind::InfiltrationChanged &&
+                  ev->param == 1 && ev->aux == 1 && ev->tick == 7 &&
+                  ev->squadIndex == -1 && ev->side == -1,
+              "event carries region + new level, side-less");
+        Check(f.LevelAt(1) == IL::Whispered, "level moved to 1");
+        ev = f.Apply(1, MK::Incursion, 8);
+        Check(f.LevelAt(1) == IL::Haunted && ev.has_value(),
+              "second incursion -> 2");
+        Check(!f.Apply(99, MK::Incursion, 9).has_value(),
+              "OOB region apply rejected");
+        Check(f.LevelAt(99) == IL::None, "OOB level reads quiet");
+        Check(!f.Seed(99, IL::Invaded), "OOB seed rejected");
+        Check(f.Seed(2, IL::Invaded) &&
+                  f.LevelAt(2) == IL::Invaded,
+              "seed sets a persisted level directly");
+        ev = f.Apply(2, MK::Incursion, 10);
+        Check(!ev.has_value() && f.LevelAt(2) == IL::Invaded,
+              "saturating apply emits nothing");
+    }
+
+    // --- Controller verbs: Planning gate, checksum, events ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 0, 0);
+        bc.DeploySquad(Mk("foe"), 3, 1);
+        Check(!bc.SeedInfiltration(9, 1), "seed OOB rejected");
+        Check(!bc.SeedInfiltration(1, 4), "seed level 4 rejected");
+        Check(!bc.SeedInfiltration(1, -1), "seed level -1 rejected");
+        Check(bc.SeedInfiltration(1, 2), "seed level 2 accepted");
+        Check(bc.Myth().LevelAt(1) == IL::Haunted, "seed applied");
+        Check(bc.ApplyMythEvent(1, MK::Incursion),
+              "incursion accepted");
+        Check(bc.Myth().LevelAt(1) == IL::Invaded, "level now 3");
+        const SimEvent* ev = FindKind(
+            bc.Events(), SimEvent::Kind::InfiltrationChanged);
+        Check(ev && ev->param == 1 && ev->aux == 3 && ev->tick == 0,
+              "planning-phase transition stamps tick 0");
+        // Seed emits no event — carry-in is an initial condition.
+        Check(CountKind(bc.Events(),
+                        SimEvent::Kind::InfiltrationChanged) == 1,
+              "seed emits no event");
+        bc.RequestBeat(BattleBeat::Execution);
+        Check(!bc.SeedInfiltration(2, 1),
+              "seed in Execution rejected");
+        Check(!bc.ApplyMythEvent(2, MK::Incursion),
+              "myth apply in Execution rejected");
+    }
+
+    // --- Journal contract: no-op ops reject, never journal ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 0, 0);
+        bc.DeploySquad(Mk("foe"), 3, 1);
+        Check(!bc.ApplyMythEvent(0, MK::Pacification),
+              "saturating pacification at 0 rejects");
+        Check(!bc.SeedInfiltration(0, 0),
+              "seed to current level rejects");
+        Check(bc.SeedInfiltration(0, 1), "real seed accepts");
+        Check(!bc.SeedInfiltration(0, 1),
+              "seed to same level rejects");
+        Check(CountKind(bc.Events(),
+                        SimEvent::Kind::InfiltrationChanged) == 0,
+              "rejected ops emit nothing");
+        // InfiltrationChanged precedes BeatChanged(Execution) —
+        // pin the event-stream shape this introduces.
+        Check(bc.ApplyMythEvent(0, MK::Incursion), "apply accepts");
+        bc.RequestBeat(BattleBeat::Execution);
+        const std::vector<SimEvent>& evs = bc.Events();
+        std::size_t firstMyth = evs.size(), firstBeat = evs.size();
+        for (std::size_t i = 0; i < evs.size(); ++i) {
+            if (evs[i].kind == SimEvent::Kind::InfiltrationChanged &&
+                firstMyth == evs.size()) firstMyth = i;
+            if (evs[i].kind == SimEvent::Kind::BeatChanged &&
+                firstBeat == evs.size()) firstBeat = i;
+        }
+        Check(firstMyth < firstBeat,
+              "myth events precede the Execution BeatChanged");
+    }
+
+    // --- Checksum: infiltration is sim state ---
+    {
+        BattleController a(1, fx.map, fx.cards);
+        BattleController b(1, fx.map, fx.cards);
+        for (BattleController* p : {&a, &b}) {
+            p->DeploySquad(Mk("ally"), 0, 0);
+            p->DeploySquad(Mk("foe"), 3, 1);
+        }
+        Check(a.Checksum() == b.Checksum(),
+              "identical battles have identical checksums");
+        b.SeedInfiltration(2, 1);
+        Check(a.Checksum() != b.Checksum(),
+              "infiltration seed folds into the checksum");
+    }
+
+    // --- Record -> replay: myth ops verify bit-exact ---
+    {
+        BattleRecorder rec;
+        BattleController bc(5, fx.map, fx.cards);
+        rec.Bind(5, fx.md, fx.cd);
+        SquadTemplate a = Mk("ally"), f = Mk("foe");
+        bc.DeploySquad(a, 0, 0); rec.RecordDeploy(a, 0, 0);
+        bc.DeploySquad(f, 3, 1); rec.RecordDeploy(f, 3, 1);
+        Check(bc.SeedInfiltration(1, 2), "record: seed carried in");
+        rec.RecordMythSeed(1, 2);
+        Check(bc.ApplyMythEvent(1, MK::Incursion),
+              "record: incursion applied");
+        rec.RecordMyth(1, 0);
+        bc.RequestBeat(BattleBeat::Execution);
+        for (int i = 0; i < 5 && bc.Tick(); ++i) {}
+        bc.RequestBeat(BattleBeat::Aftermath);
+        rec.Seal(bc);
+        auto doc = rec.ToJson();
+        Check(doc.ok(), "myth record sealed");
+        if (doc.ok()) {
+            auto r = Replay::Verify(doc.value);
+            Check(r.ok() && r.value.ok,
+                  "myth ops replay bit-exact");
+            if (r.ok() && !r.value.ok) {
+                std::printf("    replay reason: %s\n",
+                            r.value.reason.c_str());
+            }
+
+            // Forge: inject a myth op into a sealed payload and
+            // recompute the root — the replayed op must apply
+            // (state changed) or the record rejects.
+            JsonValue::Object payload = doc.value.Members();
+            payload.erase("integrity");
+            JsonValue::Array in = payload["inputs"].Items();
+            JsonValue::Object forge;
+            // Pacification at level 0 — a saturating no-op. Under
+            // the journal contract it now rejects on replay, so a
+            // forged no-op op can never ride a valid record.
+            forge.emplace("kind", JsonValue::Int(1));
+            forge.emplace("op", JsonValue::String("myth"));
+            forge.emplace("region", JsonValue::Int(2));
+            in.push_back(JsonValue::MakeObject(std::move(forge)));
+            payload["inputs"] = JsonValue::MakeArray(std::move(in));
+            JsonValue::Object integ;
+            integ.emplace("root", JsonValue::Int(
+                static_cast<std::int64_t>(
+                    BattleRecorder::ComputeRoot(
+                        JsonValue::MakeObject(payload)))));
+            JsonValue::Object tampered = payload;
+            tampered.emplace("integrity",
+                             JsonValue::MakeObject(std::move(integ)));
+            auto fr = Replay::Verify(
+                JsonValue::MakeObject(std::move(tampered)));
+            Check(fr.ok() && !fr.value.ok,
+                  "forged myth op diverges the replay");
+        }
+    }
+
+    // --- potato.myth/1 persistence ---
+    {
+        MythState st;
+        Check(st.LevelAt("ch_a", 3) == 0, "absent reads quiet");
+        Check(st.Set("ch_a", 3, 2), "set level 2");
+        Check(st.LevelAt("ch_a", 3) == 2, "read back 2");
+        Check(!st.Set("ch_a", 3, 4), "level 4 rejected");
+        Check(!st.Set("ch_a", -1, 1), "region -1 rejected");
+        Check(!st.Set("ch_a", 1024, 1), "region cap rejected");
+        Check(!st.Set("", 1, 1), "empty chapter id rejected");
+        Check(st.Set("ch_a", 3, 0), "0-write erases");
+        Check(st.LevelAt("ch_a", 3) == 0, "erased reads quiet");
+        Check(st.ChapterCount() == 0,
+              "last erase drops the chapter entry (canonical)");
+        Check(st.Set("ch_a", 5, 3) && st.Set("ch_b", 0, 1),
+              "two chapters hold state");
+        auto doc = st.ToJson();
+        Check(doc.ok(), "myth doc serializes");
+        auto rt = MythState::FromJson(doc.value);
+        Check(rt.ok() && rt.value.LevelAt("ch_a", 5) == 3 &&
+                  rt.value.LevelAt("ch_b", 0) == 1 &&
+                  rt.value.ChapterCount() == 2,
+              "round-trip preserves per-chapter levels");
+        // Rejections: bad schema, non-object chapters, bad region
+        // key, level 0 (non-canonical), level 4, mistyped value.
+        auto bad = [](const char* json) {
+            return !MythState::FromJson(
+                       JsonValue::Parse(json).value)
+                       .ok();
+        };
+        Check(bad(R"({"schema":"potato.myth/2","chapters":{}})"),
+              "wrong schema rejected");
+        Check(bad(R"({"schema":"potato.myth/1","chapters":[]})"),
+              "non-object chapters rejected");
+        Check(bad(R"({"schema":"potato.myth/1","chapters":
+                      {"c":{"x":1}}})"),
+              "non-numeric region key rejected");
+        Check(bad(R"({"schema":"potato.myth/1","chapters":
+                      {"c":{"1024":1}}})"),
+              "region key cap rejected");
+        Check(bad(R"({"schema":"potato.myth/1","chapters":
+                      {"c":{"3":0}}})"),
+              "level 0 rejected (canonical form stores 1..3)");
+        Check(bad(R"({"schema":"potato.myth/1","chapters":
+                      {"c":{"3":4}}})"),
+              "level 4 rejected");
+        Check(bad(R"({"schema":"potato.myth/1","chapters":
+                      {"c":{"3":"high"}}})"),
+              "mistyped level rejected");
+        Check(bad(R"({"schema":"potato.myth/1","chapters":
+                      {"c":{"03":1}}})"),
+              "leading-zero region key rejected (non-canonical)");
+    }
+
+    // --- CommitMyth: battle field -> campaign persistence ---
+    {
+        MythField f;
+        f.Init(fx.map);
+        f.Apply(1, MK::Incursion, 0);
+        f.Apply(1, MK::Incursion, 0); // -> Haunted
+        f.Seed(3, IL::Whispered);
+        MythState st;
+        auto cm = Potato::Campaign::CommitMyth(st, "ch_a", f);
+        Check(cm.ok() && cm.value == 2,
+              "commit returns nonzero-level count");
+        Check(st.LevelAt("ch_a", 1) == 2 && st.LevelAt("ch_a", 3) == 1,
+              "commit persists nonzero levels");
+        Check(st.LevelAt("ch_a", 0) == 0 && st.LevelAt("ch_a", 2) == 0,
+              "quiet regions stay canonical");
+        // A rejected commit must leave stored state untouched —
+        // ClearChapter runs only after every check passed.
+        auto rej = Potato::Campaign::CommitMyth(st, "", f);
+        Check(!rej.ok() && st.LevelAt("ch_a", 1) == 2,
+              "bad chapter id rejects without clearing state");
+        // A second commit replaces wholesale — a stale region can't
+        // linger across map revisions.
+        MythField g;
+        g.Init(fx.map);
+        g.Seed(2, IL::Invaded);
+        cm = Potato::Campaign::CommitMyth(st, "ch_a", g);
+        Check(cm.ok() && st.LevelAt("ch_a", 1) == 0 &&
+                  st.LevelAt("ch_a", 2) == 3,
+              "re-commit replaces the chapter's region set");
+        // Chapter cap: fill the book, then a fresh chapter with
+        // nonzero state must reject — an all-quiet commit still
+        // clears (no slot needed).
+        MythState full;
+        for (int i = 0; i < 128; ++i) {
+            full.Set("ch_" + std::to_string(i), 0, 1);
+        }
+        rej = Potato::Campaign::CommitMyth(full, "ch_new", g);
+        Check(!rej.ok(), "commit to a full book rejects");
+        MythField quiet;
+        quiet.Init(fx.map);
+        cm = Potato::Campaign::CommitMyth(full, "ch_new", quiet);
+        Check(cm.ok() && cm.value == 0,
+              "all-quiet commit needs no chapter slot");
+    }
+
+    std::printf("%s (%d failures)\n",
+                failures == 0 ? "ALL PASS" : "FAILURES", failures);
+    return failures == 0 ? 0 : 1;
+}
