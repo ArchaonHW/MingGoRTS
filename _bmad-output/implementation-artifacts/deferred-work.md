@@ -105,3 +105,11 @@
 
 - A convoy still in flight when the battle closes emits no terminal event — silence = unsettled; the ledger fold (4.3) and chapter shell decide whether an unresolved convoy counts for anything. Also: convoys don't hold a battle open (wipe detection counts squads only) — deliberate for now.
 - `ConvoyArrived.squadIndex` records destination-presence, not route escort; if accounting needs per-leg escort credit, add an escorted-legs counter to `Convoy` and carry it on the event.
+
+## Deferred from: code review of 4-2-atrocity-auto-detection (2026-10-05)
+
+- `BookDeeds` has no production call site — the detection/tagging seam is unit-tested but nothing invokes it at battle close yet. The aftermath wiring (recorded event stream + `BattleResult::ledger` -> postings + roster aftermath) belongs to the battle->campaign resolution pass: Story 4.5 (defeat conversion) or the Game shell chapter resolution, whichever lands the caller first.
+- `Squad::ApplyHit` still has no production caller — `IssueExecute` kills via `hp = 0` + `ApplyEvent(HpZero)` (an execution isn't a hit roll). Damage mechanics remain deferred to the combat vocabulary.
+- No doctrine-level "no quarter" stance — Execute is a per-victim intervention verb; an authored standing policy (e.g. a trigger/action pair that refuses all routs in a region) is Epic 7 vocabulary territory.
+- Refuser presence accepts any Holding squad — a contested region does not shield a routing victim (contrast `ExclusiveSide` for village dwell). Deliberate: atrocity needs killers in reach, not control of the ground.
+- `AuditSegment::atrocities` counts forged entries tagged "atrocity" too — the forgery channel can inflate the headline number; `audit.forged` exposes the source for cross-reference (suspicion is data, not exclusion — 2.3 contract).

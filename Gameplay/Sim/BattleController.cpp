@@ -434,6 +434,66 @@ Result<bool> BattleController::IssueReplan(int side, int squadIndex,
     return Ok(true);
 }
 
+namespace {
+
+// A coherent squad of `side` STANDING in `region` — the proximity
+// precondition for refusing a surrender there. Holding only: a
+// squad mid-leg has already left (or hasn't arrived); routing ones
+// are fleeing, not refusing.
+bool RefuserPresent(const std::vector<Squad>& squads, int side,
+                    std::size_t region) {
+    for (const Squad& s : squads) {
+        if (s.side == side && s.state == SquadState::Holding &&
+            s.regionIndex == region) {
+            return true;
+        }
+    }
+    return false;
+}
+
+} // namespace
+
+Result<bool> BattleController::IssueExecute(int side, int squadIndex) {
+    // CheckCommand can't carry this shape: the target is the OTHER
+    // side's squad and Routing is the required (not forbidden) state.
+    if (beat_ != BattleBeat::Execution) {
+        return Fail<bool>("command", "interventions only during Execution");
+    }
+    if (side != 0 && side != 1) {
+        return Fail<bool>("command", "side must be 0 or 1");
+    }
+    if (squadIndex < 0 ||
+        static_cast<std::size_t>(squadIndex) >= squads_.size()) {
+        return Fail<bool>("command", "invalid squad index");
+    }
+    const Squad& vic = squads_[static_cast<std::size_t>(squadIndex)];
+    if (vic.side == side) {
+        return Fail<bool>("command", "cannot execute your own squad");
+    }
+    if (vic.state != SquadState::Routing) {
+        return Fail<bool>("command", "victim is not routing");
+    }
+    if (!RefuserPresent(squads_, side, vic.regionIndex)) {
+        return Fail<bool>("command", "no squad in reach to refuse");
+    }
+    for (const Intervention& c : pendingCommands_) {
+        if (c.kind == InterventionKind::Execute &&
+            c.squadIndex == squadIndex) {
+            return Fail<bool>("command", "victim already marked");
+        }
+    }
+    const int tick = static_cast<int>(sim_.TickCount());
+    pendingCommands_.push_back({side, InterventionKind::Execute,
+                                squadIndex,
+                                static_cast<int>(vic.regionIndex), tick,
+                                {}});
+    events_.push_back({SimEvent::Kind::Intervention, tick, squadIndex, -1,
+                       static_cast<int>(vic.regionIndex),
+                       static_cast<int>(InterventionKind::Execute),
+                       side, {}, {}});
+    return Ok(true);
+}
+
 void BattleController::MarchArrows() {
     for (std::size_t i = 0; i < squads_.size(); ++i) {
         PlanArrow& a = arrows_[i];
@@ -455,7 +515,6 @@ void BattleController::MarchArrows() {
 }
 
 void BattleController::ApplyInterventions(int tick) {
-    (void)tick; // applied at tick start; issueTick already recorded
     for (const Intervention& cmd : pendingCommands_) {
         const int side = (cmd.side == 1) ? 1 : 0;
         // Fog ops don't address squads — handle before the squad guard
@@ -468,6 +527,38 @@ void BattleController::ApplyInterventions(int tick) {
         }
         if (cmd.kind == InterventionKind::Entangle) {
             fog_[side].Entangle(cmd.squadIndex, cmd.target);
+            continue;
+        }
+        if (cmd.kind == InterventionKind::Execute) {
+            // The victim IS the routing enemy — handle before the
+            // squad guard (which would skip Routing). Re-gate at
+            // apply: nothing can alter the victim between issue and
+            // apply (rout aging runs later this tick), but the
+            // REFUSER may have broken — an earlier-queued Retreat on
+            // the refusing squad flips presence off, and queue order
+            // decides it (Retreat-then-Execute no-ops; Execute-first
+            // kills). That asymmetry is deterministic, authored
+            // issue order — same rule as doctrine slots.
+            if (cmd.squadIndex >= 0 &&
+                static_cast<std::size_t>(cmd.squadIndex) <
+                    squads_.size()) {
+                Squad& vic =
+                    squads_[static_cast<std::size_t>(cmd.squadIndex)];
+                if (vic.state == SquadState::Routing &&
+                    vic.side != side &&
+                    RefuserPresent(squads_, side, vic.regionIndex)) {
+                    // The kill shot zeroes hp — a Destroyed corpse
+                    // must not keep routing victims' full hp
+                    // (ApplyHit is the only other path and zeroes).
+                    vic.hp = 0;
+                    if (!vic.ApplyEvent(SquadEvent::HpZero)) continue;
+                    events_.push_back(
+                        {SimEvent::Kind::SquadExecuted, tick,
+                         cmd.squadIndex, -1,
+                         static_cast<int>(vic.regionIndex), 0, side,
+                         {}, {}});
+                }
+            }
             continue;
         }
         if (cmd.squadIndex < 0 ||
@@ -545,7 +636,9 @@ void BattleController::ApplyInterventions(int tick) {
             }
             case InterventionKind::Probe:
             case InterventionKind::Entangle:
-                break; // handled above — fog ops skip the squad guard
+            case InterventionKind::Execute:
+                break; // handled above — fog ops + Execute skip the
+                       // squad guard
         }
     }
     pendingCommands_.clear();

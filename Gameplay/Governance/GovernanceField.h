@@ -37,8 +37,8 @@ constexpr int OCCUPY_TICKS = 4 * TICK_RATE_HZ;
 // Ticks a convoy spends on each leg — the Slow squad edge cost
 // (TICKS_PER_EDGE_BASE at SpeedMilli(Slow) = 600 -> 66).
 constexpr int CONVOY_LEG_TICKS = 66;
-// SimEvent::aux's wire gate admits 0..5 — convoy indices ride aux,
-// so the cap keeps them inside it.
+// Convoy indices ride SimEvent::aux (wire gate 0..6, bounded by the
+// InterventionKind domain) — the cap keeps them inside it.
 constexpr std::size_t MAX_CONVOYS = 4;
 
 // Per-village tracker. `claimant` is this tick's exclusive-presence

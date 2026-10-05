@@ -443,11 +443,143 @@ int main() {
               "in-flight convoy at close emits no terminal event");
     }
 
+    // --- Refused rout-surrender: Execute kills a Routing enemy ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 1, 0); // shares r1 with the foe
+        bc.DeploySquad(Mk("foe"), 1, 1);
+        bc.RequestBeat(BattleBeat::Execution);
+        auto r = bc.IssueRetreat(1, 1); // the plea
+        Check(r.ok() && r.value, "rout plea issued");
+        Ticks(bc, 1); // applies at tick start -> Routing
+        Check(bc.Squads()[1].state == SquadState::Routing,
+              "plea pending: foe routing at r1");
+        bc.SetCpPool(0, 0); // empty pool — refusal is free
+        r = bc.IssueExecute(0, 1);
+        Check(r.ok() && r.value, "execute issued at 0 CP");
+        Ticks(bc, 1);
+        const SimEvent* ev =
+            FindKind(bc.Events(), SimEvent::Kind::SquadExecuted);
+        Check(ev != nullptr, "refusal deed emitted at apply");
+        Check(ev && ev->squadIndex == 1 && ev->side == 0 &&
+                  ev->param == 1,
+              "deed carries victim + refuser + region");
+        Check(bc.Squads()[1].state == SquadState::Destroyed,
+              "refused plea is a corpse, not a prisoner");
+        Check(bc.Squads()[1].hp == 0,
+              "the kill shot zeroes hp (Destroyed => hp==0)");
+    }
+
+    // --- Execute gates: beat, side, victim state, reach ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        Parked(bc);
+        Check(!bc.IssueExecute(0, 1).ok(),
+              "execute outside Execution rejected");
+        bc.RequestBeat(BattleBeat::Execution);
+        Check(!bc.IssueExecute(0, 0).ok(),
+              "cannot execute your own squad");
+        Check(!bc.IssueExecute(0, 1).ok(),
+              "non-routing victim rejected");
+        Check(!bc.IssueExecute(2, 1).ok(), "bad side rejected");
+        Check(!bc.IssueExecute(0, 9).ok(), "bad index rejected");
+    }
+
+    // --- Reach is required; a squad off the region cannot refuse ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 4, 0); // parked far
+        bc.DeploySquad(Mk("foe"), 1, 1);
+        bc.RequestBeat(BattleBeat::Execution);
+        bc.IssueRetreat(1, 1);
+        Ticks(bc, 1);
+        Check(!bc.IssueExecute(0, 1).ok(),
+              "no squad in reach to refuse");
+        // Mercy by passage: the plea ages off to Routed — off-field,
+        // and no refusal lands after that.
+        Ticks(bc, ROUT_TICKS + 2);
+        Check(bc.Squads()[1].state == SquadState::Routed,
+              "unrefused plea ages off-field");
+        Check(!bc.IssueExecute(0, 1).ok(),
+              "routed victim is beyond reach");
+        Check(CountKind(bc.Events(), SimEvent::Kind::SquadExecuted) == 0,
+              "no deed without a refusal");
+    }
+
+    // --- A marching squad has already left: presence requires
+    //     Holding ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 1, 0);
+        bc.DeploySquad(Mk("foe"), 1, 1);
+        bc.RequestBeat(BattleBeat::Execution);
+        bc.IssueRetreat(1, 1);
+        auto r = bc.IssueRedirect(0, 0, 0); // ally marches off r1
+        Check(r.ok() && r.value, "ally redirect queues");
+        Ticks(bc, 1); // retreat + redirect apply; ally now Moving
+        Check(bc.Squads()[0].state == SquadState::Moving,
+              "ally departed mid-leg");
+        Check(!bc.IssueExecute(0, 1).ok(),
+              "a killer mid-march cannot refuse");
+    }
+
+    // --- One refusal per victim; symmetric for the enemy ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 1, 0);
+        bc.DeploySquad(Mk("foe"), 1, 1);
+        bc.RequestBeat(BattleBeat::Execution);
+        bc.IssueRetreat(1, 1);
+        Ticks(bc, 1);
+        auto r = bc.IssueExecute(0, 1);
+        Check(r.ok() && r.value, "first refusal queues");
+        Check(!bc.IssueExecute(0, 1).ok(),
+              "victim already marked rejected");
+    }
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 1, 0); // ally routs; foe refuses
+        bc.DeploySquad(Mk("foe"), 1, 1);
+        bc.RequestBeat(BattleBeat::Execution);
+        bc.IssueRetreat(0, 0);
+        Ticks(bc, 1);
+        auto r = bc.IssueExecute(1, 0);
+        Check(r.ok() && r.value, "enemy refusal queues");
+        Ticks(bc, 1);
+        const SimEvent* ev =
+            FindKind(bc.Events(), SimEvent::Kind::SquadExecuted);
+        Check(ev != nullptr && ev->side == 1 && ev->squadIndex == 0,
+              "enemy refusal records side-1 perpetrator");
+        Check(bc.Squads()[0].state == SquadState::Destroyed,
+              "our routed squad is destroyed");
+    }
+
+    // --- Issue event stamps the victim's region for context ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.DeploySquad(Mk("ally"), 1, 0);
+        bc.DeploySquad(Mk("foe"), 1, 1);
+        bc.RequestBeat(BattleBeat::Execution);
+        bc.IssueRetreat(1, 1);
+        Ticks(bc, 1);
+        bc.IssueExecute(0, 1);
+        const SimEvent* iv = nullptr;
+        for (const SimEvent& e : bc.Events()) {
+            if (e.kind == SimEvent::Kind::Intervention &&
+                e.aux == static_cast<int>(InterventionKind::Execute)) {
+                iv = &e;
+            }
+        }
+        Check(iv != nullptr && iv->squadIndex == 1 && iv->side == 0 &&
+                  iv->param == 1,
+              "execute command journal carries victim + region");
+    }
+
     // --- Wire: governance kinds round-trip; out-of-range rejected ---
     {
         bool allOk = true;
         for (int k = static_cast<int>(SimEvent::Kind::VillageOccupied);
-             k <= static_cast<int>(SimEvent::Kind::ConvoyRaided); ++k) {
+             k <= static_cast<int>(SimEvent::Kind::SquadExecuted); ++k) {
             SimEvent e;
             e.kind = static_cast<SimEvent::Kind>(k);
             e.tick = 42; e.squadIndex = 3; e.slotIndex = -1;
@@ -459,13 +591,20 @@ int main() {
                      back.squadIndex != e.squadIndex ||
                      back.tick != e.tick) allOk = false;
         }
-        Check(allOk, "governance event kinds 4-7 round-trip on wire");
+        Check(allOk, "governance event kinds 4-8 round-trip on wire");
         auto bad = JsonValue::Parse(
-            R"({"kind":8,"tick":0,"squad":-1,"slot":-1,"param":-1,)"
+            R"({"kind":9,"tick":0,"squad":-1,"slot":-1,"param":-1,)"
             R"("aux":0,"side":-1,"path":[],"card":""})");
         SimEvent sink;
         Check(bad.ok() && !EventFromJson(bad.value, sink),
-              "event kind 8 rejected on the wire");
+              "event kind 9 rejected on the wire");
+        // aux gate: Execute(6) is the max legitimate Intervention
+        // ordinal; aux=7+ is wire-garbage and must reject.
+        auto badAux = JsonValue::Parse(
+            R"({"kind":2,"tick":0,"squad":0,"slot":-1,"param":6,)"
+            R"("aux":7,"side":0,"path":[],"card":""})");
+        Check(badAux.ok() && !EventFromJson(badAux.value, sink),
+              "intervention aux beyond Execute rejected");
     }
 
     // --- Determinism: identical runs, identical stream + checksum ---

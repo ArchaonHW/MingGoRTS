@@ -1,4 +1,5 @@
 #include "Campaign/Ledger/CrossCheck.h"
+#include "Campaign/Ledger/DeedBook.h"
 #include "Campaign/Ledger/HistorianReport.h"
 #include "Campaign/Ledger/Ledger.h"
 #include "Gameplay/Json/JsonValue.h"
@@ -6,6 +7,7 @@
 
 #include <cstdio>
 #include <string>
+#include <vector>
 
 namespace {
 
@@ -894,6 +896,100 @@ int main() {
         Check(!ParseRecordRootTag("record_root:DEADBEEF00000000",
                                   tmp),
               "uppercase anchor tag rejected");
+    }
+    // --- AC (4.2): deeds translate; atrocities post tagged ---
+    {
+        using Potato::Gameplay::SimEvent;
+        Ledger l;
+        std::vector<SimEvent> evs;
+        const auto ev = [&](SimEvent::Kind k, int side, int sq,
+                            int param) {
+            SimEvent e;
+            e.kind = k;
+            e.side = side;
+            e.squadIndex = sq;
+            e.param = param;
+            evs.push_back(e);
+        };
+        ev(SimEvent::Kind::VillageBurned, 0, 0, 3);   // atrocity
+        ev(SimEvent::Kind::SquadExecuted, 0, 4, 2);   // atrocity
+        ev(SimEvent::Kind::VillageBurned, 1, 1, 0);   // enemy deed
+        ev(SimEvent::Kind::CardFired, 0, 0, -1);      // not a deed
+        ev(SimEvent::Kind::VillageOccupied, 0, 0, 1);
+        ev(SimEvent::Kind::ConvoyRaided, 0, 2, 5);
+        const auto n = BookDeeds(l, 0, evs);
+        Check(n.ok() && n.value == 4,
+              "deeds post; enemy + non-deeds skipped");
+        Check(l.Size() == 4, "posting order preserved in chain");
+        const LedgerEntry& burn = l.Entries()[0];
+        Check(burn.credit.account == Account::Materiel &&
+                  burn.credit.amount == 40 &&
+                  burn.debit.account == Account::PopularSupport &&
+                  burn.debit.amount == 15,
+              "burn books +物資40 / -民心15");
+        bool burnTagged = false;
+        for (const std::string& t : burn.tags) {
+            if (t == "atrocity") burnTagged = true;
+        }
+        Check(burnTagged, "burn carries the atrocity tag");
+        const LedgerEntry& exe = l.Entries()[1];
+        Check(exe.credit.account == Account::ArmyPrestige &&
+                  exe.credit.amount == 5 &&
+                  exe.debit.account == Account::PopularSupport &&
+                  exe.debit.amount == 10,
+              "execution books +軍威5 / -民心10");
+        Check(exe.tags.size() == 3 && exe.tags[1] == "victim:4" &&
+                  exe.tags[2] == "region:2",
+              "execution tags carry victim + place");
+        const LedgerEntry& occ = l.Entries()[2];
+        Check(occ.credit.account == Account::PopularSupport &&
+                  occ.debit.account == Account::Materiel,
+              "occupation books +民心 / -物資");
+        const LedgerEntry& raid = l.Entries()[3];
+        Check(raid.tags.size() == 2 && raid.tags[0] == "raid",
+              "raid tagged raid, not atrocity");
+        Check(l.Balance(Account::Materiel) == 40 + 25 - 5 &&
+                  l.Balance(Account::PopularSupport) ==
+                      -15 - 10 + 10 - 5 &&
+                  l.Balance(Account::ArmyPrestige) == 5,
+              "deed folds land in balances");
+        // Enemy-side deeds don't post even when the fold asks for
+        // the player — but they DO post under their own side.
+        Ledger le;
+        const auto ne = BookDeeds(le, 1, evs);
+        Check(ne.ok() && ne.value == 1 && le.Size() == 1,
+              "enemy deeds book only under the enemy side");
+    }
+    // --- AC (4.2): the report acknowledges or visibly omits ---
+    {
+        using Potato::Gameplay::SimEvent;
+        Ledger l;
+        SimEvent b;
+        b.kind = SimEvent::Kind::VillageBurned;
+        b.side = 0; b.param = 3; b.squadIndex = 0;
+        const SimEvent evs[1] = {b};
+        Check(BookDeeds(l, 0, evs).ok(), "deed booked");
+        l.Post(BurnVillage()); // second honest atrocity entry
+        Posting plain;
+        plain.credit = {Account::Materiel, 1};
+        plain.debit = {Account::PopularSupport, 1};
+        plain.memo = "routine levy";
+        l.Post(plain); // non-atrocity
+        const HistorianReport r = RenderHistorianReport(l);
+        Check(r.audit.atrocities == 2,
+              "audit counts atrocity-tagged entries");
+        Check(r.RenderText().find("atrocities: 2") !=
+                  std::string::npos,
+              "report text acknowledges the count");
+        // Omitted atrocity still can't hide: omission confession +
+        // audit count both show it.
+        l.SetSuspect(0);
+        const HistorianReport ro = RenderHistorianReport(l);
+        Check(ro.omissions == 1 && ro.audit.atrocities == 2 &&
+                  ro.includedSeqs.size() == 2,
+              "omitted atrocity still counted in audit");
+        const HistorianReport re = RenderHistorianReport(Ledger{});
+        Check(re.audit.atrocities == 0, "clean ledger counts zero");
     }
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
                          : "LEDGER TESTS PASS\n",

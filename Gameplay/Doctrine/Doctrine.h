@@ -97,13 +97,19 @@ struct SimEvent {
         // (0=Wipe, 1=Concede, 2=Stalemate — wire-format stable).
         ResultDeclared,
         // GovernanceField deeds (Epic 4) — truth-layer outcomes
-        // emitted post-movement, destined for ledger posting.
-        // param = region in all four; side = the perpetrator.
+        // destined for ledger posting. The four field kinds emit
+        // post-movement; SquadExecuted emits during intervention
+        // apply (step 0). param = region in all five; side =
+        // the perpetrator.
         VillageOccupied, // squadIndex = occupier witness
         VillageBurned,   // squadIndex = the arsonist
         ConvoyArrived,   // aux = convoy index; squadIndex = escort
                          // of record at destination (-1 unescorted)
         ConvoyRaided,    // aux = convoy index; squadIndex = raider
+        // Refused rout-surrender (Epic 4.2): emitted when a pending
+        // Execute intervention applies to a still-Routing victim.
+        // param = region, squadIndex = victim, side = refuser.
+        SquadExecuted,
     };
 
     Kind kind = Kind::CardFired;
@@ -113,9 +119,10 @@ struct SimEvent {
     // Intervention: param = target region (Redirect, Probe) or slot
     // index (Override) or cloud id B (Entangle — squadIndex carries
     // cloud id A) or path length (Replan — the path itself lives in
-    // the queued Intervention, which the checksum folds); aux =
+    // the queued Intervention, which the checksum folds) or the
+    // victim's region (Execute — squadIndex carries the victim); aux =
     // InterventionKind ordinal (0=Redirect, 1=Override, 2=Retreat,
-    // 3=Probe, 4=Entangle, 5=Replan — wire-format stable).
+    // 3=Probe, 4=Entangle, 5=Replan, 6=Execute — wire-format stable).
     int param = -1;
     // BeatChanged: new BattleBeat ordinal — wire-format stable
     // (Planning=0, Execution=1, Aftermath=2; recorder/replay depends on it).

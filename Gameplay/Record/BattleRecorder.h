@@ -32,8 +32,10 @@ public:
     // payload fields and the ResultDeclared event kind. Records
     // stamped by v1 tools fail strict field validation — format
     // revisions ride this axis, not the potato.battle_record schema.
-    // v3: GovernanceField — four new SimEvent kinds (ordinals 4-7)
-    // and the "convoy" planning op. Older tools reject kind > 3.
+    // v3: GovernanceField — five new SimEvent kinds (ordinals 4-8)
+    // and the "convoy" planning op; 4.2's Execute intervention +
+    // SquadExecuted deed share this version. Older tools reject
+    // kind > 3.
     static constexpr int TOOL_VERSION = 3;
     static constexpr std::string_view SCHEMA = "potato.battle_record/1";
 

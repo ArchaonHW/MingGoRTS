@@ -74,6 +74,9 @@ bool ReIssue(BattleController& bc, const SimEvent& e) {
         case InterventionKind::Replan:
             r = bc.IssueReplan(e.side, e.squadIndex, e.path);
             break;
+        case InterventionKind::Execute:
+            r = bc.IssueExecute(e.side, e.squadIndex);
+            break;
     }
     return r.ok() && r.value;
 }

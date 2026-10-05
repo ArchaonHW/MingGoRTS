@@ -14,6 +14,11 @@ struct AuditSegment {
     std::size_t entries = 0;
     std::size_t forged = 0;   // provenance == Forged
     std::size_t suspect = 0;  // suspect flag set
+    // Entries carrying the "atrocity" tag (4.2). Counted ALWAYS —
+    // the audit is the truth layer and doesn't take OmissionPolicy:
+    // an atrocity the policy omits still shows here (and in the
+    // omission counter). Cruelty can't hide in the numbers either way.
+    std::size_t atrocities = 0;
     bool chainOk = false;     // Verify() == nullptr
     const char* breakReason = nullptr; // Verify()'s reason when broken
     std::uint64_t tip = 0;    // Ledger::Tip()

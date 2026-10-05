@@ -167,6 +167,30 @@ std::string RunAndRecordConvoy(BattleRecorder& rec) {
     return doc.ok() ? doc.value.Emit() : std::string{};
 }
 
+// Execute record: a rout plea refused — the Execute intervention
+// (journal op aux=6) and the SquadExecuted deed (kind 8) must replay
+// bit-exact.
+std::string RunAndRecordExecute(BattleRecorder& rec) {
+    auto md = JsonValue::Parse(MAP_DOC).value;
+    auto cd = JsonValue::Parse(CARDS_DOC).value;
+    BattleMap map = BattleMap::FromJson(md).value;
+    DoctrineLibrary cards = DoctrineLibrary::FromJson(cd).value;
+
+    BattleController bc(9, map, cards);
+    rec.Bind(9, md, cd);
+    SquadTemplate a = Mk("ally", 200, 15), f = Mk("foe", 200, 15);
+    bc.DeploySquad(a, 1, 0); rec.RecordDeploy(a, 1, 0);
+    bc.DeploySquad(f, 1, 1); rec.RecordDeploy(f, 1, 1);
+    bc.RequestBeat(BattleBeat::Execution);
+    bc.IssueRetreat(1, 1);  // stamped 0, applies tick 0 -> Routing
+    bc.Tick();
+    bc.IssueExecute(0, 1);  // stamped 1, applies tick 1 -> Destroyed
+    bc.Tick();              // execute lands; wipe auto-closes
+    rec.Seal(bc);
+    auto doc = rec.ToJson();
+    return doc.ok() ? doc.value.Emit() : std::string{};
+}
+
 // Recompute the integrity root over a (tampered) payload so the record
 // passes the byte-level seal — forcing the verifier onto the semantic
 // replay path. NOTE: ComputeRoot is public FNV — edit detection only.
@@ -295,6 +319,34 @@ int main(int argc, char** argv) {
             auto r = Replay::Verify(cdoc.value);
             Check(r.ok() && r.value.ok,
                   "convoy record verifies (op + new event kind)");
+        }
+    }
+
+    // --- Refused-surrender record: Execute + SquadExecuted verify ---
+    {
+        BattleRecorder xrec;
+        const std::string xtext = RunAndRecordExecute(xrec);
+        auto xdoc = JsonValue::Parse(xtext);
+        Check(xdoc.ok(), "execute record emitted");
+        if (xdoc.ok()) {
+            bool sawDeed = false, sawCmd = false;
+            for (const JsonValue& e : xdoc.value["events"].Items()) {
+                const std::int64_t k = e["kind"].AsInt();
+                if (k == static_cast<std::int64_t>(
+                             SimEvent::Kind::SquadExecuted)) {
+                    sawDeed = true;
+                }
+                if (k == static_cast<std::int64_t>(
+                             SimEvent::Kind::Intervention) &&
+                    e["aux"].AsInt() == 6) {
+                    sawCmd = true;
+                }
+            }
+            Check(sawDeed && sawCmd,
+                  "record carries the refusal command + deed");
+            auto r = Replay::Verify(xdoc.value);
+            Check(r.ok() && r.value.ok,
+                  "execute record verifies end-to-end");
         }
     }
 

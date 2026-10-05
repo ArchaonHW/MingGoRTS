@@ -42,9 +42,10 @@ bool EventFromJson(const JsonValue& j, SimEvent& e) {
         return false;
     }
     const std::int64_t kind = j["kind"].AsInt();
-    // CardFired..ConvoyRaided — ordinals are append-only (v3 added
-    // the four governance kinds 4-7; bump the bound with the enum).
-    if (kind < 0 || kind > 7) return false;
+    // CardFired..SquadExecuted — ordinals are append-only (v3 added
+    // the four governance kinds 4-7 and SquadExecuted 8; bump the
+    // bound with the enum).
+    if (kind < 0 || kind > 8) return false;
     // Every field must fit int32 — silent narrowing would let a forged
     // value verify as a different number than the wire claimed.
     const auto fitInt = [&](const char* key, std::int64_t lo,
@@ -63,11 +64,13 @@ bool EventFromJson(const JsonValue& j, SimEvent& e) {
     if (!fitInt("squad", -1, I32MAX, parsed.squadIndex)) return false;
     if (!fitInt("slot", -1, I32MAX, parsed.slotIndex)) return false;
     if (!fitInt("param", -2147483648, I32MAX, parsed.param)) return false;
-    // aux multiplexes by kind: BattleBeat ordinal (BeatChanged),
-    // InterventionKind ordinal (Intervention), CloseReason ordinal
-    // (ResultDeclared). 0..5 covers all three domains; the replay
-    // diff catches any kind-inconsistent value.
-    if (!fitInt("aux", 0, 5, parsed.aux)) return false;
+    // aux multiplexes by kind: BattleBeat ordinal (BeatChanged,
+    // 0..2), InterventionKind ordinal (Intervention, 0..6 — Execute
+    // rides 6), CloseReason ordinal (ResultDeclared, 0..2), convoy
+    // index (governance kinds, 0..3). Replan's path length rides
+    // param, not aux. 6 is the max legitimate value; the replay
+    // diff catches any kind-inconsistent value anyway.
+    if (!fitInt("aux", 0, 6, parsed.aux)) return false;
     if (!fitInt("side", -1, 1, parsed.side)) return false;
     for (const JsonValue& r : j["path"].Items()) {
         if (!r.IsInt() || r.AsInt() < 0 || r.AsInt() > I32MAX) return false;

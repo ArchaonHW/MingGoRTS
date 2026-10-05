@@ -85,6 +85,13 @@ public:
     // from CURRENT certainty at apply time. Costs planConfig.replanCost.
     Result<bool> IssueReplan(int side, int squadIndex,
                              std::vector<std::size_t> path);
+    // Refuse a routing enemy's surrender (Epic 4.2): the victim must
+    // be a Routing ENEMY squad and the refusing side needs an
+    // effective non-routing squad in the victim's region (checked at
+    // issue AND apply — mercy by absence). 0 CP: cruelty is free;
+    // the atrocity posting is the price. On apply the victim goes
+    // Routing -> Destroyed and a SquadExecuted deed event records it.
+    Result<bool> IssueExecute(int side, int squadIndex);   // 0 CP
 
     // Planning-only intel hook (briefing/tests): overwrite a cloud's
     // believed region + certainty in `fogSide`'s view for `squadIndex`

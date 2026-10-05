@@ -91,6 +91,10 @@ public:
     static constexpr std::size_t MAX_ENTRIES = 1000000;
     static constexpr std::size_t MAX_TAGS = 16;
     static constexpr std::size_t MAX_TAG_LEN = 64;
+    // Canonical fold-key tags — byte-exact matching is the contract
+    // (compare CrossCheck's record_root: discipline). Producers and
+    // folders share these spellings; anything else is just a label.
+    static constexpr std::string_view TAG_ATROCITY = "atrocity";
     static constexpr std::size_t MAX_MEMO_LEN = 256;
     // Per-leg amount cap. With MAX_ENTRIES worst-case entries the
     // Balance fold stays ~1e18 — far inside int64.

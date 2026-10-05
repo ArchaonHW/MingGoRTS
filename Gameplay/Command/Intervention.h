@@ -16,7 +16,8 @@ constexpr int CP_REGEN_TICKS = 60 * TICK_RATE_HZ;
 
 // Mid-Execution player/AI commands. Costs: redirect 1, override 2,
 // retreat 3, probe 0 (budgeted separately), entangle 2, replan 2
-// (live value from PlanConfig). Queued at issue, applied at next tick
+// (live value from PlanConfig), execute 0 (cruelty is free — the
+// ledger is the price). Queued at issue, applied at next tick
 // start (well inside the ~3 s resolution budget). Wire-format
 // ordinals are append-only.
 enum class InterventionKind : std::uint8_t {
@@ -24,6 +25,7 @@ enum class InterventionKind : std::uint8_t {
     Probe,     // fog op: region intel +probe_gain (no collapse)
     Entangle,  // fog op: link two clouds to share fate
     Replan,    // plan op: rewrite a squad's arrow mid-execution
+    Execute,   // refuse a routing enemy's surrender (Epic 4)
 };
 
 // Probes are limited per battle (GDD: ~2-3), not by CP.
@@ -38,13 +40,16 @@ constexpr int CostOf(InterventionKind k) {
         case InterventionKind::Entangle: return 2;
         case InterventionKind::Replan:   return 2; // default; live cost
                                                  // comes from PlanConfig
+        case InterventionKind::Execute:  return 0;
     }
     return 0; // unreachable — all enumerators handled
 }
 
 // target: region index (Redirect, Probe) or slot index (Override) or
 // cloud id B (Entangle — squadIndex field carries cloud id A) or
-// path length (Replan); unused for Retreat. `path` is Replan's
+// path length (Replan) or the victim's region (Execute — squadIndex
+// carries the victim; apply re-derives the region, target is
+// journal/checksum only); unused for Retreat. `path` is Replan's
 // payload (empty for the rest).
 // issueTick is recorded for replay/ordering metadata — the apply step
 // doesn't re-read it (queue order is canonical).

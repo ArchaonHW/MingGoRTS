@@ -32,6 +32,12 @@ HistorianReport RenderHistorianReport(const Ledger& l,
     for (const LedgerEntry& e : l.Entries()) {
         if (e.provenance == Provenance::Forged) ++r.audit.forged;
         if (e.suspect) ++r.audit.suspect;
+        for (const std::string& t : e.tags) {
+            if (t == Ledger::TAG_ATROCITY) {
+                ++r.audit.atrocities;
+                break;
+            }
+        }
         if (Omitted(e, policy)) {
             ++r.omissions;
         } else {
@@ -49,6 +55,8 @@ std::string HistorianReport::RenderText() const {
     AppendUInt(s, audit.forged);
     s += "\nsuspect: ";
     AppendUInt(s, audit.suspect);
+    s += "\natrocities: ";
+    AppendUInt(s, audit.atrocities);
     s += "\nchain: ";
     s += audit.chainOk ? "ok" : "BROKEN";
     if (audit.breakReason != nullptr) {
