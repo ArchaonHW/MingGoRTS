@@ -240,6 +240,11 @@ std::uint64_t Ledger::EntryHash(const LedgerEntry& e) {
 }
 
 std::int64_t Ledger::Balance(Account a) const {
+    // The no-overflow claim (header) is structural: legs must name
+    // different accounts, so each entry touches `a` at most once —
+    // |sum| <= MAX_ENTRIES * MAX_AMOUNT. Pin the bound.
+    static_assert(MAX_ENTRIES * MAX_AMOUNT <= INT64_MAX,
+                  "balance fold can overflow int64");
     std::int64_t sum = 0;
     for (const LedgerEntry& e : entries_) {
         if (e.credit.account == a) sum += e.credit.amount;

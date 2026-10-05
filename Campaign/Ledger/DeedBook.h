@@ -12,8 +12,9 @@ namespace Potato::Campaign {
 // Battle deeds -> ledger postings (Story 4.2, the A-2 auto-detection
 // seam). The recorded SimEvent stream is the truth: BookDeeds folds
 // the player's deeds into double-entry postings — atrocity kinds
-// (VillageBurned, SquadExecuted) carry the "atrocity" tag that the
-// 墮落 ratchet folds (4.3 — computed, never written).
+// (VillageBurned, SquadExecuted) carry the "atrocity" audit tag plus
+// corruption:/order: governance deltas that the 墮落 ratchet and
+// 秩序 accumulator fold (4.3 — computed, never written).
 //
 // Scope: only deeds committed by `playerSide` post to this ledger —
 // it is the player's domain chronicle; enemy deeds are the enemy's

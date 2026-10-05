@@ -1,3 +1,4 @@
+#include "Campaign/Governance/Accumulators.h"
 #include "Campaign/Ledger/CrossCheck.h"
 #include "Campaign/Ledger/DeedBook.h"
 #include "Campaign/Ledger/HistorianReport.h"
@@ -938,15 +939,17 @@ int main() {
                   exe.debit.account == Account::PopularSupport &&
                   exe.debit.amount == 10,
               "execution books +軍威5 / -民心10");
-        Check(exe.tags.size() == 3 && exe.tags[1] == "victim:4" &&
+        Check(exe.tags.size() == 5 && exe.tags[1] == "victim:4" &&
                   exe.tags[2] == "region:2",
-              "execution tags carry victim + place");
+              "execution tags carry victim + place + axes");
         const LedgerEntry& occ = l.Entries()[2];
         Check(occ.credit.account == Account::PopularSupport &&
-                  occ.debit.account == Account::Materiel,
-              "occupation books +民心 / -物資");
+                  occ.debit.account == Account::Materiel &&
+                  occ.tags.size() == 2 && occ.tags[1] == "order:+5",
+              "occupation books +民心 / -物資 and feeds 秩序");
         const LedgerEntry& raid = l.Entries()[3];
-        Check(raid.tags.size() == 2 && raid.tags[0] == "raid",
+        Check(raid.tags.size() == 3 && raid.tags[0] == "raid" &&
+                  raid.tags[2] == "order:-3",
               "raid tagged raid, not atrocity");
         Check(l.Balance(Account::Materiel) == 40 + 25 - 5 &&
                   l.Balance(Account::PopularSupport) ==
@@ -990,6 +993,157 @@ int main() {
               "omitted atrocity still counted in audit");
         const HistorianReport re = RenderHistorianReport(Ledger{});
         Check(re.audit.atrocities == 0, "clean ledger counts zero");
+    }
+    // --- AC (4.3): accumulators fold; 墮落 ratchets; nothing
+    //     writes them ---
+    {
+        using Potato::Gameplay::SimEvent;
+        Ledger l;
+        // Populate via the real producer: burn + execute + occupy.
+        std::vector<SimEvent> evs;
+        const auto ev = [&](SimEvent::Kind k, int side, int sq,
+                            int param) {
+            SimEvent e;
+            e.kind = k; e.side = side; e.squadIndex = sq;
+            e.param = param; evs.push_back(e);
+        };
+        ev(SimEvent::Kind::VillageOccupied, 0, 0, 1);
+        ev(SimEvent::Kind::VillageBurned, 0, 0, 3);
+        ev(SimEvent::Kind::SquadExecuted, 0, 4, 2);
+        Check(BookDeeds(l, 0, evs).ok(), "deeds booked for fold");
+        GovernanceAccumulators a = FoldGovernance(l);
+        Check(a.popularSupport == 10 - 15 - 10,
+              "民心 folds net postings");
+        Check(a.order == 5 - 10 - 5, "秩序 folds order:±N tags");
+        Check(a.corruption == 15 + 20,
+              "墮落 accumulates atrocity contributions");
+
+        // Ratchet: penance drops the running sum, not the peak.
+        Posting penance;
+        penance.credit = {Account::PopularSupport, 30};
+        penance.debit = {Account::Materiel, 30};
+        penance.memo = "reparations";
+        penance.tags = {"corruption:-25", "order:+8"};
+        Check(l.Post(penance).ok(), "penance posts");
+        a = FoldGovernance(l);
+        Check(a.corruption == 35,
+              "墮落 ratchet: peak survives penance");
+        Check(a.order == 5 - 10 - 5 + 8,
+              "秩序 accepts penance deltas");
+
+        // Forged atrocity still ratchets (suspicion is data).
+        Posting forged = BurnVillage();
+        forged.tags = {"atrocity", "corruption:+50"};
+        Check(l.Forge(forged).ok(), "forged atrocity posts");
+        a = FoldGovernance(l);
+        Check(a.corruption == 35 - 25 + 50,
+              "forged atrocity still ratchets 墮落");
+        Check(a.popularSupport == 10 - 15 - 10 + 30 - 15,
+              "民心 folds forged postings too");
+    }
+    // --- AC (4.3): tag grammar edge cases ---
+    {
+        std::int64_t v = 0;
+        Check(ParseGovernanceTag("order:+5", "order", v) && v == 5,
+              "signed tag parses");
+        Check(ParseGovernanceTag("order:-12", "order", v) &&
+                  v == -12,
+              "negative tag parses");
+        Check(ParseGovernanceTag("order:7", "order", v) && v == 7,
+              "bare digits default positive");
+        Check(!ParseGovernanceTag("orderly:5", "order", v),
+              "axis prefix alone doesn't match");
+        Check(!ParseGovernanceTag("order:", "order", v),
+              "empty magnitude rejected");
+        Check(!ParseGovernanceTag("order:5x", "order", v),
+              "trailing garbage rejected");
+        Check(!ParseGovernanceTag("order:+", "order", v),
+              "lone sign rejected");
+        Check(!ParseGovernanceTag(
+                  "order:99999999999999999999", "order", v),
+              "overflow magnitude rejected");
+        Check(!ParseGovernanceTag("order:+5", "corruption", v),
+              "wrong axis doesn't fold");
+        Check(!ParseGovernanceTag("order:+1001", "order", v),
+              "over-cap magnitude rejected");
+        Check(ParseGovernanceTag("corruption:+1000", "corruption", v) &&
+                  v == 1000,
+              "cap boundary accepted");
+        Check(!ParseGovernanceTag(":5", "", v),
+              "empty axis rejected");
+        Check(!ParseGovernanceTag("order:-9223372036854775808",
+                                  "order", v),
+              "INT64_MIN-magnitude rejected");
+        // The fold ignores malformed tags — no exceptions, no UB.
+        Ledger l;
+        Posting p;
+        p.credit = {Account::Materiel, 1};
+        p.debit = {Account::PopularSupport, 1};
+        p.memo = "x";
+        p.tags = {"order:", "order:abc", "order:+99999999999999999999",
+                  "corruption:0", "corruption:+3"};
+        Check(l.Post(p).ok(), "malformed tags still post (labels)");
+        const GovernanceAccumulators a = FoldGovernance(l);
+        Check(a.order == 0 && a.corruption == 3,
+              "malformed tags fold nothing; valid still counts");
+    }
+    // --- AC (4.3): poisoning/rail/dedup adversaries ---
+    {
+        Ledger l;
+        const auto post = [&](std::vector<std::string> tags) {
+            Posting p;
+            p.credit = {Account::Materiel, 1};
+            p.debit = {Account::PopularSupport, 1};
+            p.memo = "t";
+            p.tags = std::move(tags);
+            return l.Post(p).ok();
+        };
+        // Outrun semantics: penance amortizes against the running
+        // sum — the peak stands, and new atrocities must push the
+        // sum PAST the old peak before the reading moves.
+        Check(post({"atrocity", "corruption:+40"}), "atrocity 1");
+        Check(post({"corruption:-25"}), "penance posts");
+        Check(post({"atrocity", "corruption:+40"}), "atrocity 2");
+        GovernanceAccumulators a = FoldGovernance(l);
+        Check(a.corruption == 55,
+              "penance amortizes: peak 40, sum 55 -> reads 55");
+        // Wait — sum after atrocity2 = 40-25+40 = 55 > peak 40:
+        // the second atrocity outran the debt.
+        Check(a.corruption != 40 && a.corruption != 80,
+              "neither naive-max-entry nor naive-sum — the ratchet "
+              "is max(running)");
+        // A giant penance (bounded by the cap) can still hide fresh
+        // atrocities for a while — the debt is real — but the peak
+        // is never repaid.
+        Check(post({"corruption:-1000"}), "max penance posts");
+        Check(post({"atrocity", "corruption:+15"}), "atrocity 3");
+        a = FoldGovernance(l);
+        Check(a.corruption == 55,
+              "deep debt hides new cruelty until outrun; peak kept");
+        // Spelling variants dedupe per (axis,value) within an entry;
+        // distinct values still stack.
+        Check(post({"order:5", "order:+5", "order:05"}),
+              "spelling variants post");
+        Check(post({"order:5", "order:+10"}),
+              "distinct order values post");
+        a = FoldGovernance(l);
+        Check(a.order == 5 + 5 + 10,
+              "variants dedupe per entry; distinct values stack");
+        // All-negative history floors at zero — no debt without a deed.
+        Ledger l2;
+        Posting p2;
+        p2.credit = {Account::Materiel, 1};
+        p2.debit = {Account::PopularSupport, 1};
+        p2.memo = "x";
+        p2.tags = {"corruption:-50", "order:-5"};
+        Check(l2.Post(p2).ok(), "negative-only entry posts");
+        const GovernanceAccumulators a2 = FoldGovernance(l2);
+        Check(a2.corruption == 0 && a2.order == -5,
+              "corruption floors at 0; order goes negative");
+        const GovernanceAccumulators a3 = FoldGovernance(Ledger{});
+        Check(a3.popularSupport == 0 && a3.order == 0 &&
+                  a3.corruption == 0,
+              "empty ledger folds zeros");
     }
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
                          : "LEDGER TESTS PASS\n",

@@ -22,20 +22,22 @@ bool DeedPosting(const SimEvent& e, Posting& p) {
     switch (e.kind) {
         case SimEvent::Kind::VillageOccupied:
             p = {{Account::PopularSupport, 10}, {Account::Materiel, 5},
-                 "occupied village", {RegionTag(e.param)}};
+                 "occupied village", {RegionTag(e.param), "order:+5"}};
             return true;
         case SimEvent::Kind::VillageBurned:
             p = {{Account::Materiel, 40}, {Account::PopularSupport, 15},
                  "burned village",
-                 {std::string(Ledger::TAG_ATROCITY), RegionTag(e.param)}};
+                 {std::string(Ledger::TAG_ATROCITY), RegionTag(e.param),
+                  "order:-10", "corruption:+15"}};
             return true;
         case SimEvent::Kind::ConvoyArrived:
             p = {{Account::Materiel, 30}, {Account::PopularSupport, 5},
-                 "convoy arrived", {RegionTag(e.param)}};
+                 "convoy arrived", {RegionTag(e.param), "order:+2"}};
             return true;
         case SimEvent::Kind::ConvoyRaided:
             p = {{Account::Materiel, 25}, {Account::PopularSupport, 5},
-                 "raided convoy", {"raid", RegionTag(e.param)}};
+                 "raided convoy",
+                 {"raid", RegionTag(e.param), "order:-3"}};
             return true;
         case SimEvent::Kind::SquadExecuted:
             // "victim:" names the murdered squad — every other kind's
@@ -46,7 +48,7 @@ bool DeedPosting(const SimEvent& e, Posting& p) {
                  "refused rout-surrender",
                  {std::string(Ledger::TAG_ATROCITY),
                   "victim:" + std::to_string(e.squadIndex),
-                  RegionTag(e.param)}};
+                  RegionTag(e.param), "order:-5", "corruption:+20"}};
             return true;
         default:
             return false; // CardFired/BeatChanged/... aren't deeds
