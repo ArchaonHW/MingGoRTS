@@ -19,7 +19,7 @@ jobs:
     - name: Check banned C functions
       run: |
         echo "Scanning for banned unsafe functions..."
-        BANNED='(gets|strcpy|strcat|sprintf|vsprintf|scanf)\s*\('
+        BANNED='\b(gets|strcpy|strcat|sprintf|vsprintf|scanf)\s*\('
         if grep -rnE --include='*.cpp' --include='*.h' --exclude-dir=external --exclude-dir=build --exclude-dir=_bmad "$BANNED" . ; then
           echo "::error::Banned unsafe functions found (gets/strcpy/strcat/sprintf/vsprintf/scanf)"
           exit 1

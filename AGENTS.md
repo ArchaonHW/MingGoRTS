@@ -1,33 +1,48 @@
 <!-- bmad:context -->
-<!-- Verified 2026-09-16 against 91989f7. Managed by bmad-project-context; edits inside this block are replaced on refresh. Keep anything you want preserved outside the markers. -->
+<!-- Verified 2026-09-29 (unversioned: git unavailable in this environment). Managed by bmad-project-context; edits inside this block are replaced on refresh. Keep anything you want preserved outside the markers. -->
 
-## MingGoRTS (Potato Engine)
+## MingGoRTS / PotatoEngine
 
-C++20 遊戲引擎 + MingGoRTS IDE，CMake 建置，無 UE5 依賴。BMAD v6 已安裝：skills 在 `.agents/skills/`，本體在 `_bmad/`，規劃產出到 `_bmad-output/`。長篇文件與報告在 `docs/`。
+C++20 game engine (PotatoEngine) + greenfield game layer (MingGoRTS). Planning artifacts live in `_bmad-output/` (GDD, `game-architecture.md`, `narrative-design.md`, `planning-artifacts/epics.md`, `implementation-artifacts/sprint-status.yaml`); these are authoritative over README status claims.
 
 ## Policy
 
-- 不直接推 `main`/`develop`——所有變更走 PR。
-- Commit message 與 PR title 必須是 conventional commits（CI commitlint 強制）。
-- 不修改 `external/`（第三方依賴）與 `build/`（建置輸出）。
-- 禁止硬編碼 secrets / 憑證檔——CI security-scan 會擋。
+- Never push to `main`/`develop`; PRs only, Conventional Commits.
+- Never modify `external/` — vendored dependencies.
+- No third-party JSON libraries; use the game-layer `JsonValue` (to be built in `Gameplay/Json/`).
+- No unsafe C functions: `gets`, `strcpy`, `strcat`, `sprintf`, `vsprintf`, `scanf`.
+- All game content files are versioned JSON: `potato.<name>/<ver>` header, reject bad schema without mutating state.
+- Saves write via temp-file + rename (atomic).
 
 ## Where things are
 
-- 引擎與所有 target 定義：根 `CMakeLists.txt`（唯一 CMake 清單，無子目錄 CMakeLists）
-- Windows 建置入口：`BuildEngine.bat`（需 VS Developer Command Prompt）
-- Agent 語言規則：`.windsurf/AGENT_LANGUAGE_CONFIG`——回覆與註解用繁體中文，識別符與檔名保持英文
-- `C:\HWC\PotatoEngine`（repo 外）是活的上游參考副本——別與 repo 內引擎混淆，相關改動需留意同步
+- Engine subsystems: top-level dirs (`Core/`, `ECS/`, `Events/`, `Rendering/`, `Serialization/`, `GUI/`, ...).
+- Game layer (planned, may not exist yet): `Gameplay/` sim → `Campaign/` → `Game/` shell → `assets/`.
+- Executable examples/tests: `Examples/` — each is its own `add_executable` target.
+- Story files and sprint tracking: `_bmad-output/implementation-artifacts/`.
 
 ## Running and verifying
 
-- 本地建置必須 MSVC 與 MinGW 都過——MinGW 專用連結用 `if(WIN32 AND NOT MSVC)` 守衛（參考 psapi 寫法）
-- 沒有測試框架/ctest——驗證 = `cmake --build build` 後跑 `Examples/` 執行檔（如 `AITestSuite`）
-- CI 在 Linux g++ 建置；另掃 banned C 函式 `gets|strcpy|strcat|sprintf|vsprintf|scanf`——用 `strncpy`/`snprintf` 等安全替代
-- 需求：CMake ≥3.15、C++20 編譯器、OpenGL；GLFW 由 FetchContent 拉取
+- Build (Windows/MSVC): `BuildEngine.bat`, or `cmake -B build -G "Visual Studio 17 2022" -A x64` then `cmake --build build --config Release`.
+- MinGW builds: guard toolchain specifics with `WIN32 AND NOT MSVC`; verify both MSVC and MinGW before calling work done.
+- No unified test command — there is no CTest; tests are standalone executables under `Examples/`. Game-layer tests use the `potato_test_<name>` convention (POTATO_TESTS option is planned, not yet in CMake).
+- Environment: `git`, `python`, `uv` are NOT on PATH here — don't script around them.
+
+## Conventions that differ from defaults
+
+- `Gameplay/` must compile headless: no Rendering/GUI/OpenGL includes; dependency direction is Engine ← Gameplay ← Campaign ← Game, single direction only.
+- Simulation is deterministic: fixed 20 Hz tick, integer/fixed-point only (no floats in sim), one seeded PRNG stream, canonical eval order (squad index → slot index).
+- Truth boundary: nothing outside `Gameplay/Sim/` reads true enemy state — presentation and doctrine conditions read certainty only.
+- Two event regimes: typed `SimEvent` list inside the sim (recorded for replay); engine `EventBus` only at layer boundaries — subscribers never write `BattleState`.
+- `PotatoEngine` facade subsystem accessors are commented out — bind engine leaf modules directly; do not "fix" the facade as a side task.
+- Error handling: no exceptions in the tick path; `Result<T>` at I/O/content boundaries; registries immutable during battle; zero file I/O in the tick path.
 
 ## Known pitfalls
 
+- README describes aspirational state (completed epics, existing `Gameplay/`, old planning paths) that does not match the filesystem — trust `_bmad-output/` documents and the actual tree, not README status lines.
+- PowerShell here-strings treat backticks as escapes — prefer `[IO.File]::WriteAllText` with single-quoted here-strings when writing content containing backticks.
+- The repo path contains CJK (`F:\民國史詩`) — MinGW make and FetchContent subbuilds fail on it ("Illegal byte sequence"). Build via an ASCII junction, e.g. `C:\MingGoRTS -> F:\民國史詩\HWC\MingGoRTS`.
+- `PotatoEngine` static lib does not compile under MinGW (`Security/SecuritySystem.cpp` uses MSVC-isms) — `PotatoGameplay` deliberately does not link it yet. For headless builds use `-DPOTATO_BUILD_GUI=OFF` (skips glfw/glad FetchContent, which also needs git/network).
 - IDE GUI state 用固定長度 char buffer（如 `state.developmentResponse`）——必須 `strncpy` + 結尾 `\0` 或 `memset`，不可直接 `=` 指派 `std::string`
 
 <!-- /bmad:context -->

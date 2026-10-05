@@ -1,0 +1,96 @@
+#pragma once
+
+#include "Gameplay/Doctrine/Doctrine.h" // SimEvent
+#include "Gameplay/Json/JsonValue.h"
+#include "Gameplay/Result.h"
+
+#include <cstddef>
+#include <cstdint>
+#include <string>
+#include <string_view>
+#include <vector>
+
+namespace Potato::Gameplay {
+
+class BattleController;
+struct SquadTemplate;
+
+// potato.battle_record/1 — the record-is-truth battle journal
+// (D-ARCH-6 event sourcing): seed + embedded content docs + an ordered
+// planning-input op stream + the sealed SimEvent log. integrity.root =
+// FNV-1a over the canonical emit of every field except `integrity` —
+// byte-level tamper-evident; semantic tampering that survives a
+// recomputed root is caught by the ReplayVerifier's bit-exact diff.
+//
+// The host mirrors each controller call into a Record* call — the
+// recorder is deliberately dumb: it stores what it's told, never reads
+// hidden state. Commands need no Record* API: the sealed SimEvent
+// stream already carries them (side + payload since Story 1.11).
+class BattleRecorder {
+public:
+    static constexpr int TOOL_VERSION = 1;
+    static constexpr std::string_view SCHEMA = "potato.battle_record/1";
+
+    // Embedded content makes the record self-contained — the verifier
+    // needs no asset pipeline access.
+    // Single-use recorder: (re)Binding resets all per-battle state.
+    // CONTRACT: mirror ONLY calls the controller accepted (returned
+    // true) — a rejected op in the record can never verify.
+    void Bind(std::uint64_t seed, const JsonValue& mapDoc,
+              const JsonValue& cardsDoc);
+    void BindBalance(const JsonValue& doc); // optional; defaults replay
+    // Records stamped by older tools verify with a downgrade warning —
+    // test hook until a v2 exists.
+    void SetToolVersion(int v) { toolVersion_ = v; }
+
+    // Planning inputs — mirror the controller calls, in call order.
+    // The template is embedded fully (squad stats are sim state).
+    // No-ops after Seal().
+    void RecordDeploy(const SquadTemplate& t, std::size_t region,
+                      int side);
+    void RecordSheet(std::size_t squadIndex,
+                     const std::vector<std::string>& cardIds);
+    // Argument order mirrors BattleController::DrawArrow(side, squad, path).
+    void RecordArrow(int side, std::size_t squadIndex,
+                     const std::vector<std::size_t>& path);
+    void RecordIntel(int fogSide, int squadIndex, int region,
+                     int certainty);
+    void RecordCpPool(int side, int cp);
+
+    // Captures bc's event stream + checksum + outcome and computes the
+    // integrity root. Records are completed battles only: Seal no-ops
+    // unless bc is in Aftermath (ToJson then fails as unsealed).
+    void Seal(const BattleController& bc);
+
+    // Full record incl. `integrity`. Fails if Bind/Seal never ran.
+    Result<JsonValue> ToJson() const;
+
+    // FNV-1a over the canonical emit — verifiers (and tests forging a
+    // root-consistent tampered record) recompute it.
+    static std::uint64_t ComputeRoot(const JsonValue& payload);
+
+private:
+    // Everything except `integrity` — ComputeRoot's input.
+    JsonValue PayloadJson() const;
+
+    bool bound_ = false;
+    bool sealed_ = false;
+    int toolVersion_ = TOOL_VERSION;
+    std::uint64_t seed_ = 0;
+    JsonValue mapDoc_;     // embedded potato.map/1 doc
+    JsonValue cardsDoc_;   // embedded potato.doctrine_cards/1 doc
+    JsonValue balanceDoc_; // Null until BindBalance
+    std::vector<JsonValue> inputs_; // ordered planning ops
+    std::vector<SimEvent> events_;
+    std::uint64_t checksum_ = 0;
+    int endTick_ = 0;
+    int endBeat_ = 0;
+    int winner_ = -1;
+    bool forced_ = false;
+};
+
+// SimEvent <-> JSON — shared between recorder emit and verifier parse.
+JsonValue EventToJson(const SimEvent& e);
+bool EventFromJson(const JsonValue& j, SimEvent& e); // false = malformed
+
+} // namespace Potato::Gameplay

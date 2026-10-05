@@ -56,6 +56,11 @@ if(MINGW)
     add_link_options(-static-libgcc -static-libstdc++ -static)
 endif()
 
+# GUI 依賴（glfw/glad/OpenGL）——headless 建置可用 -DPOTATO_BUILD_GUI=OFF 略過
+# （無 git/網路或非 ASCII 路徑環境下 FetchContent 會失敗；Gameplay 層本來就不需要 GL）
+option(POTATO_BUILD_GUI "Fetch glfw/glad and build GUI targets" ON)
+
+if(POTATO_BUILD_GUI)
 # 查找依賴
 find_package(OpenGL REQUIRED)
 
@@ -104,6 +109,7 @@ endif()
 # 注意:glad v2.x 的頭文件是 <glad/gl.h>,與引擎代碼不相容,勿改回 FetchContent
 add_library(glad STATIC external/glad_gen/src/glad.c)
 target_include_directories(glad PUBLIC external/glad_gen/include)
+endif()
 
 # OpenAL - 音頻庫 (可選)
 # include(FetchContent)
@@ -438,7 +444,8 @@ add_executable(MingGoRTS_IDE_CLI MingGoRTS_IDE/MingGoRTS_IDE_Main.cpp MingGoRTS_
 target_include_directories(MingGoRTS_IDE_CLI PRIVATE ${CMAKE_SOURCE_DIR})
 
 # MingGoRTS IDE（GUI 版本）
-add_executable(MingGoRTS_IDE_GUI 
+if(POTATO_BUILD_GUI)
+add_executable(MingGoRTS_IDE_GUI
     MingGoRTS_IDE/GUI/Main.cpp
     MingGoRTS_IDE/GUI/IDEGUI.cpp
     MingGoRTS_IDE/GUI/IDEGUI.h
@@ -453,7 +460,7 @@ add_executable(MingGoRTS_IDE_GUI
     external/imgui/backends/imgui_impl_glfw.cpp
     external/imgui/backends/imgui_impl_opengl3.cpp
 )
-target_include_directories(MingGoRTS_IDE_GUI PRIVATE 
+target_include_directories(MingGoRTS_IDE_GUI PRIVATE
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/external/imgui
     ${CMAKE_SOURCE_DIR}/external/imgui/backends
@@ -471,6 +478,7 @@ target_link_libraries(MingGoRTS_IDE_GUI glfw ${OPENGL_LIBRARIES}
     KnowledgeGraph
     SelfReflection
 )
+endif() # POTATO_BUILD_GUI
 
 # 數學測試程序
 add_executable(MathTest Examples/MathTest.cpp)
@@ -584,6 +592,132 @@ target_link_libraries(PortraitBaker PotatoEngine)
 # AI Agent GUI 示例 (暫時禁用)
 # add_executable(AIAgentGUIExample Examples/AIAgentGUIExample.cpp)
 # target_link_libraries(AIAgentGUIExample PotatoEngine)
+
+# ==== MingGoRTS 遊戲層 ====
+# Gameplay：純模擬函式庫——headless、無 Rendering/GUI/Platform-GL 依賴
+# （禁入清單由 scripts/CheckGameplayDeps.ps1 檢查）
+# 只收新架構子目錄——Gameplay/ 根層的 flat 檔案屬於舊 doctrine 原型，
+# 由上方的 `Gameplay` lib 編譯；兩套在 Potato::Gameplay 下有同名 class，
+# 一起 glob 會 ODR 衝突
+file(GLOB_RECURSE GAMEPLAY_SOURCES CONFIGURE_DEPENDS
+    "Gameplay/AI/*.cpp"
+    "Gameplay/Command/*.cpp"
+    "Gameplay/Doctrine/*.cpp"
+    "Gameplay/Fog/*.cpp"
+    "Gameplay/Governance/*.cpp"
+    "Gameplay/Json/*.cpp"
+    "Gameplay/Map/*.cpp"
+    "Gameplay/Plan/*.cpp"
+    "Gameplay/Record/*.cpp"
+    "Gameplay/Sim/*.cpp"
+    "Gameplay/Squad/*.cpp")
+file(GLOB_RECURSE GAMEPLAY_HEADERS CONFIGURE_DEPENDS
+    "Gameplay/AI/*.h"
+    "Gameplay/Command/*.h"
+    "Gameplay/Doctrine/*.h"
+    "Gameplay/Fog/*.h"
+    "Gameplay/Governance/*.h"
+    "Gameplay/Json/*.h"
+    "Gameplay/Map/*.h"
+    "Gameplay/Plan/*.h"
+    "Gameplay/Record/*.h"
+    "Gameplay/Sim/*.h"
+    "Gameplay/Squad/*.h"
+    "Gameplay/Result.h")
+add_library(PotatoGameplay STATIC ${GAMEPLAY_SOURCES} ${GAMEPLAY_HEADERS})
+target_include_directories(PotatoGameplay PUBLIC ${CMAKE_SOURCE_DIR})
+# 注意：暫不連結 PotatoEngine——其唯二啟用實作（Security/*.cpp）在 MinGW 下
+# 無法編譯（MSVC 專用寫法）；leaf 模組僅以標頭形式提供。待引擎修復或拆出
+# 獨立 leaf target 後再恢復連結。
+
+# Headless 煙霧測試：固定種子決定性 tick
+add_executable(potato_test_gameplay Examples/potato_test_gameplay.cpp)
+target_include_directories(potato_test_gameplay PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_gameplay PotatoGameplay)
+
+# TODO: POTATO_TESTS 清單為規劃項——目前以 CTest 直接註冊遊戲層測試
+# JsonValue DOM parser + potato.<name>/<ver> schema gate 測試
+add_executable(potato_test_json Examples/potato_test_json.cpp)
+target_include_directories(potato_test_json PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_json PotatoGameplay)
+
+# BattleMap region/node-graph model + potato.map/1 loader 測試
+add_executable(potato_test_map Examples/potato_test_map.cpp)
+target_include_directories(potato_test_map PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_map PotatoGameplay)
+
+# Squad model + potato.squad/1 templates + cohesion/rout state table 測試
+add_executable(potato_test_squad Examples/potato_test_squad.cpp)
+target_include_directories(potato_test_squad PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_squad PotatoGameplay)
+
+# TODO: POTATO_TESTS 清單為規劃項——目前以 CTest 直接註冊遊戲層測試
+enable_testing()
+add_test(NAME potato_test_gameplay COMMAND potato_test_gameplay)
+add_test(NAME potato_test_json COMMAND potato_test_json)
+add_test(NAME potato_test_map COMMAND potato_test_map)
+add_test(NAME potato_test_squad COMMAND potato_test_squad)
+
+# Doctrine interpreter + potato.doctrine_cards/1 library 測試
+add_executable(potato_test_doctrine Examples/potato_test_doctrine.cpp)
+target_include_directories(potato_test_doctrine PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_doctrine PotatoGameplay)
+add_test(NAME potato_test_doctrine COMMAND potato_test_doctrine)
+
+# BattleController 三拍迴圈測試
+add_executable(potato_test_battle Examples/potato_test_battle.cpp)
+target_include_directories(potato_test_battle PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_battle PotatoGameplay)
+add_test(NAME potato_test_battle COMMAND potato_test_battle)
+
+# CP interventions 測試
+add_executable(potato_test_command Examples/potato_test_command.cpp)
+target_include_directories(potato_test_command PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_command PotatoGameplay)
+add_test(NAME potato_test_command COMMAND potato_test_command)
+
+# QuantumFog 測試
+add_executable(potato_test_fog Examples/potato_test_fog.cpp)
+target_include_directories(potato_test_fog PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_fog PotatoGameplay)
+add_test(NAME potato_test_fog COMMAND potato_test_fog)
+
+# BattlePlan arrows 測試
+add_executable(potato_test_plan Examples/potato_test_plan.cpp)
+target_include_directories(potato_test_plan PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_plan PotatoGameplay)
+add_test(NAME potato_test_plan COMMAND potato_test_plan)
+
+# Symmetric AI 測試
+add_executable(potato_test_ai Examples/potato_test_ai.cpp)
+target_include_directories(potato_test_ai PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_ai PotatoGameplay)
+add_test(NAME potato_test_ai COMMAND potato_test_ai)
+
+# BattleRecorder / replay verifier 測試
+add_executable(potato_test_record Examples/potato_test_record.cpp)
+target_include_directories(potato_test_record PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_record PotatoGameplay)
+add_test(NAME potato_test_record COMMAND potato_test_record)
+
+# Replay-verifier CLI: potato_verify <record.json> -> VERIFY OK/FAIL
+add_executable(potato_verify Examples/potato_verify.cpp)
+target_include_directories(potato_verify PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_verify PotatoGameplay)
+
+# CLI end-to-end: emit a sealed record, then verify it (exit-code check).
+add_test(NAME potato_record_emit
+    COMMAND potato_test_record --emit ${CMAKE_BINARY_DIR}/verify_sample.json)
+add_test(NAME potato_verify_cli
+    COMMAND potato_verify ${CMAKE_BINARY_DIR}/verify_sample.json)
+set_tests_properties(potato_verify_cli PROPERTIES DEPENDS potato_record_emit)
+
+if(WIN32)
+    # Gameplay 層依賴方向守衛：禁 Rendering/GUI/Platform/GL 標頭
+    add_test(NAME gameplay_dep_guard
+        COMMAND powershell -NoProfile -File ${CMAKE_SOURCE_DIR}/scripts/CheckGameplayDeps.ps1
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+endif()
 
 # 安裝 (暫時禁用)
 # install(TARGETS PotatoEngine SimpleExample PlatformTest
