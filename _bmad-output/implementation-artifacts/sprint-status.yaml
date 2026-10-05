@@ -65,12 +65,12 @@ development_status:
   3-6-refitcamp: done
   3-7-rivaldeck-learning: done
   epic-3-retrospective: optional
-  epic-4: in-progress
+  epic-4: done
   4-1-governancefield-battle-events: done
   4-2-atrocity-auto-detection: done
   4-3-governance-accumulators: done
   4-4-governance-victory-path: done
-  4-5-defeat-conversion: backlog
+  4-5-defeat-conversion: done
   epic-4-retrospective: optional
   epic-5: backlog
   5-1-myth-infiltration-state-machine: backlog

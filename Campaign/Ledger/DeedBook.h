@@ -27,6 +27,11 @@ namespace Potato::Campaign {
 // costs are the design: burning banks 物資 against 民心, execution
 // banks 軍威 dread against 民心 revulsion. Magnitudes are initial
 // balance targets, not final tuning.
+//
+// INVARIANT for future deed kinds: every generated posting must
+// satisfy ValidateLegs + ValidateMeta — ResolveAftermath (4.5)
+// preflights only capacity, so a malformed deed would post a prefix
+// then fail mid-settlement, reopening the partial-land hole.
 Gameplay::Result<std::size_t>
 BookDeeds(Ledger& ledger, int playerSide,
           std::span<const Gameplay::SimEvent> events);

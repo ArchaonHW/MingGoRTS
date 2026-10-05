@@ -113,3 +113,8 @@
 - No doctrine-level "no quarter" stance — Execute is a per-victim intervention verb; an authored standing policy (e.g. a trigger/action pair that refuses all routs in a region) is Epic 7 vocabulary territory.
 - Refuser presence accepts any Holding squad — a contested region does not shield a routing victim (contrast `ExclusiveSide` for village dwell). Deliberate: atrocity needs killers in reach, not control of the ground.
 - `AuditSegment::atrocities` counts forged entries tagged "atrocity" too — the forgery channel can inflate the headline number; `audit.forged` exposes the source for cross-reference (suspicion is data, not exclusion — 2.3 contract).
+
+## Deferred from: code review of 4-5-defeat-conversion (2026-10-05)
+
+- Every ResolveAftermath call spends the chapter — single-battle chapters only. A mid-chapter non-sealing variant (ApplyAftermath + BookDeeds without ConcludeChapter) or an explicit chapterFinal flag belongs to whichever story introduces multi-battle chapters.
+- ecord_root: dedup is a linear tag scan per settlement — fine at ledger scale today; if settlement frequency ever matters, index anchors.

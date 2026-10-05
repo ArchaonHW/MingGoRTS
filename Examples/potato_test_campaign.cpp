@@ -1,5 +1,6 @@
 // Story 3.1 — CampaignState facade: potato.campaign/1 round-trip.
 // Story 3.2 — SaveSystem: atomic tmp->rename saves, gated loads.
+#include "Campaign/Aftermath/Aftermath.h"
 #include "Campaign/Chapters/ChapterLibrary.h"
 #include "Campaign/Chapters/Progression.h"
 #include "Campaign/Governance/Accumulators.h"
@@ -1433,6 +1434,208 @@ int main() {
         }
 
         fs::remove_all(vdir);
+    }
+
+    // ===== Story 4.5 — Defeat Conversion =====
+    {
+        namespace fs = std::filesystem;
+        const fs::path adir =
+            fs::temp_directory_path() / "potato_test_aftermath_ch";
+        fs::remove_all(adir);
+        fs::create_directories(adir);
+        const auto wch = [&adir](const char* name, const char* id,
+                                 int idx) {
+            std::ofstream f(adir / name,
+                            std::ios::binary | std::ios::trunc);
+            f << "{\"schema\":\"potato.chapter/1\",\"id\":\"" << id
+              << "\",\"index\":" << idx
+              << ",\"title\":\"t\",\"map\":\"m.json\","
+                 "\"combat\":true}";
+        };
+        wch("a.json", "a0", 0);
+        wch("b.json", "a1", 1);
+        ChapterLibrary alib;
+        Check(ChapterLibrary::Load(adir, alib).ok,
+              "4.5: library loads");
+
+        using Potato::Gameplay::SimEvent;
+        using Potato::Campaign::ChapterResolution;
+        using Potato::Campaign::ResolveAftermath;
+        using Potato::Campaign::FoldGovernance;
+
+        const auto ready = [&]() {
+            CampaignState st;
+            InitializeProgress(st, alib);
+            Enlist(st, "甲隊");
+            Enlist(st, "乙隊");
+            return st;
+        };
+        const auto burn = [](int squad, int region, int side) {
+            SimEvent e;
+            e.kind = SimEvent::Kind::VillageBurned;
+            e.squadIndex = squad;
+            e.param = region;
+            e.side = side;
+            return e;
+        };
+
+        // The AC: a lost battle persists casualties, books the loss,
+        // and the campaign CONTINUES — no game-over anywhere.
+        {
+            CampaignState st = ready();
+            std::vector<SimEvent> deeds = {burn(0, 3, 0)};
+            std::vector<AftermathRow> rows = {
+                AftermathRow{"甲隊", 12, true}};
+            const auto r = ResolveAftermath(st, alib, false, 0,
+                                            deeds, rows, 0xA11CE5);
+            Check(r.ok(), "4.5: defeat settlement succeeds");
+            Check(r.value.resolution == ChapterResolution::Defeat,
+                  "4.5: lost field resolves defeat");
+            Check(r.value.roster.buried == 1 &&
+                      r.value.roster.veterans == 0 &&
+                      st.GetRoster()[0].dead &&
+                      st.GetRoster()[0].casualties == 12,
+                  "4.5: casualties persist, wiped stays dead");
+            Check(r.value.deedsPosted == 1,
+                  "4.5: player's arson deed posted");
+            Check(r.value.nextChapter == 1 &&
+                      st.GetChapter().resolved[0] &&
+                      st.GetChapter().unlocked[1],
+                  "4.5: campaign continues — chapter advanced");
+            // The loss is IN the book: seal + deed + verify clean.
+            const auto& entries = st.GetLedger().Entries();
+            bool sealed = false, deedSeen = false;
+            for (const auto& e : entries) {
+                for (const auto& t : e.tags) {
+                    sealed |= t == "resolution:defeat";
+                    deedSeen |= t == "atrocity";
+                }
+            }
+            Check(sealed && deedSeen &&
+                      st.GetLedger().Verify() == nullptr,
+                  "4.5: defeat sealed, deed booked, chain verifies");
+            // 墮落 ratcheted through the loss — cruelty in defeat
+            // still counts.
+            Check(FoldGovernance(st.GetLedger()).corruption == 15,
+                  "4.5: atrocity ratchets 墮落 through defeat");
+        }
+
+        // Win path shares the same flow (single settlement point).
+        {
+            CampaignState st = ready();
+            std::vector<SimEvent> deeds;
+            std::vector<AftermathRow> rows = {
+                AftermathRow{"甲隊", 3, false}};
+            const auto r = ResolveAftermath(st, alib, true, 0,
+                                            deeds, rows, 0xB4771E);
+            Check(r.ok() &&
+                      r.value.resolution ==
+                          ChapterResolution::BattleVictory &&
+                      r.value.roster.veterans == 1 &&
+                      r.value.deedsPosted == 0,
+                  "4.5: won field settles as battle victory");
+        }
+
+        // Governance thresholds override INSIDE the settlement —
+        // deeds post before the fold, so an occupying defender can
+        // governance-win a lost battle.
+        {
+            CampaignState st = ready();
+            std::vector<SimEvent> deeds;
+            Posting p;
+            p.credit = {Account::PopularSupport, 80};
+            p.debit = {Account::Materiel, 80};
+            p.memo = "rule";
+            p.tags = {"order:+70"};
+            Check(st.GetLedger().Post(p).ok(),
+                  "4.5: threshold funding posts");
+            const auto r = ResolveAftermath(st, alib, false, 0,
+                                            deeds, {}, 0x60A11);
+            Check(r.ok() &&
+                      r.value.resolution ==
+                          ChapterResolution::GovernanceVictory,
+                  "4.5: lost battle + thresholds = governance win");
+        }
+
+        // Atomicity: a bad casualty report rejects the whole
+        // settlement — no roster death, no deeds, no seal.
+        {
+            CampaignState st = ready();
+            std::vector<SimEvent> deeds = {burn(0, 3, 0)};
+            std::vector<AftermathRow> rows = {
+                AftermathRow{"不存在的隊", 5, true}};
+            const auto n = st.GetLedger().Size();
+            const auto r = ResolveAftermath(st, alib, false, 0,
+                                            deeds, rows, 0xBAD);
+            Check(!r.ok() && st.GetLedger().Size() == n &&
+                      !st.GetRoster()[0].dead &&
+                      !st.GetChapter().resolved[0],
+                  "4.5: bad report rejects whole settlement");
+        }
+
+        // Preflight pins: invalid side and uninitialized progress
+        // both reject BEFORE any mutation — a bad side must not
+        // bury the roster (the H1 hole).
+        {
+            CampaignState st = ready();
+            std::vector<AftermathRow> rows = {
+                AftermathRow{"甲隊", 1, true}};
+            const auto n = st.GetLedger().Size();
+            const auto r = ResolveAftermath(st, alib, false, 7,
+                                            {}, rows, 0x51DE);
+            Check(!r.ok() && st.GetLedger().Size() == n &&
+                      !st.GetRoster()[0].dead,
+                  "4.5: invalid side rejects pre-mutation");
+            CampaignState st2; // uninitialized progress
+            const auto r2 = ResolveAftermath(st2, alib, true, 0,
+                                             {}, {}, 0x511E);
+            Check(!r2.ok() && r2.error == "state",
+                  "4.5: uninitialized progress rejects");
+            // Retry protection: an already-anchored record root
+            // can't settle twice — and the report survives intact.
+            CampaignState st3 = ready();
+            Check(ResolveAftermath(st3, alib, true, 0, {}, {},
+                                   0xD1CE).ok(),
+                  "4.5: first settlement lands");
+            const auto n3 = st3.GetLedger().Size();
+            const auto retry = ResolveAftermath(st3, alib, false, 0,
+                                                {}, {}, 0xD1CE);
+            Check(!retry.ok() &&
+                      retry.reason == "battle already settled" &&
+                      st3.GetLedger().Size() == n3,
+                  "4.5: same record root can't re-settle");
+            CampaignState st4 = ready();
+            const auto r0 = ResolveAftermath(st4, alib, true, 0,
+                                             {}, {}, 0);
+            Check(!r0.ok(), "4.5: zero record root rejected");
+        }
+
+        // Final-chapter defeat: settles, resolves, nextChapter is
+        // the campaign-complete sentinel — continuation is vacuous,
+        // not a game-over screen.
+        {
+            CampaignState st = ready();
+            Check(ResolveAftermath(st, alib, true, 0, {}, {},
+                                   0xC4A17E1).ok() &&
+                      ResolveAftermath(st, alib, false, 0, {}, {},
+                                       0xC4A17E2)
+                          .ok(),
+                  "4.5: both chapters settle");
+            Check(st.GetChapter().current == 2,
+                  "4.5: campaign-complete sentinel after final loss");
+        }
+
+        // Empty aftermath still settles — a bloodless defeat.
+        {
+            CampaignState st = ready();
+            const auto r = ResolveAftermath(st, alib, false, 0,
+                                            {}, {}, 0xE4911);
+            Check(r.ok() && r.value.deedsPosted == 0 &&
+                      r.value.resolution == ChapterResolution::Defeat,
+                  "4.5: empty aftermath still seals defeat");
+        }
+
+        fs::remove_all(adir);
     }
 
     std::printf(failures ? "CAMPAIGN TESTS FAILED: %d\n"

@@ -1,6 +1,7 @@
 #include "Campaign/Governance/Victory.h"
 
 #include "Campaign/Chapters/Progression.h"
+#include "Campaign/Ledger/CrossCheck.h"
 
 #include <string>
 #include <string_view>
@@ -17,7 +18,8 @@ constexpr std::int64_t kSealAmount = 1;
 //   governance victory: 民心一分凝為天命 (support consolidates)
 //   battle victory:     軍威以物資記   (glory paid in supply)
 //   defeat:             收殮得物資，軍威折損 (salvage; prestige bleeds)
-Posting SealPosting(ChapterResolution r, std::int64_t chapter) {
+Posting SealPosting(ChapterResolution r, std::int64_t chapter,
+                    std::uint64_t recordRoot) {
     Posting p;
     // No `default:` — a new ChapterResolution enumerator trips
     // -Wswitch here (and in ResolutionName), fail-closed by the
@@ -41,6 +43,9 @@ Posting SealPosting(ChapterResolution r, std::int64_t chapter) {
     p.tags = {std::string(Ledger::TAG_RESOLUTION) + ResolutionName(r),
               std::string(Ledger::TAG_CHAPTER) +
                   std::to_string(chapter)};
+    // Anchored verdicts cite the battle record's integrity root —
+    // tamper-evident and retry-safe (a settled root can't re-seal).
+    if (recordRoot != 0) p.tags.push_back(RecordRootTag(recordRoot));
     return p;
 }
 
@@ -64,7 +69,8 @@ bool IsGovernanceVictory(const GovernanceAccumulators& a) {
 }
 
 Gameplay::Result<ChapterResolution> ConcludeChapter(
-    CampaignState& state, const ChapterLibrary& lib, bool battleWon) {
+    CampaignState& state, const ChapterLibrary& lib, bool battleWon,
+    std::uint64_t recordRoot) {
     // Shared gate predicate — same list ResolveAndAdvance enforces,
     // so post-seal advance cannot fail (the two can't drift).
     std::string_view error;
@@ -91,12 +97,13 @@ Gameplay::Result<ChapterResolution> ConcludeChapter(
 
     const std::int64_t chapter = state.GetChapter().current;
     const auto posted =
-        state.GetLedger().Post(SealPosting(r, chapter));
+        state.GetLedger().Post(SealPosting(r, chapter, recordRoot));
     if (!posted.ok()) {
         return Gameplay::Fail<ChapterResolution>(posted.error,
                                                  posted.reason);
     }
-    // Guaranteed by CanClose + untouched chapter state since.
+    // Guaranteed by the shared CanResolveChapter gate + untouched
+    // chapter state since.
     const auto next = ResolveAndAdvance(state, lib);
     if (!next.ok()) {
         return Gameplay::Fail<ChapterResolution>(next.error,

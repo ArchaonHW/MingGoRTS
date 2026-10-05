@@ -55,7 +55,12 @@ bool IsGovernanceVictory(const GovernanceAccumulators& a);
 // seal lands the advance cannot fail; the verdict is in the book
 // before the chapter counts as closed, and a chapter that cannot
 // close never gets a seal.
+//
+// `recordRoot` (when nonzero) anchors the seal to the battle
+// record's integrity root via the `record_root:` tag family
+// (CrossCheck, Story 2.5) — the verdict cites its evidence.
 Gameplay::Result<ChapterResolution> ConcludeChapter(
-    CampaignState& state, const ChapterLibrary& lib, bool battleWon);
+    CampaignState& state, const ChapterLibrary& lib, bool battleWon,
+    std::uint64_t recordRoot = 0);
 
 } // namespace Potato::Campaign
