@@ -117,9 +117,17 @@ development_status:
   epic-9-retrospective: optional
   epic-10: in-progress
   10-1-bencao-entry-schema-registry: done
-  10-2-bencao-unlock-engine: backlog
+  10-2-bencao-unlock-engine: done
   10-3-buchao-delivery-marginalia: backlog
   10-4-bencao-codex-renderer: backlog
   10-5-document-stream-integration: backlog
   10-6-bencao-launch-content-set: backlog
   epic-10-retrospective: optional
+  epic-11: backlog
+  11-1-mintclaim-schema-outbox: backlog
+  11-2-ledger-merkle-root: backlog
+  11-3-replay-gated-claim-emission: backlog
+  11-4-external-relayer-tool: backlog
+  11-5-testnet-anchor-token-contract: backlog
+  11-6-nft-collectible-minting: backlog
+  epic-11-retrospective: optional

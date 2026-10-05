@@ -1,16 +1,36 @@
 // Story 10.1 — bencao codex entry registry (potato.bencao/1):
 // per-file isolated load, six-field anatomy, unlock manifest
 // validation, annotation-key guard, canonical ordering.
+// Story 10.2 — unlock engine (potato.bencao_state/1): six-kind
+// trigger evaluation over read-only signals, idempotent unlocks,
+// pending 補鈔 FIFO, codex state round-trip.
 #include "Campaign/Narrative/Bencao.h"
+#include "Campaign/Narrative/BencaoCodex.h"
+#include "Campaign/Ledger/Ledger.h"
+#include "Campaign/Myth/MythLog.h"
+#include "Campaign/Myth/MythState.h"
+#include "Gameplay/Json/JsonValue.h"
+#include "Gameplay/Map/BattleMap.h"
 
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
 
 using namespace Potato;
-using Potato::Campaign::BencaoLibrary;
+using Potato::Campaign::Account;
 using Potato::Campaign::BencaoCategory;
+using Potato::Campaign::BencaoCodex;
+using Potato::Campaign::BencaoLibrary;
+using Potato::Campaign::CodexSignals;
+using Potato::Campaign::Ledger;
+using Potato::Campaign::MythLog;
+using Potato::Campaign::MythState;
+using Potato::Campaign::Posting;
+using Potato::Campaign::ResolveBencaoUnlocks;
+using Potato::Campaign::TerrainFlagsOf;
 using Potato::Campaign::UnlockKind;
+using Potato::Gameplay::BattleMap;
+using Potato::Gameplay::JsonValue;
 
 namespace fs = std::filesystem;
 
@@ -204,7 +224,183 @@ int main() {
               "10.1: unreadable dir fails the load");
     }
 
+    // ================= Story 10.2 — unlock engine =================
+
+    const fs::path dir2 =
+        fs::temp_directory_path() / "potato_test_bencao_102";
+    fs::remove_all(dir2);
+    fs::create_directories(dir2);
+
+    // One entry per trigger kind plus a pinned chapter_close.
+    Write(dir2, "a.json",
+          Entry("t_herb", "shancao",
+                "{\"kind\":\"terrain\",\"terrain\":\"forest\"}")
+              .c_str());
+    Write(dir2, "b.json",
+          Entry("l_herb", "xicao",
+                "{\"kind\":\"ledger_tag\",\"tag\":\"atrocity\"}")
+              .c_str());
+    Write(dir2, "c.json",
+          Entry("g_herb", "gucai",
+                "{\"kind\":\"governance\",\"event\":\"governance_victory\"}")
+              .c_str());
+    Write(dir2, "d.json",
+          Entry("m_herb", "chongshou",
+                "{\"kind\":\"myth_state\",\"state\":\"pacify_shrine\"}")
+              .c_str());
+    Write(dir2, "e.json",
+          Entry("m_inf", "chongshou",
+                "{\"kind\":\"myth_state\",\"state\":\"infiltrated\"}")
+              .c_str());
+    Write(dir2, "f.json",
+          Entry("c_herb", "ducao",
+                "{\"kind\":\"corruption\",\"at_least\":10}")
+              .c_str());
+    Write(dir2, "g.json",
+          Entry("cl_any", "renbu",
+                "{\"kind\":\"chapter_close\",\"chapter\":-1}")
+              .c_str());
+    Write(dir2, "h.json",
+          Entry("cl_2", "renbu",
+                "{\"kind\":\"chapter_close\",\"chapter\":2}")
+              .c_str());
+
+    BencaoLibrary lib2;
+    Check(BencaoLibrary::Load(dir2, lib2).ok && lib2.Size() == 8,
+          "10.2: trigger library loads");
+
+    // --- null signals: only the "every settle" kind fires ---
+    {
+        BencaoCodex codex;
+        const auto fresh =
+            Potato::Campaign::ResolveBencaoUnlocks(lib2, CodexSignals{},
+                                                   codex);
+        Check(fresh.ok() && fresh.value.size() == 1 &&
+                  fresh.value[0] == "cl_any",
+              "10.2: null signals fire only chapter_close(any)");
+        Check(!codex.IsUnlocked("cl_any") &&
+                  codex.Pending().size() == 1,
+              "10.2: trigger enqueues pending, book still blank");
+    }
+
+    // --- assembled signals: each kind resolves off its own store ---
+    {
+        Ledger ledger;
+        Posting atrocity;
+        atrocity.credit = {Account::Materiel, 40};
+        atrocity.debit = {Account::PopularSupport, 15};
+        atrocity.memo = "burned village r3";
+        atrocity.tags = {"atrocity", "corruption:+15"};
+        Check(ledger.Post(atrocity).ok(), "10.2: atrocity posts");
+        Posting seal;
+        seal.credit = {Account::Mandate, 1};
+        seal.debit = {Account::ArmyPrestige, 1};
+        seal.memo = "chapter sealed";
+        seal.tags = {"resolution:governance_victory", "chapter:0"};
+        Check(ledger.Post(seal).ok(), "10.2: resolution seal posts");
+
+        MythLog mythLog;
+        Check(mythLog.Record("pacify_shrine", "安撫", 0, 1, -1).ok(),
+              "10.2: myth action logs");
+        MythState myth;
+        Check(myth.Set("ch1", 3, 2), "10.2: infiltration state sets");
+
+        CodexSignals sig;
+        sig.ledger = &ledger;
+        sig.mythLog = &mythLog;
+        sig.myth = &myth;
+        sig.chapterId = "ch1";
+        sig.chapterIndex = 0; // cl_2 wants 2 — must NOT fire here
+        sig.terrains = {"forest"};
+
+        BencaoCodex codex;
+        const auto fresh =
+            Potato::Campaign::ResolveBencaoUnlocks(lib2, sig, codex);
+        Check(fresh.ok(), "10.2: resolve ok");
+        // Canonical order = library order (category, then id):
+        // t_herb(shancao) < l_herb(xicao) < c_herb(ducao)
+        // < g_herb(gucai) < m_herb, m_inf (chongshou, id order)
+        // < cl_any(renbu). cl_2 is silent at chapter 0.
+        Check(fresh.value.size() == 7,
+              "10.2: seven kinds fire, pinned chapter stays shut");
+        Check(fresh.value[0] == "t_herb" && fresh.value[1] == "l_herb" &&
+                  fresh.value[2] == "c_herb" &&
+                  fresh.value[3] == "g_herb" &&
+                  fresh.value[4] == "m_herb" &&
+                  fresh.value[5] == "m_inf" &&
+                  fresh.value[6] == "cl_any",
+              "10.2: fresh ids in canonical eval order");
+
+        // Idempotent re-run — same signals unlock nothing twice.
+        const auto again =
+            Potato::Campaign::ResolveBencaoUnlocks(lib2, sig, codex);
+        Check(again.ok() && again.value.empty() &&
+                  codex.Pending().size() == 7,
+              "10.2: idempotent — no double unlock/enqueue");
+
+        // Pending drains FIFO; chapter 2 settle fires cl_2.
+        auto drained = codex.TakePending(3);
+        Check(drained.size() == 3 && drained[0] == "t_herb" &&
+                  drained[2] == "c_herb" && codex.Pending().size() == 4,
+              "10.2: TakePending drains FIFO");
+        Check(codex.IsUnlocked("t_herb") &&
+                  codex.Unlocked().size() == 3,
+              "10.2: 補鈔 delivery writes pages into the book");
+        sig.chapterIndex = 2;
+        const auto late =
+            Potato::Campaign::ResolveBencaoUnlocks(lib2, sig, codex);
+        Check(late.ok() && late.value.size() == 1 &&
+                  late.value[0] == "cl_2",
+              "10.2: pinned chapter_close fires on its chapter");
+
+        // State round-trip: unlocked + remaining pending survive.
+        const auto doc = codex.ToJson();
+        Check(doc.ok(), "10.2: ToJson ok");
+        const auto parsed = JsonValue::Parse(doc.value.Emit());
+        Check(parsed.ok(), "10.2: emit reparses");
+        const auto back = BencaoCodex::FromJson(parsed.value);
+        Check(back.ok() &&
+                  back.value.Unlocked() == codex.Unlocked() &&
+                  back.value.Pending() == codex.Pending(),
+              "10.2: state round-trips losslessly");
+    }
+
+    // --- FromJson guards: bad schema, dedupe, pending∩unlocked ---
+    {
+        const auto bad = JsonValue::Parse(
+            "{\"schema\":\"potato.bencao_state/2\",\"unlocked\":[],"
+            "\"pending\":[]}");
+        Check(bad.ok() && !BencaoCodex::FromJson(bad.value).ok(),
+              "10.2: wrong schema rejected");
+        const auto dup = JsonValue::Parse(
+            "{\"schema\":\"potato.bencao_state/1\","
+            "\"unlocked\":[\"a\",\"a\",\"b\"],"
+            "\"pending\":[\"b\",\"c\",\"c\"]}");
+        const auto st = BencaoCodex::FromJson(dup.value);
+        Check(st.ok() && st.value.Unlocked().size() == 2 &&
+                  st.value.Pending().size() == 1 &&
+                  st.value.Pending()[0] == "c",
+              "10.2: dupes dedupe, pending∩unlocked drops");
+    }
+
+    // --- TerrainFlagsOf: distinct flag names, flag order ---
+    {
+        const auto mdoc = JsonValue::Parse(
+            "{\"schema\":\"potato.map/1\",\"id\":\"m\",\"name\":\"m\","
+            "\"regions\":["
+            "{\"id\":\"a\",\"terrain\":[\"forest\",\"river\"]},"
+            "{\"id\":\"b\",\"terrain\":[\"highland\"]}]}");
+        Check(mdoc.ok(), "10.2: map doc parses");
+        const auto map = BattleMap::FromJson(mdoc.value);
+        Check(map.ok(), "10.2: map builds");
+        const auto flags = Potato::Campaign::TerrainFlagsOf(map.value);
+        Check(flags.size() == 3 && flags[0] == "river" &&
+                  flags[1] == "forest" && flags[2] == "highland",
+              "10.2: TerrainFlagsOf = distinct ids, flag order");
+    }
+
     fs::remove_all(dir);
+    fs::remove_all(dir2);
     std::printf(failures ? "BENCAO TESTS FAILED: %d\n"
                          : "BENCAO TESTS PASS\n",
                 failures);

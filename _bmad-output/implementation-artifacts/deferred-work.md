@@ -129,8 +129,9 @@
 ## Deferred from: Epic 10 (Bencao Codex) planning (2026-10-05)
 
 - `RosterEntry` has no `scars` field (deferred from 3.5) — the 續斷/骨碎補 unlock triggers in `bencao-worldview.md` §4 key on veterancy/casualties thresholds until scars land via a roster schema bump.
-- `ChapterDef` has no terrain field — terrain-kind unlock triggers must read the `map` ref's `potato.map/1` terrain flags at chapter settle, or `potato.chapter/2` adds an explicit `codexTerrain` hint. Decide in Story 10.2.
-- Codex persistence: embed the unlocked set + pending 補鈔 queue in `potato.campaign` (schema bump) vs. sibling `potato.bencao_state/1` — same open seam as RivalBook (deferred from 3.7). Decide in Story 10.2; AC requires lossless round-trip either way.
+- `ChapterDef` has no terrain field — terrain-kind unlock triggers must read the `map` ref's `potato.map/1` terrain flags at chapter settle, or `potato.chapter/2` adds an explicit `codexTerrain` hint. Decide in Story 10.2. **(Resolved in 10.2: `TerrainFlagsOf(BattleMap)` reads the map's `TERRAIN_*` flags; the caller loads `ChapterDef.map` at settle time — no `potato.chapter` bump needed.)**
+- Codex persistence: embed the unlocked set + pending 補鈔 queue in `potato.campaign` (schema bump) vs. sibling `potato.bencao_state/1` — same open seam as RivalBook (deferred from 3.7). Decide in Story 10.2; AC requires lossless round-trip either way. **(Resolved in 10.2: sibling `potato.bencao_state/1` shipped — `potato.campaign` untouched.)**
+- `ResolveBencaoUnlocks` has no production call site (10.2) — the chapter shell (or Game-layer settle pass) must assemble `CodexSignals`, including loading the chapter map for `TerrainFlagsOf`. Same deferral class as `BookDeeds`/`RivalBook` (deferred from 3.7, 4.2).
 - OQ-B2 (poisoned/forged bencao page) — Story 10.3 reserves the suspect-flag plumbing but ships no poisoned entry; decision pending, see `bencao-worldview.md` §9.
 - OQ-B3 (本草體 English rendering) — `potato.bencao/1` carries a `lang` block with zh-TW required; `en` deferred.
 - OQ-B5 (人部 entry count 0/1/3) — Story 10.6 gates human-derived entries on this decision.
