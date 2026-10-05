@@ -34,10 +34,28 @@ const MythActionDef* FindMythAction(Gameplay::MythActionKind kind) {
     return nullptr;
 }
 
+std::int64_t EffectiveCost(Gameplay::MythActionKind kind,
+                           Gameplay::GodStance stance) {
+    const MythActionDef* def = FindMythAction(kind);
+    if (def == nullptr) return 0;
+    switch (stance) {
+        case Gameplay::GodStance::Favorable:
+            // Favor discounts, never gifts — the floor keeps a
+            // pleased god's price real.
+            return def->cost - 5 > 5 ? def->cost - 5 : 5;
+        case Gameplay::GodStance::Wrathful:
+            return def->cost + 10;
+        case Gameplay::GodStance::Neutral:
+        default:
+            return def->cost;
+    }
+}
+
 Gameplay::Result<std::uint64_t>
 PerformMythAction(Ledger& ledger, MythLog& log,
                   Gameplay::MythActionKind kind, int side,
-                  int region, int squad) {
+                  int region, int squad,
+                  Gameplay::GodStance stance) {
     const MythActionDef* def = FindMythAction(kind);
     if (def == nullptr) {
         return Gameplay::Fail<std::uint64_t>("mythact",
@@ -54,7 +72,7 @@ PerformMythAction(Ledger& ledger, MythLog& log,
     }
     Posting p;
     p.credit = {def->sink, def->sinkAmount};
-    p.debit = {Account::Mandate, def->cost};
+    p.debit = {Account::Mandate, EffectiveCost(kind, stance)};
     p.memo = std::string(def->id);
     p.tags = {std::string(Ledger::TAG_MYTH),
               std::string("action:") + def->id,

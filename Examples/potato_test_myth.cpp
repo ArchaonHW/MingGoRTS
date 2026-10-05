@@ -907,6 +907,49 @@ int main() {
         }
     }
 
+    // ================= Story 5.7: GodStance gates =================
+
+    // --- A wrathful deity refuses both hosts and dead-lending;
+    //     the favored side's verbs pass on the same ground ---
+    {
+        BattleController bc(1, fx.map, fx.cards);
+        bc.SeedInfiltration(1, 1); // Whispered — veil thin enough
+        bc.DeploySquad(Mk("ally"), 0, 0); // parked off the shrine
+        bc.DeploySquad(Mk("foe"), 1, 1);  // claims it
+        bc.RequestBeat(BattleBeat::Execution);
+        for (int i = 0; i < SHRINE_DEDICATION_TICKS; ++i) {
+            bc.Tick();
+        }
+        Check(bc.Myth().ShrineAt(1)->owner == 1 &&
+                  bc.Myth().StanceAt(1, 0) == GodStance::Wrathful &&
+                  bc.Myth().StanceAt(1, 1) == GodStance::Favorable,
+              "enemy dedication makes the god wrathful to us");
+        auto g = bc.IssueGhostArmy(0, 1);
+        Check(!g.ok(), "5.7: wrathful god lends no dead to us");
+        auto gf = bc.IssueGhostArmy(1, 1);
+        Check(gf.ok() && gf.value,
+              "5.7: favored side raises the god's dead");
+        // Possession on wrathful ground refuses — walk the ally
+        // onto the contested shrine (foe still holds it; stance
+        // persists through the latch release).
+        auto mv = bc.IssueRedirect(0, 0, 1);
+        Check(mv.ok() && mv.value, "ally marches onto the shrine");
+        for (int i = 0; i < 60; ++i) bc.Tick();
+        Check(bc.Squads()[0].regionIndex == 1,
+              "ally stands on the wrathful shrine");
+        auto p = bc.IssueMythPossession(0, 0);
+        Check(!p.ok(), "5.7: the god refuses a host on his "
+                       "wrathful ground");
+        // Neutral ground is unaffected — non-shrine regions carry
+        // no deity, so the only rejection left is the veil itself.
+        Check(bc.Myth().StanceAt(2, 0) == GodStance::Neutral,
+              "non-shrine ground is stance-neutral");
+        auto g2 = bc.IssueGhostArmy(0, 2);
+        Check(!g2.ok() && g2.reason.find("too quiet") !=
+                              std::string::npos,
+              "5.7: non-shrine rejection is the veil, not the mood");
+    }
+
     std::printf("%s (%d failures)\n",
                 failures == 0 ? "ALL PASS" : "FAILURES", failures);
     return failures == 0 ? 0 : 1;

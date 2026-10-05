@@ -584,6 +584,12 @@ Result<bool> BattleController::IssueMythPossession(int side,
     if (sq.possessed) {
         return Fail<bool>("myth", "already possessed");
     }
+    // GodStance gate (Story 5.7): a wrathful deity refuses the host —
+    // the god does not ride the army it hates.
+    if (sq.regionIndex != Squad::NO_REGION &&
+        myth_.StanceAt(sq.regionIndex, side) == GodStance::Wrathful) {
+        return Fail<bool>("myth", "the god refuses this ground");
+    }
     const int tick = static_cast<int>(sim_.TickCount());
     pendingCommands_.push_back({side, InterventionKind::MythPossession,
                                 squadIndex,
@@ -611,6 +617,11 @@ Result<bool> BattleController::IssueGhostArmy(int side,
     }
     if (myth_.GhostAt(region) != -1) {
         return Fail<bool>("myth", "spirits already hold this ground");
+    }
+    // GodStance gate (Story 5.7): the god lends no dead to a side
+    // he is wrathful toward.
+    if (myth_.StanceAt(region, side) == GodStance::Wrathful) {
+        return Fail<bool>("myth", "the god lends no dead here");
     }
     const int tick = static_cast<int>(sim_.TickCount());
     pendingCommands_.push_back({side, InterventionKind::MythGhostArmy,

@@ -35,6 +35,16 @@ struct MythActionDef {
 std::span<const MythActionDef> MythActionDefs();
 const MythActionDef* FindMythAction(Gameplay::MythActionKind kind);
 
+// Stance-modulated price (Story 5.7): the deity's mood is a market
+// force — Favorable discounts a miracle (god's favor makes miracles
+// cheap), Wrathful surcharges it (appeasing an angry god costs
+// more). The floor keeps a favored act from becoming free — even a
+// pleased god takes an offering.
+// Caller sources the stance from MythField::StanceAt(region, side)
+// — the sim owns the mood, the ledger prices it.
+std::int64_t EffectiveCost(Gameplay::MythActionKind kind,
+                           Gameplay::GodStance stance);
+
 // The purchase seam: validate the kind, pay 天命 through
 // SpendMandate (insufficient funds reject BEFORE anything posts),
 // and enter the act into the MythLog BY NAME. The host then issues
@@ -42,11 +52,17 @@ const MythActionDef* FindMythAction(Gameplay::MythActionKind kind);
 // caller's contract (an unpaid act in a record is an audit finding;
 // a paid act never issued is just a donation).
 //
+// `stance` modulates the 天命 cost through EffectiveCost — pass
+// the deity's disposition toward `side` at the target region's
+// shrine (Neutral for non-shrine ground or unknown).
+//
 // Returns the ledger seq of the spend entry — the durable anchor
 // tying the miracle to its price.
 Gameplay::Result<std::uint64_t>
 PerformMythAction(Ledger& ledger, MythLog& log,
                   Gameplay::MythActionKind kind, int side,
-                  int region, int squad);
+                  int region, int squad,
+                  Gameplay::GodStance stance =
+                      Gameplay::GodStance::Neutral);
 
 } // namespace Potato::Campaign

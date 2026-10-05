@@ -1,5 +1,6 @@
 #include "Campaign/Governance/Accumulators.h"
 #include "Campaign/Ledger/CrossCheck.h"
+#include "Campaign/Myth/GodStance.h"
 #include "Campaign/Myth/Mandate.h"
 #include "Campaign/Myth/MythActions.h"
 #include "Campaign/Myth/MythLog.h"
@@ -1614,6 +1615,68 @@ int main() {
         Check(RenderMythLog(MythLog()).find("無傳聞") !=
                   std::string::npos,
               "5.6: empty log renders folk silence");
+    }
+
+    // --- Story 5.7: GodStance modulates the 天命 price ---
+    {
+        using GS = Potato::Gameplay::GodStance;
+        using MAK = Potato::Gameplay::MythActionKind;
+        Check(EffectiveCost(MAK::PacifyShrine, GS::Neutral) == 15 &&
+                  EffectiveCost(MAK::PacifyShrine, GS::Favorable) ==
+                      10 &&
+                  EffectiveCost(MAK::PacifyShrine, GS::Wrathful) ==
+                      25,
+              "5.7: stance modulates pacify 15->10/25");
+        Check(EffectiveCost(MAK::InvokePossession, GS::Favorable) ==
+                  15 &&
+                  EffectiveCost(MAK::RaiseGhostArmy, GS::Wrathful) ==
+                      35,
+              "5.7: discount/surcharge apply across the catalog");
+        // Spend-side: a Wrathful region's surcharge makes the base
+        // price insufficient — the spend gate sees the REAL cost.
+        {
+            Ledger l;
+            Posting grant;
+            grant.credit = {Account::Mandate, 15};
+            grant.debit = {Account::Materiel, 15};
+            grant.memo = "shrine stipend";
+            l.Post(grant);
+            MythLog log;
+            auto r = PerformMythAction(l, log, MAK::PacifyShrine, 0,
+                                       1, -1, GS::Wrathful);
+            Check(!r.ok() && log.Size() == 0 &&
+                      l.Balance(Account::Mandate) == 15,
+                  "5.7: base-price purse can't afford wrathful "
+                  "surcharge");
+            auto r2 = PerformMythAction(l, log, MAK::PacifyShrine, 0,
+                                        1, -1, GS::Neutral);
+            Check(r2.ok() && l.Entries()[1].debit.amount == 15,
+                  "5.7: neutral ground pays base cost");
+        }
+        // Favorable discount lands the smaller debit leg.
+        {
+            Ledger l;
+            Posting grant;
+            grant.credit = {Account::Mandate, 10};
+            grant.debit = {Account::Materiel, 10};
+            grant.memo = "stipend";
+            l.Post(grant);
+            MythLog log;
+            auto r = PerformMythAction(l, log, MAK::PacifyShrine, 0,
+                                       1, -1, GS::Favorable);
+            Check(r.ok() && l.Entries()[1].debit.amount == 10 &&
+                      log.Size() == 1,
+                  "5.7: favorable ground discounts the debit leg");
+        }
+        // The narrative surface: stance renders as shrine text,
+        // three distinct moods.
+        Check(ShrineMoodText(GS::Favorable).find("神悅") !=
+                      std::string_view::npos &&
+                  ShrineMoodText(GS::Neutral).find("不聞") !=
+                      std::string_view::npos &&
+                  ShrineMoodText(GS::Wrathful).find("神怒") !=
+                      std::string_view::npos,
+              "5.7: shrine mood text variants readable");
     }
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
                          : "LEDGER TESTS PASS\n",
