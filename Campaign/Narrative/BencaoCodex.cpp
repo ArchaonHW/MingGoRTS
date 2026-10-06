@@ -7,6 +7,8 @@
 #include "Campaign/Roster/Roster.h"
 
 #include <algorithm>
+#include <set>
+#include <utility>
 
 namespace Potato::Campaign {
 namespace {
@@ -14,82 +16,108 @@ namespace {
 using Gameplay::JsonValue;
 using Gameplay::Result;
 
-// Byte-exact tag membership — the ledger's own fold-key discipline.
-bool HasTag(const LedgerEntry& e, std::string_view tag) {
-    for (const std::string& t : e.tags) {
-        if (t == tag) {
-            return true;
+// Precomputed signal views — one ledger scan + one governance fold
+// per ResolveBencaoUnlocks call, not per entry. At ledger scale
+// (MAX_ENTRIES entries × library size) the naive shape is needlessly
+// quadratic.
+struct EvalCtx {
+    explicit EvalCtx(const CodexSignals& s) : sig(s) {}
+    const CodexSignals& sig;
+    std::set<std::string> ledgerTags;   // every tag ever posted
+    std::set<std::string> mythActions;  // every action ever logged
+    std::int64_t corruption = 0;
+    bool infiltrated = false;
+};
+
+EvalCtx Prepare(const CodexSignals& sig) {
+    EvalCtx ctx(sig);
+    if (sig.ledger) {
+        for (const LedgerEntry& e : sig.ledger->Entries()) {
+            for (const std::string& t : e.tags) {
+                ctx.ledgerTags.insert(t);
+            }
+        }
+        ctx.corruption = FoldGovernance(*sig.ledger).corruption;
+    }
+    if (sig.mythLog) {
+        for (const MythLogEntry& e : sig.mythLog->Entries()) {
+            ctx.mythActions.insert(e.action);
         }
     }
-    return false;
+    ctx.infiltrated = sig.myth && !sig.chapterId.empty() &&
+                      sig.myth->HasChapter(sig.chapterId);
+    return ctx;
 }
 
-bool Triggered(const BencaoEntry& entry, const CodexSignals& sig) {
-    switch (entry.unlockKind) {
+// Trigger test + provenance: when the trigger fires, `detail`
+// carries WHAT matched (the tag posted, the action logged, the
+// terrain flag, the corruption level, the closing chapter) — the
+// queue keeps the moment, not just the verdict.
+bool Triggered(const BencaoEntry& e, const EvalCtx& ctx,
+               std::string& detail) {
+    switch (e.unlockKind) {
     case UnlockKind::Terrain:
-        return std::find(sig.terrains.begin(), sig.terrains.end(),
-                         entry.unlockParam) != sig.terrains.end();
-    case UnlockKind::LedgerTag:
-        if (!sig.ledger) {
-            return false;
+        if (std::find(ctx.sig.terrains.begin(), ctx.sig.terrains.end(),
+                      e.unlockParam) != ctx.sig.terrains.end()) {
+            detail = e.unlockParam;
+            return true;
         }
-        for (const LedgerEntry& e : sig.ledger->Entries()) {
-            if (HasTag(e, entry.unlockParam)) {
-                return true;
-            }
+        return false;
+    case UnlockKind::LedgerTag:
+        if (ctx.ledgerTags.count(e.unlockParam)) {
+            detail = e.unlockParam;
+            return true;
         }
         return false;
     case UnlockKind::Governance: {
-        if (!sig.ledger) {
-            return false;
+        // Resolution seals book `resolution:<kind>`; governance-
+        // flavored deed tags may also match the event id bare.
+        const std::string seal =
+            std::string(Ledger::TAG_RESOLUTION) + e.unlockParam;
+        if (ctx.ledgerTags.count(seal)) {
+            detail = seal;
+            return true;
         }
-        // Resolution seals book `resolution:<kind>`; governance-flavored
-        // deed tags may also match the event id bare.
-        const std::string seal = "resolution:" + entry.unlockParam;
-        for (const LedgerEntry& e : sig.ledger->Entries()) {
-            if (HasTag(e, seal) || HasTag(e, entry.unlockParam)) {
-                return true;
-            }
+        if (ctx.ledgerTags.count(e.unlockParam)) {
+            detail = e.unlockParam;
+            return true;
         }
         return false;
     }
     case UnlockKind::MythState:
-        if (entry.unlockParam == "infiltrated") {
-            return sig.myth && !sig.chapterId.empty() &&
-                   sig.myth->HasChapter(sig.chapterId);
-        }
-        if (!sig.mythLog) {
-            return false;
-        }
-        for (const MythLogEntry& e : sig.mythLog->Entries()) {
-            if (e.action == entry.unlockParam) {
+        if (e.unlockParam == "infiltrated") {
+            if (ctx.infiltrated) {
+                detail = std::string(ctx.sig.chapterId);
                 return true;
             }
+            return false;
+        }
+        if (ctx.mythActions.count(e.unlockParam)) {
+            detail = e.unlockParam;
+            return true;
         }
         return false;
     case UnlockKind::Corruption:
-        return sig.ledger &&
-               FoldGovernance(*sig.ledger).corruption >= entry.unlockInt;
+        if (ctx.corruption >= e.unlockInt) {
+            detail = std::to_string(ctx.corruption);
+            return true;
+        }
+        return false;
     case UnlockKind::ChapterClose:
-        return entry.unlockInt < 0 || entry.unlockInt == sig.chapterIndex;
+        if (e.unlockInt < 0 || e.unlockInt == ctx.sig.chapterIndex) {
+            detail = std::to_string(ctx.sig.chapterIndex);
+            return true;
+        }
+        return false;
     }
     return false;
 }
 
-// Deduped append: first occurrence wins, over-capacity reports a
-// reason string (persisted docs are untrusted input).
-const char* ReadIds(const JsonValue& arr, std::vector<std::string>& out) {
-    for (const JsonValue& v : arr.Items()) {
-        if (!v.IsString()) {
-            return "non-string id";
-        }
-        if (out.size() >= BencaoCodex::MAX_ENTRIES) {
-            return "overflow";
-        }
-        const std::string& id = v.AsString();
-        if (std::find(out.begin(), out.end(), id) == out.end()) {
-            out.push_back(id);
-        }
+// Id bound: non-empty, within the library's own wire bound — a
+// persisted id that can't name an entry is junk occupying capacity.
+const char* CheckId(const std::string& id) {
+    if (id.empty() || id.size() > BencaoLibrary::MAX_ID_LEN) {
+        return "bad id";
     }
     return nullptr;
 }
@@ -101,13 +129,15 @@ bool BencaoCodex::IsUnlocked(std::string_view id) const {
            unlocked_.end();
 }
 
-std::vector<std::string> BencaoCodex::TakePending(std::size_t max) {
+std::vector<PendingPage> BencaoCodex::TakePending(std::size_t max) {
     const std::size_t n = std::min(max, pending_.size());
-    std::vector<std::string> out(pending_.begin(), pending_.begin() + n);
+    std::vector<PendingPage> out(pending_.begin(), pending_.begin() + n);
     pending_.erase(pending_.begin(), pending_.begin() + n);
     // Delivered = transcribed into the book: the drained pages move
     // from the queue to the unlocked set.
-    unlocked_.insert(unlocked_.end(), out.begin(), out.end());
+    for (const PendingPage& p : out) {
+        unlocked_.push_back(p.id);
+    }
     return out;
 }
 
@@ -119,8 +149,12 @@ Result<JsonValue> BencaoCodex::ToJson() const {
     }
     JsonValue::Array pending;
     pending.reserve(pending_.size());
-    for (const std::string& id : pending_) {
-        pending.push_back(JsonValue::String(id));
+    for (const PendingPage& p : pending_) {
+        JsonValue::Object o;
+        o["id"] = JsonValue::String(p.id);
+        o["kind"] = JsonValue::String(p.kind);
+        o["detail"] = JsonValue::String(p.detail);
+        pending.push_back(JsonValue::MakeObject(std::move(o)));
     }
     JsonValue::Object root;
     root["schema"] = JsonValue::String(std::string(SCHEMA));
@@ -136,8 +170,8 @@ Result<BencaoCodex> BencaoCodex::FromJson(const JsonValue& doc) {
     }
     const std::string* schema = doc.FindString("schema");
     if (!schema || *schema != SCHEMA) {
-        return Gameplay::Fail<BencaoCodex>("schema",
-                                           "expected potato.bencao_state/1");
+        return Gameplay::Fail<BencaoCodex>(
+            "schema", "expected potato.bencao_state/1");
     }
     if (!doc.Has("unlocked") || !doc["unlocked"].IsArray() ||
         !doc.Has("pending") || !doc["pending"].IsArray()) {
@@ -145,18 +179,60 @@ Result<BencaoCodex> BencaoCodex::FromJson(const JsonValue& doc) {
                                            "unlocked/pending: not arrays");
     }
     BencaoCodex codex;
-    if (const char* err = ReadIds(doc["unlocked"], codex.unlocked_)) {
-        return Gameplay::Fail<BencaoCodex>("bencao_state", err);
+    // Union bound: a codex can never hold more pages than a library
+    // can host — the two lists share one budget.
+    const std::size_t total =
+        doc["unlocked"].Size() + doc["pending"].Size();
+    if (total > MAX_ENTRIES) {
+        return Gameplay::Fail<BencaoCodex>("overflow",
+                                           "codex exceeds MAX_ENTRIES");
     }
-    // Pending ids already written into the book are stale — drop them;
-    // the canonical form keeps the two lists disjoint.
-    std::vector<std::string> pend;
-    if (const char* err = ReadIds(doc["pending"], pend)) {
-        return Gameplay::Fail<BencaoCodex>("bencao_state", err);
+    for (const JsonValue& v : doc["unlocked"].Items()) {
+        if (!v.IsString()) {
+            return Gameplay::Fail<BencaoCodex>("bencao_state",
+                                               "non-string id");
+        }
+        if (const char* err = CheckId(v.AsString())) {
+            return Gameplay::Fail<BencaoCodex>("bencao_state", err);
+        }
+        const std::string& id = v.AsString();
+        if (std::find(codex.unlocked_.begin(), codex.unlocked_.end(),
+                      id) == codex.unlocked_.end()) {
+            codex.unlocked_.push_back(id);
+        }
     }
-    for (const std::string& id : pend) {
-        if (!codex.IsUnlocked(id)) {
-            codex.pending_.push_back(id);
+    for (const JsonValue& v : doc["pending"].Items()) {
+        if (!v.IsObject()) {
+            return Gameplay::Fail<BencaoCodex>("bencao_state",
+                                               "pending not an object");
+        }
+        PendingPage p;
+        const std::string* id = v.FindString("id");
+        const std::string* kind = v.FindString("kind");
+        const std::string* detail = v.FindString("detail");
+        UnlockKind parsedKind;
+        if (!id || !kind || !detail ||
+            detail->size() > MAX_DETAIL_LEN ||
+            !UnlockKindFromName(*kind, parsedKind)) {
+            return Gameplay::Fail<BencaoCodex>(
+                "bencao_state", "pending id/kind/detail bad");
+        }
+        if (const char* err = CheckId(*id)) {
+            return Gameplay::Fail<BencaoCodex>("bencao_state", err);
+        }
+        p.id = *id;
+        p.kind = *kind;
+        p.detail = *detail;
+        // Pending ids already written into the book are stale —
+        // drop them; the canonical form keeps the lists disjoint.
+        if (codex.IsUnlocked(p.id)) {
+            continue;
+        }
+        const auto dup = std::find_if(
+            codex.pending_.begin(), codex.pending_.end(),
+            [&](const PendingPage& q) { return q.id == p.id; });
+        if (dup == codex.pending_.end()) {
+            codex.pending_.push_back(std::move(p));
         }
     }
     return Gameplay::Ok(std::move(codex));
@@ -165,6 +241,7 @@ Result<BencaoCodex> BencaoCodex::FromJson(const JsonValue& doc) {
 Result<std::vector<std::string>>
 ResolveBencaoUnlocks(const BencaoLibrary& lib, const CodexSignals& signals,
                      BencaoCodex& codex) {
+    const EvalCtx ctx = Prepare(signals);
     std::vector<std::string> fresh;
     for (const BencaoEntry& e : lib.Entries()) {
         if (codex.IsUnlocked(e.id)) {
@@ -172,14 +249,18 @@ ResolveBencaoUnlocks(const BencaoLibrary& lib, const CodexSignals& signals,
         }
         // A pending page is already claimed by the queue — don't
         // double-enqueue it.
-        if (std::find(codex.pending_.begin(), codex.pending_.end(),
-                      e.id) != codex.pending_.end()) {
+        const auto queued = std::find_if(
+            codex.pending_.begin(), codex.pending_.end(),
+            [&](const PendingPage& p) { return p.id == e.id; });
+        if (queued != codex.pending_.end()) {
             continue;
         }
-        if (!Triggered(e, signals)) {
+        std::string detail;
+        if (!Triggered(e, ctx, detail)) {
             continue;
         }
-        codex.pending_.push_back(e.id);
+        codex.pending_.push_back(
+            {e.id, UnlockKindName(e.unlockKind), std::move(detail)});
         fresh.push_back(e.id);
     }
     return Gameplay::Ok(std::move(fresh));

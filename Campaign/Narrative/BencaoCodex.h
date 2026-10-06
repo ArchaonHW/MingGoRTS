@@ -25,10 +25,25 @@ struct RosterEntry;
 // same pattern as potato.myth/1 / potato.rivals/1: schema revisions
 // stay independent of potato.campaign.
 //
+// One queued page awaiting 補鈔, with the provenance of what
+// claimed it: `kind` is the UnlockKind wire id ("terrain", …),
+// `detail` is the matched evidence — the tag that posted, the
+// myth action recorded, the terrain flag found, the corruption
+// level attained, or the chapter index that closed. Bare ids can't
+// say which of a page's several triggers fired first; the queue
+// keeps the moment so later layers (批註, citation) can quote it.
+struct PendingPage {
+    std::string id;
+    std::string kind;
+    std::string detail;
+    bool operator==(const PendingPage&) const = default;
+};
+
 // Wire shape:
 //   {"schema":"potato.bencao_state/1",
-//    "unlocked":["sanqi",...],   // insertion order = unlock order
-//    "pending":["fuzi",...]}     // 補鈔 queue, FIFO
+//    "unlocked":["sanqi",...],   // delivery order — the book's own
+//                                // history (10.4 re-sorts for display)
+//    "pending":[{"id":"fuzi","kind":"corruption","detail":"15"}]}
 //
 // Canonical form: `unlocked` and `pending` are disjoint — a page is
 // either awaiting 補鈔 (pending) or already written into the book
@@ -37,8 +52,11 @@ struct RosterEntry;
 class BencaoCodex {
 public:
     static constexpr std::string_view SCHEMA = "potato.bencao_state/1";
-    // A codex can never hold more pages than a library can host.
+    // A codex can never hold more pages than a library can host —
+    // enforced on the UNION of unlocked + pending at load.
     static constexpr std::size_t MAX_ENTRIES = BencaoLibrary::MAX_ENTRIES;
+    static constexpr std::size_t MAX_DETAIL_LEN =
+        BencaoLibrary::MAX_UNLOCK_PARAM_LEN;
 
     // Pages written into the book — delivered 補鈔. `false` for
     // pages still pending (known to the Scribe, not yet on paper).
@@ -46,13 +64,15 @@ public:
     // Insertion order = delivery order; the store keeps history,
     // 10.4's renderer re-sorts for display.
     const std::vector<std::string>& Unlocked() const { return unlocked_; }
-    // FIFO queue of pages awaiting 補鈔 delivery.
-    const std::vector<std::string>& Pending() const { return pending_; }
+    // FIFO queue of pages awaiting 補鈔 delivery, each carrying the
+    // trigger provenance that claimed it.
+    const std::vector<PendingPage>& Pending() const { return pending_; }
 
     // The 10.3 delivery seam: the 補鈔 move itself. Pops up to `max`
-    // pending ids in queue order, writes them into the book
-    // (unlocked), and returns them. `max == 0` delivers nothing.
-    std::vector<std::string> TakePending(std::size_t max);
+    // pending pages in queue order, writes their ids into the book
+    // (unlocked), and returns the pages with their provenance.
+    // `max == 0` delivers nothing.
+    std::vector<PendingPage> TakePending(std::size_t max);
 
     Gameplay::Result<Gameplay::JsonValue> ToJson() const;
     // Rejects: bad schema, non-string ids, over-capacity lists.
@@ -68,7 +88,7 @@ private:
                          BencaoCodex& codex);
 
     std::vector<std::string> unlocked_;
-    std::vector<std::string> pending_;
+    std::vector<PendingPage> pending_;
 };
 
 // Read-only signal bundle the caller assembles at chapter settle
@@ -83,6 +103,8 @@ struct CodexSignals {
     // Exposed for the deferred veterancy-keyed unlocks (續斷/骨碎補
     // wait on RosterEntry::scars); the six kinds don't read it yet.
     const std::vector<RosterEntry>* roster = nullptr;
+    // Caller-scoped views — bind them for the duration of one
+    // ResolveBencaoUnlocks call; never store the struct.
     std::string_view chapterId;         // chapter that just settled
     std::int64_t chapterIndex = -1;     // for chapter_close; -1 = none
     // Lowercase TERRAIN_* flag ids present on the chapter map —
@@ -93,8 +115,10 @@ struct CodexSignals {
 // The unlock engine. Walks the library in canonical order
 // (category, then id — Entries() order IS the eval order), tests
 // each entry's trigger against `signals`, and enqueues every new
-// match in `codex`'s pending queue. Idempotent: a page already
-// unlocked or pending is never claimed twice.
+// match in `codex`'s pending queue with its trigger provenance.
+// Idempotent: a page already unlocked or pending is never claimed
+// twice. Returns the newly triggered ids (canonical order) — they
+// are QUEUED, not yet in the book: citation waits for 補鈔.
 //
 // Trigger semantics per UnlockKind:
 //   terrain       — signals.terrains contains unlockParam
@@ -105,8 +129,6 @@ struct CodexSignals {
 //                   else any MythLog entry.action == unlockParam
 //   corruption    — FoldGovernance(*ledger).corruption >= unlockInt
 //   chapter_close — unlockInt == -1 (every settle) or == chapterIndex
-//
-// Returns the newly unlocked ids in canonical order.
 Gameplay::Result<std::vector<std::string>>
 ResolveBencaoUnlocks(const BencaoLibrary& lib,
                      const CodexSignals& signals,

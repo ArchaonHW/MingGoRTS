@@ -200,16 +200,16 @@ hearsay precedes codex confirmation.
 
 Reviewed 10.1+10.2 (4 layers, 2026-10-05):
 
-- [ ] [Review][Decision] Pending carries no trigger provenance — pending stores bare ids; 10.3's 批註 needs which trigger/ledger-entry/chapter fired. Extend `potato.bencao_state/1` to `{id, kind, detail}` now, bump schema in 10.3, or re-derive at delivery (ambiguous)?
-- [ ] [Review][Decision] Dead-param validation breadth — `unlockParam` accepts strings that can never resolve. Terrain vocab is closed (7 flag ids), but tightening `myth_state`/`governance`/`chapter_close` bounds changes the authoring contract: validate against producer vocab or document it?
-- [ ] [Review][Patch] FromJson: enforce union bound `unlocked+pending ≤ MAX_ENTRIES` and per-id non-empty/≤`MAX_ID_LEN` — a crafted save can hold 2× bound and junk ids [BencaoCodex.cpp ReadIds/FromJson]
-- [ ] [Review][Patch] Test fixtures: `lang` reject+accept, `aliases`/`origin` both directions, `unlock` int out-of-range, missing `unlock`/each required field, `governance` bare-tag path, uppercase `.JSON`, malformed `bencao_state` docs [potato_test_bencao.cpp]
-- [ ] [Review][Patch] `lang` doc overstates code — header says "must assert zh-tw: true"; code only rejects explicit `false`. Fix comments to match intent [Bencao.h:75-77, Bencao.cpp:181-182]
-- [ ] [Review][Patch] Annotation guard misses CJK spellings — add `"批註"`/`"批注"` to the reserved-key reject [Bencao.cpp:138-140]
-- [ ] [Review][Patch] Terrain `unlockParam` bound to the 7 emitted flag ids + use `Ledger::TAG_RESOLUTION` constant for the seal prefix [Bencao.cpp, BencaoCodex.cpp:46-50]
-- [ ] [Review][Patch] Precompute ledger-tag set + `FoldGovernance` once per resolve — per-entry rescans/folds are needlessly quadratic at ledger scale [BencaoCodex.cpp Triggered]
-- [ ] [Review][Patch] Wording drift: `ResolveBencaoUnlocks` returns "newly triggered" (pending) not "unlocked"; wire comment `unlocked` order = delivery order; note `chapterId` is a caller-scoped view [BencaoCodex.h]
-- [ ] [Review][Patch] Missing direct includes — `<utility>` (`std::pair`/`std::move`) in BencaoCodex.cpp, `<utility>`/`<system_error>` in Bencao.cpp, `<string>` in test
+- [x] [Review][Decision] Pending carries no trigger provenance — **decided: extend wire now.** `pending` carries `{id, kind, detail}` (matched tag / action / flag / corruption level / chapter index); `ComposeMarginalia` (10.3) consumes it via `%P` + pool keying on `page.kind`.
+- [x] [Review][Decision] Dead-param validation breadth — **decided: full strict.** `terrain` → 7 flag ids; `myth_state` → `infiltrated`/`invasion` ∪ `MythActionDefs` ids; `governance` event ≤ `MAX_TAG_LEN − len("resolution:")` (53); `ledger_tag` ≤ `MAX_TAG_LEN`; `chapter_close` ∈ [-1, `MAX_CHAPTERS`-1]; `corruption.at_least` ≥ 1.
+- [x] [Review][Patch] FromJson: union bound `unlocked+pending ≤ MAX_ENTRIES` + per-id non-empty/≤`MAX_ID_LEN` enforced; pending `kind` validated via `UnlockKindFromName` [BencaoCodex.cpp]
+- [x] [Review][Patch] Test fixtures added: required-field matrix, `lang` reject, `aliases`/`origin` both directions, `unlock` int bounds, `governance` bare-tag path (`g_deed`/`epidemic`), uppercase `.JSON`, malformed `bencao_state` docs, union overflow, provenance pins
+- [x] [Review][Patch] `lang` docs corrected — "must not assert zh-tw: false" [Bencao.h, Bencao.cpp]
+- [x] [Review][Patch] Annotation guard now rejects `"批註"`/`"批注"` CJK spellings [Bencao.cpp]
+- [x] [Review][Patch] Terrain vocab + `Ledger::TAG_RESOLUTION` constant in the seal path [Bencao.cpp, BencaoCodex.cpp]
+- [x] [Review][Patch] `EvalCtx` precomputes ledger-tag set + `FoldGovernance` + myth-action set once per resolve [BencaoCodex.cpp]
+- [x] [Review][Patch] Wording: "newly triggered" (queued, not yet in the book), `unlocked` = delivery order, `chapterId` documented as call-scoped view [BencaoCodex.h]
+- [x] [Review][Patch] Direct includes added — `<utility>` BencaoCodex.cpp, `<utility>`/`<system_error>` Bencao.cpp, `<string>` test
 - [x] [Review][Defer] `MAX_ENTRIES` overflow fixture — 1025 fixture files too heavy for this Check style; failure mode is loud wholesale rejection
 - [x] [Review][Defer] Unbounded `files`/`rejected` vectors in Load — systemic pattern shared with ChapterLibrary; hostile-dir resource bound is a loader-class issue, not introduced here
 - [x] [Review][Defer] `CodexSignals::roster` dead pointer / no veterancy kind / DeedBook unread / settled-chapter-id seam — extends the recorded scars + wiring deferrals; veterancy producer lands with RefitCamp

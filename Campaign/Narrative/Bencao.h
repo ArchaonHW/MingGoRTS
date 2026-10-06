@@ -54,6 +54,11 @@ enum class UnlockKind : std::uint8_t {
     ChapterClose, // {"kind":"chapter_close","chapter":<int|-1=any>}
 };
 
+// Wire-id pair for the unlock manifest's "kind" field — PendingPage
+// (10.2) persists the same spellings as trigger provenance.
+const char* UnlockKindName(UnlockKind k);
+bool UnlockKindFromName(std::string_view s, UnlockKind& out);
+
 struct BencaoEntry {
     std::string id;
     BencaoCategory category = BencaoCategory::Shancao;
@@ -68,8 +73,8 @@ struct BencaoEntry {
                                       // chapter (-1 = every chapter)
     std::string source;               // 卷/條 citation — required
     // zh-tw is inherent — the entry fields ARE the zh-tw text.
-    // `lang` block is optional; when present it must assert
-    // "zh-tw": true. `en` is tolerated but ignored (OQ-B3).
+    // `lang` block is optional; when present it must not assert
+    // "zh-tw": false. `en` is tolerated but ignored (OQ-B3).
 };
 
 struct RejectedBencao {

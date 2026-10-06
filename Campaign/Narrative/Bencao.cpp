@@ -1,11 +1,16 @@
 #include "Campaign/Narrative/Bencao.h"
 
+#include "Campaign/Chapters/ChapterLibrary.h"
+#include "Campaign/Ledger/Ledger.h"
+#include "Campaign/Myth/MythActions.h"
 #include "Gameplay/Json/Json.h"
 #include "Gameplay/Json/JsonValue.h"
 
 #include <algorithm>
 #include <cctype>
 #include <set>
+#include <system_error>
+#include <utility>
 
 namespace Potato::Campaign {
 
@@ -13,6 +18,31 @@ using Gameplay::JsonValue;
 using Gameplay::Result;
 
 namespace {
+
+// The closed vocabularies a trigger param can actually resolve
+// against — a manifest naming anything else loads into a dead
+// unlock, which is worse than a loud rejection (review D2).
+bool IsTerrainFlag(std::string_view s) {
+    static constexpr std::string_view kFlags[] = {
+        "water", "river", "road", "forest",
+        "highland", "chokepoint", "open",
+    };
+    for (std::string_view f : kFlags) {
+        if (s == f) return true;
+    }
+    return false;
+}
+
+// Myth-state ids: the catalog's player verbs (MythActionDefs) plus
+// the two non-purchased entries — "invasion" (the god's own move,
+// folded by LogMythEvents) and "infiltrated" (MythState presence).
+bool IsMythStateId(std::string_view s) {
+    if (s == "infiltrated" || s == "invasion") return true;
+    for (const MythActionDef& d : MythActionDefs()) {
+        if (s == d.id) return true;
+    }
+    return false;
+}
 
 bool CategoryFromString(std::string_view s, BencaoCategory& out) {
     struct Row { std::string_view id; BencaoCategory cat; };
@@ -35,23 +65,18 @@ bool CategoryFromString(std::string_view s, BencaoCategory& out) {
     return false;
 }
 
+struct KindRow { std::string_view id; UnlockKind kind; };
+constexpr KindRow kKindRows[] = {
+    {"terrain", UnlockKind::Terrain},
+    {"ledger_tag", UnlockKind::LedgerTag},
+    {"governance", UnlockKind::Governance},
+    {"myth_state", UnlockKind::MythState},
+    {"corruption", UnlockKind::Corruption},
+    {"chapter_close", UnlockKind::ChapterClose},
+};
+
 bool UnlockKindFromString(std::string_view s, UnlockKind& out) {
-    struct Row { std::string_view id; UnlockKind kind; };
-    static constexpr Row kRows[] = {
-        {"terrain", UnlockKind::Terrain},
-        {"ledger_tag", UnlockKind::LedgerTag},
-        {"governance", UnlockKind::Governance},
-        {"myth_state", UnlockKind::MythState},
-        {"corruption", UnlockKind::Corruption},
-        {"chapter_close", UnlockKind::ChapterClose},
-    };
-    for (const Row& r : kRows) {
-        if (s == r.id) {
-            out = r.kind;
-            return true;
-        }
-    }
-    return false;
+    return UnlockKindFromName(s, out);
 }
 
 // Required string field: present, non-empty, within bound.
@@ -87,17 +112,23 @@ const char* ValidateUnlock(const JsonValue& u, BencaoEntry& out) {
                        out.unlockParam)) {
             return "unlock.terrain missing/out of range";
         }
+        // Closed vocab: the only ids TerrainFlagsOf can emit.
+        if (!IsTerrainFlag(out.unlockParam)) {
+            return "unlock.terrain is not a TERRAIN_* flag id";
+        }
         break;
     case UnlockKind::LedgerTag:
-        if (!ReadField(u, "tag",
-                       BencaoLibrary::MAX_UNLOCK_PARAM_LEN,
+        // A tag longer than MAX_TAG_LEN can never be posted.
+        if (!ReadField(u, "tag", Ledger::MAX_TAG_LEN,
                        out.unlockParam)) {
             return "unlock.tag missing/out of range";
         }
         break;
     case UnlockKind::Governance:
+        // The event id must fit a `resolution:<event>` seal tag —
+        // longer ids resolve through the bare-tag path only.
         if (!ReadField(u, "event",
-                       BencaoLibrary::MAX_UNLOCK_PARAM_LEN,
+                       Ledger::MAX_TAG_LEN - Ledger::TAG_RESOLUTION.size(),
                        out.unlockParam)) {
             return "unlock.event missing/out of range";
         }
@@ -108,20 +139,26 @@ const char* ValidateUnlock(const JsonValue& u, BencaoEntry& out) {
                        out.unlockParam)) {
             return "unlock.state missing/out of range";
         }
+        if (!IsMythStateId(out.unlockParam)) {
+            return "unlock.state is not a myth action/state id";
+        }
         break;
     case UnlockKind::Corruption:
+        // at_least 0 degenerates to "any non-null ledger" — the
+        // trigger must name a real threshold.
         if (!u["at_least"].IsInt() ||
-            u["at_least"].AsInt() < 0 ||
+            u["at_least"].AsInt() < 1 ||
             u["at_least"].AsInt() > BencaoLibrary::MAX_UNLOCK_INT) {
             return "unlock.at_least out of range";
         }
         out.unlockInt = u["at_least"].AsInt();
         break;
     case UnlockKind::ChapterClose:
-        // -1 = every chapter close; otherwise a chapter index.
+        // -1 = every chapter close; otherwise a real chapter index.
         if (!u["chapter"].IsInt() ||
             u["chapter"].AsInt() < -1 ||
-            u["chapter"].AsInt() > BencaoLibrary::MAX_UNLOCK_INT) {
+            u["chapter"].AsInt() >= static_cast<std::int64_t>(
+                ChapterLibrary::MAX_CHAPTERS)) {
             return "unlock.chapter out of range";
         }
         out.unlockInt = u["chapter"].AsInt();
@@ -135,8 +172,12 @@ const char* ValidateUnlock(const JsonValue& u, BencaoEntry& out) {
 // annotation keys — 批註 is runtime-bound, files cannot author it.
 const char* ValidateBencao(const JsonValue& doc, BencaoEntry& out) {
     if (!doc.IsObject()) return "root is not an object";
+    // The reserved annotation keys — English spellings AND the CJK
+    // name an author would naturally reach for. 批註 is
+    // runtime-bound: files that try to author it are rejected.
     if (doc.Has("annotation") || doc.Has("annotations") ||
-        doc.Has("marginalia")) {
+        doc.Has("marginalia") || doc.Has("批註") ||
+        doc.Has("批注")) {
         return "annotation fields are runtime-bound";
     }
     if (!ReadField(doc, "id", BencaoLibrary::MAX_ID_LEN, out.id) ||
@@ -177,17 +218,40 @@ const char* ValidateBencao(const JsonValue& doc, BencaoEntry& out) {
     }
     if (doc.Has("lang")) {
         if (!doc["lang"].IsObject()) return "lang is not an object";
-        // zh-tw is inherent to the entry text; if the block is
-        // declared it must assert it. en rides ignored (OQ-B3).
+        // zh-tw is inherent to the entry text; the block may add
+        // other languages but must not assert zh-tw false. en rides
+        // ignored (OQ-B3).
         const JsonValue& zh = doc["lang"]["zh-tw"];
         if (zh.IsBool() && !zh.AsBool()) {
-            return "lang.zh-tw must be true";
+            return "lang.zh-tw must not be false";
         }
     }
     return nullptr;
 }
 
 } // namespace
+
+const char* UnlockKindName(UnlockKind k) {
+    switch (k) {
+    case UnlockKind::Terrain:      return "terrain";
+    case UnlockKind::LedgerTag:    return "ledger_tag";
+    case UnlockKind::Governance:   return "governance";
+    case UnlockKind::MythState:    return "myth_state";
+    case UnlockKind::Corruption:   return "corruption";
+    case UnlockKind::ChapterClose: return "chapter_close";
+    }
+    return "chapter_close";
+}
+
+bool UnlockKindFromName(std::string_view s, UnlockKind& out) {
+    for (const KindRow& r : kKindRows) {
+        if (s == r.id) {
+            out = r.kind;
+            return true;
+        }
+    }
+    return false;
+}
 
 BencaoLoadResult BencaoLibrary::Load(const std::filesystem::path& dir,
                                      BencaoLibrary& out) {
