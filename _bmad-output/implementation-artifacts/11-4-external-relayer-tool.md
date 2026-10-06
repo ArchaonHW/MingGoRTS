@@ -5,7 +5,7 @@ baseline_commit: NO_VCS
 # Story 11.4 — External Relayer Tool
 
 > Epic 11 — 鑄鏈存證 Mint & Anchor (MT) · relay boundary ·
-> **Status: in-progress**
+> **Status: done**
 
 ## Story (from epics.md)
 
@@ -145,3 +145,48 @@ Doubles as the demo path:
   env-var vs config key resolution; `--endpoint` absent → dry-run.
 - `potato_export_chain` builds + runs under MinGW; ctest stays
   green.
+
+## Dev Agent Record
+
+**Implemented 2026-10-06** (MinGW via `C:\MingGoRTS` junction +
+Node 24):
+
+- `Examples/potato_export_chain.cpp` + `potato_export_chain`
+  target — deterministic fixture/demo producer: three-post
+  ledger (incl. anchored chapter seal), gate-emitted outbox,
+  `ledger.json` via tmp→rename.
+- `Tools/MintRelayer/` — zero-dep Node ESM relayer:
+  - `src/json.mjs` — lossless parser (ints → BigInt; parity with
+    `JsonValue::Parse`: depth 64, last-wins keys, surrogate
+    pairing, int64-range degrade-to-Real) + byte-exact
+    `Emit` replication (byte-order key sort, minimal escapes).
+  - `src/fnv.mjs`, `src/ledger.mjs` — full `Verify()` replay:
+    link + recompute + leg/meta invariants + seal, all u64
+    arithmetic BigInt-clamped.
+  - `src/claim.mjs` — `FromJson` mirror + `ClaimId` recompute +
+    emit→parse→validate round-trip + seal-consistency +
+    `record_root:` anchor checks.
+  - `src/run.mjs` + `relayer.mjs` — sorted `.json` scan
+    (case-folded, MAX_CLAIMS 4096), per-file isolation, atomic
+    `potato.relayer_report/1` at a sibling path; `--endpoint`
+    probes `eth_chainId`; key via `POTATO_RELAYER_KEY` env or
+    config `keyFile`/`key`, never echoed.
+- `test/relayer.test.mjs` + `test/fixtures/` — C++-produced
+  fixtures checked in; 7 tests: accept-verbatim, 9-case tamper
+  battery w/ sibling survival, ledger tamper → wholesale reject,
+  seal truncation, report-path refusal, empty outbox, validator
+  pins.
+- `.gitignore` — `*.local.json`, `*.report.json`, node_modules.
+
+**Toolchain note:** Node.js chosen over the epics.md "C#/.NET"
+parenthetical — no dotnet SDK/csc on the machine and no Tools/
+precedent existed; Node's web3 ecosystem serves 11.5/11.6.
+
+**Deferred to 11.5:** actual tx submission (needs contract ABI);
+the `--endpoint` path is probe-only by design.
+
+**Verification (MinGW `build-mingw` + Node 24):**
+`node --test` 7/7 pass; CLI end-to-end run on fixtures → 2/2
+accepted, canonical report written; `ctest` 22/22 green incl.
+`gameplay_dep_guard`. MSVC not verified (exporter is portable
+C++17 filesystem code).

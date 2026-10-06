@@ -105,6 +105,12 @@ Generated/
 Temp/
 Backup_*
 
+# MintRelayer (Story 11.4) — dev-wallet config & run artifacts
+Tools/MintRelayer/node_modules/
+*.local.json
+*.report.json
+*.report.json.tmp
+
 # Allow specific JSON files
 !tasks.json
 !**/tasks.json
