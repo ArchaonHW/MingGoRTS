@@ -5,6 +5,10 @@
 // Story 12.2 — WorldState day-beat resolution (potato.worldstate/1):
 // Init seeds control/warband/start, canonical ordered event queue,
 // dedicated SplitMix64 stream persisted via wire.
+// Story 12.3 — warband movement: march orders post supply to the
+// ledger and queue arrival; sightings are hearsay-only markers.
+#include "Campaign/Ledger/Ledger.h"
+#include "Campaign/World/March.h"
 #include "Campaign/World/WorldMap.h"
 #include "Campaign/World/WorldState.h"
 #include "Gameplay/Json/JsonValue.h"
@@ -30,6 +34,12 @@ void Check(bool cond, const char* name) {
     }
 }
 
+using Potato::Campaign::Account;
+using Potato::Campaign::IssueMarch;
+using Potato::Campaign::IssueSighting;
+using Potato::Campaign::Ledger;
+using Potato::Campaign::MarchPlan;
+using Potato::Campaign::Posting;
 using Potato::Campaign::WorldControl;
 using Potato::Campaign::WorldEvent;
 using Potato::Campaign::WorldEventKind;
@@ -466,13 +476,14 @@ int main() {
     // --- ToJson/FromJson round-trip: full state ---
     {
         auto s = WorldState::Init(wmap, 9).value;
-        s.Enqueue(wmap, WorldEvent{3, 0, WorldEventKind::SetControl,
-                  "longmen", WorldControl::Player});
-        s.Enqueue(wmap, WorldEvent{3, 1, WorldEventKind::Resolve,
-                  "kaifeng"});
+        s.Enqueue(wmap, WorldEvent{3, s.NextSeq(),
+                  WorldEventKind::SetControl, "longmen",
+                  WorldControl::Player});
+        s.Enqueue(wmap, WorldEvent{3, s.NextSeq(),
+                  WorldEventKind::Resolve, "kaifeng"});
         s.ResolveBeats(wmap, 3);
-        s.Enqueue(wmap, WorldEvent{10, 1, WorldEventKind::Resolve,
-                  "luoyang"});
+        s.Enqueue(wmap, WorldEvent{10, s.NextSeq(),
+                  WorldEventKind::Resolve, "luoyang"});
         s.SetWarband("luoyang", wmap);
         auto wire = s.ToJson();
         Check(wire.ok(), "12.2: state serializes");
@@ -540,6 +551,194 @@ int main() {
         Check(run() == run(),
               "12.2: identical seed+events -> identical bytes");
     }
+
+    // ================= Story 12.3 — warband & movement =================
+
+    // --- March: order → ledger debit → queue → arrival ---
+    {
+        Ledger ledger;
+        // Seed 物資: credit Materiel / debit ArmyPrestige.
+        Posting seed;
+        seed.credit = {Account::Materiel, 100};
+        seed.debit = {Account::ArmyPrestige, 100};
+        seed.memo = "war chest";
+        Check(ledger.Post(seed).ok(), "12.3: seed funds");
+
+        auto s = WorldState::Init(wmap, 3).value;
+        Check(!s.Marching(), "12.3: idle warband");
+
+        auto plan = IssueMarch(s, wmap, ledger, "longmen");
+        Check(plan.ok() && plan.value.from == "kaifeng" &&
+                  plan.value.to == "longmen" &&
+                  plan.value.days == 2 && plan.value.supply == 10,
+              "12.3: march plan");
+        Check(ledger.Balance(Account::Materiel) == 90 &&
+                  ledger.Balance(Account::ArmyPrestige) == -90,
+              "12.3: supply posted (debit Materiel)");
+        Check(ledger.Entries().back().tags ==
+                      std::vector<std::string>{"march",
+                                               "region:longmen"},
+              "12.3: march tags book the region");
+        Check(s.Marching() && s.MarchDest() == "longmen" &&
+                  s.MarchEta() == 2,
+              "12.3: in-flight marker set");
+        Check(s.Pending().size() == 1 &&
+                  s.Pending()[0].kind == WorldEventKind::March &&
+                  s.Pending()[0].day == 2 && s.Pending()[0].seq == 0,
+              "12.3: march queued at day+days with state seq");
+
+        // Still at kaifeng mid-march; arrives when the beat lands.
+        Check(s.WarbandAt() == "kaifeng", "12.3: en route, not there");
+        auto n = s.ResolveBeats(wmap, 1);
+        Check(n.ok() && s.WarbandAt() == "kaifeng" && s.Marching(),
+              "12.3: day 1 — still on the road");
+        n = s.ResolveBeats(wmap, 1);
+        Check(n.ok() && n.value == 1 && s.WarbandAt() == "longmen" &&
+                  !s.Marching(),
+              "12.3: arrival applies via the queue");
+    }
+
+    // --- Rejections are atomic ---
+    {
+        Ledger ledger; // empty — no 物資
+        auto s = WorldState::Init(wmap, 3).value;
+        const auto entriesBefore = ledger.Size();
+        Check(!IssueMarch(s, wmap, ledger, "longmen").ok(),
+              "12.3: no 物資 -> order rejected");
+        Check(ledger.Size() == entriesBefore && !s.Marching() &&
+                  s.Pending().empty(),
+              "12.3: rejected order mutates nothing");
+        // Not adjacent: luoyang isn't a kaifeng neighbor.
+        Posting seed;
+        seed.credit = {Account::Materiel, 100};
+        seed.debit = {Account::ArmyPrestige, 100};
+        ledger.Post(seed);
+        Check(!IssueMarch(s, wmap, ledger, "luoyang").ok() &&
+                  ledger.Balance(Account::Materiel) == 100,
+              "12.3: non-adjacent rejects, funds untouched");
+        // Double-march while in flight.
+        Check(IssueMarch(s, wmap, ledger, "longmen").ok(),
+              "12.3: first order lands");
+        Check(!IssueMarch(s, wmap, ledger, "kaifeng").ok(),
+              "12.3: second order while marching rejects");
+    }
+
+    // --- Sightings are hearsay marks ---
+    {
+        auto s = WorldState::Init(wmap, 1).value;
+        Check(IssueSighting(s, wmap, "luoyang").ok() &&
+                  IssueSighting(s, wmap, "luoyang").ok() &&
+                  IssueSighting(s, wmap, "longmen").ok(),
+              "12.3: sightings enqueue");
+        Check(!IssueSighting(s, wmap, "ghost").ok(),
+              "12.3: sighting unknown node rejects");
+        Check(s.Pending().size() == 3 && s.Pending()[0].seq == 0 &&
+                  s.Pending()[1].seq == 1 && s.Pending()[2].seq == 2,
+              "12.3: sightings draw monotonic state seqs");
+        s.ResolveBeats(wmap, 0); // same-day drain
+        const auto& sg = s.Sightings();
+        Check(sg.size() == 2 && sg.at("luoyang").count == 2 &&
+                  sg.at("luoyang").day == 0 &&
+                  sg.at("longmen").count == 1,
+              "12.3: hearsay counts accumulate per node");
+        Check(!s.IsResolved("luoyang"),
+              "12.3: sightings never touch resolved truth");
+    }
+
+    // --- Edited-out nodes: no teleport, march marker releases ---
+    {
+        // A second map where longmen doesn't exist.
+        const WorldMap shrunk = WorldMap::FromJson(
+            JsonValue::Parse(WORLD_DOC2).value).value;
+        Ledger ledger;
+        Posting seed;
+        seed.credit = {Account::Materiel, 100};
+        seed.debit = {Account::ArmyPrestige, 100};
+        ledger.Post(seed);
+        auto s = WorldState::Init(wmap, 3).value;
+        IssueMarch(s, wmap, ledger, "longmen");
+        IssueSighting(s, wmap, "longmen");
+        Check(s.Marching() && s.Pending().size() == 2,
+              "12.3: march + sight queued pre-shrink");
+        // Resolve past the arrival day against the shrunken map.
+        auto n = s.ResolveBeats(shrunk, 5);
+        Check(n.ok() && n.value == 0,
+              "12.3: vanished-node events skip, none applied");
+        Check(s.WarbandAt() == "kaifeng",
+              "12.3: warband never teleports to a deleted node");
+        Check(!s.Marching(),
+              "12.3: aborted march releases the in-flight marker");
+        Check(s.Sightings().empty(),
+              "12.3: sighting on a deleted node never lands");
+        Check(s.Day() == 5, "12.3: beats still advance");
+    }
+
+    // --- Determinism: identical order sequence -> identical bytes ---
+    {
+        auto run = [&wmap]() {
+            auto s = WorldState::Init(
+                WorldMap::FromJson(
+                    JsonValue::Parse(WORLD_DOC).value).value,
+                55).value;
+            Ledger ledger;
+            Posting seed;
+            seed.credit = {Account::Materiel, 100};
+            seed.debit = {Account::ArmyPrestige, 100};
+            ledger.Post(seed);
+            IssueMarch(s, wmap, ledger, "longmen");
+            IssueSighting(s, wmap, "luoyang");
+            s.ResolveBeats(wmap, 1);
+            IssueSighting(s, wmap, "kaifeng");
+            s.ResolveBeats(wmap, 1); // march lands at day 2
+            return s.ToJson().value.Emit();
+        };
+        Check(run() == run(),
+              "12.3: identical order sequence -> identical bytes");
+    }
+
+    // --- Round-trip: in-flight march + sightings + seq counter ---
+    {
+        Ledger ledger;
+        Posting seed;
+        seed.credit = {Account::Materiel, 100};
+        seed.debit = {Account::ArmyPrestige, 100};
+        ledger.Post(seed);
+        auto s = WorldState::Init(wmap, 3).value;
+        IssueMarch(s, wmap, ledger, "longmen");
+        IssueSighting(s, wmap, "luoyang");
+        s.ResolveBeats(wmap, 0); // sight lands, march in flight
+
+        auto wire = s.ToJson();
+        auto rt = WorldState::FromJson(wire.value);
+        Check(rt.ok(), "12.3: mid-march state restores");
+        const WorldState& r = rt.value;
+        Check(r.Marching() && r.MarchDest() == "longmen" &&
+                  r.MarchEta() == 2,
+              "12.3: in-flight march survives");
+        Check(r.Sightings().count("luoyang") == 1 &&
+                  r.Sightings().at("luoyang").count == 1,
+              "12.3: sightings survive");
+        Check(r.Pending().size() == 1 &&
+                  r.Pending()[0].kind == WorldEventKind::March,
+              "12.3: queued march survives");
+        // seq counter never replays an id.
+        auto s2 = r;
+        auto n = s2.ResolveBeats(wmap, 2);
+        Check(n.ok() && s2.WarbandAt() == "longmen",
+              "12.3: restored state finishes the march");
+        Check(s2.NextSeq() >= 2,
+              "12.3: seq counter continues past stored events");
+    }
+
+    // --- Malformed 12.3 fields reject ---
+    bad(R"({"schema":"potato.worldstate/1","world":"w","day":0,"warband":"a","marching":{"to":"b"}})",
+        "12.3: marching missing eta rejected");
+    bad(R"({"schema":"potato.worldstate/1","world":"w","day":0,"warband":"a","sightings":{"x":{"day":0,"count":0}}})",
+        "12.3: sighting count 0 rejected");
+    bad(R"({"schema":"potato.worldstate/1","world":"w","day":0,"warband":"a","queue":[{"day":1,"seq":0,"kind":"teleport","node":"a"}]})",
+        "12.3: unknown new kind rejected");
+    bad(R"({"schema":"potato.worldstate/1","world":"w","day":0,"warband":"a","sightings":{"x":{"day":-1,"count":2}}})",
+        "12.3: sighting negative day rejected");
 
     if (failures == 0) {
         std::puts("WORLD TESTS PASS");
