@@ -2,20 +2,42 @@
 // deterministic ids (filename-safe '-' separators), id==recomputed
 // binding, per-kind field rules, atomic Emit, per-file-isolated
 // Scan, ledger seal bitcast round-trip.
+// Story 11.2 — ledger Merkle root: canonical leaf order (entry
+// seq, then claim id), domain-tagged FNV-1a fold, set semantics,
+// iff-coverage (suspect flag exempt).
+// Story 11.3 — replay-gated emission: CrossVerdict::Clean is the
+// only path to the outbox; forgery_bust auto-adds on forged
+// anchors; refusals are data, never files.
+#include "Campaign/Chain/ClaimGate.h"
+#include "Campaign/Chain/LedgerMerkle.h"
 #include "Campaign/Chain/MintClaim.h"
 #include "Campaign/Chain/MintOutbox.h"
+#include "Campaign/Ledger/Ledger.h"
+#include "Gameplay/Record/BattleRecorder.h"
 #include "Gameplay/Json/JsonValue.h"
 
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
+#include <span>
 #include <sstream>
+#include <vector>
 
 using namespace Potato;
+using Potato::Campaign::Account;
 using Potato::Campaign::ClaimKind;
 using Potato::Campaign::ClaimId;
+using Potato::Campaign::CrossVerdict;
+using Potato::Campaign::EmitGatedClaims;
+using Potato::Campaign::Ledger;
+using Potato::Campaign::LedgerMerkleRoot;
 using Potato::Campaign::MintClaim;
 using Potato::Campaign::MintOutbox;
+using Potato::Campaign::Posting;
+using Potato::Campaign::RecordRootTag;
+using Potato::Campaign::ACH_FORGERY_BUST;
+using Potato::Campaign::ACH_FOUR_VOICE;
+using Potato::Campaign::ACH_ZERO_COMBAT;
 using Potato::Campaign::ParseRootHex;
 using Potato::Campaign::RootHex;
 using Potato::Gameplay::JsonValue;
@@ -252,6 +274,236 @@ int main() {
               "11.1: unreadable dir fails io");
     }
     fs::remove_all(dir);
+
+    // ================= Story 11.2 — ledger Merkle root =================
+
+    // --- empty fold → 0 sentinel ---
+    {
+        Ledger l;
+        const auto r =
+            LedgerMerkleRoot(l, std::span<const MintClaim>{});
+        Check(r.ok() && r.value == 0,
+              "11.2: empty ledger + empty claims = 0");
+    }
+
+    // --- determinism + canonical order + set semantics ---
+    {
+        Ledger l;
+        Posting p;
+        p.credit = {Account::Materiel, 40};
+        p.debit = {Account::PopularSupport, 15};
+        p.memo = "burned village r3";
+        p.tags = {"atrocity"};
+        Check(l.Post(p).ok(), "11.2: posting lands");
+        Posting q;
+        q.credit = {Account::Mandate, 1};
+        q.debit = {Account::ArmyPrestige, 1};
+        q.memo = "chapter sealed";
+        q.tags = {"resolution:governance_victory", "chapter:7"};
+        Check(l.Post(q).ok(), "11.2: seal posts");
+
+        const MintClaim s = Settlement();
+        const MintClaim a = Achievement();
+        const std::vector<MintClaim> forward = {s, a};
+        const std::vector<MintClaim> reverse = {a, s};
+        const std::vector<MintClaim> duped = {a, s, a};
+
+        const auto r1 = LedgerMerkleRoot(l, forward);
+        const auto r2 = LedgerMerkleRoot(l, reverse);
+        const auto r3 = LedgerMerkleRoot(l, duped);
+        Check(r1.ok() && r2.ok() && r3.ok(), "11.2: folds ok");
+        Check(r1.value == r2.value,
+              "11.2: claim order irrelevant (canonical sort)");
+        Check(r1.value == r3.value,
+              "11.2: exact-duplicate claim dedupes");
+        Check(LedgerMerkleRoot(l, forward).value == r1.value,
+              "11.2: same inputs → same root (bit-exact)");
+        Check(r1.value != 0, "11.2: populated fold non-zero");
+
+        // Ledger-only and claims-only subtrees differ from the
+        // joined root.
+        Check(LedgerMerkleRoot(l, std::span<const MintClaim>{})
+                  .value != r1.value,
+              "11.2: claims move the root");
+        Ledger empty;
+        Check(LedgerMerkleRoot(empty, forward).value != r1.value,
+              "11.2: ledger moves the root");
+
+        // Iff-coverage: entry content mutates → root moves.
+        Ledger l2 = l;
+        Posting p2;
+        p2.credit = {Account::Materiel, 41}; // +1 amount
+        p2.debit = {Account::PopularSupport, 15};
+        p2.memo = "burned village r3";
+        p2.tags = {"atrocity"};
+        Check(l2.Post(p2).ok(), "11.2: sibling ledger posts");
+        Check(LedgerMerkleRoot(l2, forward).value != r1.value,
+              "11.2: entry content moves the root");
+
+        // Judgment overlay is NOT covered — flag flip must not
+        // move the anchor.
+        Check(l.SetSuspect(0), "11.2: suspect flag sets");
+        Check(LedgerMerkleRoot(l, forward).value == r1.value,
+              "11.2: suspect flag does NOT move the root");
+
+        // Claim leaf binds the full emit — ledgerTip changes move
+        // the root even though the id wouldn't.
+        MintClaim s2 = s;
+        s2.ledgerTip ^= 1;
+        const std::vector<MintClaim> tipped = {s2, a};
+        Check(ClaimId(s2) == ClaimId(s) &&
+                  LedgerMerkleRoot(l, tipped).value != r1.value,
+              "11.2: claim leaf covers more than the id");
+    }
+
+    // --- odd/even leaf counts both fold ---
+    {
+        Ledger l; // zero entries
+        const MintClaim a = Achievement();
+        const auto odd =
+            LedgerMerkleRoot(l, std::vector<MintClaim>{a});
+        Check(odd.ok() && odd.value != 0,
+              "11.2: single-leaf fold non-zero");
+        const MintClaim s = Settlement();
+        const auto even =
+            LedgerMerkleRoot(l, std::vector<MintClaim>{a, s});
+        Check(even.ok() && even.value != odd.value,
+              "11.2: leaf count moves the root");
+    }
+
+    // ============ Story 11.3 — replay-gated emission ============
+
+    // A real, self-consistent record doc: payload + integrity.root
+    // recomputed the same way CrossCheck does.
+    auto MakeRecord = [](std::uint64_t& root) {
+        JsonValue::Object payload;
+        payload["battle"] = JsonValue::String("ford_crossing");
+        payload["ticks"] = JsonValue::Int(1200);
+        JsonValue rec = JsonValue::MakeObject(payload);
+        root = Potato::Gameplay::BattleRecorder::ComputeRoot(rec);
+        JsonValue::Object integ;
+        integ["root"] =
+            JsonValue::Int(static_cast<std::int64_t>(root));
+        payload["integrity"] =
+            JsonValue::MakeObject(std::move(integ));
+        return JsonValue::MakeObject(std::move(payload));
+    };
+
+    const fs::path gateDir =
+        fs::temp_directory_path() / "potato_test_claimgate";
+    fs::remove_all(gateDir);
+
+    // --- Clean: settlement + achievements emit ---
+    {
+        std::uint64_t root = 0;
+        const JsonValue rec = MakeRecord(root);
+        Ledger l;
+        Posting seal;
+        seal.credit = {Account::Mandate, 1};
+        seal.debit = {Account::ArmyPrestige, 1};
+        seal.memo = "chapter sealed";
+        seal.tags = {RecordRootTag(root),
+                     "resolution:battle_victory", "chapter:7"};
+        Check(l.Post(seal).ok(), "11.3: anchor seal posts");
+
+        MintOutbox box(gateDir);
+        const std::vector<std::string_view> keys = {
+            ACH_ZERO_COMBAT, ACH_FOUR_VOICE};
+        const auto r = EmitGatedClaims(l, rec, "battle_victory", 7,
+                                       keys, box);
+        Check(r.ok() && r.value.verdict == CrossVerdict::Clean,
+              "11.3: clean record passes the gate");
+        Check(r.value.emitted.size() == 3,
+              "11.3: settlement + two achievements emit");
+        Check(r.value.emitted[0].filename().string() ==
+                  "settlement-" + RootHex(root) + ".json",
+              "11.3: settlement file binds recomputed root");
+        Check(r.value.emitted[1].filename().string() ==
+                  "achievement-four_voice_ending-0007.json" &&
+                  r.value.emitted[2].filename().string() ==
+                      "achievement-zero_combat-0007.json",
+              "11.3: achievements emit in id order");
+        Check(r.value.recordRoot == root,
+              "11.3: report carries the proved root");
+        // The emitted settlement claim binds the live seal.
+        const auto scan = box.Scan();
+        Check(scan.ok() && scan.value.claims.size() == 3 &&
+                  scan.value.claims[0].ledgerTip == l.Tip(),
+              "11.3: claims stamp the live ledger seal");
+    }
+
+    // --- forgery bust: forged anchor auto-adds the key, dedupe ---
+    {
+        fs::remove_all(gateDir);
+        std::uint64_t root = 0;
+        const JsonValue rec = MakeRecord(root);
+        Ledger l;
+        Posting p;
+        p.credit = {Account::Mandate, 1};
+        p.debit = {Account::ArmyPrestige, 1};
+        p.memo = "planted seal";
+        p.tags = {RecordRootTag(root), "chapter:7"};
+        Check(l.Forge(p).ok(), "11.3: forged anchor posts");
+
+        MintOutbox box(gateDir);
+        // Caller also asserts it — the gate dedupes to one claim.
+        const std::vector<std::string_view> keys = {
+            ACH_FORGERY_BUST};
+        const auto r = EmitGatedClaims(l, rec, "subversion", 7,
+                                       keys, box);
+        Check(r.ok() && r.value.emitted.size() == 2,
+              "11.3: forged anchor still mints (coverage by "
+              "fiction) + auto-key dedupes");
+        Check(r.value.emitted[1].filename().string() ==
+                  "achievement-forgery_bust-0007.json",
+              "11.3: forgery_bust auto-added");
+    }
+
+    // --- refusals: NoAnchor, RecordInconsistent, BadRecord ---
+    {
+        fs::remove_all(gateDir);
+        std::uint64_t root = 0;
+        const JsonValue rec = MakeRecord(root);
+        Ledger l; // no anchor posted
+        MintOutbox box(gateDir);
+        const std::vector<std::string_view> keys = {
+            ACH_ZERO_COMBAT};
+        const auto r = EmitGatedClaims(l, rec, "battle_victory", 7,
+                                       keys, box);
+        Check(r.ok() && r.value.verdict == CrossVerdict::NoAnchor &&
+                  r.value.emitted.empty(),
+              "11.3: unanchored record emits nothing");
+        Check(!fs::exists(gateDir) ||
+                  fs::is_empty(gateDir),
+              "11.3: refusal leaves no artifact");
+
+        // Tampered declared root — self-inconsistent.
+        JsonValue::Object tampered = rec.Members();
+        JsonValue::Object integ = tampered["integrity"].Members();
+        integ["root"] = JsonValue::Int(
+            static_cast<std::int64_t>(root ^ 1));
+        tampered["integrity"] =
+            JsonValue::MakeObject(std::move(integ));
+        const JsonValue bad = JsonValue::MakeObject(std::move(tampered));
+        const auto r2 = EmitGatedClaims(l, bad, "battle_victory",
+                                        7, keys, box);
+        Check(r2.ok() &&
+                  r2.value.verdict ==
+                      CrossVerdict::RecordInconsistent &&
+                  r2.value.emitted.empty(),
+              "11.3: inconsistent record emits nothing");
+
+        // No integrity block at all.
+        const auto empty = JsonValue::Parse("{\"battle\":\"x\"}");
+        const auto r3 = EmitGatedClaims(l, empty.value,
+                                        "battle_victory", 7, keys,
+                                        box);
+        Check(r3.ok() &&
+                  r3.value.verdict == CrossVerdict::BadRecord &&
+                  r3.value.emitted.empty(),
+              "11.3: malformed record refuses");
+    }
+    fs::remove_all(gateDir);
 
     if (failures == 0) {
         std::printf("ALL PASS\n");
