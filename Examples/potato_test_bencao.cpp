@@ -9,6 +9,7 @@
 #include "Campaign/Narrative/Bencao.h"
 #include "Campaign/Narrative/BencaoCodex.h"
 #include "Campaign/Narrative/Buchao.h"
+#include "Campaign/Narrative/Codex.h"
 #include "Campaign/Ledger/Ledger.h"
 #include "Campaign/Myth/MythLog.h"
 #include "Campaign/Myth/MythState.h"
@@ -35,6 +36,7 @@ using Potato::Campaign::MythLog;
 using Potato::Campaign::MythState;
 using Potato::Campaign::PendingPage;
 using Potato::Campaign::Posting;
+using Potato::Campaign::RenderCodex;
 using Potato::Campaign::ResolveBencaoUnlocks;
 using Potato::Campaign::TerrainFlagsOf;
 using Potato::Campaign::UnlockKind;
@@ -745,6 +747,86 @@ int main() {
               "10.3: zero bound delivers nothing");
     }
 
+    // ================= Story 10.4 — codex renderer =================
+
+    // A three-state codex: unlocked / pending / locked.
+    const fs::path dir3 = fs::temp_directory_path() / "bc_104_test";
+    fs::remove_all(dir3);
+    fs::create_directories(dir3);
+    Write(dir3, "a.json",
+          "{\"schema\":\"potato.bencao/1\",\"id\":\"sanqi\","
+          "\"category\":\"shancao\",\"name\":\"三七\","
+          "\"aliases\":[\"山漆\",\"金不換\"],"
+          "\"origin\":\"生廣西、雲南山峒深處。\","
+          "\"nature\":\"甘、微苦，溫。歸肝、胃經。\","
+          "\"indications\":\"止血散血，定痛。\","
+          "\"source\":\"《本草綱目》卷十二\","
+          "\"unlock\":{\"kind\":\"ledger_tag\",\"tag\":\"first_loss\"}}");
+    Write(dir3, "b.json",
+          Entry("fuzi", "ducao",
+                "{\"kind\":\"corruption\",\"at_least\":30}")
+              .c_str());
+    Write(dir3, "c.json",
+          Entry("lingzhi", "jinshi",
+                "{\"kind\":\"myth_state\",\"state\":\"pacify_shrine\"}")
+              .c_str());
+    BencaoLibrary lib3;
+    Check(BencaoLibrary::Load(dir3, lib3).ok && lib3.Size() == 3,
+          "10.4: fixture library loads");
+
+    const auto cx = JsonValue::Parse(
+        "{\"schema\":\"potato.bencao_state/1\",\"unlocked\":[\"sanqi\"],"
+        "\"pending\":[{\"id\":\"fuzi\",\"kind\":\"corruption\","
+        "\"detail\":\"35\"}]}");
+    BencaoCodex codex3 = BencaoCodex::FromJson(cx.value).value;
+    BuchaoStore store3;
+    {
+        // Seed the store's page for the sanqi slot — suspect on:
+        // the judgment mark must render.
+        const auto seeded = JsonValue::Parse(
+            "{\"schema\":\"potato.buchao/1\",\"pages\":[{\"entry\":"
+            "\"sanqi\",\"note\":\"第三回，斥候中箭，此末敷之，血止。\","
+            "\"suspect\":true}]}");
+        store3 = BuchaoStore::FromJson(seeded.value).value;
+    }
+
+    const std::string book = RenderCodex(lib3, codex3, &store3);
+    Check(book.find("是冊所載，皆前人之驗") != std::string::npos &&
+              book.find("勿執紙上之言以試人身") != std::string::npos,
+          "10.4: frontispiece verbatim disclaimer");
+    Check(book.find("——山草類——") != std::string::npos &&
+              book.find("——人部拾遺——") != std::string::npos &&
+              book.find("山草類") < book.find("人部拾遺"),
+          "10.4: all 8 部類 headers, canonical order");
+    Check(book.find("釋名：") != std::string::npos &&
+              book.find("性味歸經：") != std::string::npos &&
+              book.find("主治：") != std::string::npos &&
+              book.find("出處：") != std::string::npos,
+          "10.4: unlocked page renders all fields");
+    Check(book.find("【諱】補鈔在途") != std::string::npos &&
+              book.find("fuzi") == std::string::npos,
+          "10.4: pending = sealed slot, name never leaks");
+    Check(book.find("【諱】未錄") != std::string::npos &&
+              book.find("lingzhi") == std::string::npos,
+          "10.4: locked = sealed slot, name never leaks");
+    Check(book.find("批註：第三回，斥候中箭") != std::string::npos &&
+              book.find("書吏疑其不實") != std::string::npos,
+          "10.4: 批註 renders with suspect mark");
+    Check(book.find("凡 3 種，已錄 1 種") != std::string::npos &&
+              book.find("not medical advice") != std::string::npos,
+          "10.4: colophon counts + English disclaimer");
+    Check(RenderCodex(lib3, codex3, &store3) == book,
+          "10.4: render is deterministic");
+
+    // Empty library: headers + zero counts, no crash.
+    BencaoLibrary empty;
+    BencaoCodex ecodex;
+    const std::string ebook = RenderCodex(empty, ecodex, nullptr);
+    Check(ebook.find("——山草類——") != std::string::npos &&
+              ebook.find("凡 0 種，已錄 0 種") != std::string::npos,
+          "10.4: empty library renders TOC + zero counts");
+
+    fs::remove_all(dir3);
     fs::remove_all(dir);
     fs::remove_all(dir2);
     std::printf(failures ? "BENCAO TESTS FAILED: %d\n"

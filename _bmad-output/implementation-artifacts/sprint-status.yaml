@@ -29,7 +29,7 @@
 
 generated: '2026-09-29'
 last_updated: '2026-10-06'
-# 12-1 verified MinGW: potato_test_world 73/73, ctest 22/22.
+# 12-1..12-3 verified MinGW: potato_test_world all-green, ctest 23/23.
 project: MingGoRTS
 project_key: NOKEY
 tracking_system: file-system
@@ -120,7 +120,7 @@ development_status:
   10-1-bencao-entry-schema-registry: done
   10-2-bencao-unlock-engine: done
   10-3-buchao-delivery-marginalia: done
-  10-4-bencao-codex-renderer: backlog
+  10-4-bencao-codex-renderer: done
   10-5-document-stream-integration: backlog
   10-6-bencao-launch-content-set: backlog
   epic-10-retrospective: optional
@@ -128,15 +128,15 @@ development_status:
   11-1-mintclaim-schema-outbox: done
   11-2-ledger-merkle-root: done
   11-3-replay-gated-claim-emission: done
-  11-4-external-relayer-tool: backlog
+  11-4-external-relayer-tool: review
   11-5-testnet-anchor-token-contract: backlog
   11-6-nft-collectible-minting: backlog
   epic-11-retrospective: optional
   epic-12: in-progress
   12-1-worldmap-schema-registry: done
   12-2-worldstate-time: review
-  12-3-warband-movement: backlog
-  12-4-character-model-creation: backlog
+  12-3-warband-movement: review
+  12-4-character-model-creation: review
   12-5-encounter-pipeline: backlog
   12-6-chapter-anchoring-refactor: backlog
   12-7-regional-governance-myth-binding: backlog

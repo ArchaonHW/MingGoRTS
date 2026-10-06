@@ -4,13 +4,10 @@
 #include "Campaign/Ledger/Ledger.h"
 #include "Campaign/Myth/MythActions.h"
 #include "Gameplay/Json/Json.h"
-#include "Gameplay/Json/JsonValue.h"
 
 #include <algorithm>
 #include <cctype>
 #include <set>
-#include <system_error>
-#include <utility>
 
 namespace Potato::Campaign {
 
@@ -18,6 +15,20 @@ using Gameplay::JsonValue;
 using Gameplay::Result;
 
 namespace {
+
+const char* kCategories[] = {"shancao",   "xicao",     "ducao",
+                             "manshui",   "gucai",     "jinshi",
+                             "chongshou", "renbu"};
+static_assert(std::size(kCategories) == kBencaoCategoryCount,
+              "category table out of sync");
+
+const char* kUnlockKinds[] = {"terrain",      "ledger_tag",
+                              "governance",   "myth_state",
+                              "corruption",   "chapter_close"};
+
+bool InBounds(const std::string& s, std::size_t max) {
+    return !s.empty() && s.size() <= max;
+}
 
 // The closed vocabularies a trigger param can actually resolve
 // against — a manifest naming anything else loads into a dead
@@ -33,9 +44,10 @@ bool IsTerrainFlag(std::string_view s) {
     return false;
 }
 
-// Myth-state ids: the catalog's player verbs (MythActionDefs) plus
-// the two non-purchased entries — "invasion" (the god's own move,
-// folded by LogMythEvents) and "infiltrated" (MythState presence).
+// Myth-state ids: the catalog's player verbs (MythActionDefs)
+// plus the two non-purchased entries — "invasion" (the god's own
+// move, folded by LogMythEvents) and "infiltrated" (MythState
+// presence).
 bool IsMythStateId(std::string_view s) {
     if (s == "infiltrated" || s == "invasion") return true;
     for (const MythActionDef& d : MythActionDefs()) {
@@ -44,209 +56,217 @@ bool IsMythStateId(std::string_view s) {
     return false;
 }
 
-bool CategoryFromString(std::string_view s, BencaoCategory& out) {
-    struct Row { std::string_view id; BencaoCategory cat; };
-    static constexpr Row kRows[] = {
-        {"shancao", BencaoCategory::Shancao},
-        {"xicao", BencaoCategory::Xicao},
-        {"ducao", BencaoCategory::Ducao},
-        {"manshui", BencaoCategory::Manshui},
-        {"gucai", BencaoCategory::Gucai},
-        {"jinshi", BencaoCategory::Jinshi},
-        {"chongshou", BencaoCategory::Chongshou},
-        {"renbu", BencaoCategory::Renbu},
-    };
-    for (const Row& r : kRows) {
-        if (s == r.id) {
-            out = r.cat;
+// The 批註 field is runtime-bound (10.3) — an authored annotation
+// key rejects the file, English AND the CJK spellings an author
+// would naturally reach for. Other unknown members stay
+// forward-compatible.
+bool HasRuntimeBoundKey(const JsonValue& doc) {
+    return doc.Has("annotation") || doc.Has("annotations") ||
+           doc.Has("marginalia") || doc.Has("批註") ||
+           doc.Has("批注");
+}
+
+// One file -> BencaoEntry or a reason string. Pure validation —
+// unknown members ignored except the runtime-bound guard.
+const char* ValidateEntry(const JsonValue& doc, BencaoEntry& out) {
+    if (!doc.IsObject()) return "root is not an object";
+    if (HasRuntimeBoundKey(doc)) {
+        return "annotation slots are runtime-bound";
+    }
+    const std::string* id = doc.FindString("id");
+    const std::string* category = doc.FindString("category");
+    const std::string* name = doc.FindString("name");
+    const std::string* nature = doc.FindString("nature");
+    const std::string* indications = doc.FindString("indications");
+    const std::string* source = doc.FindString("source");
+    if (id == nullptr || category == nullptr || name == nullptr ||
+        nature == nullptr || indications == nullptr ||
+        source == nullptr) {
+        return "missing required field";
+    }
+    if (!InBounds(*id, BencaoLibrary::MAX_ID_LEN)) {
+        return "id out of range";
+    }
+    BencaoCategory cat;
+    if (!BencaoCategoryFromName(*category, cat)) {
+        return "unknown category";
+    }
+    if (!InBounds(*name, BencaoLibrary::MAX_NAME_LEN)) {
+        return "name out of range";
+    }
+    if (!InBounds(*nature, BencaoLibrary::MAX_TEXT_LEN) ||
+        !InBounds(*indications, BencaoLibrary::MAX_TEXT_LEN)) {
+        return "nature/indications out of range";
+    }
+    if (!InBounds(*source, BencaoLibrary::MAX_SOURCE_LEN)) {
+        return "source out of range";
+    }
+    // Optional 釋名/集解 — bounds-checked when present.
+    std::vector<std::string> aliases;
+    if (doc.Has("aliases")) {
+        const JsonValue& a = doc["aliases"];
+        if (!a.IsArray() ||
+            a.Size() > BencaoLibrary::MAX_ALIASES) {
+            return "aliases out of range";
+        }
+        for (const JsonValue& v : a.Items()) {
+            if (!v.IsString() ||
+                !InBounds(v.AsString(), BencaoLibrary::MAX_NAME_LEN)) {
+                return "bad alias";
+            }
+            aliases.push_back(v.AsString());
+        }
+    }
+    std::string origin;
+    if (doc.Has("origin")) {
+        if (!doc["origin"].IsString()) return "bad origin";
+        origin = doc["origin"].AsString();
+        if (origin.size() > BencaoLibrary::MAX_TEXT_LEN) {
+            return "origin out of range";
+        }
+    }
+    // lang block: optional; zh-tw is inherent — asserting it false
+    // is a contradiction. `en` is tolerated but ignored (OQ-B3).
+    if (doc.Has("lang")) {
+        const JsonValue& l = doc["lang"];
+        if (!l.IsObject()) return "bad lang";
+        const JsonValue& zh = l["zh-tw"];
+        if (zh.IsBool() && !zh.AsBool()) {
+            return "lang cannot deny zh-tw";
+        }
+    }
+    // Unlock manifest — kind required, params per kind.
+    const JsonValue& unlock = doc["unlock"];
+    if (!unlock.IsObject()) return "missing unlock";
+    const std::string* kindS = unlock.FindString("kind");
+    UnlockKind kind;
+    if (kindS == nullptr || !UnlockKindFromName(*kindS, kind)) {
+        return "unknown unlock kind";
+    }
+    std::string param;
+    std::int64_t pint = 0;
+    const char* paramKey = nullptr;
+    switch (kind) {
+        case UnlockKind::Terrain: paramKey = "terrain"; break;
+        case UnlockKind::LedgerTag: paramKey = "tag"; break;
+        case UnlockKind::Governance: paramKey = "event"; break;
+        case UnlockKind::MythState: paramKey = "state"; break;
+        case UnlockKind::Corruption:
+            if (!unlock["at_least"].IsInt()) {
+                return "corruption needs at_least";
+            }
+            pint = unlock["at_least"].AsInt();
+            // at_least 0 degenerates to "any non-null ledger" —
+            // the trigger must name a real threshold. 1023 is the
+            // story's bound (covers MAX_CHAPTERS with headroom).
+            if (pint < 1 || pint > 1023) {
+                return "at_least out of range";
+            }
+            break;
+        case UnlockKind::ChapterClose:
+            if (!unlock["chapter"].IsInt()) {
+                return "chapter_close needs chapter";
+            }
+            pint = unlock["chapter"].AsInt();
+            // -1 = every chapter close; otherwise a real index.
+            if (pint < -1 ||
+                pint >= static_cast<std::int64_t>(
+                    ChapterLibrary::MAX_CHAPTERS)) {
+                return "chapter out of range";
+            }
+            break;
+    }
+    if (paramKey != nullptr) {
+        const std::string* p = unlock.FindString(paramKey);
+        if (p == nullptr) return "unlock param missing";
+        param = *p;
+        switch (kind) {
+        case UnlockKind::Terrain:
+            if (!InBounds(param, BencaoLibrary::MAX_UNLOCK_PARAM_LEN) ||
+                !IsTerrainFlag(param)) {
+                return "unlock.terrain is not a TERRAIN_* flag id";
+            }
+            break;
+        case UnlockKind::LedgerTag:
+            // A tag longer than MAX_TAG_LEN can never be posted.
+            if (!InBounds(param, Ledger::MAX_TAG_LEN)) {
+                return "unlock.tag out of range";
+            }
+            break;
+        case UnlockKind::Governance:
+            // The event id must fit a `resolution:<event>` seal
+            // tag — longer ids resolve through the bare-tag path
+            // only.
+            if (!InBounds(param, Ledger::MAX_TAG_LEN -
+                                     Ledger::TAG_RESOLUTION.size())) {
+                return "unlock.event out of range";
+            }
+            break;
+        case UnlockKind::MythState:
+            if (!InBounds(param, BencaoLibrary::MAX_UNLOCK_PARAM_LEN) ||
+                !IsMythStateId(param)) {
+                return "unlock.state is not a myth action/state id";
+            }
+            break;
+        default:
+            break;
+        }
+    }
+    out.id = *id;
+    out.category = cat;
+    out.name = *name;
+    out.aliases = std::move(aliases);
+    out.origin = std::move(origin);
+    out.nature = *nature;
+    out.indications = *indications;
+    out.unlockKind = kind;
+    out.unlockParam = std::move(param);
+    out.unlockInt = pint;
+    out.source = *source;
+    return nullptr;
+}
+
+} // namespace
+
+const char* BencaoCategoryName(BencaoCategory c) {
+    const auto i = static_cast<std::size_t>(c);
+    return i < kBencaoCategoryCount ? kCategories[i] : "shancao";
+}
+
+bool BencaoCategoryFromName(std::string_view name,
+                            BencaoCategory& out) {
+    for (std::size_t i = 0; i < kBencaoCategoryCount; ++i) {
+        if (name == kCategories[i]) {
+            out = static_cast<BencaoCategory>(i);
             return true;
         }
     }
     return false;
 }
 
-struct KindRow { std::string_view id; UnlockKind kind; };
-constexpr KindRow kKindRows[] = {
-    {"terrain", UnlockKind::Terrain},
-    {"ledger_tag", UnlockKind::LedgerTag},
-    {"governance", UnlockKind::Governance},
-    {"myth_state", UnlockKind::MythState},
-    {"corruption", UnlockKind::Corruption},
-    {"chapter_close", UnlockKind::ChapterClose},
-};
-
-bool UnlockKindFromString(std::string_view s, UnlockKind& out) {
-    return UnlockKindFromName(s, out);
+const char* BencaoCategoryTitle(BencaoCategory c) {
+    switch (c) {
+    case BencaoCategory::Shancao:   return "山草類";
+    case BencaoCategory::Xicao:     return "隰草類";
+    case BencaoCategory::Ducao:     return "毒草類";
+    case BencaoCategory::Manshui:   return "蔓水類";
+    case BencaoCategory::Gucai:     return "穀菜類";
+    case BencaoCategory::Jinshi:    return "金石類";
+    case BencaoCategory::Chongshou: return "蟲獸類";
+    case BencaoCategory::Renbu:     return "人部拾遺";
+    }
+    return "山草類";
 }
-
-// Required string field: present, non-empty, within bound.
-bool ReadField(const JsonValue& doc, std::string_view key,
-               std::size_t maxLen, std::string& out) {
-    const std::string* s = doc.FindString(key);
-    if (!s || s->empty() || s->size() > maxLen) return false;
-    out = *s;
-    return true;
-}
-
-// Optional free text: absent or string within bound.
-bool ReadText(const JsonValue& doc, std::string_view key,
-              std::size_t maxLen, std::string& out) {
-    if (!doc.Has(key)) return true;
-    if (!doc[key].IsString() || doc[key].AsString().size() > maxLen) {
-        return false;
-    }
-    out = doc[key].AsString();
-    return true;
-}
-
-const char* ValidateUnlock(const JsonValue& u, BencaoEntry& out) {
-    if (!u.IsObject()) return "unlock is not an object";
-    const std::string* kind = u.FindString("kind");
-    if (!kind || !UnlockKindFromString(*kind, out.unlockKind)) {
-        return "unknown unlock kind";
-    }
-    switch (out.unlockKind) {
-    case UnlockKind::Terrain:
-        if (!ReadField(u, "terrain",
-                       BencaoLibrary::MAX_UNLOCK_PARAM_LEN,
-                       out.unlockParam)) {
-            return "unlock.terrain missing/out of range";
-        }
-        // Closed vocab: the only ids TerrainFlagsOf can emit.
-        if (!IsTerrainFlag(out.unlockParam)) {
-            return "unlock.terrain is not a TERRAIN_* flag id";
-        }
-        break;
-    case UnlockKind::LedgerTag:
-        // A tag longer than MAX_TAG_LEN can never be posted.
-        if (!ReadField(u, "tag", Ledger::MAX_TAG_LEN,
-                       out.unlockParam)) {
-            return "unlock.tag missing/out of range";
-        }
-        break;
-    case UnlockKind::Governance:
-        // The event id must fit a `resolution:<event>` seal tag —
-        // longer ids resolve through the bare-tag path only.
-        if (!ReadField(u, "event",
-                       Ledger::MAX_TAG_LEN - Ledger::TAG_RESOLUTION.size(),
-                       out.unlockParam)) {
-            return "unlock.event missing/out of range";
-        }
-        break;
-    case UnlockKind::MythState:
-        if (!ReadField(u, "state",
-                       BencaoLibrary::MAX_UNLOCK_PARAM_LEN,
-                       out.unlockParam)) {
-            return "unlock.state missing/out of range";
-        }
-        if (!IsMythStateId(out.unlockParam)) {
-            return "unlock.state is not a myth action/state id";
-        }
-        break;
-    case UnlockKind::Corruption:
-        // at_least 0 degenerates to "any non-null ledger" — the
-        // trigger must name a real threshold.
-        if (!u["at_least"].IsInt() ||
-            u["at_least"].AsInt() < 1 ||
-            u["at_least"].AsInt() > BencaoLibrary::MAX_UNLOCK_INT) {
-            return "unlock.at_least out of range";
-        }
-        out.unlockInt = u["at_least"].AsInt();
-        break;
-    case UnlockKind::ChapterClose:
-        // -1 = every chapter close; otherwise a real chapter index.
-        if (!u["chapter"].IsInt() ||
-            u["chapter"].AsInt() < -1 ||
-            u["chapter"].AsInt() >= static_cast<std::int64_t>(
-                ChapterLibrary::MAX_CHAPTERS)) {
-            return "unlock.chapter out of range";
-        }
-        out.unlockInt = u["chapter"].AsInt();
-        break;
-    }
-    return nullptr;
-}
-
-// One file -> BencaoEntry or a reason string. Pure validation:
-// unknown members are ignored (forward-compat) except the reserved
-// annotation keys — 批註 is runtime-bound, files cannot author it.
-const char* ValidateBencao(const JsonValue& doc, BencaoEntry& out) {
-    if (!doc.IsObject()) return "root is not an object";
-    // The reserved annotation keys — English spellings AND the CJK
-    // name an author would naturally reach for. 批註 is
-    // runtime-bound: files that try to author it are rejected.
-    if (doc.Has("annotation") || doc.Has("annotations") ||
-        doc.Has("marginalia") || doc.Has("批註") ||
-        doc.Has("批注")) {
-        return "annotation fields are runtime-bound";
-    }
-    if (!ReadField(doc, "id", BencaoLibrary::MAX_ID_LEN, out.id) ||
-        !ReadField(doc, "name", BencaoLibrary::MAX_NAME_LEN,
-                   out.name) ||
-        !ReadField(doc, "nature", BencaoLibrary::MAX_TEXT_LEN,
-                   out.nature) ||
-        !ReadField(doc, "indications", BencaoLibrary::MAX_TEXT_LEN,
-                   out.indications) ||
-        !ReadField(doc, "source", BencaoLibrary::MAX_SOURCE_LEN,
-                   out.source)) {
-        return "missing/mistyped field";
-    }
-    const std::string* cat = doc.FindString("category");
-    if (!cat || !CategoryFromString(*cat, out.category)) {
-        return "unknown category";
-    }
-    if (doc.Has("aliases")) {
-        if (!doc["aliases"].IsArray() ||
-            doc["aliases"].Size() > BencaoLibrary::MAX_ALIASES) {
-            return "aliases out of range";
-        }
-        for (const JsonValue& a : doc["aliases"].Items()) {
-            if (!a.IsString() || a.AsString().empty() ||
-                a.AsString().size() > BencaoLibrary::MAX_NAME_LEN) {
-                return "alias out of range";
-            }
-            out.aliases.push_back(a.AsString());
-        }
-    }
-    if (!ReadText(doc, "origin", BencaoLibrary::MAX_TEXT_LEN,
-                  out.origin)) {
-        return "origin out of range";
-    }
-    if (!doc.Has("unlock")) return "missing/mistyped field";
-    if (const char* why = ValidateUnlock(doc["unlock"], out)) {
-        return why;
-    }
-    if (doc.Has("lang")) {
-        if (!doc["lang"].IsObject()) return "lang is not an object";
-        // zh-tw is inherent to the entry text; the block may add
-        // other languages but must not assert zh-tw false. en rides
-        // ignored (OQ-B3).
-        const JsonValue& zh = doc["lang"]["zh-tw"];
-        if (zh.IsBool() && !zh.AsBool()) {
-            return "lang.zh-tw must not be false";
-        }
-    }
-    return nullptr;
-}
-
-} // namespace
 
 const char* UnlockKindName(UnlockKind k) {
-    switch (k) {
-    case UnlockKind::Terrain:      return "terrain";
-    case UnlockKind::LedgerTag:    return "ledger_tag";
-    case UnlockKind::Governance:   return "governance";
-    case UnlockKind::MythState:    return "myth_state";
-    case UnlockKind::Corruption:   return "corruption";
-    case UnlockKind::ChapterClose: return "chapter_close";
-    }
-    return "chapter_close";
+    const auto i = static_cast<std::size_t>(k);
+    return i < 6 ? kUnlockKinds[i] : "ledger_tag";
 }
 
-bool UnlockKindFromName(std::string_view s, UnlockKind& out) {
-    for (const KindRow& r : kKindRows) {
-        if (s == r.id) {
-            out = r.kind;
+bool UnlockKindFromName(std::string_view name, UnlockKind& out) {
+    for (std::size_t i = 0; i < 6; ++i) {
+        if (name == kUnlockKinds[i]) {
+            out = static_cast<UnlockKind>(i);
             return true;
         }
     }
@@ -263,17 +283,16 @@ BencaoLoadResult BencaoLibrary::Load(const std::filesystem::path& dir,
              dir, std::filesystem::directory_options::none, ec);
          !ec && it != std::filesystem::directory_iterator();
          it.increment(ec)) {
-        // Per-entry stat uses its OWN error channel — sharing `ec`
-        // would let a stat failure be cleared by the next
-        // increment() and silently drop the file.
+        // Per-entry stat uses its OWN error channel (ChapterLibrary
+        // precedent — shared `ec` gets cleared by increment()).
         std::error_code ec2;
         const bool isFile = it->is_regular_file(ec2);
         if (ec2) {
             res.rejected.push_back(
-                {it->path(), "io", "stat failed: " + ec2.message()});
+                {it->path(), "io",
+                 "stat failed: " + ec2.message()});
             continue;
         }
-        // Case-folded extension: X.JSON/X.Json are still content.
         std::string ext = it->path().extension().string();
         std::transform(ext.begin(), ext.end(), ext.begin(),
                        [](unsigned char c) {
@@ -288,8 +307,6 @@ BencaoLoadResult BencaoLibrary::Load(const std::filesystem::path& dir,
         res.reason = "bencao dir unreadable: " + ec.message();
         return res;
     }
-    // Deterministic registration order: filename sort (category
-    // order is applied at commit below).
     std::sort(files.begin(), files.end());
 
     std::vector<BencaoEntry> entries;
@@ -306,24 +323,23 @@ BencaoLoadResult BencaoLibrary::Load(const std::filesystem::path& dir,
             continue;
         }
         BencaoEntry e;
-        if (const char* why = ValidateBencao(doc.value, e)) {
+        if (const char* why = ValidateEntry(doc.value, e)) {
             res.rejected.push_back({f, "field", why});
+            continue;
+        }
+        // Capacity and dup checks BEFORE commit — a rejected
+        // file must not consume its id.
+        if (entries.size() >= MAX_ENTRIES) {
+            res.rejected.push_back({f, "field", "library full"});
             continue;
         }
         if (ids.count(e.id)) {
             res.rejected.push_back(
-                {f, "duplicate", "bencao id already registered"});
+                {f, "duplicate", "entry id already registered"});
             continue;
         }
         ids.insert(e.id);
         entries.push_back(std::move(e));
-    }
-    if (entries.size() > MAX_ENTRIES) {
-        // Overflow can't be a per-file rejection (already committed);
-        // fail wholesale — a library beyond bound is a content bug.
-        res.error = "overflow";
-        res.reason = "bencao entries exceed MAX_ENTRIES";
-        return res;
     }
 
     // Canonical order: category ordinal, then id.
