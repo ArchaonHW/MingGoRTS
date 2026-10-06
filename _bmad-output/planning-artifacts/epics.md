@@ -30,7 +30,7 @@ FR11: Symmetric AI — identical doctrine machinery and CP rules; personality pr
 FR12: BattleRecorder — recorded replayable battles, record-is-truth, tamper-evident integrity seal, downgrade warning.
 FR13: Defeat conversion — battle loss routes into governance/recovery play; no single-battle game over.
 FR14: Victory paths — military rout (<20% cohesion), governance thresholds, subversion (defection/deterrence/negotiation); designated zero-combat chapters; four-voice ending from final ledger state.
-FR15: Campaign structure — 8–12 chapters via versioned ChapterLibrary; doctrinal progression (cards/slots unlock, veterancy); chapter shell progression.
+FR15: Campaign structure — the campaign is an open strategic map of regions and POIs; 8–12 authored scenarios anchor to places/predicates via the versioned ChapterLibrary (place-bound 回目, non-linear order); doctrinal progression (cards/slots unlock, veterancy) unchanged; progression follows a prerequisite graph, not a fixed sequence.
 FR16: Narrative systems — HistorianReport with omission counters, ChapterConventions (題詞/判詞/欲知後事/四聲部), IntelLedger distortion, NarrativePack bundles, GeneralDossier hearsay register.
 FR17: Document-voice systems — Scribe marginalia (authenticity-flagged), rival defection arcs (Cautious via governance record, Nemesis late-campaign), ledger/GodStance-driven document variant rendering, audit spread (Judgment of the Brush), four-voice folios.
 FR18: Presentation — pixel sprite atlas (units/terrain/myth), HUD (doctrine UI, CP bar, density scaling), CJK text pipeline, chapter frontispieces (冊頁), audio (direction deferred OQ-1).
@@ -38,6 +38,8 @@ FR19: Content & tools — card pool expansion+balance, SquadTemplate budgeted bu
 FR20: Versioned content pipeline — all game data as `potato.<name>/<ver>` JSON via game-layer JsonValue DOM parser; boot-time registries.
 FR21: Bencao codex — `potato.bencao/1` entries with six-field 本草體 anatomy (正名/釋名/集解/性味歸經/主治/批註) across 8 categories; campaign-layer unlock engine resolving trigger keys from ledger/terrain/myth state; 補鈔 delivery into the document stream; Scribe marginalia binding; HistorianReport/MythLog clause-pool citations of unlocked entries; frontispiece disclaimer; all 性味/主治 claims source-verified; collection layer only — zero sim/tick involvement, no stat effects. Design authority: `_bmad-output/bencao-worldview.md`.
 FR22: Chain provenance & mint claims — Merkle root over the ledger hash chain; replay-gated `potato.mintclaim/1` outbox written at the aftermath boundary only; external relayer anchors the root and mints a testnet token; token burns mint NFT collectibles of campaign artifacts (frontispiece 冊頁, Bencao codex entries, general dossiers). Testnet only; zero real-world value; engine remains network-free — the chain boundary is versioned-JSON files to an external process. Design authority: `_bmad-output/forge/metaverse-currency/forged-idea.md`, `_bmad-output/planning-artifacts/sprint-change-proposal-2026-10-05.md`.
+FR23: Open campaign world — persistent strategic map (`potato.world/1`); player warband moves freely along routes; world resolves at day-scale beats via ordered deterministic events; encounters marshal into the three-beat battle and write back to world state; rival warbands exist as hearsay-tracked entities; world events book into the ledger with region tags.
+FR24: Player characters — the campaign protagonist is chosen at start: a predefined named general or a player-created commander (`potato.character/1`: name, origin, personality priors, starting deck seed); character priors bind into QuantumFog priors and the hearsay record. Design authority: `_bmad-output/planning-artifacts/sprint-change-proposal-2026-10-06.md`.
 
 ### NonFunctional Requirements
 
@@ -84,7 +86,7 @@ N/A — no UX design document exists; F-epic will carry UI requirements.
 | FR12 | E0 | BattleRecorder |
 | FR13 | A | Defeat conversion |
 | FR14 | A + E | Military/governance paths → A; subversion paths → E |
-| FR15 | B | Chapter library & progression |
+| FR15 | B + W | Anchored scenario library & prerequisite-graph progression |
 | FR16 | C | Narrative systems |
 | FR17 | C + E | Document voices → C; defection mechanics → E |
 | FR18 | F | Presentation |
@@ -92,6 +94,8 @@ N/A — no UX design document exists; F-epic will carry UI requirements.
 | FR20 | E0 | Versioned JSON pipeline & JsonValue |
 | FR21 | BC | Bencao codex (collection layer) |
 | FR22 | MT | Mint claims, Merkle anchor, relayer, NFT collectibles |
+| FR23 | W | World map, warband movement, encounters, regional bindings |
+| FR24 | W | Character model, creation, priors binding |
 
 ## Epic List
 
@@ -222,7 +226,134 @@ So that the campaign's own documents become things I hold on-chain.
 **And** collectible kinds map to existing artifacts — frontispiece (Epic 8), bencao entry (Epic 10), dossier (Epic 6) — with placeholder art valid until those epics land
 **And** the mint is gated on the artifact existing in the player's own campaign record — you can only seal what your chronicle wrote.
 
-**Execution sequence:** E0 → L → B → A → D → C → E → F → G → MT (F and G may partially parallel once E0 lands). BC lands once C's document machinery (6.5–6.7) exists; 10.1–10.2 may run alongside C, and 10.5 content authoring can parallel F/G. MT's hard dependencies (1.11 BattleRecorder, 2.2 hash chain, 3.2 atomic save) are all done; it may run in parallel with any epic and uses Epic 8/10 artifacts as NFT payloads when available.
+### Epic 12: W — 行營輿圖 (Open Campaign World)
+The chronicle gains a geography: the last field army marches a living map of regions, shrines, and rival warbands; battles happen where the player chooses to fight them; the protagonist is a named general — historical or self-created — whose deeds the Chronicler records.
+**FRs covered:** FR15 (revised), FR23, FR24
+
+### Story 12.1: WorldMap Schema & Registry
+
+As a developer,
+I want `potato.world/1` world documents — a region graph (nodes, routes, POIs), faction-control flags, dual-layer tags — loaded into a boot-time registry,
+So that the campaign has a geography to march across.
+
+**Acceptance Criteria:**
+
+**Given** a `potato.world/1` file,
+**When** loaded via the content pipeline,
+**Then** regions, routes, adjacency, and POI flags are queryable, and bad schema/version rejects without mutating state
+**And** region ids are the single scheme shared by governance tags, myth infiltration, and encounter map references — no parallel id space
+**And** dual-layer marks (historical layer + shrine POI bindings) exist from the start.
+
+### Story 12.2: WorldState & Day-Beat Resolution
+
+As a system,
+I want world state resolving at day-scale beats through an ordered event queue — integer math, a dedicated seeded PRNG stream, canonical ordering,
+So that the world evolves deterministically without a second tick sim.
+
+**Acceptance Criteria:**
+
+**Given** a WorldState and a queued event list,
+**When** a beat resolves,
+**Then** events apply in canonical order and the state serializes into CampaignState
+**And** two identical seeds + event sequences produce bit-identical world states on MSVC and MinGW
+**And** beat resolution performs zero file I/O and throws no exceptions.
+
+### Story 12.3: Warband & Movement
+
+As a player,
+I want my warband — the commander plus attached roster squads — to march along map routes on orders I issue,
+So that I choose where the chronicle goes next.
+
+**Acceptance Criteria:**
+
+**Given** a warband on a region node,
+**When** I issue a move order along an adjacent route,
+**Then** the warband arrives after the route's day cost and 物資 supply drains per balance JSON
+**And** rival warbands appear only as hearsay/certainty markers — the truth boundary holds at strategic scale
+**And** arrival/proximity events queue into the beat resolution deterministically.
+
+### Story 12.4: Character Model & Creation
+
+As a player,
+I want to begin a campaign as a named general or a commander I create — name, origin, personality priors, starting doctrine-deck seed in `potato.character/1`,
+So that the protagonist of the chronicle is mine.
+
+**Acceptance Criteria:**
+
+**Given** the predefined general roster and the creation schema,
+**When** a campaign starts,
+**Then** the chosen/created character binds priors into QuantumFog and RivalDeck surfaces
+**And** a bad-schema character doc rejects cleanly; the character serializes into the save
+**And** the hearsay record refers to the commander by their own name and priors.
+
+### Story 12.5: Encounter Pipeline
+
+As a system,
+I want world triggers (region entry, proximity, POI) to marshal a battle — map template, belligerents, stakes — into the three-beat BattleController, and the aftermath to write back to the world,
+So that battles happen where the army stands.
+
+**Acceptance Criteria:**
+
+**Given** an armed encounter,
+**When** it triggers,
+**Then** battle assembly produces a valid `BattleState`, and Aftermath writeback applies control flags, ledger entries, roster casualties, and infiltration deltas
+**And** a converted defeat returns the warband to the map via the existing defeat-conversion path — no dead ends
+**And** replay-gated claim kinds (`potato.mintclaim/1`) generalize to `settlement` so encounters mint like chapters.
+
+### Story 12.6: Chapter Anchoring Refactor
+
+As a developer,
+I want ChapterLibrary entries bound to world predicates (region, POI, ledger thresholds) instead of a linear sequence,
+So that the 回目 are place-bound and mandatory beats stay anchored.
+
+**Acceptance Criteria:**
+
+**Given** the existing ChapterLibrary,
+**When** entries carry world-bindings,
+**Then** scenario availability resolves from world-state predicates — a prerequisite graph replaces the shell sequence
+**And** the `potato.chapter` schema gains bindings via an additive optional field or a clean version bump; unbound entries remain loadable
+**And** mandatory beats (commission, midpoint pivot, final confrontation) anchor to fixed regions or ledger thresholds per narrative-design.
+
+### Story 12.7: Regional Governance & Myth Binding
+
+As a system,
+I want ledger events carrying region ids with per-region 民心/秩序 folds, and world POIs bound to shrine entities,
+So that governance and myth live on the geography.
+
+**Acceptance Criteria:**
+
+**Given** booked events with region tags,
+**When** accumulators fold,
+**Then** per-region 民心/秩序 derive alongside the campaign totals — additive, derived state never stored
+**And** region tags thread through GovernanceField events and myth infiltration keys.
+
+### Story 12.8: World Save Integration
+
+As a player,
+I want the world state — warband position, control flags, resolved encounters, chosen character — inside the atomic save,
+So that a reloaded campaign stands exactly where it was left.
+
+**Acceptance Criteria:**
+
+**Given** a save carrying world state,
+**When** loaded,
+**Then** the schema gate validates and the world resumes bit-identically
+**And** old-format saves reject cleanly per the schema gate (no migration in v1.0).
+
+### Story 12.9: Overworld Presentation & Creation UI
+
+As a player,
+I want to see the campaign map — regions, POIs, my warband, encounter banners — and a character-creation screen,
+So that the world is playable, not just simulatable.
+
+**Acceptance Criteria:**
+
+**Given** Epic F's presentation stack,
+**When** the overworld renders,
+**Then** regions/POIs/warband display with movement-order input and encounter banners; placeholder tiles acceptable
+**And** character creation offers the predefined roster plus creation fields bound to `potato.character/1`.
+
+**Execution sequence:** E0 → L → B → A → D → C → W → E → F → G → MT (F and G may partially parallel once E0 lands). BC lands once C's document machinery (6.5–6.7) exists; 10.1–10.2 may run alongside C, and 10.5 content authoring can parallel F/G. MT's hard dependencies (1.11 BattleRecorder, 2.2 hash chain, 3.2 atomic save) are all done; it may run in parallel with any epic and uses Epic 8/10 artifacts as NFT payloads when available. W's hard dependencies (E0 battle core, B persistence/roster/library) are all done; it may start in parallel with C's remaining items, but E's location-bound content and F's overworld surfaces land after 12.6's anchoring model — hold drafting of 6.5–6.9 and Epic 7 stories until then.
 
 ---
 

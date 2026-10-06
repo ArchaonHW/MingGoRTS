@@ -69,9 +69,11 @@ despairing nor heroic.
 **Episodic (chapter-form 章回體) with branching endings**
 
 Not a classical three-act: a chronicle modeled on 編年/回目 conventions —
-each chapter is a self-contained 回 with its own conventions, inside an
-8–12 chapter campaign arc; the ledger's final state branches into the
-four-voice ending.
+each chapter is a self-contained 回 with its own conventions. The 回目 are
+place-bound: each anchors to a region or deed on the open campaign map,
+its order the player's march rather than a fixed index — an 8–12
+anchored-scenario arc inside a living world; the ledger's final state
+branches into the four-voice ending.
 
 ### Act Breakdown
 
@@ -136,6 +138,11 @@ intrusion, forgery, midpoint pivot, the corrupting fork.
 **Act 3: Resolution (Ch.9–12 + coda)** — Beats 11–14: confluence,
 accountability, final chapter, four-voice reckoning.
 
+**World-map anchoring:** Beats 1–4 anchor to the starting region
+(commission). Beat 8 anchors to a ledger-threshold trigger anywhere on
+the map. Beats 11–14 anchor to late-campaign regions/conditions. All
+other beats bind to world-state triggers at Epic 12 spec time.
+
 ---
 
 ## Pacing and Flow
@@ -190,6 +197,22 @@ fog, hearsay, and his own handwriting.
 
 - Internal: is he recording the war, or writing the war he wished for?
 - External: rivals read his doctrines; forgers write in his margins.
+
+#### The Commander（統帥）
+
+The diegetic protagonist — the general whose war the chronicle records.
+Chosen at campaign start: a predefined named general carrying authored
+priors, or the player's self-created commander (`potato.character/1` —
+name, origin, personality priors, starting doctrine-deck seed).
+
+**Function:** the hand on the map — marches the warband, chooses where
+the 回目 happen. The Chronicler remains the voice; the Commander is
+whose deeds get written.
+
+**Relationship to the Chronicler:** the Commander never speaks in the
+record; the Chronicler never stands on the field. Authorship stays with
+the player — the Commander is the hand on the map, the Chronicler the
+hand on the page.
 
 ---
 
@@ -678,8 +701,11 @@ is unverifiable. That's not a flaw; it's the thesis.
 
 ### Story Gating
 
-**Gating Approach:** Chapter sequence is a hard gate (戰役 chronological);
-inside chapters, narrative content is soft-gated by ledger state.
+**Gating Approach:** Scenarios are gated by world-state predicates —
+region control, POI resolution, ledger thresholds; the prerequisite
+graph replaces the hard chapter sequence, and mandatory beats anchor to
+fixed places or ledger states. Inside scenarios, narrative content is
+soft-gated by ledger state.
 
 **Story-Locked Elements:**
 

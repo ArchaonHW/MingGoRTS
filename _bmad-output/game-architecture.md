@@ -144,6 +144,7 @@ _Version column omitted — every choice below is in-repo/in-house; no external 
 | D-ARCH-7 | QuantumFog model | Region certainty field + probability-cloud entities | per-node certainty gradient for map intel; superposed cloud objects for enemy positions; collapse/probe/decay/entangle as sim ops |
 | D-ARCH-8 | Campaign save | Versioned JSON on SerializationManager slots + `potato.<name>/<ver>` header + tmp→rename atomic write | readable, auditable, rejects bad schema without mutating state |
 | D-ARCH-9 | Chain boundary | External relayer over versioned-JSON outbox — `Campaign/Chain/` writes `potato.mintclaim/1` claims at the aftermath boundary; `Tools/MintRelayer/` does all web3 work | engine has no networking; file boundary preserves headless sim, determinism, and the zero-I/O tick path; matches the C#/.NET tooling precedent |
+| D-ARCH-10 | Campaign world layer | `Campaign/World/` — event-driven world model (WorldMap `potato.world/1`, WorldState, Warband, EncounterPipeline); day-scale beats resolve via ordered event queue, integer math, dedicated seeded PRNG | no second tick sim; encounters marshal into `Gameplay` battles and write back at aftermath; keeps NFR1 intact and world logic inside the persistence layer it mutates |
 
 ### Simulation Kernel
 
@@ -275,6 +276,8 @@ MingGoRTS/
 │   ├── Rivals/                # GeneralDossier, RivalDeck, personality priors
 │   ├── Narrative/             # IntelLedger, NarrativePack, ChapterConventions, EndingPage
 │   ├── Myth/                  # infiltration 0–3, shrines, 天命, MythLog, GodStance
+│   ├── World/                 # WorldMap (potato.world/1), WorldState, Warband, EncounterPipeline
+│   ├── Characters/            # potato.character/1 model + creation data
 │   └── Save/                  # save slots, atomic write, schema gate
 ├── Game/                      # shell app (windowed) — binds Rendering/Input/GUI
 │   ├── Render/                # SpriteAtlas, map view (Epic F)
@@ -303,6 +306,8 @@ MingGoRTS/
 | Rivals / RivalDeck / priors | `Campaign/Rivals` | hearsay model |
 | Narrative systems | `Campaign/Narrative` | chaptered conventions, endings |
 | Myth layer | `Campaign/Myth` | infiltration, shrines, MythLog, GodStance |
+| World map / warband / encounters | `Campaign/World` | day-scale beats; no tick sim |
+| Character model & creation | `Campaign/Characters` | priors bind to Fog priors + Rivals |
 | Save system | `Campaign/Save` | atomic, schema-gated |
 | Sprites / HUD / game UI | `Game/` | Epic F — deferred |
 
@@ -405,6 +410,7 @@ constexpr bool canTransition(BattleBeat a, BattleBeat b) {
 | Ledger append-only | accumulators are folds | no public write API on accumulators |
 | Registry immutability | load at boot, read-only at runtime | `const` registry refs only |
 | Schema gate | `potato.<name>/<ver>` checked on load | `Json` module rejects bad version |
+| World determinism | ordered event queue, integer math, dedicated seeded stream | same review discipline as sim |
 
 ---
 
@@ -417,7 +423,7 @@ constexpr bool canTransition(BattleBeat a, BattleBeat b) {
 | Decision Compatibility | PASS | 16 decisions coherent; ECS/Physics/facade deliberately unused with recorded rationale |
 | GDD Coverage | PASS | every named mechanic maps to an architecture location |
 | Pattern Completeness | PASS | communication/creation/state/error/data/event all covered with examples |
-| Epic Mapping | PASS | E0→Gameplay, B→Campaign State/Save/Roster/Rivals, A→Governance, L→Ledger, C→Narrative, D→Myth, E→doctrine paths, F→Game/, G→tools boundary |
+| Epic Mapping | PASS | E0→Gameplay, B→Campaign State/Save/Roster/Rivals, A→Governance, L→Ledger, C→Narrative, D→Myth, E→doctrine paths, F→Game/, G→tools boundary, W→Campaign World/Characters |
 | Document Completeness | PASS | executive summary + version note added during validation; no placeholders |
 
 ### Coverage Report

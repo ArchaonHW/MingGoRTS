@@ -31,6 +31,8 @@ Every battle runs on two layers of the same map: the **historical layer** (colum
 
 The campaign presents itself as a **章回 chronicle the player is writing**: battles produce historian reports, omissions are confessed in print, enemy generals exist only as hearsay, and the replay archive is a tamper-evident historical record. The player is an author whose medium is war.
 
+The campaign is crossed on foot: an **open strategic map** where the player's commander — a chosen historical general or a self-created one — marches a warband between regions, shrines, and rival armies. Every battle begins where the army stands; where to fight, and whether to fight at all, is the player's march to choose.
+
 ### Target Audience
 
 Hybrid audience, in priority order:
@@ -55,7 +57,7 @@ Single-player only; depth and replayability over breadth.
 
 ### Project Goals
 
-- Ship a complete single-player campaign of 8–12 chapters that proves the doctrine-authorship loop end to end. [ASSUMPTION: chapter count to be committed at first playtest of E0 + B.]
+- Ship a complete single-player campaign — 8–12 authored scenarios anchored across an open world map — that proves the doctrine-authorship loop end to end. [ASSUMPTION: scenario count to be committed at first playtest of E0 + B.]
 - Validate that no-combat victories and defeat-conversion produce genuinely playable campaigns, not gimmick paths.
 - Demonstrate PotatoEngine as a viable game platform; this GDD is the engine's first real product. [ASSUMPTION: solo developer, non-commercial personal/portfolio project.]
 
@@ -79,7 +81,8 @@ PotatoEngine (C++20, OpenGL 3.3+) and the MingGoRTS IDE are already implemented 
 1. **Planning** (untimed) — read intel through QuantumFog, compose doctrine cards onto squad sheets, deploy named squads, draw plan arrows.
 2. **Execution** (real-time, target 5–10 min) — both sides' doctrine scripts run; the player intervenes only via scarce CP, and each intervention resolves within roughly 3 seconds of issue.
 3. **Aftermath** — casualties persist to the roster, ledger entries settle (double-entry), governance deltas apply, and the historian issues the chapter's written account — including what it chose to omit.
-4. **Campaign** — chapter outcome (including converted defeats) shapes intel, rival counter-decks, myth infiltration, and the next chapter's starting conditions.
+4. **World map** (day-scale) — the warband marches between regions, chooses engagements, visits shrines and refit points; encounters — field battles, no-combat confrontations, anchored scenarios — open the three-beat battle where they occur.
+5. **Campaign** — each outcome (including converted defeats) shapes intel, rival counter-decks, myth infiltration, and the conditions of the ground ahead.
 
 ### Win/Loss Conditions
 
@@ -189,6 +192,8 @@ No classic tech tree — progression is **doctrinal**: new cards and sheet slots
 
 Card pool and sheet slots grow by chapter; squads accumulate veterancy and scars; generals earn titles in the campaign's persistent record; myth infiltration opens 天命-spending actions. Progression is account-shaped — what the player has *written into the ledger* defines who they are at the ending.
 
+The protagonist's identity is itself a choice: predefined generals carry authored priors; a created commander is defined by name, origin, personality priors, and a starting doctrine-deck seed.
+
 ### Difficulty Curve
 
 Early chapters teach doctrine primitives against thin counter-decks; mid-campaign adds governance stakes and myth infiltration; late chapters face rivals whose counter-decks have fully adapted to the player's habits — the final difficulty is the player's own predictability.
@@ -209,7 +214,7 @@ Ledger double-entry enforces that nothing is free; refit consumes 物資, myth c
 
 ### Level Progression
 
-8–12 chapters [ASSUMPTION: exact count committed after E0 playtest] via a chapter library. Early: doctrine tutorials disguised as battles. Mid: governance and myth layers entangle — victories start costing things. Late: full rival adaptation, infiltration events, and the four-ending ledger reckoning.
+The campaign world is a persistent map of regions and POIs. 8–12 authored scenarios (回目) anchor to places and prerequisite predicates — order is the player's march, not a fixed list. [ASSUMPTION: scenario count committed after E0 playtest.] Mandatory beats (commission, midpoint pivot, final confrontation) anchor to fixed locations or ledger thresholds. Dynamic encounters fill the space between anchored scenarios: early regions teach doctrines disguised as battles; mid-campaign regions entangle governance and myth; late regions field rivals whose counter-decks have adapted. Defeat on the map converts to governance play as before.
 
 ---
 
@@ -316,8 +321,11 @@ Itemized assumptions pending confirmation or playtest:
 12. Pixel sprites + ink frontispieces blend.
 13. Engine (PotatoEngine) and MingGoRTS IDE exist and build; the game layer is greenfield.
 14. All JSON via the engine's own parser; namespaced versioned schemas; atomic save writes.
+15. World map scale ~20–40 regions/POIs; time resolves at day-scale beats; the world layer is event-driven (no second tick sim).
+16. Character creation fields committed at Epic 12 spec time; priors reuse the existing personality-prior machinery.
 
 ### Open Questions
 
 - OQ-1: Audio direction — period instrumentation vs. modern minimalist (decide at Epic F).
 - OQ-2: Exact four ending voices and their ledger conditions (decide at Epic C).
+- OQ-3: Whether the player may field multiple named generals as subordinate warbands (multi-stack) or commands a single warband — default single-warband for v1.0 unless design review says otherwise.

@@ -3,7 +3,7 @@ title: "Sprint Change Proposal — Epic 12: W 行營輿圖 (Open Campaign World)
 date: 2026-10-06
 project: MingGoRTS
 trigger: "New requirement: open-world campaign map — predefined generals + player-created commander roam freely; battles become encounters"
-status: draft
+status: approved (2026-10-06)
 ---
 
 # Sprint Change Proposal — 2026-10-06
@@ -259,7 +259,7 @@ Section "Story Beats / Beat Placement" — annotate:
 **Handoff:**
 1. This proposal approved → apply §4 edits (epics.md, gdd.md, game-architecture.md, narrative-design.md, sprint-status.yaml).
 2. **Hold drafting of stories 6.5–6.9 and all Epic 7 stories** until Story 12.6's anchoring model lands — they re-anchor onto it.
-3. Epic 11.1 (in review): amend claim-kind wording `chapter-settlement` → `settlement` at its next revision (one-line change).
+3. Epic 11.1 (done 2026-10-06): the `potato.mintclaim/1` claim-kind vocabulary shipped with `chapter-settlement`; generalize it to `settlement` kinds (battle/encounter/governance) when Epic 12.5's encounter pipeline emits claims — the shipped value stays valid, so this is an additive enum extension, not a schema break.
 4. `gds-create-story` per Epic 12 story when it enters the queue; UX surfaces (overworld map, character creation) must land in the UX docs before Epic F.
 5. OQ-3 (multi-stack warbands) defaults to single-warband for v1.0.
 
