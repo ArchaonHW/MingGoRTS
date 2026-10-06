@@ -46,6 +46,10 @@ const char* KindName(WorldEventKind k) {
         return "control";
     case WorldEventKind::Resolve:
         return "resolve";
+    case WorldEventKind::March:
+        return "march";
+    case WorldEventKind::Sight:
+        return "sight";
     }
     return "control";
 }
@@ -57,6 +61,14 @@ bool KindFromName(std::string_view s, WorldEventKind& out) {
     }
     if (s == "resolve") {
         out = WorldEventKind::Resolve;
+        return true;
+    }
+    if (s == "march") {
+        out = WorldEventKind::March;
+        return true;
+    }
+    if (s == "sight") {
+        out = WorldEventKind::Sight;
         return true;
     }
     return false;
@@ -114,6 +126,14 @@ WorldControl WorldState::ControlAt(std::string_view node) const {
     return it == control_.end() ? WorldControl::Neutral : it->second;
 }
 
+bool WorldState::MarkResolved(std::string_view id) {
+    if (!ValidId(id)) return false;
+    if (resolved_.count(std::string(id)) != 0) return true;
+    if (resolved_.size() >= MAX_RESOLVED) return false;
+    resolved_.emplace(id);
+    return true;
+}
+
 Result<bool> WorldState::Enqueue(const WorldMap& map, WorldEvent ev) {
     if (!ValidId(ev.node)) {
         return Gameplay::Fail<bool>("world", "event node id bad");
@@ -129,13 +149,19 @@ Result<bool> WorldState::Enqueue(const WorldMap& map, WorldEvent ev) {
     if (queue_.size() >= MAX_EVENTS) {
         return Gameplay::Fail<bool>("world", "event queue full");
     }
+    // Keep nextSeq_ above every queued seq — events authored
+    // without NextSeq() must not let the counter replay an id
+    // (FromJson's floor is the same rule for the wire).
+    if (ev.seq >= nextSeq_) {
+        nextSeq_ = ev.seq + 1;
+    }
     queue_.push_back(std::move(ev));
     return Gameplay::Ok(true);
 }
 
 Result<int> WorldState::ResolveBeats(const WorldMap& map,
                                      std::int64_t days) {
-    if (days < 0 || day_ + days > MAX_DAY) {
+    if (days < 0 || days > MAX_DAY - day_) {
         return Gameplay::Fail<int>("world", "day advance out of range");
     }
     day_ += days;
@@ -158,6 +184,14 @@ Result<int> WorldState::ResolveBeats(const WorldMap& map,
     int applied = 0;
     for (const WorldEvent& ev : batch) {
         if (map.FindNode(ev.node) == nullptr) {
+            // A March whose destination was edited out resolves
+            // into nothing: the warband never arrived (no
+            // teleport) but it's no longer walking to a place
+            // that doesn't exist — release the in-flight marker.
+            if (ev.kind == WorldEventKind::March &&
+                marchingTo_ == ev.node) {
+                marchingTo_.clear();
+            }
             continue; // node edited out of content — skip
         }
         switch (ev.kind) {
@@ -174,6 +208,16 @@ Result<int> WorldState::ResolveBeats(const WorldMap& map,
                 resolved_.insert(ev.node);
             }
             break;
+        case WorldEventKind::March:
+            warband_ = ev.node;
+            marchingTo_.clear(); // an arrival concludes the march
+            break;
+        case WorldEventKind::Sight: {
+            SightingMark& m = sightings_[ev.node];
+            m.day = day_;
+            ++m.count;
+            break;
+        }
         }
         ++applied;
     }
@@ -210,6 +254,23 @@ Result<JsonValue> WorldState::ToJson() const {
         root["resolved"] = JsonValue::MakeArray(std::move(rs));
     }
     root["rng"] = JsonValue::Int(ToWire(rng_.State()));
+    root["seq"] = JsonValue::Int(ToWire(nextSeq_));
+    if (!marchingTo_.empty()) {
+        JsonValue::Object m;
+        m["to"] = JsonValue::String(marchingTo_);
+        m["eta"] = JsonValue::Int(marchEta_);
+        root["marching"] = JsonValue::MakeObject(std::move(m));
+    }
+    if (!sightings_.empty()) {
+        JsonValue::Object s;
+        for (const auto& [id, mark] : sightings_) {
+            JsonValue::Object jm;
+            jm["day"] = JsonValue::Int(mark.day);
+            jm["count"] = JsonValue::Int(mark.count);
+            s[id] = JsonValue::MakeObject(std::move(jm));
+        }
+        root["sightings"] = JsonValue::MakeObject(std::move(s));
+    }
     if (!queue_.empty()) {
         std::vector<WorldEvent> sorted = queue_;
         std::stable_sort(sorted.begin(), sorted.end(), Before);
@@ -344,6 +405,9 @@ Result<WorldState> WorldState::FromJson(const JsonValue& doc) {
                     "world", "queue node bad");
             }
             ev.node = *n;
+            if (ev.seq >= s.nextSeq_) {
+                s.nextSeq_ = ev.seq + 1;
+            }
             if (ev.kind == WorldEventKind::SetControl) {
                 const std::string* c = je.FindString("control");
                 if (c == nullptr ||
@@ -353,6 +417,55 @@ Result<WorldState> WorldState::FromJson(const JsonValue& doc) {
                 }
             }
             s.queue_.push_back(std::move(ev));
+        }
+    }
+    // Explicit "seq" wins over the queue-derived floor.
+    if (doc.Has("seq")) {
+        const JsonValue& sq = doc["seq"];
+        if (!sq.IsInt()) {
+            return Gameplay::Fail<WorldState>("world",
+                                              "'seq' not int");
+        }
+        const std::uint64_t v = FromWire(sq.AsInt());
+        if (v > s.nextSeq_) {
+            s.nextSeq_ = v;
+        }
+    }
+    if (doc.Has("marching")) {
+        const JsonValue& m = doc["marching"];
+        if (!m.IsObject()) {
+            return Gameplay::Fail<WorldState>("world",
+                                              "'marching' bad");
+        }
+        const std::string* to = m.FindString("to");
+        const JsonValue& eta = m["eta"];
+        if (to == nullptr || !ValidId(*to) || !eta.IsInt() ||
+            eta.AsInt() < 0 || eta.AsInt() > MAX_DAY) {
+            return Gameplay::Fail<WorldState>("world",
+                                              "marching to/eta bad");
+        }
+        s.marchingTo_ = *to;
+        s.marchEta_ = eta.AsInt();
+    }
+    if (doc.Has("sightings")) {
+        const JsonValue& sv = doc["sightings"];
+        if (!sv.IsObject() || sv.Size() > MAX_RESOLVED) {
+            return Gameplay::Fail<WorldState>("world",
+                                              "'sightings' bad/over");
+        }
+        for (const auto& [k, v] : sv.Members()) {
+            if (!ValidId(k) || !v.IsObject()) {
+                return Gameplay::Fail<WorldState>(
+                    "world", "sighting entry bad");
+            }
+            const JsonValue& d = v["day"];
+            const JsonValue& c = v["count"];
+            if (!d.IsInt() || d.AsInt() < 0 || !c.IsInt() ||
+                c.AsInt() < 1 || c.AsInt() > 1000000) {
+                return Gameplay::Fail<WorldState>(
+                    "world", "sighting day/count bad");
+            }
+            s.sightings_[k] = {d.AsInt(), c.AsInt()};
         }
     }
     return Gameplay::Ok(std::move(s));

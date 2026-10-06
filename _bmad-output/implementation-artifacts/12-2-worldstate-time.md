@@ -5,7 +5,7 @@ baseline_commit: NO_VCS
 # Story 12.2 — WorldState & Day-Beat Resolution
 
 > Epic 12 — 行營輿圖 Open Campaign World (W) · `potato.worldstate/1` ·
-> **Status: review**
+> **Status: done**
 
 ## Story (from epics.md)
 

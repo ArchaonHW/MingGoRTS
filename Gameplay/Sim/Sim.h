@@ -16,6 +16,9 @@ class Prng {
 public:
     explicit Prng(std::uint64_t seed) : state_(seed) {}
     std::uint64_t Next();
+    // Raw counter for persistence: Prng(p.State()) resumes the
+    // stream bit-exactly (counter-based — no degenerate states).
+    std::uint64_t State() const { return state_; }
 private:
     std::uint64_t state_;
 };

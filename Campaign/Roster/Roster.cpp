@@ -51,7 +51,7 @@ Gameplay::Result<AftermathResult> ApplyAftermath(
     const std::vector<AftermathRow>& rows) {
     // Every accepted row must name a distinct live squad, so a
     // report bigger than the roster is provably garbage — reject
-    // before allocating `targets`.
+    // before allocating `applyIdx`.
     if (rows.size() > state.GetRoster().size()) {
         return Gameplay::Fail<AftermathResult>(
             "aftermath", "report larger than roster");
@@ -60,7 +60,7 @@ Gameplay::Result<AftermathResult> ApplyAftermath(
     // Phase 1: validate every row against an unmutated roster.
     // Any failure rejects the entire aftermath — a caller bug or
     // forged report must not half-apply.
-    std::vector<int> targets(rows.size());
+    std::vector<int> applyIdx(rows.size());
     std::unordered_set<std::string> seen;
     for (std::size_t i = 0; i < rows.size(); ++i) {
         const auto& row = rows[i];
@@ -103,14 +103,14 @@ Gameplay::Result<AftermathResult> ApplyAftermath(
             return Gameplay::Fail<AftermathResult>(
                 "aftermath", "veterancy would overflow bound");
         }
-        targets[i] = found.value;
+        applyIdx[i] = found.value;
     }
 
     // Phase 2: apply.
     AftermathResult res;
     for (std::size_t i = 0; i < rows.size(); ++i) {
         auto& e = state.GetRoster()[
-            static_cast<std::size_t>(targets[i])];
+            static_cast<std::size_t>(applyIdx[i])];
         e.casualties += rows[i].casualties;
         if (rows[i].wiped) {
             e.dead = true;

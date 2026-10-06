@@ -1106,7 +1106,7 @@ std::uint64_t BattleController::Checksum() const {
         for (std::size_t r : a.path) h = Fold(h, RegionKey(r));
     }
     // Fog state: region fields + cloud beliefs + the truth<->cloud map
-    // + probe budgets (decayAccum is derived from TickCount — skipped).
+    // + probe budget (decayAccum is derived from TickCount — skipped).
     for (int s = 0; s < 2; ++s) {
         for (const CloudEntity& c : fog_[s].Clouds()) {
             h = Fold(h, static_cast<std::uint64_t>(

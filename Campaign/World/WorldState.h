@@ -47,6 +47,8 @@ namespace Potato::Campaign {
 enum class WorldEventKind : std::uint8_t {
     SetControl, // node changes faction control
     Resolve,    // mark a POI/encounter id resolved
+    March,      // warband arrives at node (12.3)
+    Sight,      // hearsay marker: rival banners seen (12.3)
 };
 
 struct WorldEvent {
@@ -55,6 +57,14 @@ struct WorldEvent {
     WorldEventKind kind = WorldEventKind::SetControl;
     std::string node;             // world node id (the target)
     WorldControl control = WorldControl::Neutral; // SetControl arg
+};
+
+// Hearsay marker — rival warbands exist only as sightings the
+// camp heard about (node, freshest day, count). No live position,
+// no truth the player can read: uncertainty is the data.
+struct SightingMark {
+    std::int64_t day = 0;
+    std::int64_t count = 0;
 };
 
 class WorldState {
@@ -80,6 +90,16 @@ public:
     bool IsResolved(std::string_view node) const {
         return resolved_.count(std::string(node)) != 0;
     }
+    // Mark a POI/encounter id resolved directly (12.5): the
+    // resolved set accepts arbitrary ids, not just map nodes —
+    // queue Resolve events stay node-keyed, but encounters live
+    // in their own id space and settle outside the beat queue.
+    // Idempotent; false only on bound/empty-id rejection.
+    bool MarkResolved(std::string_view id);
+    // Resolved-set occupancy — the settle ceremony (12.5)
+    // preflights capacity before committing so MarkResolved
+    // cannot fail post-mutation.
+    std::size_t ResolvedCount() const { return resolved_.size(); }
     // Canonical order: (day, seq, insertion-stable).
     const std::vector<WorldEvent>& Pending() const { return queue_; }
 
@@ -91,8 +111,9 @@ public:
     // Advance `days` beats (>= 0), draining every queued event with
     // day <= new day in canonical (day, seq, insertion) order.
     // Integer math; no I/O; no exceptions. An event whose node has
-    // since vanished from the map is skipped but counts as applied
-    // (content may shrink between versions — the beat marches on).
+    // since vanished from the map is skipped — never applied — but
+    // a skipped March still releases the in-flight marker (the
+    // warband stays put; it isn't walking to a deleted node).
     Gameplay::Result<int> ResolveBeats(const WorldMap& map,
                                        std::int64_t days);
 
@@ -101,9 +122,36 @@ public:
     // other canonical paths, never from presentation.
     std::uint64_t Draw() { return rng_.Next(); }
 
-    // Relocate the warband (12.3's movement mechanics call this
-    // after charging march cost). false if `node` isn't in `map`.
+    // Direct relocate seam (tests/dev tools; 12.3's march order
+    // goes through the event queue instead — see March.cpp).
+    // false if `node` isn't in `map`.
     bool SetWarband(std::string_view node, const WorldMap& map);
+
+    // --- 12.3: movement & hearsay ---
+
+    // State-owned emission counter for canonical event ordering.
+    // Callers pass NextSeq() into WorldEvent::seq; persisted as
+    // "seq" so replays emit identical queues.
+    std::uint64_t NextSeq() { return nextSeq_++; }
+    std::uint64_t SeqCounter() const { return nextSeq_; }
+
+    // In-flight march: a pending March event marks the warband as
+    // en route. Issued by March.cpp; cleared when the arrival
+    // applies. Empty destination = not marching.
+    bool Marching() const { return !marchingTo_.empty(); }
+    const std::string& MarchDest() const { return marchingTo_; }
+    std::int64_t MarchEta() const { return marchEta_; }
+    // Begin/clear the in-flight marker — validation (adjacency,
+    // cost) lives in IssueMarch; this just records intent.
+    void BeginMarch(std::string_view dest, std::int64_t eta) {
+        marchingTo_ = std::string(dest);
+        marchEta_ = eta;
+    }
+
+    // Hearsay read view: node -> {freshest day, count}.
+    const std::map<std::string, SightingMark>& Sightings() const {
+        return sightings_;
+    }
 
     Gameplay::Result<Gameplay::JsonValue> ToJson() const;
     static Gameplay::Result<WorldState> FromJson(
@@ -117,6 +165,10 @@ private:
     std::set<std::string> resolved_;
     std::vector<WorldEvent> queue_;
     Gameplay::Prng rng_{0};
+    std::uint64_t nextSeq_ = 0;                   // emission counter
+    std::string marchingTo_;                      // in-flight dest
+    std::int64_t marchEta_ = 0;                   // arrival day
+    std::map<std::string, SightingMark> sightings_;
 };
 
 } // namespace Potato::Campaign
