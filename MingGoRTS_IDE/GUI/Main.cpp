@@ -104,8 +104,10 @@ int main() {
         ideGUI.RenderDebugger();
         ideGUI.RenderGitPanel();
         ideGUI.RenderCodeAnalysis();
+        ideGUI.UpdateIntelligentSuggestions();
         ideGUI.RenderIntelligentSuggestions();
         ideGUI.RenderDevelopmentAssistant();
+        ideGUI.RenderCardGallery();
         ideGUI.RenderSettings();
         ideGUI.RenderHelp();
         ideGUI.RenderStatusBar();
@@ -133,6 +135,8 @@ int main() {
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
     
+    // 此窗口未安裝引擎共享 context（回調由 ImGui GLFW backend 管理），
+    // 直接銷毀即可；引擎路徑的窗口一律走 Potato::DestroyGLFWWindow
     glfwDestroyWindow(window);
     glfwTerminate();
     

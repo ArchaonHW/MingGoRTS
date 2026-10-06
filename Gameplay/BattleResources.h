@@ -1,0 +1,66 @@
+#pragma once
+
+#include "Core/CoreTypes.h"
+
+#include <unordered_map>
+
+namespace Potato {
+namespace Gameplay {
+
+class BattleController;
+
+/**
+ * 戰鬥資源（BattleResources）——T-6 情報/CP/士氣執行率
+ *
+ * 回合層的核心資源三件套：
+ *   intel  —— 情報點。戰前花費解鎖敵方資訊（敵將人格、卡組傾向）；
+ *            與指令槽互斥取捨（設計：情報↔指令槽 trade-off）
+ *   cp     —— 指揮點數。即時層介入用，由 BattleController 持有；
+ *            此處管理額度並同步進 controller
+ *   morale —— 每小隊士氣在 Squad 裡；本類提供「士氣 < 30% →
+ *            doctrine 執行率 70%」的全域規則設定（接到 controller）
+ */
+class BattleResources {
+public:
+    struct TeamResources {
+        int intel = 0;
+        int cp = 0;
+        int maxCP = 0;
+        int loot = 0;   // G-7 戰利品點數（跨場累積的 meta 貨幣）
+    };
+
+    // 設定某隊資源並把 CP 同步進 controller
+    void Setup(BattleController& battle, int team, int intel, int cp);
+
+    // 花情報：回傳 false = 情報不足
+    bool SpendIntel(int team, int amount);
+    int GetIntel(int team) const;
+    int GetCP(int team) const;
+
+    // G-5 計畫加成：作戰計畫核准後的補給入帳
+    void AddIntel(int team, int amount);
+    // CP 加給會同步進 controller（含 maxCP 上限放寬）
+    void AddCP(BattleController& battle, int team, int amount);
+
+    // 情報消費：解鎖敵方人格三軸的可視化（回傳是否成功解鎖）
+    bool RevealEnemyPersonality(int team);
+
+    // G-7 戰利品帳戶：戰後結算入帳，meta 層（招募/整補）消費
+    void AddLoot(int team, int points);
+    bool SpendLoot(int team, int points); // 不足回 false
+    int GetLoot(int team) const;
+
+    // 把士氣執行率規則灌進 controller：
+    // 小隊士氣 < threshold 時 doctrine 動作只有 rate 機率執行
+    // （預設 < 0.30 → 70%，對應設計「士氣 < 30 → 執行率 70%」）
+    static void ApplyMoraleRule(BattleController& battle,
+                                float threshold = 0.30f,
+                                float rate = 0.70f);
+
+private:
+    std::unordered_map<int, TeamResources> teams;
+    std::unordered_map<int, bool> personalityRevealed;
+};
+
+} // namespace Gameplay
+} // namespace Potato

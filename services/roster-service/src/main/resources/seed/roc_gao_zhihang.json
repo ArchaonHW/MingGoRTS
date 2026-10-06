@@ -1,0 +1,25 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_gao_zhihang",
+  "name": "高志航",
+  "courtesyName": "子恒",
+  "epithet": "空軍軍神",
+  "rarity": "rare",
+  "faction": "中央軍",
+  "role": "commander",
+  "personality": { "aggression": 88, "discipline": 80, "cunning": 66 },
+  "stats": { "command": 68, "attack": 90, "defense": 52, "mobility": 96, "moraleAura": 80 },
+  "signatureDoctrine": {
+    "name": "鷹擊長空",
+    "trigger": "EnemyInRange", "threshold": 12.0, "action": "AttackNearest",
+    "description": "發現敵機即俯衝接戰——八一四空戰首開擊落紀錄的獵殺本能"
+  },
+  "cards": [
+    { "name": "受創脫離", "trigger": "HealthBelow", "action": "RetreatToRally", "threshold": 0.35, "priority": 30, "cooldown": 15.0 },
+    { "name": "巡航", "trigger": "Always", "action": "HoldPosition", "threshold": 0.0, "priority": 95, "cooldown": 0.0 }
+  ],
+  "portrait": { "build": "slim", "head": "cap", "beard": "none", "glasses": false },
+  "lore": "空軍第四大隊大隊長,八一四筧橋空戰首開紀錄擊落日機,周家口遇襲殉國,年三十。",
+  "historicalBattle": "八一四空戰 1937",
+  "art": "cards/art/roc_gao_zhihang.png"
+}

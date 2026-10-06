@@ -1,0 +1,21 @@
+{
+  "schema": "potato.squad_template/1",
+  "id": "archer_skirmish",
+  "name": "弓兵散陣",
+  "unit_class": "archer",
+  "members": 20,
+  "cost": 120,
+  "stats": {
+    "speed": 2.2,
+    "engage_range": 4.0,
+    "damage_per_member": 0.04,
+    "stamina": {
+      "drain_move": 0.025,
+      "drain_combat": 0.04,
+      "regen": 0.06,
+      "threshold": 0.3,
+      "penalty_mul": 0.6
+    }
+  },
+  "note": "散兵弓隊——人少價廉、接戰距離長，克制步兵、怕騎兵衝臉"
+}

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "NeuralNetwork.h"
+
 #include <vector>
 #include <unordered_map>
 #include <memory>
@@ -121,13 +123,25 @@ public:
     // Target network update
     void UpdateTargetNetwork();
     
-    // Getters
+    // Getters / tuning
     size_t GetReplayBufferSize() const { return replayBuffer.size(); }
+    float GetExplorationRate() const { return explorationRate; }
+    void SetExplorationRate(float rate);
+    // 重建 rng（訓練可重現）；不影響已建權重
+    void SetSeed(unsigned int seed);
+    // 以固定 seed 重建兩個網路權重（整條訓練管線可重現）；
+    // 會清空 replay buffer
+    void SeedWeights(unsigned int seed);
+    
+    // 持久化：序列化線上 Q 網路（NeuralNetwork::Serialize 格式）；
+    // 載入後 target network 同步為同一組權重
+    std::string Serialize() const;
+    bool Deserialize(const std::string& data);
     
 private:
-    class NeuralNetwork* qNetwork;
-    class NeuralNetwork* targetNetwork;
-    
+    std::unique_ptr<NeuralNetwork> qNetwork;
+    std::unique_ptr<NeuralNetwork> targetNetwork;
+
     int stateSize;
     int numActions;
     float learningRate;
@@ -142,6 +156,7 @@ private:
     
     float PredictQValue(const State& state, int action);
     std::vector<float> PredictQValues(const State& state);
+    std::vector<float> PredictTargetQValues(const State& state);
 };
 
 /**
@@ -166,19 +181,21 @@ public:
     void ClearTrajectory();
     
 private:
-    class NeuralNetwork* policyNetwork;
-    
+    std::unique_ptr<NeuralNetwork> policyNetwork;
+
     int stateSize;
     int numActions;
     float learningRate;
     float discountFactor;
-    
+
     struct TrajectoryStep {
         State state;
         Action action;
         float reward;
     };
     std::vector<TrajectoryStep> trajectory;
+    
+    std::mt19937 rng;
     
     std::vector<float> ComputeReturns();
     std::vector<float> GetActionProbabilities(const State& state);
@@ -202,14 +219,16 @@ public:
                    float reward, const State& nextState, bool done);
     
 private:
-    class NeuralNetwork* actorNetwork;
-    class NeuralNetwork* criticNetwork;
+    std::unique_ptr<NeuralNetwork> actorNetwork;
+    std::unique_ptr<NeuralNetwork> criticNetwork;
     
     int stateSize;
     int numActions;
     float actorLearningRate;
     float criticLearningRate;
     float discountFactor;
+    
+    std::mt19937 rng;
     
     std::vector<float> GetActionProbabilities(const State& state);
     float GetValue(const State& state);
@@ -242,6 +261,16 @@ private:
 };
 
 /**
+ * Result of an environment step
+ */
+struct StepResult {
+    State nextState;
+    float reward;
+    bool done;
+    std::string info;
+};
+
+/**
  * Environment interface for RL
  */
 class RLEnvironment {
@@ -252,12 +281,7 @@ public:
     virtual State Reset() = 0;
     
     // Step environment
-    virtual struct StepResult {
-        State nextState;
-        float reward;
-        bool done;
-        std::string info;
-    } Step(const Action& action) = 0;
+    virtual StepResult Step(const Action& action) = 0;
     
     // Get action space
     virtual std::vector<Action> GetActionSpace() const = 0;
@@ -290,6 +314,7 @@ private:
     std::pair<int, int> goal;
     std::vector<std::pair<int, int>> obstacles;
     std::pair<int, int> currentPosition;
+    std::vector<Action> actions;
     
     bool IsObstacle(int x, int y) const;
     bool IsGoal(int x, int y) const;

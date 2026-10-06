@@ -1,0 +1,25 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_duan_qirui",
+  "name": "段祺瑞",
+  "courtesyName": "芝泉",
+  "epithet": "北洋之虎",
+  "rarity": "epic",
+  "faction": "皖系",
+  "role": "commander",
+  "personality": { "aggression": 62, "discipline": 80, "cunning": 78 },
+  "stats": { "command": 82, "attack": 68, "defense": 72, "mobility": 58, "moraleAura": 74 },
+  "signatureDoctrine": {
+    "name": "武力統一",
+    "trigger": "Always", "threshold": 0.0, "action": "AdvanceToObjective",
+    "description": "皖系政略即軍略——執政虎威,務求以武力壓服四方"
+  },
+  "cards": [
+    { "name": "臨敵不退", "trigger": "UnderAttack", "action": "HoldPosition", "threshold": 0.0, "priority": 40, "cooldown": 15.0 },
+    { "name": "策應", "trigger": "AllyEngaged", "action": "DefendNearestAlly", "threshold": 0.0, "priority": 60, "cooldown": 12.0 }
+  ],
+  "portrait": { "build": "slim", "head": "bald", "beard": "mustache", "glasses": false },
+  "lore": "皖系首領,四任總理再造共和,六不總理不抽不喝不嫖不賭不貪不佔,剛愎而廉。",
+  "historicalBattle": "直皖戰爭 1920",
+  "art": "cards/art/roc_duan_qirui.png"
+}

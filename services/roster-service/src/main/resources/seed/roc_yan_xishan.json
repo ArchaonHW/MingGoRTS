@@ -1,0 +1,38 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_yan_xishan",
+  "name": "閻錫山",
+  "courtesyName": "百川",
+  "epithet": "山西王",
+  "rarity": "epic",
+  "faction": "晉綏軍",
+  "role": "commander",
+  "personality": {
+    "aggression": 40,
+    "discipline": 85,
+    "cunning": 90
+  },
+  "stats": {
+    "command": 76,
+    "attack": 65,
+    "defense": 92,
+    "mobility": 50,
+    "moraleAura": 75
+  },
+  "signatureDoctrine": {
+    "name": "模範省壁壘",
+    "trigger": "Always",
+    "threshold": 0.0,
+    "action": "HoldPosition",
+    "description": "永遠優先固守——三十八年的山西經營,把防守做成一門哲學"
+  },
+  "portrait": {
+    "build": "normal",
+    "head": "bald",
+    "beard": "goatee",
+    "glasses": false
+  },
+  "lore": "統治山西三十八年的不倒翁。太原會戰雖敗猶榮,保存實力的小大智慧。",
+  "historicalBattle": "太原會戰 1937",
+  "art": "cards/art/roc_yan_xishan.png"
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_qiu_qingquan",
+  "name": "邱清泉",
+  "courtesyName": "雨庵",
+  "epithet": "邱瘋子",
+  "rarity": "epic",
+  "faction": "中央軍",
+  "role": "commander",
+  "personality": { "aggression": 92, "discipline": 60, "cunning": 62 },
+  "stats": { "command": 76, "attack": 90, "defense": 60, "mobility": 84, "moraleAura": 66 },
+  "signatureDoctrine": {
+    "name": "瘋虎撲敵",
+    "trigger": "EnemyInRange", "threshold": 9.0, "action": "AttackNearest",
+    "description": "遠距離即撲——留德裝甲兵的攻勢本能,瘋起來連命都不要"
+  },
+  "cards": [
+    { "name": "以寡擊眾", "trigger": "Outnumbered", "action": "AttackNearest", "threshold": 0.0, "priority": 15, "cooldown": 30.0 },
+    { "name": "推進", "trigger": "Always", "action": "AdvanceToObjective", "threshold": 0.0, "priority": 95, "cooldown": 0.0 }
+  ],
+  "portrait": { "build": "normal", "head": "cap", "beard": "none", "glasses": false },
+  "lore": "第二兵團司令,留德學裝甲戰,崑崙關血戰成名,淮海兵敗不肯突圍,戰死陳官莊。",
+  "historicalBattle": "崑崙關戰役 1939",
+  "art": "cards/art/roc_qiu_qingquan.png"
+}

@@ -6,6 +6,7 @@
 #include "AIIntegration.h"
 #include <iostream>
 #include <algorithm>
+#include <cctype>
 #include <chrono>
 #include <thread>
 
@@ -339,7 +340,13 @@ bool AIAgentInterface::Initialize() {
     
     // Initialize IDE Context Manager
     contextManager = std::make_unique<IDEContextManager>();
-    
+
+    // 啟用預設 agent 編制——面板與 ProcessRequest 依賴非空 agent 集
+    agentManager->CreateAgent(GameDevAgentType::EngineCode, "CodeAssistant");
+    agentManager->CreateAgent(GameDevAgentType::GameDesigner, "Designer");
+    agentManager->CreateAgent(GameDevAgentType::Performance, "PerfAnalyst");
+    agentManager->CreateAgent(GameDevAgentType::BuildAgent, "BuildKeeper");
+
     // This will integrate with Potato Engine AI Agent system
     available = true;
     
@@ -362,27 +369,102 @@ void AIAgentInterface::Shutdown() {
     available = false;
 }
 
+namespace {
+
+// 關鍵字意圖分派（中英雙語）——回傳命中的意圖種類
+bool ContainsAny(const std::string& s, std::initializer_list<const char*> kws) {
+    for (const char* kw : kws) {
+        if (s.find(kw) != std::string::npos) return true;
+    }
+    return false;
+}
+
+std::string ToLowerCopy(std::string s) {
+    for (auto& c : s) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    return s;
+}
+
+} // namespace
+
 std::string AIAgentInterface::ProcessRequest(const std::string& request) {
     std::cout << "Processing AI request: " << request << std::endl;
-    
-    // This will call Potato Engine AI Agent system
-    return "AI response to: " + request;
+    if (!available || !agentManager) {
+        return "AI Agent system not available";
+    }
+
+    const std::string lower = ToLowerCopy(request);
+    SimplifiedAI::Context ctx = contextManager
+        ? contextManager->GetCurrentContext() : SimplifiedAI::Context{};
+
+    // 意圖 → 專責 agent。各 manager 方法內部已先嘗試智能後端
+    // （SetBackend 由 SetAssistantHook 轉發），回空才走 agent 模板。
+    if (ContainsAny(lower, {"generate", "create", "write", "implement",
+                            "生成", "產生", "新增", "寫一", "寫個", "建立"})) {
+        return "[CodeAssistant] " +
+               agentManager->GenerateCode(request, GameDevAgentType::EngineCode, ctx);
+    }
+    if (ContainsAny(lower, {"analyze", "review", "check", "fix", "bug",
+                            "分析", "檢查", "審查", "修"})) {
+        return "[PerfAnalyst] " +
+               agentManager->AnalyzePerformance(request, ctx);
+    }
+    if (ContainsAny(lower, {"level", "map", "stage", "design",
+                            "關卡", "地圖", "設計"})) {
+        return "[Designer] " + agentManager->DesignLevel(request, ctx);
+    }
+    if (ContainsAny(lower, {"build", "compile", "編譯", "建置", "連結"})) {
+        return "[BuildKeeper] " + agentManager->OptimizeBuild(request, ctx);
+    }
+    if (ContainsAny(lower, {"performance", "optimize", "slow", "效能", "優化", "卡"})) {
+        return "[PerfAnalyst] " + agentManager->AnalyzePerformance(request, ctx);
+    }
+
+    // 一般問答：智能後端優先，其次第一個 agent 的 IDE 任務處理
+    if (assistantHook) {
+        std::string r = assistantHook("chat: " + request);
+        if (!r.empty()) return "[AI] " + r;
+    }
+    auto agents = agentManager->GetAllAgents();
+    if (!agents.empty()) {
+        return "[AI] " + agents[0]->ProcessIDETask(request, ctx);
+    }
+    return "No agents available";
 }
 
 std::string AIAgentInterface::ProcessCodeRequest(const std::string& code, const std::string& context) {
-    (void)code;
-    (void)context;
     std::cout << "Processing code request with context" << std::endl;
-    
-    // This will use specialized code generation agents
-    return "Generated code based on context";
+    if (!available || !agentManager) {
+        return "AI Agent system not available";
+    }
+
+    SimplifiedAI::Context ctx = contextManager
+        ? contextManager->GetCurrentContext() : SimplifiedAI::Context{};
+    ctx.currentTask = context;
+
+    if (assistantHook) {
+        std::string r = assistantHook(code);
+        if (!r.empty()) return r;
+    }
+    return agentManager->GenerateCode(code, GameDevAgentType::EngineCode, ctx);
 }
 
 std::string AIAgentInterface::ProcessBuildRequest(const std::string& buildConfig) {
     std::cout << "Processing build request: " << buildConfig << std::endl;
-    
-    // This will use build optimization agents
-    return "Build optimization suggestions";
+    if (!available || !agentManager) {
+        return "AI Agent system not available";
+    }
+
+    SimplifiedAI::Context ctx = contextManager
+        ? contextManager->GetCurrentContext() : SimplifiedAI::Context{};
+    return agentManager->OptimizeBuild(buildConfig, ctx);
+}
+
+void AIAgentInterface::SetAssistantHook(
+    std::function<std::string(const std::string&)> hook) {
+    assistantHook = hook;
+    if (agentManager) {
+        agentManager->SetBackend(std::move(hook));
+    }
 }
 
 size_t AIAgentInterface::GetActiveAgentCount() const {

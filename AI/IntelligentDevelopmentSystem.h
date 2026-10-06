@@ -19,6 +19,10 @@
 namespace Potato {
 namespace AI {
 
+// 前向聲明：本地生成管線的可選上下文來源
+class KnowledgeGraph;
+class SelfReflection;
+
 /**
  * Development Task Type
  */
@@ -144,6 +148,9 @@ public:
     // Configuration
     void SetRAGSystem(RAGSystem* ragSystem);
     void SetToolExecutor(ToolExecutor* executor);
+
+    // 外部 LLM 端點覆寫（Ollama 相容伺服器用；空字串=各 client 預設端點）
+    void SetLLMBaseURL(const std::string& url) { llmBaseURL = url; }
     
     // Task Management
     std::string CreateTask(DevTaskType type, const std::string& description, const std::unordered_map<std::string, std::string>& params = {});
@@ -158,9 +165,19 @@ public:
         const std::string& language = "C++",
         const std::string& context = "");
     
+    // 本地生成管線：NLP 意圖解析 → 模板/規則合成 → 可選知識圖譜上下文。
+    // 不依賴外部 LLM，離線可用；GenerateCode 會優先走此路徑。
+    CodeGenerationResult GenerateLocal(
+        const std::string& specification,
+        const std::string& language = "C++");
+    
     CodeGenerationResult GenerateCodeFromPrompt(
         const std::vector<ChatMessage>& messages,
         const std::string& language = "C++");
+    
+    // 本地管線上下文掛接（可選，設置後生成時會參考專案知識）
+    void SetKnowledgeGraph(KnowledgeGraph* graph) { knowledgeGraph = graph; }
+    void SetSelfReflection(SelfReflection* reflection) { selfReflection = reflection; }
     
     // Code Analysis
     CodeAnalysisResult AnalyzeCode(const std::string& code, const std::string& language = "C++");
@@ -217,16 +234,45 @@ public:
     DevSystemStats GetStats() const;
     void ResetStats();
     
+    // Subsystem access
+    ILLMClient* GetLLMClient() const { return llmClient; }
+    const std::string& GetLLMBaseURL() const { return llmBaseURL; }
+    RAGSystem* GetRAGSystem() const { return ragSystem; }
+    
 private:
     ILLMClient* llmClient;
+    std::string llmBaseURL;
     AIAgentManager* agentManager;
     RAGSystem* ragSystem;
     ToolExecutor* toolExecutor;
+    KnowledgeGraph* knowledgeGraph = nullptr;
+    SelfReflection* selfReflection = nullptr;
     
     std::unordered_map<std::string, DevTask> tasks;
     DevSystemStats stats;
     
+    // ---- 本地生成管線 ----
+    // 從自然語言提示解析出的生成意圖
+    struct ParsedIntent {
+        enum class Kind { Class, Function, SystemStub, TestStub, Unknown };
+        Kind kind = Kind::Unknown;
+        std::string subject;                 // 主體名稱（如 "Player"、"mergeSort"）
+        std::vector<std::string> fields;     // 提及的欄位
+        std::vector<std::string> methods;    // 提及的方法
+        std::string rawPrompt;
+    };
+    
+    ParsedIntent ParseIntent(const std::string& prompt) const;
+    std::string Synthesize(const ParsedIntent& intent, const std::string& language);
+    
+    // 模板生成器（資料驅動：kind -> generator）
+    std::string GenClass(const ParsedIntent& intent);
+    std::string GenFunction(const ParsedIntent& intent);
+    std::string GenSystemStub(const ParsedIntent& intent);
+    std::string GenTestStub(const ParsedIntent& intent);
+    
     // Internal methods
+    LLMConfig MakeLLMConfig(float temperature, int maxTokens) const;
     std::string BuildPrompt(const std::string& task, const std::string& context);
     std::string ExtractCodeFromResponse(const std::string& response);
     CodeAnalysisResult ParseAnalysisResult(const std::string& response);

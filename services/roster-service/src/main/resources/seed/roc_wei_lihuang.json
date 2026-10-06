@@ -1,0 +1,25 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_wei_lihuang",
+  "name": "衛立煌",
+  "courtesyName": "俊如",
+  "epithet": "常勝將軍",
+  "rarity": "epic",
+  "faction": "遠征軍",
+  "role": "commander",
+  "personality": { "aggression": 55, "discipline": 85, "cunning": 65 },
+  "stats": { "command": 86, "attack": 74, "defense": 82, "mobility": 70, "moraleAura": 82 },
+  "signatureDoctrine": {
+    "name": "穩紮穩打",
+    "trigger": "Always", "threshold": 0.0, "action": "AdvanceToObjective",
+    "description": "不求奇襲,步步為營推向目標——忻口到滇西的厚實推進"
+  },
+  "cards": [
+    { "name": "受襲固守", "trigger": "UnderAttack", "action": "HoldPosition", "threshold": 0.0, "priority": 40, "cooldown": 15.0 },
+    { "name": "潰線重整", "trigger": "MoraleBelow", "threshold": 0.4, "action": "RetreatToRally", "priority": 25, "cooldown": 25.0 }
+  ],
+  "portrait": { "build": "burly", "head": "cap", "beard": "none", "glasses": false },
+  "lore": "二戰區副司令長官,忻口會戰硬撼板垣師團,後統遠征軍收復滇西,戰功彪炳而不爭功。",
+  "historicalBattle": "滇西反攻 1944",
+  "art": "cards/art/roc_wei_lihuang.png"
+}

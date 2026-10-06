@@ -1,0 +1,38 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_xue_yue",
+  "name": "薛岳",
+  "courtesyName": "伯陵",
+  "epithet": "長沙之虎",
+  "rarity": "legendary",
+  "faction": "中央軍",
+  "role": "commander",
+  "personality": {
+    "aggression": 85,
+    "discipline": 80,
+    "cunning": 75
+  },
+  "stats": {
+    "command": 90,
+    "attack": 88,
+    "defense": 85,
+    "mobility": 70,
+    "moraleAura": 82
+  },
+  "signatureDoctrine": {
+    "name": "天爐戰法",
+    "trigger": "EnemyInRange",
+    "threshold": 20.0,
+    "action": "AttackWeakest",
+    "description": "敵軍進入伏擊圈即猛攻其最弱環節——四次長沙會戰的爐心"
+  },
+  "portrait": {
+    "build": "normal",
+    "head": "cap",
+    "beard": "mustache",
+    "glasses": false
+  },
+  "lore": "第九戰區司令長官,四次長沙會戰重創日軍,殲敵數為抗戰諸將之冠。",
+  "historicalBattle": "第三次長沙會戰 1941",
+  "art": "cards/art/roc_xue_yue.png"
+}

@@ -7,6 +7,7 @@ docs/
 ├── guides/           # 使用指南與建置說明
 ├── architecture/     # 架構設計與開發計劃
 ├── reports/          # 整合報告與稽核
+├── business/         # 商業估算與成本收益分析
 ├── research/         # 研究文檔
 └── archive/          # 歷史完成報告(已整合)
 ```
@@ -31,7 +32,11 @@ docs/
 - **[CONSOLIDATED_COMPLETION_REPORT.md](./reports/CONSOLIDATED_COMPLETION_REPORT.md)** — 整合完成報告:涵蓋引擎核心、AI 平台、智能開發系統、IDE 全開發歷程(取代 12 份原始報告)
 - **[SECURITY_AUDIT.md](./reports/SECURITY_AUDIT.md)** — 安全稽核報告(2026-09-16)
 
-## 🔬 研究 (research/)
+## � 商業估算 (business/)
+
+- **[PROJECT_COST_REVENUE_ESTIMATE.md](./business/PROJECT_COST_REVENUE_ESTIMATE.md)** — 專案總成本與總收益預估:三階段人力/外包/行銷成本、Steam 定價模型、銷量情境與回本門檻(約 1.5 萬套)
+
+## �🔬 研究 (research/)
 
 - **[QUANTUM_DEVELOPMENT_RESEARCH.md](./research/QUANTUM_DEVELOPMENT_RESEARCH.md)** — 量子計算開發研究
 

@@ -1,0 +1,44 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "avatar_xiao_renou",
+  "name": "蕭忍柔",
+  "courtesyName": "懷民",
+  "epithet": "治平之手",
+  "rarity": "epic",
+  "faction": "民政督導處",
+  "role": "governor",
+  "personality": {
+    "aggression": 20,
+    "discipline": 85,
+    "cunning": 70
+  },
+  "stats": {
+    "command": 78,
+    "attack": 40,
+    "defense": 82,
+    "mobility": 50,
+    "moraleAura": 95
+  },
+  "signatureDoctrine": {
+    "name": "惜兵撤退",
+    "trigger": "HealthBelow",
+    "threshold": 0.5,
+    "action": "RetreatToRally",
+    "description": "兵力過半損即撤——治平者不以人命換戰功"
+  },
+  "cards": [
+    { "trigger": "MoraleBelow", "threshold": 0.4, "action": "RetreatToRally" },
+    { "trigger": "AllyEngaged", "threshold": 0.0, "action": "DefendNearestAlly" },
+    { "trigger": "Always", "threshold": 0.0, "action": "HoldPosition" }
+  ],
+  "portrait": {
+    "source": "vrm",
+    "model": "avatars/xiao-renou.vrm",
+    "region": "head",
+    "yaw": 15,
+    "pose": "relax"
+  },
+  "lore": "佔領區民心恢復速度從無敗績。她說：兵敗可治，民散不可復。",
+  "origin": "戰後重建",
+  "art": "cards/art_vrm/xiao_renou.png"
+}

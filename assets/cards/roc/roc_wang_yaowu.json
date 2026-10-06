@@ -1,0 +1,25 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_wang_yaowu",
+  "name": "王耀武",
+  "courtesyName": "佐民",
+  "epithet": "虎賁統帥",
+  "rarity": "epic",
+  "faction": "中央軍",
+  "role": "commander",
+  "personality": { "aggression": 72, "discipline": 90, "cunning": 70 },
+  "stats": { "command": 84, "attack": 84, "defense": 80, "mobility": 74, "moraleAura": 84 },
+  "signatureDoctrine": {
+    "name": "虎賁逆擊",
+    "trigger": "HealthBelow", "threshold": 0.5, "action": "AttackNearest",
+    "description": "兵力過半損反而逆擊——七十四軍被打得越狠咬得越死"
+  },
+  "cards": [
+    { "name": "迎擊", "trigger": "UnderAttack", "action": "AttackNearest", "threshold": 0.0, "priority": 45, "cooldown": 12.0 },
+    { "name": "推進", "trigger": "Always", "action": "AdvanceToObjective", "threshold": 0.0, "priority": 95, "cooldown": 0.0 }
+  ],
+  "portrait": { "build": "normal", "head": "cap", "beard": "none", "glasses": false },
+  "lore": "七十四軍軍長,上高會戰、常德會戰屢挫日軍,所部號「虎賁」,抗戰勳績第一等。",
+  "historicalBattle": "上高會戰 1941",
+  "art": "cards/art/roc_wang_yaowu.png"
+}

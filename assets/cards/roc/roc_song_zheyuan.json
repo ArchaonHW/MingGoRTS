@@ -1,0 +1,25 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_song_zheyuan",
+  "name": "宋哲元",
+  "courtesyName": "明軒",
+  "epithet": "大刀軍魂",
+  "rarity": "epic",
+  "faction": "西北軍",
+  "role": "commander",
+  "personality": { "aggression": 78, "discipline": 78, "cunning": 55 },
+  "stats": { "command": 76, "attack": 88, "defense": 74, "mobility": 70, "moraleAura": 80 },
+  "signatureDoctrine": {
+    "name": "大刀夜襲",
+    "trigger": "EnemyInRange", "threshold": 5.0, "action": "AttackNearest",
+    "description": "近身即拔刀——喜峰口大刀隊夜襲敵營,砍出二十九軍威名"
+  },
+  "cards": [
+    { "name": "逆境硬拚", "trigger": "Outnumbered", "action": "AttackNearest", "threshold": 0.0, "priority": 25, "cooldown": 30.0 },
+    { "name": "推進", "trigger": "Always", "action": "AdvanceToObjective", "threshold": 0.0, "priority": 95, "cooldown": 0.0 }
+  ],
+  "portrait": { "build": "burly", "head": "cap", "beard": "mustache", "glasses": false },
+  "lore": "二十九軍軍長,西北軍五虎之一,喜峰口大刀隊威震敵膽,七七事變忍辱支撐華北危局。",
+  "historicalBattle": "喜峰口戰役 1933",
+  "art": "cards/art/roc_song_zheyuan.png"
+}

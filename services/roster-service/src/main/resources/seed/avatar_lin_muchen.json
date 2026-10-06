@@ -1,0 +1,44 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "avatar_lin_muchen",
+  "name": "林慕辰",
+  "courtesyName": "子衡",
+  "epithet": "不戰之謀",
+  "rarity": "epic",
+  "faction": "參謀本部",
+  "role": "commander",
+  "personality": {
+    "aggression": 35,
+    "discipline": 92,
+    "cunning": 78
+  },
+  "stats": {
+    "command": 85,
+    "attack": 60,
+    "defense": 88,
+    "mobility": 55,
+    "moraleAura": 80
+  },
+  "signatureDoctrine": {
+    "name": "堅壁不戰",
+    "trigger": "EnemyInRange",
+    "threshold": 8.0,
+    "action": "HoldPosition",
+    "description": "敵近不先動——固守待其自亂，以不戰屈人之兵"
+  },
+  "cards": [
+    { "trigger": "HealthBelow", "threshold": 0.4, "action": "RetreatToRally" },
+    { "trigger": "AllyEngaged", "threshold": 0.0, "action": "DefendNearestAlly" },
+    { "trigger": "Always", "threshold": 0.0, "action": "AdvanceToObjective" }
+  ],
+  "portrait": {
+    "source": "vrm",
+    "model": "avatars/AvatarSample.vrm",
+    "region": "head",
+    "yaw": 0,
+    "pose": "relax"
+  },
+  "lore": "沙盤推演從未輸過的參謀。信條：最高的勝利是讓敵人連開戰的理由都找不到。",
+  "origin": "斷橋演習",
+  "art": "cards/art_vrm/avatar_sample.png"
+}

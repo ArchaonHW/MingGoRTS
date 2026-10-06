@@ -1,0 +1,26 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_hu_lian",
+  "name": "胡璉",
+  "courtesyName": "伯玉",
+  "epithet": "金門之狐",
+  "rarity": "legendary",
+  "faction": "中央軍",
+  "role": "commander",
+  "personality": { "aggression": 55, "discipline": 88, "cunning": 92 },
+  "stats": { "command": 82, "attack": 72, "defense": 92, "mobility": 80, "moraleAura": 78 },
+  "signatureDoctrine": {
+    "name": "狐性脫戰",
+    "trigger": "MoraleBelow", "threshold": 0.45, "action": "RetreatToRally",
+    "description": "士氣未崩先脫戰——狡如狐,猛如虎,絕不在不利時硬拚"
+  },
+  "cards": [
+    { "name": "受襲穩守", "trigger": "UnderAttack", "action": "HoldPosition", "threshold": 0.0, "priority": 40, "cooldown": 15.0 },
+    { "name": "馳援", "trigger": "AllyEngaged", "action": "DefendNearestAlly", "threshold": 0.0, "priority": 60, "cooldown": 10.0 },
+    { "name": "推進", "trigger": "Always", "action": "AdvanceToObjective", "threshold": 0.0, "priority": 95, "cooldown": 0.0 }
+  ],
+  "portrait": { "build": "normal", "head": "cap", "beard": "mustache", "glasses": false },
+  "lore": "十八軍宿將,石牌要塞死守住長江門戶,金門古寧頭一戰扭轉台海局勢,一生善於保全實力。",
+  "historicalBattle": "石牌保衛戰 1943",
+  "art": "cards/art/roc_hu_lian.png"
+}

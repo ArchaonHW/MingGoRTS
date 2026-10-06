@@ -3,6 +3,8 @@
  */
 
 #include "LLMIntegration.h"
+#include "Serialization/JsonParser.h"
+#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <chrono>
@@ -11,9 +13,142 @@
 #include <algorithm>
 #include <regex>
 #include <cstdio>
+#include <cstring>
+
+#ifdef _WIN32
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#include <winhttp.h>
+#if defined(_MSC_VER)
+#pragma comment(lib, "winhttp.lib")
+#endif
+#endif
 
 namespace Potato {
 namespace AI {
+
+namespace {
+
+#ifdef _WIN32
+// UTF-8 → UTF-16（WinHTTP API 皆為寬字元）
+std::wstring Utf8ToWide(const std::string& s) {
+    if (s.empty()) return {};
+    int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), (int)s.size(), nullptr, 0);
+    if (n <= 0) return {};
+    std::wstring w((size_t)n, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), (int)s.size(), &w[0], n);
+    return w;
+}
+
+// 解析 scheme://host[:port][/path]
+struct ParsedUrl {
+    bool secure = true;
+    std::wstring host;
+    INTERNET_PORT port = 443;
+    std::wstring path = L"/";
+};
+
+bool ParseHttpUrl(const std::string& url, ParsedUrl& out) {
+    std::string u = url;
+    if (u.rfind("https://", 0) == 0) { out.secure = true;  u.erase(0, 8); }
+    else if (u.rfind("http://", 0) == 0) { out.secure = false; u.erase(0, 7); }
+    else return false;
+    size_t slash = u.find('/');
+    std::string hostport = (slash == std::string::npos) ? u : u.substr(0, slash);
+    std::string path = (slash == std::string::npos) ? "/" : u.substr(slash);
+    size_t colon = hostport.rfind(':');
+    if (colon != std::string::npos) {
+        int p = std::atoi(hostport.substr(colon + 1).c_str());
+        if (p <= 0 || p > 65535) return false;
+        out.port = (INTERNET_PORT)p;
+        hostport.erase(colon);
+    } else {
+        out.port = out.secure ? 443 : 80;
+    }
+    if (hostport.empty() || hostport.size() > 253) return false;
+    out.host = Utf8ToWide(hostport);
+    out.path = Utf8ToWide(path);
+    return !out.host.empty();
+}
+
+// HTTPS POST（WinHTTP）。成功回 true 並填 outBody；失敗回 false + errMsg。
+// headers 為 "Name: Value" 列表。回應體上限 16MB 防 OOM。
+bool HttpPostWinHttp(const std::string& url,
+                     const std::vector<std::string>& headers,
+                     const std::string& body,
+                     int& outStatus, std::string& outBody,
+                     std::string& errMsg) {
+    ParsedUrl pu;
+    if (!ParseHttpUrl(url, pu)) {
+        errMsg = "invalid URL: " + url;
+        return false;
+    }
+    HINTERNET session = WinHttpOpen(L"PotatoEngine-LLM/1.0",
+        WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY, WINHTTP_NO_PROXY_NAME,
+        WINHTTP_NO_PROXY_BYPASS, 0);
+    if (!session) { errMsg = "WinHttpOpen failed"; return false; }
+    // LLM 回應可能較慢：resolve/connect 10s、send 30s、receive 120s
+    WinHttpSetTimeouts(session, 10000, 10000, 30000, 120000);
+    bool ok = false;
+    HINTERNET connect = WinHttpConnect(session, pu.host.c_str(), pu.port, 0);
+    if (connect) {
+        HINTERNET req = WinHttpOpenRequest(connect, L"POST", pu.path.c_str(),
+            nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES,
+            pu.secure ? WINHTTP_FLAG_SECURE : 0);
+        if (req) {
+            for (const auto& h : headers) {
+                std::wstring wh = Utf8ToWide(h);
+                if (!wh.empty())
+                    WinHttpAddRequestHeaders(req, wh.c_str(), (DWORD)-1,
+                        WINHTTP_ADDREQ_FLAG_ADD);
+            }
+            if (WinHttpSendRequest(req, WINHTTP_NO_ADDITIONAL_HEADERS, 0,
+                    (LPVOID)body.data(), (DWORD)body.size(),
+                    (DWORD)body.size(), 0) &&
+                WinHttpReceiveResponse(req, nullptr)) {
+                DWORD status = 0, sz = sizeof(status);
+                WinHttpQueryHeaders(req,
+                    WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
+                    WINHTTP_HEADER_NAME_BY_INDEX, &status, &sz,
+                    WINHTTP_NO_HEADER_INDEX);
+                outStatus = (int)status;
+                outBody.clear();
+                char buf[16384];
+                DWORD read = 0;
+                const size_t kMaxBody = 16u * 1024 * 1024;
+                while (WinHttpReadData(req, buf, sizeof(buf), &read) && read > 0) {
+                    outBody.append(buf, read);
+                    if (outBody.size() > kMaxBody) {
+                        errMsg = "response body exceeds 16MB limit";
+                        WinHttpCloseHandle(req);
+                        WinHttpCloseHandle(connect);
+                        WinHttpCloseHandle(session);
+                        return false;
+                    }
+                }
+                ok = true;
+            } else {
+                errMsg = "WinHTTP send/receive failed (err=" +
+                         std::to_string(GetLastError()) + ")";
+            }
+            WinHttpCloseHandle(req);
+        } else {
+            errMsg = "WinHttpOpenRequest failed";
+        }
+        WinHttpCloseHandle(connect);
+    } else {
+        errMsg = "WinHttpConnect failed (err=" +
+                 std::to_string(GetLastError()) + ")";
+    }
+    WinHttpCloseHandle(session);
+    return ok;
+}
+#endif // _WIN32
+
+} // anonymous namespace
+
 
 // 跳脫 JSON 字串中的特殊字元，防止產生不合法 JSON 與注入
 static std::string EscapeJson(const std::string& input) {
@@ -172,14 +307,21 @@ std::future<LLMResponse> OpenAIClient::ChatCompletionAsync(
 std::vector<float> OpenAIClient::GenerateEmbedding(
     const std::string& text,
     const std::string& model) {
-    
-    // Placeholder - would call OpenAI embedding API
-    // Return dummy embedding for now
-    std::vector<float> embedding(1536, 0.0f);  // OpenAI ada-002 dimension
-    for (size_t i = 0; i < embedding.size(); i++) {
-        embedding[i] = static_cast<float>(rand()) / RAND_MAX;
-    }
-    return embedding;
+
+    if (text.empty()) return {};
+    std::string m = model.empty() ? "text-embedding-ada-002" : model;
+    std::stringstream json;
+    json << "{\"input\":\"" << EscapeJson(text)
+         << "\",\"model\":\"" << EscapeJson(m) << "\"}";
+    std::string resp = MakeRequest("/embeddings", json.str());
+    if (resp.empty()) return {};
+
+    JsonValue root;
+    if (!JsonValue::ParseOk(resp, root)) return {};
+    std::vector<float> emb;
+    for (const JsonValue& v : root["data"][0]["embedding"].AsArray())
+        emb.push_back(v.AsFloat());
+    return emb;
 }
 
 std::vector<std::vector<float>> OpenAIClient::GenerateEmbeddings(
@@ -202,36 +344,71 @@ std::string OpenAIClient::GetDefaultModel() {
 }
 
 std::string OpenAIClient::MakeRequest(const std::string& endpoint, const std::string& jsonBody) {
-    // Placeholder - would use HTTP client (curl, libcurl, etc.)
-    // For now, return a mock response
-    return R"({
-        "choices": [{
-            "message": {
-                "role": "assistant",
-                "content": "This is a simulated response from OpenAI API."
-            },
-            "finish_reason": "stop"
-        }],
-        "usage": {
-            "prompt_tokens": 10,
-            "completion_tokens": 20,
-            "total_tokens": 30
-        }
-    })";
+    lastTransportError.clear();
+#ifdef _WIN32
+    std::string body, err;
+    int status = 0;
+    std::vector<std::string> headers = {
+        "Authorization: Bearer " + apiKey,
+        "Content-Type: application/json"
+    };
+    if (!HttpPostWinHttp(baseURL + endpoint, headers, jsonBody,
+                         status, body, err)) {
+        lastTransportError = "HTTP transport failed: " + err;
+        return {};
+    }
+    if (status < 200 || status >= 300) {
+        // 非 2xx：body 仍可能是 JSON 錯誤物件，留給 ParseResponse 解析
+        if (body.empty())
+            lastTransportError = "HTTP " + std::to_string(status);
+    }
+    return body;
+#else
+    (void)endpoint;
+    (void)jsonBody;
+    lastTransportError = "HTTP transport unavailable on this platform";
+    return {};
+#endif
 }
 
 LLMResponse OpenAIClient::ParseResponse(const std::string& jsonResponse) {
     LLMResponse response;
-    
-    // Placeholder - would parse JSON properly
-    // For now, set mock values
-    response.content = "This is a simulated response from OpenAI API.";
+
+    if (jsonResponse.empty()) {
+        response.success = false;
+        response.error = lastTransportError.empty()
+            ? "LLM request failed (OpenAI)"
+            : "LLM request failed (OpenAI): " + lastTransportError;
+        return response;
+    }
+
+    JsonValue root;
+    if (!JsonValue::ParseOk(jsonResponse, root)) {
+        response.success = false;
+        response.error = "LLM response parse failed (OpenAI): invalid JSON";
+        return response;
+    }
+
+    const JsonValue& err = root["error"]["message"];
+    if (err.IsString()) {
+        response.success = false;
+        response.error = err.AsString();
+        return response;
+    }
+
+    const JsonValue& choice = root["choices"][0];
+    response.content = choice["message"]["content"].AsString();
+    if (response.content.empty()) {
+        response.success = false;
+        response.error = "LLM response missing content (OpenAI)";
+        return response;
+    }
+
     response.success = true;
-    response.promptTokens = 10;
-    response.completionTokens = 20;
-    response.totalTokens = 30;
-    response.finishReason = "stop";
-    
+    response.finishReason = choice["finish_reason"].AsString("stop");
+    response.promptTokens = root["usage"]["prompt_tokens"].AsInt();
+    response.completionTokens = root["usage"]["completion_tokens"].AsInt();
+    response.totalTokens = root["usage"]["total_tokens"].AsInt();
     return response;
 }
 
@@ -314,14 +491,11 @@ std::future<LLMResponse> AnthropicClient::ChatCompletionAsync(
 std::vector<float> AnthropicClient::GenerateEmbedding(
     const std::string& text,
     const std::string& model) {
-    
-    // Anthropic doesn't have a public embedding API yet
-    // Return dummy embedding
-    std::vector<float> embedding(1536, 0.0f);
-    for (size_t i = 0; i < embedding.size(); i++) {
-        embedding[i] = static_cast<float>(rand()) / RAND_MAX;
-    }
-    return embedding;
+
+    // HTTP transport 未接入——回傳空向量（同 OpenAIClient 的說明）
+    (void)text;
+    (void)model;
+    return {};
 }
 
 std::vector<std::vector<float>> AnthropicClient::GenerateEmbeddings(
@@ -344,24 +518,73 @@ std::string AnthropicClient::GetDefaultModel() {
 }
 
 std::string AnthropicClient::MakeRequest(const std::string& endpoint, const std::string& jsonBody) {
-    // Placeholder for HTTP request
-    return R"({
-        "content": [{
-            "type": "text",
-            "text": "This is a simulated response from Anthropic API."
-        }],
-        "stop_reason": "end_turn"
-    })";
+    lastTransportError.clear();
+#ifdef _WIN32
+    std::string body, err;
+    int status = 0;
+    std::vector<std::string> headers = {
+        "x-api-key: " + apiKey,
+        "anthropic-version: 2023-06-01",
+        "Content-Type: application/json"
+    };
+    if (!HttpPostWinHttp(baseURL + endpoint, headers, jsonBody,
+                         status, body, err)) {
+        lastTransportError = "HTTP transport failed: " + err;
+        return {};
+    }
+    if ((status < 200 || status >= 300) && body.empty())
+        lastTransportError = "HTTP " + std::to_string(status);
+    return body;
+#else
+    (void)endpoint;
+    (void)jsonBody;
+    lastTransportError = "HTTP transport unavailable on this platform";
+    return {};
+#endif
 }
 
 LLMResponse AnthropicClient::ParseResponse(const std::string& jsonResponse) {
     LLMResponse response;
-    response.content = "This is a simulated response from Anthropic API.";
+
+    if (jsonResponse.empty()) {
+        response.success = false;
+        response.error = lastTransportError.empty()
+            ? "LLM request failed (Anthropic)"
+            : "LLM request failed (Anthropic): " + lastTransportError;
+        return response;
+    }
+
+    JsonValue root;
+    if (!JsonValue::ParseOk(jsonResponse, root)) {
+        response.success = false;
+        response.error = "LLM response parse failed (Anthropic): invalid JSON";
+        return response;
+    }
+
+    const JsonValue& err = root["error"]["message"];
+    if (err.IsString()) {
+        response.success = false;
+        response.error = err.AsString();
+        return response;
+    }
+
+    // Anthropic 回應格式: content 為 [{type:"text", text:"..."}] 陣列
+    for (const JsonValue& block : root["content"].AsArray()) {
+        if (block["type"].AsString() == "text") {
+            response.content += block["text"].AsString();
+        }
+    }
+    if (response.content.empty()) {
+        response.success = false;
+        response.error = "LLM response missing content (Anthropic)";
+        return response;
+    }
+
     response.success = true;
-    response.promptTokens = 10;
-    response.completionTokens = 20;
-    response.totalTokens = 30;
-    response.finishReason = "end_turn";
+    response.finishReason = root["stop_reason"].AsString("end_turn");
+    response.promptTokens = root["usage"]["input_tokens"].AsInt();
+    response.completionTokens = root["usage"]["output_tokens"].AsInt();
+    response.totalTokens = response.promptTokens + response.completionTokens;
     return response;
 }
 
@@ -403,7 +626,10 @@ LLMResponse LocalModelClient::ChatCompletion(
     }
     prompt << "Assistant:";
     
-    std::string localResponse = MakeLocalRequest(prompt.str());
+    std::string baseURL = config.baseURL.empty()
+        ? "http://localhost:11434" : config.baseURL;
+    std::string model = config.model.empty() ? modelPath : config.model;
+    std::string localResponse = MakeLocalRequest(prompt.str(), baseURL, model);
     response = ParseLocalResponse(localResponse);
     
     return response;
@@ -440,13 +666,32 @@ std::future<LLMResponse> LocalModelClient::ChatCompletionAsync(
 std::vector<float> LocalModelClient::GenerateEmbedding(
     const std::string& text,
     const std::string& model) {
-    
-    // Local model embedding
-    std::vector<float> embedding(768, 0.0f);  // Common dimension
-    for (size_t i = 0; i < embedding.size(); i++) {
-        embedding[i] = static_cast<float>(rand()) / RAND_MAX;
-    }
-    return embedding;
+
+    // Ollama /api/embeddings；無 HTTP 層的平台回傳空向量，
+    // RAG 層對空 embedding 已降級處理。
+    if (text.empty()) return {};
+#ifdef _WIN32
+    std::string m = model.empty()
+        ? (modelPath.empty() ? "nomic-embed-text" : modelPath) : model;
+    std::stringstream json;
+    json << "{\"model\":\"" << EscapeJson(m)
+         << "\",\"prompt\":\"" << EscapeJson(text) << "\"}";
+    std::string body, err;
+    int status = 0;
+    std::vector<std::string> headers = {"Content-Type: application/json"};
+    if (!HttpPostWinHttp("http://localhost:11434/api/embeddings",
+                         headers, json.str(), status, body, err))
+        return {};
+    JsonValue root;
+    if (!JsonValue::ParseOk(body, root)) return {};
+    std::vector<float> emb;
+    for (const JsonValue& v : root["embedding"].AsArray())
+        emb.push_back(v.AsFloat());
+    return emb;
+#else
+    (void)model;
+    return {};
+#endif
 }
 
 std::vector<std::vector<float>> LocalModelClient::GenerateEmbeddings(
@@ -469,9 +714,10 @@ std::string LocalModelClient::GetDefaultModel() {
 }
 
 bool LocalModelClient::LoadModel(const std::string& modelPath) {
-    // Placeholder for model loading
-    // Would use llama.cpp or similar
-    modelHandle = reinterpret_cast<void*>(1);  // Dummy handle
+    // Ollama 模式：modelPath 即伺服器端模型名（如 "llama3"），
+    // 不做檔案檢查——模型存不存在由伺服器在推論時回報。
+    if (modelPath.empty()) return false;
+    this->modelPath = modelPath;
     return true;
 }
 
@@ -482,19 +728,58 @@ void LocalModelClient::UnloadModel() {
     }
 }
 
-std::string LocalModelClient::MakeLocalRequest(const std::string& prompt) {
-    // Placeholder for local model inference
-    // Would call llama.cpp or Ollama API
-    return "This is a simulated response from local model.";
+std::string LocalModelClient::MakeLocalRequest(const std::string& prompt,
+                                               const std::string& baseURL,
+                                               const std::string& model) {
+    lastLocalError.clear();
+    if (model.empty()) {
+        lastLocalError = "no model specified";
+        return {};
+    }
+#ifdef _WIN32
+    // Ollama /api/generate（stream=false 回單一 JSON）
+    std::stringstream json;
+    json << "{\"model\":\"" << EscapeJson(model)
+         << "\",\"prompt\":\"" << EscapeJson(prompt)
+         << "\",\"stream\":false}";
+    std::string body, err;
+    int status = 0;
+    std::vector<std::string> headers = {"Content-Type: application/json"};
+    if (!HttpPostWinHttp(baseURL + "/api/generate", headers, json.str(),
+                         status, body, err)) {
+        lastLocalError = "ollama unreachable: " + err;
+        return {};
+    }
+    JsonValue root;
+    if (!JsonValue::ParseOk(body, root)) {
+        lastLocalError = "invalid ollama response";
+        return {};
+    }
+    const JsonValue& e = root["error"];
+    if (e.IsString()) {
+        lastLocalError = e.AsString();
+        return {};
+    }
+    return root["response"].AsString();
+#else
+    (void)prompt;
+    (void)baseURL;
+    lastLocalError = "HTTP transport unavailable on this platform";
+    return {};
+#endif
 }
 
 LLMResponse LocalModelClient::ParseLocalResponse(const std::string& response) {
     LLMResponse resp;
+    if (response.empty()) {
+        resp.success = false;
+        resp.error = lastLocalError.empty()
+            ? "Local model inference unavailable"
+            : "Local model inference failed: " + lastLocalError;
+        return resp;
+    }
     resp.content = response;
     resp.success = true;
-    resp.promptTokens = 10;
-    resp.completionTokens = 20;
-    resp.totalTokens = 30;
     resp.finishReason = "stop";
     return resp;
 }

@@ -1,0 +1,1165 @@
+commit aa51f4202d6260efb8393e3cc1b1a112d2e3e92a
+Author: ArchaonHW <42804678+ArchaonHW@users.noreply.github.com>
+Commit: ArchaonHW <42804678+ArchaonHW@users.noreply.github.com>
+
+    feat(gameplay): quantum fog battle integration (Q-1)
+    
+    敵軍以疊加態存在：候選位置機率雲，情報點觀測或小隊接觸才塌縮，
+    情報時效過期回雲。
+    
+    - QuantumFog::Reveal(免費揭露) + EliminateCandidate(負面觀測:
+      目視覆蓋候選格但無人→消去候選,雲縮小)
+    - BattleController: BindFog/BindFogSquad/GetFogEntityId/GetFogSquad;
+      Update 接觸揭露(刷新時效,不刷屏)+負面觀測;
+      IsHiddenByFog 讓 doctrine 感知/Engage 不吃未揭露敵軍
+    - DoctrineAction::Scout:向最近未揭露雲的 modal 候選 AttackMove
+    - BattleSceneSync: SetFog/SetFogMarkerMesh;未揭露藏真身,
+      __battle_units 下 __fog_e<id> 標記(每候選一子節點,scale∝機率)
+    - DuanqiaoPlayable: 情報經濟(intel=4/cost=1/25s),LMB 點雲觀測,
+      後衛 Scout doctrine,雲心偏移不洩真值
+    - EnemyGeneral ActionFromString 補 Scout 映射
+    
+    測試: QuantumFogBattleTest 新 target(觀測/時效/接觸/Scout/負面觀測/
+    無 fog 退回),BattleSceneTest 加 fog 顯隱斷言。MSVC+MinGW 全綠。
+    
+    Generated with [Devin](https://devin.ai)
+    
+    Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4332eeb..51e8838 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -439,6 +439,11 @@ target_include_directories(DuanqiaoPlayable PRIVATE
+ )
+ target_link_libraries(DuanqiaoPlayable glfw glad ${OPENGL_LIBRARIES} Gameplay)
+ 
++# Q-1 敵情霧戰鬥整合測試（headless：觀測塌縮/時效回雲/接觸揭露/Scout）
++add_executable(QuantumFogBattleTest Examples/QuantumFogBattleTest.cpp)
++target_include_directories(QuantumFogBattleTest PRIVATE ${CMAKE_SOURCE_DIR})
++target_link_libraries(QuantumFogBattleTest Gameplay)
++
+ # 量子敵情霧可視化（ImGui：機率雲/觀測塌縮/情報時效）
+ add_executable(QuantumFogDemo
+     Examples/QuantumFogDemo.cpp
+@@ -469,8 +474,8 @@ add_executable(MingGoRTS_IDE_GUI
+     MingGoRTS_IDE/GUI/I18N.h
+     MingGoRTS_IDE/IDECore.cpp
+     MingGoRTS_IDE/AIIntegration.cpp
+-    Rendering/ImageCodec.cpp
+-    Logging/Logger.cpp
++    Rendering/ImageCodec.cpp
++    Logging/Logger.cpp
+     external/imgui/imgui.cpp
+     external/imgui/imgui_draw.cpp
+     external/imgui/imgui_tables.cpp
+@@ -681,6 +686,7 @@ set(POTATO_TESTS
+     SageCommandTest
+     QuantumTest
+     QuasiRandomTest
++    QuantumFogBattleTest
+     BattlePickerTest
+     SynthDataDemo
+ )
+diff --git a/Examples/BattleSceneTest.cpp b/Examples/BattleSceneTest.cpp
+index d002e3b..64ab92f 100644
+--- a/Examples/BattleSceneTest.cpp
++++ b/Examples/BattleSceneTest.cpp
+@@ -4,6 +4,7 @@
+ 
+ #include "Gameplay/BattleController.h"
+ #include "Gameplay/BattleSceneSync.h"
++#include "Gameplay/QuantumFog.h"
+ #include "Scene/SceneNode.h"
+ #include "Rendering/SceneRenderer.h"
+ #include "Rendering/RenderableComponent.h"
+@@ -142,6 +143,36 @@ int main() {
+           findChild(blueNode, "__hp_fill") == nullptr,
+           "傳 nullptr 清除 overlay 節點");
+ 
++    // [12] Q-1 敵情霧:未揭露的 bound squad 藏真身,機率雲標記掛 __battle_units
++    QuantumFog fog(30.0f, 1);
++    Squad* ghost = battle.CreateSquad("幻影隊", 1, Vector2(10, 10), 10);
++    const int gid = fog.AddEntity("幻影隊", /*觀測方=*/0,
++                                  {Vector2(9, 10), Vector2(11, 10)},
++                                  {0.5, 0.5});
++    battle.BindFog(&fog);
++    battle.BindFogSquad(ghost, gid);
++    sync.SetFog(&fog);
++    sync.Sync(battle);
++    SceneNode* ghostNode = sync.GetNodeFor(ghost);
++    Check(ghostNode && !ghostNode->IsActive(), "未揭露敵軍節點隱藏");
++    SceneNode* units = findChild(root.get(), "__battle_units");
++    SceneNode* fogNode = units ? findChild(units, "__fog_e0") : nullptr;
++    Check(fogNode && fogNode->IsActive() &&
++              fogNode->GetChildren().size() == 2,
++          "機率雲標記節點(2 候選)");
++
++    // [13] 揭露 → 真身現、雲標記隱;過期 → 回雲;全滅 → 連雲一起藏
++    fog.Reveal(gid, ghost->GetPosition());
++    sync.Sync(battle);
++    Check(ghostNode && ghostNode->IsActive(), "揭露後節點恢復顯示");
++    Check(fogNode && !fogNode->IsActive(), "揭露後雲標記隱藏");
++    fog.Update(40.0f); // 情報時效 30s,過期回疊加
++    sync.Sync(battle);
++    Check(fogNode && fogNode->IsActive(), "時效過期雲標記復活");
++    ghost->ApplyCasualties(99);
++    sync.Sync(battle);
++    Check(fogNode && !fogNode->IsActive(), "全滅後雲標記隱藏");
++
+     sync.Detach();
+     Check(sync.BindingCount() == 0, "Detach 清空綁定");
+ 
+diff --git a/Examples/DuanqiaoPlayable.cpp b/Examples/DuanqiaoPlayable.cpp
+index 6f237ad..8100015 100644
+--- a/Examples/DuanqiaoPlayable.cpp
++++ b/Examples/DuanqiaoPlayable.cpp
+@@ -3,7 +3,8 @@
+ // 管線: BattleMap(duanqiao.json) → BattleController(doctrine 執行)
+ //       → BattleSceneSync(小隊節點+選取環+血條) → SceneRenderer → OpenGL
+ // 操作: 左鍵選取我軍小隊 / 右鍵地面=AttackMove、右鍵敵軍=Engage(皆走 CP 介入)
+-//       Space 暫停 / 1,2,3 倍速 0.5,1,2 / WASD 平移視角 / 滾輪縮放 / Esc 取消選取
++//       左鍵點敵情機率雲=花情報點觀測塌縮 / Space 暫停 / 1,2,3 倍速
++//       WASD 平移視角 / 滾輪縮放 / Esc 取消選取
+ // 無顯示環境: 印 [SKIP] 並以 0 結束(不進 POTATO_TESTS)
+ 
+ #include "Rendering/OpenGLRenderer.h"
+@@ -18,6 +19,7 @@
+ #include "Gameplay/BattlePlanner.h"
+ #include "Gameplay/EnemyGeneral.h"
+ #include "Gameplay/BattleResources.h"
++#include "Gameplay/QuantumFog.h"
+ #include "MathUtils/Matrix4.h"
+ 
+ #include <glad/glad.h>
+@@ -194,6 +196,28 @@ static SharedPtr<SceneNode> AddStaticBox(SharedPtr<SceneNode> parent,
+ static double g_scroll = 0.0;
+ static void ScrollCallback(GLFWwindow*, double, double yoff) { g_scroll += yoff; }
+ 
++// 點選機率雲:ray 與雲高平面求交,取最近候選格的 entity(-1 = 沒點到)
++static int PickFogCloud(const QuantumFog& fog, const BattleController& battle,
++                        const PickRay& ray, float cell) {
++    Vector3 g;
++    if (!BattlePicker::IntersectGround(ray, 0.5f * cell, g)) return -1;
++    int best = -1;
++    float bestDist = 0.9f * cell;
++    for (size_t id = 0; id < fog.EntityCount(); ++id) {
++        const int eid = static_cast<int>(id);
++        if (fog.IsRevealed(eid)) continue;
++        const Squad* owner = battle.GetFogSquad(eid);
++        if (!owner || owner->IsEliminated()) continue; // 無主雲不可觀測
++        for (const auto& c : fog.GetCloud(eid)) {
++            const float dx = c.first.x * cell - g.x;
++            const float dz = c.first.y * cell - g.z;
++            const float d = std::sqrt(dx * dx + dz * dz);
++            if (d < bestDist) { bestDist = d; best = eid; }
++        }
++    }
++    return best;
++}
++
+ static const char* OrderName(SquadOrder o) {
+     switch (o) {
+     case SquadOrder::Hold:       return "駐守";
+@@ -291,6 +315,7 @@ int main() {
+     // 血條直立(XY 面朝相機):平躺版在 63° 俯角下只剩 ~2px 不可讀
+     auto barBgMesh  = MakeShared<Mesh>(MakeBox(1.0f, 0.16f, 0.03f));
+     auto barFillMesh = MakeShared<Mesh>(MakeBox(0.96f, 0.11f, 0.04f));
++    auto cloudMesh  = MakeShared<Mesh>(MakeBox(0.7f, 0.7f, 0.7f)); // 機率雲標記
+ 
+     auto groundNode = AddStaticBox(root, groundMesh,
+                                    Vector3(FW / 2, -0.15f, FH / 2),
+@@ -339,30 +364,63 @@ int main() {
+     battle.CreateSquad("前鋒", 0, Vector2(8.0f, 3.0f),  30);
+     battle.CreateSquad("中軍", 0, Vector2(12.0f, 2.5f), 30);
+     battle.CreateSquad("左翼", 0, Vector2(16.0f, 3.0f), 25);
+-    battle.CreateSquad("後衛", 0, Vector2(12.0f, 4.5f), 15);
+-    battle.CreateSquad("格洛克親衛", 1, Vector2(12.0f, 12.0f), 35);
+-    battle.CreateSquad("蠻兵隊",     1, Vector2(9.0f, 12.5f),  25);
+-    battle.CreateSquad("掠奪隊",     1, Vector2(15.0f, 12.5f), 25);
+-    battle.CreateSquad("守橋隊",     1, Vector2(12.0f, 10.5f), 20);
++    Squad* rearGuard = battle.CreateSquad("後衛", 0, Vector2(12.0f, 4.5f), 15);
++    Squad* e0 = battle.CreateSquad("格洛克親衛", 1, Vector2(12.0f, 12.0f), 35);
++    Squad* e1 = battle.CreateSquad("蠻兵隊",     1, Vector2(9.0f, 12.5f),  25);
++    Squad* e2 = battle.CreateSquad("掠奪隊",     1, Vector2(15.0f, 12.5f), 25);
++    Squad* e3 = battle.CreateSquad("守橋隊",     1, Vector2(12.0f, 10.5f), 20);
+     if (southCamp)  battle.SetObjective(0, southCamp->pos);
+     if (northRally) battle.SetObjective(1, northRally->pos);
+     if (northRally) battle.SetRallyPoint(0, northRally->pos);
+     if (southCamp)  battle.SetRallyPoint(1, southCamp->pos);
+-    battle.SetCommandPoints(1, 3);
+ 
+     EnemyGeneral glock = EnemyGeneral::MakeGlock();
+     glock.ApplyTo(battle, 1);
+     BattlePlanner planner;
+     planner.ApplyPlan(battle, planner.GeneratePlan(battle, 0));
+-    // ApplyPlan 會覆寫玩家 CP(建議值 2)——demo 要 5 點,必須在規劃之後設
+-    battle.SetCommandPoints(0, 5);
++    // 情報/CP 走 BattleResources(fog 觀測扣點要它);ApplyPlan 會覆寫
++    // 玩家 CP(建議值 2),故資源設定必須在規劃之後
++    BattleResources res;
++    res.Setup(battle, 0, /*intel=*/4, /*cp=*/5);
++    res.Setup(battle, 1, /*intel=*/0, /*cp=*/3);
+     BattleResources::ApplyMoraleRule(battle);
+ 
++    // ---- Q-1 敵情霧:敵軍以疊加態存在,觀測或接觸才塌縮 ----
++    QuantumFog fog(/*intelDuration=*/25.0f, /*cost=*/1);
++    fog.BindResources(&res);
++    battle.BindFog(&fog);
++    for (Squad* es : {e0, e1, e2, e3}) {
++        // 雲心朝敵軍進攻方向偏移 1.5 格:不洩漏真實位置,
++        // 靠偵查/觀測才能確定敵人在哪
++        Vector2 center = es->GetPosition();
++        if (northRally) {
++            Vector2 dir = northRally->pos - center;
++            const float len = dir.Length();
++            if (len > 1e-4f) center = center + dir * (1.5f / len);
++        }
++        const int id = fog.AddEntityCloud(
++            es->GetName(), /*觀測方=*/0, center,
++            /*radius=*/3.5f, /*count=*/6, /*minSpacing=*/1.2f,
++            southCamp ? &southCamp->pos : nullptr);
++        if (id >= 0) battle.BindFogSquad(es, id);
++    }
++
++    // 後衛改當偵查兵:低血撤退 > 遇敵應戰 > 無事就往最近的雲走
++    DoctrineSet scoutDoc;
++    scoutDoc.AddRule({DoctrineTrigger::HealthBelow,
++                      DoctrineAction::RetreatToRally, 0.3f, 1});
++    scoutDoc.AddRule({DoctrineTrigger::EnemyInRange,
++                      DoctrineAction::AttackNearest, 3.0f, 10});
++    scoutDoc.AddRule({DoctrineTrigger::Always, DoctrineAction::Scout, 0.0f, 90});
++    battle.AssignDoctrine(rearGuard, scoutDoc);
++
+     // ---- Gameplay → 場景 ----
+     BattleSceneSync sync;
+     sync.Attach(battle, scene, CELL);
+     sync.SetUnitMesh(capMesh);
+     sync.SetOverlayMeshes(ringMesh, barBgMesh, barFillMesh, 2.0f * CELL, 1.2f);
++    sync.SetFog(&fog);
++    sync.SetFogMarkerMesh(cloudMesh);
+     sync.Sync(battle);
+ 
+     battle.BeginExecution();
+@@ -452,11 +510,33 @@ int main() {
+             // 左右鍵獨立處理:同幀雙擊不會把右鍵指令吞掉
+             if (lClick) {
+                 Squad* hit = BattlePicker::PickSquad(battle, 0, ray, CELL);
+-                selected = hit;
+-                sync.SetSelectedSquad(hit);
++                if (hit) {
++                    selected = hit;
++                    sync.SetSelectedSquad(hit);
++                } else {
++                    // 點到敵情雲 → 花情報點觀測塌縮
++                    const int eid = PickFogCloud(fog, battle, ray, CELL);
++                    if (eid >= 0) {
++                        Squad* ts = battle.GetFogSquad(eid);
++                        if (ts && fog.Observe(eid, ts->GetPosition())) {
++                            eventLog.push_back("觀測塌縮:" + ts->GetName());
++                        } else {
++                            eventLog.push_back("觀測失敗(情報不足)");
++                        }
++                        if (eventLog.size() > 8) eventLog.pop_front();
++                    } else {
++                        selected = nullptr;
++                        sync.SetSelectedSquad(nullptr);
++                    }
++                }
+             }
+             if (rClick && selected) {
+                 Squad* enemy = BattlePicker::PickSquad(battle, 1, ray, CELL);
++                // 未揭露的敵軍不可被 Engage(看不見的打不到)
++                if (enemy) {
++                    const int fid = battle.GetFogEntityId(enemy);
++                    if (fid >= 0 && !fog.IsRevealed(fid)) enemy = nullptr;
++                }
+                 bool ok = false;
+                 if (enemy) {
+                     ok = battle.Intervene(selected, SquadOrder::Engage, enemy);
+@@ -505,9 +585,16 @@ int main() {
+                     battle.GetPhase() == BattlePhase::Execution ? "執行" :
+                     battle.GetPhase() == BattlePhase::Deployment ? "部署" : "結算",
+                     paused ? "(暫停)" : "");
+-        ImGui::Text("CP: %d   倍速: %.1fx   時間: %.0fs",
+-                    battle.GetCommandPoints(0), paused ? 0.0f : speedScale,
+-                    battle.GetElapsed());
++        int hiddenFoes = 0;
++        for (size_t id = 0; id < fog.EntityCount(); ++id) {
++            const Squad* owner = battle.GetFogSquad((int)id);
++            if (owner && owner->IsEliminated()) continue; // 全滅不算「未揭露」
++            if (!fog.IsRevealed((int)id)) ++hiddenFoes;
++        }
++        ImGui::Text("CP: %d   情報: %d   倍速: %.1fx   時間: %.0fs",
++                    battle.GetCommandPoints(0), res.GetIntel(0),
++                    paused ? 0.0f : speedScale, battle.GetElapsed());
++        ImGui::Text("未揭露敵軍: %d / %d", hiddenFoes, (int)fog.EntityCount());
+         ImGui::Separator();
+         if (selected) {
+             ImGui::Text("選取: %s", selected->GetName().c_str());
+@@ -519,7 +606,7 @@ int main() {
+             ImGui::TextDisabled("未選取小隊(左鍵點選)");
+         }
+         ImGui::Separator();
+-        ImGui::TextDisabled("左鍵選取 | 右鍵下令 | Space 暫停 | 1/2/3 倍速");
++        ImGui::TextDisabled("左鍵選取/點雲觀測 | 右鍵下令 | Space 暫停 | 1/2/3 倍速");
+         ImGui::TextDisabled("WASD 平移 | 滾輪縮放 | Esc 取消選取");
+         ImGui::End();
+ 
+@@ -559,6 +646,7 @@ int main() {
+         renderer.SwapBuffers();
+     }
+ 
++    battle.BindFog(nullptr); // fog 是 local,先於 battle 解構——解綁防懸空
+     ImGui_ImplOpenGL3_Shutdown();
+     ImGui_ImplGlfw_Shutdown();
+     ImGui::DestroyContext();
+diff --git a/Examples/QuantumFogBattleTest.cpp b/Examples/QuantumFogBattleTest.cpp
+new file mode 100644
+index 0000000..cee01fe
+--- /dev/null
++++ b/Examples/QuantumFogBattleTest.cpp
+@@ -0,0 +1,175 @@
++// QuantumFogBattleTest - Q-1 敵情霧接入戰鬥的無頭驗證
++// 覆蓋:情報點觀測塌縮、時效到期回雲、接觸偵查免費揭露、
++//       Scout doctrine 向最近未揭露雲的 modal 候選移動
++
++#include "Gameplay/BattleController.h"
++#include "Gameplay/BattleResources.h"
++#include "Gameplay/QuantumFog.h"
++
++#include <cmath>
++#include <cstdio>
++
++using namespace Potato;
++using namespace Potato::Gameplay;
++
++static int g_pass = 0;
++static int g_fail = 0;
++
++static void Check(bool ok, const char* name, float value = 0.0f,
++                  float expected = 0.0f) {
++    if (ok) {
++        g_pass++;
++        printf("  [PASS] %s\n", name);
++    } else {
++        g_fail++;
++        printf("  [FAIL] %s  (got %.4f, expected %.4f)\n", name, value, expected);
++    }
++}
++
++// 跑 battle 直到條件成立或逾時(秒);回傳是否達成
++template <typename Pred>
++static bool RunUntil(BattleController& b, float seconds, Pred pred) {
++    const float step = 0.1f;
++    for (float t = 0.0f; t < seconds; t += step) {
++        b.Update(step);
++        if (pred()) return true;
++    }
++    return false;
++}
++
++int main() {
++    printf("=== Quantum Fog Battle Tests ===\n\n");
++
++    // ---- 情報觀測路徑 ----
++    {
++        BattleController battle(20, 15, 1.0f);
++        BattleResources res;
++        res.Setup(battle, 0, /*intel=*/3, /*cp=*/0);
++
++        QuantumFog fog(/*intelDuration=*/5.0f, /*cost=*/1);
++        fog.BindResources(&res);
++        battle.BindFog(&fog);
++
++        battle.CreateSquad("偵查隊", 0, Vector2(2, 7), 20);
++        Squad* enemy = battle.CreateSquad("敵軍", 1, Vector2(15, 7), 20);
++        const int eid = fog.AddEntity("敵軍", /*觀測方=*/0,
++            {Vector2(14, 7), Vector2(15, 8), Vector2(16, 7)},
++            {0.2, 0.6, 0.2});
++        battle.BindFogSquad(enemy, eid);
++        battle.BeginExecution();
++
++        // [1] 觀測:扣情報 → 塌縮揭露真實位置
++        Check(!fog.IsRevealed(eid), "初始為疊加態");
++        Check(fog.Observe(eid, enemy->GetPosition()), "觀測成功");
++        Check(res.GetIntel(0) == 2, "觀測扣 1 情報", (float)res.GetIntel(0), 2.0f);
++        Check(fog.IsRevealed(eid), "觀測後揭露");
++        Vector2 rp = fog.GetRevealedPos(eid);
++        Check(std::fabs(rp.x - 15.0f) < 1e-4f && std::fabs(rp.y - 7.0f) < 1e-4f,
++              "揭露真實位置", rp.x, 15.0f);
++        Check(fog.GetCloud(eid).size() == 1, "塌縮後雲收斂為單點");
++
++        // [2] 重複觀測已揭露者不再扣點
++        Check(fog.Observe(eid, enemy->GetPosition()) && res.GetIntel(0) == 2,
++              "已揭露重複觀測不扣點");
++
++        // [3] 情報時效到期 → 回疊加態(雙方距離 13 格,不會接觸揭露)
++        Check(RunUntil(battle, 8.0f, [&] { return !fog.IsRevealed(eid); }),
++              "時效到期回疊加態");
++        Check(fog.GetCloud(eid).size() > 1, "回雲後恢復多候選");
++    }
++
++    // ---- 接觸偵查 + Scout doctrine ----
++    {
++        BattleController battle(20, 15, 1.0f);
++        BattleResources res;
++        res.Setup(battle, 0, /*intel=*/2, /*cp=*/0);
++
++        QuantumFog fog(5.0f, 1);
++        fog.BindResources(&res);
++        battle.BindFog(&fog);
++        battle.SetFogRevealRange(3.0f);
++
++        Squad* player = battle.CreateSquad("前鋒", 0, Vector2(2, 7), 30);
++        Squad* enemy = battle.CreateSquad("伏兵", 1, Vector2(15, 7), 20);
++        const int eid = fog.AddEntity("伏兵", 0,
++            {Vector2(14, 7), Vector2(15, 8), Vector2(16, 7)},
++            {0.2, 0.6, 0.2});
++        battle.BindFogSquad(enemy, eid);
++
++        // Scout:Always → 往最近未揭露雲的 modal 候選移動
++        DoctrineSet scoutDoc;
++        scoutDoc.AddRule({DoctrineTrigger::Always, DoctrineAction::Scout,
++                          0.0f, 10});
++        battle.AssignDoctrine(player, scoutDoc);
++        battle.BeginExecution();
++
++        // [4] Scout 指令:order=AttackMove 且目標是 modal 候選 (15,8)
++        Check(RunUntil(battle, 1.0f, [&] {
++                  return player->GetOrder() == SquadOrder::AttackMove;
++              }),
++              "Scout 觸發 AttackMove");
++        Vector2 st = player->GetOrderTarget();
++        Check(std::fabs(st.x - 15.0f) < 0.5f && std::fabs(st.y - 8.0f) < 0.5f,
++              "Scout 目標為 modal 候選格", st.x, 15.0f);
++
++        // [5] 接觸偵查:走進 fogRevealRange 免費揭露,不扣情報
++        Check(RunUntil(battle, 30.0f, [&] { return fog.IsRevealed(eid); }),
++              "接近後接觸揭露");
++        Check(res.GetIntel(0) == 2, "接觸揭露不扣情報",
++              (float)res.GetIntel(0), 2.0f);
++    }
++
++    // ---- 未綁 fog 時 Scout 退回 Hold(無回歸)----
++    {
++        BattleController battle(20, 15, 1.0f);
++        Squad* lone = battle.CreateSquad("孤軍", 0, Vector2(5, 5), 10);
++        DoctrineSet scoutDoc;
++        scoutDoc.AddRule({DoctrineTrigger::Always, DoctrineAction::Scout,
++                          0.0f, 10});
++        battle.AssignDoctrine(lone, scoutDoc);
++        battle.BeginExecution();
++        // 跑 4 個 doctrine 評估週期,確認不會誤發 AttackMove
++        for (int i = 0; i < 10; ++i) battle.Update(0.1f);
++        Vector2 lt = lone->GetOrderTarget();
++        Check(lone->GetOrder() == SquadOrder::Hold &&
++                  std::fabs(lt.x - 5.0f) < 0.5f &&
++                  std::fabs(lt.y - 5.0f) < 0.5f,
++              "無 fog 時 Scout 退回 Hold 原地");
++    }
++
++    // ---- 負面觀測:目視覆蓋候選格但沒人 → 候選消去、雲縮小 ----
++    {
++        BattleController battle(20, 15, 1.0f);
++        BattleResources res;
++        res.Setup(battle, 0, 2, 0);
++        QuantumFog fog(5.0f, 1);
++        fog.BindResources(&res);
++        battle.BindFog(&fog);
++        battle.SetFogRevealRange(2.0f);
++
++        // 玩家小隊站在錯的候選格 (5,3);真身在 (15,12)
++        battle.CreateSquad("目視隊", 0, Vector2(5, 3), 10);
++        Squad* enemy = battle.CreateSquad("伏軍", 1, Vector2(15, 12), 10);
++        const int eid = fog.AddEntity("伏軍", 0,
++                                    {Vector2(5, 3), Vector2(15, 12)},
++                                    {0.9, 0.1});
++        battle.BindFogSquad(enemy, eid);
++        battle.BeginExecution();
++
++        Check(fog.GetCloud(eid).size() == 2, "初始雲有 2 候選");
++        battle.Update(0.1f);
++        // (5,3) 候選被目視覆蓋且真身不在 → 消去;真身格未被覆蓋 → 仍在雲中
++        const auto cloud = fog.GetCloud(eid);
++        Check(cloud.size() == 1 && !fog.IsRevealed(eid),
++              "負面觀測消去空候選格",
++              (float)cloud.size(), 1.0f);
++        if (cloud.size() == 1) {
++            Check(std::fabs(cloud[0].first.x - 15.0f) < 1e-3f &&
++                      std::fabs(cloud[0].first.y - 12.0f) < 1e-3f,
++                  "殘存候選為真身所在格", cloud[0].first.x, 15.0f);
++        }
++    }
++
++    printf("\n=== 結果: %d PASS, %d FAIL ===\n", g_pass, g_fail);
++    return g_fail == 0 ? 0 : 1;
++}
+diff --git a/Gameplay/BattleController.cpp b/Gameplay/BattleController.cpp
+index db5e6ca..7f45976 100644
+--- a/Gameplay/BattleController.cpp
++++ b/Gameplay/BattleController.cpp
+@@ -1,5 +1,7 @@
+ #include "BattleController.h"
+ 
++#include "QuantumFog.h"
++
+ #include <algorithm>
+ #include <cmath>
+ #include <sstream>
+@@ -120,7 +122,8 @@ bool BattleController::Intervene(Squad* squad, SquadOrder order,
+         return Intervene(squad, order, target->GetPosition(), holdSeconds);
+     }
+     if (!target || target->IsEliminated() || target->IsRouting() ||
+-        target == squad || (squad && target->GetTeam() == squad->GetTeam())) {
++        target == squad || (squad && target->GetTeam() == squad->GetTeam()) ||
++        IsHiddenByFog(*target)) {
+         return false;
+     }
+     if (phase != BattlePhase::Execution || !squad || squad->IsEliminated() ||
+@@ -187,6 +190,65 @@ void BattleController::Update(float realDt) {
+     }
+ 
+     ResolveCombat(dt);
++
++    // Q-1 敵情霧：情報時效/退相干推進 + 接觸偵查（正負面觀測）
++    if (fog) {
++        fog->Update(dt);
++        // Emit 會跑使用者 callback,蒐集起來離開 fogEntities 迭代再發,
++        // 避免 callback 裡 BindFogSquad/CreateSquad 造成 map 重雜湊
++        std::vector<const Squad*> spotted;
++        for (const auto& kv : fogEntities) {
++            Squad* target = kv.first;
++            const int entityId = kv.second;
++            if (!target || target->IsEliminated()) continue;
++            const UncertainEntity* ent = fog->GetEntity(entityId);
++            if (!ent) continue;
++
++            // 正面：敵對方小隊進入真身接觸範圍 → 揭露(已揭露則刷新時效)
++            bool inContact = false;
++            for (const auto& other : squads) {
++                if (other->GetTeam() == target->GetTeam() ||
++                    other->IsEliminated()) {
++                    continue;
++                }
++                if ((other->GetPosition() - target->GetPosition()).Length() <=
++                    fogRevealRange) {
++                    inContact = true;
++                    break;
++                }
++            }
++            if (inContact) {
++                const bool was = fog->IsRevealed(entityId);
++                if (fog->Reveal(entityId, target->GetPosition()) && !was) {
++                    spotted.push_back(target);
++                }
++                continue;
++            }
++
++            // 負面：目視覆蓋候選格但真身不在那 → 消去該候選(雲縮小,
++            // Scout 才不會卡在同一格 modal 上空轉)
++            if (!fog->IsRevealed(entityId)) {
++                for (size_t ci = 0; ci < ent->candidates.size(); ++ci) {
++                    for (const auto& other : squads) {
++                        if (other->GetTeam() == target->GetTeam() ||
++                            other->IsEliminated()) {
++                            continue;
++                        }
++                        if ((other->GetPosition() - ent->candidates[ci])
++                                .Length() <= fogRevealRange) {
++                            fog->EliminateCandidate(entityId,
++                                                    static_cast<int>(ci));
++                            break;
++                        }
++                    }
++                }
++            }
++        }
++        for (const Squad* s : spotted) {
++            Emit(s->GetName() + " 被我軍目擊（接觸偵查）");
++        }
++    }
++
+     CheckOutcome();
+ }
+ 
+@@ -204,12 +266,18 @@ SquadContext BattleController::BuildContext(const Squad& squad) const {
+     return ctx;
+ }
+ 
++bool BattleController::IsHiddenByFog(const Squad& squad) const {
++    if (!fog) return false;
++    auto it = fogEntities.find(const_cast<Squad*>(&squad));
++    return it != fogEntities.end() && !fog->IsRevealed(it->second);
++}
++
+ Squad* BattleController::FindNearestEnemy(const Squad& squad, float maxDist) const {
+     Squad* best = nullptr;
+     float bestDist = maxDist;
+     for (const auto& other : squads) {
+         if (other->GetTeam() == squad.GetTeam() || other->IsEliminated() ||
+-            other->IsRouting()) {
++            other->IsRouting() || IsHiddenByFog(*other)) {
+             continue;
+         }
+         float d = (other->GetPosition() - squad.GetPosition()).Length();
+@@ -226,7 +294,7 @@ Squad* BattleController::FindWeakestEnemy(const Squad& squad, float maxDist) con
+     int lowest = 0x7fffffff;
+     for (const auto& other : squads) {
+         if (other->GetTeam() == squad.GetTeam() || other->IsEliminated() ||
+-            other->IsRouting()) {
++            other->IsRouting() || IsHiddenByFog(*other)) {
+             continue;
+         }
+         float d = (other->GetPosition() - squad.GetPosition()).Length();
+@@ -255,6 +323,63 @@ Squad* BattleController::FindNearestEngagedAlly(const Squad& squad) const {
+     return best;
+ }
+ 
++void BattleController::BindFog(QuantumFog* f) {
++    fog = f;
++}
++
++void BattleController::BindFogSquad(Squad* squad, int entityId) {
++    if (!squad) return;
++    // fog 已綁時驗證 id,無效綁定會讓小隊永遠隱形又沒有雲
++    if (fog && (entityId < 0 ||
++                entityId >= static_cast<int>(fog->EntityCount()))) {
++        return;
++    }
++    fogEntities[squad] = entityId;
++}
++
++int BattleController::GetFogEntityId(const Squad* squad) const {
++    auto it = fogEntities.find(const_cast<Squad*>(squad));
++    return it != fogEntities.end() ? it->second : -1;
++}
++
++Squad* BattleController::GetFogSquad(int entityId) const {
++    for (const auto& kv : fogEntities) {
++        if (kv.second == entityId) return kv.first;
++    }
++    return nullptr;
++}
++
++bool BattleController::FindScoutTarget(const Squad& squad,
++                                       Vector2& out) const {
++    if (!fog) return false;
++    float bestDist = 1e30f;
++    bool found = false;
++    for (const auto& kv : fogEntities) {
++        const Squad* target = kv.first;
++        const int entityId = kv.second;
++        // 只偵查敵對方、未全滅、未揭露的實體
++        if (!target || target->GetTeam() == squad.GetTeam() ||
++            target->IsEliminated() || fog->IsRevealed(entityId)) {
++            continue;
++        }
++        const auto cloud = fog->GetCloud(entityId);
++        if (cloud.empty()) continue;
++        // modal 候選格 = 機率最大者
++        const Vector2 modal =
++            std::max_element(cloud.begin(), cloud.end(),
++                             [](const auto& a, const auto& b) {
++                                 return a.second < b.second;
++                             })->first;
++        const float d = (modal - squad.GetPosition()).Length();
++        if (d < bestDist) {
++            bestDist = d;
++            out = modal;
++            found = true;
++        }
++    }
++    return found;
++}
++
+ void BattleController::UpdateContexts() {
+     for (auto& squad : squads) {
+         SquadContext ctx;
+@@ -273,6 +398,7 @@ void BattleController::UpdateContexts() {
+         int enemyMembers = 0;
+         for (const auto& other : squads) {
+             if (other->GetTeam() != squad->GetTeam() && !other->IsEliminated() &&
++                !IsHiddenByFog(*other) &&
+                 (other->GetPosition() - squad->GetPosition()).Length() <=
+                     squad->GetEngageRange() * 3.0f) {
+                 enemyMembers += other->GetMembers();
+@@ -372,6 +498,16 @@ void BattleController::EvaluateDoctrines() {
+             }
+             break;
+         }
++        case DoctrineAction::Scout: {
++            Vector2 dest;
++            if (FindScoutTarget(*squad, dest)) {
++                squad->IssueOrder(SquadOrder::AttackMove, dest);
++            } else {
++                // 沒有未揭露的敵情雲——退回駐守
++                squad->IssueOrder(SquadOrder::Hold, squad->GetPosition());
++            }
++            break;
++        }
+         }
+ 
+         bool orderChanged =
+diff --git a/Gameplay/BattleController.h b/Gameplay/BattleController.h
+index 6618e5a..a2a8c17 100644
+--- a/Gameplay/BattleController.h
++++ b/Gameplay/BattleController.h
+@@ -16,6 +16,8 @@
+ namespace Potato {
+ namespace Gameplay {
+ 
++class QuantumFog;
++
+ /**
+  * 戰鬥階段：對應「回合層 → 即時層 → 戰後」的三拍循環
+  */
+@@ -98,6 +100,17 @@ public:
+     bool Intervene(Squad* squad, SquadOrder order, const Squad* target,
+                    float holdSeconds = 5.0f);
+ 
++    // ---- 量子敵情霧（Q-1，可選）----
++    // 綁定後：Update 會推 fog（情報時效/退相干），我軍小隊進入
++    // fogRevealRange 格內的未揭露敵軍自動免費揭露（接觸偵查）。
++    void BindFog(QuantumFog* fog);
++    // 把一支小隊與 fog entity 關聯（entity 的疊加雲代表這支小隊）
++    void BindFogSquad(Squad* squad, int entityId);
++    QuantumFog* GetFog() const { return fog; }
++    int GetFogEntityId(const Squad* squad) const;
++    Squad* GetFogSquad(int entityId) const;
++    void SetFogRevealRange(float cells) { fogRevealRange = cells; }
++
+     // 每幀呼叫：realDt 為真實秒數，內部乘 timeScale
+     void Update(float realDt);
+ 
+@@ -121,6 +134,10 @@ private:
+     Squad* FindNearestEnemy(const Squad& squad, float maxDist) const;
+     Squad* FindWeakestEnemy(const Squad& squad, float maxDist) const;
+     Squad* FindNearestEngagedAlly(const Squad& squad) const;
++    // Scout 目標：最近未揭露敵情雲的最高機率候選格；無則回 false
++    bool FindScoutTarget(const Squad& squad, Vector2& out) const;
++    // squad 綁定了未揭露的敵情實體 → 對 doctrine/Engage 層不可見
++    bool IsHiddenByFog(const Squad& squad) const;
+ 
+     FlowField field;                                  // 地形/障礙定義
+     std::unordered_map<int, UniquePtr<FlowField>> teamFields; // 各隊目標場
+@@ -132,6 +149,9 @@ private:
+     std::unordered_map<Squad*, float> interventionUntil; // 剩餘覆寫秒數
+     std::unordered_map<Squad*, float> damageBuffer;      // 小數傷害累積
+     std::unordered_map<Squad*, SquadContext> contexts;
++    QuantumFog* fog = nullptr;                     // Q-1 敵情霧（外層持有）
++    std::unordered_map<Squad*, int> fogEntities;   // squad → fog entityId
++    float fogRevealRange = 3.0f;                   // 接觸偵查距離（格）
+ 
+     BattlePhase phase;
+     BattleOutcome outcome;
+diff --git a/Gameplay/BattleSceneSync.cpp b/Gameplay/BattleSceneSync.cpp
+index 20730cf..e9f3678 100644
+--- a/Gameplay/BattleSceneSync.cpp
++++ b/Gameplay/BattleSceneSync.cpp
+@@ -1,4 +1,6 @@
+ #include "BattleSceneSync.h"
++
++#include "QuantumFog.h"
+ #include "BattleController.h"
+ #include "Squad.h"
+ 
+@@ -6,6 +8,7 @@
+ #include "Rendering/RenderableComponent.h"
+ 
+ #include <algorithm>
++#include <string>
+ #include <unordered_set>
+ 
+ namespace Potato {
+@@ -131,6 +134,16 @@ void BattleSceneSync::Sync(BattleController& battle) {
+     for (auto& b : bindings) {
+         Squad* squad = b.squad;
+ 
++        // Q-1 敵情霧:未揭露的 bound squad 藏真身(overlay 為子節點一併隱藏)
++        if (fog) {
++            const int fid = battle.GetFogEntityId(squad);
++            if (fid >= 0 && !fog->IsRevealed(fid)) {
++                b.node->SetActive(false);
++                continue;
++            }
++            b.node->SetActive(true); // 揭露狀態恢復顯示(全滅由下方再隱)
++        }
++
+         if (squad->IsEliminated()) {
+             b.node->SetActive(false);
+             if (b.ringNode) b.ringNode->SetActive(false);
+@@ -166,6 +179,39 @@ void BattleSceneSync::Sync(BattleController& battle) {
+             }
+         }
+     }
++
++    // Q-1:機率雲標記——每個未揭露 entity 一組候選標記,scale∝機率
++    if (fog) {
++        for (size_t id = 0; id < fog->EntityCount(); ++id) {
++            const int eid = static_cast<int>(id);
++            const Squad* owner = battle.GetFogSquad(eid);
++            const bool hide = fog->IsRevealed(eid) ||
++                              (owner && owner->IsEliminated());
++            auto it = fogNodes.find(eid);
++            if (hide) {
++                if (it != fogNodes.end()) it->second->SetActive(false);
++                continue;
++            }
++            SceneNode* node = EnsureFogNode(eid);
++            if (!node) continue;
++            node->SetActive(true);
++            const auto cloud = fog->GetCloud(eid);
++            const auto& children = node->GetChildren();
++            for (size_t i = 0; i < children.size(); ++i) {
++                SceneNode* c = children[i].get();
++                if (i >= cloud.size()) {
++                    c->SetActive(false); // 低機率候選被 GetCloud 篩掉,標記也藏
++                    continue;
++                }
++                c->SetActive(true);
++                c->SetLocalPosition(
++                    Vector3(cloud[i].first.x * cellSize, 0.5f * cellSize,
++                            cloud[i].first.y * cellSize));
++                const float s = 0.4f + static_cast<float>(cloud[i].second) * 2.0f;
++                c->SetLocalScale(Vector3(s, s, s));
++            }
++        }
++    }
+ }
+ 
+ void BattleSceneSync::SetUnitMesh(SharedPtr<Mesh> mesh) {
+@@ -189,6 +235,42 @@ void BattleSceneSync::SetOverlayMeshes(SharedPtr<Mesh> ring,
+     }
+ }
+ 
++void BattleSceneSync::SetFog(const QuantumFog* f) {
++    fog = f;
++    fogNodes.clear(); // 換 fog 物件後舊標記依 entityId 對不上,重建
++}
++
++void BattleSceneSync::SetFogMarkerMesh(SharedPtr<Mesh> mesh) {
++    fogMarkerMesh = std::move(mesh);
++    for (auto& kv : fogNodes) {
++        for (auto& c : kv.second->GetChildren()) {
++            if (auto* rc = c->GetRenderable()) rc->mesh = fogMarkerMesh;
++        }
++    }
++}
++
++SceneNode* BattleSceneSync::EnsureFogNode(int entityId) {
++    auto it = fogNodes.find(entityId);
++    if (it != fogNodes.end()) return it->second.get();
++    if (!fog || !parentNode) return nullptr;
++    const UncertainEntity* e = fog->GetEntity(entityId);
++    if (!e) return nullptr;
++
++    auto node = MakeShared<SceneNode>("__fog_e" + std::to_string(entityId));
++    for (size_t i = 0; i < e->candidates.size(); ++i) {
++        auto c = MakeShared<SceneNode>("__fog_c" + std::to_string(i));
++        auto rc = MakeShared<RenderableComponent>();
++        rc->mesh = fogMarkerMesh;
++        rc->color = Vector3(0.55f, 0.45f, 0.85f); // 敵情雲:紫灰
++        rc->boundingRadius = cellSize * 1.5f;
++        c->SetRenderable(rc);
++        node->AddChild(c);
++    }
++    parentNode->AddChild(node);
++    fogNodes[entityId] = node;
++    return node.get();
++}
++
+ void BattleSceneSync::SetSelectedSquad(const Squad* squad) {
+     selected = squad;
+ }
+@@ -206,6 +288,9 @@ void BattleSceneSync::Detach() {
+     }
+     parentNode.reset();
+     bindings.clear();
++    fogNodes.clear();   // 標記節點隨 parentNode 子樹一起釋放
++    fog = nullptr;      // 外層持有的 fog 不隨綁定續命
++    fogMarkerMesh.reset();
+     selected = nullptr; // 綁定已清,選取指標不得留給下一場 battle
+     scene = nullptr;
+ }
+diff --git a/Gameplay/BattleSceneSync.h b/Gameplay/BattleSceneSync.h
+index 305dc26..cd372bf 100644
+--- a/Gameplay/BattleSceneSync.h
++++ b/Gameplay/BattleSceneSync.h
+@@ -3,6 +3,7 @@
+ #include "Core/CoreTypes.h"
+ #include "MathUtils/Vector3.h"
+ 
++#include <unordered_map>
+ #include <vector>
+ 
+ namespace Potato {
+@@ -16,6 +17,7 @@ namespace Gameplay {
+ 
+ class BattleController;
+ class Squad;
++class QuantumFog;
+ 
+ /**
+  * 戰鬥→場景同步器(E4:Gameplay 接上場景圖/渲染管線)
+@@ -52,6 +54,12 @@ public:
+                           SharedPtr<Mesh> barFill, float barY = 2.0f,
+                           float barWidth = 1.2f);
+ 
++    // ---- 敵情霧(Q-1)----
++    // 綁定後:未揭露的 bound squad 節點隱藏,改在 parentNode 下顯示
++    // 機率雲標記(__fog_e<id> 節點,每候選一子節點,scale∝機率)。
++    void SetFog(const QuantumFog* fog);
++    void SetFogMarkerMesh(SharedPtr<Mesh> mesh);
++
+     // 選取的小隊(顯示選取環);nullptr 取消選取
+     void SetSelectedSquad(const Squad* squad);
+     const Squad* GetSelectedSquad() const { return selected; }
+@@ -75,13 +83,17 @@ private:
+ 
+     void CreateBinding(Squad* squad);
+     void EnsureOverlay(Binding& b);
++    SceneNode* EnsureFogNode(int entityId);
+     static Vector3 TeamColor(int team);
+ 
+     std::vector<Binding> bindings;
++    std::unordered_map<int, SharedPtr<SceneNode>> fogNodes;
+     SharedPtr<SceneNode> parentNode;
+     SceneGraph* scene = nullptr;
+     SharedPtr<Mesh> unitMesh;
+     SharedPtr<Mesh> ringMesh, barBgMesh, barFillMesh;
++    const QuantumFog* fog = nullptr;
++    SharedPtr<Mesh> fogMarkerMesh;
+     const Squad* selected = nullptr;
+     float barY = 2.0f;
+     float barWidth = 1.2f;
+diff --git a/Gameplay/Doctrine.cpp b/Gameplay/Doctrine.cpp
+index c5dc24f..fab761b 100644
+--- a/Gameplay/Doctrine.cpp
++++ b/Gameplay/Doctrine.cpp
+@@ -74,6 +74,7 @@ const char* ActionName(DoctrineAction action) {
+     case DoctrineAction::HoldPosition: return "HoldPosition";
+     case DoctrineAction::RetreatToRally: return "RetreatToRally";
+     case DoctrineAction::DefendNearestAlly: return "DefendNearestAlly";
++    case DoctrineAction::Scout: return "Scout";
+     }
+     return "Unknown";
+ }
+diff --git a/Gameplay/Doctrine.h b/Gameplay/Doctrine.h
+index afde323..be8bdb1 100644
+--- a/Gameplay/Doctrine.h
++++ b/Gameplay/Doctrine.h
+@@ -37,7 +37,8 @@ enum class DoctrineAction {
+     AdvanceToObjective, // 沿 flow field 往目標推進
+     HoldPosition,       // 原地駐守
+     RetreatToRally,     // 撤往集結點
+-    DefendNearestAlly   // 移向最近的接戰友軍
++    DefendNearestAlly,  // 移向最近的接戰友軍
++    Scout               // 偵查：移向最近的未揭露敵情雲（接觸後免費揭露）
+ };
+ 
+ /**
+diff --git a/Gameplay/EnemyGeneral.cpp b/Gameplay/EnemyGeneral.cpp
+index 1312a4d..84a51cd 100644
+--- a/Gameplay/EnemyGeneral.cpp
++++ b/Gameplay/EnemyGeneral.cpp
+@@ -27,6 +27,7 @@ DoctrineAction EnemyGeneral::ActionFromString(const std::string& s) {
+     if (s == "AdvanceToObjective") return DoctrineAction::AdvanceToObjective;
+     if (s == "RetreatToRally") return DoctrineAction::RetreatToRally;
+     if (s == "DefendNearestAlly") return DoctrineAction::DefendNearestAlly;
++    if (s == "Scout") return DoctrineAction::Scout;
+     return DoctrineAction::HoldPosition;
+ }
+ 
+diff --git a/Gameplay/QuantumFog.cpp b/Gameplay/QuantumFog.cpp
+index 3f6842e..c59e3c3 100644
+--- a/Gameplay/QuantumFog.cpp
++++ b/Gameplay/QuantumFog.cpp
+@@ -79,13 +79,55 @@ bool QuantumFog::Observe(int entityId, const Vector2& truePos) {
+         return false;
+     }
+     UncertainEntity& e = entities[entityId];
+-    if (e.revealed) return true;  // 已揭露不重複扣點
++    if (e.revealed) { // 已揭露不重複扣點,但刷新真值與時效
++        e.revealedPos = truePos;
++        e.revealTimer = intelDuration;
++        return true;
++    }
+ 
+     // 情報點 = 觀測成本；資源不足則觀測失敗（態不塌縮）
+     if (resources && !resources->SpendIntel(e.team, intelCost)) {
+         return false;
+     }
+ 
++    CollapseNear(e, truePos);
++    return true;
++}
++
++bool QuantumFog::Reveal(int entityId, const Vector2& truePos) {
++    if (entityId < 0 || entityId >= static_cast<int>(entities.size())) {
++        return false;
++    }
++    CollapseNear(entities[entityId], truePos);
++    return true;
++}
++
++bool QuantumFog::EliminateCandidate(int entityId, int candidateIndex) {
++    UncertainEntity* e =
++        (entityId >= 0 && entityId < static_cast<int>(entities.size()))
++            ? &entities[entityId]
++            : nullptr;
++    if (!e || e->revealed || candidateIndex < 0 ||
++        candidateIndex >= static_cast<int>(e->candidates.size())) {
++        return false;
++    }
++    std::vector<double> probs = e->state.Probabilities();
++    if (probs[candidateIndex] <= 1e-9) return false;
++
++    // 真值必在雲中——不得消到一個候選都不剩
++    int nonzero = 0;
++    for (double p : probs) {
++        if (p > 1e-9) ++nonzero;
++    }
++    if (nonzero <= 1) return false;
++
++    probs[candidateIndex] = 0.0;
++    e->priors[candidateIndex] = 0.0; // 過期重建時同樣排除
++    e->state.SetProbabilities(probs);
++    return true;
++}
++
++void QuantumFog::CollapseNear(UncertainEntity& e, const Vector2& truePos) {
+     // 塌縮到距真值最近的候選態
+     int best = 0;
+     float bestDist = 1e30f;
+@@ -98,7 +140,6 @@ bool QuantumFog::Observe(int entityId, const Vector2& truePos) {
+     e.revealed = true;
+     e.revealedPos = truePos;
+     e.revealTimer = intelDuration;
+-    return true;
+ }
+ 
+ int QuantumFog::ObserveRandom(int entityId) {
+diff --git a/Gameplay/QuantumFog.h b/Gameplay/QuantumFog.h
+index 75def01..6b81d73 100644
+--- a/Gameplay/QuantumFog.h
++++ b/Gameplay/QuantumFog.h
+@@ -71,6 +71,14 @@ public:
+     // 情報不足或實體不存在回傳 false。
+     bool Observe(int entityId, const Vector2& truePos);
+ 
++    // 免情報點揭露（物理偵查：小隊目視接觸）。已揭露者僅更新位置。
++    bool Reveal(int entityId, const Vector2& truePos);
++
++    // 負面觀測：把某候選格機率歸零並重新歸一化
++    // （小隊目視覆蓋該格但沒看到人——「這裡沒有敵軍」也是情報）。
++    // 已揭露/實體或索引無效/候選已為零/只剩最後一個非零候選時回 false。
++    bool EliminateCandidate(int entityId, int candidateIndex);
++
+     // 純 Born-rule 觀測（無真值來源時）：回傳命中的候選 index，-1 表示失敗
+     int ObserveRandom(int entityId);
+ 
+@@ -85,6 +93,8 @@ public:
+     size_t EntityCount() const { return entities.size(); }
+ 
+ private:
++    void CollapseNear(UncertainEntity& e, const Vector2& truePos);
++
+     std::vector<UncertainEntity> entities;
+     BattleResources* resources = nullptr;
+     float intelDuration;
+diff --git a/_bmad-output/implementation-artifacts/spec-q1-quantum-fog-battle.md b/_bmad-output/implementation-artifacts/spec-q1-quantum-fog-battle.md
+new file mode 100644
+index 0000000..d5bccf6
+--- /dev/null
++++ b/_bmad-output/implementation-artifacts/spec-q1-quantum-fog-battle.md
+@@ -0,0 +1,89 @@
++---
++title: 'Q-1 QuantumFog 接入斷橋戰場（疊加態敵軍 + 偵查玩法）'
++type: 'feature'
++created: '2026-09-17'
++status: 'in-progress'
++baseline_commit: '67825f7'
++baseline_revision: '821ed5c8a56796078fbf885c7fa0ab1a685a4b47'
++context:
++  - AGENTS.md
++  - _bmad-output/implementation-artifacts/auto-dev-queue.yaml
++  - Gameplay/QuantumFog.h
++  - Gameplay/BattleController.h
++  - Gameplay/BattleSceneSync.h
++  - Examples/DuanqiaoPlayable.cpp
++---
++
++<frozen-after-approval reason="human-owned intent — do not modify unless human renegotiates">
++
++## Intent
++
++把 QuantumFog 從獨立 demo 變成斷橋的實際玩法層：敵軍小隊開戰時以**疊加態**存在——玩家只看到候選位置的機率雲，看不到真身。揭露途徑兩種：花情報點觀測（即時、遠距）或小隊物理接觸偵查（免費、要走過去）。情報有時效，過期回疊加態。
++
++**觀測語義**：`UncertainEntity.team` 沿用 QuantumFogDemo 慣例 = **付情報點的觀測方**（玩家 0），不是敵軍陣營。
++
++## Boundaries
++
++**In scope:**
++- `QuantumFog::Reveal`（免情報點的塌縮，物理偵查路徑）
++- `BattleController`：fog 綁定、squad↔entityId 映射、接觸揭露、`DoctrineAction::Scout`
++- `BattleSceneSync`：未揭露敵軍藏真身 + 機率雲標記節點
++- `DuanqiaoPlayable`：敵軍註冊疊加態、情報點經濟、LMB 點雲觀測、後衛 Scout doctrine、HUD 情報顯示
++- `QuantumFogBattleTest`（新 headless 測試）+ `BattleSceneTest` fog 斷言
++
++**Out of scope:**
++- Q-2~Q-9（糾纏/Probe/人格先驗/隨機源/存檔回放/干涉/效能/教學）
++- 機率雲半透明渲染（現有 lambert shader 無 alpha——用機率縮放標記大小代替）
++- 敵軍反過來觀測玩家（單向戰爭迷霧）
++- intelDuration 過期後候選格重新生成（v1 候選集固定於註冊時）
++
++## I/O Contract
++
++| 輸入 | 輸出 |
++|---|---|
++| LMB 點機率雲標記 | `fog.Observe` → 扣情報點 → 該敵軍真身顯示 intelDuration 秒 |
++| 我軍小隊進入敵軍 `fogRevealRange`（預設 3 格） | `fog.Reveal`（免費）→ 真身顯示 + 戰報事件 |
++| doctrine `Scout` 命中 | 小隊 AttackMove 向最近未揭露雲的 modal 候選格 |
++| 情報時效到期 | 真身隱藏、機率雲標記復活（先驗重建） |
++| 情報點不足 | Observe false、戰報「情報不足」、雲不變 |
++
++**錯誤處理**：fog 未綁定 → 一切行為退回現狀（敵軍恆可見，Scout 空轉為 Hold）；entity 對應 squad 全滅 → 標記隱藏、Observe 仍可叫但 demo 不讓點；重複 Observe 已揭露實體 → 不重複扣點（既有行為）。
++
++</frozen-after-approval>
++
++## Implementation Checklist
++
++- [ ] `Gameplay/QuantumFog.h/.cpp` — `Reveal(entityId, truePos)`：塌縮+揭露但不走 SpendIntel；與 Observe 共用塌縮段
++- [ ] `Gameplay/Doctrine.h/.cpp` — `DoctrineAction::Scout` + `ActionName`
++- [ ] `Gameplay/BattleController.h/.cpp` — `BindFog`/`BindFogSquad`/`GetFog`/`GetFogEntityId`/`GetFogSquad`/`SetFogRevealRange`；Update：fog->Update(dt)、接觸揭露（Emit 戰報）；EvaluateDoctrines 加 Scout case（最近未揭露 entity 的最高機率候選格 → AttackMove；無目標退回 Hold）
++- [ ] `Gameplay/BattleSceneSync.h/.cpp` — `SetFog(const QuantumFog*)` + `SetFogMarkerMesh`；Sync 時未揭露 bound squad 藏節點（含 overlay）；`__fog_e<id>` 標記節點掛 parentNode，每候選一子節點（位置×CELL、scale∝機率、紫灰色）
++- [ ] `Examples/DuanqiaoPlayable.cpp` — `BattleResources res` + `res.Setup(battle,0,intel=4,cp=5)`（取代 SetCommandPoints）；4 敵軍 AddEntityCloud（center=出生點,radius=3.5,count=6,spacing=1.2,bias=南岸敵營）+ BindFogSquad；LMB 點雲→Observe；HUD 加情報點/未揭露數；後衛 doctrine 改寫含 Scout
++- [ ] `Examples/QuantumFogBattleTest.cpp` — 新測試：Observe 扣情報/到期回雲/接觸免費揭露/Scout 指令朝向雲 modal
++- [ ] `Examples/BattleSceneTest.cpp` — fog 段落：未揭露藏節點+標記存在、Reveal 後反轉、全滅藏標記
++- [ ] `CMakeLists.txt` — QuantumFogBattleTest 入 POTATO_TESTS
++
++## Design Notes
++
++- 接觸揭露在 squad Update 之後檢查（位置已刷新）；fog->Update 用縮放後 dt（暫停時情報不過期）。
++- 機率雲標記掛 `__battle_units` 下做 squad 節點的兄弟——不是子節點（未揭露時父節點 inactive 會連子節點一起藏）。
++- Scout 的目標 = `GetCloud` 中機率最大候選；雲擴散後 modal 會漂移，小隊自然追著雲走。
++- 敵軍真身未揭露時仍可被點選攻擊？不行——PickSquad 只回傳可見（未隱藏）的不在此列；AttackMove 接近後接觸揭露自然形成「偵查→交戰」循環。
++- 情報經濟：intel=4、cost=1、duration=25s——可觀測 4 次但敵軍也是 4 隊，逼玩家選擇花點或走接觸偵查。
++
++## Acceptance Criteria
++
++- [ ] demo 中未觀測敵軍顯示機率雲而非實體
++- [ ] 情報點消費 → Observe → 真實位置顯示；intelDuration 過期回雲
++- [ ] Scout doctrine 可觸發觀測（接觸揭露）
++- [ ] `QuantumFogBattleTest` + `BattleSceneTest` 新斷言 PASS；既有測試無回歸
++- [ ] MSVC + MinGW 建置通過
++
++## Verification
++
++**Commands:**
++- `cmake --build build --config Release --target DuanqiaoPlayable QuantumFogBattleTest BattleSceneTest`
++- `cd build && ctest -C Release -R "QuantumFogBattleTest|BattleSceneTest|BattlePickerTest|DuanqiaoDemo|DoctrineBattleDemo|QuantumTest" --output-on-failure`
++- `cmake --build build-mingw --target DuanqiaoPlayable QuantumFogBattleTest`
++
++**Manual checks:**
++- `DuanqiaoPlayable.exe`：南岸只見紫色機率雲；LMB 點雲扣情報顯真身；25s 後回雲；後衛自動走向雲、接近後敵軍現蹤

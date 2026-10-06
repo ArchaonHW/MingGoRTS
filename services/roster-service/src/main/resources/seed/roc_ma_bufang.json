@@ -1,0 +1,25 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_ma_bufang",
+  "name": "馬步芳",
+  "courtesyName": "子香",
+  "epithet": "青馬狼帥",
+  "rarity": "rare",
+  "faction": "青馬",
+  "role": "commander",
+  "personality": { "aggression": 85, "discipline": 55, "cunning": 70 },
+  "stats": { "command": 66, "attack": 84, "defense": 58, "mobility": 92, "moraleAura": 58 },
+  "signatureDoctrine": {
+    "name": "鐵騎掠襲",
+    "trigger": "Always", "threshold": 0.0, "action": "AttackWeakest",
+    "description": "騎兵專挑軟處撕——青馬鐵騎的狼群戰法,追亡逐北絕不放手"
+  },
+  "cards": [
+    { "name": "遇強則避", "trigger": "Outnumbered", "action": "RetreatToRally", "threshold": 0.0, "priority": 20, "cooldown": 18.0 },
+    { "name": "近敵纏鬥", "trigger": "EnemyInRange", "action": "AttackNearest", "threshold": 4.0, "priority": 40, "cooldown": 8.0 }
+  ],
+  "portrait": { "build": "burly", "head": "cap", "beard": "none", "glasses": false },
+  "lore": "青海馬家軍首領,騎兵縱橫西北,蘭州戰役兵敗出走,一生剽悍嗜殺。",
+  "historicalBattle": "河西阻擊戰 1936",
+  "art": "cards/art/roc_ma_bufang.png"
+}

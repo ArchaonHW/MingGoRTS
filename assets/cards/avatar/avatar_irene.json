@@ -1,0 +1,43 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "avatar_irene",
+  "name": "艾琳·馮·塞堡",
+  "courtesyName": "",
+  "epithet": "破曉之矛",
+  "rarity": "rare",
+  "faction": "前線偵察群",
+  "role": "vanguard",
+  "personality": {
+    "aggression": 88,
+    "discipline": 62,
+    "cunning": 55
+  },
+  "stats": {
+    "command": 65,
+    "attack": 90,
+    "defense": 58,
+    "mobility": 92,
+    "moraleAura": 60
+  },
+  "signatureDoctrine": {
+    "name": "擊弱潰敵",
+    "trigger": "EnemyInRange",
+    "threshold": 6.0,
+    "action": "AttackWeakest",
+    "description": "專打最弱的隊伍製造潰逃——擴大歸附數而非殲滅數"
+  },
+  "cards": [
+    { "trigger": "HealthBelow", "threshold": 0.3, "action": "RetreatToRally" },
+    { "trigger": "Always", "threshold": 0.0, "action": "AdvanceToObjective" }
+  ],
+  "portrait": {
+    "source": "vrm",
+    "model": "avatars/blonde-character.vrm",
+    "region": "head",
+    "yaw": -15,
+    "pose": "relax"
+  },
+  "lore": "僱傭偵察兵出身，金髮雙馬尾是她故意的偽裝——敵人總在低估她之後潰逃。",
+  "origin": "邊境衝突",
+  "art": "cards/art_vrm/blonde_character.png"
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_cai_tingkai",
+  "name": "蔡廷鍇",
+  "courtesyName": "賢初",
+  "epithet": "鐵血十九路",
+  "rarity": "epic",
+  "faction": "粵系",
+  "role": "commander",
+  "personality": { "aggression": 68, "discipline": 82, "cunning": 58 },
+  "stats": { "command": 78, "attack": 80, "defense": 84, "mobility": 66, "moraleAura": 86 },
+  "signatureDoctrine": {
+    "name": "奮起還擊",
+    "trigger": "UnderAttack", "threshold": 0.0, "action": "AttackNearest",
+    "description": "挨了打必還手——一二八淞滬,十九路軍沒有後退二字"
+  },
+  "cards": [
+    { "name": "死守陣地", "trigger": "Always", "action": "HoldPosition", "threshold": 0.0, "priority": 95, "cooldown": 0.0 },
+    { "name": "殘部猶戰", "trigger": "HealthBelow", "action": "HoldPosition", "threshold": 0.3, "priority": 20, "cooldown": 0.0 }
+  ],
+  "portrait": { "build": "slim", "head": "cap", "beard": "none", "glasses": false },
+  "lore": "十九路軍軍長,一二八淞滬抗戰奮起還擊,打破日軍速勝迷夢,全國振奮。",
+  "historicalBattle": "一二八淞滬抗戰 1932",
+  "art": "cards/art/roc_cai_tingkai.png"
+}

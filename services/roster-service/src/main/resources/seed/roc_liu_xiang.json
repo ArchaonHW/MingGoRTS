@@ -1,0 +1,25 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_liu_xiang",
+  "name": "劉湘",
+  "courtesyName": "甫澄",
+  "epithet": "四川王",
+  "rarity": "rare",
+  "faction": "川系",
+  "role": "commander",
+  "personality": { "aggression": 58, "discipline": 70, "cunning": 72 },
+  "stats": { "command": 74, "attack": 62, "defense": 70, "mobility": 60, "moraleAura": 78 },
+  "signatureDoctrine": {
+    "name": "川軍出川",
+    "trigger": "AllyEngaged", "threshold": 0.0, "action": "AdvanceToObjective",
+    "description": "友軍開戰即傾巢赴援——「敵軍一日不退出國境,川軍一日誓不還鄉」"
+  },
+  "cards": [
+    { "name": "護援", "trigger": "AllyEngaged", "action": "DefendNearestAlly", "threshold": 0.0, "priority": 55, "cooldown": 14.0 },
+    { "name": "穩守", "trigger": "Always", "action": "HoldPosition", "threshold": 0.0, "priority": 98, "cooldown": 0.0 }
+  ],
+  "portrait": { "build": "burly", "head": "cap", "beard": "none", "glasses": false },
+  "lore": "川軍領袖,統一四川,七七後率川軍出川抗日,病逝漢口,遺言激勵川軍抗戰到底。",
+  "historicalBattle": "出川抗日 1937",
+  "art": "cards/art/roc_liu_xiang.png"
+}

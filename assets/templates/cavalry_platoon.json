@@ -1,0 +1,21 @@
+{
+    "schema": "potato.squad_template/1",
+    "id": "cavalry_platoon",
+    "name": "騎兵排",
+    "members": 12,
+    "unit_class": "cavalry",
+    "cost": 160,
+    "stats": {
+        "speed": 3.5,
+        "engage_range": 1.5,
+        "damage_per_member": 0.06,
+        "stamina": {
+            "drain_move": 0.045,
+            "drain_combat": 0.06,
+            "regen": 0.05,
+            "threshold": 0.35,
+            "penalty_mul": 0.5
+        }
+    },
+    "note": "遷移自舊扁平 schema——原 morale 欄位已廢（v1 不收錄士氣），其餘數值保留"
+}

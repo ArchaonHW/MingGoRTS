@@ -1,0 +1,26 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_zhang_lingfu",
+  "name": "張靈甫",
+  "courtesyName": "鍾麟",
+  "epithet": "跛腿猛將",
+  "rarity": "legendary",
+  "faction": "中央軍",
+  "role": "commander",
+  "personality": { "aggression": 95, "discipline": 70, "cunning": 55 },
+  "stats": { "command": 78, "attack": 92, "defense": 62, "mobility": 78, "moraleAura": 75 },
+  "signatureDoctrine": {
+    "name": "中心開花",
+    "trigger": "Outnumbered", "threshold": 0.0, "action": "HoldPosition",
+    "description": "被圍反而固守吸住敵軍——孟良崮的孤注一擲,成則開花,敗則全軍"
+  },
+  "cards": [
+    { "name": "見敵必戰", "trigger": "EnemyInRange", "action": "AttackNearest", "threshold": 7.0, "priority": 10, "cooldown": 0.0 },
+    { "name": "死戰不退", "trigger": "MoraleBelow", "action": "HoldPosition", "threshold": 0.3, "priority": 20, "cooldown": 0.0 },
+    { "name": "推進", "trigger": "Always", "action": "AdvanceToObjective", "threshold": 0.0, "priority": 95, "cooldown": 0.0 }
+  ],
+  "portrait": { "build": "slim", "head": "cap", "beard": "none", "glasses": false },
+  "lore": "整編七十四師師長,驍勇偏執,孟良崮孤軍深陷被圍,中心開花不成,全師覆滅身死。",
+  "historicalBattle": "孟良崮戰役 1947",
+  "art": "cards/art/roc_zhang_lingfu.png"
+}

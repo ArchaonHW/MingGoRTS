@@ -1,0 +1,25 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "roc_xie_jinyuan",
+  "name": "謝晉元",
+  "courtesyName": "中民",
+  "epithet": "八百壯士",
+  "rarity": "epic",
+  "faction": "中央軍",
+  "role": "commander",
+  "personality": { "aggression": 40, "discipline": 95, "cunning": 50 },
+  "stats": { "command": 76, "attack": 62, "defense": 96, "mobility": 45, "moraleAura": 94 },
+  "signatureDoctrine": {
+    "name": "四行死守",
+    "trigger": "Always", "threshold": 0.0, "action": "HoldPosition",
+    "description": "寸步不退——四行倉庫四晝夜,旗幟不倒士氣不散"
+  },
+  "cards": [
+    { "name": "絕不撤退", "trigger": "MoraleBelow", "action": "HoldPosition", "threshold": 0.2, "priority": 10, "cooldown": 0.0 },
+    { "name": "還擊", "trigger": "UnderAttack", "action": "AttackNearest", "threshold": 0.0, "priority": 50, "cooldown": 8.0 }
+  ],
+  "portrait": { "build": "normal", "head": "cap", "beard": "none", "glasses": false },
+  "lore": "五二四團團附,率四百餘人守四行倉庫四晝夜,中外矚目,後遭叛徒刺殺殉國。",
+  "historicalBattle": "四行倉庫保衛戰 1937",
+  "art": "cards/art/roc_xie_jinyuan.png"
+}

@@ -385,7 +385,10 @@ std::string IDEAgentManager::GenerateCode(const std::string& description,
                                           GameDevAgentType preferredType,
                                           const SimplifiedAI::Context& context) {
     std::cout << "Generating code with enhanced context: " << description << std::endl;
-    
+
+    std::string backendResult = TryBackend("generate: ", description);
+    if (!backendResult.empty()) return backendResult;
+
     // Find agent of preferred type
     auto agentsOfType = GetAgentsByType(preferredType);
     if (!agentsOfType.empty()) {
@@ -401,40 +404,64 @@ std::string IDEAgentManager::GenerateCode(const std::string& description,
     return "No agents available";
 }
 
-std::string IDEAgentManager::OptimizeAsset(const std::string& assetPath, 
+std::string IDEAgentManager::OptimizeAsset(const std::string& assetPath,
                                           const SimplifiedAI::Context& context) {
+    std::string r = TryBackend("asset: ", assetPath);
+    if (!r.empty()) return r;
     auto agentsOfType = GetAgentsByType(GameDevAgentType::AssetAgent);
     if (!agentsOfType.empty()) {
         return agentsOfType[0]->ProcessAssetOptimization(assetPath, context);
     }
-    return "No asset agent available";
+    auto allAgents = GetAllAgents();
+    if (!allAgents.empty()) {
+        return allAgents[0]->ProcessAssetOptimization(assetPath, context);
+    }
+    return "No agents available";
 }
 
-std::string IDEAgentManager::DesignLevel(const std::string& levelDescription, 
+std::string IDEAgentManager::DesignLevel(const std::string& levelDescription,
                                         const SimplifiedAI::Context& context) {
+    std::string r = TryBackend("design: ", levelDescription);
+    if (!r.empty()) return r;
     auto agentsOfType = GetAgentsByType(GameDevAgentType::LevelDesign);
     if (!agentsOfType.empty()) {
         return agentsOfType[0]->ProcessLevelDesign(levelDescription, context);
     }
-    return "No level design agent available";
+    auto allAgents = GetAllAgents();
+    if (!allAgents.empty()) {
+        return allAgents[0]->ProcessLevelDesign(levelDescription, context);
+    }
+    return "No agents available";
 }
 
-std::string IDEAgentManager::AnalyzePerformance(const std::string& code, 
+std::string IDEAgentManager::AnalyzePerformance(const std::string& code,
                                                  const SimplifiedAI::Context& context) {
+    std::string r = TryBackend("perf: ", code);
+    if (!r.empty()) return r;
     auto agentsOfType = GetAgentsByType(GameDevAgentType::Performance);
     if (!agentsOfType.empty()) {
         return agentsOfType[0]->ProcessPerformanceAnalysis(code, context);
     }
-    return "No performance agent available";
+    auto allAgents = GetAllAgents();
+    if (!allAgents.empty()) {
+        return allAgents[0]->ProcessPerformanceAnalysis(code, context);
+    }
+    return "No agents available";
 }
 
-std::string IDEAgentManager::OptimizeBuild(const std::string& buildConfig, 
+std::string IDEAgentManager::OptimizeBuild(const std::string& buildConfig,
                                           const SimplifiedAI::Context& context) {
+    std::string r = TryBackend("build: ", buildConfig);
+    if (!r.empty()) return r;
     auto agentsOfType = GetAgentsByType(GameDevAgentType::BuildAgent);
     if (!agentsOfType.empty()) {
         return agentsOfType[0]->ProcessBuildOptimization(buildConfig, context);
     }
-    return "No build agent available";
+    auto allAgents = GetAllAgents();
+    if (!allAgents.empty()) {
+        return allAgents[0]->ProcessBuildOptimization(buildConfig, context);
+    }
+    return "No agents available";
 }
 
 void IDEAgentManager::EnableCollaboration(bool enable) {

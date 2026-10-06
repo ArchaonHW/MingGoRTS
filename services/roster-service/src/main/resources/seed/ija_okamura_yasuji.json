@@ -1,0 +1,26 @@
+{
+  "schema": "potato.character_card/1",
+  "id": "ija_okamura_yasuji",
+  "name": "岡村寧次",
+  "courtesyName": "",
+  "epithet": "華北狩人",
+  "rarity": "legendary",
+  "faction": "日軍",
+  "role": "commander",
+  "personality": { "aggression": 65, "discipline": 90, "cunning": 94 },
+  "stats": { "command": 88, "attack": 78, "defense": 84, "mobility": 74, "moraleAura": 74 },
+  "signatureDoctrine": {
+    "name": "囚籠掃蕩",
+    "trigger": "Always", "threshold": 0.0, "action": "AttackWeakest",
+    "description": "先剪最弱——治安肅正戰的獵手邏輯,逐格收緊囚籠"
+  },
+  "cards": [
+    { "name": "殘敵必殲", "trigger": "EnemyInRange", "action": "AttackWeakest", "threshold": 7.0, "priority": 10, "cooldown": 5.0 },
+    { "name": "寡眾不戀", "trigger": "Outnumbered", "action": "RetreatToRally", "threshold": 0.0, "priority": 22, "cooldown": 20.0 },
+    { "name": "推進", "trigger": "Always", "action": "AdvanceToObjective", "threshold": 0.0, "priority": 92, "cooldown": 0.0 }
+  ],
+  "portrait": { "build": "slim", "head": "bald", "beard": "none", "glasses": false },
+  "lore": "華北方面軍司令官,推行治安肅正與囚籠政策,心思縝密手段酷烈,戰後被國府聘用。",
+  "historicalBattle": "華北治安戰 1941",
+  "art": "cards/art/ija_okamura_yasuji.png"
+}

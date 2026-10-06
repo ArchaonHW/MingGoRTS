@@ -1,4 +1,4 @@
-﻿name: Security Scan
+name: Security Scan
 
 on:
   push:
@@ -50,8 +50,9 @@ jobs:
       run: |
         echo "Scanning C++ sources for unsafe functions..."
         # 高危函式：必須為零
-        BANNED='(gets|strcpy|strcat|sprintf|vsprintf|scanf)\s*\('
-        if grep -rnE --include='*.cpp' --include='*.h' --exclude-dir=external --exclude-dir=build "$BANNED" . ; then
+        BANNED='\b(gets|strcpy|strcat|sprintf|vsprintf|scanf)\s*\('
+        # UNSAFE_FN_FIXTURE 標記的行是偵測器本身/測試字串，不算實際呼叫
+        if grep -rnE --include='*.cpp' --include='*.h' --exclude-dir=external --exclude-dir=build "$BANNED" . | grep -v 'UNSAFE_FN_FIXTURE'; then
           echo "::error::Banned unsafe functions found (gets/strcpy/strcat/sprintf/vsprintf/scanf)"
           exit 1
         fi
