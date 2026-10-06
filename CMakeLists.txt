@@ -480,6 +480,18 @@ target_include_directories(potato_test_mintclaim PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_mintclaim PotatoCampaign)
 add_test(NAME potato_test_mintclaim COMMAND potato_test_mintclaim)
 
+# Story 12.1 — world map schema + registry (potato.world/1)
+add_executable(potato_test_world Examples/potato_test_world.cpp)
+target_include_directories(potato_test_world PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_world PotatoCampaign)
+add_test(NAME potato_test_world COMMAND potato_test_world)
+
+# Story 11.4 — chain/outbox exporter: fixture producer for the
+# external relayer (Tools/MintRelayer/) and the demo path.
+add_executable(potato_export_chain Examples/potato_export_chain.cpp)
+target_include_directories(potato_export_chain PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_export_chain PotatoCampaign)
+
 # CLI end-to-end: emit a sealed record, then verify it (exit-code check).
 add_test(NAME potato_record_emit
     COMMAND potato_test_record --emit ${CMAKE_BINARY_DIR}/verify_sample.json)
