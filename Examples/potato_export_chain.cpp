@@ -156,16 +156,16 @@ int main(int argc, char** argv) {
         std::fprintf(stderr, "outbox rescan failed\n");
         return 1;
     }
-    const auto root =
+    const auto merkle =
         Campaign::LedgerMerkleRoot(ledger, scan.value.claims);
-    if (!root.ok()) {
+    if (!merkle.ok()) {
         std::fprintf(stderr, "merkle fold failed\n");
         return 1;
     }
     const fs::path merklePath = outDir / "merkle.json";
     const std::string merkleText =
         "{\"schema\":\"potato.merkle/1\",\"root\":\"" +
-        Campaign::RootHex(root.value) + "\"}";
+        Campaign::RootHex(merkle.value) + "\"}";
     if (!WriteAtomic(merklePath, merkleText)) {
         std::fprintf(stderr, "merkle write failed\n");
         return 1;
