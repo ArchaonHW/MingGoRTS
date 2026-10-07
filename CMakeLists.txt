@@ -499,6 +499,12 @@ target_include_directories(potato_test_encounter PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_encounter PotatoCampaign)
 add_test(NAME potato_test_encounter COMMAND potato_test_encounter)
 
+# Story 6.5 — narrative pack registry (assets/narrative/*.json)
+add_executable(potato_test_narrative Examples/potato_test_narrative.cpp)
+target_include_directories(potato_test_narrative PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_narrative PotatoCampaign)
+add_test(NAME potato_test_narrative COMMAND potato_test_narrative)
+
 # Story 11.4 — chain/outbox exporter: fixture producer for the
 # external relayer (Tools/MintRelayer/) and the demo path.
 add_executable(potato_export_chain Examples/potato_export_chain.cpp)
