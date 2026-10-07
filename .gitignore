@@ -119,3 +119,14 @@ Tools/MintRelayer/node_modules/
 !.github/**/*.json
 !.github/**/*.yml
 !.github/**/*.md
+
+# BMAD / GDS / WDS agent frameworks (third-party — do not upload to GitHub)
+_bmad/
+_bmad-output/
+.agents/
+.claude/
+progress/
+
+# IDE / AI tool local configuration
+.windsurf/
+.devin/
