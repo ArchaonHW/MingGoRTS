@@ -41,7 +41,7 @@ C++20 game engine (PotatoEngine) + greenfield game layer (MingGoRTS). Planning a
 
 - README describes aspirational state (completed epics, existing `Gameplay/`, old planning paths) that does not match the filesystem — trust `_bmad-output/` documents and the actual tree, not README status lines.
 - PowerShell here-strings treat backticks as escapes — prefer `[IO.File]::WriteAllText` with single-quoted here-strings when writing content containing backticks.
-- The repo path contains CJK (`F:\民國史詩`) — MinGW make and FetchContent subbuilds fail on it ("Illegal byte sequence"). Build via an ASCII junction, e.g. `C:\MingGoRTS -> F:\民國史詩\HWC\MingGoRTS`.
+- The repo path contains CJK (`F:\民國史詩`) — MinGW make and FetchContent subbuilds fail on it ("Illegal byte sequence"). Build via an ASCII junction, e.g. `F:\dev\MingGoRTS -> F:\民國史詩\HWC\MingGoRTS` (older sessions may reference `C:\MingGoRTS`, a legacy alias of the same junction — prefer F: to keep workspace off the system drive).
 - `PotatoEngine` static lib does not compile under MinGW (`Security/SecuritySystem.cpp` uses MSVC-isms) — `PotatoGameplay` deliberately does not link it yet. For headless builds use `-DPOTATO_BUILD_GUI=OFF` (skips glfw/glad FetchContent, which also needs git/network).
 
 <!-- /bmad:context -->
