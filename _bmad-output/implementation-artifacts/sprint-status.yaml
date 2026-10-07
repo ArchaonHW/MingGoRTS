@@ -128,16 +128,16 @@ development_status:
   11-1-mintclaim-schema-outbox: done
   11-2-ledger-merkle-root: done
   11-3-replay-gated-claim-emission: done
-  11-4-external-relayer-tool: review
+  11-4-external-relayer-tool: done
   11-5-testnet-anchor-token-contract: backlog
   11-6-nft-collectible-minting: backlog
   epic-11-retrospective: optional
   epic-12: in-progress
   12-1-worldmap-schema-registry: done
-  12-2-worldstate-time: review
-  12-3-warband-movement: review
-  12-4-character-model-creation: review
-  12-5-encounter-pipeline: backlog
+  12-2-worldstate-time: done
+  12-3-warband-movement: done
+  12-4-character-model-creation: done
+  12-5-encounter-pipeline: review
   12-6-chapter-anchoring-refactor: backlog
   12-7-regional-governance-myth-binding: backlog
   12-8-world-save-integration: backlog
