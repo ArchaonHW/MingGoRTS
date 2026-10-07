@@ -1,5 +1,7 @@
 #include "Campaign/Narrative/BattleReport.h"
 
+#include "Campaign/Narrative/BencaoCite.h"
+
 #include "Gameplay/Command/Intervention.h"   // InterventionKind
 #include "Gameplay/Eval/WinEval.h"           // CloseReason ordinals
 #include "Gameplay/Myth/Infiltration.h"      // MythActionKind
@@ -46,7 +48,9 @@ std::string_view EllipticalCount(std::size_t n) {
 std::string RenderBattleReport(std::span<const SimEvent> events,
                                int historianSide,
                                std::span<const std::uint8_t>
-                                   seedLevels) {
+                                   seedLevels,
+                               const BencaoCodex* bcodex,
+                               const BencaoLibrary* blib) {
     // Fold — every kind lands in exactly one bucket or the
     // confession counter.
     std::size_t occupied[2] = {0, 0};
@@ -241,6 +245,12 @@ std::string RenderBattleReport(std::span<const SimEvent> events,
     s += "本報告省略 ";
     AppendUInt(s, omissions);
     s += " 項\n";
+    // 書吏按 — the codex colophon rides after the confession:
+    // the historian admits what was omitted, then the clerk
+    // notes which pages of the book the field touched.
+    if (bcodex && blib) {
+        s += RenderBencaoColophon(events, *bcodex, *blib);
+    }
     return s;
 }
 

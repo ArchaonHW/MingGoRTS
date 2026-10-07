@@ -6,13 +6,16 @@
 // pending 補鈔 FIFO, codex state round-trip.
 // Story 10.3 — 補鈔 delivery (potato.buchao/1): bounded drain,
 // clause-pool 批註 composition, suspect flag, store round-trip.
+#include "Campaign/Narrative/BattleReport.h"
 #include "Campaign/Narrative/Bencao.h"
 #include "Campaign/Narrative/BencaoCodex.h"
+#include "Campaign/Narrative/BencaoCite.h"
 #include "Campaign/Narrative/Buchao.h"
 #include "Campaign/Narrative/Codex.h"
 #include "Campaign/Ledger/Ledger.h"
 #include "Campaign/Myth/MythLog.h"
 #include "Campaign/Myth/MythState.h"
+#include "Gameplay/Doctrine/Doctrine.h" // SimEvent
 #include "Gameplay/Json/JsonValue.h"
 #include "Gameplay/Map/BattleMap.h"
 
@@ -825,6 +828,192 @@ int main() {
     Check(ebook.find("——山草類——") != std::string::npos &&
               ebook.find("凡 0 種，已錄 0 種") != std::string::npos,
           "10.4: empty library renders TOC + zero counts");
+
+    // --- Story 10.5: the other voices cite the book ---
+    {
+        using Potato::Campaign::RenderBattleReport;
+        using Potato::Campaign::RenderBencaoColophon;
+        using Potato::Campaign::RenderBencaoHearsay;
+        using Potato::Campaign::RenderMythLog;
+        using Potato::Gameplay::SimEvent;
+
+        const fs::path dir4 =
+            fs::temp_directory_path() / "potato_test_bencao_cite";
+        fs::remove_all(dir4);
+        fs::create_directories(dir4);
+        // Two gucai entries (one-per-category pin), one manshui,
+        // one jinshi (locked), one chongshou myth_state entry.
+        Write(dir4, "a.json",
+              Entry("ga", "gucai",
+                    "{\"kind\":\"ledger_tag\",\"tag\":\"x\"}")
+                  .c_str());
+        Write(dir4, "b.json",
+              Entry("gb", "gucai",
+                    "{\"kind\":\"ledger_tag\",\"tag\":\"y\"}")
+                  .c_str());
+        Write(dir4, "c.json",
+              Entry("m1", "manshui",
+                    "{\"kind\":\"ledger_tag\",\"tag\":\"z\"}")
+                  .c_str());
+        Write(dir4, "d.json",
+              Entry("j1", "jinshi",
+                    "{\"kind\":\"myth_state\",\"state\":\"ghost_army\"}")
+                  .c_str());
+        // c1 carries a folk 釋名 — the rumor voice names the
+        // alias, never the sealed 正名.
+        Write(dir4, "e.json",
+              "{\"schema\":\"potato.bencao/1\",\"id\":\"c1\","
+              "\"category\":\"chongshou\",\"name\":\"三七\","
+              "\"aliases\":[\"鬼蓋\"],"
+              "\"nature\":\"甘、微苦，溫。\","
+              "\"indications\":\"止血散血，定痛。\","
+              "\"source\":\"本草綱目·卷十二\","
+              "\"unlock\":{\"kind\":\"myth_state\","
+              "\"state\":\"pacify_shrine\"}}");
+        BencaoLibrary lib4;
+        Check(BencaoLibrary::Load(dir4, lib4).ok &&
+                  lib4.Size() == 5,
+              "10.5: cite fixture loads");
+
+        auto mkCodex = [](const char* unlockedJson) {
+            // pending is a required array on the wire even when
+            // empty — omitting it rejects the whole doc.
+            const auto j = JsonValue::Parse(
+                std::string(
+                    "{\"schema\":\"potato.bencao_state/1\","
+                    "\"unlocked\":") +
+                unlockedJson + ",\"pending\":[]}");
+            return BencaoCodex::FromJson(j.value).value;
+        };
+
+        // Events: village deed + convoy deed + shrine + execution.
+        SimEvent ev[4] = {};
+        ev[0].kind = SimEvent::Kind::VillageBurned;
+        ev[1].kind = SimEvent::Kind::ConvoyRaided;
+        ev[2].kind = SimEvent::Kind::ShrineCaptured;
+        ev[3].kind = SimEvent::Kind::SquadExecuted;
+
+        // Unlocked: ga, gb (gucai), m1 (manshui). Locked: j1, c1.
+        BencaoCodex cx4 = mkCodex("[\"ga\",\"gb\",\"m1\"]");
+        const std::string report = RenderBattleReport(
+            ev, /*historianSide=*/0, {}, &cx4, &lib4);
+        const auto countOf = [](const std::string& h,
+                                std::string_view n) {
+            std::size_t c = 0, p = 0;
+            while ((p = h.find(n, p)) != std::string::npos) {
+                ++c;
+                ++p;
+            }
+            return c;
+        };
+        Check(countOf(report, "書吏按") == 2,
+              "10.5: one colophon per cited category");
+        Check(report.find("是役及村落") != std::string::npos &&
+                  report.find("是役近河津") != std::string::npos &&
+                  report.find("是役近河津") <
+                      report.find("是役及村落"),
+              "10.5: colophon order follows category ordinal");
+        Check(report.find("是役動祠宇") == std::string::npos &&
+                  report.find("是役有暴行") == std::string::npos,
+              "10.5: categories with no unlocked page stay "
+              "silent");
+        Check(RenderBattleReport(ev, 0, {}, &cx4, &lib4) ==
+                  report,
+              "10.5: colophon deterministic");
+        // Removable: null args byte-identical to no-arg render.
+        Check(RenderBattleReport(ev, 0, {}, nullptr, nullptr) ==
+                  RenderBattleReport(ev, 0, {}) &&
+                  RenderBattleReport(ev, 0, {}, nullptr,
+                                     &lib4) ==
+                      RenderBattleReport(ev, 0, {}),
+              "10.5: unaided render byte-identical");
+
+        // Shrine deed cites jinshi only once j1 unlocks.
+        {
+            SimEvent sev[1] = {};
+            sev[0].kind = SimEvent::Kind::ShrineCaptured;
+            const std::string r0 = RenderBattleReport(
+                sev, 0, {}, &cx4, &lib4);
+            Check(r0.find("書吏按") == std::string::npos,
+                  "10.5: locked jinshi page never named");
+            BencaoCodex cxJ = mkCodex("[\"j1\"]");
+            const std::string r1 = RenderBattleReport(
+                sev, 0, {}, &cxJ, &lib4);
+            Check(r1.find("書吏按") != std::string::npos &&
+                      r1.find("是役動祠宇") != std::string::npos,
+                  "10.5: unlocked jinshi page cited");
+        }
+
+        // Helper seam: colophon over the same span matches the
+        // renderer's appended clause. Guard the substr — a
+        // missing colophon is a FAIL, not a terminate().
+        const auto cp = report.find("書吏按");
+        Check(cp != std::string::npos &&
+                  RenderBencaoColophon(ev, cx4, lib4) ==
+                      report.substr(cp),
+              "10.5: standalone helper equals appended text");
+
+        // --- hearsay: rumor precedes the catalog, speaks the
+        //     folk 釋名, never the sealed 正名. Composed at the
+        //     call site — RenderMythLog itself is untouched.
+        MythLog mlog;
+        Check(mlog.Record("pacify_shrine", "安撫", 0, 1, -1)
+                  .ok(),
+              "10.5: myth entry recorded");
+        const std::string& e0 = mlog.Entries()[0].action;
+        (void)e0;
+        const std::string hearsay0 = RenderBencaoHearsay(
+            mlog.Entries()[0], cx4, lib4);
+        Check(hearsay0.find("據說第1里出鬼蓋") !=
+                  std::string::npos,
+              "10.5: hearsay names the folk alias");
+        Check(hearsay0.find("三七") == std::string::npos &&
+                  RenderMythLog(mlog).find("三七") ==
+                      std::string::npos,
+              "10.5: sealed 正名 never leaks to rumor");
+        // Once catalogued, rumor goes silent — never the
+        // reverse order.
+        BencaoCodex cxC = mkCodex("[\"c1\"]");
+        const std::string hearsay1 = RenderBencaoHearsay(
+            mlog.Entries()[0], cxC, lib4);
+        Check(hearsay1.empty(),
+              "10.5: catalogued page never hearsays");
+        // Seq parity picks the 或云 variant.
+        Check(mlog.Record("pacify_shrine", "安撫", 0, 1, -1)
+                  .ok(),
+              "10.5: second entry recorded");
+        Check(RenderBencaoHearsay(mlog.Entries()[1], cx4, lib4)
+                  .find("或云第1里有鬼蓋之屬") !=
+                  std::string::npos,
+              "10.5: odd seq picks the 或云 variant");
+        // Aliasless entry hearsays vaguely (靈藥), not by name.
+        MythLog mlog2;
+        Check(mlog2.Record("ghost_army", "陰兵", 0, 2, -1)
+                  .ok(),
+              "10.5: ghost_army recorded");
+        Check(RenderBencaoHearsay(mlog2.Entries()[0], cx4,
+                                  lib4)
+                  .find("據說第2里產靈藥") != std::string::npos,
+              "10.5: aliasless page hearsays vaguely");
+        // Non-matching action carries no hearsay.
+        MythLog mlog3;
+        Check(mlog3.Record("invasion", "神罰", 0, 3, -1).ok(),
+              "10.5: invasion recorded");
+        Check(RenderBencaoHearsay(mlog3.Entries()[0], cx4,
+                                  lib4)
+                  .empty(),
+              "10.5: unmatched action no hearsay");
+        // Rumor composes beside the log render, not inside it.
+        const std::string composed =
+            RenderMythLog(mlog) + "\n傳聞拾遺：\n" + hearsay0;
+        Check(composed.find("據說第1里的神明息了怒") !=
+                  std::string::npos &&
+                  composed.find("據說第1里出鬼蓋") !=
+                      std::string::npos,
+              "10.5: hearsay composes beside the log render");
+
+        fs::remove_all(dir4);
+    }
 
     fs::remove_all(dir3);
     fs::remove_all(dir);

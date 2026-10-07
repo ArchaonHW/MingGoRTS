@@ -83,6 +83,22 @@ LogMythEvents(MythLog& log,
 // and misattributes (the god's host always marched for "our"
 // side) — the register's licensed contradiction. The ledger never
 // corrects rumor; rumor never cites the ledger.
-std::string RenderMythLog(const MythLog& log);
+//
+// Story 10.5 hearsay layer: when `codex`+`lib` are both given,
+// each entry may gain a rumor line for any not-yet-unlocked
+// bencao page whose myth_state trigger this action will later
+// fire — rumor precedes the catalog, never the reverse. The
+// rumor speaks the page's folk 釋名 (aliases[0]); an aliasless
+// page stays vague (per-category noun — 「靈藥」, 「異草」, …):
+// a sealed 正名 never reaches the folk telling. Once the page
+// lands in `unlocked` the hearsay goes silent — the catalog has
+// spoken. Either arg null renders byte-identically to the
+// unaided form. (codex first — the unlock state is the gate,
+// the library is reference data.)
+class BencaoCodex;
+class BencaoLibrary;
+std::string RenderMythLog(const MythLog& log,
+                          const BencaoCodex* codex = nullptr,
+                          const BencaoLibrary* lib = nullptr);
 
 } // namespace Potato::Campaign

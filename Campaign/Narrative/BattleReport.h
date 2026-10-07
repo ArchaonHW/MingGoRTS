@@ -28,9 +28,21 @@ namespace Potato::Campaign {
 // of seeded haunted ground misreads as a fresh incursion. Pass it
 // when rendering a real battle; omit for event-only narratives
 // (then each region's first sighting is presumed to rise from 0).
+//
+// `bcodex`/`blib` (Story 10.5) are optional citation sources:
+// when both are non-null a 書吏按 colophon rides after the
+// confession line, naming only already-unlocked entries.
+// Omit either and output is byte-identical to the unaided
+// render — the citation layer is removable by construction.
+// (codex first — the unlock state is the gate, the library is
+// reference data.)
+class BencaoCodex;
+class BencaoLibrary;
 std::string RenderBattleReport(
     std::span<const Gameplay::SimEvent> events, int historianSide,
-    std::span<const std::uint8_t> seedLevels = {});
+    std::span<const std::uint8_t> seedLevels = {},
+    const BencaoCodex* bcodex = nullptr,
+    const BencaoLibrary* blib = nullptr);
 
 // The elliptical ladder — the only numbers the register permits.
 // 0 -> empty (nothing is said rather than "zero"), 1-2 一二,
