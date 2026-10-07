@@ -139,6 +139,19 @@ Result<JsonValue> CampaignState::ToJson() const {
     o["chapter"] = ChapterToJson(chapter_);
     o["roster"] = std::move(rosterJson);
     o["ledger"] = std::move(led.value);
+    // Optional sub-docs (potato.campaign/2): emit only when the
+    // binding exists — absent == default, so a worldless
+    // campaign stays byte-minimal.
+    if (hasWorld_) {
+        Result<JsonValue> w = world_.ToJson();
+        if (!w.ok()) {
+            return Gameplay::Fail<JsonValue>("world", w.reason);
+        }
+        o["world"] = std::move(w.value);
+    }
+    if (hasCharacter_) {
+        o["character"] = character_.ToJson();
+    }
     return Gameplay::Ok(JsonValue::MakeObject(std::move(o)));
 }
 
@@ -162,6 +175,37 @@ Result<CampaignState> CampaignState::FromJson(
         return Gameplay::Fail<CampaignState>(led.error, led.reason);
     }
     st.ledger_ = std::move(led.value);
+    // Optional sub-docs: absent is fine, present-but-invalid
+    // rejects the whole envelope. Each sub-parser gates its own
+    // `schema` field — the envelope does not re-check it.
+    if (doc.Has("world")) {
+        const JsonValue& w = doc["world"];
+        if (!w.IsObject()) {
+            return Gameplay::Fail<CampaignState>(
+                "world", "sub-doc must be an object");
+        }
+        Result<WorldState> ws = WorldState::FromJson(w);
+        if (!ws.ok()) {
+            return Gameplay::Fail<CampaignState>(ws.error,
+                                                 ws.reason);
+        }
+        st.world_ = std::move(ws.value);
+        st.hasWorld_ = true;
+    }
+    if (doc.Has("character")) {
+        const JsonValue& c = doc["character"];
+        if (!c.IsObject()) {
+            return Gameplay::Fail<CampaignState>(
+                "character", "sub-doc must be an object");
+        }
+        Result<Character> ch = Character::FromJson(c);
+        if (!ch.ok()) {
+            return Gameplay::Fail<CampaignState>(ch.error,
+                                                 ch.reason);
+        }
+        st.character_ = std::move(ch.value);
+        st.hasCharacter_ = true;
+    }
     return Gameplay::Ok(std::move(st));
 }
 

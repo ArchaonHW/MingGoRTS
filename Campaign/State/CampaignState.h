@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Campaign/Characters/Character.h"
 #include "Campaign/Ledger/Ledger.h"
+#include "Campaign/World/WorldState.h"
 #include "Gameplay/Json/JsonValue.h"
 #include "Gameplay/Result.h"
 
@@ -38,12 +40,20 @@ struct RosterEntry {
 //
 // The ledger is embedded as its own `potato.ledger/3` sub-document:
 // its seal/chain verification rides inside Ledger::FromJson, so a
-// campaign file carrying a broken chain fails at load. Chapter and
-// roster are minimal spines this story persists; 3.3–3.5 grow them
-// via schema bumps.
+// campaign file carrying a broken chain fails at load.
+//
+// potato.campaign/2 (Story 12.8) adds two optional sub-docs on the
+// same convention: `world` carries a `potato.worldstate/1` doc
+// verbatim and `character` carries the chosen commander's
+// `potato.character/1` doc. Both absent == no world bound / no
+// commander chosen — a worldless campaign stays byte-minimal.
+// Old /1 files reject at the schema gate; no migration in v1.0.
+// Neither embedded id is reconciled against content registries
+// here — world.id matching the loaded WorldMap and character.id
+// existing in the CharacterLibrary are CALLER checks.
 class CampaignState {
 public:
-    static constexpr std::string_view SCHEMA = "potato.campaign/1";
+    static constexpr std::string_view SCHEMA = "potato.campaign/2";
     static constexpr std::size_t MAX_ROSTER = 256;
     static constexpr std::size_t MAX_CHAPTERS = 64;
     // Bytes, not codepoints — ~21 CJK chars. Name uniqueness and
@@ -63,6 +73,34 @@ public:
         return roster_;
     }
 
+    // Optional world binding (potato.campaign/2): absent for
+    // linear/test states; when present it carries the whole
+    // warband position / control flags / resolved set.
+    bool HasWorld() const { return hasWorld_; }
+    WorldState& GetWorld() { return world_; }
+    const WorldState& GetWorld() const { return world_; }
+    void SetWorld(WorldState w) {
+        world_ = std::move(w);
+        hasWorld_ = true;
+    }
+    void ClearWorld() {
+        world_ = WorldState{};
+        hasWorld_ = false;
+    }
+
+    // Optional chosen-commander doc — embedded verbatim so a
+    // player-created character (`created`) survives the save.
+    bool HasCharacter() const { return hasCharacter_; }
+    const Character& GetCharacter() const { return character_; }
+    void SetCharacter(Character c) {
+        character_ = std::move(c);
+        hasCharacter_ = true;
+    }
+    void ClearCharacter() {
+        character_ = Character{};
+        hasCharacter_ = false;
+    }
+
     Gameplay::Result<Gameplay::JsonValue> ToJson() const;
     static Gameplay::Result<CampaignState> FromJson(
         const Gameplay::JsonValue& doc);
@@ -71,6 +109,10 @@ private:
     Ledger ledger_;
     ChapterProgress chapter_;
     std::vector<RosterEntry> roster_;
+    bool hasWorld_ = false;
+    WorldState world_;
+    bool hasCharacter_ = false;
+    Character character_;
 };
 
 } // namespace Potato::Campaign

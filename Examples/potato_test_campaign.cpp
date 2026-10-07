@@ -13,8 +13,6 @@
 #include "Campaign/State/CampaignState.h"
 #include "Campaign/World/WorldMap.h"
 #include "Campaign/World/WorldState.h"
-#include "Campaign/World/WorldMap.h"
-#include "Campaign/World/WorldState.h"
 #include "Gameplay/Json/JsonValue.h"
 
 #include <cstdio>
@@ -118,11 +116,11 @@ int main() {
         const JsonValue good = st.ToJson().value;
 
         auto badSchema = good.Members();
-        badSchema["schema"] = JsonValue::String("potato.campaign/2");
+        badSchema["schema"] = JsonValue::String("potato.campaign/1");
         Check(!CampaignState::FromJson(
                   JsonValue::MakeObject(std::move(badSchema)))
                    .ok(),
-              "bad campaign schema rejected");
+              "old-format /1 doc rejected by the /2 gate");
 
         auto badChapter = good.Members();
         badChapter["chapter"] = JsonValue::Int(5);
@@ -1895,6 +1893,133 @@ int main() {
         }
 
         fs::remove_all(adir);
+    }
+
+    // --- Story 12.8: world + chosen character embed in
+    //     potato.campaign/2; /1 docs reject at the gate ---
+    {
+        using Potato::Campaign::Character;
+        using Potato::Campaign::RivalPrior;
+        using Potato::Campaign::WorldMap;
+        using Potato::Campaign::WorldState;
+        namespace fs = std::filesystem;
+
+        auto wdoc = JsonValue::Parse(
+            "{\"schema\":\"potato.world/1\",\"id\":\"w\","
+            "\"nodes\":[{\"id\":\"kaifeng\",\"control\":\"player\"},"
+            "{\"id\":\"longmen\",\"control\":\"neutral\"}],"
+            "\"routes\":[{\"a\":\"kaifeng\",\"b\":\"longmen\","
+            "\"days\":1}],\"start\":\"kaifeng\"}");
+        Check(wdoc.ok(), "12.8: world doc parses");
+        auto wmap = WorldMap::FromJson(wdoc.value);
+        Check(wmap.ok(), "12.8: world map loads");
+        auto ws = WorldState::Init(wmap.value, 42);
+        Check(ws.ok(), "12.8: world state inits");
+        ws.value.MarkResolved("gate");
+        ws.value.Draw(); // advance the rng stream
+
+        CampaignState st = SampleState();
+        st.SetWorld(std::move(ws.value));
+        Character c;
+        c.id = "lv_bu";
+        c.name = "\xE5\x91\x82\xE5\xB8\x83"; // 呂布
+        c.origin = "\xE4\xB9\x9D\xE5\x8E\x9F"; // 九原
+        c.prior = RivalPrior::Aggressive;
+        c.deckSeed = 42;
+        c.created = true;
+        st.SetCharacter(c);
+        Check(st.HasWorld() && st.HasCharacter(),
+              "12.8: bindings set");
+
+        auto j = st.ToJson();
+        Check(j.ok() && j.value.Has("world") &&
+                  j.value.Has("character"),
+              "12.8: /2 emits both sub-docs");
+        const std::string wire = j.value.Emit();
+        auto doc = JsonValue::Parse(wire);
+        Check(doc.ok(), "12.8: emitted doc re-parses");
+        auto st2 = CampaignState::FromJson(doc.value);
+        Check(st2.ok() && st2.value.HasWorld() &&
+                  st2.value.GetWorld().WorldId() == "w" &&
+                  st2.value.GetWorld().WarbandAt() == "kaifeng" &&
+                  st2.value.GetWorld().IsResolved("gate"),
+              "12.8: world resumes bit-identically");
+        Check(st2.value.HasCharacter() &&
+                  st2.value.GetCharacter().id == "lv_bu" &&
+                  st2.value.GetCharacter().created &&
+                  st2.value.GetCharacter().deckSeed == 42,
+              "12.8: created commander round-trips");
+        auto j2 = st2.value.ToJson();
+        Check(j2.ok() && j2.value.Emit() == wire,
+              "12.8: re-emit byte-identical");
+
+        // Optional fields: absent stays absent — a worldless
+        // campaign is still a legal /2 doc.
+        CampaignState bare = SampleState();
+        auto bj = bare.ToJson();
+        Check(bj.ok() && !bj.value.Has("world") &&
+                  !bj.value.Has("character"),
+              "12.8: worldless campaign emits no sub-docs");
+        auto bareDoc = JsonValue::Parse(bj.value.Emit());
+        auto st3 = CampaignState::FromJson(bareDoc.value);
+        Check(st3.ok() && !st3.value.HasWorld() &&
+                  !st3.value.HasCharacter(),
+              "12.8: absent fields load unbound");
+
+        // Present-but-invalid sub-docs reject the envelope.
+        {
+            auto m = j.value.Members();
+            m["world"] = JsonValue::Int(7);
+            Check(!CampaignState::FromJson(
+                      JsonValue::MakeObject(std::move(m)))
+                       .ok(),
+                  "12.8: non-object world rejects");
+        }
+        {
+            auto m = j.value.Members();
+            m["character"] = JsonValue::String("x");
+            Check(!CampaignState::FromJson(
+                      JsonValue::MakeObject(std::move(m)))
+                       .ok(),
+                  "12.8: non-object character rejects");
+        }
+        {
+            auto m = j.value.Members();
+            auto w = m["world"].Members();
+            w["schema"] =
+                JsonValue::String("potato.worldstate/9");
+            m["world"] = JsonValue::MakeObject(std::move(w));
+            Check(!CampaignState::FromJson(
+                      JsonValue::MakeObject(std::move(m)))
+                       .ok(),
+                  "12.8: wrong world sub-schema rejects");
+        }
+        {
+            auto m = j.value.Members();
+            m.erase("world");
+            auto cj = m["character"].Members();
+            cj.erase("id");
+            m["character"] =
+                JsonValue::MakeObject(std::move(cj));
+            Check(!CampaignState::FromJson(
+                      JsonValue::MakeObject(std::move(m)))
+                       .ok(),
+                  "12.8: malformed character sub-doc rejects");
+        }
+
+        // Slot-level round-trip through SaveSystem.
+        const fs::path sdir =
+            fs::temp_directory_path() / "potato_test_save28";
+        fs::remove_all(sdir);
+        fs::create_directories(sdir);
+        SaveSystem saves(sdir);
+        Check(saves.Save(3, st).ok(), "12.8: slot save writes");
+        auto loaded = saves.Load(3);
+        Check(loaded.ok() && loaded.value.HasWorld() &&
+                  loaded.value.GetWorld().IsResolved("gate") &&
+                  loaded.value.GetCharacter().id == "lv_bu",
+              "12.8: slot load restores world+character");
+        fs::remove_all(sdir);
     }
 
     std::printf(failures ? "CAMPAIGN TESTS FAILED: %d\n"
