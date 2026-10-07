@@ -3,6 +3,8 @@
 #include "Campaign/Ledger/Ledger.h"
 
 #include <cstdint>
+#include <map>
+#include <string>
 #include <string_view>
 
 namespace Potato::Campaign {
@@ -30,6 +32,17 @@ struct GovernanceAccumulators {
 // suspicion is data, not exclusion) — a forged atrocity still
 // ratchets 墮落.
 GovernanceAccumulators FoldGovernance(const Ledger& l);
+
+// Per-world-node folds (Story 12.7) derived from `region:<id>`-tagged
+// entries: a tagged entry's PopularSupport legs net into the region's
+// 民心, its order:/corruption: tags into its 秩序/墮落 — same
+// saturating math and per-(axis,value)-dedupe rules as the campaign
+// fold. An entry carrying several distinct region tags folds into
+// each; untagged entries feed only the campaign totals. std::map
+// keeps the output id-sorted for determinism. Derived state — never
+// stored, same discipline as FoldGovernance.
+std::map<std::string, GovernanceAccumulators>
+FoldGovernanceByRegion(const Ledger& l);
 
 // Per-tag magnitude bound. Governance deltas are deed-scale numbers
 // (double digits today); the cap exists because tags are unvalidated

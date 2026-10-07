@@ -7,13 +7,19 @@
 // dedicated SplitMix64 stream persisted via wire.
 // Story 12.3 — warband movement: march orders post supply to the
 // ledger and queue arrival; sightings are hearsay-only markers.
+#include "Campaign/Chapters/ChapterLibrary.h"
+#include "Campaign/Governance/Accumulators.h"
+#include "Campaign/Ledger/DeedBook.h"
 #include "Campaign/Ledger/Ledger.h"
+#include "Campaign/Myth/MythState.h"
 #include "Campaign/World/March.h"
+#include "Campaign/World/RegionBind.h"
 #include "Campaign/World/WorldMap.h"
 #include "Campaign/World/WorldState.h"
 #include "Gameplay/Json/JsonValue.h"
 #include "Gameplay/Map/BattleMap.h" // flag bit constants
 
+#include <algorithm>
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
@@ -739,6 +745,130 @@ int main() {
         "12.3: unknown new kind rejected");
     bad(R"({"schema":"potato.worldstate/1","world":"w","day":0,"warband":"a","sightings":{"x":{"day":-1,"count":2}}})",
         "12.3: sighting negative day rejected");
+
+    // --- Story 12.7: regional governance & myth binding ---
+    {
+        using Potato::Campaign::BookDeeds;
+        using Potato::Campaign::ChapterDef;
+        using Potato::Campaign::FoldGovernanceByRegion;
+        using Potato::Campaign::IsShrinePoi;
+        using Potato::Campaign::MythPlaceKey;
+        using Potato::Campaign::MythState;
+        using Potato::Campaign::RegionTagFor;
+        using Potato::Campaign::SetShrineLevel;
+        using Potato::Campaign::ShrineLevel;
+        using Potato::Gameplay::SimEvent;
+
+        Ledger l;
+        // Untagged entry — campaign totals only.
+        {
+            Posting p;
+            p.credit = {Account::PopularSupport, 50};
+            p.debit = {Account::Materiel, 50};
+            p.memo = "unsited";
+            Check(l.Post(p).ok(), "12.7: untagged posts");
+        }
+        // Two deeds tagged at longmen.
+        {
+            Posting p;
+            p.credit = {Account::Materiel, 40};
+            p.debit = {Account::PopularSupport, 15};
+            p.memo = "burned village";
+            p.tags = {"atrocity", "field:2",
+                      std::string(Ledger::TAG_REGION) + "longmen",
+                      "order:-10", "corruption:+15"};
+            Check(l.Post(p).ok(), "12.7: longmen atrocity posts");
+        }
+        {
+            Posting p;
+            p.credit = {Account::PopularSupport, 10};
+            p.debit = {Account::Materiel, 5};
+            p.memo = "occupied village";
+            p.tags = {std::string(Ledger::TAG_REGION) + "longmen",
+                      "order:+5"};
+            Check(l.Post(p).ok(), "12.7: longmen order posts");
+        }
+        // One deed tagged at kaifeng — different region.
+        {
+            Posting p;
+            p.credit = {Account::PopularSupport, 8};
+            p.debit = {Account::Materiel, 8};
+            p.memo = "escorted convoy";
+            p.tags = {std::string(Ledger::TAG_REGION) + "kaifeng",
+                      "order:+2"};
+            Check(l.Post(p).ok(), "12.7: kaifeng deed posts");
+        }
+
+        const auto fold = FoldGovernanceByRegion(l);
+        Check(fold.size() == 2 && fold.count("longmen") &&
+                  fold.count("kaifeng"),
+              "12.7: per-region map keyed by node id");
+        const auto& lm = fold.at("longmen");
+        // PS: -15 + 10 = -5; order: -10 + 5 = -5; corruption
+        // ratchet peaks at 15.
+        Check(lm.popularSupport == -5 && lm.order == -5 &&
+                  lm.corruption == 15,
+              "12.7: longmen folds PS/order/corruption");
+        Check(fold.at("kaifeng").popularSupport == 8 &&
+                  fold.at("kaifeng").order == 2 &&
+                  fold.at("kaifeng").corruption == 0,
+              "12.7: kaifeng folds independently");
+        Check(fold.count("") == 0 &&
+                  fold.find("unsited") == fold.end(),
+              "12.7: untagged entries feed no region");
+
+        // BookDeeds worldNode stamping: the battle happened AT
+        // longmen — deeds carry both field:<n> and region:<node>.
+        {
+            Ledger l2;
+            SimEvent e;
+            e.kind = SimEvent::Kind::VillageBurned;
+            e.side = 0;
+            e.param = 3;
+            const SimEvent evs[] = {e};
+            const auto n = BookDeeds(l2, 0, evs, "longmen");
+            Check(n.ok() && n.value == 1,
+                  "12.7: world-anchored deed books");
+            const auto& tags = l2.Entries().back().tags;
+            const bool hasField =
+                std::find(tags.begin(), tags.end(),
+                          "field:3") != tags.end();
+            const bool hasRegion =
+                std::find(tags.begin(), tags.end(),
+                          "region:longmen") != tags.end();
+            Check(hasField && hasRegion,
+                  "12.7: deed carries field + world region");
+            const auto f2 = FoldGovernanceByRegion(l2);
+            Check(f2.count("longmen") &&
+                      f2.at("longmen").corruption == 15,
+                  "12.7: stamped deed folds under the node");
+        }
+
+        // Myth binding: place key follows the node when bound.
+        ChapterDef unbound;
+        unbound.id = "ch01_kaifeng";
+        Check(MythPlaceKey(unbound) == "ch01_kaifeng",
+              "12.7: unbound chapter keys by id");
+        ChapterDef bound;
+        bound.id = "ch02_longmen";
+        bound.bound = true;
+        bound.bind.node = "longmen";
+        Check(MythPlaceKey(bound) == "longmen",
+              "12.7: bound chapter keys by node");
+
+        // Shrine POI: node myth flag -> sanctity at slot 0.
+        Check(IsShrinePoi(wmap.NodeAt(wmap.NodeIndexOf("longmen"))),
+              "12.7: longmen reads as shrine POI");
+        Check(!IsShrinePoi(wmap.NodeAt(wmap.NodeIndexOf("kaifeng"))),
+              "12.7: kaifeng is not a shrine");
+        MythState ms;
+        Check(SetShrineLevel(ms, "longmen", 2) &&
+                  ShrineLevel(ms, "longmen") == 2 &&
+                  ShrineLevel(ms, "kaifeng") == 0,
+              "12.7: shrine level round-trips slot 0");
+        Check(!SetShrineLevel(ms, "longmen", 4),
+              "12.7: level >3 rejected");
+    }
 
     if (failures == 0) {
         std::puts("WORLD TESTS PASS");

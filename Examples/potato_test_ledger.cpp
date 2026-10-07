@@ -2090,6 +2090,116 @@ int main() {
         }
     }
 
+    // --- Story 12.7: BookDeeds worldNode stamps region:<node>
+    //     alongside the map-local field:<n> ---
+    {
+        using Potato::Gameplay::SimEvent;
+        Ledger l;
+        SimEvent e;
+        e.kind = SimEvent::Kind::VillageBurned;
+        e.side = 0;
+        e.param = 2; // map-local region 2
+        const SimEvent evs[1] = {e};
+        const auto n = BookDeeds(l, 0, evs, "longmen");
+        Check(n.ok() && n.value == 1, "12.7: worldNode books");
+        const LedgerEntry& d = l.Entries()[0];
+        const auto has = [](const LedgerEntry& en,
+                            std::string_view t) {
+            return std::find(en.tags.begin(), en.tags.end(), t) !=
+                   en.tags.end();
+        };
+        Check(has(d, "field:2") && has(d, "region:longmen"),
+              "12.7: deed carries field + world region tags");
+        // Linear path unchanged — no world node, no region tag.
+        Ledger l2;
+        const auto n2 = BookDeeds(l2, 0, evs);
+        Check(n2.ok() && !has(l2.Entries()[0], "region:longmen") &&
+                  has(l2.Entries()[0], "field:2"),
+              "12.7: unanchored deeds stay field-only");
+        // Oversized node id fails the tag bound.
+        const auto tooBig = BookDeeds(
+            l2, 0, evs,
+            std::string(Ledger::MAX_TAG_LEN, 'x'));
+        Check(!tooBig.ok(), "12.7: oversized node id rejected");
+    }
+
+    // --- Story 12.7: FoldGovernanceByRegion — per-node folds
+    //     from region:<id> tags; field:/untagged excluded ---
+    {
+        Ledger l;
+        const auto post = [&](std::int64_t psCredit,
+                              std::int64_t psDebit,
+                              std::vector<std::string> tags) {
+            Posting p;
+            p.credit = {Account::PopularSupport, psCredit};
+            p.debit = {Account::PopularSupport, psDebit};
+            p.memo = "x";
+            p.tags = std::move(tags);
+            // Balanced pair: amounts must be >0 and accounts must
+            // differ — use Materiel as the counter-leg.
+            if (psCredit <= 0) {
+                p.credit = {Account::Materiel, 1};
+            }
+            if (psDebit <= 0) {
+                p.debit = {Account::Materiel, 1};
+            }
+            return l.Post(std::move(p));
+        };
+        // longmen: +10 民心, order +5 spelled two ways (byte-
+        // distinct so Post accepts; value-dedupe folds once),
+        // corr:+7.
+        Check(post(10, 0,
+                   {"region:longmen", "order:+5", "order:05",
+                    "corruption:+7"})
+                  .ok(),
+              "12.7: longmen entry posts");
+        // kaifeng: -4 民心 (debit leg), order:-2.
+        Check(post(0, 4, {"region:kaifeng", "order:-2"}).ok(),
+              "12.7: kaifeng entry posts");
+        // Both regions on one entry — folds into each.
+        Check(post(3, 0,
+                   {"region:longmen", "region:kaifeng"})
+                  .ok(),
+              "12.7: multi-region entry posts");
+        // field: tags are map-local — never world attribution.
+        Check(post(99, 0, {"field:2", "order:+9"}).ok(),
+              "12.7: field-tagged entry posts");
+        // Untagged entries are campaign-scope only.
+        Check(post(50, 0, {"order:+1"}).ok(),
+              "12.7: untagged entry posts");
+
+        const auto folds = FoldGovernanceByRegion(l);
+        Check(folds.size() == 2,
+              "12.7: only region:-tagged nodes fold");
+        const auto lm = folds.find("longmen");
+        const auto kf = folds.find("kaifeng");
+        Check(lm != folds.end() && kf != folds.end(),
+              "12.7: both world nodes present");
+        Check(lm->second.popularSupport == 13 &&
+                  lm->second.order == 5 &&
+                  lm->second.corruption == 7,
+              "12.7: longmen 民心/秩序/墮落 fold");
+        Check(kf->second.popularSupport == -4 + 3 &&
+                  kf->second.order == -2 &&
+                  kf->second.corruption == 0,
+              "12.7: kaifeng folds its own entries");
+        Check(folds.count("2") == 0,
+              "12.7: field:<n> never becomes a world node");
+        // Campaign totals still see everything.
+        const auto a = FoldGovernance(l);
+        Check(a.popularSupport ==
+                  l.Balance(Account::PopularSupport),
+              "12.7: campaign fold unchanged");
+        // std::map ordering: kaifeng < longmen — deterministic
+        // id-sorted output.
+        Check(folds.begin()->first == "kaifeng",
+              "12.7: fold output is id-sorted");
+        // The reserved namespaces pin byte-exactly.
+        Check(Ledger::TAG_REGION == "region:" &&
+                  Ledger::TAG_FIELD == "field:",
+              "12.7: tag vocabulary constants pinned");
+    }
+
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
                          : "LEDGER TESTS PASS\n",
                 failures);
