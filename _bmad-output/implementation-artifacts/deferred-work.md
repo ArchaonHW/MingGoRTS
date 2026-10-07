@@ -144,3 +144,11 @@
 - `BencaoLibrary::Load` has no bound on candidate-file count or `rejected` vector size — systemic pattern shared with `ChapterLibrary::Load`; a hostile content dir could grow both unboundedly (each .json costs up to the shared 64 MiB read/parse budget). Loader-class hardening, not introduced by Epic 10.
 - `CodexSignals::roster` is dead API until a veterancy/casualty-keyed unlock kind lands (scars deferral); DeedBook deed-kind reads are likewise unexpressed in the six kinds; the settled-chapter identity for `CodexSignals` comes from the settle caller, which today is unbuilt — all extend the existing wiring-seam deferral.
 - `BencaoCodex::FromJson` doesn't reconcile persisted ids against the loaded library — ids for content entries that no longer exist silently persist. A `Reconcile(lib)` prune/flag is a design choice for 10.3+.
+
+## Deferred from: Story 11.6 NFT collectible minting (2026-10-07)
+
+- `PotatoToken.burnFrom` is `onlyOwner` — the relayer wallet is the trusted burner on the dev chain. Production would use standard ERC-20 allowance (`approve`/`burnFrom`) so the player authorizes the spend; dev-chain simplification recorded, not built.
+- `PotatoCollectible` stores descriptors on-chain (dev chain: gas free). Mainnet would tokenURI to IPFS/Arweave and store only the hash — noted, not built.
+- `frontispiece`/`dossier` gates are evidence-text placeholders until Epics 8/6 land real artifact state docs — then upgrade to schema-typed membership checks like `bencao`.
+- `struck[key]` dedupe returns `false` (idempotent no-op, not revert) — if the UI wants "already struck" as a distinct signal, surface via `totalMinted` diff or an event; the contract emits no `Struck` event today.
+- `collectiblePrice` is global (one price for all kinds) — per-kind pricing is a config-schema bump if wanted.
