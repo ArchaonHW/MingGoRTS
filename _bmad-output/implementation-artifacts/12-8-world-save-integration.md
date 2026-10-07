@@ -6,7 +6,7 @@ baseline_commit: NO_VCS
 
 > Epic 12 — 行營輿圖 Open Campaign World (W) ·
 > `potato.campaign/2` ·
-> **Status: review**
+> **Status: done**
 
 ## Story (from epics.md)
 

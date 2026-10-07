@@ -28,7 +28,7 @@
 #   - done: Retrospective has been completed
 
 generated: '2026-09-29'
-last_updated: '2026-10-06'
+last_updated: '2026-10-07'
 # 12-1..12-3 verified MinGW: potato_test_world all-green, ctest 23/23.
 project: MingGoRTS
 project_key: NOKEY
@@ -87,8 +87,8 @@ development_status:
   6-2-chapterconventions: done
   6-3-generaldossier: done
   6-4-intelledger: done
-  6-5-narrativepack: backlog
-  6-6-scribe-marginalia: backlog
+  6-5-narrativepack: done
+  6-6-scribe-marginalia: done
   6-7-document-variant-rendering: backlog
   6-8-audit-spread-judgment-of-the-brush: backlog
   6-9-endingpage-four-voices: backlog
@@ -121,7 +121,7 @@ development_status:
   10-2-bencao-unlock-engine: done
   10-3-buchao-delivery-marginalia: done
   10-4-bencao-codex-renderer: done
-  10-5-document-stream-integration: backlog
+  10-5-document-stream-integration: done
   10-6-bencao-launch-content-set: backlog
   epic-10-retrospective: optional
   epic-11: in-progress

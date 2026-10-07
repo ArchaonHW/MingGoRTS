@@ -160,7 +160,7 @@ Result<CampaignState> CampaignState::FromJson(
     const std::string* s = doc.FindString("schema");
     if (!s || *s != SCHEMA) {
         return Gameplay::Fail<CampaignState>("schema",
-                                             "expected potato.campaign/1");
+                                             "expected potato.campaign/2");
     }
     CampaignState st;
     if (const char* why = ValidateChapter(doc["chapter"],

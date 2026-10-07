@@ -6,7 +6,7 @@ baseline_commit: NO_VCS
 
 > Epic 12 — 行營輿圖 Open Campaign World (W) · region-id
 > unification · derived folds ·
-> **Status: review**
+> **Status: done**
 
 ## Story (from epics.md)
 
@@ -183,46 +183,6 @@ bool SetShrineLevel(MythState& s, std::string_view node,
   place key, shrine level)
 - `_bmad-output/implementation-artifacts/12-7-*.md`,
   `sprint-status.yaml`
-
-## Dev Notes — guardrails
-
-- `region:` is now a RESERVED world-node namespace: producers of
-  map-local ids must use `field:`; content may not name a world
-  node a bare integer (it would collide with nothing — `field:`
-  holds the ints — but keep the convention documented).
-- FoldGovernanceByRegion must NOT include untagged entries
-  (they're campaign-scope) and must NOT dedupe regions across
-  entries — same rules as the campaign fold otherwise.
-- `MythPlaceKey` returns the node id for bound chapters — myth
-  belongs to the PLACE; two chapters anchored at one node share
-  its myth state (intended: the shrine remembers, not the book).
-- Shrine world-scale level uses region slot 0 — a documented
-  convention, not a new schema.
-- BookDeeds' worldNode is additive-with-default: existing
-  signatures at Aftermath.cpp and all test sites stay valid.
-
-## Validation
-
-- `potato_test_ledger` + `potato_test_world` + full ctest green
-  incl. `gameplay_dep_guard`.
-- Pins: `field:<n>` on deed/myth postings; `region:<node>`
-  stamped when worldNode supplied; per-region fold derives
-  民心/秩序/墮落 for tagged entries only; MythPlaceKey bound/
-  unbound; ShrineLevel slot-0 round-trip.
-
-### File List
-
-- `Campaign/Ledger/Ledger.h` — TAG_REGION/TAG_FIELD constants
-- `Campaign/Ledger/Accumulators.{h,cpp}` — FoldGovernanceByRegion
-- `Campaign/Ledger/DeedBook.{h,cpp}` — worldNode param, FieldTag
-- `Campaign/Myth/MythActions.cpp` — field: rename
-- `Campaign/World/RegionBind.{h,cpp}` — new bridge helpers
-- `Campaign/World/March.cpp`, `Campaign/Encounter/EncounterSettle.cpp`
-  — TAG_REGION constant + BookDeeds node attribution
-- `Examples/potato_test_ledger.cpp`, `potato_test_world.cpp`
-  — 12.7 pins
-- `_bmad-output/implementation-artifacts/12-7-regional-
-  governance-myth-binding.md`, `sprint-status.yaml`
 
 ## Dev Notes — guardrails
 
