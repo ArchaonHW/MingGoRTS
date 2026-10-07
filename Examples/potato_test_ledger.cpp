@@ -949,7 +949,7 @@ int main() {
                   exe.debit.amount == 10,
               "execution books +軍威5 / -民心10");
         Check(exe.tags.size() == 5 && exe.tags[1] == "victim:4" &&
-                  exe.tags[2] == "region:2",
+                  exe.tags[2] == "field:2",
               "execution tags carry victim + place + axes");
         const LedgerEntry& occ = l.Entries()[2];
         Check(occ.credit.account == Account::PopularSupport &&
@@ -1289,8 +1289,8 @@ int main() {
                   d.debit.amount == 5,
               "5.3: dedication books +天命10 / -物資5");
         Check(d.tags.size() == 3 && d.tags[0] == "myth" &&
-                  d.tags[1] == "region:1" && d.tags[2] == "order:+2",
-              "5.3: dedication tagged myth + region + order axis");
+                  d.tags[1] == "field:1" && d.tags[2] == "order:+2",
+              "5.3: dedication tagged myth + field + order axis");
         Check(l.Balance(Account::Mandate) == 10,
               "5.3: 天命 balance folds the dedication");
         Check(l.Verify() == nullptr,
@@ -1414,8 +1414,8 @@ int main() {
               "5.4: spend books -天命15 / +民心10");
         Check(spent.tags.size() == 3 && spent.tags[0] == "myth" &&
                   spent.tags[1] == "action:pacify_shrine" &&
-                  spent.tags[2] == "region:2",
-              "5.4: spend carries myth+action+region tags");
+                  spent.tags[2] == "field:2",
+              "5.4: spend carries myth+action+field tags");
         Check(log.Size() == 1 && log.Entries()[0].action ==
                                      "pacify_shrine" &&
                   log.Entries()[0].region == 2,
@@ -1487,8 +1487,8 @@ int main() {
                       e0.debit.amount == 5,
                   "5.5: divine aid bills mandate");
             Check(has(e0, Ledger::TAG_MYTH) && has(e0, "invasion") &&
-                      has(e0, "region:1"),
-                  "5.5: visitation carries myth + region tags");
+                      has(e0, "field:1"),
+                  "5.5: visitation carries myth + field tags");
         }
         // Terror: an enemy-bannered host still lands on our
         // chronicle — visitations bypass the deeds side-gate.

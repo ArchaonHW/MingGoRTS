@@ -62,7 +62,8 @@ Result<MarchPlan> IssueMarch(WorldState& ws, const WorldMap& map,
     p.debit = {Account::Materiel, supply};
     p.credit = {Account::ArmyPrestige, supply};
     p.memo = "march " + from + " -> " + std::string(dest);
-    p.tags = {"march", "region:" + std::string(dest)};
+    p.tags = {"march",
+              std::string(Ledger::TAG_REGION) + std::string(dest)};
     if (const auto r = ledger.Post(std::move(p)); !r.ok()) {
         return Gameplay::Fail<MarchPlan>(r.error, r.reason);
     }

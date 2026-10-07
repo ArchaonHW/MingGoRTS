@@ -76,7 +76,8 @@ PerformMythAction(Ledger& ledger, MythLog& log,
     p.memo = std::string(def->id);
     p.tags = {std::string(Ledger::TAG_MYTH),
               std::string("action:") + def->id,
-              "region:" + std::to_string(region)};
+              std::string(Ledger::TAG_FIELD) +
+                  std::to_string(region)};
     auto r = SpendMandate(ledger, std::move(p));
     if (!r.ok()) {
         return Gameplay::Fail<std::uint64_t>("mythact", r.reason);

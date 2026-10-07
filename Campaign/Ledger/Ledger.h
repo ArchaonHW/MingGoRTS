@@ -104,6 +104,13 @@ public:
     // folds the verdict out of the same truth as everything else.
     static constexpr std::string_view TAG_RESOLUTION = "resolution:";
     static constexpr std::string_view TAG_CHAPTER = "chapter:";
+    // Place tags (Story 12.7): `region:<id>` is RESERVED for
+    // world-node ids — the one namespace per-region governance
+    // folds read. `field:<n>` carries a battle-map-local region
+    // index (the sim's own region space). The two never mix: a
+    // world node named "2" is still a world node.
+    static constexpr std::string_view TAG_REGION = "region:";
+    static constexpr std::string_view TAG_FIELD = "field:";
     static constexpr std::size_t MAX_MEMO_LEN = 256;
     // Per-leg amount cap. With MAX_ENTRIES worst-case entries the
     // Balance fold stays ~1e18 — far inside int64.

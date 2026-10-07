@@ -9,11 +9,7 @@
 #include <string_view>
 
 namespace Potato::Campaign {
-namespace {
 
-// A settled battle's record root anchors its resolution seal —
-// finding it already in the ledger means this battle was already
-// recorded (idempotency: the retry sees "recorded", not success).
 bool SettlementRecorded(const Ledger& l, std::uint64_t root) {
     const std::string anchor = RecordRootTag(root);
     for (const LedgerEntry& e : l.Entries()) {
@@ -23,8 +19,6 @@ bool SettlementRecorded(const Ledger& l, std::uint64_t root) {
     }
     return false;
 }
-
-} // namespace
 
 Gameplay::Result<ChapterSettlement> ResolveAftermath(
     CampaignState& state, const ChapterLibrary& lib, bool battleWon,

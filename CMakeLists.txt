@@ -486,6 +486,19 @@ target_include_directories(potato_test_world PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_world PotatoCampaign)
 add_test(NAME potato_test_world COMMAND potato_test_world)
 
+# Story 12.4 — character model + creation (potato.character/1)
+add_executable(potato_test_character Examples/potato_test_character.cpp)
+target_include_directories(potato_test_character PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_character PotatoCampaign)
+add_test(NAME potato_test_character COMMAND potato_test_character)
+
+# Story 12.5 — encounter pipeline (potato.encounter/1): world
+# position -> three-beat battle -> world writeback + gated claims
+add_executable(potato_test_encounter Examples/potato_test_encounter.cpp)
+target_include_directories(potato_test_encounter PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_encounter PotatoCampaign)
+add_test(NAME potato_test_encounter COMMAND potato_test_encounter)
+
 # Story 11.4 — chain/outbox exporter: fixture producer for the
 # external relayer (Tools/MintRelayer/) and the demo path.
 add_executable(potato_export_chain Examples/potato_export_chain.cpp)

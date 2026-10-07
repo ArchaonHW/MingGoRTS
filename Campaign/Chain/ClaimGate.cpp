@@ -94,4 +94,33 @@ Result<ClaimGateReport> EmitGatedClaims(
     return Gameplay::Ok(std::move(report));
 }
 
+Result<ClaimGateReport> EmitGatedSettlement(
+    Ledger& ledger, const JsonValue& recordDoc,
+    std::string_view resolution, std::string_view encounterId,
+    std::string_view node, const MintOutbox& outbox) {
+    ClaimGateReport report;
+    const CrossCheckResult xr = CrossCheckRecord(ledger, recordDoc);
+    report.verdict = xr.verdict;
+    report.recordRoot = xr.recomputedRoot;
+    if (xr.verdict != CrossVerdict::Clean) {
+        return Gameplay::Ok(std::move(report));
+    }
+
+    MintClaim c;
+    c.kind = ClaimKind::Settlement;
+    c.encounter = std::string(encounterId);
+    c.node = std::string(node);
+    c.recordRoot = xr.recomputedRoot;
+    c.resolution = std::string(resolution);
+    c.ledgerCount = ledger.Size();
+    c.ledgerTip = ledger.Tip();
+    const auto path = EmitChecked(c, outbox);
+    if (!path.ok()) {
+        return Gameplay::Fail<ClaimGateReport>(path.error,
+                                               path.reason);
+    }
+    report.emitted.push_back(path.value);
+    return Gameplay::Ok(std::move(report));
+}
+
 } // namespace Potato::Campaign

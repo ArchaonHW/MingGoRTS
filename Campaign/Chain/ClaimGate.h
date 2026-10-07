@@ -58,4 +58,13 @@ Gameplay::Result<ClaimGateReport> EmitGatedClaims(
     std::span<const std::string_view> achievementKeys,
     const MintOutbox& outbox);
 
+// Encounter variant (Story 12.5): same gate, same Clean verdict
+// requirement, but the claim is the generalized "settlement"
+// kind — encounter/node bound, no chapter field, and no
+// achievement claims (those stay chapter-keyed).
+Gameplay::Result<ClaimGateReport> EmitGatedSettlement(
+    Ledger& ledger, const Gameplay::JsonValue& recordDoc,
+    std::string_view resolution, std::string_view encounterId,
+    std::string_view node, const MintOutbox& outbox);
+
 } // namespace Potato::Campaign

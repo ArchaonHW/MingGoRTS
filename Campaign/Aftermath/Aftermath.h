@@ -70,4 +70,11 @@ Gameplay::Result<ChapterSettlement> ResolveAftermath(
     std::uint64_t recordRoot,
     MythLog* mythLog = nullptr);
 
+// A settled battle's record root anchors its resolution seal —
+// finding it already in the ledger means this battle was already
+// recorded (idempotency: the retry sees "recorded", not success).
+// Exported for the encounter-settlement preflight (Story 12.5),
+// which shares the rule but not the chapter machinery.
+bool SettlementRecorded(const Ledger& l, std::uint64_t root);
+
 } // namespace Potato::Campaign

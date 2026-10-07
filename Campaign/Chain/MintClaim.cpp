@@ -45,6 +45,8 @@ const char* ClaimKindName(ClaimKind k) {
         return "chapter_settlement";
     case ClaimKind::Achievement:
         return "achievement";
+    case ClaimKind::Settlement:
+        return "settlement";
     }
     return "unknown";
 }
@@ -56,6 +58,10 @@ bool ClaimKindFromName(std::string_view name, ClaimKind& out) {
     }
     if (name == "achievement") {
         out = ClaimKind::Achievement;
+        return true;
+    }
+    if (name == "settlement") {
+        out = ClaimKind::Settlement;
         return true;
     }
     return false;
@@ -88,7 +94,11 @@ bool ParseRootHex(std::string_view s, std::uint64_t& out) {
 }
 
 std::string ClaimId(const MintClaim& c) {
-    if (c.kind == ClaimKind::ChapterSettlement) {
+    // Both settlement flavors bind the battle record's root —
+    // a chapter verdict and an encounter verdict can't share a
+    // record, so one id shape serves both.
+    if (c.kind == ClaimKind::ChapterSettlement ||
+        c.kind == ClaimKind::Settlement) {
         return "settlement-" + RootHex(c.recordRoot);
     }
     std::string id = "achievement-" + c.achievement + "-";
@@ -114,10 +124,19 @@ Result<JsonValue> MintClaim::ToJson() const {
     o["schema"] = JsonValue::String(std::string(SCHEMA));
     o["id"] = JsonValue::String(id);
     o["kind"] = JsonValue::String(ClaimKindName(kind));
-    o["chapter"] = JsonValue::Int(chapter);
-    if (kind == ClaimKind::ChapterSettlement) {
+    if (kind != ClaimKind::Settlement) {
+        // Encounters aren't chapter-keyed — the field is
+        // forbidden on "settlement" claims, not merely absent.
+        o["chapter"] = JsonValue::Int(chapter);
+    }
+    if (kind == ClaimKind::ChapterSettlement ||
+        kind == ClaimKind::Settlement) {
         o["record_root"] = JsonValue::String(RootHex(recordRoot));
         o["resolution"] = JsonValue::String(resolution);
+        if (kind == ClaimKind::Settlement) {
+            o["encounter"] = JsonValue::String(encounter);
+            o["node"] = JsonValue::String(node);
+        }
     } else {
         o["achievement"] = JsonValue::String(achievement);
     }
@@ -141,14 +160,21 @@ Result<MintClaim> MintClaim::FromJson(const JsonValue& doc) {
     if (!kind || !ClaimKindFromName(*kind, c.kind)) {
         return Gameplay::Fail<MintClaim>("kind", "unknown claim kind");
     }
-    const JsonValue& ch = doc["chapter"];
-    if (!ch.IsInt() || ch.AsInt() < 0 ||
-        ch.AsInt() > static_cast<std::int64_t>(
-                         CampaignState::MAX_CHAPTERS)) {
-        return Gameplay::Fail<MintClaim>("field",
-                                         "chapter out of range");
+    if (c.kind == ClaimKind::Settlement) {
+        if (doc.Has("chapter")) {
+            return Gameplay::Fail<MintClaim>(
+                "field", "settlement claim carries chapter");
+        }
+    } else {
+        const JsonValue& ch = doc["chapter"];
+        if (!ch.IsInt() || ch.AsInt() < 0 ||
+            ch.AsInt() > static_cast<std::int64_t>(
+                             CampaignState::MAX_CHAPTERS)) {
+            return Gameplay::Fail<MintClaim>("field",
+                                             "chapter out of range");
+        }
+        c.chapter = ch.AsInt();
     }
-    c.chapter = ch.AsInt();
 
     const JsonValue& ledger = doc["ledger"];
     if (!ledger.IsObject() || !ledger["count"].IsInt() ||
@@ -160,7 +186,8 @@ Result<MintClaim> MintClaim::FromJson(const JsonValue& doc) {
         ledger["count"].AsInt());
     c.ledgerTip = static_cast<std::uint64_t>(ledger["tip"].AsInt());
 
-    if (c.kind == ClaimKind::ChapterSettlement) {
+    if (c.kind == ClaimKind::ChapterSettlement ||
+        c.kind == ClaimKind::Settlement) {
         const std::string* root = doc.FindString("record_root");
         if (!root || !ParseRootHex(*root, c.recordRoot)) {
             return Gameplay::Fail<MintClaim>(
@@ -176,6 +203,17 @@ Result<MintClaim> MintClaim::FromJson(const JsonValue& doc) {
             return Gameplay::Fail<MintClaim>(
                 "field", "settlement claim carries achievement");
         }
+        if (c.kind == ClaimKind::Settlement) {
+            if (!ReadField(doc, "encounter", MAX_KEY_LEN,
+                           c.encounter) ||
+                !ReadField(doc, "node", MAX_KEY_LEN, c.node)) {
+                return Gameplay::Fail<MintClaim>(
+                    "field", "settlement missing encounter/node");
+            }
+        } else if (doc.Has("encounter") || doc.Has("node")) {
+            return Gameplay::Fail<MintClaim>(
+                "field", "chapter claim carries encounter fields");
+        }
     } else {
         if (!ReadField(doc, "achievement", MAX_KEY_LEN,
                        c.achievement) ||
@@ -183,7 +221,8 @@ Result<MintClaim> MintClaim::FromJson(const JsonValue& doc) {
             return Gameplay::Fail<MintClaim>(
                 "field", "achievement missing/bad key");
         }
-        if (doc.Has("record_root") || doc.Has("resolution")) {
+        if (doc.Has("record_root") || doc.Has("resolution") ||
+            doc.Has("encounter") || doc.Has("node")) {
             return Gameplay::Fail<MintClaim>(
                 "field", "achievement claim carries settlement");
         }

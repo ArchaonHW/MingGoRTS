@@ -6,6 +6,7 @@
 
 #include <cstddef>
 #include <span>
+#include <string_view>
 
 namespace Potato::Campaign {
 
@@ -36,12 +37,18 @@ namespace Potato::Campaign {
 // banks 軍威 dread against 民心 revulsion. Magnitudes are initial
 // balance targets, not final tuning.
 //
+// World attribution (Story 12.7): a non-empty `worldNode` stamps
+// `region:<node>` on every generated posting — the battle happened
+// AT that world node, so its deeds fold into that region's
+// 民心/秩序/墮落. Map-local regions still ride as `field:<n>`.
+//
 // INVARIANT for future deed kinds: every generated posting must
 // satisfy ValidateLegs + ValidateMeta — ResolveAftermath (4.5)
 // preflights only capacity, so a malformed deed would post a prefix
 // then fail mid-settlement, reopening the partial-land hole.
 Gameplay::Result<std::size_t>
 BookDeeds(Ledger& ledger, int playerSide,
-          std::span<const Gameplay::SimEvent> events);
+          std::span<const Gameplay::SimEvent> events,
+          std::string_view worldNode = {});
 
 } // namespace Potato::Campaign
