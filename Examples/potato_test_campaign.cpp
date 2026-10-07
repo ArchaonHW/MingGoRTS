@@ -11,6 +11,10 @@
 #include "Campaign/Roster/Roster.h"
 #include "Campaign/Save/SaveSystem.h"
 #include "Campaign/State/CampaignState.h"
+#include "Campaign/World/WorldMap.h"
+#include "Campaign/World/WorldState.h"
+#include "Campaign/World/WorldMap.h"
+#include "Campaign/World/WorldState.h"
 #include "Gameplay/Json/JsonValue.h"
 
 #include <cstdio>
@@ -597,6 +601,226 @@ int main() {
         }
 
         fs::remove_all(pdir);
+    }
+
+    // ===== Story 12.6 — Chapter anchoring (bind/predicate graph)
+    {
+        namespace fs = std::filesystem;
+        using Potato::Campaign::CampaignComplete;
+        using Potato::Campaign::ChapterAvailable;
+        using Potato::Campaign::ChapterBeat;
+        using Potato::Campaign::RefreshAvailability;
+        using Potato::Campaign::SetCurrentChapter;
+        using Potato::Campaign::WorldControl;
+        using Potato::Campaign::WorldMap;
+        using Potato::Campaign::WorldState;
+
+        const fs::path bdir =
+            fs::temp_directory_path() / "potato_test_bind_ch";
+        fs::remove_all(bdir);
+        fs::create_directories(bdir);
+        const auto wch = [](const fs::path& dir, const char* name,
+                            const std::string& text) {
+            std::ofstream f(dir / name,
+                            std::ios::binary | std::ios::trunc);
+            f << text;
+        };
+        const auto chapter = [](const char* id, int idx,
+                                const std::string& bind = "") {
+            return std::string(
+                       "{\"schema\":\"potato.chapter/1\","
+                       "\"id\":\"") +
+                   id + "\",\"index\":" + std::to_string(idx) +
+                   ",\"title\":\"t\",\"map\":\"m.json\","
+                   "\"combat\":true" + bind + "}";
+        };
+
+        // --- wire decode + strict-inner-key rejections ---
+        wch(bdir, "a.json",
+            chapter("a0", 0, ",\"bind\":{\"node\":\"longmen\","
+                             "\"control\":\"player\","
+                             "\"resolved\":[\"gate\"],"
+                             "\"requires\":[\"a0\"],"
+                             "\"ledger\":{\"axis\":\"corruption\","
+                             "\"at_least\":5},"
+                             "\"mandatory\":true,"
+                             "\"beat\":\"pivot\"}"));
+        wch(bdir, "bad_bind_type.json",
+            chapter("bb", 1, ",\"bind\":\"x\""));
+        wch(bdir, "bad_key.json",
+            chapter("bk", 2, ",\"bind\":{\"nope\":1}"));
+        wch(bdir, "bad_ctrl.json",
+            chapter("bc", 3, ",\"bind\":{\"control\":\"friend\"}"));
+        wch(bdir, "ctrl_no_node.json",
+            chapter("cn", 4, ",\"bind\":{\"control\":\"player\"}"));
+        wch(bdir, "bad_axis.json",
+            chapter("ba", 5, ",\"bind\":{\"ledger\":{\"axis\":"
+                             "\"mandate\",\"at_least\":1}}"));
+        wch(bdir, "bad_atleast.json",
+            chapter("bl", 6, ",\"bind\":{\"ledger\":{\"axis\":"
+                             "\"order\",\"at_least\":0}}"));
+        wch(bdir, "bad_beat.json",
+            chapter("be", 7, ",\"bind\":{\"beat\":\"finale\"}"));
+        wch(bdir, "req_dangling.json",
+            chapter("rd", 8, ",\"bind\":{\"requires\":[\"ghost\"]}"));
+        // Cascade: rc requires rd, which gets pruned.
+        wch(bdir, "req_cascade.json",
+            chapter("rc", 9, ",\"bind\":{\"requires\":[\"rd\"]}"));
+        ChapterLibrary blib;
+        const auto bres = ChapterLibrary::Load(bdir, blib);
+        Check(bres.ok && blib.Size() == 1,
+              "bind library: one valid chapter loads");
+        Check(bres.rejected.size() == 9,
+              "bind mistypes/unknown keys/dangling+cascade "
+              "requires rejected");
+        {
+            const Potato::Campaign::ChapterDef& d = *blib.Find("a0");
+            Check(d.bound && d.bind.node == "longmen" &&
+                      d.bind.hasControl &&
+                      d.bind.control == WorldControl::Player &&
+                      d.bind.resolved.size() == 1 &&
+                      d.bind.prereqs.size() == 1 &&
+                      d.bind.prereqs[0] == "a0" &&
+                      d.bind.hasLedger && d.bind.atLeast == 5 &&
+                      d.bind.IsMandatory() &&
+                      d.bind.beat == ChapterBeat::Pivot,
+                  "bind fields decode");
+        }
+
+        // --- predicate evaluation + latch ---
+        auto wdoc = JsonValue::Parse(
+            "{\"schema\":\"potato.world/1\",\"id\":\"w\","
+            "\"nodes\":[{\"id\":\"kaifeng\",\"control\":\"player\"},"
+            "{\"id\":\"longmen\",\"control\":\"neutral\"}],"
+            "\"routes\":[{\"a\":\"kaifeng\",\"b\":\"longmen\","
+            "\"days\":1}],\"start\":\"kaifeng\"}");
+        Check(wdoc.ok(), "world fixture parses");
+        auto wmap = WorldMap::FromJson(wdoc.value);
+        Check(wmap.ok(), "world fixture loads");
+        auto ws = WorldState::Init(wmap.value, 7);
+        Check(ws.ok() && ws.value.WarbandAt() == "kaifeng",
+              "world state inits at start");
+
+        // Bound library: ch0 unbound anchor; ch1 requires ch0 and
+        // warband at longmen; ch2 ledger-gated (corruption >= 30),
+        // mandatory pivot; ch3 optional side chapter gated on POI
+        // resolution; ch4 bound requires+control player@kaifeng.
+        const fs::path gdir =
+            fs::temp_directory_path() / "potato_test_graph_ch";
+        fs::remove_all(gdir);
+        fs::create_directories(gdir);
+        wch(gdir, "a.json", chapter("g0", 0));
+        wch(gdir, "b.json",
+            chapter("g1", 1, ",\"bind\":{\"requires\":[\"g0\"],"
+                             "\"node\":\"longmen\"}"));
+        wch(gdir, "c.json",
+            chapter("g2", 2, ",\"bind\":{\"requires\":[\"g0\"],"
+                             "\"ledger\":{\"axis\":\"corruption\","
+                             "\"at_least\":30},"
+                             "\"beat\":\"pivot\"}"));
+        wch(gdir, "d.json",
+            chapter("g3", 3, ",\"bind\":{\"resolved\":[\"shrine_x\"]}"
+                             ));
+        wch(gdir, "e.json",
+            chapter("g4", 4, ",\"bind\":{\"node\":\"kaifeng\","
+                             "\"control\":\"player\","
+                             "\"mandatory\":true}"));
+        ChapterLibrary glib;
+        Check(ChapterLibrary::Load(gdir, glib).ok &&
+                  glib.Size() == 5,
+              "graph library loads");
+
+        CampaignState st;
+        Check(InitializeProgress(st, glib).ok() &&
+                  st.GetChapter().current == 0,
+              "graph init lands first chapter");
+        // Null-world refresh inside init: unbound g0 latches;
+        // g4's kaifeng predicates need a live world — not latched.
+        Check(st.GetChapter().unlocked[0] &&
+                  !st.GetChapter().unlocked[4],
+              "node-bound chapter needs live world");
+        Check(!ChapterAvailable(*glib.Find("g1"), glib, st,
+                                &ws.value, &wmap.value),
+              "requires-unmet chapter not available");
+        RefreshAvailability(st, glib, &ws.value, &wmap.value);
+        Check(st.GetChapter().unlocked[4],
+              "world refresh latches control+node bind");
+        // Latch is monotone: leave kaifeng, flag stays.
+        ws.value.SetWarband("longmen", wmap.value);
+        RefreshAvailability(st, glib, &ws.value, &wmap.value);
+        Check(st.GetChapter().unlocked[4],
+              "latch survives departure");
+
+        // SetCurrentChapter: locked rejected, unlocked accepted.
+        Check(!SetCurrentChapter(st, glib, 3),
+              "locked chapter cannot be selected");
+        Check(SetCurrentChapter(st, glib, 4) &&
+                  st.GetChapter().current == 4,
+              "shell picks among unlocked");
+
+        // requires gating: g1 needs g0 resolved — resolve g0 via
+        // the ceremony path by pointing current back at it.
+        Check(SetCurrentChapter(st, glib, 0),
+              "re-point at unbound opener");
+        Check(ResolveAndAdvance(st, glib).ok(),
+              "resolve g0");
+        // g1's requires holds now but node predicate needs warband
+        // at longmen (warband IS there) — null-world refresh in
+        // ResolveAndAdvance can't see it; world refresh can.
+        Check(!st.GetChapter().unlocked[1],
+              "node bind not latched by null-world refresh");
+        RefreshAvailability(st, glib, &ws.value, &wmap.value);
+        Check(st.GetChapter().unlocked[1],
+              "arrival + requires latch g1");
+        Check(!st.GetChapter().unlocked[2],
+              "ledger threshold unmet keeps g2 locked");
+        Check(!st.GetChapter().unlocked[3],
+              "unresolved POI keeps g3 locked");
+
+        // Ledger predicate: corruption:+30 crosses the pivot gate.
+        {
+            Posting p;
+            p.credit = {Account::ArmyPrestige, 1};
+            p.debit = {Account::Materiel, 1};
+            p.memo = "atrocity";
+            p.tags = {"corruption:+30"};
+            Check(st.GetLedger().Post(p).ok(),
+                  "corruption posting lands");
+        }
+        RefreshAvailability(st, glib, &ws.value, &wmap.value);
+        Check(st.GetChapter().unlocked[2],
+              "ledger threshold latches pivot chapter");
+        ws.value.MarkResolved("shrine_x");
+        RefreshAvailability(st, glib, &ws.value, &wmap.value);
+        Check(st.GetChapter().unlocked[3],
+              "POI resolution latches side chapter");
+
+        // Out-of-order graph resolution: play g2 before g1.
+        Check(SetCurrentChapter(st, glib, 2),
+              "graph allows out-of-order pick");
+        Check(ResolveAndAdvance(st, glib).ok(),
+              "resolve g2 out of index order");
+        Check(st.GetChapter().resolved[2] &&
+                  !st.GetChapter().resolved[1],
+              "g2 resolved while g1 untouched");
+
+        // Mandatory spine: g2 (beat pivot) + g4 (mandatory) are
+        // the spine — g1/g3 optional. Resolving g4 completes the
+        // campaign even though g1/g3 are open.
+        Check(!CampaignComplete(st, glib),
+              "open mandatory chapter blocks completion");
+        Check(SetCurrentChapter(st, glib, 4) &&
+                  ResolveAndAdvance(st, glib).ok(),
+              "resolve final mandatory chapter");
+        Check(CampaignComplete(st, glib) &&
+                  st.GetChapter().current == 5,
+              "mandatory spine complete -> sentinel");
+        Check(!st.GetChapter().resolved[1] &&
+                  !st.GetChapter().resolved[3],
+              "optional chapters unresolved at completion");
+
+        fs::remove_all(bdir);
+        fs::remove_all(gdir);
     }
 
     // --- Story 3.5: persistent roster ---

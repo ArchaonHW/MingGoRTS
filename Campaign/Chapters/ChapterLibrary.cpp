@@ -20,6 +20,120 @@ using Gameplay::Result;
 
 namespace {
 
+constexpr std::size_t kMaxBindIds = 32;
+
+const char* ParseIdArray(const JsonValue& arr,
+                         std::vector<std::string>& out) {
+    if (arr.Size() > kMaxBindIds) return "bind id array too long";
+    for (const JsonValue& item : arr.Items()) {
+        if (!item.IsString()) return "bind id not a string";
+        const std::string& id = item.AsString();
+        if (id.empty() || id.size() > ChapterLibrary::MAX_ID_LEN) {
+            return "bind id out of range";
+        }
+        out.push_back(id);
+    }
+    return nullptr;
+}
+
+const char* ParseControl(const std::string& s, WorldControl& out) {
+    if (s == "neutral") out = WorldControl::Neutral;
+    else if (s == "player") out = WorldControl::Player;
+    else if (s == "rival") out = WorldControl::Rival;
+    else return "bind control unknown";
+    return nullptr;
+}
+
+const char* ValidateBind(const JsonValue& bind, ChapterBind& out) {
+    // New vocabulary inside `bind` is strict — typos reject.
+    for (const auto& kv : bind.Members()) {
+        const std::string& key = kv.first;
+        if (key != "node" && key != "control" && key != "resolved" &&
+            key != "requires" && key != "ledger" &&
+            key != "mandatory" && key != "beat") {
+            return "bind unknown key";
+        }
+    }
+    if (const std::string* node = bind.FindString("node")) {
+        if (node->empty() || node->size() > ChapterLibrary::MAX_ID_LEN) {
+            return "bind node out of range";
+        }
+        out.node = *node;
+    } else if (bind.Has("node")) {
+        return "bind node mistyped";
+    }
+    if (bind.Has("control")) {
+        const std::string* s = bind.FindString("control");
+        if (!s) return "bind control mistyped";
+        if (const char* why = ParseControl(*s, out.control)) {
+            return why;
+        }
+        out.hasControl = true;
+    }
+    if (bind.Has("resolved")) {
+        if (!bind["resolved"].IsArray()) return "bind resolved mistyped";
+        if (const char* why =
+                ParseIdArray(bind["resolved"], out.resolved)) {
+            return why;
+        }
+    }
+    if (bind.Has("requires")) {
+        if (!bind["requires"].IsArray()) return "bind requires mistyped";
+        if (const char* why =
+                ParseIdArray(bind["requires"], out.prereqs)) {
+            return why;
+        }
+    }
+    if (bind.Has("ledger")) {
+        const JsonValue& led = bind["ledger"];
+        if (!led.IsObject()) return "bind ledger mistyped";
+        for (const auto& kv : led.Members()) {
+            if (kv.first != "axis" && kv.first != "at_least") {
+                return "bind ledger unknown key";
+            }
+        }
+        const std::string* ax = led.FindString("axis");
+        if (!ax || !led["at_least"].IsInt()) {
+            return "bind ledger missing field";
+        }
+        if (*ax == "popular_support") {
+            out.axis = LedgerAxis::PopularSupport;
+        } else if (*ax == "order") {
+            out.axis = LedgerAxis::Order;
+        } else if (*ax == "corruption") {
+            out.axis = LedgerAxis::Corruption;
+        } else {
+            return "bind ledger axis unknown";
+        }
+        const std::int64_t at = led["at_least"].AsInt();
+        if (at < 1) return "bind ledger at_least out of range";
+        out.atLeast = at;
+        out.hasLedger = true;
+    }
+    if (bind.Has("mandatory")) {
+        if (!bind["mandatory"].IsBool()) return "bind mandatory mistyped";
+        out.mandatory = bind["mandatory"].AsBool();
+    }
+    if (bind.Has("beat")) {
+        const std::string* b = bind.FindString("beat");
+        if (!b) return "bind beat mistyped";
+        if (*b == "commission") {
+            out.beat = ChapterBeat::Commission;
+        } else if (*b == "pivot") {
+            out.beat = ChapterBeat::Pivot;
+        } else if (*b == "final") {
+            out.beat = ChapterBeat::Final;
+        } else {
+            return "bind beat unknown";
+        }
+    }
+    // A held-region predicate with no region is meaningless.
+    if (out.hasControl && out.node.empty()) {
+        return "bind control requires node";
+    }
+    return nullptr;
+}
+
 // One file -> ChapterDef or a reason string. Pure validation:
 // unknown members are ignored (forward-compat).
 const char* ValidateChapter(const JsonValue& doc, ChapterDef& out) {
@@ -61,6 +175,11 @@ const char* ValidateChapter(const JsonValue& doc, ChapterDef& out) {
     out.map = *map;
     out.combat = doc["combat"].AsBool();
     out.briefing = briefing ? *briefing : "";
+    if (doc.Has("bind")) {
+        if (!doc["bind"].IsObject()) return "bind mistyped";
+        out.bound = true;
+        return ValidateBind(doc["bind"], out.bind);
+    }
     return nullptr;
 }
 
@@ -105,6 +224,7 @@ ChapterLoadResult ChapterLibrary::Load(
     std::sort(files.begin(), files.end());
 
     std::vector<ChapterDef> chapters;
+    std::vector<std::filesystem::path> chapterPaths;
     std::set<std::string> ids;
     std::set<std::int64_t> indexes;
     for (const std::filesystem::path& f : files) {
@@ -139,7 +259,44 @@ ChapterLoadResult ChapterLibrary::Load(
         }
         ids.insert(def.id);
         indexes.insert(def.index);
+        chapterPaths.push_back(f);
         chapters.push_back(std::move(def));
+    }
+
+    // Cross-file pass: bind.requires edges must land on chapters
+    // that survived validation. Fixpoint prune — dropping a
+    // candidate can orphan another's edge; loop until stable.
+    if (!chapters.empty()) {
+        bool changed = true;
+        while (changed) {
+            changed = false;
+            for (std::size_t i = 0; i < chapters.size(); ++i) {
+                const ChapterBind& b = chapters[i].bind;
+                if (!chapters[i].bound) continue;
+                const std::string* missing = nullptr;
+                for (const std::string& req : b.prereqs) {
+                    if (ids.count(req) == 0) {
+                        missing = &req;
+                        break;
+                    }
+                }
+                if (!missing) continue;
+                res.rejected.push_back(
+                    {chapterPaths[i],
+                     "field",
+                     "bind requires unknown chapter '" + *missing +
+                         "'"});
+                ids.erase(chapters[i].id);
+                indexes.erase(chapters[i].index);
+                chapters.erase(chapters.begin() +
+                               static_cast<std::ptrdiff_t>(i));
+                chapterPaths.erase(
+                    chapterPaths.begin() +
+                    static_cast<std::ptrdiff_t>(i));
+                changed = true;
+                break; // restart the scan after mutation
+            }
+        }
     }
 
     // Library order = campaign order.

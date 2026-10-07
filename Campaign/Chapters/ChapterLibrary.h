@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Campaign/World/WorldMap.h"
+
 #include <cstddef>
 #include <cstdint>
 #include <filesystem>
@@ -8,6 +10,48 @@
 #include <vector>
 
 namespace Potato::Campaign {
+
+// Ledger axis for bind.ledger predicates — the FoldGovernance
+// vocabulary (campaign-scope totals; per-region folds are 12.7's).
+enum class LedgerAxis : std::uint8_t {
+    PopularSupport,
+    Order,
+    Corruption,
+};
+
+// Mandatory-beat names (narrative-design: commission / midpoint
+// pivot / final confrontation) — a beat implies mandatory.
+enum class ChapterBeat : std::uint8_t {
+    None,
+    Commission,
+    Pivot,
+    Final,
+};
+
+// Optional world-binding (12.6): gates a chapter's availability
+// on world-state predicates and/or prerequisite chapters instead
+// of the linear index sequence. Absent bind = legacy unbound
+// chapter (predecessor rule). Presence of any field is optional;
+// an empty bind latches as soon as its (vacuous) gates hold.
+struct ChapterBind {
+    // `node` alone is an arrival gate (warband must stand on it);
+    // `node` + `control` is a held-region gate — `node` becomes
+    // control's argument and arrival is not required.
+    std::string node;
+    WorldControl control = WorldControl::Neutral;
+    bool hasControl = false;             // requires `node`
+    std::vector<std::string> resolved;   // WorldState resolved-ids
+    std::vector<std::string> prereqs;    // wire "requires":
+                                         // chapter-id prereqs
+    bool hasLedger = false;
+    LedgerAxis axis = LedgerAxis::PopularSupport;
+    std::int64_t atLeast = 0;
+    bool mandatory = false;              // spine membership
+    ChapterBeat beat = ChapterBeat::None;
+    bool IsMandatory() const {
+        return mandatory || beat != ChapterBeat::None;
+    }
+};
 
 // One potato.chapter/1 pack — the spine; Epic 4/6 grow it via
 // schema bumps. `index` is the persisted chapter coordinate
@@ -22,6 +66,8 @@ struct ChapterDef {
     std::string map;          // content ref (assets/maps/...)
     bool combat = true;       // false = designated zero-combat (E)
     std::string briefing;
+    bool bound = false;       // bind block present (12.6)
+    ChapterBind bind;
 };
 
 struct RejectedChapter {
