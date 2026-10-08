@@ -5,6 +5,7 @@
 #include "ReinforcementLearning.h"
 #include "NeuralNetwork.h"
 #include <algorithm>
+#include <iterator>
 #include <random>
 #include <sstream>
 #include <iostream>
@@ -126,15 +127,15 @@ DQNAgent::DQNAgent(int stateSize, int numActions,
     , rng(std::random_device{}()) {
     
     // Create networks
-    qNetwork = new NeuralNetwork();
+    qNetwork = std::make_unique<NeuralNetwork>();
     qNetwork->AddLayer(stateSize);
     qNetwork->AddLayer(128, "relu");
     qNetwork->AddLayer(128, "relu");
     qNetwork->AddLayer(numActions);
     qNetwork->Build();
     qNetwork->SetLossFunction("mse");
-    
-    targetNetwork = new NeuralNetwork();
+
+    targetNetwork = std::make_unique<NeuralNetwork>();
     targetNetwork->AddLayer(stateSize);
     targetNetwork->AddLayer(128, "relu");
     targetNetwork->AddLayer(128, "relu");
@@ -145,6 +146,8 @@ DQNAgent::DQNAgent(int stateSize, int numActions,
     // Initialize target network with qNetwork weights
     targetNetwork->CopyWeightsFrom(*qNetwork);
 }
+
+DQNAgent::~DQNAgent() = default;
 
 Action DQNAgent::SelectAction(const State& state, bool explore) {
     if (explore && std::uniform_real_distribution<float>(0.0f, 1.0f)(rng) < explorationRate) {
@@ -169,22 +172,28 @@ void DQNAgent::TrainFromReplayBuffer() {
     if (replayBuffer.size() < batchSize) {
         return;
     }
-    
+
     // Sample random batch
     std::vector<size_t> indices(replayBuffer.size());
     for (size_t i = 0; i < indices.size(); i++) indices[i] = i;
     std::shuffle(indices.begin(), indices.end(), rng);
-    
+
     for (size_t i = 0; i < batchSize; i++) {
         const Experience& exp = replayBuffer[indices[i]];
-        
-        // Compute target Q-value
-        std::vector<float> nextQValues = PredictQValues(exp.nextState);
-        float maxNextQ = *std::max_element(nextQValues.begin(), nextQValues.end());
-        float target = exp.done ? exp.reward : exp.reward + discountFactor * maxNextQ;
-        
-        // Train network (simplified - would need proper target computation)
-        // This is a placeholder for full DQN training
+
+        // 以 target network 計算 bootstrapped target（標準 DQN 做法：
+        // 用 qNetwork 也算得出 target，但每次更新都追著自己會發散）
+        std::vector<float> targetVec = qNetwork->Forward(exp.state.features);
+        float target = exp.reward;
+        if (!exp.done) {
+            std::vector<float> nextQValues = PredictTargetQValues(exp.nextState);
+            target += discountFactor * *std::max_element(nextQValues.begin(),
+                                                         nextQValues.end());
+        }
+        targetVec[exp.action.id] = target;
+
+        // 只把被執行動作的 Q 值往 target 拉，其餘動作的輸出維持不變
+        qNetwork->TrainStep(exp.state.features, targetVec, learningRate);
     }
 }
 
@@ -219,6 +228,41 @@ std::vector<float> DQNAgent::PredictQValues(const State& state) {
     return qNetwork->Forward(state.features);
 }
 
+std::vector<float> DQNAgent::PredictTargetQValues(const State& state) {
+    return targetNetwork->Forward(state.features);
+}
+
+std::string DQNAgent::Serialize() const {
+    std::stringstream ss;
+    ss << "PDQNv1\n";
+    ss << stateSize << " " << numActions << "\n";
+    ss << learningRate << " " << discountFactor << " " << explorationRate << "\n";
+    ss << qNetwork->Serialize();
+    return ss.str();
+}
+
+bool DQNAgent::Deserialize(const std::string& data) {
+    std::stringstream ss(data);
+
+    std::string tok;
+    ss >> tok;
+    if (tok != "PDQNv1") return false;
+
+    ss >> stateSize >> numActions;
+    ss >> learningRate >> discountFactor >> explorationRate;
+    if (!ss) return false;
+
+    // >> 停在参數行尾，剩餘內容即內嵌的 PNNv1 blob
+    std::string netData((std::istreambuf_iterator<char>(ss)),
+                        std::istreambuf_iterator<char>());
+    if (!qNetwork->Deserialize(netData)) return false;
+
+    // replay buffer 不落盤；target network 由載入後的 Q-network 重建
+    replayBuffer.clear();
+    targetNetwork->CopyWeightsFrom(*qNetwork);
+    return true;
+}
+
 // ============================================================================
 // Policy Gradient Agent
 // ============================================================================
@@ -231,13 +275,15 @@ PolicyGradientAgent::PolicyGradientAgent(int stateSize, int numActions,
     , learningRate(learningRate)
     , discountFactor(discountFactor) {
     
-    policyNetwork = new NeuralNetwork();
+    policyNetwork = std::make_unique<NeuralNetwork>();
     policyNetwork->AddLayer(stateSize);
     policyNetwork->AddLayer(64, "relu");
     policyNetwork->AddLayer(64, "relu");
     policyNetwork->AddLayer(numActions);
     policyNetwork->Build();
 }
+
+PolicyGradientAgent::~PolicyGradientAgent() = default;
 
 Action PolicyGradientAgent::SelectAction(const State& state) {
     std::vector<float> probs = GetActionProbabilities(state);
@@ -309,19 +355,21 @@ ActorCriticAgent::ActorCriticAgent(int stateSize, int numActions,
     , criticLearningRate(criticLearningRate)
     , discountFactor(discountFactor) {
     
-    actorNetwork = new NeuralNetwork();
+    actorNetwork = std::make_unique<NeuralNetwork>();
     actorNetwork->AddLayer(stateSize);
     actorNetwork->AddLayer(64, "relu");
     actorNetwork->AddLayer(64, "relu");
     actorNetwork->AddLayer(numActions);
     actorNetwork->Build();
-    
-    criticNetwork = new NeuralNetwork();
+
+    criticNetwork = std::make_unique<NeuralNetwork>();
     criticNetwork->AddLayer(stateSize);
     criticNetwork->AddLayer(64, "relu");
     criticNetwork->AddLayer(1);
     criticNetwork->Build();
 }
+
+ActorCriticAgent::~ActorCriticAgent() = default;
 
 Action ActorCriticAgent::SelectAction(const State& state) {
     std::vector<float> probs = GetActionProbabilities(state);

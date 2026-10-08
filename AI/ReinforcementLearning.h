@@ -14,6 +14,8 @@
 namespace Potato {
 namespace AI {
 
+class NeuralNetwork;
+
 /**
  * Action space
  */
@@ -70,7 +72,12 @@ public:
     // Learning rate decay
     void DecayLearningRate(float decay = 0.995f);
     void DecayExplorationRate(float decay = 0.995f);
-    
+
+    // 續跑訓練用：Deserialize 後探索率已衰減，可直接重設再訓練
+    void SetExplorationRate(float rate) { explorationRate = rate; }
+    void SetLearningRate(float rate) { learningRate = rate; }
+    float GetExplorationRate() const { return explorationRate; }
+
     // Getters
     float GetQValue(int state, int action) const;
     const std::vector<std::vector<float>>& GetQTable() const { return qTable; }
@@ -101,32 +108,46 @@ public:
              float explorationRate = 0.1f,
              size_t replayBufferSize = 10000,
              size_t batchSize = 32);
-    
+    ~DQNAgent();
+
+    DQNAgent(const DQNAgent&) = delete;
+    DQNAgent& operator=(const DQNAgent&) = delete;
+
     // Select action
     Action SelectAction(const State& state, bool explore = true);
-    
+
     // Train step
     void TrainStep(const Experience& exp);
-    
+
     // Training from replay buffer
     void TrainFromReplayBuffer();
-    
+
     // Add experience
     void AddExperience(const Experience& exp);
-    
+
     // Learning rate and exploration decay
     void DecayLearningRate(float decay = 0.995f);
     void DecayExplorationRate(float decay = 0.995f);
-    
+
+    // 續跑訓練用：Deserialize 後探索率已衰減，可直接重設再訓練
+    void SetExplorationRate(float rate) { explorationRate = rate; }
+    void SetLearningRate(float rate) { learningRate = rate; }
+    float GetExplorationRate() const { return explorationRate; }
+
     // Target network update
     void UpdateTargetNetwork();
-    
+
     // Getters
     size_t GetReplayBufferSize() const { return replayBuffer.size(); }
-    
+
+    // 模型持久化（PDQNv1：超參數 + 內嵌 Q-network 的 PNNv1 blob；
+    // replay buffer 不落盤，Deserialize 後 target network 由 Q-network 重建）
+    std::string Serialize() const;
+    bool Deserialize(const std::string& data);
+
 private:
-    class NeuralNetwork* qNetwork;
-    class NeuralNetwork* targetNetwork;
+    std::unique_ptr<NeuralNetwork> qNetwork;
+    std::unique_ptr<NeuralNetwork> targetNetwork;
     
     int stateSize;
     int numActions;
@@ -142,6 +163,7 @@ private:
     
     float PredictQValue(const State& state, int action);
     std::vector<float> PredictQValues(const State& state);
+    std::vector<float> PredictTargetQValues(const State& state);
 };
 
 /**
@@ -152,6 +174,11 @@ public:
     PolicyGradientAgent(int stateSize, int numActions,
                         float learningRate = 0.001f,
                         float discountFactor = 0.99f);
+    ~PolicyGradientAgent();
+
+    PolicyGradientAgent(const PolicyGradientAgent&) = delete;
+    PolicyGradientAgent& operator=(const PolicyGradientAgent&) = delete;
+
     
     // Select action based on policy
     Action SelectAction(const State& state);
@@ -166,13 +193,13 @@ public:
     void ClearTrajectory();
     
 private:
-    class NeuralNetwork* policyNetwork;
-    
+    std::unique_ptr<NeuralNetwork> policyNetwork;
+
     int stateSize;
     int numActions;
     float learningRate;
     float discountFactor;
-    
+
     struct TrajectoryStep {
         State state;
         Action action;
@@ -181,7 +208,7 @@ private:
     std::vector<TrajectoryStep> trajectory;
     
     std::mt19937 rng;
-    
+
     std::vector<float> ComputeReturns();
     std::vector<float> GetActionProbabilities(const State& state);
 };
@@ -195,17 +222,21 @@ public:
                     float actorLearningRate = 0.001f,
                     float criticLearningRate = 0.001f,
                     float discountFactor = 0.99f);
-    
+    ~ActorCriticAgent();
+
+    ActorCriticAgent(const ActorCriticAgent&) = delete;
+    ActorCriticAgent& operator=(const ActorCriticAgent&) = delete;
+
     // Select action
     Action SelectAction(const State& state);
-    
+
     // Train step
-    void TrainStep(const State& state, const Action& action, 
+    void TrainStep(const State& state, const Action& action,
                    float reward, const State& nextState, bool done);
-    
+
 private:
-    class NeuralNetwork* actorNetwork;
-    class NeuralNetwork* criticNetwork;
+    std::unique_ptr<NeuralNetwork> actorNetwork;
+    std::unique_ptr<NeuralNetwork> criticNetwork;
     
     int stateSize;
     int numActions;
