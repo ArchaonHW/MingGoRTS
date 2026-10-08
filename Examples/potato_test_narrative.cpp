@@ -2,6 +2,7 @@
 // assets/narrative/): sorted-dir load, per-file rejection, pack-id
 // and chapter-id dedupe, merged conventions view feeding the 6.2
 // renderers.
+#include "Campaign/Narrative/EndingPage.h"
 #include "Campaign/Narrative/Marginalia.h"
 #include "Campaign/Narrative/NarrativePack.h"
 #include "Campaign/Ledger/Ledger.h"
@@ -317,7 +318,7 @@ int main() {
         };
         Ledger cleanL = mkLedger(0, 0);
         Ledger dirtyL = mkLedger(50, 0);
-        Ledger poorL = mkLedger(0, 0);
+        Ledger richL = mkLedger(0, 40); // blessed — uncovered
 
         // Mood axis: clean vs corrupt select different clauses.
         const std::string vClean = RenderDocVariant(
@@ -347,10 +348,10 @@ int main() {
         // Omen axis on a different doc/slot; pool pick is
         // deterministic and salt-sensitive.
         const std::string d1 = RenderDocVariant(
-            vlib.Conventions(), "dossier", "temper", poorL,
+            vlib.Conventions(), "dossier", "temper", cleanL,
             gs::GodStance::Neutral, 0);
         const std::string d2 = RenderDocVariant(
-            vlib.Conventions(), "dossier", "temper", poorL,
+            vlib.Conventions(), "dossier", "temper", cleanL,
             gs::GodStance::Neutral, 0);
         Check(d1 == d2 && !d1.empty(),
               "6.7: omen pick deterministic");
@@ -368,7 +369,7 @@ int main() {
                                    gs::GodStance::Neutral)
                       .empty() &&
                   RenderDocVariant(vlib.Conventions(), "dossier",
-                                   "temper", dirtyL,
+                                   "temper", richL,
                                    gs::GodStance::Neutral)
                       .empty(),
               "6.7: absent doc/slot/state renders nothing");
@@ -414,6 +415,288 @@ int main() {
                                    gs::GodStance::Neutral)
                           .find("其政清") != std::string::npos,
               "6.7: duplicate doc name rejects later pack");
+    }
+
+    // --- Story 6.7: document variant rendering ---
+    {
+        using Potato::Campaign::Account;
+        using Potato::Campaign::Ledger;
+        using Potato::Campaign::Posting;
+        using Potato::Campaign::RenderDocVariant;
+        using Potato::Gameplay::GodStance;
+
+        // Earlier rejection fixtures still sit in `dir` — every
+        // load below reports the same 3 stale rejects; only new
+        // failures matter.
+        Write(dir, "d_vars.json",
+              "{\"schema\":\"potato.narrative/1\",\"pack\":\"vars\","
+              "\"chapters\":{},"
+              "\"variants\":{\"report\":{\"verdict\":{"
+              "\"mood\":{\"clean\":\"師出有律。\","
+              "\"corrupt\":[\"冊多隱飾。\",\"暴名遠播。\"]},"
+              "\"omen\":{\"default\":\"天命未卜。\"},"
+              "\"stance\":{\"wrathful\":\"神人共憤。\"}},"
+              "\"temper\":{\"stance\":{\"favorable\":\"神悅。\","
+              "\"default\":\"神不語。\"}}}}}");
+
+        NarrativeLibrary lib;
+        auto r = NarrativeLibrary::Load(dir, lib);
+        Check(r.ok &&
+                  lib.Conventions().Variants("report") != nullptr,
+              "6.7: variants section loads and registers");
+
+        // Clean ledger: mood=clean, omen=barren (mandate 0),
+        // stance passed in.
+        Ledger l;
+        const std::string v0 = RenderDocVariant(
+            lib.Conventions(), "report", "verdict", l,
+            GodStance::Neutral);
+        Check(v0.find("師出有律。") != std::string::npos &&
+                  v0.find("天命未卜。") != std::string::npos,
+              "6.7: state keys select their clauses");
+        // Neutral stance has no pool key and no default — a
+        // variant clause is color: uncovered states stay silent
+        // rather than borrowing the wrong key's voice.
+        Check(v0.find("神人共憤") == std::string::npos &&
+                  v0.find("天命未卜") != std::string::npos,
+              "6.7: uncovered axis key stays silent, default "
+              "still falls back");
+        const std::string v1 = RenderDocVariant(
+            lib.Conventions(), "report", "verdict", l,
+            GodStance::Wrathful);
+        Check(v1.find("神人共憤。") != std::string::npos &&
+                  v1 != v0,
+              "6.7: GodStance moves the stance clause");
+
+        // Corruption ratchet flips the mood clause.
+        {
+            Posting p;
+            p.credit = {Account::ArmyPrestige, 5};
+            p.debit = {Account::Materiel, 5};
+            p.memo = "deed";
+            p.tags = {"atrocity", "corruption:+45"};
+            Check(l.Post(std::move(p)).ok(),
+                  "6.7: corruption posting lands");
+        }
+        const std::string v2 = RenderDocVariant(
+            lib.Conventions(), "report", "verdict", l,
+            GodStance::Neutral);
+        Check(v2.find("師出有律") == std::string::npos &&
+                  (v2.find("冊多隱飾") != std::string::npos ||
+                   v2.find("暴名遠播") != std::string::npos),
+              "6.7: mood threshold flips the clause");
+        Check(RenderDocVariant(lib.Conventions(), "report",
+                               "verdict", l,
+                               GodStance::Neutral) == v2,
+              "6.7: same inputs -> same text");
+        // Salted pick: over enough salts the two-clause pool
+        // shows both members; each render is a pool clause.
+        {
+            bool sawA = false, sawB = false;
+            for (std::uint64_t s = 0; s < 8; ++s) {
+                const std::string vs = RenderDocVariant(
+                    lib.Conventions(), "report", "verdict", l,
+                    GodStance::Neutral, s);
+                if (vs.find("冊多隱飾") != std::string::npos) {
+                    sawA = true;
+                }
+                if (vs.find("暴名遠播") != std::string::npos) {
+                    sawB = true;
+                }
+            }
+            Check(sawA && sawB,
+                  "6.7: salt reshuffles the pool pick");
+        }
+        // Multi-slot doc: temper has only a stance axis —
+        // absent axes emit nothing.
+        const std::string t0 = RenderDocVariant(
+            lib.Conventions(), "report", "temper", l,
+            GodStance::Favorable);
+        Check(t0 == "神悅。\n",
+              "6.7: absent axes stay silent in mixed slots");
+        Check(RenderDocVariant(lib.Conventions(), "report",
+                               "temper", l,
+                               GodStance::Neutral) ==
+                  "神不語。\n",
+              "6.7: default key covers unlisted states");
+        // Unknown doc/slot render empty.
+        Check(RenderDocVariant(lib.Conventions(), "nope",
+                               "verdict", l,
+                               GodStance::Neutral)
+                  .empty() &&
+                  RenderDocVariant(lib.Conventions(), "report",
+                                   "nope", l,
+                                   GodStance::Neutral)
+                      .empty(),
+              "6.7: unknown doc/slot render empty");
+
+        // Strict axis vocabulary: an unknown axis rejects the
+        // whole pack file, siblings still load.
+        Write(dir, "z_badaxis.json",
+              "{\"schema\":\"potato.narrative/1\",\"chapters\":{},"
+              "\"variants\":{\"bad\":{\"s\":{\"luck\":"
+              "{\"x\":\"y\"}}}}}");
+        {
+            NarrativeLibrary lib2;
+            auto r2 = NarrativeLibrary::Load(dir, lib2);
+            Check(r2.ok &&
+                      lib2.Conventions().Variants("report") !=
+                          nullptr,
+                  "6.7: bad-axis pack drops, siblings load");
+            bool sawRej = false;
+            for (const auto& rej : r2.rejected) {
+                if (rej.path.filename() == "z_badaxis.json") {
+                    sawRej = true;
+                }
+            }
+            Check(sawRej, "6.7: unknown axis rejected");
+        }
+        fs::remove(dir / "z_badaxis.json");
+
+        // Variant doc names are one namespace — a later pack
+        // repeating "report" rejects the file.
+        Write(dir, "z_dupvar.json",
+              "{\"schema\":\"potato.narrative/1\",\"chapters\":{},"
+              "\"variants\":{\"report\":{\"s\":{\"mood\":"
+              "{\"clean\":\"x\"}}}}}");
+        {
+            NarrativeLibrary lib3;
+            auto r3 = NarrativeLibrary::Load(dir, lib3);
+            bool sawDup = false;
+            for (const auto& rej : r3.rejected) {
+                if (rej.error == "duplicate") sawDup = true;
+            }
+            Check(sawDup,
+                  "6.7: duplicate doc name rejects later file");
+            Check(lib3.Conventions().Variants("report") !=
+                      nullptr,
+                  "6.7: earlier doc survives the rejection");
+        }
+        fs::remove(dir / "z_dupvar.json");
+
+        // Wire round-trip: emitted doc re-parses with pools
+        // intact (ToJson omits empty sections — variants are
+        // present here).
+        {
+            const auto j =
+                Potato::Gameplay::JsonValue::Parse(
+                    lib.Conventions().ToJson().Emit());
+            Check(j.ok(), "6.7: emitted doc re-parses");
+            auto conv2 = ChapterConventions::FromJson(j.value);
+            Check(conv2.ok() &&
+                      RenderDocVariant(conv2.value, "report",
+                                       "verdict", l,
+                                       GodStance::Wrathful) ==
+                          RenderDocVariant(
+                              lib.Conventions(), "report",
+                              "verdict", l, GodStance::Wrathful),
+                  "6.7: variants survive the wire round-trip");
+        }
+    }
+
+    // ===== Story 6.9 — ending folio: four voices =====
+    {
+        using Potato::Campaign::Account;
+        using Potato::Campaign::EndingVoice;
+        using Potato::Campaign::EndingVoiceFromName;
+        using Potato::Campaign::EndingVoiceName;
+        using Potato::Campaign::FoldEndingVoice;
+        using Potato::Campaign::Posting;
+        using Potato::Campaign::Provenance;
+        using Potato::Campaign::RenderEndingPage;
+
+        auto post = [](Ledger& l, const char* memo,
+                       std::vector<std::string> tags = {}) {
+            Posting p;
+            p.credit = {Account::Materiel, 10};
+            p.debit = {Account::ArmyPrestige, 5};
+            p.memo = memo;
+            p.tags = std::move(tags);
+            return l.Post(std::move(p));
+        };
+
+        // Clean chronicle → believed.
+        {
+            Ledger l;
+            post(l, "ordinary march");
+            post(l, "relief works");
+            Check(FoldEndingVoice(l) == EndingVoice::Believed,
+                  "6.9: clean ledger closes believed");
+            Check(RenderEndingPage(l).find("信史") !=
+                      std::string::npos,
+                  "6.9: believed folio renders 信史");
+        }
+
+        // Suspect flags, no forgery → doubted.
+        {
+            Ledger l;
+            post(l, "a deed");
+            post(l, "another deed");
+            Check(l.SetSuspect(0), "6.9: flag sets");
+            Check(FoldEndingVoice(l) == EndingVoice::Doubted,
+                  "6.9: suspect-only ledger closes doubted");
+            Check(RenderEndingPage(l).find("疑筆1條") !=
+                      std::string::npos,
+                  "6.9: doubted folio confesses the count");
+        }
+
+        // Forged row present → forged (beats suspicion too).
+        {
+            Ledger l;
+            post(l, "honest");
+            l.SetSuspect(0);
+            Posting f;
+            f.credit = {Account::Mandate, 9};
+            f.debit = {Account::Materiel, 9};
+            f.memo = "not the chronicler's hand";
+            Check(l.Forge(std::move(f)).ok(),
+                  "6.9: forge injects");
+            Check(FoldEndingVoice(l) == EndingVoice::Forged,
+                  "6.9: forged row outranks suspect");
+            Check(RenderEndingPage(l).find("偽筆1條") !=
+                      std::string::npos,
+                  "6.9: forged folio confesses the count");
+        }
+
+        // Abandoned: empty book, or the ratchet drowning the
+        // hand. A broken chain is the same verdict (Verify is
+        // the first gate — an unreadable book is abandoned
+        // whatever it claims).
+        {
+            Check(FoldEndingVoice(Ledger{}) ==
+                      EndingVoice::Abandoned,
+                  "6.9: empty ledger closes abandoned");
+            Ledger l;
+            post(l, "the cruelty that ended it",
+                 {"corruption:+150"});
+            Check(FoldEndingVoice(l) == EndingVoice::Abandoned,
+                  "6.9: corruption at the abandon bound closes "
+                  "絕筆");
+            Check(RenderEndingPage(l).find("絕筆") !=
+                      std::string::npos,
+                  "6.9: abandoned folio renders 絕筆");
+        }
+
+        // Voice names round-trip; unknown rejects.
+        {
+            EndingVoice v;
+            Check(EndingVoiceFromName("abandoned", v) &&
+                      v == EndingVoice::Abandoned,
+                  "6.9: voice name parses");
+            Check(!EndingVoiceFromName("triumphant", v),
+                  "6.9: unknown voice rejects");
+            Check(std::string(EndingVoiceName(
+                      EndingVoice::Doubted)) == "doubted",
+                  "6.9: voice name spells doubted");
+        }
+
+        // Determinism: same ledger → same folio bytes.
+        {
+            Ledger l;
+            post(l, "steady hand");
+            Check(RenderEndingPage(l) == RenderEndingPage(l),
+                  "6.9: render deterministic");
+        }
     }
 
     fs::remove_all(dir);
