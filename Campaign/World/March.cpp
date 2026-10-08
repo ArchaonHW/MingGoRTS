@@ -38,12 +38,10 @@ Result<MarchPlan> IssueMarch(WorldState& ws, const WorldMap& map,
             "world", "no route between '" + from + "' and '" +
                          std::string(dest) + "'");
     }
+    // 欠帳行軍：物資可負——affordability 是呈現層的事
+    // （MarchOptions.affordable），sim 只負責記帳。軍隊開拔，
+    // 帳本照記，管它能不能活到目的地。
     const std::int64_t supply = days * rules.supplyPerDay;
-    if (supply <= 0 ||
-        ledger.Balance(Account::Materiel) < supply) {
-        return Gameplay::Fail<MarchPlan>(
-            "world", "insufficient 物資 for the march");
-    }
     // Enqueue's fallible conditions are preflighted here (node
     // exists, day >= Day() by construction, queue under cap) so the
     // ledger post below can't strand without its arrival event.
@@ -57,15 +55,20 @@ Result<MarchPlan> IssueMarch(WorldState& ws, const WorldMap& map,
     }
 
     // Commit order: ledger first (the army eats whether or not it
-    // survives the road), then the queued arrival.
-    Posting p;
-    p.debit = {Account::Materiel, supply};
-    p.credit = {Account::ArmyPrestige, supply};
-    p.memo = "march " + from + " -> " + std::string(dest);
-    p.tags = {"march",
-              std::string(Ledger::TAG_REGION) + std::string(dest)};
-    if (const auto r = ledger.Post(std::move(p)); !r.ok()) {
-        return Gameplay::Fail<MarchPlan>(r.error, r.reason);
+    // survives the road), then the queued arrival. A zero-cost
+    // march (rules with supplyPerDay=0) posts nothing — Post
+    // would reject a 0-amount pair.
+    if (supply > 0) {
+        Posting p;
+        p.debit = {Account::Materiel, supply};
+        p.credit = {Account::ArmyPrestige, supply};
+        p.memo = "march " + from + " -> " + std::string(dest);
+        p.tags = {"march",
+                  std::string(Ledger::TAG_REGION) +
+                      std::string(dest)};
+        if (const auto r = ledger.Post(std::move(p)); !r.ok()) {
+            return Gameplay::Fail<MarchPlan>(r.error, r.reason);
+        }
     }
 
     WorldEvent ev;

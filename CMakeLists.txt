@@ -36,12 +36,15 @@ if(POTATO_SECURITY_HARDENING)
         # 堆疊保護 + PIE (位置無關執行檔，啟用 ASLR)
         add_compile_options(-fstack-protector-strong -fstack-clash-protection -fPIE)
         if(WIN32)
-            # MinGW: PE 格式加固
-            add_link_options(-pie -Wl,--dynamicbase -Wl,--nxcompat -Wl,--high-entropy-va)
+            # MinGW: PE 格式加固。-pie 只適用執行檔——套到 SHARED/MODULE 會拉進
+            # exe CRT 要求 WinMain（如 FakeCheat 測試 DLL）。
+            add_link_options($<$<STREQUAL:$<TARGET_PROPERTY:TYPE>,EXECUTABLE>:-pie>)
+            add_link_options(-Wl,--dynamicbase -Wl,--nxcompat -Wl,--high-entropy-va)
         else()
-            # Linux/macOS: ELF 加固
+            # Linux/macOS: ELF 加固（-pie 同樣僅限執行檔）
             add_compile_definitions(_FORTIFY_SOURCE=2)
-            add_link_options(-pie -Wl,-z,relro,-z,now -Wl,-z,noexecstack)
+            add_link_options($<$<STREQUAL:$<TARGET_PROPERTY:TYPE>,EXECUTABLE>:-pie>)
+            add_link_options(-Wl,-z,relro,-z,now -Wl,-z,noexecstack)
         endif()
     endif()
 endif()
@@ -51,30 +54,52 @@ endif()
 option(POTATO_BUILD_GUI "Fetch glfw/glad and build GUI targets" ON)
 
 if(POTATO_BUILD_GUI)
+# glfw/glad 皆為 C 源碼——頂層 project() 僅啟用 CXX，此處按需啟用
+enable_language(C)
+
 # 查找依賴
 find_package(OpenGL REQUIRED)
 
 # GLFW - 窗口和輸入管理
-include(FetchContent)
-FetchContent_Declare(
-    glfw
-    GIT_REPOSITORY https://github.com/glfw/glfw.git
-    GIT_TAG 3.3.8
-)
-FetchContent_MakeAvailable(glfw)
-
-# Disable GLFW tests
+# 以 URL 擷取 source zip——GIT_REPOSITORY 需要 git，此環境沒有；
+# 若已預先 vendored 到 external/glfw 則直接使用（離線可建置）。
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
+if(EXISTS ${CMAKE_SOURCE_DIR}/external/glfw/CMakeLists.txt)
+    add_subdirectory(external/glfw)
+else()
+    include(FetchContent)
+    FetchContent_Declare(
+        glfw
+        URL https://github.com/glfw/glfw/releases/download/3.4/glfw-3.4.zip
+        URL_HASH SHA256=b5ec004b2712fd08e8861dc271428f048775200a2df719ccf575143ba749a3e9
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+    FetchContent_MakeAvailable(glfw)
+endif()
 
-# GLAD - OpenGL 加載器
-include(FetchContent)
-FetchContent_Declare(
-    glad
-    GIT_REPOSITORY https://github.com/Dav1dde/glad.git
-    GIT_TAG v2.0.4
-)
-FetchContent_MakeAvailable(glad)
+# GLAD - OpenGL 加載器（external/glad_gen 預生成——glad2 的
+# FetchContent 需要 git+python；此環境皆無，直接編譯 vendored 產物，
+# 涵蓋 GL 3.3 core，符合引擎 Rendering/ 的 context 需求）
+add_library(glad STATIC external/glad_gen/src/glad.c)
+target_include_directories(glad PUBLIC
+    ${CMAKE_SOURCE_DIR}/external/glad_gen/include)
+
+# Dear ImGui — vendored (external/imgui). The GL/GLFW backends use
+# imgui's embedded GL loader, so imgui itself never touches glad.
+add_library(imgui STATIC
+    external/imgui/imgui.cpp
+    external/imgui/imgui_draw.cpp
+    external/imgui/imgui_tables.cpp
+    external/imgui/imgui_widgets.cpp
+    external/imgui/backends/imgui_impl_glfw.cpp
+    external/imgui/backends/imgui_impl_opengl3.cpp)
+target_include_directories(imgui PUBLIC
+    ${CMAKE_SOURCE_DIR}/external/imgui
+    ${CMAKE_SOURCE_DIR}/external/imgui/backends)
+target_link_libraries(imgui PUBLIC glfw)
 endif()
 
 # OpenAL - 音頻庫 (可選)
@@ -177,7 +202,7 @@ target_link_libraries(PotatoEngine
 
 # Windows: psapi.lib（Security 模組的模組枚舉用；MSVC 由 #pragma comment 處理，MinGW 需顯式連結）
 if(WIN32 AND NOT MSVC)
-    target_link_libraries(PotatoEngine psapi wintrust)
+    target_link_libraries(PotatoEngine psapi wintrust bcrypt)
 endif()
 
 target_compile_definitions(PotatoEngine PRIVATE POTATO_ENGINE_VERSION="${PROJECT_VERSION}")
@@ -474,6 +499,18 @@ target_include_directories(potato_test_bencao PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_test_bencao PotatoCampaign)
 add_test(NAME potato_test_bencao COMMAND potato_test_bencao)
 
+# Story 10.6 — launch content set (assets/bencao/*.json): registry
+# invariants over the shipped catalog, not fixture data
+add_executable(potato_test_bencao_launch
+               Examples/potato_test_bencao_launch.cpp)
+target_include_directories(potato_test_bencao_launch
+                           PRIVATE ${CMAKE_SOURCE_DIR})
+target_compile_definitions(potato_test_bencao_launch PRIVATE
+    POTATO_BENCAO_DIR="${CMAKE_SOURCE_DIR}/assets/bencao")
+target_link_libraries(potato_test_bencao_launch PotatoCampaign)
+add_test(NAME potato_test_bencao_launch
+         COMMAND potato_test_bencao_launch)
+
 # Story 11.1 — mint-claim schema + outbox (potato.mintclaim/1)
 add_executable(potato_test_mintclaim Examples/potato_test_mintclaim.cpp)
 target_include_directories(potato_test_mintclaim PRIVATE ${CMAKE_SOURCE_DIR})
@@ -510,6 +547,42 @@ add_test(NAME potato_test_narrative COMMAND potato_test_narrative)
 add_executable(potato_export_chain Examples/potato_export_chain.cpp)
 target_include_directories(potato_export_chain PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(potato_export_chain PotatoCampaign)
+
+# ==== Game 層 ====
+# Game：表示層 —— 依賴方向 Gameplay <- Campaign <- Game。
+# 注意：Game/Render 核心是 headless 軟體光柵（不依賴 GL），
+# 未來的 GL presenter 才把視窗依賴掛上來。
+# Game/Shell 是 GL presenter —— glfw/glad/imgui 依賴，永遠不進
+# PotatoGame（無論 GUI 開關）；它由 potato_game 執行檔單獨編譯，
+# 讓 PotatoGame 在任何建置下都保持 headless。
+file(GLOB_RECURSE GAME_SOURCES CONFIGURE_DEPENDS "Game/*.cpp")
+file(GLOB_RECURSE GAME_HEADERS CONFIGURE_DEPENDS "Game/*.h")
+list(FILTER GAME_SOURCES EXCLUDE REGEX "Game/Shell/")
+add_library(PotatoGame STATIC ${GAME_SOURCES} ${GAME_HEADERS})
+target_include_directories(PotatoGame PUBLIC ${CMAKE_SOURCE_DIR})
+target_link_libraries(PotatoGame PUBLIC PotatoCampaign)
+
+# Story 8.1 — sprite atlas + software map rendering
+add_executable(potato_test_render Examples/potato_test_render.cpp)
+target_include_directories(potato_test_render PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_render PotatoGame)
+add_test(NAME potato_test_render COMMAND potato_test_render)
+
+# Story 12.9 — overworld view / order menu / creation form
+add_executable(potato_test_overworld Examples/potato_test_overworld.cpp)
+target_include_directories(potato_test_overworld PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_test_overworld PotatoGame)
+add_test(NAME potato_test_overworld COMMAND potato_test_overworld)
+
+if(POTATO_BUILD_GUI)
+# Windowed shell — the only target that may see glfw/glad/imgui.
+add_executable(potato_game
+    Game/Shell/GlShell.cpp
+    Game/Shell/main.cpp)
+target_include_directories(potato_game PRIVATE ${CMAKE_SOURCE_DIR})
+target_link_libraries(potato_game
+    PotatoGame glfw glad imgui ${OPENGL_LIBRARIES})
+endif()
 
 # CLI end-to-end: emit a sealed record, then verify it (exit-code check).
 add_test(NAME potato_record_emit

@@ -604,29 +604,25 @@ int main() {
               "12.3: arrival applies via the queue");
     }
 
-    // --- Rejections are atomic ---
+    // --- Debt marches + atomic rejections ---
     {
-        Ledger ledger; // empty — no 物資
+        Ledger ledger; // empty — 欠帳行軍：物資可負
         auto s = WorldState::Init(wmap, 3).value;
+        Check(IssueMarch(s, wmap, ledger, "longmen").ok() &&
+                  s.Marching() &&
+                  ledger.Balance(Account::Materiel) == -10,
+              "12.3: unfunded march books debt");
         const auto entriesBefore = ledger.Size();
-        Check(!IssueMarch(s, wmap, ledger, "longmen").ok(),
-              "12.3: no 物資 -> order rejected");
-        Check(ledger.Size() == entriesBefore && !s.Marching() &&
-                  s.Pending().empty(),
-              "12.3: rejected order mutates nothing");
-        // Not adjacent: luoyang isn't a kaifeng neighbor.
-        Posting seed;
-        seed.credit = {Account::Materiel, 100};
-        seed.debit = {Account::ArmyPrestige, 100};
-        ledger.Post(seed);
-        Check(!IssueMarch(s, wmap, ledger, "luoyang").ok() &&
-                  ledger.Balance(Account::Materiel) == 100,
-              "12.3: non-adjacent rejects, funds untouched");
-        // Double-march while in flight.
-        Check(IssueMarch(s, wmap, ledger, "longmen").ok(),
-              "12.3: first order lands");
-        Check(!IssueMarch(s, wmap, ledger, "kaifeng").ok(),
+        Check(!IssueMarch(s, wmap, ledger, "kaifeng").ok() &&
+                  ledger.Size() == entriesBefore,
               "12.3: second order while marching rejects");
+        // Not adjacent: luoyang isn't a kaifeng neighbor.
+        auto s2 = WorldState::Init(wmap, 3).value;
+        Check(!IssueMarch(s2, wmap, ledger, "luoyang").ok() &&
+                  ledger.Balance(Account::Materiel) == -10,
+              "12.3: non-adjacent rejects, ledger untouched");
+        Check(IssueMarch(s2, wmap, ledger, "longmen").ok(),
+              "12.3: first order lands");
     }
 
     // --- Sightings are hearsay marks ---
