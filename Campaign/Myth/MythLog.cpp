@@ -1,8 +1,5 @@
 #include "Campaign/Myth/MythLog.h"
 
-#include "Campaign/Narrative/Bencao.h"
-#include "Campaign/Narrative/BencaoCodex.h"
-
 #include "Gameplay/Doctrine/Doctrine.h" // SimEvent
 
 namespace Potato::Campaign {
@@ -158,58 +155,9 @@ std::string FolkLine(const MythLogEntry& e) {
     return "據說" + place + "出了怪事，人說是「" + e.name + "」。";
 }
 
-// Story 10.5 hearsay: a myth act the folk saw whispers of the
-// materia it will one day be catalogued as — the rumor precedes
-// the page. Names the folk 釋名 (aliases[0]); an aliasless page
-// stays vague — the sealed 正名 never reaches the telling.
-// One line per matching sealed page, canonical Entries() order.
-std::string HearsayLines(const MythLogEntry& e,
-                         const BencaoLibrary& lib,
-                         const BencaoCodex& codex) {
-    std::string out;
-    for (const BencaoEntry& en : lib.Entries()) {
-        if (en.unlockKind != UnlockKind::MythState ||
-            en.unlockParam != e.action || codex.IsUnlocked(en.id)) {
-            continue;
-        }
-        // Verb + vague noun bend to the materia's nature:
-        // 蟲獸 emerges, 金石 yields, 毒草 breeds, the 草部 grow.
-        const char* verb = "產";
-        const char* vague = "異草";
-        switch (en.category) {
-        case BencaoCategory::Chongshou:
-            verb = "出";
-            vague = "異獸";
-            break;
-        case BencaoCategory::Jinshi:
-            verb = "產";
-            vague = "靈藥";
-            break;
-        case BencaoCategory::Ducao:
-            verb = "生";
-            vague = "毒草";
-            break;
-        default:
-            break;
-        }
-        const std::string_view folk =
-            en.aliases.empty()
-                ? std::string_view(vague)
-                : std::string_view(en.aliases[0]);
-        out += "據說";
-        out += FolkPlace(e.region);
-        out += verb;
-        out += folk;
-        out += "，惟未見諸冊。\n";
-    }
-    return out;
-}
-
 } // namespace
 
-std::string RenderMythLog(const MythLog& log,
-                          const BencaoCodex* codex,
-                          const BencaoLibrary* lib) {
+std::string RenderMythLog(const MythLog& log) {
     std::string out = "—— 市井傳聞 ——\n";
     if (log.Entries().empty()) {
         out += "市井無傳聞。\n";
@@ -218,9 +166,6 @@ std::string RenderMythLog(const MythLog& log,
     for (const MythLogEntry& e : log.Entries()) {
         out += FolkLine(e);
         out += '\n';
-        if (codex != nullptr && lib != nullptr) {
-            out += HearsayLines(e, *lib, *codex);
-        }
     }
     return out;
 }
