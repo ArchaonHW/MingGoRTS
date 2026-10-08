@@ -9,6 +9,7 @@
 #include <chrono>
 #include <queue>
 #include <stack>
+#include <cstring>
 
 namespace Potato {
 namespace AI {

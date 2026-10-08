@@ -143,7 +143,7 @@ DQNAgent::DQNAgent(int stateSize, int numActions,
     targetNetwork->SetLossFunction("mse");
     
     // Initialize target network with qNetwork weights
-    *targetNetwork = *qNetwork;
+    targetNetwork->CopyWeightsFrom(*qNetwork);
 }
 
 Action DQNAgent::SelectAction(const State& state, bool explore) {
@@ -207,7 +207,7 @@ void DQNAgent::DecayExplorationRate(float decay) {
 void DQNAgent::UpdateTargetNetwork() {
     // Copy weights from qNetwork to targetNetwork
     // This is a simplified version
-    *targetNetwork = *qNetwork;
+    targetNetwork->CopyWeightsFrom(*qNetwork);
 }
 
 float DQNAgent::PredictQValue(const State& state, int action) {
@@ -596,7 +596,7 @@ float RewardShaper::CurriculumScaling(float reward,
 Action Exploration::EpsilonGreedy(const std::vector<Action>& actions,
                                   const std::vector<float>& values,
                                   float epsilon) {
-    static std::mt19937 rng(std::random_device{});
+    static std::mt19937 rng(std::random_device{}());
     
     if (std::uniform_real_distribution<float>(0.0f, 1.0f)(rng) < epsilon) {
         return actions[std::uniform_int_distribution<int>(0, actions.size() - 1)(rng)];
@@ -635,7 +635,7 @@ Action Exploration::UCB(const std::vector<Action>& actions,
 Action Exploration::Boltzmann(const std::vector<Action>& actions,
                               const std::vector<float>& values,
                               float temperature) {
-    static std::mt19937 rng(std::random_device{});
+    static std::mt19937 rng(std::random_device{}());
     
     // Compute softmax probabilities
     std::vector<float> expValues(values.size());

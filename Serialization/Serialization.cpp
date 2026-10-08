@@ -1,7 +1,9 @@
 #include "Serialization.h"
+#include "JsonParser.h"
 #include <iostream>
 #include <algorithm>
 #include <cstdio>
+#include <filesystem>
 
 namespace Potato {
 
@@ -141,7 +143,8 @@ void SerializationManager::Initialize() {
     RegisterSerializer(SerializationFormat::Binary, MakeShared<BinarySerializer>());
     
     // 創建存檔目錄
-    // 實際應該使用文件系統創建目錄
+    std::error_code ec;
+    std::filesystem::create_directories(saveDirectory, ec);
     
     initialized = true;
     std::cout << "Serialization Manager initialized" << std::endl;
@@ -169,68 +172,62 @@ ISerializer* SerializationManager::GetSerializer(SerializationFormat format) {
     return nullptr;
 }
 
-template<typename T>
-bool SerializationManager::Serialize(const std::string& filePath, const T& object, SerializationFormat format) {
-    ISerializer* serializer = GetSerializer(format);
-    if (!serializer) {
-        std::cerr << "No serializer registered for format: " << static_cast<int>(format) << std::endl;
-        return false;
+namespace {
+// 存檔名只允許英數字、底線、連字號——GetSaveSlotPath 與
+// GetSaveSlots 必須共用同一個規則,否則列出的 slot 會對不上路徑
+std::string SanitizeSlotName(const std::string& name) {
+    std::string sanitized;
+    sanitized.reserve(name.size());
+    for (char c : name) {
+        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+            (c >= '0' && c <= '9') || c == '_' || c == '-') {
+            sanitized += c;
+        }
     }
-    
-    return serializer->Serialize(filePath, object);
+    return sanitized.empty() ? "invalid_slot" : sanitized;
 }
-
-template<typename T>
-bool SerializationManager::Deserialize(const std::string& filePath, T& object, SerializationFormat format) {
-    ISerializer* serializer = GetSerializer(format);
-    if (!serializer) {
-        std::cerr << "No serializer registered for format: " << static_cast<int>(format) << std::endl;
-        return false;
-    }
-    
-    return serializer->Deserialize(filePath, object);
-}
-
-template<typename T>
-bool SerializationManager::SaveGame(const std::string& saveSlot, const T& gameState) {
-    std::string filePath = GetSaveSlotPath(saveSlot);
-    return Serialize(filePath, gameState, SerializationFormat::JSON);
-}
-
-template<typename T>
-bool SerializationManager::LoadGame(const std::string& saveSlot, T& gameState) {
-    std::string filePath = GetSaveSlotPath(saveSlot);
-    return Deserialize(filePath, gameState, SerializationFormat::JSON);
-}
+} // namespace
 
 std::vector<std::string> SerializationManager::GetSaveSlots() const {
     std::vector<std::string> saveSlots;
-    
-    // 簡化實現：應該掃描存檔目錄
-    saveSlots.push_back("auto_save_1");
-    saveSlots.push_back("auto_save_2");
-    saveSlots.push_back("manual_save_1");
-    saveSlots.push_back("manual_save_2");
-    
+
+    // 掃描存檔目錄中的 .json 檔。只列出 stem 本身已合規的檔案
+    // （SanitizeSlotName(stem) == stem）：這保證每個列出的 slot
+    // 都能被 SaveSlotExists/DeleteSaveSlot 經 GetSaveSlotPath 操作。
+    // 例如 "a.b.json" 的 stem sanitize 後是 "ab" ≠ "a.b",
+    // 列出它也無法對回實際檔案,直接排除
+    std::error_code ec;
+    if (!std::filesystem::is_directory(saveDirectory, ec)) {
+        return saveSlots;
+    }
+    for (const auto& entry : std::filesystem::directory_iterator(saveDirectory, ec)) {
+        std::error_code entryEc;
+        if (entry.is_regular_file(entryEc) && !entryEc &&
+            entry.path().extension() == ".json") {
+            std::string stem = entry.path().stem().string();
+            if (SanitizeSlotName(stem) == stem) {
+                saveSlots.push_back(stem);
+            }
+        }
+    }
+    std::sort(saveSlots.begin(), saveSlots.end());
     return saveSlots;
 }
 
 bool SerializationManager::DeleteSaveSlot(const std::string& saveSlot) {
     std::string filePath = GetSaveSlotPath(saveSlot);
-    
-    // 刪除文件
-    // 簡化實現：使用文件系統刪除
-    std::cout << "Deleted save slot: " << saveSlot << std::endl;
-    
-    return true;
+
+    std::error_code ec;
+    bool removed = std::filesystem::remove(filePath, ec);
+    if (removed) {
+        std::cout << "Deleted save slot: " << saveSlot << std::endl;
+    }
+    return removed;
 }
 
 bool SerializationManager::SaveSlotExists(const std::string& saveSlot) const {
-    std::string filePath = GetSaveSlotPath(saveSlot);
-    
-    // 檢查文件是否存在
-    // 簡化實現：使用文件系統檢查
-    return false;
+    std::error_code ec;
+    return std::filesystem::is_regular_file(GetSaveSlotPath(saveSlot), ec);
 }
 
 void SerializationManager::EnableAutoSave(bool enable) {
@@ -261,18 +258,7 @@ void SerializationManager::Update(float deltaTime) {
 
 std::string SerializationManager::GetSaveSlotPath(const std::string& saveSlot) const {
     // 防止路徑遍歷：存檔名稱只允許英數字、底線、連字號
-    std::string sanitized;
-    sanitized.reserve(saveSlot.size());
-    for (char c : saveSlot) {
-        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-            (c >= '0' && c <= '9') || c == '_' || c == '-') {
-            sanitized += c;
-        }
-    }
-    if (sanitized.empty()) {
-        sanitized = "invalid_slot";
-    }
-    return saveDirectory + "/" + sanitized + ".json";
+    return saveDirectory + "/" + SanitizeSlotName(saveSlot) + ".json";
 }
 
 void SerializationManager::ProcessAutoSave() {
@@ -359,10 +345,38 @@ std::string SceneNodeData::Serialize() const {
     return ss.str();
 }
 
+// 從 JsonValue array 讀 Vector3([x,y,z])
+static bool ReadVector3(const JsonValue& v, Vector3& out) {
+    if (!v.IsArray() || v.Size() < 3) return false;
+    out.x = v[0].AsFloat();
+    out.y = v[1].AsFloat();
+    out.z = v[2].AsFloat();
+    return true;
+}
+
+// 從 JsonValue array 讀 Quaternion([x,y,z,w])
+static bool ReadQuaternion(const JsonValue& v, Quaternion& out) {
+    if (!v.IsArray() || v.Size() < 4) return false;
+    out.x = v[0].AsFloat();
+    out.y = v[1].AsFloat();
+    out.z = v[2].AsFloat();
+    out.w = v[3].AsFloat();
+    return true;
+}
+
 bool SceneNodeData::Deserialize(const std::string& data) {
-    // 簡化實現：解析JSON字符串
-    // 實際應該使用JSON解析庫
-    std::cout << "Deserializing SceneNodeData: " << data << std::endl;
+    JsonValue root;
+    if (!JsonValue::ParseOk(data, root) || !root.IsObject()) {
+        return false;
+    }
+    name = root["name"].AsString();
+    ReadVector3(root["position"], position);
+    ReadQuaternion(root["rotation"], rotation);
+    ReadVector3(root["scale"], scale);
+    children.clear();
+    for (const auto& c : root["children"].AsArray()) {
+        children.push_back(c.AsString());
+    }
     return true;
 }
 
@@ -379,8 +393,15 @@ std::string GameObjectData::Serialize() const {
 }
 
 bool GameObjectData::Deserialize(const std::string& data) {
-    // 簡化實現：解析JSON字符串
-    std::cout << "Deserializing GameObjectData: " << data << std::endl;
+    JsonValue root;
+    if (!JsonValue::ParseOk(data, root) || !root.IsObject()) {
+        return false;
+    }
+    name = root["name"].AsString();
+    tag = root["tag"].AsString();
+    layer = root["layer"].AsInt();
+    active = root["active"].AsBool(true);
+    sceneNodeData = root["sceneNodeData"].AsString();
     return true;
 }
 
@@ -400,8 +421,17 @@ std::string GameStateData::Serialize() const {
 }
 
 bool GameStateData::Deserialize(const std::string& data) {
-    // 簡化實現：解析JSON字符串
-    std::cout << "Deserializing GameStateData: " << data << std::endl;
+    JsonValue root;
+    if (!JsonValue::ParseOk(data, root) || !root.IsObject()) {
+        return false;
+    }
+    levelName = root["levelName"].AsString();
+    playTime = root["playTime"].AsFloat();
+    score = root["score"].AsInt();
+    activeObjects.clear();
+    for (const auto& o : root["activeObjects"].AsArray()) {
+        activeObjects.push_back(o.AsString());
+    }
     return true;
 }
 

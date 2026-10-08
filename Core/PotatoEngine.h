@@ -18,6 +18,8 @@ namespace Potato {
     class ILogger;
     class IMemoryManager;
     class IFileSystem;
+    class JobSystem;
+    class Profiler;
 }
 
 namespace Potato {
@@ -84,7 +86,7 @@ struct PerformanceMetrics {
 struct Event {
     std::string type;
     std::unordered_map<std::string, std::string> data;
-    float timestamp;
+    float timestamp = 0.0f;
 };
 
 /**
@@ -96,7 +98,7 @@ using EventCallback = std::function<void(const Event&)>;
  * Resource handle
  */
 struct ResourceHandle {
-    uint64_t id;
+    uint64_t id = 0;
     std::string type;
     std::string path;
     bool isValid = false;
@@ -106,7 +108,7 @@ struct ResourceHandle {
  * Scene handle
  */
 struct SceneHandle {
-    uint64_t id;
+    uint64_t id = 0;
     std::string name;
     bool isActive = false;
 };
@@ -137,6 +139,14 @@ public:
     
     // Configuration access
     const EngineConfig& GetConfig() const { return config; }
+
+    // Job system（EngineConfig::enableJobSystem=true 時由 Initialize 建立,
+    // workerThreads 指定工人數;關閉或停用時回 nullptr）
+    JobSystem* GetJobSystem() const { return jobSystem.get(); }
+
+    // Profiler（enableProfiling=true 時建立並設為全域啟用點;
+    // POTATO_PROFILE_SCOPE 巨集才有作用對象）
+    Profiler* GetProfiler() const { return profiler.get(); }
     
     // Callback functions
     using UpdateCallback = std::function<void(float)>;
@@ -226,6 +236,8 @@ private:
     std::unique_ptr<ILogger> logger;
     std::unique_ptr<IMemoryManager> memoryManager;
     std::unique_ptr<IFileSystem> fileSystem;
+    std::unique_ptr<JobSystem> jobSystem;
+    std::unique_ptr<Profiler> profiler;
     
     // Callback functions
     UpdateCallback updateCallback;

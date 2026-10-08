@@ -348,6 +348,9 @@ public:
     void SetActive(bool isActive) { active = isActive; }
     
     bool IsAutonomous() const { return autonomous; }
+    bool CanCollaborate() const { return canCollaborate; }
+    bool CanLearnFromPeers() const { return canLearnFromPeers; }
+    const std::vector<std::string>& GetCapabilities() const { return capabilities; }
     
     // 任務查詢
     const std::vector<AgentTask>& GetTasks() const { return tasks; }
@@ -426,11 +429,11 @@ protected:
     };
     std::vector<SharedKnowledge> sharedKnowledge;
     
-    std::mutex taskMutex;
-    std::mutex learningMutex;
-    std::mutex perceptionMutex;
-    std::mutex memoryMutex;
-    std::mutex toolMutex;
+    mutable std::mutex taskMutex;
+    mutable std::mutex learningMutex;
+    mutable std::mutex perceptionMutex;
+    mutable std::mutex memoryMutex;
+    mutable std::mutex toolMutex;
     
     // 內部方法
     void ProcessPerceptionQueue();
@@ -509,6 +512,51 @@ private:
     bool ValidateToolParameters(const ToolDescription& tool, 
                                const std::unordered_map<std::string, std::string>& parameters);
     std::string FormatToolOutput(const ToolExecutionResult& result);
+};
+
+/**
+ * 開發代理 - 代碼生成與優化
+ */
+class DeveloperAgent : public AIAgent {
+public:
+    DeveloperAgent(const AgentDesc& desc);
+    
+    Decision MakeDecision(const std::string& context, const std::vector<std::string>& options) override;
+    void ProcessCurrentTask() override;
+    
+private:
+    std::string GenerateCode(const std::string& description);
+    bool OptimizeCode(const std::string& code);
+};
+
+/**
+ * 設計代理 - 設計生成與創意發想
+ */
+class DesignerAgent : public AIAgent {
+public:
+    DesignerAgent(const AgentDesc& desc);
+    
+    Decision MakeDecision(const std::string& context, const std::vector<std::string>& options) override;
+    void ProcessCurrentTask() override;
+    
+private:
+    std::string GenerateDesign(const std::string& description);
+    std::vector<std::string> BrainstormIdeas(const std::string& topic);
+};
+
+/**
+ * 分析代理 - 數據分析與洞察生成
+ */
+class AnalystAgent : public AIAgent {
+public:
+    AnalystAgent(const AgentDesc& desc);
+    
+    Decision MakeDecision(const std::string& context, const std::vector<std::string>& options) override;
+    void ProcessCurrentTask() override;
+    
+private:
+    std::string AnalyzeData(const std::string& data);
+    std::vector<std::string> GenerateInsights(const std::string& analysis);
 };
 
 /**
@@ -593,9 +641,9 @@ private:
     std::unordered_map<std::string, ToolDescription> sharedTools;
     std::vector<std::string> collaborativeTopics;
     
-    std::mutex agentsMutex;
-    std::mutex tasksMutex;
-    std::mutex toolsMutex;  // 新增
+    mutable std::mutex agentsMutex;
+    mutable std::mutex tasksMutex;
+    mutable std::mutex toolsMutex;  // 新增
     
     AIAgent* FindBestAgentForTask(const AgentTask& task);
     void UpdateAgentPerformance();
@@ -734,7 +782,7 @@ public:
     
 private:
     std::unordered_map<std::string, AIAgent*> registeredAgents;
-    std::mutex coordinatorMutex;
+    mutable std::mutex coordinatorMutex;
 };
 
 } // namespace AI

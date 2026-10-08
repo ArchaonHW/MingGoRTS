@@ -20,6 +20,7 @@
 #include <thread>
 #include <mutex>
 #include <unordered_map>
+#include <unordered_set>
 
 namespace Potato {
 namespace Security {
@@ -36,7 +37,14 @@ enum class ViolationType {
     MemoryTampered,         // 受保護記憶體區域被竄改
     HardwareBreakpoint,     // 偵測到 DR0-DR7 硬體中斷點
     InjectedThread,         // 偵測到起始位址不在任何模組內的執行緒
-    CodeTampered            // 自身 .text 程式碼區段被修改（inline patch/hook）
+    CodeTampered,           // 自身 .text 程式碼區段被修改（inline patch/hook）
+    HiddenModule,           // 記憶體中有 MEM_IMAGE 區域不在模組清單（手動映射/PEB unlinked）
+    SuspiciousMemory,       // 存在可執行的 MEM_PRIVATE 區域（shellcode staging）
+    HookDetected,           // IAT entry 指向模組外（import hook）
+    ExternalHandle,         // 外部行程持有本行程 handle（Cheat Engine 類工具特徵）
+    HeapCorruption,         // Heap 完整性檢查失敗
+    ApiHook,                // 關鍵 API 前導碼被 patch（inline hook 攔截系統呼叫）
+    ExternalTool            // 偵測到已知作弊/除錯工具行程
 };
 
 // 違規報告
@@ -47,6 +55,8 @@ struct SecurityReport {
 
 // 違規事件回呼
 using ViolationCallback = std::function<void(const SecurityReport&)>;
+
+class AuditLedger;  // Security/AuditLedger.h——防竄改稽核帳本
 
 // 模組掃描結果（含不受信任原因，供診斷用）
 struct ModuleScanResult {
@@ -73,6 +83,33 @@ uint32_t ComputeCRC32(const void* data, size_t size);
 // 用於清除密鑰、token 等敏感資料
 void SecureZeroMemory(void* ptr, size_t size);
 
+// 計算 HMAC-SHA256（RFC 2104）訊息鑑別碼，回傳 64 字元小寫 hex。
+// 供「攻擊者不知金鑰即無法偽造」的完整性場景（存檔簽章、資料鑑別）
+std::string ComputeHMACSHA256(const void* key, size_t keyLen,
+                              const void* data, size_t dataLen);
+
+// 產生密碼學安全隨機位元組（Windows BCryptGenRandom / POSIX /dev/urandom；
+// 兩者皆失效時退回多來源混合 xorshift——僅為最後備援，非密碼學級）
+std::vector<uint8_t> GenerateRandomBytes(size_t len);
+
+// ---- 資料簽章（存檔/設定檔竄改防護）----
+// blob 格式：[原始資料 || HMAC-SHA256(key, data) 32B 尾]。
+// 金鑰保管責任在呼叫端（例：首啟 GenerateRandomBytes(32) 存於使用者目錄）。
+// 驗證使用常數時間比對；blob 短於 32B 或 MAC 不符一律回 false。
+std::vector<uint8_t> SignData(const void* key, size_t keyLen,
+                              const void* data, size_t dataLen);
+// out 非空時驗證通過才寫回原始資料；只驗不取可傳 nullptr
+bool VerifySignedData(const void* key, size_t keyLen,
+                      const std::vector<uint8_t>& blob,
+                      std::vector<uint8_t>* out = nullptr);
+// 檔案版：讀 srcPath → 簽章 blob 寫入 destPath
+bool SignFile(const std::string& srcPath, const std::string& destPath,
+              const void* key, size_t keyLen);
+// 驗證簽章檔並取出原始內容（out 可為 nullptr 只驗證）
+bool VerifySignedFile(const std::string& filePath,
+                      const void* key, size_t keyLen,
+                      std::vector<uint8_t>* out = nullptr);
+
 // ============================================================================
 // SecurityManager - 安全檢查管理器
 // ============================================================================
@@ -87,6 +124,13 @@ public:
     // 設定違規事件回呼（例如：記錄 log、通知伺服器、終止程式）
     void SetViolationCallback(ViolationCallback callback);
 
+    // 設定稽核帳本（nullptr 解除）。設定後每次違規事件除回呼外,
+    // 亦以 hash 鏈記錄入帳（category="violation",eventType=違規類型名,
+    // payload 存 details 的 SHA-256,原文不落帳）——日誌層級的
+    // tamper-evident 揭露：作弊者刪改本地違規紀錄會讓鏈斷裂。
+    // 呼叫端持有 ledger 生命週期,並應定期取出 HeadHash 外部錨定。
+    void SetAuditLedger(AuditLedger* ledger);
+
     // ---- 反除錯 ----
     // 偵測是否有除錯器附加（IsDebuggerPresent / CheckRemoteDebuggerPresent / TracerPid）
     bool CheckDebugger();
@@ -98,6 +142,33 @@ public:
     bool CheckHardwareBreakpoints();
     // 注入執行緒偵測：執行緒起始位址不在任何已載入模組內（CreateRemoteThread/shellcode）
     bool CheckInjectedThreads();
+    // 隱藏模組偵測：掃描 MEM_IMAGE 區域，找出不在模組清單中的映像
+    // （手動映射 / 從 PEB 載入器鏈表摘除的 DLL 會被 EnumProcessModules 遺漏，這裡能補抓）
+    bool CheckHiddenModules();
+    // 可疑記憶體：可執行的 MEM_PRIVATE 區域（PAGE_EXECUTE_* 且非模組）= shellcode staging
+    bool CheckExecutablePrivateMemory();
+    // IAT hook 偵測：import 表 entry 的解析位址不在任何已載入模組內
+    bool CheckIATHooks();
+    // 外部 handle 偵測：枚舉系統 handle，回報持有本行程 handle 的其他行程
+    // diag 為非 null 時輸出診斷訊息（失敗原因 / 掃描統計）
+    bool CheckExternalHandles(std::string* diag = nullptr);
+    // Heap 完整性：HeapValidate 檢查主堆
+    bool CheckHeapIntegrity();
+    // 關鍵 API inline hook 偵測：x64 的 ntdll syscall stub 前導碼恆為
+    // 4C 8B D1 B8（mov r10,rcx; mov eax,imm）。被 E9/FF25 等覆寫 = 被 hook，
+    // 這是外掛攔截 NtProtectVirtualMemory/NtWriteVirtualMemory 的慣用手法。
+    bool CheckCriticalApiHooks();
+    // 已知作弊/除錯工具行程掃描：cheatengine、x64dbg、ollydbg、windbg、
+    // processhacker、systeminformer、xenos、wemod、ida、ghidra 等
+    // （子字串比對映像檔名；完整特徵表見 SecuritySystem.cpp kToolNames）
+    bool CheckKnownToolProcesses();
+    // 執行緒 RIP 稽核：短暫暫停各執行緒檢查指令指標是否落在已載入模組內。
+    // 補 CheckInjectedThreads 的盲點——後者只看起始位址，無法抓到
+    // 「合法起點建立、之後跳入 shellcode」的執行緒。
+    bool CheckThreadContexts();
+    // 外部 handle 持有者白名單（exe 檔名，如 "conhost.exe"）。
+    // 位於系統目錄的二進位自動視為合法持有者，不需手動加入。
+    void AddTrustedHandleHolder(const std::string& imageName);
 
     // ---- DLL 注入偵測 ----
     // 將模組名稱加入信任清單（例如 "myplugin.dll"）。
@@ -118,6 +189,15 @@ public:
     // ---- 完整性校驗 ----
     // 驗證檔案 SHA-256 是否符合預期值
     bool VerifyFileIntegrity(const std::string& filePath, const std::string& expectedSha256Hex);
+    // 啟動期自身完整性：依 manifest（GenerateIntegrityManifest 產生的
+    // SHA-256 白名單）逐檔驗證 baseDir 下的引擎/遊戲檔案。
+    // hmacKey 非空時要求 manifest 帶相符簽章（見 IntegrityManifest.h）。
+    // 每筆失敗（竄改/消失/不可讀/清單異常）觸發一次 IntegrityMismatch 回呼。
+    // 回傳是否全部通過；manifest 無法讀取/解析/簽章不符也回 false。
+    bool CheckIntegrityManifest(const std::string& manifestPath,
+                                const std::string& baseDir,
+                                const void* hmacKey = nullptr,
+                                size_t hmacKeyLen = 0);
     // 為記憶體區域建立完整性快照（keyed HMAC-SHA256），回傳快照 ID。
     // 受保護位址會被記錄，監控執行緒會定期自動驗證（VerifyAllGuards）。
     // 注意：data 指標在 UnguardRegion 前必須保持有效。
@@ -145,6 +225,9 @@ public:
     void StartMonitoring(uint32_t intervalMs = 5000);
     void StopMonitoring();
     bool IsMonitoring() const { return monitoring.load(); }
+    // 監控心跳：監控執行緒在 maxAgeMs 內有更新即視為存活。
+    // 若監控執行緒被凍結/殺死，此函數回傳 false —— 供遊戲主執行緒定期檢查。
+    bool IsMonitorAlive(uint32_t maxAgeMs = 15000) const;
 
     // 立即執行全部檢查，回傳是否有違規
     bool RunAllChecks();
@@ -172,7 +255,10 @@ private:
     std::atomic<bool> initialized{false};
     std::atomic<bool> monitoring{false};
     std::thread monitorThread;
+    // 監控心跳（steady_clock 毫秒時間戳，MonitorLoop 每週期更新）
+    std::atomic<int64_t> monitorHeartbeatMs{0};
     ViolationCallback violationCallback;
+    AuditLedger* auditLedger = nullptr;   // 可選：違規事件同時入帳（非擁有）
     std::mutex callbackMutex;
 
     // 系統模組清單（小寫檔名）：必須位於系統目錄且通過 Authenticode 簽章驗證
@@ -181,6 +267,12 @@ private:
     std::vector<std::string> trustedModules;
     // 模組 SHA-256 釘選：小寫檔名 -> 預期雜湊
     std::unordered_map<std::string, std::string> moduleHashes;
+    // 已回報過的外部 handle 持有者（去重）
+    std::unordered_set<uintptr_t> extHandleSeen;
+    // 外部 handle 持有者白名單（小寫 exe 檔名）
+    std::unordered_set<std::string> trustedHandleHolders;
+    // 已回報過的外部工具行程（去重）
+    std::unordered_set<uintptr_t> extToolSeen;
     mutable std::mutex trustedMutex;
 
     // 受信任模組目錄（正規化：小寫、反斜線、無尾分隔符）
@@ -227,7 +319,7 @@ private:
     std::atomic<bool> notifyRun{false};
     std::atomic<uint64_t> notifyDropped{0};
 
-    static void CALLBACK LdrNotifyThunk(unsigned long reason, const void* data, void* ctx);
+    static void __stdcall LdrNotifyThunk(unsigned long reason, const void* data, void* ctx);
     void NotifyWorkerLoop();
     void OnImageLoad(const wchar_t* path);
 #endif

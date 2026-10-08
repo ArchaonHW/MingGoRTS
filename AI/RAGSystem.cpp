@@ -10,6 +10,7 @@
 #include <regex>
 #include <chrono>
 #include <unordered_set>
+#include <cstring>
 
 namespace Potato {
 namespace AI {
@@ -102,6 +103,10 @@ std::vector<DocumentChunk> InMemoryVectorDB::SearchByKeyword(
     
     std::string lowerKeyword = keyword;
     std::transform(lowerKeyword.begin(), lowerKeyword.end(), lowerKeyword.begin(), ::tolower);
+    
+    if (lowerKeyword.empty()) {
+        return {};
+    }
     
     for (auto& chunk : chunks) {
         std::string lowerContent = chunk.content;
@@ -243,17 +248,16 @@ std::vector<std::string> DocumentProcessor::SplitIntoChunks(
         // Try to break at word boundary
         if (end < text.length()) {
             size_t lastSpace = text.rfind(' ', end);
-            if (lastSpace > pos) {
+            if (lastSpace != std::string::npos && lastSpace > pos) {
                 end = lastSpace;
             }
         }
         
         chunks.push_back(text.substr(pos, end - pos));
-        pos = end - overlap;
-        
-        if (pos >= text.length()) {
+        if (end >= text.length()) {
             break;
         }
+        pos = (end > pos + overlap) ? end - overlap : end;
     }
     
     return chunks;

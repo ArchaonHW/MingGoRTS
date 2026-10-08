@@ -8,6 +8,7 @@
 #include <chrono>
 #include <fstream>
 #include <algorithm>
+#include <cstring>
 
 namespace Potato {
 namespace AI {

@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <regex>
 #include <cstdio>
+#include <cstring>
 
 namespace Potato {
 namespace AI {

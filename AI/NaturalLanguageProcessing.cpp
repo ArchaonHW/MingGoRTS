@@ -8,6 +8,8 @@
 #include <sstream>
 #include <regex>
 #include <cmath>
+#include <random>
+#include <unordered_set>
 
 namespace Potato {
 namespace AI {
@@ -18,7 +20,7 @@ namespace AI {
 
 Tokenizer::Tokenizer() {
     // Initialize common stop words
-    stopWords = {
+    for (const char* word : {
         "the", "a", "an", "and", "or", "but", "is", "are", "was", "were",
         "be", "been", "being", "have", "has", "had", "do", "does", "did",
         "will", "would", "could", "should", "may", "might", "must", "shall",
@@ -28,7 +30,9 @@ Tokenizer::Tokenizer() {
         "there", "when", "where", "why", "how", "all", "each", "few",
         "more", "most", "other", "some", "such", "no", "nor", "not",
         "only", "own", "same", "so", "than", "too", "very", "just"
-    };
+    }) {
+        stopWords[word] = true;
+    }
 }
 
 std::vector<Token> Tokenizer::Tokenize(const std::string& text) {
@@ -92,7 +96,7 @@ std::vector<std::string> Tokenizer::SplitSentences(const std::string& text) {
     return sentences;
 }
 
-std::string Tokenizer::Normalize(const std::string& word) {
+std::string Tokenizer::Normalize(const std::string& word) const {
     std::string normalized = word;
     
     // Convert to lowercase
@@ -323,7 +327,7 @@ SentimentAnalyzer::SentimentAnalyzer() {
         {"sad", -0.8f},
         {"angry", -0.7f},
         {"joy", 0.8f},
-        "fear", -0.7f,
+        {"fear", -0.7f},
         {"disgust", -0.7f},
         {"surprise", 0.3f},
         {"like", 0.6f},

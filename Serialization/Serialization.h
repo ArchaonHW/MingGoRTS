@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Core/CoreTypes.h"
+#include "MathUtils/Vector3.h"
+#include "MathUtils/Quaternion.h"
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -94,19 +96,35 @@ public:
     void RegisterSerializer(SerializationFormat format, SharedPtr<ISerializer> serializer);
     ISerializer* GetSerializer(SerializationFormat format);
     
-    // 便捷序列化方法
+    // 便捷序列化方法(T 須實作 ISerializable;定義放 header 使各 TU 可實例化)
     template<typename T>
-    bool Serialize(const std::string& filePath, const T& object, SerializationFormat format = SerializationFormat::JSON);
-    
+    bool Serialize(const std::string& filePath, const T& object, SerializationFormat format = SerializationFormat::JSON) {
+        ISerializer* serializer = GetSerializer(format);
+        if (!serializer) {
+            return false;
+        }
+        return serializer->Serialize(filePath, object);
+    }
+
     template<typename T>
-    bool Deserialize(const std::string& filePath, T& object, SerializationFormat format = SerializationFormat::JSON);
-    
+    bool Deserialize(const std::string& filePath, T& object, SerializationFormat format = SerializationFormat::JSON) {
+        ISerializer* serializer = GetSerializer(format);
+        if (!serializer) {
+            return false;
+        }
+        return serializer->Deserialize(filePath, object);
+    }
+
     // 異存系統
     template<typename T>
-    bool SaveGame(const std::string& saveSlot, const T& gameState);
-    
+    bool SaveGame(const std::string& saveSlot, const T& gameState) {
+        return Serialize(GetSaveSlotPath(saveSlot), gameState, SerializationFormat::JSON);
+    }
+
     template<typename T>
-    bool LoadGame(const std::string& saveSlot, T& gameState);
+    bool LoadGame(const std::string& saveSlot, T& gameState) {
+        return Deserialize(GetSaveSlotPath(saveSlot), gameState, SerializationFormat::JSON);
+    }
     
     // 存檔管理
     std::vector<std::string> GetSaveSlots() const;
@@ -156,11 +174,6 @@ void ShutdownSerializationManager();
  */
 SerializationManager* GetSerializationManager();
 
-} // namespace Potato
-
-// 便捷宏
-#define GET_SERIALIZATION() Potato::GetSerializationManager()
-
 // 預定義義可序列化類型
 namespace SerializableTypes {
 
@@ -203,3 +216,7 @@ struct GameStateData : public ISerializable {
 };
 
 } // namespace SerializableTypes
+} // namespace Potato
+
+// 便捷宏
+#define GET_SERIALIZATION() Potato::GetSerializationManager()

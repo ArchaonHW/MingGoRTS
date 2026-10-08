@@ -148,7 +148,7 @@ public:
     std::vector<std::string> SplitSentences(const std::string& text);
     
     // Word normalization
-    std::string Normalize(const std::string& word);
+    std::string Normalize(const std::string& word) const;
     
     // Stop word detection
     bool IsStopWord(const std::string& word) const;
