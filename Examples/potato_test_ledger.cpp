@@ -8,9 +8,11 @@
 #include "Campaign/Myth/Mandate.h"
 #include "Campaign/Myth/MythActions.h"
 #include "Campaign/Myth/MythLog.h"
+#include "Campaign/Ledger/AuditSpread.h"
 #include "Campaign/Ledger/DeedBook.h"
 #include "Campaign/Ledger/HistorianReport.h"
 #include "Campaign/Ledger/Ledger.h"
+#include "Campaign/Narrative/Marginalia.h"
 #include "Gameplay/Json/JsonValue.h"
 #include "Gameplay/Record/BattleRecorder.h"
 
@@ -2198,6 +2200,90 @@ int main() {
         Check(Ledger::TAG_REGION == "region:" &&
                   Ledger::TAG_FIELD == "field:",
               "12.7: tag vocabulary constants pinned");
+    }
+
+    // --- Story 6.8: Audit Spread — forged ∪ suspect laid open
+    //     with provenance; Scribe testifies only on an
+    //     authentic note ---
+    {
+        using Potato::Campaign::RenderAuditSpread;
+
+        Ledger l;
+        Posting clean;
+        clean.credit = {Account::Materiel, 10};
+        clean.debit = {Account::ArmyPrestige, 10};
+        clean.memo = "clean tithe";
+        Check(l.Post(clean).ok(), "6.8: clean entry posts"); // seq 0
+        Posting forged = BurnVillage();
+        Check(l.Forge(forged).ok(), "6.8: forged entry");    // seq 1
+        Check(l.Post(clean).ok(), "6.8: entry posts");       // seq 2
+        Check(l.SetSuspect(2), "6.8: suspect flag lands");   // seq 2 suspect
+        Posting both;
+        both.credit = {Account::Mandate, 5};
+        both.debit = {Account::MartialMerit, 5};
+        both.memo = "enemy hand, questioned";
+        Check(l.Forge(both).ok() && l.SetSuspect(3),
+              "6.8: forged+suspect entry");                  // seq 3
+
+        // Scribe notes: authentic on seq 1 (testifies),
+        // suspect on seq 2 (silent), none on seq 3 (無批).
+        auto md = JsonValue::Parse(
+            R"json({"schema":"potato.marginalia/1","notes":[
+                {"seq":1,"note":"其墨非史官手","suspect":false},
+                {"seq":2,"note":"疑筆","suspect":true}
+            ]})json");
+        auto ms = MarginaliaStore::FromJson(md.value);
+        Check(ms.ok() && ms.value.Notes().size() == 2,
+              "6.8: marginalia store loads");
+
+        const AuditSpread sp = RenderAuditSpread(l, &ms.value);
+        Check(sp.exposed.size() == 3,
+              "6.8: forged ∪ suspect expose, clean skipped");
+        Check(sp.exposed[0].seq == 1 &&
+                  sp.exposed[0].provenance == Provenance::Forged &&
+                  !sp.exposed[0].suspect &&
+                  sp.exposed[1].seq == 2 &&
+                  sp.exposed[1].provenance == Provenance::Honest &&
+                  sp.exposed[1].suspect &&
+                  sp.exposed[2].seq == 3 &&
+                  sp.exposed[2].provenance == Provenance::Forged &&
+                  sp.exposed[2].suspect,
+              "6.8: rows carry seq + provenance + suspect");
+        Check(sp.testimony.size() == 3 &&
+                  sp.testimony[0].testifies &&
+                  sp.testimony[0].note == "其墨非史官手" &&
+                  sp.testimony[1].hasNote &&
+                  !sp.testimony[1].testifies &&
+                  !sp.testimony[2].hasNote &&
+                  !sp.testimony[2].testifies,
+              "6.8: testimony follows note authenticity");
+        Check(sp.silent == 2, "6.8: silence count");
+
+        const std::string text = sp.RenderText();
+        Check(text.find("entry 1 [forged]") != std::string::npos &&
+                  text.find("entry 2 [suspect]") !=
+                      std::string::npos &&
+                  text.find("entry 3 [forged+suspect]") !=
+                      std::string::npos,
+              "6.8: provenance named per row");
+        Check(text.find("批者證曰：其墨非史官手") !=
+                  std::string::npos &&
+                  text.find("批者默然") != std::string::npos &&
+                  text.find("（無批）") != std::string::npos,
+              "6.8: testify / silent / absent lines render");
+        Check(text.find("silences: 2") != std::string::npos,
+              "6.8: silence count renders");
+        Check(sp.RenderText() == RenderAuditSpread(l, &ms.value)
+                                       .RenderText(),
+              "6.8: render deterministic");
+
+        // Null scribe → every row silent; empty ledger → empty.
+        Check(RenderAuditSpread(l, nullptr).silent == 3,
+              "6.8: no scribe → all silent");
+        const AuditSpread empty =
+            RenderAuditSpread(Ledger{}, nullptr);
+        Check(empty.exposed.empty() && empty.silent == 0,
+              "6.8: clean ledger exposes nothing");
     }
 
     std::printf(failures ? "LEDGER TESTS FAILED: %d\n"
